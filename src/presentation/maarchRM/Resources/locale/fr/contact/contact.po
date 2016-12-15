@@ -1,0 +1,184 @@
+# contact/contact
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Add a new contact"
+msgstr "Ajouter un contact"
+
+msgid "Edit contact"
+msgstr "Editer un contact"
+
+msgid "Add a contact"
+msgstr "Ajouter un contact"
+
+msgid "New contact"
+msgstr "Nouveau contact"
+
+msgid "Information"
+msgstr "Informations"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Person"
+msgstr "Personne"
+
+msgid "person"
+msgstr "Personne"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Responsibility"
+msgstr "Responsabilité"
+
+msgid "Department name"
+msgstr "Nom de l'organisation"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "organization"
+msgstr "Organisation"
+
+msgid "Organization name"
+msgstr "Raison sociale"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Display name"
+msgstr "Nom affiché"
+
+msgid "Function"
+msgstr "Fonction"
+
+msgid "Organization unit name"
+msgstr "Service"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "No data saved for this contact."
+msgstr "Aucune donnée sauvegardée pour ce contact."
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Purpose"
+msgstr "Point de contact"
+
+msgid "Room"
+msgstr "Porte"
+
+msgid "Floor"
+msgstr "Etage"
+
+msgid "Building"
+msgstr "Bâtiment"
+
+msgid "Number"
+msgstr "Numéro"
+
+msgid "Street"
+msgstr "Rue"
+
+msgid "Block"
+msgstr "Bloc de bâtiment"
+
+msgid "City sub division"
+msgstr "Arrondissement"
+
+msgid "PC"
+msgstr "CP"
+
+msgid "PB"
+msgstr "BP"
+
+msgid "City"
+msgstr "Ville"
+
+msgid "Post box"
+msgstr "Boîte postale"
+
+msgid "Post code"
+msgstr "Code postal"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Phone"
+msgstr "Téléphone"
+
+msgid "E-mail"
+msgstr "Courriel"
+
+msgid "Cellular"
+msgstr "Téléphone mobile"
+
+msgid "Communication"
+msgstr "Communication"
+
+msgid "Communication mean"
+msgstr "Moyen de communication"
+
+msgid "Add a communication mean"
+msgstr "Ajouter un moyen de communication"
+
+msgid "Delete the communication"
+msgstr "Supprimer la communication"
+
+msgid "The communication has been deleted."
+msgstr "La communication a été supprimée."
+
+msgid "Are you sure to delete this communication ?"
+msgstr "Voulez-vous supprimer ce canal de communication ?"
+
+msgid "Delete the address"
+msgstr "Supprimer l'adresse"
+
+msgid "Are you sure to delete this address ?"
+msgstr "Voulez-vous supprimer cette adresse ?"
+
+msgid "Delete the contact"
+msgstr "Suppression du contact"
+
+msgid "Do you really want to delete"
+msgstr "Voulez-vous vraiment supprimer"
+
+msgid "from your contact ?"
+msgstr "de la liste de contact ?"
+
+msgid "The contact has been created."
+msgstr "Le contact a été ajouté."
+
+msgid "The contact has been updated."
+msgstr "Le contact a été modifié."
+
+msgid "The contact has been deleted."
+msgstr "Le contact a été supprimé."
+
+msgid "The address has been added."
+msgstr "L'adresse a été ajoutée."
+
+msgid "The address has been modified."
+msgstr "L'adresse a été modifiée."
+
+msgid "The address has been deleted."
+msgstr "L'adresse a été supprimée."
+
+msgid "The communication has been added."
+msgstr "Le moyen de communication a été ajouté."
+
+msgid "The communication has been modified."
+msgstr "Le moyen de communication a été modifié."
+
+msgid "An address with this purpose already exist."
+msgstr "Une adresse portant cette désignation existe déjà."
+
+msgid "A communication mean with this purpose already exist."
+msgstr "Un moyen de communication portant cette désignation existe déjà."
+

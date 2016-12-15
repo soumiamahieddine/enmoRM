@@ -1,0 +1,63 @@
+# digitalResource/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "digitalResource"
+msgstr "Ressources numériques"
+msgctxt "bundle"
+
+msgid "cluster"
+msgstr "Gestion des grappes de dépôt"
+msgctxt "interface"
+
+msgid "format"
+msgstr "Gestion des formats de fichier"
+msgctxt "interface"
+
+msgid "repository"
+msgstr "Gestion des répertoires"
+msgctxt "interface"
+
+msgid "address"
+msgstr "Adresses"
+msgctxt "model"
+
+msgid "cluster"
+msgstr "Grappes"
+msgctxt "model"
+
+msgid "clusterRepository"
+msgstr "Répertoires des grappes"
+msgctxt "model"
+
+msgid "digitalResource"
+msgstr "Ressources numériques"
+msgctxt "model"
+
+msgid "format"
+msgstr "Formats"
+msgctxt "model"
+
+msgid "package"
+msgstr "Paquets"
+msgctxt "model"
+
+msgid "packedResource"
+msgstr "Ressources empaquetées"
+msgctxt "model"
+
+msgid "repository"
+msgstr "Répertoires"
+msgctxt "model"
+
+msgid "repositoryParam"
+msgstr "Paramètres des répertoires"
+msgctxt "model"
+
+msgid "digitalResourceRelationship"
+msgstr "Relation entre les ressources numériques"
+msgctxt "model"
+
+msgid "Digital resource created"
+msgstr "Ressource digitale créée"
+

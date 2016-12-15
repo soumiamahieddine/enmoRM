@@ -1,0 +1,171 @@
+# recordsManagement/message
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Search messages"
+msgstr "Recherche de messages"
+
+msgid "Message reference"
+msgstr "Référence du message"
+
+msgid "Message type"
+msgstr "Type de message"
+
+msgid "Date from"
+msgstr "Depuis"
+msgctxt "date"
+
+msgid "to"
+msgstr "jusqu'au"
+msgctxt "date"
+
+msgid "Originator"
+msgstr "Service Producteur"
+
+msgid "Depositor"
+msgstr "Service Versant"
+
+msgid "Archiver"
+msgstr "Service d'Archives"
+
+msgid "Control authority"
+msgstr "Autorité de contrôle"
+
+msgid "Derogation"
+msgstr "Dérogation"
+
+msgid "Information"
+msgstr "Informations"
+
+msgid "Comments"
+msgstr "Commentaires"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Add comment"
+msgstr "Ajouter un commentaire"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Identifier"
+msgstr "Côte"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Requester"
+msgstr "Demandeur"
+
+msgid "Operation date"
+msgstr "Date de l'opération"
+
+msgid "Status :"
+msgstr "Statut :"
+
+msgid "Operation date :"
+msgstr "Date de l'opération :"
+
+msgid "Name :"
+msgstr "Nom :"
+
+msgid "Registration number :"
+msgstr "SIREN/SIRET :"
+
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
+msgid "Orginiator archive identifier"
+msgstr "Identifiant du service producteur"
+
+msgid "Archiver archive identifier"
+msgstr "Identifiant du service d'Archives"
+
+msgid "Depositor archive identifier"
+msgstr "Identifiant du service versant"
+
+msgid "Approve"
+msgstr "Approuver"
+
+msgid "Reject"
+msgstr "Rejeter"
+
+msgid "modification"
+msgstr "Modification"
+
+msgid "Modification"
+msgstr "Modification"
+
+msgid "deposit"
+msgstr "Dépôt"
+
+msgid "Deposit"
+msgstr "Dépôt"
+
+msgid "processed"
+msgstr "Traité"
+
+msgid "Processed"
+msgstr "Traité"
+
+msgid "approved"
+msgstr "Approuvé"
+
+msgid "Approved"
+msgstr "Approuvé"
+
+msgid "rejected"
+msgstr "Rejeté"
+
+msgid "Rejected"
+msgstr "Rejeté"
+
+msgid "pending"
+msgstr "En attente"
+
+msgid "Pending"
+msgstr "En attente"
+
+msgid "failed"
+msgstr "Echoué"
+
+msgid "Failed"
+msgstr "Echoué"
+
+msgid "Reject message"
+msgstr "Rejeter le message"
+
+msgid "Do you want to reject this message ?"
+msgstr "Voulez-vous rejeter ce message ?"
+
+msgid "This action will delete pending archives."
+msgstr "Cette action supprimera les archives en attente de versement."
+
+msgid "Comment added"
+msgstr "Commentaire ajouté"
+
+msgid "Message approved"
+msgstr "Message approuvé"
+
+msgid "Message rejected"
+msgstr "Message rejeté"
+
+msgid "The document is missing."
+msgstr "Le document est manquant."
+
+msgid "You must define all required fields."
+msgstr "Vous devez remplir tous les champs obligatoires."
+
+msgid "You must define or remove all custom blank fields."
+msgstr "Vous devez remplir ou supprimer les champs ajoutés."
+
+msgid "A keyword label is missing."
+msgstr "Le label mot clé est manquant."
+
+msgid "The retention rule is missing."
+msgstr "La règle de conservation est manquante"
+

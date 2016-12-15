@@ -1,0 +1,517 @@
+# lifeCycle/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "lifeCycle"
+msgstr "Cycle de vie"
+msgctxt "bundle"
+
+msgid "journal"
+msgstr "Consultation du journal de cycle de vie"
+msgctxt "interface"
+
+msgid "event"
+msgstr "Evénements du cycle de vie"
+msgctxt "model"
+
+msgid "journal"
+msgstr "Journal de cycle de vie"
+msgctxt "model"
+
+msgid "eventFormat"
+msgstr "Format de l'événement"
+msgctxt "model"
+
+msgid "Life cycle event search"
+msgstr "Recherche d'événements du journal de cycle de vie"
+
+msgid "Event Type"
+msgstr "Type d'événement"
+
+msgid "Event Class"
+msgstr "Type d'object"
+
+msgid "Select an object type"
+msgstr "Sélectionnez un type d'objet"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "From"
+msgstr "Depuis"
+msgctxt "date"
+
+msgid "to"
+msgstr "jusqu'au"
+msgctxt "date"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "result(s)"
+msgstr "résultat(s)"
+
+msgid "Event type"
+msgstr "Type d'événement"
+
+msgid "Timestamp"
+msgstr "Horodatage"
+
+msgid "Address :"
+msgstr "Adresse :"
+
+msgid "Archive identifier :"
+msgstr "Identifiant de l'archive :"
+
+msgid "Archiver name :"
+msgstr "Nom du service archiveur :"
+
+msgid "Originator name :"
+msgstr "Nom du service producteur :"
+
+msgid "Hash :"
+msgstr "Empreinte numérique :"
+
+msgid "Hash algorithm :"
+msgstr "Algorithme de calcul d'empreinte :"
+
+msgid "Timestamp :"
+msgstr "Horodatage :"
+
+msgid "The form is empty."
+msgstr "Le formulaire est vide."
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Failure"
+msgstr "Echec"
+
+msgid "Event"
+msgstr "Evénement"
+
+msgid "Certificate"
+msgstr "Attestation"
+
+msgid "Show the certificate"
+msgstr "Voir l'attestattion"
+
+msgid "Deposit"
+msgstr "Dépôt"
+
+msgid "Compliance"
+msgstr "Consultation"
+
+msgid "Profile added"
+msgstr "Ajout de profil"
+
+msgid "Profile modified"
+msgstr "Modification de profil"
+
+msgid "Profile deleted"
+msgstr "Suppression de profil"
+
+msgid "eventId"
+msgstr "identifiant d'évènement"
+
+msgid "eventType"
+msgstr "Type d'évènement"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "objectClass"
+msgstr "Classe d'objet"
+
+msgid "Object class"
+msgstr "Classe de l'objet"
+
+msgid "objectId"
+msgstr "Identifiant d'objet"
+
+msgid "Object identifier"
+msgstr "Identifiant d'objet"
+
+msgid "Account identifier"
+msgstr "Identifiant du compte"
+
+msgid "operationResult"
+msgstr "Résultat d'opération"
+
+msgid "Operation result"
+msgstr "Résultat d'opération"
+
+msgid "description"
+msgstr "Description"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Account name"
+msgstr "Nom du compte"
+
+# ---------------------------------------------------------
+# Event info detail
+# ---------------------------------------------------------
+
+msgid "resId"
+msgstr "Identifiant de la ressource"
+msgctxt "eventInfo"
+
+msgid "hashAlgorithm"
+msgstr "Algorithme de hachage"
+msgctxt "eventInfo"
+
+msgid "hash"
+msgstr "Empreinte numérique"
+msgctxt "eventInfo"
+
+msgid "address"
+msgstr "Adresse de stockage"
+msgctxt "eventInfo"
+
+msgid "instanceName"
+msgstr "Plateforme"
+msgctxt "eventInfo"
+
+msgid "orgRegNumber"
+msgstr "Identifiant d'organisation"
+msgctxt "eventInfo"
+
+msgid "orgUnitRegNumber"
+msgstr "Identifiant du service demandeur"
+msgctxt "eventInfo"
+
+msgid "requesterOrgRegNumber"
+msgstr "Identifiant du demandeur"
+msgctxt "eventInfo"
+
+msgid "depositorOrgRegNumber"
+msgstr "Identifiant du service versant"
+msgctxt "eventInfo"
+
+msgid "archiverOrgRegNumber"
+msgstr "Identifiant du service d'Archives"
+msgctxt "eventInfo"
+
+msgid "originatorOrgRegNumber"
+msgstr "Identifiant du service producteur"
+msgctxt "eventInfo"
+
+msgid "accessRuleStartDate"
+msgstr "Nouvelle date de début de la règle d'accès"
+msgctxt "eventInfo"
+
+msgid "accessRuleDuration"
+msgstr "Nouvelle durée pour la règle d'accès"
+msgctxt "eventInfo"
+
+msgid "previousAccessRuleStartDate"
+msgstr "Ancienne date de début de la règle d'accès"
+msgctxt "eventInfo"
+
+msgid "previousAccessRuleDuration"
+msgstr "Ancienne durée pour la règle d'accès"
+msgctxt "eventInfo"
+
+msgid "retentionStartDate"
+msgstr "Nouvelle date de début de conservation"
+msgctxt "eventInfo"
+
+msgid "retentionDuration"
+msgstr "Nouvelle durée de conservation"
+msgctxt "eventInfo"
+
+msgid "finalDisposition"
+msgstr "Nouveau sort final"
+msgctxt "eventInfo"
+
+msgid "previousStartDate"
+msgstr "Ancienne date de début de conservation"
+msgctxt "eventInfo"
+
+msgid "previousDuration"
+msgstr "Ancienne durée de conservation"
+msgctxt "eventInfo"
+
+msgid "previousFinalDisposition"
+msgstr "Ancien sort final"
+msgctxt "eventInfo"
+
+msgid "archivalProfileId"
+msgstr "Identifiant du profil d'archivage"
+msgctxt "eventInfo"
+
+msgid "archivalProfileReference"
+msgstr "Référence du profile d'archivage"
+msgctxt "eventInfo"
+
+msgid "startEventDate"
+msgstr "Date de début"
+msgctxt "eventInfo"
+
+msgid "endEventDate"
+msgstr "Date de fin"
+msgctxt "eventInfo"
+
+msgid "endEventId"
+msgstr "Identifiant du dernier événement traité"
+msgctxt "eventInfo"
+
+msgid "senderOrgRegNumber"
+msgstr "Identifiant du service émetteur"
+msgctxt "eventInfo"
+
+msgid "recipientOrgRegNumber"
+msgstr "Identifiant du service destinataire"
+msgctxt "eventInfo"
+
+msgid "reference"
+msgstr "Identifiant du bordereau fourni par l'émetteur"
+msgctxt "eventInfo"
+
+msgid "convertedResId"
+msgstr "Identifiant de la ressource cible"
+msgctxt "eventInfo"
+
+msgid "convertedHashAlgorithm"
+msgstr "Algorithme de hachage cible"
+msgctxt "eventInfo"
+
+msgid "convertedHash"
+msgstr "Empreinte numérique cible"
+msgctxt "eventInfo"
+
+msgid "convertedAddress"
+msgstr "Adresse de stockage cible"
+msgctxt "eventInfo"
+
+msgid "software"
+msgstr "Logiciel de conversion"
+msgctxt "eventInfo"
+
+msgid "docId"
+msgstr "Identifiant de document"
+msgctxt "eventInfo"
+
+
+# ---------------------------------------------------------
+# Event types
+# ---------------------------------------------------------
+
+msgid "recordsManagement/reception"
+msgstr "Reception"
+
+msgid "recordsManagement/validation"
+msgstr "Validation"
+
+msgid "recordsManagement/deposit"
+msgstr "Dépôt"
+
+msgid "recordsManagement/modification"
+msgstr "Modification"
+
+msgid "recordsManagement/retentionRuleModification"
+msgstr "Modification de la règle de conservation"
+
+msgid "recordsManagement/accessRuleModification"
+msgstr "Modification de la règle d'accès"
+
+msgid "recordsManagement/freeze"
+msgstr "Gel"
+
+msgid "recordsManagement/unfreeze"
+msgstr "Dégel"
+
+msgid "recordsManagement/restitution"
+msgstr "Restitution"
+
+msgid "recordsManagement/destruction"
+msgstr "Elimination"
+
+msgid "recordsManagement/profileCreation"
+msgstr "Création de profil"
+
+msgid "recordsManagement/profileModification"
+msgstr "Modification de profil"
+
+msgid "recordsManagement/profileDestruction"
+msgstr "Destruction de profil"
+
+msgid "recordsManagement/integrityCheck"
+msgstr "Test de conformité"
+
+msgid "recordsManagement/integrity"
+msgstr "Test de conformité"
+
+msgid "recordsManagement/delivery"
+msgstr "Communication"
+
+msgid "recordsManagement/conversion"
+msgstr "Conversion"
+
+msgid "medona/sending"
+msgstr "Envoi d'un message"
+
+msgid "medona/reception"
+msgstr "Reception d'un message"
+
+msgid "medona/processing"
+msgstr "Traitement d'un message"
+
+msgid "medona/acceptance"
+msgstr "Acceptation d'un message"
+
+msgid "medona/rejection"
+msgstr "Rejet d'un message"
+
+msgid "recordsManagement/archive"
+msgstr "Côte de l'archive"
+
+msgid "recordsManagement/ArchivalProfileModification"
+msgstr "Modification de profil"
+
+msgid "recordsManagement/addRelationship"
+msgstr "Ajout d'une relation à une archive"
+
+msgid "recordsManagement/deleteRelationship"
+msgstr "Suppression d'une relation d'une une archive"
+
+msgid "recordsManagement/integrityDataSystem"
+msgstr "Vérification d'intégrité par le système de données"
+
+msgid "recordsManagement/integrityLifeCycle"
+msgstr "Véfication d'intégrité par le Journal de cycle de vie"
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Reception of the message"
+msgstr "Reception du message"
+
+msgid "Processing of the message"
+msgstr "Traitement du message"
+
+msgid "Deposit of archive"
+msgstr "Dépôt d'archive"
+
+msgid "Sending of the message"
+msgstr "Message envoyé"
+
+msgid "Acceptance of the message"
+msgstr "Message accepté"
+
+msgid "Modification of retention rule"
+msgstr "Modification de la règle de retention"
+
+msgid "Modification of access rule"
+msgstr "Modification de la règle de communicabilité"
+
+msgid "Frezze of life cycle"
+msgstr "Gel"
+
+msgid "Unfrezze of life cycle"
+msgstr "Dégel"
+
+msgid "Periodic validation of integrity"
+msgstr "Contrôle périodique d'intégrité"
+
+msgid "beforeDuration"
+msgstr "Précédente durée"
+
+msgid "beforeFinalDisposition"
+msgstr "Précédent sort final"
+
+msgid "beforeAccessRuleStartDate"
+msgstr "Précédente date de départ de la règle d'accès"
+
+msgid "beforeAccessRuleDuration"
+msgstr "Précédente durée de la règle d'accès"
+
+msgid "retentionStartDate"
+msgstr "Date de départ de la rétention"
+
+msgid "retentionDuration"
+msgstr "Durée de rétention"
+
+msgid "finalDisposition"
+msgstr "Sort final"
+
+msgid "accessRuleStartDate"
+msgstr "Date de départ de la règle d'accès"
+
+msgid "accessRuleDuration"
+msgstr "Durée de la règle d'accès"
+
+msgid "Domain"
+msgstr "Domaine"
+
+msgid "Events formats"
+msgstr "Formats d'événements"
+
+msgid "Event(s) format(s)"
+msgstr "Format(s) d'événement(s)"
+
+msgid "Add event format"
+msgstr "Ajouter un format d'événement"
+
+msgid "The type must be qualified by the bundle name and separated by '/'"
+msgstr "Le type doit être qualifié par le nom du bundle et séparé par '/'"
+
+msgid "Show the event"
+msgstr "Visualiser l'évenement"
+
+msgid "To insert the value of a field in this format, use ' %{field position}${type} '"
+msgstr "Pour inserer la valeur d'un des champs présent dans le format, utiliser ' %{position du champs}${type} '"
+
+msgid "The type can be 's' for string, 'd' for number, 'f' for float"
+msgstr "Le type peut être 's' pour une chaîne de caractères, 'd' pour un nombre, 'f' pour un nombre à virgule"
+
+msgid "1 - Unique identifier of event"
+msgstr "1 - Identifiant unique de l'événement"
+
+msgid "2 - Event type"
+msgstr "2 - Type de l'événement"
+
+msgid "3 - Timestamp of event"
+msgstr "3 - Date et heure à la microseconde de l'événement"
+
+msgid "4 - User or service identifier who have triggered the event"
+msgstr "4 - Identifiant du compte utilisateur ou du compte de service ayant déclenché l'événement"
+
+msgid "5 - Object type impacted by the event"
+msgstr "5 - Type d'objet impacté par l'événement"
+
+msgid "6 - Unique object identifier impacted by the event"
+msgstr "6 - Identifiant unique de l'objet impacté"
+
+msgid "7 - Result of operation"
+msgstr "7 - Résultat de l'opération"
+
+msgid "9 and more - Value of fields defined in format field"
+msgstr "9 et plus - Valeur des champs définis dans le champs format"
+
+msgid "Ex : %6$s for use the unique object identifier impacted by the event"
+msgstr "Ex : %6$s pour utiliser l'identifiant unique de l'objet impacté"
+
+msgid "Event format created"
+msgstr "Format d'événement créé"
+
+msgid "Event format deleted"
+msgstr "Format d'événement supprimé"
+
+msgid "Event format updated"
+msgstr "Format d'événement modifié"
+
+msgid "The format is empty."
+msgstr "Le format est vide."
+

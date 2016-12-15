@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema version="1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- 
+        Certificates
+    -->
+    <xsd:element name="Reception" type="ReceptionType" />
+    <xsd:element name="Validation" type="ValidationType" />
+    <xsd:element name="Deposit" type="DepositType" />
+    <xsd:element name="Modification" type="ModificationType" />
+    <xsd:element name="Compliance" type="ComplianceType" />
+    <xsd:element name="Restitution" type="RestitutionType" />
+    <xsd:element name="Destruction" type="DestructionType" />
+    <xsd:element name="ProfileCreation" type="ProfileCreationType" />
+    <xsd:element name="ProfileModification" type="ProfileModificationType" />
+    <xsd:element name="ProfileDeletion" type="ProfileDeletionType" />
+    <xsd:element name="FormatConvertion" type="FormatConvertionType" />
+    <xsd:element name="StorageMigration" type="StorageMigrationType" />
+    
+    <xsd:element name="PreProcess" type="PreProcessType" /> 
+    
+    <xsd:complexType name="certificateType">
+        <xsd:sequence>
+            <xsd:element name="timestamp" type="xsd:date" />
+            
+            <xsd:element name="archiverOrg" type="OrgType" />
+            <xsd:element name="depositorOrg" type="OrgType"  minOccurs="0" />
+            <xsd:element name="requesterOrg" type="OrgType"  minOccurs="0" />
+            <xsd:element name="controlAuthority" type="OrgType"  minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- 
+        Archive information
+    -->
+    <xsd:complexType name="archiveType">
+        <xsd:sequence>
+            <xsd:element name="timestamp" type="xsd:date" />
+            <xsd:element name="archiveId" type="xsd:string" />
+            <xsd:element name="hash" type="hashType" />
+            <xsd:element name="address" type="addressType" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name='hashType'>
+		<xsd:simpleContent>
+			<xsd:extension base='xsd:base64Binary'>
+				<xsd:attribute name='algorithm' type='xsd:string' use='required' />
+			</xsd:extension>			
+		</xsd:simpleContent>
+	</xsd:complexType>
+    
+    <xsd:complexType name="addressType">
+        <xsd:sequence>
+            <xsd:element name="address" type="xsd:string" />
+            <xsd:element name="repository">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="repositoryName" type="xsd:string" />
+                        <xsd:element name="repositoryUri" type="xsd:string" />
+                    </xsd:sequence>
+                    <xsd:attribute name="repositoryType" type="xsd:string" use="required" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- 
+        Organization information
+    -->
+    <xsd:complexType name="orgType">
+        <xsd:sequence>
+            <xsd:element name="orgName" type="xsd:string" />
+            <xsd:element name="displayName" type="xsd:string" />
+            <xsd:element name="taxIdentifier" type="xsd:string"  minOccurs="0" />
+            <xsd:element name="registrationNumber" type="xsd:string" />
+            
+            <xsd:element name="OrgUnit" type="OrgUnitType"  minOccurs="0" />
+            
+            <xsd:element name="Address" type="AddressType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="Communication" type="CommunicationType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="orgUnitType">
+        <xsd:sequence>
+            <xsd:element name="orgUnitName" type="xsd:string" />
+            <xsd:element name="displayName" type="xsd:string" />
+            
+            <xsd:element name="User" type="UserType"  minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="UserType">
+        <xsd:sequence>
+            <xsd:element name="userName" type="xsd:string" />
+            <xsd:element name="displayName" type="xsd:string" />
+            <xsd:element name="email" type="xsd:string"  minOccurs="0" />
+            <xsd:element name="telephoneNumber" type="xsd:string"  minOccurs="0" />
+            
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="CommunicationType">
+        <xsd:sequence>
+            <xsd:element name="purpose" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="value" type="xsd:string" />
+            <xsd:element name="commMean" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="AddressType">
+        <xsd:sequence>
+            <xsd:element name="purpose" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="occupancy" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="building" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="street" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="postBox" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="zipCode" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="placeName" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="stateName" type="xsd:string"  minOccurs="0"/>
+            <xsd:element name="nationName" type="xsd:string"  minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- 
+        Specific certificate information
+    -->
+    <xsd:complexType name="ValidationType">
+        <xsd:complexContent>
+            <xsd:extension base="certificateType" >
+                <xsd:sequence>
+                    <xsd:element ref="archive" />
+                    <xsd:element name="validationResult" type="validationResultType" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ModificationType">
+        <xsd:complexContent>
+            <xsd:extension base="certificateType" >
+                <xsd:sequence>
+                    <xsd:element ref="archive" />
+                    <xsd:element name="ModificationContent">
+                        <xsd:complexType>
+                            <xsd:element name="code" type="xsd:string" />
+                            <xsd:element name="retentionStartDate" type="xsd:date" />
+                            <xsd:element name="duration" type="xsd:duration" />
+                            <xsd:element name="finalDisposition" type="xsd:string" />
+                            
+                            <xsd:element name="accessRuleStartDate" type="xsd:date" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+</xsd:schema>

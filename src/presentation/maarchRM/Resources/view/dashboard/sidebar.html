@@ -1,0 +1,90 @@
+<nav class="sidebar" role="navigation" translate="no" data-translate-context="layout">
+    <div class="sidebar-collapse affix" style="position: fixed; height: calc(100% - 42px); z-index: 10000">
+        <!--ul class="nav nav-stacked">
+            <li class="hidden-xs" style="height: 32px;">
+                <a href="#" class="hidden-xs" id="hideSidebar" data-action="true"><i class="pull-right fa fa-angle-double-left fa-lg"></i>&nbsp;</a>
+            </li>
+        </ul-->
+        <ul class="nav nav-stacked" id="side-menu" style="padding-bottom: 42px">
+            <?merge .menu ?>
+            <li style="cursor:pointer">
+                <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                    <i class="[?merge ['class'] ?]"></i> 
+                    <?merge ['label'] ?>
+                    <?merge ['submenu'].count().bool() ?>
+                    <span class="fa arrow"></span>
+                </a>
+                <?merge ['submenu'].count().bool() ?>
+                <ul class="nav nav-second-level collapse">
+                    <?merge ['submenu'] ?>
+                    <li>
+                        <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                            <i class="[?merge ['class'] ?]"></i> 
+                            <?merge ['label'] ?>
+                            <?merge ['submenu'].count().bool() ?>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <?merge ['submenu'].count().bool() ?>
+                        <ul class="nav nav-third-level collapse">
+                            <?merge ['submenu'] ?>
+                            <li>
+                                <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                    <i class="[?merge ['class'] ?]"></i> 
+                                    <?merge ['label'] ?>
+                                    <?merge ['submenu'].count().bool() ?>
+                                    <span class="fa arrow"></span>
+                                </a>
+                                <?merge ['submenu'].count().bool() ?>
+                                <ul class="nav nav-fourth-level collapse">
+                                    <?merge ['submenu'] ?>
+                                    <li>
+                                        <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                            <i class="[?merge ['class'] ?]"></i> 
+                                            <?merge ['label'] ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+<script>
+    $('.affix').width($('.affix').parent().width()); 
+    if($(".last-open").closest('ul').hasClass("nav-second-level")){
+        $(".last-open").closest('.nav-second-level').addClass("in");
+    } else if($(".last-open").closest('ul').hasClass("nav-third-level")){
+        $(".last-open").closest('.nav-third-level').addClass("in");
+        $(".last-open").closest('.nav-second-level').addClass("in");
+    } else if ($(".last-open").closest('ul').hasClass("nav-fourth-level")) {
+        $(".last-open").closest('.nav-fourth-level').addClass("in");
+        $(".last-open").closest('.nav-third-level').addClass("in");
+        $(".last-open").closest('.nav-second-level').addClass("in");
+    }
+    
+    $(document).ready(function() {
+        menuOverflow();
+    })
+
+    $(window).resize( function(){
+        menuOverflow();
+    })
+
+    $('#side-menu').on('click', 'a', function() {
+        menuOverflow();
+    })
+
+    function menuOverflow() {
+        var rect = $('#side-menu')[0].getBoundingClientRect();
+
+        if (rect.top + rect.height > window.innerHeight) {
+            $('#side-menu').parent().css('overflow-y','scroll');
+        } else {
+            $('#side-menu').parent().css('overflow-y','hidden');
+
+        }
+    }
+</script>

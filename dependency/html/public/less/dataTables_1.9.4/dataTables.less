@@ -1,0 +1,292 @@
+// dataTable
+.dataTables_wrapper {
+    position: relative;
+    clear: both;
+    *zoom: 1;
+
+    // table
+    table.dataTable {
+        margin: 0 auto;
+        clear: both;
+        width: 100%;
+
+        thead {
+            th {
+                padding: 3px 18px 3px 10px;
+                border-bottom: 1px solid black;
+                font-weight: bold;
+                cursor: pointer;
+                *cursor: hand;
+                background: @dataTable-thead-bg;
+            }
+
+        }
+
+        tfoot {
+            th {
+                padding: 3px 18px 3px 10px;
+                border-top: 1px solid black;
+                font-weight: bold;
+            }
+        }
+
+        td {
+            padding: 3px 10px;
+
+            &.center,
+            &.dataTables_empty {
+                text-align: center;
+            }
+        }
+
+        tr {
+            &.odd {
+                background: @dataTable-row-odd-bg;
+
+                td {
+                    &.sorting_1 {
+                        background: @dataTable-row-odd-col-one-bg;
+                    }
+
+                    &.sorting_2 {
+                        background: @dataTable-row-odd-col-two-bg;
+                    }
+
+                    &.sorting_3 {
+                        background: @dataTable-row-odd-col-three-bg;
+                    }
+                }
+            }
+
+            &.even {
+                background: @dataTable-row-even-bg;
+
+                td {
+                    &.sorting_1 {
+                        background: @dataTable-row-even-col-one-bg;
+                    }
+
+                    &.sorting_2 {
+                        background: @dataTable-row-even-col-two-bg;
+                    }
+
+                    &.sorting_3 {
+                        background: @dataTable-row-even-col-three-bg;
+                    }
+                }
+            }
+        }
+    }
+
+    .dataTable-footer {
+        background: whiteSmoke;
+
+        padding: 15px;
+        padding-bottom: 5px;
+    }
+
+    // Page length menu
+    .dataTables_length {
+    }
+
+    // Filter
+    .dataTables_filter {
+    }
+
+    // Table informations
+    .dataTables_info {
+        clear: both;
+        float: left;
+    }
+
+    // Pagination
+    .dataTables_paginate {
+        // Two buttons
+        .paginate_disabled_previous,
+        .paginate_enabled_previous,
+        .paginate_disabled_next,
+        .paginate_enabled_next {
+            height: 19px;
+            float: left;
+            cursor: pointer;
+            *cursor: hand;
+            color: #111 !important;
+
+            &:hover {
+                text-decoration: none !important;
+            }
+
+            &:active {
+                outline: none;
+            }
+        }
+
+        .paginate_disabled_previous,
+        .paginate_disabled_next {
+            color: #666 !important;
+        }
+
+        .paginate_disabled_previous,
+        .paginate_enabled_previous {
+            padding-left: 23px;
+        }
+
+        .paginate_disabled_next,
+        .paginate_enabled_next {
+            padding-right: 23px;
+            margin-left: 10px;
+        }
+
+        .paginate_enabled_previous {
+            background: url('../images/back_enabled.png') no-repeat top left;
+
+            &:hover {
+                background: url('../images/back_enabled_hover.png') no-repeat top left;
+            }
+        }
+
+        .paginate_disabled_previous {
+            background: url('../images/back_disabled.png') no-repeat top left;
+        }
+
+        .paginate_enabled_next {
+            background: url('../images/forward_enabled.png') no-repeat top right;
+
+            &:hover {
+                background: url('../images/forward_enabled_hover.png') no-repeat top right;
+            }
+        }
+
+        .paginate_disabled_next {
+            background: url('../images/forward_disabled.png') no-repeat top right;
+        }
+
+        // Full numbers
+        &.paging_full_numbers {
+            //height: 22px;
+            //line-height: 22px;
+
+            /*
+            position: relative;
+            top: 32px;
+            */
+
+            a {
+                &:active {
+                    outline: none;
+                }
+
+                &:hover {
+                    text-decoration: none;
+                }
+
+                &.paginate_button,
+                &.paginate_active {
+                    display: inline-block;
+                    margin: 0;
+                    margin-left: 2px;
+                    margin-right: 2px;
+                    font-weight: @btn-font-weight;
+                    text-align: center;
+                    vertical-align: middle;
+                    cursor: pointer;
+                    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+                    border: 1px solid transparent;
+                    white-space: nowrap;
+                    .button-size(@padding-small-vertical; @padding-small-horizontal; @font-size-small; @line-height-small; @border-radius-small);
+                    .user-select(none);
+                }
+
+                &.paginate_button {
+                    .button-variant(@btn-primary-color; @btn-primary-bg; @btn-primary-border);
+                }
+
+                &.paginate_active {
+                    .button-variant(@btn-info-color; @btn-info-bg; @btn-info-border);
+                }
+            }
+        }
+    }
+
+    // Processing indicator
+    .dataTables_processing {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 250px;
+        height: 30px;
+        margin-left: -125px;
+        margin-top: -15px;
+        padding: 14px 0 2px 0;
+        border: 1px solid #ddd;
+        text-align: center;
+        color: #999;
+        font-size: 14px;
+        background-color: white;
+    }
+
+    // Sorting
+    .sorting:after {
+        content: " \f0dc";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: @brand-primary;
+    }
+    
+    .sorting_asc:after {
+        content: " \f0de";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: @brand-primary;
+    }
+    
+    .sorting_desc:after {
+        content: " \f0dd";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: @brand-primary;
+    }
+
+    .sorting_asc_disabled:after {
+        content: " \f0de";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: @gray-lighter;
+    }
+    
+    .sorting_desc_disabled:after {
+        content: " \f0dd";
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        color: @gray-lighter;
+    }
+
+    table.dataTable {
+        thead {
+            th:active,
+            td.active {
+                outline: none;
+            }
+        }
+    }
+
+    // Scrolling
+    .dataTables_scroll {
+        clear: both;
+    }
+
+    .dataTables_scrollBody {
+        *margin-top: -1px;
+        -webkit-overflow-scrolling: touch;
+    }
+}

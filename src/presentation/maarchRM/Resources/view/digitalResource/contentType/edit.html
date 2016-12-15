@@ -1,0 +1,258 @@
+<div data-form-ns="cluster" class="dataForm"  data-translate-catalog="digitalResource/contentType">
+    <div class="container-fluid">
+        <div class="page-header">
+            <?merge contentType.name.ifeq('') ?>
+            <h1>
+                <i class="fa fa-tasks-open-o"></i>
+                Edit a new content type
+            </h1>
+            <?merge contentType.name.ifne('') ?>
+            <h1>
+                <i class="fa fa-tasks-open-o"></i>
+                Edit a content type
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-5 well">
+            <form>
+                <div class="form-group">
+                    <label class="control-label" for="contentTypeName">Name</label>
+                    <?merge contentType.name.ifne('') @readonly ?>
+                    <input type="text" class="form-control" placeholder="Name" name="contentTypeName" id="contentTypeName" value="[?merge contentType.name ?]" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="contentTypeDescription">Description</label>
+                    <input type="text" class="form-control" placeholder="Description" name="contentTypeDescription" id="contentTypeDescription" value="[?merge contentType.description ?]"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="contentTypeMediatype">Mediatype</label>
+                    <select class="form-control" name="contentTypeMediatype" id="contentTypeMediatype">
+                        <option value="">Select a mediatype</option>
+                        <?merge contentType.mediatype.ifeq('message').then("selected") @selected ?>
+                        <option value="message">Message</option>
+                        <?merge contentType.mediatype.ifeq('text').then("selected") @selected ?>
+                        <option value="text">Text</option>
+                        <?merge contentType.mediatype.ifeq('audio').then("selected") @selected ?>
+                        <option value="audio">Audio</option>
+                        <?merge contentType.mediatype.ifeq('video').then("selected") @selected ?>
+                        <option value="video">Video</option>
+                        <?merge contentType.mediatype.ifeq('image').then("selected") @selected ?>
+                        <option value="image">Image</option>
+                        <?merge contentType.mediatype.ifeq('application').then("selected") @selected ?>
+                        <option value="application">Application</option>
+                        <?merge contentType.mediatype.ifeq('multipart').then("selected") @selected ?>
+                        <option value="multipart">Multipart</option>
+                        <?merge contentType.mediatype.ifeq('model').then("selected") @selected ?>
+                        <option value="model">Model</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-7">
+            <!-- Formats -->
+            <div id="archivalAgreementFormat">
+                <div class="row col-md-10 col-md-offset-1 well">
+                    <div class="form-group">
+                        <label class="control-label">List of formats</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="formatTypeahead" placeholder="Format" data-puids='[]'/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-success disabled" id="addFormat"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-7 col-md-offset-2">
+                    <ul class="list-group" id="formatList">
+                        <?merge contentType.puids.bool() ?>
+                        <div>
+                            <?merge contentType.puids ?>
+                            <li class="list-group-item" data-puid="[?merge .puid ?]">
+                                [<?merge .puid ?>] <?merge .name ?><?merge .version.bool() ?><span> - <?merge .version ?></span>
+                                <a href="#" class="pull-right removeFormat">
+                                    <i class="fa fa-times">&nbsp;</i>
+                                </a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer clearfix">
+        <div class="pull-right" id="contentTypeButtonGroup">
+            <button type="button" class="btn btn-warning" data-cancel title="Cancel"><span class="fa fa-undo">&nbsp;</span>Cancel</button>
+            <?merge contentType.name.ifeq('') ?>
+            <button type="button" class="btn btn-success" data-submit title="Add"><span class="fa fa-plus">&nbsp;</span>Add</button>
+            <?merge contentType.name.ifne('') ?>
+            <button type="button" class="btn btn-success" data-update title="Update"><span class="fa fa-save">&nbsp;</span>Update</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //typeahead
+    $('#app_maarchRM_main').ready(function () {
+        var typesSource = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('puid'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/digitalResource/format/find/%QUERY',
+                rateLimitWait: 500
+            },
+            limit: 100
+        });
+        typesSource.initialize();
+
+        // initialize typeahead
+        $('#formatTypeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+        // data source contacts
+        {
+            name: 'format',
+            displayKey: 'name',
+            templates: {
+                empty: function () {
+                    return "<span class='well well-sm'>No format found</span>";
+                },
+                suggestion: function (type) {
+                    var displayName = '[' + type['puid'] + '] ' + type['name'];
+                    if (type['version'] != undefined) {
+                        displayName += ' ' + type['version'];
+                    }
+                    var display = "<span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + displayName
+                            + "</span>"
+                            + "</span>";
+
+                    return display;
+                }
+            },
+            source: function (query, cb) {
+                typesSource.get(query, function (suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($.inArray(suggestions[i].puid, boundFormats()) > -1)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }).on('typeahead:selected', function ($event, suggestion, source) {
+            $("#formatTypeahead").data('format', suggestion);
+            $('#addFormat').removeClass('disabled');
+        });
+    });
+    
+    //add format
+    $("#addFormat").on('click', function () {
+        $(this).attr("disable", "");
+        var input = $('#formatTypeahead');
+        var format = input.data('format');
+        input.removeData('format').val('');
+
+        addFormatToList(format);
+        $(this).addClass('disabled');
+        $(this).removeAttr("disable");
+
+    })
+
+    //remove format
+    $("#formatList").on('click', '.removeFormat', function () {
+        $(this).closest('li').remove();
+    })
+    
+    function boundFormats() {
+        return $('#formatList').find('li').map(function () {
+            return $(this).attr('data-puid');
+        }).get();
+    }
+    
+    function addFormatToList(format) {
+        var list = $('#formatList');
+        var display = '[' + format['puid'] + '] ' + format['name'];
+        if (format['version']) {
+            display += ' ' + format['version'];
+        }
+        var li = $('<li/>').addClass('list-group-item').attr('data-puid', format.puid).html(display);
+        var span = $('<span/>').addClass('pull-right').appendTo(li);
+        var a = $('<a/>').attr('onclick', 'load(\'#\')').addClass('pull-right removeFormat').appendTo(span)
+        var i = $('<i/>').addClass('fa fa-times').appendTo(a);
+
+        li.appendTo(list);
+    }
+    
+    $('#contentTypeButtonGroup').on('click', '[data-submit]', function () {
+        $(this).attr("disable", "");
+        
+        var parameters = {
+          contentType: serialize()  
+        };
+        
+        ajax($(this), {
+            type: "POST",
+            url: '/digitalResource/contentType',
+            data: JSON.stringify(parameters),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                load("/digitalResource/contentType/list");
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $(this).removeAttr("disable");
+    });
+
+    $('#contentTypeButtonGroup').on('click', '[data-update]', function () {
+        $(this).attr("disable", "");
+        
+        var parameters = {
+          contentType: serialize()  
+        };
+
+        ajax($(this), {
+            type: "PUT",
+            url: '/digitalResource/contentType',
+            data: JSON.stringify(parameters),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                load("/digitalResource/contentType/list");
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $(this).removeAttr("disable");
+    });
+
+    $('#contentTypeButtonGroup').on('click', '[data-cancel]', function () {
+        load("/digitalResource/contentType/list");
+    });
+    
+    function serialize() {
+        var puids = boundFormats().join(' ');
+        contentType = {
+            name: $('#contentTypeName').val(),
+            description: $('#contentTypeDescription').val(),
+            mediatype: $('#contentTypeMediatype').val(),
+            puids: puids
+        };
+        
+        return contentType;
+    }
+
+</script>

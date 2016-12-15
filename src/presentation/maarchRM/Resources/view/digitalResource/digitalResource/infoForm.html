@@ -1,0 +1,72 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-folder-open-o"></i>
+            Digital resources information
+        </h1>
+    </div>
+</div>
+
+<div class="container-fluid"> 
+    <form class="well form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Resource identifier</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" name="resId" id="resId"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-4 col-lg-4">
+                <button type="button" class="btn btn-primary btn-block" id="search" title="Display"><i class="fa fa-sliders">&nbsp;</i>Display</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContainer">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Digital resources information</h4>
+            </div>
+            <div class="modal-body" id='modalBody'></div>
+            <div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#app_maarchRM_main').ready(function() {
+        $('#search').on('click', function(){
+            if ($('#resId').val() == "") {
+                return;
+            }
+            $('#search').attr('disabled', '');
+            ajax($(this), {
+                type: 'POST',
+                url: '/digitalResource/retrieve/info?resId='+$('#resId').val(),
+                dataType : 'html',
+                contentType: 'application/xhtml+xml',
+                async: true,
+                success: function(response) {
+                    $('#modalBody').html('');
+                    $('#modalBody').append(response);
+                    $('#viewModal').modal();
+                }
+            });
+            $('#search').removeAttr('disabled');
+        });
+
+    });
+</script>

@@ -1,0 +1,471 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain">
+<div class="container-fluid" data-translate-catalog="auth/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-group"></i>
+            <?merge role.roleId.bool() ?>
+            <span>Edit role</span>
+            <?merge role.roleId.bool().not() ?>
+            <span>New role</span>
+            <small><?merge role.roleName ?></small>
+        </h1>
+    </div>
+</div>
+
+<div class="container-fluid" data-translate-catalog="auth/messages">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">Informations</div>
+                <div class="panel-body">
+                    <?merge role ?>
+                    <form id="roleInformation">
+                        <input type="hidden" id="roleId" name="roleId"/>
+                        <div class="form-group">
+                            <label>Role name<span style="color : red">*</span></label>
+                            <input type="text" class="form-control" name="roleName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"><span>Administrator</span>&nbsp;
+                            <?merge role.superadmin @checked ?>
+                                <input type="checkbox" name="superadmin" id="superadmin" data-toggle="toggle"> 
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="btn-group" data-toggle="buttons" id="roleStatus">
+                                <label class="btn btn-info [?merge .enabled.then('', 'active') ?]" title="Enabled">
+                                    <input type="radio" name="enabled" value="1"><i class="fa fa-unlock">&nbsp;</i> Enabled
+                                </label>
+                                <label class="btn btn-danger [?merge .enabled.then('active', '') ?]" title="Disabled">
+                                    <input type="radio" name="enabled" value="0"><i class="fa fa-lock">&nbsp;</i> Disabled
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix" id="buttonInformation">
+                        <div class="pull-right ">
+                            <button type="button" id="cancel" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                            <button type="button" id="submit" class="btn btn-success" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <ul class="nav nav-tabs nav-justified">
+                    <li id="roleMembersTabBtn" class="[?merge publicArchive.then('hidden','active') ?]"><a href="#roleMembersTab" data-toggle="tab">Role members</a></li>
+                    <li id="privilegesTabBtn" class="[?merge publicArchive.then('active','') ?]"><a href="#privilegesTab" data-toggle="tab">Role privileges</a></li>
+                </ul>
+            <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in [?merge publicArchive.then('','active') ?]" id="roleMembersTab" >
+                            <h3>Role members</h3>
+                            <div class="form-group">
+                                <div class="input-group">                                  
+                                    <input type="text" class="form-control" placeholder="User" id="userTypeahead"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="button" id="addMember" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div id="members" class="col-xs-12" translate="no">
+                                <?merge role.roleMembers.bool() ?>
+                                <div>
+                                    <?merge role.roleMembers ?>
+                                    <div>
+                                        <?merge . ?>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" value="[?merge .displayName ?]" data-memberid="[?merge .accountId ?]" readOnly="true">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-danger removeMembre" type="button" data-userid="[?merge .accountId ?]" title="Remove">
+                                                    <i class="fa fa-trash-o fa-fw"></i>&nbsp;
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade in [?merge publicArchive.then('active','') ?]" id="privilegesTab" >
+                            <h3>Privileges</h3>
+                            <div class="panel-group" id="privileges" role="tablist" aria-multiselectable="true">
+                                <?merge userStories ?>
+                                <div class="panel panel-default" data-translate-catalog="auth/messages">
+                                    <div class="panel-heading" role="tab">
+                                        <h4 class="panel-title">
+                                            <!--div class="btn-group" data-toggle="buttons" >
+                                                <label class="userStoryGroup btn btn-toggle btn-danger [?merge .privilegeStatus.then('active', '') ?]" title="All">
+                                                    <?merge .privilegeStatus @checked ?>
+                                                    <input type="checkbox" class="userStoryGroupRadioBtn" value='[?merge .name ?]/*'><small style="color:white">All</small>
+                                                </label>
+                                                &nbsp;
+                                            </div-->
+                                            <div class="btn-group" data-toggle="buttons">
+                                                <label class="btn btn-xs btn-default selectAll" title="All">
+                                                    <input type="radio" name="selectAll" value='[?merge .name ?]/*'/> All
+                                                </label>
+                                                <label class="btn btn-xs btn-default selectNone" title="None">
+                                                    <input type="radio" name="selectNone" value="false"> None
+                                                </label>
+                                            </div>
+                                            &nbsp;
+                                            <a data-translate-context="userStoryGroup" data-toggle="collapse" data-parent="#privileges" href="#[?merge .name ?]_privilege" aria-expanded="false" aria-controls="[?merge .name ?]_privilege">
+                                               <?merge .name ?>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="[?merge .name ?]_privilege" class="panel-collapse collapse out" role="tabpanel">
+                                        <div class="panel-body">
+                                            <ul class="list-group">
+                                                <?merge .userStory?>
+                                                <li class="list-group-item" data-translate-context="userStory">
+                                                    <div class="btn-group" data-toggle="buttons" >
+                                                        <label class="userStory btn btn-xs btn-toggle [?merge .status.then('btn-success active', 'btn-danger') ?] [?merge .bundleChecked.then('disabled', '') ?]" title="On / Off">
+                                                            <?merge .status @checked ?>
+                                                            <input type="checkbox" class="userStoryRadioBtn" value='[?merge .value ?]'/><span class="label"><?merge .status.then("On" , "Off") ?></span>
+                                                        </label>
+                                                    </div> 
+                                                    <span><?merge .name ?></span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('input[type=checkbox][data-toggle=toggle]').bootstrapToggle()
+    })
+
+    window.localStorage.clear();
+
+    $('#privileges').on('click', '.selectAll', function() {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        selectAllPrivileges($(this), false);
+    })
+
+    $('#privileges').on('click', '.selectNone', function() {
+        if ($(this).hasClass('.active')) {
+            return;
+        }
+        unselectAllPrivileges($(this), false);
+        
+    })
+
+    //superadmin
+    $("#superadmin").on('click', function() {
+        if ($(this).is(':checked')) {
+            $('#privileges').find('.selectAll').click();
+            
+        } else {
+            //alert($('#privileges').find('.selectNone.active').length);
+            if ($('#privileges').find('.selectNone.active').length <1) {
+                $('#privileges').find('.selectNone').click();
+            }
+        }
+    })
+
+    function selectAllPrivileges(btn, btnOnly) {
+        btn.addClass('btn-success active')
+           .removeClass('btn-default')
+           .closest('.btn-group')
+           .find('.selectNone')
+           .addClass('btn-default')
+           .removeClass('btn-danger active')
+
+        if (btnOnly === false) {
+            btn.closest('.panel')
+               .find('.userStory')
+               .not('.active')
+               .click();
+        }
+
+        if ($('#privileges').find('.selectNone').not('.active').length == 0 && !$("#superadmin").is(':checked')) {
+            $('#superadmin').closest('.toggle').click();
+        }
+    }
+
+    function unselectAllPrivileges(btn, btnOnly) {
+        btn.addClass('btn-danger active')
+           .removeClass('btn-default')
+           .closest('.btn-group')
+           .find('.selectAll')
+           .addClass('btn-default')
+           .removeClass('btn-success active')
+
+        if (btnOnly === false) {
+            btn.closest('.panel')
+               .find('.userStory.active')
+               .click();
+        }
+
+        if ($("#superadmin").is(':checked')) {
+            $('#superadmin').closest('.toggle').click();
+        }
+    }
+
+    function selectPrivileges(panel, ajusment) {
+        var title = panel.find('.panel-title');
+        var inputs = panel.find('.panel-body').find('input');
+        var inputsTotalNumber = inputs.length;
+        var inputsUncheckedNumber = inputs.not(':checked').length;
+
+        if(ajusment == "selected") {
+            inputsUncheckedNumber--;
+        } else if (ajusment == "unselected") {
+            inputsUncheckedNumber++;
+        }
+
+        if (inputsUncheckedNumber == 0)  {
+            selectAllPrivileges(title.find('.selectAll'));
+        } else if (inputsUncheckedNumber == inputsTotalNumber) {
+            unselectAllPrivileges(title.find('.selectNone'));
+        } else {
+            title.find('.selectAll, .selectNone')
+                 .addClass('btn-default')
+                 .removeClass('btn-danger btn-success active')
+                 .find('input')
+                 .prop('checked', false);
+        }
+    }
+
+    $('#contain').ready(function(){
+
+        $('#privileges').find('.panel').each(function(){
+            selectPrivileges($(this))
+        })
+
+        //$('.userStoryGroup.active').closest('.panel').find('.objectRadio').addClass('disabled').addClass('btn-success').removeClass('btn-danger').find('.label').html('On ');
+
+        // Define data source for user typeahead
+        var users = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {url: '/user/todisplay', ttl: '0'},
+            limit: 100
+        });
+        users.initialize();
+
+        // initialize typeahead
+        $('#userTypeahead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, 
+            {
+                name: 'users',
+                displayKey: 'displayName',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>No user found</span>";
+                    },
+                    suggestion: function(user) {
+                        var display = 
+                            "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>" 
+                                + user.displayName
+                                + "</span>"
+                                + "</span>";
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    users.get(query, function(suggestions) {
+                        var i = suggestions.length
+                        while (i--) {
+                            // if ($.inArray(suggestions[i].puid, boundFormats()) > -1)
+                            if ($('#members').find('[data-memberid="'+ suggestions[i].accountId +'"]').length)
+                                suggestions.splice(i, 1);
+                        }
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $("#userTypeahead").prop('user', suggestion);
+        });
+    })
+
+    //cancel
+    $("#cancel").on('click', function() {
+        load("/auth/roles"); 
+    })
+
+    //submit
+    $('#submit').on('click', function() {
+        var url = '/auth/role';
+        var type = 'POST';
+
+        if($('#roleId').val()){
+            type = 'PUT';
+            url += '/' + $('#roleId').val();
+        }
+        
+        var parameters = {
+            role : serialize()
+        };
+        
+        if(parameters.role.roleName == "") {
+             gritter.show($('#empty_text').html(),false);
+             return false;
+        }
+        
+        ajax($(this), {
+            url: url,
+            type: type,
+            data: JSON.stringify(parameters),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                   load("/auth/roles");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+        $(this).removeProp('disabled');
+    })
+
+    /* ROLE MEMBERS 
+    //add members
+    $("#addMember").on('click', function() {
+        if(suggestion = $("#userTypeahead").prop('user')) {
+            addroleMember(suggestion.displayName, suggestion.accountId);
+            $("#userTypeahead").val('');
+        }
+    })
+
+    //remove members
+    $("#members").on('click', '.removeMembre', function() {
+        $(this).closest('.input-group').remove();
+    })
+
+    /* TREE MANAGEMENT */
+    // on/off switches
+        
+    $("#contain").on('click', '.userStory', function() {
+        var btn = $(this);
+
+        if(btn.hasClass('active')) {
+            btn.addClass('btn-danger')
+               .removeClass('btn-success')
+               .find('.label')
+               .text('Off');
+                selectPrivileges(btn.closest('.panel'), "unselected"); 
+            if ($("#superadmin").is(':checked')) {
+                $('#superadmin').closest('.toggle').click();
+            }
+        } else {
+            btn.addClass('btn-success')
+               .removeClass('btn-danger')
+               .find('.label')
+               .text("On");
+                selectPrivileges(btn.closest('.panel'), "selected"); 
+        }
+    })
+
+    function serialize() {
+        var jsonObject = {
+            roleMembers : [],
+            privileges : [],
+        };
+
+        //role
+        var properties = $('#roleInformation').find('input[type="text"], input[type="hidden"], textarea');
+        $.each(properties, function(){
+            jsonObject[$(this).attr('name')] = $(this).val();
+        })
+        properties = $('#roleStatus').find('.active > input');
+        jsonObject[properties.attr('name')] = properties.val();
+
+        //roleMembers
+        var roleMembers = $("#members").find('input');
+        $.each(roleMembers, function(){
+            jsonObject.roleMembers.push($(this).data('memberid'));
+        })
+
+        if($('#superadmin').prop('checked')){
+            jsonObject.privileges.push('*');
+        }
+        else{
+            //privileges
+            $('#privileges').find('.selectAll').each(function(){
+                if($(this).hasClass('active')) {
+                    jsonObject.privileges.push($(this).find('input').val());
+                } else {
+                    $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
+                        jsonObject.privileges.push($(this).val());
+                    });
+                }
+            });
+        }
+
+        return jsonObject;
+    }
+
+    function addroleMember(memberName, memberId) {
+
+        var userTypeahead = $('#userTypeahead');
+
+        var inputGroup = $('<div/>')
+            .addClass('input-group')
+            .data('memeberid', memberId)
+            .appendTo($('#members'));
+        
+        var input = $('<input/>')
+            .addClass('form-control')
+            .attr('type', 'text')
+            .attr('readonly', 'true')
+            .val(memberName)
+            .data('memberid', memberId)
+            .appendTo(inputGroup);
+
+        var inputGrpBtn = $('<span/>')
+            .addClass('input-group-btn')
+            .appendTo(inputGroup);
+
+        var btn = $('<button/>')
+            .addClass('btn btn-danger removeMembre')                   
+            .attr('type', 'button')
+            .html("&nbsp;")
+            .appendTo(inputGrpBtn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-trash-o fa-fw')
+            .prependTo(btn);
+    }
+
+</script>

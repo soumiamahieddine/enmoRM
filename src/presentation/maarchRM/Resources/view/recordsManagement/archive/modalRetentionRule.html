@@ -1,0 +1,192 @@
+<!-- ARCHIVE DESCRIPTION -->
+<div class="modal fade" id="retentionRuleModal" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" data-translate-catalog="recordsManagement/messages">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3>Edit archive</h3>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="sidebar-offcanvas col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <input type="hidden" name="archiveId">
+                            <h4>Disposal rule</h4>
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr><td><strong>Start date</strong></td><td><input class='form-control input-sm ruleInput datePicker' name="retentionStartDate"></td></tr>
+                                        <tr><td><strong>Duration</strong></td><td>
+                                            <div class="form-inline">
+                                                <input class='form-control input-sm ruleInput' name="retentionDuration" />
+                                                <select name="retentionDurationUnit" class="form-control input-sm ruleInput">
+                                                    <option value='D'>Day(s)</option>
+                                                    <option value='M'>Month(s)</option>
+                                                    <option value='Y'>Year(s)</option>
+                                                </select>
+                                            </div>
+                                        </td></tr>
+                                        <tr><td><strong>Final disposition</strong></td><td>
+                                            <select class='form-control input-sm ruleInput' name="finalDisposition">
+                                                <option value ="preservation">Preservation</option>
+                                                <option value ="destruction">Destruction</option>
+                                            </select>
+                                        </td></tr>
+                                        <tr><td><strong>Comment</strong> <span style="color:red">*</span></td>
+                                            <td><div>
+                                                    <textarea class="form-control" id ="comment" name="comment" placeholder="Comment"></textarea>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" data-translate-context="validationModal" id="retentionRuleModal_multipleSelection">
+                        <div class="panel-body">
+                            <h4><strong style="color:red"><span id="retentionRuleModal_selected"></span></strong> archives selected.</h4>
+                            <h4>The modification will be applied on <strong style="color:red"><span id="retentionRuleModal_relevant"></span></strong> archives.</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="saveRetentionRule" class="btn btn-success" data-dismiss="modal" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+.datepicker{z-index:1151 !important;}
+</style>
+
+<script>
+    $('#retentionRuleModal').on('keyup change', 'input, select, textarea', function() {
+        var modal = $('#retentionRuleModal');
+        var starDate = modal.find('[name="retentionStartDate"]').val();
+        var duration = modal.find('[name="retentionDuration"]').val();
+        var retentionDurationUnit = modal.find('[name="retentionDurationUnit"]').val();
+        var finalDisposition = modal.find('[name="finalDisposition"]').val();
+        var comment = $('#comment').val();
+
+        if (starDate && duration && retentionDurationUnit && finalDisposition && comment) {
+            $('#saveRetentionRule').prop('disabled', false);        
+        }
+    })
+
+    $("#contain").on('change','#comment',function(){
+        var modal = $('#retentionRuleModal');
+        var starDate = modal.find('[name="retentionStartDate"]').val();
+        var duration = modal.find('[name="retentionDuration"]').val();
+        var retentionDurationUnit = modal.find('[name="retentionDurationUnit"]').val();
+        var finalDisposition = modal.find('[name="finalDisposition"]').val();
+        var comment = $('#comment').val();
+        
+        if (starDate && duration && retentionDurationUnit && finalDisposition && comment) {
+            $('#saveRetentionRule').prop('disabled', false);        
+        }
+    })
+    
+    // Save the retention rule
+    $("#saveRetentionRule").on('click', function () {
+        var url = '/recordsManagement/archive/retentionRule';
+        var type = 'PUT';
+        var retentionRule = retentionRuleModal.serialize();
+        var parameters = { retentionRule: retentionRule};
+        var archiveIds = $(this).data('archiveids');
+        var comment = $("#comment").val();
+        
+        parameters.comment = comment;
+        
+        if(archiveIds!="") {
+            parameters.archiveIds = archiveIds;
+        } else {
+            parameters.archiveIds = retentionRule.archiveId;
+        }
+
+        $.ajax({
+            url         : url,
+            type        : type,
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    retentionRuleModal.close();
+                    $('#archive_search').click();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    })
+
+    retentionRuleModal = {
+        load: function(archiveId) {
+
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archive/retentionRule/" + archiveId,
+                dataType    : 'json',
+                success     : function (response) {
+                    var rule = response.retentionRule;
+                    var modal = $('#retentionRuleModal');
+
+                    rule.retentionDurationUnit = rule.retentionDuration.substring(rule.retentionDuration.length-1);
+                    rule.retentionDuration = rule.retentionDuration.substring(1, rule.retentionDuration.length-1);
+
+                    $.each(rule, function(key, value) {
+                        modal.find("[name='" +key+ "']").val(value);
+                    })
+
+                    $('#saveRetentionRule').data("archiveids", "");
+                    $('#retentionRuleModal_multipleSelection').css('display', 'none');
+
+                    modal.modal();
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        loadMultiple: function(selected, relevant, ids) {
+            var modal = $('#retentionRuleModal');
+
+            $('#saveRetentionRule').data("archiveids", ids);
+            $('#retentionRuleModal_multipleSelection').css('display', '');
+
+            $('#retentionRuleModal_selected').html(selected);
+            $('#retentionRuleModal_relevant').html(relevant);
+
+            modal.find('input, select').val('');
+            modal.modal();
+        },
+
+        close: function() {
+            $('#retentionRuleModal').modal('hide');
+        },
+
+        serialize: function() {
+            var retentionRule = {}
+            var inputs = $('#retentionRuleModal').find('input, select');
+
+            $.each(inputs, function() {
+                var a = $(this);
+                retentionRule[a.attr('name')] = a.val();
+            })
+
+            retentionRule.retentionDuration = 'P'+retentionRule.retentionDuration+retentionRule.retentionDurationUnit;
+
+            return retentionRule;
+        }
+    }
+</script>

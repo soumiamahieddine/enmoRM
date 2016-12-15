@@ -1,0 +1,171 @@
+<?merge user ?>
+<form id="user_userAdministrationForm">
+    <br/>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-md-offset-2">
+                <?merge profile.bool().not() ?>
+                <div class="form-group ">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label id="user_lockUser" class="btn btn-info [?merge user.locked.then('active','') ?]" data-useraccountid="[?merge user.accountId ?]" title="Locked">
+                            <input type="radio" name="locked" value="1" checked="checked">
+                            <i class="fa fa-lock">&nbsp;</i>
+                            Locked
+                        </label>
+                        <label id="user_unlockUser" class="btn btn-info [?merge user.locked.then('','active') ?]" data-useraccountid="[?merge user.accountId ?]" title="Unlocked">
+                            <input type="radio" name="locked" value="0"> 
+                            <i class="fa fa-unlock">&nbsp;</i>
+                            Unlocked
+                        </label>
+                    </div>
+                </div>
+                <?merge profile.bool().not() ?>
+                <div class="form-group">
+                    <button class="btn btn-default" id="user_passwordChangeRequest" type="button" data-useraccountid="[?merge user.accountId ?]" title="Request a password change">
+                        <i class="fa fa-refresh fa-f"></i> Request a password change</button>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-default" role="button" data-toggle="collapse" id="user_showNewPasswordForm" href="#user_password" aria-expanded="false" title="Change password">
+                        Change password
+                        <span class="caret"></span>
+                    </a>
+                </div>
+                <div class="collapse well" id="user_password">
+                    <div class="form-group">
+                        <label>New password</label>
+                        <input type="text" class="form-control" name="newPassword" placeholder="New password">
+                    </div>
+                    <button class="btn btn-success" id="user_newPassword" type="button" data-useraccountid="[?merge user.accountId ?]" title="Ok"><i class="fa fa-check">&nbsp;</i>OK</button>
+                </div>
+                <?merge profile.bool().not() ?>
+                <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label id="user_enableUser" class="btn btn-danger [?merge user.enabled.then('active','') ?]" data-useraccountid="[?merge user.accountId ?]" title="Enabled">
+                            <input type="radio" name="enabled" value="1" checked="checked">
+                            <i class="fa fa-check">&nbsp;</i>
+                            Enabled
+                        </label>
+                        <label id="user_disableUser" class="btn btn-danger [?merge user.enabled.then('','active') ?]" data-useraccountid="[?merge user.accountId ?]" title="Disabled">
+                            <input type="radio" name="enabled" value="0"> 
+                            <i class="fa fa-ban">&nbsp;</i>
+                            Disabled
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <?merge profile.bool().not() ?>
+            <dl class="col-md-offset-2">
+                <?merge user.lastLogin.bool() ?>
+                <dt>Last login date</dt>
+                <dd><?merge user.lastLogin ?></dd>
+                <?merge user.lastIp.bool() ?>
+                <dt>Last IP address</dt>
+                <dd><?merge user.lastIp ?></dd>
+                <?merge user.passwordLastChange.bool() ?>
+                <dt>Last password change date</dt>
+                <dd><?merge user.passwordLastChange ?></dd>
+            </dl>
+        </div>
+    </div>
+</form>
+
+<script>
+// Unlock
+    $("#user_unlockUser").on('click', function () {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        ajax($(this), {
+            url         : "/useraccount/" + $(this).data('useraccountid')+'/unlock',
+            type        : "PUT",
+            contentType : 'application/json',
+            dataType    :'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+
+    });
+
+// Lock
+    $("#user_lockUser").on('click', function () {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        ajax($(this), {
+            url         : "/useraccount/" + $(this).data('useraccountid')+'/lock',
+            type        : "PUT",
+            contentType : 'application/json',
+            dataType    :'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error: function (response) {
+                gritter.show(response.responseText, false);
+            }
+        });
+    });
+
+// Enable
+    $("#user_enableUser").on('click', function () {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        $('#enableUserModal').modal('show');
+        $('#confirmEnabling').data('useraccountid', $(this).data('useraccountid'));
+    });
+
+// Disable
+    $("#user_disableUser").on('click', function () {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        $('#disableUserModal').modal('show');
+        $('#replacingUser').val('');
+        $('#confirmDisabling').data('useraccountid', $(this).data('useraccountid'));
+    });
+
+// Password change request
+    $("#user_passwordChangeRequest").on('click', function () {
+        ajax($(this), {
+            url         : "/userAccount/" + $(this).data('useraccountid')+'/requirePasswordChange',
+            type        : "PUT",
+            contentType : 'application/json',
+            dataType    :'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    });
+
+// New password
+    $('#user_newPassword').on('click', function() {
+        var password = $('#user_password').find('input');
+
+        if (password.val() == "") {
+            return;
+        }
+
+        ajax($(this), {
+            url         : '/userAccount/setPassword/' + $(this).data('useraccountid'),
+            type        : "PUT",
+            data        : JSON.stringify({newPassword : password.val()}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                $('#user_showNewPasswordForm').click();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })  
+    })
+</script>

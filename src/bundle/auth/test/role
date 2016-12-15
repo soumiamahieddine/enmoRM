@@ -1,0 +1,60 @@
+[CREATE]
+POST http://maarchRM/auth/role
+
+{
+    "role":{
+        "roleMembers":[
+            "ddaull",
+            "ppetit"
+        ],
+        "privileges":[
+            "digitalResource/cluster"
+        ],
+        "accessRules":[
+            {
+                "class":"financialRecords/invoice",
+                "context":""
+            }
+        ],
+        "roleId":"",
+        "roleName":"Rôle de test",
+        "description":"Ceci est un rôle de test",
+        "enabled":"1"
+    }
+}
+
+
+[UPDATE]
+PUT http://maarchRM/auth/role
+
+The role identifier must be qualified par the return of create method.
+
+{
+    "role":{
+        "roleMembers":[
+            {"userAccountId":"ddaull"}
+        ],
+        "privileges":[
+            {"userStory":"digitalResource/cluster"}
+        ],
+        "accessRules":[
+            {"class":"financialRecords/invoice","context":""}
+        ],
+        "roleId":"",
+        "roleName":"Rôle de test modifié",
+        "description":"Ceci est un rôle de test modifié",
+        "enabled":"1"
+    }
+}
+
+[UPDATE STATUS]
+PUT http://maarchRM/auth/role/status/_roleId_/_status_
+
+[READ]
+GET http://maarchRM/auth/role/_roleId_
+
+[READ INDEX]
+GET http://maarchRM/auth/role/index
+
+[DELETE]
+DELETE http://maarchRM/auth/role/_roleId_;

@@ -1,0 +1,23 @@
+[CREATE]
+POST http://maarchRM/auth/role/accessRule
+
+{
+    "accessRule":{
+        "class":"test/test",
+        "roleId":"ADMIN",
+        "context":"un"
+    }
+}
+
+
+
+[DELETE]
+DELETE http://maarchRM.test/auth/role/accessRule
+
+{
+    "accessRule":{
+        "class":"test/test",
+        "roleId":"ADMIN",
+        "context":"deux"
+    }
+}

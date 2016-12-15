@@ -1,0 +1,120 @@
+[CREATE]
+POST http://maarchRM/auth/userAccount/
+
+{
+        "userAccount": {
+            "userName": "test",
+            "emailAddress": "info@maarch.org",
+            "password": "maarch",
+            "passwordLastChange": null,
+            "passwordChangeRequired": false,
+            "locked": false,
+            "enabled": true,
+            "badPasswordCount": 0,
+            "lastLogin": null,
+            "lastIp": null,
+            "replacingUserAccountId": null,
+            "roleMembers": null
+        },
+        "person": {
+            "firstName": "Test",
+            "lastName": "TEST",
+            "displayName": "TEST Test",
+            "gender": null,
+            "birthName": null,
+            "title": "M.",
+            "dateOfBirth": null,
+            "picture": null
+        },
+        "roleMembers": [
+             {
+                 "roleId": "UTILISATEUR"
+             }
+        ]
+    }
+
+[CREATE]
+POST http://maarchRM/auth/userAccount/userAccount
+
+{
+    "userAccount" : 
+    {
+        "userName": "aackermann",
+        "password": "maarch", 
+        "emailAddress": "info@maarch.org" 
+    }
+}
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/
+
+{
+        "userAccount": {
+            "userAccountId": "_userAccountId_",
+            "userName": "ttest2",
+            "emailAddress": "info2@maarch.org",
+            "password": "fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d",
+            "passwordLastChange": null,
+            "passwordChangeRequired": false,
+            "locked": false,
+            "enabled": true,
+            "badPasswordCount": 0,
+            "lastLogin": null,
+            "lastIp": null,
+            "replacingUserAccountId": null,
+            "roleMembers": null,
+            "personId": "_personId_"
+        },
+        "person": {
+            "personId": "_personId_",
+            "firstName": "Testsss",
+            "lastName": "TESTss",
+            "displayName": "TESTss Testsss",
+            "gender": null,
+            "birthName": null,
+            "title": "M.",
+            "dateOfBirth": null,
+            "picture": null
+        },
+        "roleMembers": [
+             {
+                 "roleId": "ARCHIVISTE"
+             }
+        ]
+    }
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/userAccount
+
+{
+    "userAccount" : 
+    {
+        "userAccountId": "_userAccountId_",
+        "personId": "aackermann",
+        "userName": "aackermann",
+        "password": "maarch", 
+        "emailAddress": "info@maarch.org" 
+    }
+}
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/disable_userAccountId__replacingUserAccountId_
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/enable_userAccountId_
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/lock_userAccountId_
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/unlock_userAccountId_
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/setPassword
+{
+    "userAccountId": "aackermann",
+    "newPassword": "maarchRM",
+}
+
+[UPDATE]
+PUT http://maarchRM/auth/userAccount/requirePasswordChange_userAccountId_

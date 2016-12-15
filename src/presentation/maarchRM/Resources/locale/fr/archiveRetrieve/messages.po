@@ -1,0 +1,12 @@
+# archiveRetrieve/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveRetrieve"
+msgstr "Récupération d'archive"
+msgctxt "bundle"
+
+msgid "retrieve"
+msgstr "Récupération d'archive"
+msgctxt "interface"
+

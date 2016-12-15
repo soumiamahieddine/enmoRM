@@ -1,0 +1,48 @@
+<div class="modal fade" id="integrityModal" tabindex="-1" role="dialog" aria-labelledby="integrityModal" aria-hidden="true" data-translate-catalog="recordsManagement/log">
+    <div class="modal-dialog">
+        <div class="modal-content" id="integrityModal_container">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="integrityModal_title"><i class="fa">&nbsp;</i><span><span></h3>
+            </div>
+            <div class="modal-body">
+                <h4 id="integrityFailure" class="hide">Integrity check failed on this journal.</h4>
+                <h4 id="integritySuccess" class="hide has-success">The journal is integrity is valid.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <span id="success_text" class="hide">Valid</span>
+    <span id="error_text" class="hide">Error</span>
+</div>
+
+
+<script>
+
+var LogIntegrityModal = {
+    load : function(status) {
+        var title = $('#integrityModal_title');
+        if (status) {
+            title.addClass('text-success').removeClass('text-danger').find('i').addClass('fa-check').removeClass('fa-close');
+            title.find('span').html($("#success_text").html());
+
+            $('#integrityFailure').addClass('hide');
+            $('#integritySuccess').removeClass('hide');
+
+        } else {
+            title.addClass('text-danger').removeClass('text-success').find('i').addClass('fa-close').removeClass('fa-check');
+            title.find('span').html($("#error_text").html());
+
+            $('#integrityFailure').removeClass('hide');
+            $('#integritySuccess').addClass('hide');
+
+        }
+
+        $('#integrityModal').modal();
+    }
+}
+
+</script>

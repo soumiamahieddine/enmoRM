@@ -1,0 +1,70 @@
+<ul class="nav nav-pills nav-stacked col-md-3" id="metadataList" style="padding-right: 0">
+    <!-- The metadata class names list -->
+    <?merge metadatas ?>
+    <li class="[?merge .active.bool().then('active', '') ?]"><a href="#[?merge .identifier ?]" data-toggle='pill' style='border-bottom-right-radius: 0; border-top-right-radius: 0;'>
+            <?merge .objectClass ?>
+        </a>
+    </li>
+    <li><a href="#fileInfo" data-toggle='pill' style='border-bottom-right-radius: 0; border-top-right-radius: 0;'>
+            File information
+        </a>
+    </li>
+
+</ul>
+<div class="tab-content panel panel-primary col-md-9" id="metadataPropreties" style="border-bottom-left-radius: 0; border-top-left-radius: 0; padding: 2%">
+    <!-- The metadata propreties -->
+    <div class="tab-pane" id="fileInfo" data-classname="fileInfo">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">file type</label>
+            <div class="btn-group col-sm-9" data-toggle="buttons">
+                <label class="btn btn-primary active" title="All">
+                    <input type="radio" name="fileType" value="" checked/> All
+                </label>
+                <label class="btn btn-primary" title="PDF">
+                    <input type="radio" name="fileType" value="fmt/95"/> PDF
+                </label>
+                <label class="btn btn-primary" title="XML">
+                    <input type="radio" name="fileType" value="fmt/101"/> XML
+                </label>
+                <label class="btn btn-primary" title="TXT">
+                    <input type="radio" name="fileType" value="TXT"/> TXT
+                </label>
+                <label class="btn btn-primary" title="ZIP">
+                    <input type="radio" name="fileType" value="ZIP"/> ZIP
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="filingDate" class="col-sm-3 control-label">Filing date</label>
+            <div class="col-sm-9">
+                <input type="date"  name="filingDate" class="form-control" placeholder="Filing date">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fileName" class="col-sm-3 control-label">File name</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" placeholder="File name" id="fileName" name="fileName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="fileExtension" class="col-sm-3 control-label">File extension</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control" placeholder="File extension" id="fileExtension" name="fileExtension"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-offset-11">
+    <button type="button" class="btn btn-warning btn-block" id="clearSearchForm" title="Reset"><i class="fa fa-refresh">&nbsp;</i></button>
+</div>
+
+<script>
+
+    $('#clearSearchForm').on('click', function() {
+        $('#metadataPropreties').find('input[type="text"], input[type="date"], input[type="number"]').val('');
+        $('#fileInfo').find('.active').removeClass('active');
+        $('[name="fileType"][value=""]').parent().addClass('active');
+    });
+
+</script>

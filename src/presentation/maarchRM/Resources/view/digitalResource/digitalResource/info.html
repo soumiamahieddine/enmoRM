@@ -1,0 +1,187 @@
+<div>
+    <?merge resource ?>
+    <form class="form-horizontal">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Digital resource
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Resource identifier</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="resId" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">cluster identifier</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="clusterId" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Size</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="size" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Mimetype</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="mimetype" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Hash</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="hash" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Hash algorithm</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="hashAlgorithm" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">File extension</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="fileExtension" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">File name</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="fileName" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Created</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="created" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Created by</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="createdBy" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Updated</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="updated" readonly=""/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Updated by</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="updatedBy" readonly=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Address
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        <?merge resource.address ?>
+                        <div>
+                            <?merge .?>
+                            <div class="well">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Repository identifier</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="repositoryId" readonly=""/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Address</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="address" readonly=""/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Created</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="created" readonly=""/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Created by</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" name="createdBy" readonly=""/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Format
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body">
+                        <?merge resource.format ?>
+                        <div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">puid</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="puid" readonly=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="name" readonly=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">version</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="version" readonly=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">mimetype</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="mimetype" value="[?merge resource.format.mimetype.implode(' ') ?]" readonly=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">extension</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="extension" value="[?merge resource.format.extension.implode(' ') ?]" readonly=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">mediatype</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="mediatype" readonly=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,145 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Prosper De Laure <prosper.delaure@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" data-servicelevelid="[?merge serviceLevel.serviceLevelId ?]">
+<div data-form-ns="archivalProfile" class="dataForm" data-translate-catalog="recordsManagement/serviceLevel">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-briefcase"></i>
+                <?merge serviceLevel.serviceLevelId.bool().not() ?>
+                <span>New service level</span>
+                <?merge serviceLevel.serviceLevelId.bool() ?>
+                <span>Edit a service level</span>
+                <small><?merge serviceLevel.reference ?><small>
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <?merge serviceLevel ?>
+        <form class="form-horizontal">
+            <div class="row">
+                <?merge serviceLevel.default @data-default ?>
+                <input type="hidden" name="serviceLevelId" id="serviceLevelId">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Reference <span style="color:red">*</span></label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Detect format</span></label>
+                        <input type="checkbox" name="formatDetection" id="detectFormat" data-toggle="toggle"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Validate format</span></label>
+                        <input type="checkbox" name="formatValidation" id="formatValidation" data-toggle="toggle"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Check for virus</span></label>
+                        <input type="checkbox" name="virusCheck" id="virusCheck" data-toggle="toggle"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Convert on deposit</span></label>
+                        <input type="checkbox" name="convertOnDeposit" id="convertOnDeposit" data-toggle="toggle"> 
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Cluster</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" name="digitalResourceClusterId" id="digitalResourceClusterId">
+                                        <?merge clusters ?>
+                                        <option value="[?merge .clusterId ?]"><?merge .clusterName ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer clearfix">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-warning" id="cancelServiceLevelBtn" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                    <button type="button" id="save" class="btn btn-success" title="Save">
+                        <?merge serviceLevel.serviceLevelId.bool() ?>
+                        <span><i class="fa fa-save">&nbsp;</i>Save</span>
+                        <?merge serviceLevel.serviceLevelId.bool().not() ?>
+                        <span><i class="fa fa-plus">&nbsp;</i>Add</span>
+                    </button>
+                    </div>
+            </div>
+            <span class="hide" id="empty_text">The fields with a star are compulsory.</span> 
+        </form>
+    </div>
+</div>
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+</div>
+<script>
+    $("#cancelServiceLevelBtn").on('click', function(){
+        load('/serviceLevels');
+    });
+    
+//save
+$("#save").on('click', function(){
+
+    if ($('#reference').val() == '') {
+        gritter.show($('#empty_text').html(), false);
+        return;
+    }
+    
+    if($("#contain").data('servicelevelid')) {
+        type= 'PUT';
+        url= '/serviceLevel/'+$("#contain").data('servicelevelid');
+    } else {
+        type= 'POST';
+        url='/serviceLevel';
+    }
+        
+    var parameters = {
+      serviceLevel :  serialize()
+    };
+    ajax($('#save'), {
+        url         : url,
+        type        : type,
+        data        : JSON.stringify(parameters),
+        contentType : 'application/json',
+        dataType    : 'json',
+        success  : function(response){
+            gritter.show(response.message, response.status, response.errors);
+            if(response.status) {
+                load("/serviceLevels");
+            }
+        },
+        error    : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    });
+});
+
+function serialize() {
+    serializedObject = {};
+    serializedObject['default'] = $('#serviceLevelId').attr('data-default') != undefined;
+
+    $('input[type="text"], input[type="hidden"], select').each(function(){
+        serializedObject[$(this).attr('name')] = $(this).val();
+    })
+
+    controlArray = [];
+
+    $('input[type="checkbox"]').each(function(){
+        if ($(this).prop('checked')) {
+            controlArray.push($(this).attr('name'));
+        }
+
+        serializedObject['control'] = controlArray.join(" ");
+    })
+    return serializedObject;
+}
+
+</script>

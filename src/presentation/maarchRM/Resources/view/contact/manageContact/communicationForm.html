@@ -1,0 +1,244 @@
+<div class="well col-xs-12 col-md-5 pull-left" >
+    <div id="contact_communicationList" class="list-group">
+        <?merge contact.communication.bool() ?>
+        <div>
+            <?merge contact.communication ?>
+            <a data-communication="[?merge .json ?]" href="#contact_" class="list-group-item">
+                <h4 class="list-group-item-heading"><?merge .purpose ?></h4>
+                <p class="list-group-item-text"><?merge .value ?></p>
+                <p class="list-group-item-text"><?merge .comMeanName ?></p>
+                <p class="list-group-item-text"><?merge .info ?></p>
+            </a>
+        </div>
+    </div>
+    <button type="button" id="contact_new-communication" class="btn btn-success" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+</div>
+
+<form class="well col-xs-12 col-md-6 pull-right" id="contact_communication-form" style="display:none">
+    <div class="row">
+        <input type="hidden" id='contact_communicationId' name="communicationId">
+        <div class="form-group">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="communicationPurpose">Purpose<span style="color : red"> *</span></label>
+                    <input type="text" class="form-control" name="purpose" placeholder="Purpose">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="comMeanCode">Communication mean<span style="color : red"> *</span></label>
+        <select class="form-control" id="contact_comMeanCode" name="comMeanCode">
+            <option></option>
+            <?merge communicationMeans ?>
+            <option value="[?merge .code ?]"><?merge .name ?></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="value">Value<span style="color : red"> *</span></label>
+        <input type="text" class="form-control" name="value" placeholder="Value">
+    </div>
+    <div class="form-group">
+        <label for="info">Information</label>
+        <input type="text" class="form-control" name="info" placeholder="Information">
+    </div>
+    <div class="panel-footer clearfix">
+        <div>
+            <button type="button" class="btn btn-warning" id="contact_cancel-communication" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+            <button type="button" class="btn btn-danger" id="contact_delete-communication" title="Delete"><i class="fa fa-trash-o">&nbsp;</i>Delete</button>
+            <button type="button" class="btn btn-success" id="contact_add-communication" activeButtons title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+            <button type="button" class="btn btn-success" id="contact_update-communication" activeButtons title="Update"><i class="fa fa-save">&nbsp;</i>Save</button>
+        </div>
+    </div>
+</form>
+
+<span class="hide" id="contact_phone">Phone</span>
+<span class="hide" id="contact_e_mail">E-mail</span>
+<span class="hide" id="contact_cellular">Cellular</span>
+<span class="hide" id="contact_www">World Wide Web</span>
+<span class="hide" id="contact_ftp">FTP</span>
+<span class="hide" id="contact_url">URL</span>
+<span class="hide" id="contact_Fax">Fax</span>
+
+<script type="text/javascript">
+
+    // Read
+    $("#contact_communicationList").on('click', 'a', function () {
+        ContactCommunicationForm.read($(this));
+    });
+
+    // New
+    $("#contact_new-communication").on('click', function () {
+        $('#contact_communication-form').css('display', '');
+        $('#contact_new-communication').css('display', 'none');
+        $('#contact_update-communication').css('display', 'none');
+    });
+
+    // Save
+    $("#contact_add-communication, #contact_update-communication").on('click', function () {
+        ContactCommunicationForm.save();
+    });
+
+    // Cancel
+    $("#contact_cancel-communication").on('click', function () {
+        ContactCommunicationForm.cancel();
+    });
+
+    // Delete
+    $("#contact_delete-communication").on('click', function () {
+        $('#contact_communicationConfirmDelete').modal('show');
+    });
+
+    var ContactCommunicationForm = {
+        read: function(selection){
+            $('#contact_communication-form').css('display', '');
+            $('#contact_delete-communication').css('display', '');
+            $('#contact_update-communication').css('display', '');
+            $('#contact_add-communication').css('display', 'none');
+            $('#contact_new-communication').css('display', 'none');
+
+            $('#contact_communicationList').find('a').removeClass('active');
+            selection.addClass('active');
+
+            var communication = selection.data('communication');
+
+            $.each(communication, function (key, value) {
+                $('#contact_communication-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
+            });
+        },
+
+        save: function() {
+            var communicationObject = ContactCommunicationForm.serialize();
+            
+            if(communicationObject.purpose == "" ||  communicationObject.comMeanCode == "" || communicationObject.value == "") {
+                gritter.show($('#contact_empty_text').html(),false);
+                return false;
+            }
+
+            if ($('#contact_contactId').val() == "") {
+                ContactCommunicationForm.addCommunicationToScreen(communicationObject);
+                ContactCommunicationForm.cancel();
+
+                return;
+            }
+
+            // creation
+            var type = "POST"
+            var url = '/contact/' + $('#contact_contactId').val() + '/communication';
+
+            // modification
+            if (communicationObject.communicationId) {
+                type = "PUT"
+                url = '/contactCommunication/' + $('#contact_communicationId').val();
+            }
+            
+            $.ajax({
+                type        : type,
+                url         : url,
+                data        : JSON.stringify({communication: communicationObject}),
+                dataType    : 'json',
+                contentType : 'application/json',
+                async       : false,
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        if (!communicationObject.communicationId) {
+                            communicationObject.communicationId = response.communicationId;
+                        }
+
+                        ContactCommunicationForm.addCommunicationToScreen(communicationObject);
+                        ContactCommunicationForm.cancel();
+                        $('#contact_new-communication').css('display', '');
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+
+            $("button").removeProp('disabled');
+        },
+
+        serialize: function() {
+            var communication = new Object();
+
+            $('#contact_communication-form').find('input, select').each(function () {
+                communication[$(this).attr('name')] = $(this).val();
+            });
+
+            return communication;
+        },
+
+        serializeList: function() {
+            var communicationList = [];
+            var a = $('#contact_communicationList').find('a');
+
+            $.each(a, function(){
+                communicationList.push($(this).data('communication'));
+            })
+
+            return communicationList;
+        },
+
+        deleteCommunication: function() {
+            $('#contact_communicationConfirmDelete').modal('hide');
+
+            $.ajax({
+                type        : 'DELETE',
+                url         : '/contactCommunication/' + $('#contact_communicationId').val(),
+                dataType    : 'json',
+                async       : false,
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        $('#contact_communicationList').find('.active').remove();
+                        ContactCommunicationForm.cancel()
+                    }
+                    $('#contact_new-communication').css('display', '');
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        addCommunicationToScreen: function(communication) {
+            var communicationList = $('#contact_communicationList');
+            communicationList.find('.active').remove();
+
+            if (!communicationList.find('div').length){
+                var newDiv = $('<div/>').appendTo(communicationList);
+                communicationList = newDiv;
+            } else {
+                communicationList = communicationList.find('div:first');
+            }
+
+            var a = $('<a/>').data('communication', communication).attr('href', '#').addClass('list-group-item').appendTo(communicationList);
+
+            $('<b/>').addClass('list-item-heading')
+                     .text(communication.purpose)
+                     .appendTo(a);
+            $('<p/>').addClass('list-group-item-text').html($('#contact_comMeanCode').find('[value="'+communication.comMeanCode+'"]').html()).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').html(communication.value).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').html(communication.info).appendTo(a);
+        },
+
+        cancel: function() {
+            $('#contact_communication-form').find('input, select').val('');
+            $('#contact_communication-form').css('display', 'none');
+            $('#contact_communicationList').find('a').removeClass('active');
+
+            $('#contact_new-communication').css('display', '');
+
+            $('#contact_delete-communication').css('display', 'none');
+            $('#contact_update-communication').css('display', 'none');
+            $('#contact_add-communication').css('display', '');
+        },
+
+        clear : function() {
+            $('#contact_communicationList').html('');
+            ContactCommunicationForm.cancel();
+        }
+    }
+
+</script>

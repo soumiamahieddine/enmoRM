@@ -1,0 +1,26 @@
+Search public archives, Recherche d'archives publiques
+Search form, Recherche
+Description, Description
+Description level, Niveau de description
+File plan position, Position du plan de classement
+Min date, Date min
+Max date, Date max
+Other descriptive data, Autre données de description
+Repository registration, Répertoire d'enregistrement
+Archive name, Nom de l'archive
+Content, Contenu
+Reference, Référence
+Type, Type
+Search, Recherche
+Reset, Réinitialiser
+result(s), résultat(s)
+Oldest date, Plus ancienne date
+Latest date, Dernière date
+Description level, 
+archivesPubliques [bundle], Archives publiques
+contentDescription [interface], Description du contenu
+contentDescription [model], Description du contenu
+document [model], Document
+keyword [model], Mot-clés
+custodialHistory [model], Historique
+Item, Pièce

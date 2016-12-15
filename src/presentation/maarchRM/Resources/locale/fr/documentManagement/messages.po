@@ -1,0 +1,58 @@
+# documentManagement/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Search documents"
+msgstr "Recherche de documents"
+
+msgid "Convert selected documents"
+msgstr "Convertir les documents sélectionnés"
+
+msgid "Convert document"
+msgstr "Convertir le document"
+
+msgid "Document identifier"
+msgstr "Identifiant du document"
+
+msgid "Resource identifier"
+msgstr "Identifiant de la resource"
+
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
+msgid "Depositor document identifier"
+msgstr "Identifiant du document du service versant"
+
+msgid "Originator document identifier"
+msgstr "Identifiant du document du service producteur"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Archive name"
+msgstr "Nom de l'archive"
+
+msgid "Archive status"
+msgstr "Status de l'archive"
+
+msgid "Last copy"
+msgstr "Dernière copie"
+
+msgid "Copy"
+msgstr "Copie"
+
+msgid "Creacted date"
+msgstr "Date de création"
+
+msgid "Size"
+msgstr "Taille (en octets)"
+
+msgid "No archives selected."
+msgstr "Pas d'archives sélectionnées."
+
+msgid "The document has not been converted."
+msgstr "Le document n'a pas été converti."
+

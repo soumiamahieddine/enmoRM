@@ -1,0 +1,301 @@
+<div class="modal fade" id="modificationModal" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" data-translate-catalog="recordsManagement/messages">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3><span id="modification_title"></span></h3>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="sidebar-offcanvas col-sm-12">
+                    <?hinclude recordsManagement/archive/archiveModificationForm.html?>                    
+                    <div class="panel panel-default" data-translate-context="validationModal" id="modal_multipleSelection">
+                        <div class="panel-body">
+                            <h4><strong style="color:red"><span id="modal_selected"></span></strong> archives selected.</h4>
+                            <h4>The modification will be applied on <strong style="color:red"><span id="modal_relevant"></span></strong> archives.</h4>
+                            <br/>
+                            <div class="table-responsive">
+                                <table id="archiveTable" class="table table-condensed">
+                                    <thead>
+                                    <th>Id</th>
+                                    <th>Archive name</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="save" class="btn btn-success" data-archiveIds="" data-dismiss="modal" title="Save"><i class="fa fa-check">&nbsp;</i>OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <span id="mtext_retentionRule">Change disposal rule</span>
+    <span id="mtext_accessRule">Edit access rule</span>
+    <span id="mtext_flagForDestruction">Flag for destruction</span>
+    <span id="mtext_cancelDestruction">Cancel destruction</span>
+    <span id="mtext_freeze">Freeze</span>
+    <span id="mtext_unfreeze">Unfreeze</span>
+
+    <span id="text_D">day(s)</span>
+    <span id="text_M">month(s)</span>
+    <span id="text_Y">year(s)</span>
+</div>
+
+<style>
+.datepicker{z-index:1151 !important;}
+</style>
+
+<script>
+    $("#accessRuleCode").on('change', function () {
+        ModificationModal.loadAccessCode();
+    });
+    
+    $("#save").on('click', function (e) {
+        console.log($(this).data("events" ));
+        e.preventDefault();
+        ModificationModal.save(); 
+    });
+    
+    ModificationModal = {
+        actionsList : {
+            accessRule          : '/recordsManagement/archive/accessRule',
+            retentionRule       : '/recordsManagement/archive/retentionRule',
+            flagForDestruction  : '/recordsManagement/dispose',
+            cancelDestruction   : '/recordsManagement/cancelDestruction',
+            freeze              : '/recordsManagement/archive/freeze',
+            unfreeze            : '/recordsManagement/archive/unfreeze'
+        },
+        actionsType : {},
+        modal : $('#modificationModal'),
+        modalType : null,
+        dataTable : null,
+        load : function(archiveId, archiveName, type) {
+            this.modalType = type;
+
+            this.loadTitle();
+            
+            $('#selectedArchiveId').css('display', '').find('span').html(archiveId);
+            $('#selectedArchiveReference').css('display', '').find('span').html(archiveName);
+
+            if (type == 'accessRule') {
+                $('#startDate, #code').css('display', '');
+                $('#duration, #finalDisposition').css('display', 'none');
+                this.loadRule(archiveId, archiveName, type)
+
+            } else if (type == "retentionRule") { 
+                $('#startDate, #duration, #finalDisposition').css('display', '');
+                $('#code').css('display', 'none');
+                this.loadRule(archiveId, archiveName)
+
+            } else {
+                $('#startDate, #code, #duration, #finalDisposition').css('display', 'none');
+            }
+            
+            $('#save').data("archiveids", "");
+            $('#archiveModificationForm').css('display', '')
+            $('#modal_multipleSelection').css('display', 'none');
+
+            this.modal.modal();
+        },
+
+        loadRule: function(archiveId, archiveName) {
+            if (this.modalType ==='accessRule') {
+                url = '/recordsManagement/archive/accessRule/' + archiveId;
+            } else if (this.modalType === 'retentionRule') {
+                url = "/recordsManagement/archive/retentionRule/" + archiveId;
+            } else {
+                return;
+            }
+
+            $.ajax({
+                type     : "GET",
+                url      : url,
+                dataType : 'json',
+                success  : function (response) {
+                    if (ModificationModal.modalType === "accessRule") {
+                        rule = response.accessRule;
+                        if (rule.accessRuleDuration) {
+                            rule.accessRuleDurationUnit = rule.accessRuleDuration.substring(rule.accessRuleDuration.length-1);
+                            rule.accessRuleDuration = rule.accessRuleDuration.substring(1, rule.accessRuleDuration.length-1);
+                        }
+                    } else {
+                        rule = response.retentionRule;
+                        rule.retentionDurationUnit = rule.retentionDuration.substring(rule.retentionDuration.length-1);
+                        rule.retentionDuration = rule.retentionDuration.substring(1, rule.retentionDuration.length-1);
+                    }
+
+                    $.each(rule, function(key, value) {
+                        ModificationModal.modal.find("[name='" +key+ "']").val(value);
+                    });
+
+                    if( ModificationModal.modalType === "accessRule") {
+                        ModificationModal.loadAccessCode();
+                    }
+
+                    // Set datepicker Date
+                    dateValue = rule.startDate.split('/');
+                    if (dateValue.length == 3) {
+                        date = new Date(parseInt(dateValue[2]), parseInt(dateValue[1])-1, parseInt(dateValue[0]));
+                        $('#startDate').find('input').datepicker('setDate', date);
+                    }
+                },
+                error   : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        loadMultiple: function(selected, relevant, ids, names, type) {
+            this.modalType = type;
+
+            this.loadTitle();
+            $('#selectedArchiveId, #selectedArchiveReference').css('display', 'none');
+
+            if( type === "accessRule") {
+                $('#startDate, #code').css('display', '');
+                $('#finalDisposition, #duration').css('display', 'none');
+                $('#archiveModificationForm').css('display', '')
+
+            } else if ( type === "retentionRule") {
+                $('#startDate, #finalDisposition, #duration').css('display', '');
+                $('#code').css('display', 'none');
+                $('#archiveModificationForm').css('display', '')
+
+            } else {
+                $('#archiveModificationForm').css('display', 'none')
+            }
+                
+            $('#save').data("archiveids", ids);
+            $('#modal_multipleSelection').css('display', '');
+            $('#modal_selected').html(selected);
+            $('#modal_relevant').html(relevant);
+
+            ModificationModal.loadTable(ids, names);
+            
+            this.modal.find('input, select').val('');
+            this.modal.modal();
+        },
+
+        loadTitle: function() {
+            $('#modification_title').html($('#mtext_'+this.modalType).html());
+        },
+
+        save: function() {
+            parameters = ArchiveModification.serialize(this.modalType);
+            parameters.archiveIds = $("#save").data('archiveids');
+
+            if(!parameters.archiveIds) {
+                parameters.archiveIds = $('#selectedArchiveId').find('span').html();
+            }
+
+            if (this.actionsType[this.modalType]) {
+                type = this.actionsType[this.modalType];
+            } else {
+                type = 'PUT';
+            }
+
+            $.ajax({
+                url         : this.actionsList[this.modalType],
+                type        : type,
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        $('#archive_search').click();
+                        ModificationModal.close();
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        close: function() {
+            this.modal.find('input, textarea').val('');
+            this.modal.modal('hide');
+        },
+
+        loadAccessCode: function() {
+            var accessRuleCode = $("#accessRuleCode").find(':selected').data('json');
+            var accessRules = "";
+            var accessRuleTable = $('#accessRuleTable');
+
+            if (accessRuleCode) {
+                if (accessRuleCode.duration) {
+                    var accessRules = accessRuleCode.accessRules;
+                    var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                    var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+                    $('#accessRule').css("display", '');
+                    $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                
+                } else {
+                    $('#accessRule').css("display", '');
+                    $('#accessRuleDuration').html(accessRuleCode.durationUnit);
+                }
+
+            } else {
+                $('#accessRule').css("display", 'none');
+            }
+            
+            if(accessRules){
+                if (!accessRules.length) {
+                    $('#accessRuleTable').css('display', 'none');
+                } else {
+                    var checked = $('<i>').addClass('fa fa-check').html('&nbsp;');
+                }
+            }
+        },
+        
+        loadTable: function(ids, names) {
+            var table = $('#archiveTable');
+            var tbody = table.find('tbody');
+            tbody.empty();
+
+            $.each(ids,function(index,value) {
+                var tr = $('<tr/>');
+                var tdId = $('<td/>').html(value).appendTo(tr);
+                var tdName = $('<td/>').html(names[index]).appendTo(tr);
+                tr.appendTo(tbody);
+            });
+
+            if (ModificationModal.dataTable) {
+                ModificationModal.dataTable.destroy();
+                ModificationModal.dataTable = null;
+            }
+
+            ModificationModal.dataTable = table.DataTable({
+                "sdom": '<"dataTable-footer clearfix"<"pull-left"f>><"table-responsive"t><"dataTable-footer"<"pull-left"li><"pull-right"p><"clearfix">>',
+                "sPaginationType": "full_numbers",
+                "bFilter": false,
+                "bInfo" : false,
+                "pageLength": 10,
+                "oLanguage": {
+                    "sLengthMenu" : $('#lengthMenu_text').html(),
+                    "oPaginate" : {
+                        "sFirst" : $('#first_text').html(),
+                        "sPrevious" : $('#previous_text').html(),
+                        "sNext" : $('#next_text').html(),
+                        "sLast" : $('#last_text').html()
+                    }
+                }
+            });
+        }
+    };
+
+</script>

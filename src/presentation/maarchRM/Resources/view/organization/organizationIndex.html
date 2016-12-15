@@ -1,0 +1,211 @@
+<!--#
+    This file is part of the maarchRM package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain" lang="en" data-translate-catalog="organization/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-sitemap"></i>
+                Organization
+            </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid" lang="en" data-translate-catalog="organization/messages">
+        <div class="row">
+            <div class="col-xs-12 col-md-5 col-lg-5" >
+                <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
+                <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
+
+                <div id="organization_orgTree">
+                    <!-- Organization tree goes here -->
+                </div>
+            </div>
+            <div class="col-xs-12 col-lg-6" id="forms">
+                <?hinclude organization/organizationForm.html ?>
+                <?hinclude organization/organizationInfo.html ?>
+                <?hinclude organization/organizationMoveForm.html ?>
+            </div>
+        </div>
+        <!-- modal for delete confirmation -->
+        <?hinclude organization/deleteModal.html ?>
+    </div>
+</div>
+
+<style>
+ #treeLoading {
+    font-size: 50px;
+    text-align: center;
+    padding: 80px;
+ }
+
+ .selectedNode {
+    /*border: 3px solid #d9534f !important;*/
+    border: 3px solid #f0ad4e !important;
+}
+</style>
+
+<script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
+
+<script>
+    // New organization
+    $('#newOrganization').on('click', function() {
+        Forms.clear();
+        OrganizationForm.newOrg();
+    })
+
+    // Add a child organization
+    $("#organization_orgTree").on('click', '.addChildOrganization', function() {
+        var span = $(this).closest('span');
+        var orgId = span.attr("id");
+        var parentName = span.data('orgname');
+        Forms.clear();
+        Tree.select(span);
+        OrganizationForm.newOrg(parentName, orgId);
+    });
+
+    // Add a child organization unit
+    $("#organization_orgTree").on('click', '.addChildOrgUnit', function() {
+        var span = $(this).closest('span');
+        var orgId = span.attr("id");
+        var parentName = span.data('orgname');
+        var ownerOrgId = span.data('ownerorgid');
+        Forms.clear();
+        Tree.select(span);
+        OrganizationForm.newOrg(parentName, orgId, ownerOrgId);
+    });
+
+    // Delete on organization
+    $("#organization_orgTree").on('click', '.deleteOrganization', function() {
+        var span = $(this).closest('span')
+        var orgId = span.attr("id");
+        Forms.clear();
+        Tree.select(span);
+        $('#organization_confirmDelete').data('orgid', orgId);
+        $('#organization_confirmDeleteModal').modal('show');
+    });
+
+    // Move an organization
+    $("#organization_orgTree").on('click', '.moveOrganization', function() {
+        var span = $(this).closest('span')
+        Forms.clear();
+        Tree.select(span);
+        OrganizationShifting.show(span);
+    });
+
+    // Read an organization
+    $("#organization_orgTree").on('click', '.showDetails', function() {
+        var span = $(this).closest('span')
+        Forms.clear();
+        Tree.select(span);
+        Tree.showDetails(span.attr('id'));
+    });
+    
+    var Tree = {
+        loadTree: function() {
+            $("#treeLoading").css('display', '');
+            $('#organization_orgTree').css('display', 'none');
+
+            $.ajax({
+                url      : "/organizationTree",
+                type     : "GET",
+                dataType : 'html',
+                success  : function(response) {
+                    $("#treeLoading").css('display', 'none');
+                    $('#organization_orgTree').empty().html(response).css('display', '');
+                    BootstrapTree.init($('#organization_orgTree'), true);
+                },
+                error    : function(response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        showDetails: function(orgId) {
+            $.ajax({
+                url      : "/organization/"+orgId,
+                type     : "GET",
+                dataType : 'json',
+                success  : function(response) {
+                    OrgInfo.load(response);
+                },
+                error    : function(response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        select: function(item) {
+            $('#organization_orgTree').find('.selectedNode').removeClass('selectedNode');
+            item.addClass('selectedNode');
+        },
+
+        unselect: function() {
+            $('#organization_orgTree').find('.selectedNode').removeClass('selectedNode');
+        },
+
+        addNode: function(parentId, org) {
+            var template = null
+            var parent = null
+            var span = null
+            if (!org.isOrgUnit) {
+                template = $('#orgTemplate').clone();
+                span = template.find('.root');
+                org.ownerOrgId = org.orgId;
+
+            } else {
+                template = $('#orgUnitTemplate').clone();
+                span = template.find('.node');
+            }
+
+            span.attr('id', org.orgId)
+                .data('orgname', org.orgName)
+                .data('ownerorgid', org.ownerOrgId); 
+
+            template.find('.showDetails').html(org.displayName);
+            template.removeAttr('id').removeClass('hide');
+
+            if (!parentId) {
+                BootstrapTree.addRoot($('.tree'), template);
+
+            } else {
+                BootstrapTree.addNode($('#'+parentId).closest('li'), template);
+            }
+
+
+        },
+
+        updateNode: function(org) {
+            console.log(org);
+            $('#'+org.orgId).data('orgname', org.orgName)
+                            .data('ownerorgid', org.ownerOrgId)
+                            .find('.showDetails').html(org.displayName);
+        },
+
+        removeNode: function(node) {
+            BootstrapTree.removeNode(node);
+        }
+    }
+
+    var Forms = {
+        clear: function() {
+            OrgInfo.close();
+            OrganizationForm.close();
+            OrganizationShifting.close();
+            Tree.unselect();
+        }
+    }
+
+    $('#app_maarchRM_main').ready(function() {
+        $('#organization_organizationForm').css('display', 'none');
+        $('#organization_organizationInfo').css('display', 'none');
+        $('#organization_moveForm').css('display', 'none');
+        
+        Tree.loadTree();
+        window.localStorage.clear();
+    });
+</script>

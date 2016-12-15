@@ -1,0 +1,146 @@
+<div data-translate-catalog="recordsManagement/messages">
+        <?hinclude recordsManagement/archive/modalArchiveInfo.html ?>
+    <div class="modal fade bs-example-modal-lg" id="corruptedModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="container_corruptedModal">
+            </div>
+        </div>
+    </div>
+
+    <div class="hide">
+        <span id="first_text">First</span>
+        <span id="previous_text">Previous</span>
+        <span id="next_text">Next</span>
+        <span id="last_text">Last</span>
+        <span id="show_text">Show</span>
+        <span id="lengthMenu_text">Show _MENU_ entries</span>
+    </div>
+</div>
+
+<div data-translate-catalog="recordsManagement/messages">
+    <!-- MODALS -->
+    <?hinclude recordsManagement/archive/modalModification.html ?>
+
+    <div class="hide">
+        <span id="preserved_text">preserved</span>
+        <span id="disposable_text">disposable</span>
+        <span id="frozen_text">frozen</span>
+        <span id="errorEmptyNode">No archives selected.</span>
+        <span id="errorWrongNodesSelection">This action is not relevant for the selection.</span>
+        <span id="errorWrongNode">This action is not relevant for this archive.</span>
+    </div>
+</div>
+
+<script>
+/* ----------------------------------------------------------------------------------------------------*/
+/* -- LIST BUTTON -- */
+
+// view the document
+$("#archiveList").on('click', ".viewDocument", function() {
+    archiveDocumentViewer.load($(this).closest('tr').attr('id'));
+});
+
+// view the archive description
+$('#archiveList').on('click', '.viewArchive', function () {
+    archiveInfoModal.load($(this).closest('tr').attr('id'));
+})
+
+/* ----------------------------------------------------------------------------------------------------*/
+/* -- LIST ACTIONS -- */
+$('.multipleActionMenu').on('click', 'li', function() {
+    var button = $(this);
+    var type = button.data('type');    
+    var selection = ArchivesAction.getSelectedArchives(type);
+
+    if(type == "checkHash") {
+        ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
+    } else {
+        ModificationModal.loadMultiple(selection.selected, selection.relevant, selection.ids, selection.names,type);    
+    }
+
+})
+
+$('.actionMenu').on('click', 'li', function() {
+    var button = $(this);
+    var type = button.data('type');
+    var tr = button.closest('tr');
+    var id = tr.attr('id');
+    var name = tr.attr('name');
+
+    if(type == "checkHash") {
+        ArchivesAction.checkHash(id);
+    } else {
+        ModificationModal.load(id, name, type);
+    }
+})
+
+var ArchivesAction = {
+    actions : {
+        retentionRule      : ['preserved'],
+        accessRule         : ['preserved'],
+        freeze             : ['preserved', 'restituable', 'disposable'],
+        unfreeze           : ['frozen'],
+        flagForDestruction : ['preserved', 'restituable'],
+        cancelDestruction  : ['disposable'],
+        checkHash          : ''
+    },
+
+    getSelectedArchives : function(type) {
+        var status = this.actions[type];
+        var dataSelector = [];
+        var selector = [];
+        var relevant = null;
+        var ids = [];
+        var names = [];
+
+        if (status == '') {
+            dataSelector.push('[data-archive-status]');
+        } else {
+            $.each(status, function (index, value) {
+                dataSelector.push('[data-archive-status="' + value + '"]');
+            })
+        }
+        
+        $.each(dataSelector, function (index, value) {
+            selector.push('input' + value + ':checked');
+        })
+        relevant = $(selector.join(', '));
+
+        $.each(relevant, function () {
+            ids.push($(this).val());
+            id = '#'+ $(this).val();
+            names.push($(id).attr('name'));
+        })
+
+        selectedArchives = {
+            selected: $('input[data-archive-status]:checked').length,
+            relevant: relevant.length,
+            ids: ids,
+            names: names
+        }
+
+        if (selectedArchives.selected == 0) {
+            gritter.show($('#errorEmptyNode').html(), false);
+            return false;
+        } else if (selectedArchives.relevant == 0) {
+            gritter.show($('#errorWrongNodesSelection').html(), false);
+            return false;
+        }
+
+        return selectedArchives;
+    },
+
+    checkHash : function(archives) {
+        $.ajax({
+            url: "/recordsManagement/verifyIntegrity?archiveIds[]=" + archives,
+            type: "GET",
+            dataType: 'html',
+            success: function (response) {
+                $("#container_corruptedModal").html(response);
+                $("#corruptedModal").modal();
+            }
+        });
+    }
+}
+
+</script>

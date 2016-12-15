@@ -1,0 +1,125 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain">
+<div class="container-fluid" data-translate-catalog="auth/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-key"></i>
+            Authorization roles
+        </h1>
+    </div>
+</div>
+
+<div class="container-fluid" data-translate-catalog="auth/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-right btn-toolbar">
+                        <button type="button" id="createRole" class="btn btn-default btn-sm" title="Add"><i class="fa fa-plus fa-fw"></i>Add</button>
+                    </div>
+                    <div class="pull-left">
+                        <h4><?merge roles.count() ?> authorization role(s)</h4>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable" id="list">
+                        <thead>
+                            <tr>
+                                <th>Role name</th>
+                                <th>Description</th>
+                                <th>Enabled</th>
+                                <th style="min-width:100px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge roles ?>
+                            <tr>
+                                <td><?merge .roleName ?></td>
+                                <td><?merge .description ?></td>
+                                <td><i class="fa [?merge .enabled.then('fa-unlock', 'fa-lock') ?]"</td>
+                                <td>
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-info editRole" data-roleid="[?merge .roleId?]"  title="Show">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </a>
+                                        <?merge .enbled.ifeq('Lock') ?>
+                                        <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Lock">
+                                            <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
+                                        </a>
+                                        <?merge .enbled.ifeq('Lock').not() ?>
+                                        <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Unlock">
+                                            <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
+                                        </a>
+ 
+                                        <!--a class="btn btn-danger deleteRole" data-roleid="[?merge .roleId?]"  title="Delete">
+                                            <span class="fa fa-fw fa-trash"></span>
+                                        </a-->
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display:none">
+<span id="lock_text">Lock</span>
+<span id="unlock_text">Unlock</span>
+</div>
+</div>
+<script type="text/javascript">
+    
+    //add a new role
+    $("#contain").on('click', "#createRole", function(){
+        load("/auth/role");
+    });
+
+    //edit a role
+    $("#contain").on('click', ".editRole", function(){
+        load("/auth/role/"+$(this).data('roleid'));
+    });
+
+    
+    //change the status of the role
+    $("#contain").on('click', ".changeStatus", function(){
+        var roleId = $(this).data('roleid');
+        var status = $(this).data('status');
+        var button = $(this);
+        $.ajax({
+            url         : "/auth/role/"+roleId+"/status/"+!status,
+            type        : "PUT",
+            dataType  : 'json',
+            success     : function(response) {
+                var icon = button.closest('tr').find('td > i:first');
+                button.data('status', !status);
+                if(status) {
+                    icon.removeClass('fa-unlock').addClass('fa-lock');
+                    button.attr('title', $('#lock_text').html());
+                    button.find('span:first').removeClass('fa-lock').addClass('fa-unlock');
+                } else {
+                    icon.removeClass('fa-lock').addClass('fa-unlock');
+                    button.attr('title', $('#unlock_text').html());
+                    button.find('span:first').removeClass('fa-unlock').addClass('fa-lock');
+                }
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    });
+
+    //delete a role
+    $("#contain").on('click', ".deleteRole", function(){
+        gritter.show('Not implemented... yet.', false)
+    });
+
+</script>

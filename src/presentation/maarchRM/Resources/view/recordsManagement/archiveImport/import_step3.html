@@ -1,0 +1,410 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+
+<div class=" col-md-11">
+    <div class="panel-group" id="fieldList" role="tablist" >
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" data-translate-catalog="documentManagement/document">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#fieldList" href="#collapseFields">
+                        Fields
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseFields" class="panel-collapse collapse in" role="tabpanel" data-translate-catalog="documentManagement/document">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div id="allFields">
+                            <div id="archivalProfileFields"></div>
+                            <div id="customFields"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="dropup col-xs-12" id="customFieldAddBtn">
+                                <button type="button" class="btn btn-sm btn-info pull-right" title="Add field" data-toggle="dropdown">
+                                    &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+                                </button>
+                                <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                                    <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                                    <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
+                                    <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+                                    <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
+                                    <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hide">
+    <!-- TEXT VARIABLE -->
+    <div data-translate-catalog="documentManagement/documentMetadata">
+        <span id="date_text">Date</span>
+        <span id="number_text">Number</span>
+        <span id="keyword_text">Keyword</span>
+        <span id="byte_text">bytes</span>
+    </div>
+
+    <span id="preservation_text">Preservation</span>
+    <span id="destruction_text">Destruction</span>
+    <span id="retentionRule_text">%s1 after %s2</span>
+
+    <div data-translate-catalog="dates/dates">
+        <span id="days_text">days</span>
+        <span id="months_text">months</span>
+        <span id="years_text" data-translate-context="unit">years</span>
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    <div data-translate-catalog="recordsManagement/message">
+        <span id="fieldLabel_error">You must define all required fields.</span>
+        <span id="customFieldLabel_error">You must define or remove all custom blank fields.</span>
+        <span id="keywordLabel_error">A keyword label is missing.</span>
+        <span id="documentMissing_error">The document is missing.</span>
+        <span id="retentionStartDateMissing_error">The retention start date is missing.</span>
+        <span id="retentionRuleCodeMissing_error">The retention rule is missing.</span>
+    </div>
+
+    <div data-translate-catalog="documentManagement/documentMetadata">
+        <!-- CUSTOM TEXT FIELD TEMPLATE -->
+        <div class="form-group" id="customTextFieldTemplate">
+            <div class="col-md-3">
+                <input type="text" class="form-control input-sm name" placeholder="Label"/>
+            </div>
+            <div class="input-group col-md-8">
+                <input type="text" class="form-control input-sm value" placeholder="Text"/>
+                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+            </div>
+        </div>
+        
+        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
+        <div class="form-group" id="customTextareaFieldTemplate">
+            <div class="col-md-3">
+                <input type="text" class="form-control input-sm name" placeholder="Label"/>
+            </div>
+            <div class="input-group col-md-8">
+                <textarea class="form-control input-sm value" rows="2" placeholder="Text"></textarea>
+                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+            </div>
+        </div>
+        
+        <!-- CUSTOM BOOLEAN FIELD TEMPLATE -->
+        <div class="form-group" id="customBooleanFieldTemplate">
+            <div class="col-md-3">
+                <input type="text" class="form-control input-sm name" placeholder="Label"/>
+            </div>
+            <div class="input-group col-md-8">
+                <input type="checkbox" class="value"/>
+                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+            </div>
+        </div>
+
+        <!-- TEXT FIELD TEMPLATE -->
+        <div class="form-group" id="inputFieldTemplate">
+            <label class="col-md-3 small"></label>
+            <div class="col-md-8">
+                <input type="text" class="form-control input-sm"/>
+                <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
+            </div>
+        </div>
+
+        <!-- TEXTAREA FIELD TEMPLATE -->
+        <div class="form-group" id="textareaFieldTemplate">
+            <label class="col-md-3 small"></label>
+            <div class="col-md-8">
+                <textarea class="form-control input-sm" rows="2"></textarea>
+                <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
+            </div>
+        </div>
+
+        <!-- SELECT FIELD TEMPLATE -->
+        <div class="form-group" id="selectFieldTemplate">
+            <label class="col-md-3 small"></label>
+            <div class="col-md-8">
+                <select class="form-control input-sm">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- BOOLEAN FIELD TEMPLATE -->
+        <div class="form-group" id="booleanFieldTemplate">
+            <label class="col-md-3 small"></label>
+            <div class="col-md-8">
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                    </label>
+                    <label class="btn btn-default active">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- REQUIRED FIELD TEMPLATE -->
+        <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+    </div>
+</div>
+
+<script type="text/javascript" src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+    // METADATAS
+    $('.addCustomField').on('click', function(e) {
+        e.preventDefault();
+        Metadata.addCustomField($(this));
+    });
+
+    $('#allFields').on('click', '.removeField', function(e) {
+        e.preventDefault();
+        Metadata.removeField($(this));
+    });
+
+    var Metadata = {
+        addDocumentDescription : function(documentDescription) {
+            //console.log(documentDescription);
+            var target = $("#archivalProfileFields");
+            var template = $('#inputFieldTemplate').clone();
+            var type = documentDescription.descriptionField.type;
+            var defaultVal = documentDescription.descriptionField.default;
+            var enumeration= documentDescription.descriptionField.enumeration;
+            var label = documentDescription.descriptionField.label;
+            var name = documentDescription.descriptionField.name;
+            var required = documentDescription.required;
+            var origin = documentDescription.origin;
+
+            var field = null;
+
+            switch (type) {
+                case 'text':
+                    template = $('#textareaFieldTemplate').clone();
+                    field = template.find('textarea');
+                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
+                        field.val(defaultVal);
+                    }
+                    break;
+                case 'name':
+                    if (enumeration) {
+                        template = $('#selectFieldTemplate').clone();
+                        field = template.find('select');
+
+                        $.each(enumeration, function (index, value) {
+                           field.append($('<option>', {
+                               value: value,
+                               text: value
+                           }));
+                        });
+                        field.val(defaultVal);
+                    } else {
+                        field = template.find('input');
+                        if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
+                            field.val(defaultVal);
+                        }
+                    }
+                    break;
+                case 'number':
+                    field = template.find('input');
+                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
+                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
+                        field.val(defaultVal);
+                    }
+                    break;
+                case 'date':
+                    field = template.find('input');
+                    field.attr('placeholder', $('#date_text').text());
+                    field.datepicker({
+                        language:$('#wrapper').attr('lang'),
+                        autoclose:true
+                    });
+                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
+                        field.data("datepicker").setDate(defaultVal);
+                    }
+                    
+                    break;
+                case 'boolean':
+                    var template = $('#booleanFieldTemplate').clone();
+                    field = template.find("input");
+                    template.find('.active').removeClass("active");
+                    if (defaultVal == 1 || defaultVal == 0) {
+                        template.find('[value="'+defaultVal+'"]').parent().addClass("active");
+                    } else {
+                        template.find('[value=""]').parent().addClass("active");
+                    }
+                    break;
+                default:
+                    console.log("Error invalid type");
+                    return;
+                    break;
+            }
+
+            field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
+            
+            template.find("label:first").text(label);
+            
+            if (required) {
+                $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
+                field.attr("data-required", required);
+            }
+
+            template.removeAttr('id').appendTo(target);
+        },
+
+        addCustomField : function(source) {
+            var target = $("#customFields");
+            var template = $('#customTextFieldTemplate').clone();
+            var type = source.attr('data-type');
+
+            var field = null;
+
+            switch (type) {
+                case 'text'   :
+                    template = $('#customTextareaFieldTemplate').clone();
+                    field = template.find('.value');
+                    break;
+                case 'name':
+                    field = template.find('input');
+                    break;
+                case 'number' : 
+                    field = template.find('.value');
+                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
+                    break;
+                case 'date':
+                    field = template.find('.value');
+                    field.attr('placeholder', $('#date_text').text());
+                    field.datepicker({
+                        language:$('#wrapper').attr('lang'),
+                        autoclose:true
+                    });
+                    break;
+                case 'boolean':
+                    var template = $('#customBooleanFieldTemplate').clone();
+                    field = template.find("input").last();
+                    field.bootstrapToggle();
+                    break;
+                default:
+                    console.log("Error invalid type");
+                    return;
+                    break;
+            }
+
+            field.attr('data-type', type);
+            template.removeAttr('id').appendTo(target);
+
+        },
+
+        removeField : function(source) {
+            source.closest('.form-group').remove();
+        },
+
+        serialize : function(target) {
+            var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
+            var inputsCustom = target.find("#customFields").children();
+            var metadatas = {};
+            metadatas.descriptionObject = [];
+            
+            var flagEmptyRequiredField = false;
+            var flagEmptyCustomField = false;
+            
+            $.each(inputsArchivalProfile, function() {
+                var value = $.trim($(this).val());
+                var type = $(this).attr("data-type");
+                
+                if (type == "boolean") {
+                    if (!$(this).parent().hasClass("active")) {
+                        return;
+                    }
+
+                    value = $(this).val();
+                }
+                
+                var name = $(this).attr('name');
+                var required = $(this).attr('data-required');
+
+                if (required == "true" && (value === "" || value === null || value === undefined)) {
+                    flagEmptyRequiredField = true;
+                    $(this).closest(".form-group").addClass('has-error');
+                    return;
+                } else if (required != "true" && (value === "" || value === null || value === undefined)) {
+                    return;
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+
+                if ($(this).attr("data-origin") != "user") {
+                    metadatas[name] = value;
+                }
+
+                var metadata = {
+                    type : type,
+                    name : name,
+                    value: value
+                }
+
+                metadatas.descriptionObject.push(metadata);
+            });
+            
+            $.each(inputsCustom, function() {
+                var valueInput = $(this).find('.value');
+                var labelInput = $(this).find('.name');
+                var metadata = {
+                    type : valueInput.data('type'),
+                    name : labelInput.val(),
+                    value: $.trim(valueInput.val())
+                }
+                
+                if (metadata.type == "boolean") {
+                    metadata.value = valueInput.prop("checked");
+                }
+
+                if (metadata.value === '' || metadata.value == undefined || metadata.value == null || metadata.name == ''|| metadata.name == undefined || metadata.name == null) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    flagEmptyCustomField = true;
+                    return;
+
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+
+                metadatas.descriptionObject.push(metadata);
+            });
+            
+            var result = metadatas;
+            
+            if (flagEmptyRequiredField) {
+                result = true;
+                gritter.show($('#fieldLabel_error').text(), false);
+            }
+            if (flagEmptyCustomField) {
+                result = true
+                gritter.show($('#customFieldLabel_error').text(), false);
+            }
+
+            return result;
+        },
+
+        clear : function() {
+            $('#archivalProfileFields').empty();
+            $('#customFields').empty();
+        },
+        
+        acceptUserIndex : function(value) {
+            if (value) {
+                $('#customFields').empty();
+                $('#customFieldAddBtn').removeClass("hide");
+            } else {
+                $('#customFields').empty();
+                $('#customFieldAddBtn').addClass("hide");
+            }
+        }
+    }
+</script>

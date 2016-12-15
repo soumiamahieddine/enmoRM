@@ -1,0 +1,34 @@
+# recordsManagement/archive
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Archival profile"
+msgstr "Profil d'archivage"
+
+msgid "Archive identifier"
+msgstr "Côte"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Archive import"
+msgstr "Import d'archives"
+
+msgid "Archive imported"
+msgstr "Archive importée"
+
+msgid "Archive name"
+msgstr "Intitulé"
+
+msgid "Disposal rule"
+msgstr "Règle de conservation"
+
+msgid "Retention rule"
+msgstr "Règle de conservation"
+
+msgid "Retention start date"
+msgstr "Date de référence"
+
+msgid "%s1 after %s2"
+msgstr "%s1 après %s2"
+

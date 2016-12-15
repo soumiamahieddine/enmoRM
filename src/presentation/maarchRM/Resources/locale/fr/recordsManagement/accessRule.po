@@ -1,0 +1,90 @@
+# recordsManagement/accessRule
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Access codes"
+msgstr "Codes d'accès"
+
+msgid "code(s)"
+msgstr "code(s)"
+
+msgid "Add an access code"
+msgstr "Ajouter un code d'accès"
+
+msgid "edit"
+msgstr "modifier"
+
+msgid "Access rules duration"
+msgstr "Durée de la règle d'accès"
+
+msgid "New access code"
+msgstr "Nouveau code d'accès"
+
+msgid "Edit an access code"
+msgstr "Edition d'un code d'accès"
+
+msgid "Access rules"
+msgstr "Règles d'accès"
+
+msgid "Group"
+msgstr "Groupe"
+
+msgid "Deposit"
+msgstr "Déposer"
+
+msgid "Retrieve"
+msgstr "Consulter"
+
+msgid "Destroy"
+msgstr "Eliminer"
+
+msgid "Destrution"
+msgstr "Destruction"
+
+msgid "Preservation"
+msgstr "Conservation"
+
+msgid "New access code created"
+msgstr "Code d'accès créé"
+
+msgid "Access code updated"
+msgstr "Code d'accès modifié"
+
+msgid "Final disposition"
+msgstr "Sort final"
+
+msgid "Access rule duration"
+msgstr "Durée de la règle d'accès"
+
+msgid "Day(s)"
+msgstr "Jour(s)"
+
+msgid "Month(s)"
+msgstr "Mois"
+
+msgid "Year(s)"
+msgstr "Année(s)"
+
+msgid "unlimited"
+msgstr "Illimité"
+
+msgid "Y"
+msgstr "an(s)"
+msgctxt "duration"
+
+msgid "M"
+msgstr "mois"
+msgctxt "duration"
+
+msgid "D"
+msgstr "jour(s)"
+msgctxt "duration"
+
+msgid "Access Code is empty."
+msgstr "Code d'accès vide."
+
+msgid "Access entries"
+msgstr "Règles d'accès"
+
+msgid "Originator"
+msgstr "Producteur"

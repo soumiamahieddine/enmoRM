@@ -1,0 +1,164 @@
+<div id="contain" >
+<div class="col-lg-5">
+    <form class="form-horizontal" role="form">
+        <div class="well">
+            <!-- Repository -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="profileName">Repository name</label>
+                <div class="col-sm-9">
+                    <select class="form-control" id="repositoryId">
+                        <option value="">Please to select a repository</option>
+                        <?merge repositories ?>
+                        <option value="[?merge .repositoryId?]"><?merge .repositoryName ?></option>
+                        <?merge repositoriesHide ?>
+                        <option value="[?merge .repositoryId?]" class="hide"><?merge .repositoryName ?></option>
+                    </select>
+                </div>    
+            </div>
+            <!-- read priority -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="readPriority">Read priority</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Read priority" id="readPriority" />
+                </div>    
+            </div>
+            <!-- write priority -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="writePriority">Write priority</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Write priority" id="writePriority" />
+                </div>    
+            </div>
+            <!-- suppress priority -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="suppressPriority">Suppress priority</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Suppress priority" id="suppressPriority" />
+                </div>    
+            </div>
+            <div class="clearfix">
+                <button type="button" class="btn btn-primary col-sm-9 col-sm-offset-2" data-add-repository title="Add profile repository">Add profile repository</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-lg-7" data-form-ns="profileRepository" data-form-rel="toMany">
+    <div class="well">
+        <h3>Profile repositories</h3>
+        <div id="profileRepositories" class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <th>Repository name</th>
+                    <th>Read priority</th>
+                    <th>Write priority</th>
+                    <th>Suppress priority</th>
+                    <th></th>
+                </thead>
+                <tbody id='tbodyRepository'>
+                    <?merge profile.profileRepository.bool()?>
+                    <div>
+                        <?merge profile.profileRepository ?>
+                        <div>
+                            <?merge . ?>
+                            <tr>
+                                <td><?merge .repositoryName ?></td>
+                                <td><?merge .readPriority ?></td>
+                                <td><?merge .writePriority ?></td>
+                                <td><?merge .suppressPriority ?></td>
+                                <td>
+                                    <form class="hide">
+                                        <input type="hidden" name="profileId" value='[?merge profile.profileId ?]'/>
+                                        <input type="hidden" name="repositoryId"/>
+                                        <input type="hidden" name="readPriority"/>
+                                        <input type="hidden" name="writePriority"/>
+                                        <input type="hidden" name="suppressPriority"/>
+                                    </form>
+                                    <button type="button" class="btn btn-danger" data-delete-repository title="Delete"><span class="fa fa-trash">&nbsp;</span>Delete</button>
+                                </td>
+                            </tr>
+                        </div>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $('#contain').ready(function() {
+        $("#contain").on('click', '[data-delete-repository]', function(){
+            var repositoryName = $(this).parent().parent().children().first().text();
+            $("select option:contains('"+repositoryName+"')").removeClass('hide');
+            $(this).parent().parent().remove();
+        });
+        
+        $('[data-add-repository]').on('click', function(){
+            if ($('#repositoryId').val() && $('#readPriority').val() && $('#suppressPriority').val()) {
+                var repoId = $('#repositoryId').val();
+                var repoName = $('#repositoryId  option:selected').text();
+                var readPriority = $('#readPriority').val();
+                var writePriority = $('#writePriority').val();
+                var suppressPriority = $('#suppressPriority').val();
+                
+                var intRegex = /^\d+$/;
+                if(!intRegex.test(readPriority)) {
+                    $('#readPriority').parent().addClass('has-error');
+                    $.gritter.add({
+                         title: 'Error',
+                         text: 'The value of read priority must be a number'
+                    });
+                   return;
+                } else {
+                    $('#readPriority').parent().removeClass('has-error');
+                }
+                if(!intRegex.test(writePriority)) {
+                    $('#writePriority').parent().addClass('has-error');
+                    $.gritter.add({
+                         title: 'Error',
+                         text: 'The value of write priority must be a number'
+                    });
+                    return;
+                } else {
+                    $('#writePriority').parent().removeClass('has-error');
+                }
+                if(!intRegex.test(suppressPriority)) {
+                    $('#suppressPriority').parent().addClass('has-error');
+                    $.gritter.add({
+                         title: 'Error',
+                         text: 'The value of suppress priority must be a number'
+                    });
+                    return;
+                } else {
+                    $('#suppressPriority').parent().removeClass('has-error');
+                }
+                
+                var tr = $(document.createElement('tr'));
+                $(document.createElement('td')).text(repoName).appendTo(tr);
+                $(document.createElement('td')).text(readPriority).appendTo(tr);
+                $(document.createElement('td')).text(writePriority).appendTo(tr);
+                $(document.createElement('td')).text(suppressPriority).appendTo(tr);
+                var lastTd = $(document.createElement('td')).appendTo(tr);
+
+                var form = $(document.createElement('form')).attr('class', 'hide').appendTo(lastTd);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'repositoryId').attr('value', repoId).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'readPriority').attr('value', readPriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'writePriority').attr('value', writePriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'suppressPriority').attr('value', suppressPriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'profileId').attr('value', $('#profileId').val()).appendTo(form);
+
+                var button = $(document.createElement('button')).attr('type', 'button').attr('data-delete-repository', '').attr('class', 'btn btn-danger').appendTo(lastTd);
+                $(document.createElement('span')).attr('class', 'fa fa-trash').appendTo(button);
+                button.append(' Delete');
+
+                $('#tbodyRepository').append(tr);
+                
+                $('#repositoryId option:selected').addClass('hide');
+                $(this).closest('form').trigger("reset");
+            }
+            $.gritter.add({
+                title: 'Error',
+                text: 'The form must be completed to add a profile repository'
+            });
+        });
+    });
+</script>

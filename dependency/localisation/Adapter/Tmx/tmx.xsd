@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Document        : tmx20.xsd
+  Version         : 1.0
+  Created on      : December 2, 2006
+  Author          : rmraya@heartsome.net
+  Description     : This XML Schema defines the structure of TMX 2.0
+  Status          : Preliminary draft
+  
+  Copyright © The Localisation Industry Standards Association [LISA] 1997-2007. 
+  All Rights Reserved.
+  
+  This document and translations of it may be copied and furnished to others,
+  and derivative works that comment on or otherwise explain it or assist in its
+  implementation may be prepared, copied, published and distributed, in whole or
+  in part, without restriction of any kind, provided that the above copyright
+  notice and this paragraph are included on all such copies and derivative works.
+  However, this document itself may not be modified in any way, such as by removing
+  the copyright notice or references to LISA.
+
+  The limited permissions granted above are perpetual and will not be revoked by
+  LISA or its successors or assigns.
+
+  This document and the information contained herein is provided on an "AS IS"
+  basis and LISA DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+  LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+  ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR
+  PURPOSE. 
+-->
+<xs:schema xmlns:tmx="http://www.lisa.org/tmx20"
+    targetNamespace="http://www.lisa.org/tmx20" xml:lang="en"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+        schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+    <!--
+    ================================================== 
+     Restrictions
+    ================================================== 
+    -->    
+    <!-- Restrictions for segtype attribute -->
+    <xs:simpleType name="segtypes">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="block"/>
+            <xs:enumeration value="paragraph"/>
+            <xs:enumeration value="sentence"/>
+            <xs:enumeration value="phrase"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for xml:space attribute -->
+    <xs:simpleType name="space">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="default"/>
+            <xs:enumeration value="preserve"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for assoc attribute -->
+    <xs:simpleType name="assoc_type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="p"/>
+            <xs:enumeration value="f"/>
+            <xs:enumeration value="b"/>            
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for datatype attribute -->
+    <xs:simpleType name="datatype">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="unknown"/>
+            <xs:enumeration value="undefined"/>
+            <xs:enumeration value="alptext"/>
+            <xs:enumeration value="cdf"/>
+            <xs:enumeration value="cmx"/>
+            <xs:enumeration value="cpp"/>
+            <xs:enumeration value="hptag"/>
+            <xs:enumeration value="html"/>
+            <xs:enumeration value="interleaf"/>
+            <xs:enumeration value="ipf"/>
+            <xs:enumeration value="java"/>
+            <xs:enumeration value="javascript"/>
+            <xs:enumeration value="lisp"/>
+            <xs:enumeration value="mif"/>
+            <xs:enumeration value="opentag"/>
+            <xs:enumeration value="pascal"/>
+            <xs:enumeration value="plaintext"/>
+            <xs:enumeration value="pm"/>
+            <xs:enumeration value="resx"/>
+            <xs:enumeration value="rtf"/>
+            <xs:enumeration value="sgml"/>
+            <xs:enumeration value="stf-f"/>
+            <xs:enumeration value="stf-i"/>
+            <xs:enumeration value="transit"/>
+            <xs:enumeration value="vbscript"/>
+            <xs:enumeration value="winres"/>
+            <xs:enumeration value="xliff"/>
+            <xs:enumeration value="xml"/>
+            <xs:enumeration value="xptag"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for type attribute when used in <bpt> or <g> -->
+    <xs:simpleType name="paired_type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="bold"/>
+            <xs:enumeration value="color"/>
+            <xs:enumeration value="dulined"/>
+            <xs:enumeration value="font"/>
+            <xs:enumeration value="italic"/>
+            <xs:enumeration value="link"/>
+            <xs:enumeration value="scap"/>
+            <xs:enumeration value="struct"/>
+            <xs:enumeration value="ulined"/>
+            <xs:enumeration value="xliff-bpt"/>
+            <xs:enumeration value="xliff-g"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for type attribute when used in <ph> or <x/> -->
+    <xs:simpleType name="placeholder_type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="index"/>
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="time"/>
+            <xs:enumeration value="fnote"/>
+            <xs:enumeration value="enote"/>
+            <xs:enumeration value="alt"/>
+            <xs:enumeration value="image"/>
+            <xs:enumeration value="pb"/>
+            <xs:enumeration value="lb"/>
+            <xs:enumeration value="cb"/>
+            <xs:enumeration value="inset"/>
+            <xs:enumeration value="xliff-bx"/>
+            <xs:enumeration value="xliff-ex"/>
+            <xs:enumeration value="xliff-it"/>
+            <xs:enumeration value="xliff-ph"/>
+            <xs:enumeration value="xliff-x"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for type attribute when used in <hi> -->
+    <xs:simpleType name="term_type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="abbrev"/>
+            <xs:enumeration value="abbreviated-form"/>
+            <xs:enumeration value="abbreviation"/>
+            <xs:enumeration value="acronym"/>
+            <xs:enumeration value="appellation"/>
+            <xs:enumeration value="collocation"/>
+            <xs:enumeration value="common-name"/>
+            <xs:enumeration value="datetime"/>
+            <xs:enumeration value="equation"/>
+            <xs:enumeration value="expanded-form"/>
+            <xs:enumeration value="formula"/>
+            <xs:enumeration value="head-term"/>
+            <xs:enumeration value="initialism"/>
+            <xs:enumeration value="international-scientific-term"/>
+            <xs:enumeration value="internationalism"/>
+            <xs:enumeration value="logical-expression"/>
+            <xs:enumeration value="materials-management-unit"/>
+            <xs:enumeration value="name"/>
+            <xs:enumeration value="near-synonym"/>
+            <xs:enumeration value="part-number"/>
+            <xs:enumeration value="phrase"/>
+            <xs:enumeration value="phraseological-unit"/>
+            <xs:enumeration value="protected"/>
+            <xs:enumeration value="romanized-form"/>
+            <xs:enumeration value="set-phrase"/>
+            <xs:enumeration value="short-form"/>
+            <xs:enumeration value="sku"/>
+            <xs:enumeration value="standard-text"/>
+            <xs:enumeration value="symbol"/>
+            <xs:enumeration value="synonym"/>
+            <xs:enumeration value="synonymous-phrase"/>
+            <xs:enumeration value="term"/>
+            <xs:enumeration value="transcribed-form"/>
+            <xs:enumeration value="transliterated-form"/>
+            <xs:enumeration value="truncated-term"/>
+            <xs:enumeration value="variant"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for context-type attribute -->
+    <xs:simpleType name="context_type">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="database"/>
+            <xs:enumeration value="element"/>
+            <xs:enumeration value="elementtitle"/>
+            <xs:enumeration value="linenumber"/>
+            <xs:enumeration value="numparams"/>
+            <xs:enumeration value="paramnotes"/>
+            <xs:enumeration value="record"/>
+            <xs:enumeration value="recordtitle"/>
+            <xs:enumeration value="sourcefile"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- Restrictions for user-defined attribute values -->
+    <xs:simpleType name="Custom">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="x-[^\s]+"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <!--
+    ================================================== 
+    Structural Elements     
+    ================================================== 
+    -->
+    <!-- Base Document Element -->
+    <xs:element name="tmx">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="tmx:header"/>
+                <xs:element ref="tmx:body"/>
+            </xs:sequence>
+            <xs:attribute name="version" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="2.0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Body -->
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="tmx:tu"/>
+                <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>                
+            </xs:sequence>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Context Information -->
+    <xs:element name="context">
+        <xs:complexType mixed="true">
+            <xs:attribute name="context-type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:context_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- External File -->
+    <xs:element name="external-file">
+        <xs:complexType>
+            <xs:attribute name="href" use="required"/>
+            <xs:attribute name="crc"/>
+            <xs:attribute name="uid"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Header -->
+    <xs:element name="header">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="tmx:note"/>
+                    <xs:element ref="tmx:prop"/>
+                </xs:choice>
+                <xs:element minOccurs="0" ref="tmx:inline-data"/>
+                <xs:element minOccurs="0" ref="tmx:segmentation"/>
+                <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other"
+                    processContents="lax"/>
+            </xs:sequence>
+            
+            <xs:attribute name="creationtool" use="required"/>
+            <xs:attribute name="creationtoolversion" use="required"/>
+            <xs:attribute name="segtype" use="required" type="tmx:segtypes"/>
+            <xs:attribute name="o-tmf" use="required"/>
+            <xs:attribute name="adminlang" use="required"/>
+            <xs:attribute name="srclang" use="required"/>
+            <xs:attribute name="datatype" default="unknown">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:datatype tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="o-encoding"/>
+            <xs:attribute name="creationdate"/>
+            <xs:attribute name="creationid"/>
+            <xs:attribute name="changedate"/>
+            <xs:attribute name="changeid"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Inline Data -->
+    <xs:element name="inline-data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="tmx:tag"/>
+            </xs:sequence>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Internal File -->
+    <xs:element name="internal-file">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other"
+                    processContents="lax"/>                
+            </xs:sequence>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>            
+        </xs:complexType>
+    </xs:element>
+    <!-- Note -->
+    <xs:element name="note">
+        <xs:complexType mixed="true">
+            <xs:attribute name="o-encoding"/>
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute name="creationdate"/>
+            <xs:attribute name="creationid"/>
+            <xs:attribute name="changedate"/>
+            <xs:attribute name="changeid"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Property -->
+    <xs:element name="prop">
+        <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute name="o-encoding"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Segment -->
+    <xs:element name="seg">
+        <xs:complexType mixed="true">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tmx:bpt"/>
+                <xs:element ref="tmx:ept"/>
+                <xs:element ref="tmx:ph"/>
+                <xs:element ref="tmx:hi"/>
+                <xs:element ref="tmx:x"/>
+                <xs:element ref="tmx:g"/>
+            </xs:choice>
+            <xs:attribute ref="xml:space" default="default"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Segmentation -->
+    <xs:element name="segmentation">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element ref="tmx:internal-file"/>
+                <xs:element ref="tmx:external-file"/>
+            </xs:choice>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Tag -->
+    <xs:element name="tag">
+        <xs:complexType mixed="true">
+            <xs:attribute name="id" use="required" type="xs:ID"/>
+            <xs:attribute name="endmrk"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:paired_type tmx:placeholder_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="o-encoding"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Translation Unit -->
+    <xs:element name="tu">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="tmx:note"/>
+                    <xs:element ref="tmx:prop"/>
+                    <xs:element ref="tmx:context"/>
+                </xs:choice>
+                <xs:element ref="tmx:tuv" minOccurs="2" maxOccurs="unbounded"/>
+                <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other"
+                    processContents="lax"/>
+            </xs:sequence>
+            <xs:attribute name="tuid"/>
+            <xs:attribute name="o-encoding"/>
+            <xs:attribute name="datatype" default="unknown" type="tmx:datatype"/>
+            <xs:attribute name="usagecount"/>
+            <xs:attribute name="lastusagedate"/>
+            <xs:attribute name="creationtool"/>
+            <xs:attribute name="creationtoolversion"/>
+            <xs:attribute name="creationdate"/>
+            <xs:attribute name="creationid"/>
+            <xs:attribute name="changedate"/>
+            <xs:attribute name="segtype" type="tmx:segtypes"/>
+            <xs:attribute name="changeid"/>
+            <xs:attribute name="o-tmf"/>
+            <xs:attribute name="srclang"/>
+            <xs:attribute name="group"/>
+            <xs:attribute name="g-order">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Translation Unit Variant -->
+    <xs:element name="tuv">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element ref="tmx:note"/>
+                    <xs:element ref="tmx:prop"/>
+                </xs:choice>
+                <xs:element ref="tmx:seg"/>
+                <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+            </xs:sequence>
+            <xs:attribute ref="xml:lang" use="required"/>
+            <xs:attribute name="o-encoding"/>
+            <xs:attribute name="datatype" default="unknown" type="tmx:datatype"/>
+            <xs:attribute name="usagecount"/>
+            <xs:attribute name="lastusagedate"/>
+            <xs:attribute name="creationtool"/>
+            <xs:attribute name="creationtoolversion"/>
+            <xs:attribute name="creationdate"/>
+            <xs:attribute name="creationid"/>
+            <xs:attribute name="changedate"/>
+            <xs:attribute name="o-tmf"/>
+            <xs:attribute name="changeid"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!--
+    ================================================== 
+     Content Markup 
+    ================================================== 
+    -->
+    <!-- Begin Paired Tag -->
+    <xs:element name="bpt">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="tmx:sub"/>
+            </xs:sequence>
+            <xs:attribute name="i" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="equiv-text"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:paired_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- End Paired Tag -->
+    <xs:element name="ept">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="tmx:sub"/>
+            </xs:sequence>
+            <xs:attribute name="i" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="equiv-text"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Generic Group Placeholder -->
+    <xs:element name="g">
+        <xs:complexType mixed="true">
+            <xs:attribute name="xid" use="required" type="xs:IDREF"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:paired_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="equiv-text"/>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Highlight -->
+    <xs:element name="hi">
+        <xs:complexType mixed="true">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tmx:bpt"/>
+                <xs:element ref="tmx:ept"/>
+                <xs:element ref="tmx:ph"/>
+                <xs:element ref="tmx:x"/>
+                <xs:element ref="tmx:g"/>
+                <xs:element ref="tmx:hi"/>
+            </xs:choice>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:term_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="comment"/>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Placeholder -->
+    <xs:element name="ph">
+        <xs:complexType mixed="true">
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="unbounded" ref="tmx:sub"/>
+            </xs:sequence>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="assoc"  type="tmx:assoc_type"/>
+            <xs:attribute name="equiv-text"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:placeholder_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!-- Subflow -->
+    <xs:element name="sub">
+        <xs:complexType mixed="true">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="tmx:bpt"/>
+                <xs:element ref="tmx:ept"/>
+                <xs:element ref="tmx:ph"/>
+                <xs:element ref="tmx:hi"/>
+                <xs:element ref="tmx:g"/>
+                <xs:element ref="tmx:x"/>
+            </xs:choice>
+            <xs:attribute name="datatype" default="unknown" type="tmx:datatype"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:paired_type tmx:placeholder_type tmx:term_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+    <!--  Generic Placeholder -->
+    <xs:element name="x">
+        <xs:complexType>
+            <xs:attribute name="xid" use="required" type="xs:IDREF"/>
+            <xs:attribute name="equiv-text"/>
+            <xs:attribute name="type" use="required">
+                <xs:simpleType>
+                    <xs:union memberTypes="tmx:placeholder_type tmx:Custom"/>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="x">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:anyAttribute namespace="##any" processContents="lax"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<!-- End -->

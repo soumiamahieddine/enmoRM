@@ -1,0 +1,717 @@
+<form id="schedulingForm" class="form-horizontal" style="display:none">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br/>
+            <br/>
+            <input type="hidden" name="schedulingId">
+
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Name<span style="color:red">&nbsp;*</span></label>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Scheduling name"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Task<span style="color:red">&nbsp;*</span></label>
+                <div class="col-lg-7">
+                    <select class="form-control" name="taskId" title="Task name">
+                        <option value="" disabled selected>Select a task</option>
+                        <?merge tasks ?>
+                        <option value="[?merge .taskId ?]"><?merge .description ?></option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Executed by<span style="color:red">&nbsp;*</span></label>
+                <div class="col-lg-7">
+                    <select class="form-control" name="serviceAccountId" title="Executed by">
+                        <option value="" disabled selected>Select a service account</option>
+                        <?merge serviceAccount ?>
+                        <option value="[?merge .accountId ?]"><?merge .displayName ?></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <br/>
+                <div class="btn-group col-sm-offset-1 col-xs-12" role="group" data-toggle="buttons">
+                    <label class="col-xs-3 btn btn-info active frequencyType" title="Days">
+                        <input type="radio" name="frequencyType" value="daily" checked/>Daily
+                    </label>
+                    <label class="col-xs-3 btn btn-default frequencyType" title="Week">
+                        <input type="radio" name="frequencyType" value="weekly"/>Weekly
+                    </label>
+                    <label class="col-xs-3 btn btn-default frequencyType" title="Month">
+                        <input type="radio" name="frequencyType" value="monthly"/>Monthly
+                    </label>
+                </div>
+            </div>
+
+            <div id="weekDaySelector" class="form-group">
+                <label class="col-lg-3 control-label">Week days <span style="color:red">*</span></label>
+                <div class="col-lg-7">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default weekDay" title="Monday" data-translate-context="monday">
+                            <input type="checkbox" name="weekDays" value="MON"/>M
+                        </label>
+                        <label class="btn btn-default weekDay" title="Tuesday" data-translate-context="tuesday">
+                            <input type="checkbox" name="weekDays" value="TUE"/>T
+                        </label>
+                        <label class="btn btn-default weekDay" title="Wednesday" data-translate-context="wednesday">
+                            <input type="checkbox" name="weekDays" value="WED"/>W
+                        </label>
+                        <label class="btn btn-default weekDay" title="Thursday" data-translate-context="thursday">
+                            <input type="checkbox" name="weekDays" value="THU"/>T
+                        </label>
+                        <label class="btn btn-default weekDay" title="Friday" data-translate-context="friday">
+                            <input type="checkbox" name="weekDays" value="FRI"/>F
+                        </label>
+                        <label class="btn btn-default weekDay" title="Saturday" data-translate-context="saturday">
+                            <input type="checkbox" name="weekDays" value="SAT"/>S
+                        </label>
+                        <label class="btn btn-default weekDay" title="Sunday" data-translate-context="sunday">
+                            <input type="checkbox" name="weekDays" value="SUN"><span class="text-danger">S</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="monthSelector" class="form-group">
+                <label class="col-lg-3 control-label">Month</label>
+                <div class="col-lg-9">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default btn-sm month" title="January" data-translate-context="january">
+                            <input type="checkbox" name="month" value="JAN"/>J
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="February" data-translate-context="february">
+                            <input type="checkbox" name="month" value="FEB"/>F
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="March" data-translate-context="march">
+                            <input type="checkbox" name="month" value="MAR"/>M
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="April" data-translate-context="april">
+                            <input type="checkbox" name="month" value="APR"/>A
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="May" data-translate-context="mai">
+                            <input type="checkbox" name="month" value="MAI"/>M
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="June" data-translate-context="jun">
+                            <input type="checkbox" name="month" value="JUN"/>J
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="July" data-translate-context="july">
+                            <input type="checkbox" name="month" value="JUL">J
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="August" data-translate-context="august">
+                            <input type="checkbox" name="month" value="AUG">A
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="September" data-translate-context="september">
+                            <input type="checkbox" name="month" value="SEP">S
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="October" data-translate-context="october">
+                            <input type="checkbox" name="month" value="OCT">O
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="November" data-translate-context="november">
+                            <input type="checkbox" name="month" value="NOV">N
+                        </label>
+                        <label class="btn btn-default btn-sm month" title="December" data-translate-context="december">
+                            <input type="checkbox" name="month" value="DEC">D
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dateSelector" class="form-group">
+                <label class="col-lg-3 control-label">Days <span style="color:red">*</span></label>
+                <div class="col-lg-9">
+                    <table id="calendar">
+                        <tr>
+                            <td class="date btn-default" data-value="1">1</td>
+                            <td class="date btn-default" data-value="2">2</td>
+                            <td class="date btn-default" data-value="3">3</td>
+                            <td class="date btn-default" data-value="4">4</td>
+                            <td class="date btn-default" data-value="5">5</td>
+                            <td class="date btn-default" data-value="6">6</td>
+                            <td class="date btn-default" data-value="7">7</td>
+                            <td class="date btn-default" data-value="8">8</td>
+                        </tr>
+                        <tr>
+                            <td class="date btn-default" data-value="9">9</td>
+                            <td class="date btn-default" data-value="10">10</td>
+                            <td class="date btn-default" data-value="11">11</td>
+                            <td class="date btn-default" data-value="12">12</td>
+                            <td class="date btn-default" data-value="13">13</td>
+                            <td class="date btn-default" data-value="14">14</td>
+                            <td class="date btn-default" data-value="15">15</td>
+                            <td class="date btn-default" data-value="16">16</td>
+                        </tr>
+                        <tr>
+                            <td class="date btn-default" data-value="17">17</td>
+                            <td class="date btn-default" data-value="18">18</td>
+                            <td class="date btn-default" data-value="19">19</td>
+                            <td class="date btn-default" data-value="20">20</td>
+                            <td class="date btn-default" data-value="21">21</td>
+                            <td class="date btn-default" data-value="22">22</td>
+                            <td class="date btn-default" data-value="23">23</td>
+                            <td class="date btn-default" data-value="24">24</td>
+                        </tr>
+                        <tr>
+                            <td class="date btn-default" data-value="25">25</td>
+                            <td class="date btn-default" data-value="26">26</td>
+                            <td class="date btn-default" data-value="27">27</td>
+                            <td class="date btn-default" data-value="28">28</td>
+                            <td class="date btn-default lastDay" data-value="29">29</td>
+                            <td class="date btn-default lastDay" data-value="30">30</td>
+                            <td class="date btn-default lastDay" data-value="31">31</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    <small id="lastDayInfo" class="hide text-muted">
+                        <i class="fa fa-info-circle"/> The task will be executed the last day of months with less than selected days.
+                    </small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Start time<span style="color:red">&nbsp;*</span></label>
+                <div class="col-lg-5 col-xs-7 col-xs-offset-1 input-group">
+                    <select class="form-control col-xs-4" name="startHours" title="Hour">
+                        <option value="00">00</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                    </select>
+                    <b class="input-group-addon" style="font-weight: 900">:</b>
+                    <select class="form-control col-xs-1" name="startMinutes" title="Minute">
+                        <option value="00">00</option>
+                        <option value="05">05</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50">50</option>
+                        <option value="55">55</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-3 col-xs-3 control-label">Repetition</label>
+                <div class="col-lg-5 col-xs-7 btn-group" data-toggle="buttons">
+                    <label id="repetitionOn" class="btn btn-default btn-xs" title="Enabled">
+                        <input type="radio" name="repetition" value="1"/>On
+                    </label>
+                    <label id="repetitionOff" class="btn btn-default btn-xs active" title="Disabled">
+                        <input type="radio" name="repetition" value="0" checked/>Off
+                    </label>
+                </div>
+            </div>
+
+            <div id="repetitionForm" class="well hide col-xs-10 col-xs-offset-1">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Every</label>
+                    <div class="col-lg-5 col-xs-7 input-group">
+                        <input type="number" min="1" class="form-control" name="frequencyNumber" value="1">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="frequencyUnit" data-value="M">minute(s)</span> 
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                              <li><a href="#" class="frequencyUnit" data-value='M'>minute(s)</a></li>
+                              <li><a href="#" class="frequencyUnit" data-value='H'>hour(s)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">End time</label>
+                    <div class="col-lg-5 col-xs-7 input-group">
+                            <select class="form-control col-xs-4" name="endHours" title="Hour">
+                                <option value="00">00</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                            </select>
+                            <b class="input-group-addon" style="font-weight: 900">:</b>
+                            <select class="form-control col-xs-1" name="endMinutes" title="Minute">
+                                <option value="00">00</option>
+                                <option value="05">05</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                                <option value="35">35</option>
+                                <option value="40">40</option>
+                                <option value="45">45</option>
+                                <option value="50">50</option>
+                                <option value="55">55</option>
+                            </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 col-xs-3 control-label">Parameters</label>
+                <div class="col-lg-5 col-xs-7 btn-group" data-toggle="buttons">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="parameters" placeholder="Parameters"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" type="button" id="addParameters" title="Add"><i class="fa fa-plus fa-fw"></i></button>
+                        </span>
+                    </div>
+                    <br>
+                    <div>
+                        <ul class="parametersList list-group ">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="pull-right">
+                <button type="button" id="cancelSchedule" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                <button type="button" id="modifyTask" class="btn btn-success"  title="Modify the task"><i class="fa fa-save">&nbsp;</i>Modify</button>
+                <button type="button" id="addTask" class="btn btn-success"  title="Add the task"><i class="fa fa-plus">&nbsp;</i>Add</button>
+            </div>
+        </div>
+    </div>
+    <!-- TRANSLATED TEXT -->
+    <span id="minutes_text" class="hide">minute(s)</span>
+    <span id="hours_text" class="hide">hour(s)</span>
+    <span id="empty_text" class="hide">The fields with a star are compulsory.</span>
+</form>
+
+<style>
+#calendar td {
+    border: solid 1px silver;
+}
+
+#calendar .date {
+    padding:8px;
+    text-align: center;
+    cursor: pointer;
+}
+
+</style>
+
+<script type="text/javascript">
+    // Frequency type selection
+    $('#schedulingForm').on('click', '.frequencyType', function(event) {
+        $('#schedulingForm').find('.frequencyType.btn-info').removeClass('btn-info').addClass('btn-default');
+        var value = $(this).toggleClass('btn-info btn-default').find('input').val();
+        switch (value){
+            case 'daily' :
+                $('#weekDaySelector').css('display', 'none');
+                $('#dateSelector').css('display', 'none');
+                $('#monthSelector').css('display', 'none');
+                TaskSchedulingForm.clearWeekDays();
+                TaskSchedulingForm.clearMonth();
+                break;
+            case 'weekly' :
+                $('#weekDaySelector').css('display', '');
+                $('#dateSelector').css('display', 'none');
+                $('#monthSelector').css('display', 'none');
+                TaskSchedulingForm.clearMonth();
+                break;
+            case 'monthly' :
+                $('#weekDaySelector').css('display', 'none');
+                $('#dateSelector').css('display', '');
+                $('#monthSelector').css('display', '');
+                TaskSchedulingForm.clearWeekDays();
+                break;
+            default :
+        }
+    })
+
+    // Week day selection color
+    $('#schedulingForm').on('click', '.weekDay', function(event) {
+        $(this).toggleClass('btn-info btn-default');
+    })
+
+    // Month day selection color
+    $('#calendar').on('click', '.date', function(event) {
+        var btn = $(this);
+
+        btn.toggleClass('active btn-info btn-default');
+
+        if (btn.hasClass('lastDay')) {
+            if ($('#calendar').find('.lastDay.active').length) {
+                $('#lastDayInfo').removeClass('hide');
+
+            } else {
+                $('#lastDayInfo').addClass('hide');
+            }            
+        }
+    })
+
+    // Month selection color
+    $('#schedulingForm').on('click', '.month', function(event) {
+        $(this).toggleClass('btn-info btn-default');
+    })
+
+    // Repetition
+    $('#repetitionOn').on('click', function() {
+        $('#repetitionOn').addClass('btn-warning').removeClass('btn-default');
+        $('#repetitionForm').removeClass('hide');
+    })
+
+    $('#repetitionOff').on('click', function() {
+        $('#repetitionOn').removeClass('btn-warning').addClass('btn-default');
+        $('#repetitionForm').addClass('hide');
+    })
+
+    // Repetition unit selection
+    $('#schedulingForm').on('click', '.frequencyUnit', function() {
+        var value = $(this).data('value');
+
+        if(value == "M") {
+            $('#frequencyUnit').html($('#minutes_text').html()).data('value', value);
+        } else {
+            $('#frequencyUnit').html($('#hours_text').html()).data('value', value);
+        }
+    })
+
+    $("#addParameters").on("click", function() {
+        TaskSchedulingForm.addParameters();
+    });
+    
+    // Save task
+    $('#addTask, #modifyTask').on('click', function() {
+        TaskSchedulingForm.saveTask($(this));
+    })
+
+    //remove a user
+    $("#schedulingForm").on('click', '.removeParameters', function() {
+        $(this).closest('li').remove();
+    });
+    
+    // Cancel form
+    $('#cancelSchedule').on('click', function(event) {
+        event.preventDefault();
+        TaskSchedulingForm.cancel();
+    })
+
+    var TaskSchedulingForm = {
+        form : $('#schedulingForm'),
+        newTask: function() {
+            this.clear();
+            $('#schedulingForm').css('display', '');
+
+            $('#modifyTask').css('display', 'none');
+            $('#addTask').css('display', '');
+        },
+
+        showTask: function(scheduling) {
+            this.clear();
+            this.form.css('display', '');
+
+            $('#modifyTask').css('display', '');
+            $('#addTask').css('display', 'none');
+
+            this.form.find('[name="schedulingId"]').val(scheduling.schedulingId);
+            this.form.find('[name="taskId"]').val(scheduling.taskId);
+            this.form.find('[name="name"]').val(scheduling.name);
+            this.form.find('[name="serviceAccountId"]').val(scheduling.executedBy);
+
+            // Freqency selector
+            if (scheduling.monthDays.length) {
+                this.form.find("[name='frequencyType'][value='monthly']").parent().click();
+            } else if (scheduling.weekDays.length) {
+                this.form.find("[name='frequencyType'][value='weekly']").parent().click();
+            } else {
+                this.form.find("[name='frequencyType'][value='daily']").parent().click();
+            }
+
+            // Week days
+            $.each(scheduling.weekDays, function(key, value) {
+                TaskSchedulingForm.form.find("[name='weekDays'][value='"+value+"']").click();
+            })
+            // Month
+            $.each(scheduling.month, function(key, value) {
+                TaskSchedulingForm.form.find("[name='month'][value='"+value+"']").click();
+            })
+            // Month days
+            $.each(scheduling.monthDays, function(key, value) {
+                TaskSchedulingForm.form.find("#calendar [data-value='"+value+"']").click();
+            })
+
+            this.form.find('[name="startHours"]').val(scheduling.startHours);
+            this.form.find('[name="startMinutes"]').val(scheduling.startMinutes);
+
+            // Repetition
+            if (scheduling.frequencyNumber) {
+                $('#repetitionOn').click();
+                this.form.find("[name='frequencyNumber']").val(scheduling.frequencyNumber);
+                this.form.find(".frequencyUnit[data-value='"+scheduling.frequencyUnit+"']").click();
+
+                if(scheduling.endMinutes) {
+                    this.form.find("[name='endMinutes']").val(scheduling.endMinutes);
+                    this.form.find("[name='endHours']").val(scheduling.endHours);
+                }
+            }
+            
+            var liste = this.form.find(".parametersList");
+            liste.empty();
+            $.each(scheduling.parameters, function(key,value){
+                var li = $('<li/>')
+                        .attr('parameters', value)
+                        .addClass('list-group-item clearfix')
+                        .appendTo(liste)
+                        .html(value);
+
+                var span = $('<span/>')
+                    .addClass('pull-right')
+                    .appendTo(li);
+
+                var a = $('<a/>')
+                    .addClass('text-danger removeParameters')
+                    .attr('href', '#')
+                    .css('padding-left', '16px')
+                    .appendTo(span);
+
+                var i = $('<i/>')
+                    .addClass('fa fa-times fa-fw')
+                    .html("&nbsp;")
+                    .appendTo(a);
+                });
+        },
+
+        saveTask: function(button) {
+            var scheduling = this.serialize();
+            var type = 'POST';
+            var url = '/batchProcessing/scheduling';
+            
+            if( !this.checkSchedulingValues(scheduling)) {
+               gritter.show($('#empty_text').html(),false);
+               return;
+            }
+
+            if (scheduling.schedulingId != "") {
+                type = 'PUT';
+                url = '/batchProcessing/scheduling/'+ scheduling.schedulingId;
+            }
+
+            ajax(button, {
+                type        : type,
+                url         : url,
+                data        : JSON.stringify({scheduling : scheduling}),
+                dataType    : 'json',
+                contentType : 'application/json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        if (type == 'POST') {
+                            scheduling.schedulingId = response.result;
+                            TaskList.add(scheduling);
+                        } else {
+                            TaskList.update(scheduling);
+                        }
+                        
+                        TaskSchedulingForm.clear();
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        checkSchedulingValues: function(scheduling) {
+            var valid = false;
+
+            if (scheduling.taskId && scheduling.name && scheduling.executedBy) {
+                switch (this.form.find('[name="frequencyType"]:checked').val()) {
+                    case 'daily':
+                        valid = true;
+                        break;
+                    case 'weekly':
+                        if (scheduling.weekDays.length) {
+                            valid = true;
+                        }
+                        break;
+                    case 'monthly':
+                        if (scheduling.month.length && scheduling.monthDays.length) {
+                            valid = true;
+                        }
+                        break;
+                }
+            }
+
+            return valid;
+        },
+
+        addParameters: function() {
+            var parameterInput = this.form.find('[name="parameters"]');
+            var parameters = parameterInput.val();
+            
+            if( parameters == "") {
+                return;
+            }
+
+            var liste = this.form.find(".parametersList");
+
+            var li = $('<li/>')
+                .attr('parameters', parameters)
+                .addClass('list-group-item clearfix')
+                .appendTo(liste)
+                .html(parameters);
+
+            var span = $('<span/>')
+                .addClass('pull-right')
+                .appendTo(li);
+
+            var a = $('<a/>')
+                .addClass('text-danger removeParameters')
+                .attr('href', '#')
+                .css('padding-left', '16px')
+                .appendTo(span);
+
+            var i = $('<i/>')
+                .addClass('fa fa-times fa-fw')
+                .html("&nbsp;")
+                .appendTo(a);
+                
+            parameterInput.val('');
+        },
+
+        serialize: function() {
+            var scheduling = {};
+
+            scheduling.schedulingId = this.form.find('[name="schedulingId"]').val();
+            scheduling.name = this.form.find('[name="name"]').val();
+            scheduling.executedBy = this.form.find('[name="serviceAccountId"] option:selected').val();
+            scheduling.taskId = this.form.find('[name="taskId"]').val();
+            scheduling.taskName = this.form.find('[name="taskId"] option:selected').text();
+            scheduling.startMinutes = this.form.find('[name="startMinutes"]').val();
+            scheduling.startHours = this.form.find('[name="startHours"]').val();
+            
+            if (this.form.find('.parametersList').find('li').length != 0) {
+                scheduling.parameters = [];
+                
+                this.form.find('.parametersList').find('li').each(function() {
+                    scheduling.parameters.push($(this).attr('parameters'));
+                });
+            }
+            
+            scheduling.weekDays = [];
+            this.form.find('.weekDay.active').find('input').each(function() {
+                scheduling.weekDays.push($(this).val());
+            })
+
+            scheduling.month = [];
+            this.form.find('.month.active').find('input').each(function() {
+                scheduling.month.push($(this).val());
+            })
+
+            scheduling.monthDays = [];
+            $('#calendar').find('.active').each(function() {
+                scheduling.monthDays.push($(this).html());
+            })
+
+            // Repetition
+            if (this.form.find('[name="repetition"]:checked').val() == "1") {
+                scheduling.frequencyNumber = this.form.find('[name="frequencyNumber"]').val();
+                scheduling.frequencyUnit = $('#frequencyUnit').data('value');
+                scheduling.endMinutes = this.form.find('[name="endMinutes"]').val();
+                scheduling.endHours = this.form.find('[name="endHours"]').val();
+
+            } else {
+                scheduling.frequencyNumber = "";
+                scheduling.frequencyUnit = "";
+                scheduling.endMinutes = "";
+                scheduling.endHours = "";
+            }
+
+            scheduling.frequency = scheduling.startMinutes + ';'
+                                 + scheduling.startHours + ';'
+                                 + scheduling.weekDays.join() + ';'
+                                 + scheduling.monthDays.join() + ';'
+                                 + scheduling.month.join() + ';'
+                                 + scheduling.frequencyNumber + ';'
+                                 + scheduling.frequencyUnit + ';'
+                                 + scheduling.endMinutes + ';'
+                                 + scheduling.endHours;
+
+            return scheduling;
+        },
+
+        clear: function() {
+            this.form.css('display', 'none');
+            this.form.find('[name="frequencyType"][value="daily"]').parent().click().addClass('btn-info').addClass('btn-default');
+            this.form.find('[name="taskId"], [name="serviceAccountId"], [name="name"]').val('');
+            this.form.find('[name="startHours"], [name="startMinutes"]').val('00');
+            this.form.find(".parametersList").html('');
+            this.clearWeekDays();
+            this.clearMonth();
+            this.clearRepetition();
+        },
+
+        clearWeekDays: function() {
+            this.form.find('.weekDay.active').click();
+        },
+
+        clearMonth: function() {
+            this.form.find('.month.active').click();
+            $("#calendar").find('.active').click();
+        },
+
+        clearRepetition: function() {
+            $('#repetitionOff').click();
+            this.form.find('[name="endHours"]').val('00');
+            this.form.find('[name="endMinutes"]').val('00');
+            this.form.find('[name="frequencyNumber"]').val('1');
+        },
+
+        cancel: function() {
+            this.clear();
+            TaskList.unselect();
+        },
+
+    }
+
+</script>

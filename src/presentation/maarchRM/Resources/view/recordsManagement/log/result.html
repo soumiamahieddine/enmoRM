@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Alexis Ragot <alexis.ragot@maarch.org>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="row" data-translate-catalog="recordsManagement/log">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4><?merge logs.count() ?> result(s)</h4>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table dataTable">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>From date</th>
+                            <th>To date</th>
+                            <th>Process identifier</th>
+                            <th>Process name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge logs ?>
+                        <tr id="[?merge .archiveId ?]">
+                            <td><?merge .type ?></td>
+                            <td><?merge .fromDate ?></td>
+                            <td><?merge .toDate ?></td>
+                            <td><?merge .processId ?></td>
+                            <td><?merge .processName ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-warning btn-sm" data-log-check="[?merge .archiveId ?]" title="Check integrity"><span class="fa fa-database"></span></button>
+                                    <button type="button" class="btn btn-success btn-sm viewArchive" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-log-view="[?merge .archiveId ?]" title="View"><span class="fa fa-eye"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

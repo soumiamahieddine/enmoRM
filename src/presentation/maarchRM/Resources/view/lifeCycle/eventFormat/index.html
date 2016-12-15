@@ -1,0 +1,326 @@
+<div id="contain" data-translate-catalog="lifeCycle/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-list"></i>
+                Events formats
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><span><?merge eventsFormats.count() ?></span> Event(s) format(s)</h4>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default btn-sm" id="btnAddEventTypeForm" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table table-condensed dataTable" id="eventsFormatsList" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Format</th>
+                                    <th>Message</th>
+                                    <th>Notification</th>
+                                    <th style="min-width:160px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge eventsFormats ?>
+                                <tr>
+                                    <td><?merge .type ?></td>
+                                    <td><?merge .format ?></td>
+                                    <td><?merge .message ?></td>
+                                    <?merge .notification.bool() ?>
+                                    <td><span class="text-success fa fa-check"></span></td>
+                                    <?merge .notification.bool().not() ?>
+                                    <td><span class="text-danger fa fa-remove"></span></td>
+                                    <td>
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="editEventFormat btn btn-warning" title="Edit" data-type="[?merge .type ?]">
+                                                <span class="fa fa-fw fa-edit"></span>
+                                            </button>
+                                            <button type="button" class="deleteEventFormat btn btn-danger" title="Remove" data-type="[?merge .type ?]">
+                                                <span class="fa fa-fw fa-remove"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="empty_text">The fields with a star are compulsory.</span>
+        <span id="emptyFormat_text">The format is empty.</span>
+        <span id="qualified_type">Le type doit être qualifié par le nom du bundle et séparé par '/'</span>
+        <span id="position_text">The position is higher than number of format.</span>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalAddEventFormat">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add event format</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label" for="formType">Domain<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="formDomain" name="formDomain" placeholder="Domain"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="formType">Type<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="formType" name="formType" placeholder="Type"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="formMessage">Message<span style="color:red">*</span></label>
+                                <textarea class="form-control" id="formMessage" name="formMessage" placeholder="Message" style="resize: none; resize: vertical"></textarea>
+                                <p class="help-block small">To insert the value of a field in this format, use ' %{field position}${type} '</p>
+                                <p class="help-block small">The type can be 's' for string, 'd' for number, 'f' for float</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="formNotification">Notification</label>
+                                <input type="checkbox" id="formNotification" name="formNotification" data-toggle="toggle"/> 
+                            </div>
+                        </form>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label" for="formFormat">Format</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="formFormat" name="formFormat" placeholder="Format"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="button" id="addFormat" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p class="help-block small">1 - Unique identifier of event</p>
+                                <p class="help-block small">2 - Event type</p>
+                                <p class="help-block small">3 - Timestamp of event</p>
+                                <p class="help-block small">4 - User or service identifier who have triggered the event</p>
+                                <p class="help-block small">5 - Object type impacted by the event</p>
+                                <p class="help-block small">6 - Unique object identifier impacted by the event</p>
+                                <p class="help-block small">7 - Result of operation</p>
+                                <p class="help-block small">9 and more - Value of fields defined in format field</p>
+                                <p class="help-block small">Ex : %6$s for use the unique object identifier impacted by the event</p>
+                            </div>
+                            <div>
+                                <ul class="list-group" id="formatList">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="saveEventFormat" data-method="POST">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script>
+$("#btnAddEventTypeForm").on("click", function() {
+    $("#modalAddEventFormat").modal();
+    $("#formDomain").prop("disabled", false);
+    $("#formType").prop("disabled", false);
+    $("#addFormat").prop("disabled", false);
+    $("#formFormat").prop("disabled", false);
+    
+    $("#formDomain").val("");
+    $("#formType").val("");
+    $("#formMessage").html("");
+    $("#formatList").empty();
+    
+    $("#saveEventFormat").attr('data-method','POST');
+});
+
+$("#addFormat").on("click", function() {
+    
+    if($("#formFormat").val() == "") {
+        gritter.show($("#emptyFormat_text").text(), false);
+        return;
+    }
+    var format = $("#formFormat").val();
+    var liste = $("#formatList");
+
+    var nb = $("#formatList li").length + 9;
+    
+    var li = $('<li/>')
+            .attr('nb', nb)
+            .attr('format', format)
+            .addClass('list-group-item clearfix')
+            .appendTo(liste)
+            .html(format);
+    var span = $('<span/>')
+            .addClass('pull-right')
+            .appendTo(li);
+    var i = $('<i/>')
+            .addClass('badge')
+            .html(nb)
+            .appendTo(span);
+    var format = $("#formFormat").val("");
+});
+
+$("#saveEventFormat").on("click", function() {
+    if ($("#formType").val() == "" || $("#formDomain").val() == "" || $("#formMessage").val() == "" ) {
+        gritter.show($("#empty_text").text(), false);
+        return;
+    }
+
+    var position = $("#formMessage").val().match(/%\d+\$/g);
+
+    if (position != null) {
+         $.each(position, function(index,value) {
+            length = value.length;
+            positionChamp = value.substring(1, length-1);
+
+            if (positionChamp > $("#formatList li").length +8) {
+                error = true;
+            }
+        });
+
+        if (error) {
+            gritter.show($("#position_text").text(), false);
+            return;
+        }
+    }
+   
+    
+
+    var eventFormat = serializeEventFormat();
+
+    ajax($(this) ,{
+        url: '/lifecycle/eventFormat',
+        type: $("#saveEventFormat").attr('data-method'),
+        data: JSON.stringify({eventFormat: eventFormat}),
+        contentType: 'application/json',
+        dataType: 'json',
+        success : function (response) {
+            gritter.show(response.message, response.status, response.errors);
+            if (response.status) {
+               $("#modalAddEventFormat").modal("hide");
+                setTimeout(function(){
+                    load("/lifeCycle/eventsFormats");
+                }, 200);
+            }
+        },
+        error : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    })
+});
+
+$("#eventsFormatsList").on("click", ".deleteEventFormat", function() {
+    
+    $(this).prop("disabled", true);
+
+    ajax($(this), {
+        url: '/lifecycle/eventFormat/' + $(this).attr("data-type"),
+        type: 'DELETE',
+        dataType: 'json',
+        success : function (response) {
+            gritter.show(response.message, response.status, response.errors);
+            if (response.status) {
+                load("/lifeCycle/eventsFormats");
+            }
+        },
+        error : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    })
+
+    $(this).prop("disabled", false);
+});
+
+$("#eventsFormatsList").on("click",".editEventFormat", function() {
+    var param = {
+        eventFormatType : $(this).attr("data-type")
+    }
+    
+    $("#saveEventFormat").attr('data-method','PUT');
+    
+    ajax($(this), {
+        type        : "GET",
+        url         : '/lifecycle/eventFormat',
+        data        : param,
+        dataType    : 'json',
+        success     : function (response) {
+            $("#formatList").empty();
+            var split = response.eventFormat.type.split("/");
+            
+            $("#formDomain").val(split[0]);
+            $("#formType").val(split[1]);
+            $("#formMessage").html(response.eventFormat.message);
+            $("#formNotification").prop("checked",response.eventFormat.notification);
+            var splitFormat = response.eventFormat.format.split(" ");
+
+            $.each(splitFormat, function(index, value) {
+                var format = $("#formFormat").val();
+                var liste = $("#formatList");
+
+                var nb = $("#formatList li").length + 9;
+
+                var li = $('<li/>')
+                        .attr('nb', nb)
+                        .attr('format', value)
+                        .addClass('list-group-item clearfix')
+                        .appendTo(liste)
+                        .html(value);
+                var span = $('<span/>')
+                        .addClass('pull-right')
+                        .appendTo(li);
+                var i = $('<i/>')
+                        .addClass('badge')
+                        .html(nb)
+                        .appendTo(span);
+                var format = $("#formFormat").val("");
+            });
+            
+            $("#formDomain").prop("disabled", true);
+            $("#formType").prop("disabled", true);
+            $("#addFormat").prop("disabled", true);
+            $("#formFormat").prop("disabled", true);
+            
+            $("#modalAddEventFormat").modal();
+        },
+        error    : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    })
+});
+
+function serializeEventFormat(){
+    
+    var formatList = $("#formatList").find('li');
+    var format = "";
+    
+    $.each(formatList, function(){
+        format += $(this).attr('format') + " ";
+    });
+    
+    var eventFormat = {
+        type : $("#formDomain").val().trim() + "/" + $("#formType").val().trim(),
+        format : format.trim(),
+        message : $("#formMessage").val().trim(),
+        notification : false,
+    }
+    
+    if ($('#formNotification').prop('checked')) {
+        eventFormat.notification = true;
+    }
+
+    return eventFormat;
+}
+</script>

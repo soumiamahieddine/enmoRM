@@ -1,0 +1,313 @@
+<div class="panel-group" id="contact_accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="addressTab">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#contact_accordion" href="#organizationInfo_address" aria-expanded="true" aria-controls="organizationInfo_address">
+                    <i class="fa fa-envelope">&nbsp;</i>Address
+                </a>
+            </h4>
+        </div>
+        <div id="organizationInfo_address" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="addressTab">
+            <div class="panel-body">
+                <form>
+                    <div class="col-xs-12 form-group">
+                        <button class="btn btn-warning btn-sm" type="button" id="organizationInfo_modifyAddress" title="Modify"><i class="fa fa-edit fa-fw"></i>Modify</button>
+                        <br/>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <div id="organizationInfo_addressList">
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <div id="organizationInfo_communicationList">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="contactTab">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#contact_accordion" href="#organizationInfo_contact" aria-expanded="false" aria-controls="organizationInfo_contact">
+                    <i class="fa fa-commenting-o">&nbsp;</i>Contact
+                </a>
+            </h4>
+        </div>
+        <div id="organizationInfo_contact" class="panel-collapse collapse" role="tabpanel" aria-labelledby="contactTab">
+            <div class="panel-body">
+                <div class="col-xs-12 form-group">
+                    <button class="btn btn-success btn-sm" type="button" id="organizationInfo_addContact" title="Add"><i class="fa fa-plus fa-fw"></i>Add</button>
+                </div>
+                <div class="col-xs-12 form-group">
+                    <div class="panel-group" id="organizationInfo_contactList" role="tablist" aria-multiselectable="true">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hide" lang="en" data-translate-catalog="contact/contact">
+    <span id="text_room">Room</span>
+    <span id="text_floor">Floor</span>
+    <span id="text_building">Building</span>
+    <span id="text_citySubdivision">City sub division</span>
+    <span id="text_postBox">Post box</span>
+</div>
+
+<script>
+    // Add or modify addess
+    $('#organizationInfo_modifyAddress').on('click', function() {
+        var newObject = false;
+
+        if ($('#organizationInfo_addressList').html() + $('#organizationInfo_communicationList').html() == '') {
+            var newObject = true;
+        }
+
+        ContactModal.load($('#organizationInfo_address').data('contact'), newObject, true);
+    })
+
+    // Add new contact
+    $('#organizationInfo_addContact').on('click', function(){
+        ContactModal.load(null, true, false);
+    })
+
+    // Modify contact
+    $('#organizationInfo_contactList').on('click', '.modifyOrgContact', function(){
+        ContactModal.load($(this).closest('.panel').data('contact'), false, false);
+    });
+
+    // Delete contact
+    $('#organizationInfo_contactList').on('click', '.deleteOrgContact', function(){
+        ContactForm.removeContact($(this));
+    });
+
+    ContactForm = {
+        load: function(contacts) {
+            $('#organizationInfo_addressList').html('');
+            $('#organizationInfo_contactList').html('');
+            $('#organizationInfo_communicationList').html('');
+            $('#organizationInfo_address').data('contact', false);
+            
+            $.each(contacts, function(){
+                if (this.isSelf) {
+                    $('#organizationInfo_address').data('contact', this)
+                    $.each(this.address, function(){
+                        ContactForm.addAddressToScreen(this, $('#organizationInfo_addressList'));
+                    })
+                    $.each(this.communication, function(){
+                        ContactForm.addCommToScreen(this, $('#organizationInfo_communicationList'));
+                    })
+                } else {
+                    ContactForm.addContactToScreen(this);
+                }
+            })
+        },
+
+        addAddressToScreen: function(address, addressList) {
+            var a = $('<span/>').data('address', address.addressId)
+                                .attr('href', '#')
+                                .addClass('list-group-item')
+                                .appendTo(addressList);
+
+            var h4 = $('<b/>').addClass('list-item-heading')
+                              .text(address.purpose)
+                              .appendTo(a);
+
+            if (address.room) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_room').html() + ' ' + address.room)
+                         .appendTo(a);
+            }
+
+            if (address.floor) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_floor').html() + ' ' + address.floor)
+                         .appendTo(a);
+            }
+
+            if (address.building) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_building').html() + ' ' + address.building)
+                         .appendTo(a);
+            }
+
+            if (address.block) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.block)
+                         .appendTo(a);
+            }
+
+            if (address.number || address.street) {
+                var street = '';
+                if (!address.number) {
+                    street = address.street;
+                } else if (!address.street) {
+                    street = address.number;
+                } else {
+                    street = address.number + ' ' + address.street;
+                }
+
+                $('<p/>').addClass('list-group-item-text')
+                         .text(street)
+                         .appendTo(a);
+            }
+
+            if (address.postCode || address.city) {
+                var city = '';
+                if (!address.postCode) {
+                    city = address.city;
+                } else if (!address.city) {
+                    city = address.postCode;
+                } else {
+                    city = address.postCode + ' ' + address.city;
+                }
+
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.postCode + ' ' + address.city)
+                         .appendTo(a);
+            }
+
+            if (address.citySubDivision) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').html())
+                         .appendTo(a);
+            }
+
+            if (address.postBox) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_postBox').html()+ ' ' + address.postBox)
+                         .appendTo(a);
+            }
+
+            if (address.country) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.country)
+                         .appendTo(a);
+            }
+        },
+
+        addCommToScreen: function(communication, commList) {
+            var a = $('<span/>').data('communication', communication)
+                                .attr('href', '#')
+                                .addClass('list-group-item contactCommuniation')
+                                .appendTo(commList);
+
+            var h4 = $('<b/>').addClass('list-item-heading')
+                              .text(communication.purpose)
+                              .appendTo(a);
+
+            $('<p/>').addClass('list-group-item-text')
+                     .html(communication.comMeanName)
+                     .appendTo(a);
+
+            $('<p/>').addClass('list-group-item-text')
+                     .html(communication.value)
+                     .appendTo(a);
+
+            if (communication.info) {
+                $('<p/>').addClass('list-group-item-text')
+                         .html(communication.info)
+                         .appendTo(a);
+            }
+        },
+
+        addContactToScreen: function(contact) {
+            var contactList = $('#organizationInfo_contactList');
+            var panel = $('<div/>').addClass("panel panel-info")
+                                   .data('contact', contact)
+                                   .appendTo(contactList);
+
+            var panelHeading = $('<div/>').addClass("panel-heading")
+                                          .attr('role', 'tab')
+                                          .attr('id', contact.contactId+'Tab')
+                                          .appendTo(panel);
+
+            var title = $('<h4/>').addClass('panel-title')
+                                  .appendTo(panelHeading);
+
+            $('<a/>').attr('role', 'button')
+                     .attr('data-toggle', 'collapse')
+                     .attr('data-parent','#organizationInfo_contactList')
+                     .attr('href', '#'+contact.contactId)
+                     .attr('aria-expanded', 'true')
+                     .attr('aria-controls', contact.contactId)
+                     .text(contact.displayName)
+                     .appendTo(title);
+
+            $('<a/>').addClass('text-danger pull-right deleteOrgContact')
+                     .attr('href', '#')
+                     .attr('title', $('#remove_text').html())
+                     .css('padding-left', '16px')
+                     .html(
+                        $('<i/>').addClass('fa fa-times fa-fw')
+                                 .html("&nbsp;")
+                      )
+                     .appendTo(title);
+
+            $('<a/>').addClass('text-warning pull-right modifyOrgContact')
+                     .attr('href', '#')
+                     .attr('title', $('#modify_text').html())
+                     .css('padding-left', '16px')
+                     .html(
+                        $('<i/>').addClass('fa fa-edit fa-fw')
+                                 .html("&nbsp;")
+                      )
+                     .appendTo(title);
+
+            var panelCollapse = $('<div/>').attr('id', contact.contactId)
+                                           .addClass('panel-collapse collapse')
+                                           .attr('role', 'tabpanel')
+                                           .attr('aria-labelledby', contact.contactId+'Tab')
+                                           .appendTo(panel);
+
+            var panelBody = $('<div/>').addClass('panel-body')
+                                       .appendTo(panelCollapse);
+
+            var divAddress = $('<div/>').addClass("col-md-6 form-group")
+                                        .appendTo(panelBody);
+            var addressList = $('<div/>').appendTo(divAddress);
+
+            var divCommunication = $('<div/>').addClass("col-md-6 form-group")
+                                              .appendTo(panelBody);
+            var commList = $('<div/>').appendTo(divCommunication);
+
+            $.each(contact.address, function(){
+                ContactForm.addAddressToScreen(this, addressList);
+            })
+
+            $.each(contact.communication, function(){
+                ContactForm.addCommToScreen(this, commList);
+            })
+        },
+
+        removeContact: function(element) {
+            var panel = element.closest('.panel')
+            $.ajax({
+                type        : 'DELETE',
+                url         : '/Organization/' + $("#modifyOrganization").data('organization').orgId + '/Contact/' + panel.data('contact').contactId,
+                dataType    : 'json',
+                contentType : 'application/json',
+                async       : false,
+                success     : function (response) {
+                    if (response.status) {
+                        gritter.show(response.message, response.status, response.errors);
+                        panel.remove();
+
+                    } else {
+                        var message = "";
+                        $.each(response.errors, function (key, error) {
+                            message = error.message;
+                        });
+                        gritter.show(message, false);
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    res = false;
+                }
+            });
+        }
+    }
+</script>

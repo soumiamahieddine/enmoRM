@@ -1,0 +1,585 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" data-archivalprofileid="[?merge archivalProfile.archivalProfileId ?]">
+    <div data-form-ns="archivalProfile" class="dataForm" data-translate-catalog="recordsManagement/archivalProfile">
+        <div class="container-fluid">
+            <div class="page-header">
+                <?merge archivalProfile.archivalProfileId.ifeq('') ?>
+                <h1>
+                    <i class="fa fa-cubes"></i> New profile <small><?merge archivalProfile.reference ?></small>
+                </h1>
+                <?merge archivalProfile.archivalProfileId.ifne('') ?>
+                <h1>
+                    <i class="fa fa-cubes"></i>Edit a profile <small><?merge archivalProfile.reference ?></small>
+                </h1>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <?merge archivalProfile ?>
+            <form class="form-horizontal" id="archivalProfile_form">
+                <div class="row">
+                    <input type="hidden" id="archivalProfileId" name="archivalProfileId">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Reference <span style="color: red">*</span></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
+                            </div>
+                        </div>
+                    </div>
+                    <?merge archivalProfile.type.ifeq('1').not() ?>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Allow multiple documents</label>
+                            <div class="col-md-7">
+                                <input type="checkbox" id="allowMultipleDocuments" name="acceptMultipleDocuments" data-toggle="toggle"> 
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name <span style="color: red">*</span></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                            </div>
+                        </div>
+                    </div>
+                    <?merge archivalProfile.type.ifeq('1').not() ?>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">Allow user indexes</label>
+                            <div class="col-md-7">
+                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Description</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                               
+                </div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
+                    <?merge archivalProfile.type.ifeq('1').not() ?>
+                    <li role="presentation" id="descriptionClassTabBtn"><a href="#descriptionClassTab" aria-controls="descriptionClassTab" role="tab" data-toggle="tab">Description class</a></li>
+                    <?merge archivalProfile.type.ifeq('1').not() ?>
+                    <li role="presentation" id="documentDescriptionTabBtn" ><a href="#documentDescriptionTab" aria-controls="documentDescriptionTab" role="tab" data-toggle="tab">Document description</a></li>
+                    <?merge archivalProfile.type.ifeq('1').not() ?>
+                    <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                    <div class="panel-body">
+                        <div class="tab-content" id="archivalProfileNavTabs">
+                            <div role="tabpanel" class="tab-pane fade in" id="descriptionClassTab">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Description class</label>
+                                        <div class="col-md-10">
+                                            <select id="descriptionClass" name="descriptionClass" class="form-control">
+                                                <option value="" selected='true' data-properties="" data-dateproperties="[?merge dateFields ?]"></option>
+                                                <?merge descriptionClassList ?>
+                                                <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7 table-responsive">
+                                    <table id="archiveDescription" class="col-md-offset-2 table table-bordered" style="[?merge archivalProfile.descriptionClass.ifeq('').then('display:none', '') ?]">
+                                        <thead>
+                                            <tr>
+                                                <th>Property</th>
+                                                <th>Used</th>
+                                                <th>Required</th>
+                                            </tr>
+                                        </thead>
+                                        <?merge archivalProfile.archiveDescription ?>
+                                        <tr data-origin="[?merge .origin?]" class="[?merge .archivalProfileId.ifne('').then('info', '') ?] [?merge .required.ifne('').then('danger', '') ?]">
+                                            <td class="fieldName"><?merge .fieldName?></td>
+                                            <td style="text-align:center"> 
+                                                <?merge .archivalProfileId.ifne('') @checked ?>
+                                                <input type="checkbox" class="usedProperty"> 
+                                            </td>
+                                            <td style="text-align:center"> 
+                                                <?merge .required.ifne('') @checked ?>
+                                                <input type="checkbox" class="requiredProperty"> 
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="documentDescriptionTab" data-translate-catalog="documentManagement/documentMetadata">
+                                <?hinclude recordsManagement/archivalProfile/documentDescription.html ?>
+                            </div>
+                            <?merge .type.ifeq('1').not() ?>
+                            <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
+                                <div class="col-md-12 well">
+                                    <div class="col-md-7">
+                                        <h4>Retention rule</h4>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">Retention rule code</label>
+                                            <div class="col-md-10">
+                                                <select id="code" name="retentionRuleCode" class="form-control">                                               <option value="">Select a retention rule code</option>
+                                                    <?merge retentionRules ?>
+                                                    <option value='[?merge .code ?]' 
+                                                            data-duration="[?merge .retentionDuration ?]" 
+                                                            data-duration-unit='[?merge .retentionDurationUnit ?]'
+                                                            data-final-disposition='[?merge .finalDisposition ?]'>
+                                                        <?merge .code ?>
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10 col-md-offset-2">
+                                            <p>
+                                                <label>Retention duration</label> : 
+                                                <span id="duration"></span>
+                                            </p>
+                                            <p class="finalDisposition dl dl-horizontal">
+                                                <label>Final disposition</label> : 
+                                                <span id="finalDisposition"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">Retention start date</label>
+                                            <div class="col-md-10" id="retentionStartDate">
+                                                <input type="hidden" name="retentionStartDate" />
+                                                <select id="startDate" class="form-control">
+                                                    <option value="" >Select a retention start date</option>
+                                                    <option value= "definedLater">To be defined later </option>
+                                                    <option value= "depositDate" >Deposit date </option>
+                                                    <!--option value= "createdDate"> Created date </option>
+                                                    <option value= "publicatedDate"> Date of publication </option>
+                                                    <option value= "receptionDate"> Date of reception </option>
+                                                    <option value= "lastCommunicationDate"> Last communication date </option>
+                                                    <option value= "description"> Description object property </option-->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 well">
+                                    <div class="col-md-7">
+                                            <h4>Access rule</h4>
+                                        </div>
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">Access rule code</label>
+                                            <div class="col-md-10">
+                                                <select id="accessRuleCode" name="accessRuleCode" class="form-control">
+                                                    <option value="">Select a access rule code</option>
+                                                    <?merge accessRules ?>
+                                                    <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .code ?></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7" id='accessRule' >
+                                        <div class="col-md-10 col-md-offset-2">
+                                            <table class="table" style="font-size: 12px">
+                                                <tr>
+                                                    <th class="col-md-4">Access rule duration</th>
+                                                    <td  class="col-md-8" id="accessRuleDuration"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Access entries</th>
+                                                    <td >
+                                                        <ul id="accessEntries" class="list-group">
+                                                        </ul>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer clearfix">
+                    <div class="pull-right">
+                        <button type="button" id="archivalProfileCancelBtn" class="btn btn-warning"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                        <button type="button" id="save" class="btn btn-success" title="Save">
+                            <?merge archivalProfile.archivalProfileId.ifne('') ?>
+                            <span><i class="fa fa-save">&nbsp;</i>Save</span>
+                            <?merge archivalProfile.archivalProfileId.ifeq('') ?>
+                            <span><i class="fa fa-plus">&nbsp;</i>Add</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div style="display:none">
+            <span id="text_D">day(s)</span>
+            <span id="text_M">month(s)</span>
+            <span id="text_Y">year(s)</span>
+            <span id="text_I">Illimited</span>
+            <span id="text_preservation">preservation</span>
+            <span id="text_destruction">destruction</span>
+            <span id="empty_text">The fields with a star are compulsory.</span>
+        </div>
+    </div>
+</div>
+
+
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script>
+    $("#archivalProfileCancelBtn").on("click", function (){
+        load('/archivalProfiles');
+    });
+    
+    $("#contain").ready(function () {
+
+        $("#archivalProfileNavControl").find('a').first().click();
+
+        // Allow multiple document
+        if ($("#allowMultipleDocuments").is(':checked') == false) {
+            $('#documentDescriptionTabBtn').find('a').click();
+            $('#descriptionClassTabBtn').addClass('hide').find('a').attr('data-toggle', '');
+        }
+
+        $("#allowMultipleDocuments").on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#descriptionClassTabBtn').removeClass('hide').find('a').attr('data-toggle', 'tab');
+            } else {
+                $('#documentDescriptionTabBtn').find('a').click();
+                $('#descriptionClassTabBtn').addClass('hide').find('a').attr('data-toggle', '');
+            }
+        })
+       
+        loadRetentionRule();
+        loadAccessCode();
+        
+        //date properties
+        var datesProperties = $('#descriptionClass').find(':selected').data('dateproperties');
+        var requiredProperty = $('.requiredProperty:checked');
+
+        var currentRetentionStartDate = $('#retentionStartDate > input').val();
+        if (datesProperties) {
+            /*$.each(requiredProperty, function () {
+                var fieldName = $(this).closest('tr').find('.fieldName').html();
+
+                if (!$.inArray(fieldName, $('#descriptionClass').find(':selected').data('dateproperties'))) {
+                    $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
+                }
+            })*/
+            $.each(datesProperties, function (key, name) {
+                var value = 'description/'+name;
+                var option = $('<option/>').val(value).text(name).attr('data-description', '1');
+                if (value == currentRetentionStartDate) {
+                    option.attr('selected', 'selected');
+                }
+                option.appendTo('#startDate');
+            });
+        }
+
+        // Define data source for person typeahead
+        var groupsSource = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/recordsManagement/queryGroups/%QUERY',
+                ajax: {
+                    async: false
+                }
+            },
+            limit: 100
+        });
+        groupsSource.initialize();
+
+        // initialize typeahead
+        $('#groupTypeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 3
+                },
+        // data source contacts
+        {
+            name: 'groups',
+            displayKey: 'displayName',
+            templates: {
+                empty: function () {
+                    return "<span class='well well-sm'>No group found</span>";
+                },
+                suggestion: function (group) {
+                    return group.displayName;
+                }
+            },
+            source: function (query, cb) {
+                groupsSource.get(query, function (suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($.inArray(suggestions[i].objectId + suggestions[i].objectClass, $('#groupTypeahead').data('groupsids')) > -1)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }
+        ).on('typeahead:selected', function ($event, suggestion, source) {
+            var typeahead = $("#groupTypeahead");
+            var groupList = typeahead.data('groupsids');
+            typeahead.data('group', suggestion);
+            groupList.push(suggestion.objectId + suggestion.objectClass);
+            typeahead.data('groupsids', groupList);
+            $("#addGroup").prop('disabled', false);
+        });
+    });
+
+   
+
+    //add group to access rules
+    $("#contain").on('click', '#addGroup', function () {
+
+        var group = $('#groupTypeahead').data('group');
+        var tr = $(this).closest('tr');
+        var newTr = tr.clone();
+
+        $("#addGroup").prop('disabled', true);
+        newTr.data('objectid', group.objectId).data('objectclass', group.objectClass).addClass('profileAccessElement').find('input').css('display', '');
+        newTr.find('.groupName:first').html(group.displayName);
+
+        $('#groupTypeahead').val('');
+
+        newTr.insertBefore(tr);
+    })
+
+    //load description object properties
+    $("#contain").on('change', '#descriptionClass', function () {
+        var dateProperties = $(this).find(':selected').data('dateproperties');
+        var properties = $('option:selected', this).data('properties');
+        var archiveDescription = $('#archiveDescription');
+
+        archiveDescription.find('tr:not(:first)').remove();
+
+        if (properties) {
+            archiveDescription.css('display', '');
+        } else {
+            archiveDescription.css('display', 'none');
+
+        }
+
+        $.each(properties, function () {
+            var tr = $('<tr/>').appendTo(archiveDescription);
+            var td = $('<td/>').addClass('fieldName').html(this).appendTo(tr);
+
+            var td = $('<td/>').css('text-align', 'center').appendTo(tr);
+            var checkbox = $('<input/>')
+                    .attr('type', 'checkbox')
+                    .addClass('usedProperty')
+                    .appendTo(td);
+
+            var td = $('<td/>').css('text-align', 'center').appendTo(tr);
+            var checkbox = $('<input/>')
+                    .attr('type', 'checkbox')
+                    .addClass('requiredProperty')
+                    .appendTo(td);
+        });
+    })
+
+    //required description property value management
+    $("#contain").on('change', '#startDate', function () {
+        var value = $(this).val();
+        $('#startDateDescription').css('display', 'none');
+
+        if (value == 'description') {
+            $('#startDateDescription').css('display', '');
+        }
+    })
+
+    $("#contain").on('click', '.usedProperty', function () {
+        if ($(this).prop('checked')) {
+            $(this).closest('tr').addClass('info');
+        } else {
+            $(this).closest('tr').removeClass('info danger').find('.requiredProperty').prop('checked', false);
+        }
+    })
+    $("#contain").on('click', '.requiredProperty', function () {
+        if ($(this).prop('checked')) {
+            var tr = $(this).closest('tr');
+            var fieldName = tr.find('.fieldName:first').html();
+
+            tr.addClass('info danger').find('.usedProperty').prop('checked', true);
+            if (!$.inArray(fieldName, $('#descriptionClass').find(':selected').data('dateproperties'))) {
+                $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
+            }
+        } else {
+            $(this).closest('tr').removeClass('danger');
+        }
+    })
+
+    $("#contain").on('change', '#code', function () {
+        loadRetentionRule();
+    })
+
+    $("#contain").on('change', '#accessRuleCode', function () {
+        loadAccessCode();
+    })
+
+    //save
+    $("#contain").on('click', '#save', function () {
+        var parameters = {
+            archivalProfile : serialize()
+        };
+        
+        if($("#contain").data('archivalprofileid')) {
+            type= 'PUT';
+            url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
+        } else {
+            type= 'POST';
+            url='/archivalProfile';
+        }
+        if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "") {
+            gritter.show($("#empty_text").text(), false);
+            return;
+        }
+        ajax($('#save'), {
+            url: url,
+            type: type,
+            data: JSON.stringify(parameters),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    
+                    load("/archivalProfiles");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+    
+    function loadRetentionRule() {
+        var retentionRule = $('#code').find(":selected");
+        var duration = retentionRule.data('duration');
+        var durationUnit = retentionRule.data('duration-unit');
+        var finalDisposition = retentionRule.data("final-disposition");
+        if (finalDisposition) {
+            if(durationUnit) {
+                $('.finalDisposition').css('display','');
+                $('#duration').html(duration + ' ' + $('#text_' + durationUnit).html());
+                $('#finalDisposition').html($('#text_' + finalDisposition).html());
+            } else {
+                $('#duration').html($('#text_I').html());
+                $('.finalDisposition').css('display','none');
+                $('#finalDisposition').html('');
+            }
+        } else {
+            $('.finalDisposition').css('display','');
+            $('#duration').html('');
+            $('#finalDisposition').html('');
+        }
+    }
+
+    function loadAccessCode() {
+        var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
+        var accessEntries = "";
+        var accessRuleTable = $('#accessRuleTable');
+
+        if (accessRuleCode) {
+            var accessEntries = accessRuleCode.accessEntry;
+            var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+            var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+            $('#accessRule').css("display", 'block');
+            $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+        } else {
+            $('#accessRule').css("display", 'none');
+        }
+
+        if(accessEntries) {
+            for(var i=0; i<accessEntries.length; i++) {
+                loadAccessEntry(accessEntries[i]);
+            }
+        }
+
+    }
+
+    function loadAccessEntry(accessEntry) {
+        var li = $('<li/>')
+            .html(accessEntry.orgUnitId)
+            .addClass('list-group-item')
+            .appendTo($('#accessEntries'));
+        
+        var badge = $('<span/>')
+            .addClass('badge')
+            .html('<i class="fa fa-eye"></i>')
+            .appendTo(li);
+
+        if (accessEntry.readOnly == false) {
+            var badge = $('<span/>')
+            .addClass('badge')
+            .html('<i class="fa fa-times"></i>')
+            .appendTo(li);
+            var badge = $('<span/>')
+            .addClass('badge')
+            .html('<i class="fa fa-edit"></i>')
+            .appendTo(li);            
+        }   
+    }
+
+    function serialize() {
+
+        serializedObject = {
+            archivalProfileId: $('#archivalProfileId').val(),
+            reference: $('#reference').val(),
+            name: $('#name').val(),
+            descriptionClass: $('#descriptionClass').val(),
+            retentionStartDate: $('#startDate option:selected').val(),
+            description: $('#description').val(),
+            accessRuleCode: $('#accessRuleCode').val(),
+            retentionRuleCode: $('#code').val(),
+            acceptUserIndex: $('#allowUserIndexes').prop("checked"),
+            acceptMultipleDocuments: $('#allowMultipleDocuments').prop("checked"),
+            archiveDescription: []
+        }
+
+        if(serializedObject.retentionStartDate ==''){
+            serializedObject.retentionStartDate = null;
+        }
+        if(serializedObject.accessRuleCode ==''){
+            serializedObject.accessRuleCode = null;
+        }
+        if(serializedObject.retentionRuleCode ==''){
+            serializedObject.retentionRuleCode = null;
+        }
+        
+        serializedObject.documentProfile = [{
+            name                : $("#name").val(),
+            reference           : $("#reference").val(),
+            documentDescription : PropertiesList.serialize(),
+        }];
+        
+        var description = $('#archiveDescription').find('.usedProperty:checked');
+        $.each(description, function () {
+            var tr = $(this).closest('tr');
+            var descriptionProperty = {};
+            descriptionProperty.fieldName = tr.find('.fieldName:first').html();
+            descriptionProperty.required = tr.find('.requiredProperty:first').prop('checked');
+
+            serializedObject.archiveDescription.push(descriptionProperty);
+        })
+        
+        return serializedObject;
+    }
+
+</script>

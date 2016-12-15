@@ -1,0 +1,298 @@
+<div class="col-md-4 col-md-offset-1">
+    <div class="row">
+        <div class="list-group clearfix" id="documentPropertiesList">
+            <?merge archivalProfile.documentProfile.bool() ?>
+            <input type="hidden" id="documentPropertiesJson" data-json="[?merge archivalProfile.documentProfile.json() ?]">
+            <?merge archivalProfile.documentProfile.bool().not() ?>
+            <input type="hidden" id="documentPropertiesJson" data-json="">
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6 col-md-offset-1">
+    <div class="panel panel-default" id="documentPropertyForm">
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-md-3 control-label">Field<span style="color:red">&nbsp;*</span></label>
+                <div class="col-md-7">
+                    <select class="form-control" id="documentDescriptionPropertiesType" name="type">
+                        <option value=""/>
+                        <option data-origin="documentManagement/document" data-type="text" value="originatorDocId">Identifier</option>
+                        <option data-origin="documentManagement/document" data-type="text" value="language">Language</option>
+                        <option data-origin="documentManagement/document" data-type="text" value="description">Description</option>
+                        <option data-origin="documentManagement/document" data-type="name" value="publisher">Publisher</option>
+                        <option data-origin="documentManagement/document" data-type="name" value="contributor">Contributor</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="creation">Date of creation</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="issue">Date of issue</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="reception">Date of reception</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="response">Date of response</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="submission">Date of submission</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="available">Date of availablity</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="update">Date of modification</option>
+                        <option data-origin="documentManagement/document" data-type="date" value="valid">Date of validity</option>
+                        <!--option data-origin="documentManagement/document" data-type="name" value="category">Category</option-->
+                        <option data-origin="documentManagement/document" data-type="text" value="spatialCoverage">Spatial coverage</option>
+                        <option data-origin="documentManagement/document" data-type="text" value="temporalCoverage">Temporal coverage</option>
+                        <?merge descriptionFields.bool() ?>
+                        <div>
+                            <?merge descriptionFields ?>
+                            <option data-origin="recordsManagement/descriptionField" data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
+                        </div>
+                       
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="propertyRequired">
+                <label class="col-md-3 control-label">Required</label>
+                <div class="col-md-7">
+                    <input type="checkbox" name="required"/>
+                </div>
+            </div>
+            <!--div class="form-group hide" id="booleanPropertyDefaultValue">
+                <label class="col-md-3 control-label">Default value</label>
+                <div class="col-md-7">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default ">
+                            <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"/>
+                        </label>
+                        <label class="btn btn-default active">
+                            <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                        </label>
+                        <label class="btn btn-default">
+                            <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"/>
+                        </label>
+                    </div>
+                </div>
+            </div-->
+            <div class="pull-right ">
+                <button type="button" id="cancelProperty" class="btn btn-warning"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button type="button" id="addProperty" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                <button type="button" id="modifyProperty" class="btn btn-success hide"><i class="fa fa-edit">&nbsp;</i>Modify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="hide">
+        <!-- ERROR MESSAGES -->
+        <span id="emptyName_error">A name must be provide for the property.</span>
+        <span id="emptyLabe_error">A label must be provide for the property.</span>
+
+        <!-- TYPE -->
+        <span id="text_text">text</span>
+        <span id="name_text">name</span>
+        <span id="date_text">date</span>
+        <span id="number_text">number</span>
+        <span id="boolean_text">boolean</span>
+
+        <!-- DOCUMENT PROPERTY TEMPLATE -->
+        <div class="list-group-item col-xs-12 ui-state-default" id="documentPropertyTemplate" data-json="" style="cursor: pointer;">
+            <div class="col-xs-1" style="cursor: grab;">
+                <span class="fa fa-arrows-v"></span>
+            </div>
+            <div class="col-xs-1">
+                <span class="fa requiredProperty text-danger"></span>
+                </div>
+            <div class="col-xs-9">
+                <strong class="propertyLabel"></strong>&nbsp;&nbsp;<small class="propertyType"></small><br/>
+            </div>
+            <div class="col-xs-1 text-right">
+                <span class="deleteProperty" title="delete"><i class="fa fa-times"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/public/dependency/html/js/jQueryUI_1.10.4/jqueryUI.js"></script>
+<script type="text/javascript">
+    
+    $('#addProperty').on('click', function(e) {
+        PropertiesForm.add();
+    });
+
+    $('#modifyProperty').on('click', function(e) {
+        PropertiesForm.add(true);
+    });
+
+    $('#cancelProperty').on('click', function() {
+        PropertiesForm.clear();
+        PropertiesList.unselect();
+
+    });
+
+    // Properties list
+    $('#documentPropertiesList').on('click', '.deleteProperty', function(e) {
+        //e.preventDefault();
+        //e.stopPropagation();
+        e.stopImmediatePropagation()
+        PropertiesList.remove($(this));
+        PropertiesForm.clear();
+    });
+    
+    $('#documentPropertiesList').on('click', '.list-group-item', function() {
+        PropertiesList.selected($(this));
+        PropertiesForm.load($(this).data('json'));
+    });
+
+
+    var PropertiesForm = {
+        form : $('#documentPropertyForm'),
+        load : function(property) {
+            this.clear();
+
+            if(!property) {
+                PropertiesList.unselect();
+                return;
+            }
+
+            // submit buttons
+            $('#addProperty').addClass('hide');
+            $('#modifyProperty').removeClass('hide');
+            
+            // property fields
+            $('#documentDescriptionPropertiesType').find('option[value="'+property.fieldName+'"]').prop('selected', true);
+
+            if(property.required === true) {
+                $('#propertyRequired').find('input').prop('checked', true);
+            }
+
+            // custom property
+            if($('#documentDescriptionPropertiesType').val() == '') {
+                $('#documentDescriptionPropertiesType').find('option[value="custom"][data-type="'+property['type']+'"]').prop('selected', true);
+            }
+
+        },
+        add : function(update) {
+            var property = this.serialize();
+
+            if(property.fieldName == "") {
+                gritter.show($('#emptyName_error').html(), false);
+                return;
+            }
+
+            console.log(property);
+            /*if (property) {
+                $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
+            }*/
+
+            this.hideInPropertyList(property.fieldName);
+
+            if (update === true) {
+                PropertiesList.update(property);
+            } else {
+                PropertiesList.add(property);
+            }
+            this.clear();
+            PropertiesList.unselect();
+
+        },
+        serialize : function() {
+            var type = $('#documentDescriptionPropertiesType');
+            var selectedOption = type.find('option:selected');
+            var property = {
+                fieldName    : type.val(),
+                label        : selectedOption.text(),
+                origin       : selectedOption.data('origin'),
+                required     : $('#propertyRequired').find('input').is(':checked'),
+            }
+
+            return property;
+        },
+        clear : function() {
+            this.form.find('input[type="text"], input[type="number"], select').val('');
+            this.form.find('input[type="checkbox"]').attr('checked', false);
+            $('#addProperty').removeClass('hide');
+            $('#modifyProperty').addClass('hide');
+        },
+        hideInPropertyList : function(fieldName) {
+            $('#documentDescriptionPropertiesType').find('option[value="'+fieldName+'"]').addClass('hide');
+
+        },
+        showInPropertyList : function(fieldName) {
+            $('#documentDescriptionPropertiesType').find('option[value="'+fieldName+'"]').removeClass('hide');
+        }
+    }
+
+    var PropertiesList = {
+        list : $('#documentPropertiesList'),
+        selected : function(e) {
+            this.unselect();
+            e.addClass('active');
+        },
+        unselect : function() {
+            this.list.find('.active').removeClass('active');
+        },
+        add : function(property) {
+            var template = this.fillTemplate(property);
+            template.appendTo(this.list);
+        },
+        loadExisting : function() {
+            var json = $("#documentPropertiesJson").attr("data-json");
+
+            if (json == "" || json == "undefined" || json == null) {
+                return;
+            }
+
+            var documentProfile = JSON.parse(json);
+            var documentDescription = documentProfile[0].documentDescription;
+            
+            $.each(documentDescription, function (key, value) {
+                PropertiesForm.hideInPropertyList(value.fieldName);
+                var property = {
+                    fieldName    : value.fieldName,
+                    label        : $('#documentDescriptionPropertiesType').find('option[value="'+value.fieldName+'"]').text(),
+                    origin       : value.origin,
+                    required     : value.required,
+                }
+                var template = PropertiesList.fillTemplate(property);
+                template.appendTo(PropertiesList.list);
+            });
+        },
+        update : function(property) {
+            var active = this.list.find('.active');
+            var json = JSON.parse(active.attr("data-json"));
+            var template = this.fillTemplate(property);
+
+            active.after(template);
+            active.remove();
+        },
+        fillTemplate : function(property) {
+            var template = $('#documentPropertyTemplate').clone().attr('data-json', JSON.stringify(property)).removeAttr('id');
+
+            template.find('.propertyLabel').text(property['label']);
+
+            if (property['required'] == true) {
+                template.find('.requiredProperty').text("*");
+            }
+            
+            return template;
+        },
+        remove : function(e) {
+            var e = e.closest('.list-group-item');
+
+            PropertiesForm.showInPropertyList(JSON.parse(e.attr('data-json')).fieldName);
+            e.remove();
+        },
+
+        serialize : function() {
+            documentDescription = [];
+            
+            var findingElement = $("#documentPropertiesList").find(".list-group-item");
+
+            $.each(findingElement, function (key, value) {
+                var element = JSON.parse($(value).attr("data-json"));
+                var property = new Object();
+                property.fieldName = element.fieldName;
+                property.origin = element.origin;
+                property.required = element.required;
+                documentDescription.push(property);
+            });
+            
+            return documentDescription;
+        }
+    }
+    
+$('#app_maarchRM_main').ready(function() {
+    PropertiesList.loadExisting();
+    $("#documentPropertiesList").sortable();
+    $("#documentPropertiesList").disableSelection();
+})
+</script>

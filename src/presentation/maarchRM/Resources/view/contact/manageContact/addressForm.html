@@ -1,0 +1,361 @@
+<div class="well col-xs-12 col-md-5 pull-left" >
+    <div id="contact_addressList" class="list-group">
+        <?merge contact.address.bool() ?>
+        <div>
+            <?merge contact.address ?>
+            <a data-address="[?merge .json ?]" href="#" class="list-group-item">
+                <h4 class="list-group-item-heading"><?merge .purpose ?></h4>
+                <?merge .room.bool() ?>
+                <p class="list-group-item-text">Room <?merge .room ?></p>
+                <?merge .floor.bool() ?>
+                <p class="list-group-item-text">Floor <?merge .floor ?></p>
+                <?merge .building.bool() ?>
+                <p class="list-group-item-text">Building <?merge .building ?></p>
+                <p class="list-group-item-text"><?merge .number ?>&nbsp;<?merge .street ?></p>
+                <p class="list-group-item-text"><?merge .block ?></p>
+                <?merge .citySubDivision.bool() ?>
+                <p class="list-group-item-text"><?merge .citySubDivision ?> City sub division </p>
+                <p class="list-group-item-text"><?merge .postCode ?>&nbsp;<?merge .city ?></p>
+                <?merge .postBox.bool() ?>
+                <p class="list-group-item-text">BP<?merge .postBox ?></p>
+                <p class="list-group-item-text"><?merge .country ?></p>
+            </a>
+        </div>
+    </div>
+    <button type="button" id="contact_new-address" class="btn btn-success" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+</div>
+
+<form class="well col-xs-12 col-md-6 pull-right" id="contact_address-form" style="display:none">
+    <input type="hidden" id='contact_addressId' name="addressId">
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="purpose">Purpose<span style="color : red"> *</span></label>
+                    <input type="text" class="form-control" name="purpose" placeholder="Purpose">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-4">
+            <label for="room">Room</label>
+            <input type="text" class="form-control" name="room" placeholder="Room">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="floor">Floor</label>
+            <input type="text" class="form-control" name="floor" placeholder="Floor">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="building">Building</label>
+            <input type="text" class="form-control" name="building" placeholder="Building">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label for="number">Number</label>
+            <input type="text" class="form-control" name="number" placeholder="Number">
+        </div>
+        <div class="form-group col-md-9">
+            <label for="street">Street</label>
+            <input type="text" class="form-control" name="street" placeholder="Street">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label for="block">Block</label>
+            <input type="text" class="form-control" name="block" placeholder="Block">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="citySubDivision">City sub division</label>
+            <input type="text" class="form-control" name="citySubDivision" placeholder="City sub division">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label for="postCode">PC</label>
+            <input type="text" class="form-control" name="postCode" placeholder="Post code">
+        </div>
+        <div class="form-group col-md-9">
+            <label for="city">City<span style="color : red"> *</span></label>
+            <input type="text" class="form-control" name="city" placeholder="City">
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label for="postBox">PB</label>
+            <input type="text" class="form-control" name="postBox" placeholder="Post box">
+        </div>
+        <div class="form-group col-md-9">
+            <label for="country">Country</label>
+            <input type="text" class="form-control" name="country" placeholder="Country">
+        </div>
+    </div>
+
+    <div class="panel-footer clearfix">
+        <button type="button" id="contact_cancel-address" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+        <button type="button" id="contact_delete-address" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o">&nbsp;</i>Delete</button>
+        <button type="button" id="contact_add-address" class="btn btn-success" activeButtons title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+        <button type="button" id="contact_update-address" class="btn btn-success" activeButtons title="Update"><i class="fa fa-save">&nbsp;</i>Save</button>
+    </div>
+</form>
+
+<span class="hide" id="contact_text_room">Room</span>
+<span class="hide" id="contact_text_floor">Floor</span>
+<span class="hide" id="contact_text_building">Building</span>
+<span class="hide" id="contact_text_citySubDivision">City sub division</span>
+<span class="hide" id="contact_text_postBox">PB</span>
+
+<script>
+    // Read address
+    $("#contact_addressList").on('click', 'a', function(){
+        ContactAddressForm.read($(this));
+    });
+
+    // New address
+    $("#contact_new-address").on('click', function () {
+        ContactAddressForm.cancel();
+        $('#contact_address-form').css('display', '');
+        $('#contact_new-address').css('display', 'none');
+    });
+
+    // Cancel
+    $("#contact_cancel-address").on('click', function () {
+        ContactAddressForm.cancel();
+    });
+
+    // Delete
+    $("#contact_delete-address").on('click', function () {
+        $('#contact_addressConfirmDelete').modal('show');
+    });
+
+    $("#contact_add-address, #contact_update-address").on('click', function () {
+        ContactAddressForm.save();
+    });
+
+    var ContactAddressForm = {
+        read: function(selection){
+            var address = selection.data('address');
+
+            $('#contact_address-form').css('display', '');
+            $('#contact_delete-address').css('display', '');
+            $('#contact_update-address').css('display', '');
+            $('#contact_add-address').css('display', 'none');
+            $('#contact_new-address').css('display', 'none');
+
+            $('#contact_addressList').find('.active').removeClass('active');
+            selection.addClass('active');
+
+             $.each(address, function (key, value) {
+                $('#contact_address-form').find('input[name="' + key + '"]').val(value);
+            });
+        },
+
+        save: function() {
+            var addressObject = ContactAddressForm.serialize();
+
+            if(addressObject.purpose == null || addressObject.city == null) {
+                gritter.show($('#contact_empty_text').html(),false);
+
+                return false;
+            }
+
+            if ($('#contact_contactId').val() == "") {
+                                
+                ContactAddressForm.addAddressToScreen(addressObject);
+                ContactAddressForm.cancel();
+
+                return;
+            }
+
+            // creation
+            var type = "POST";
+            var url = '/contact/' + $('#contact_contactId').val() + '/address';
+
+            // modification
+            if (addressObject.addressId) {
+                type = "PUT";
+                url = '/contactAddress/' + addressObject.addressId;
+            }
+
+            $.ajax({
+                type        : type,
+                url         : url,
+                data        : JSON.stringify({address : addressObject}),
+                dataType    : 'json',
+                contentType : 'application/json',
+                async       : false,
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        if (!addressObject.addressId) {
+                            addressObject.addressId = response.addressId;
+                        }
+
+                        ContactAddressForm.addAddressToScreen(addressObject);
+                        ContactAddressForm.cancel();
+                        $('#contact_new-address').css('display', '');
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+
+            $("button").removeAttr('disabled');
+        },
+
+        serialize: function() {
+            var address = new Object();
+
+            $('#contact_address-form').find('input').each(function () {
+                if($(this).val() != ""){
+                    address[$(this).attr('name')] = $(this).val();
+                }
+            });
+
+            return address;
+        },
+
+        serializeList: function() {
+            var addressList = [];
+            var a = $('#contact_addressList').find('a');
+
+            $.each(a, function(){
+                addressList.push($(this).data('address'));
+            })
+
+            return addressList;
+        },
+
+        deleteAddress: function() {
+            $('#contact_addressConfirmDelete').modal('hide');
+
+            $.ajax( {
+                type        : 'DELETE',
+                url         : '/contactaddress/' + $('#contact_addressId').val(),
+                dataType    : 'json',
+                async       : false,
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        $('#contact_addressList').find('.active').remove();
+                        ContactAddressForm.cancel()
+                        $('#contact_new-address').css('display', '');
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        addAddressToScreen: function(address) {
+            var addressList = $('#contact_addressList');
+            addressList.find('.active').remove();
+
+            if (!addressList.find('div').length){
+                var newDiv = $('<div/>').appendTo(addressList);
+                addressList = newDiv;
+            } else {
+                addressList = addressList.find('div:first');
+            }
+
+            var a = $('<a/>').data('address', address).attr('href', '#').addClass('list-group-item').appendTo(addressList);
+
+            $('<b/>').addClass('list-item-heading')
+                     .text(address.purpose)
+                     .appendTo(a);
+
+            if (address.room) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_room').html() + ' ' + address.room)
+                         .appendTo(a);
+            }
+
+            if (address.floor) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_floor').html() + ' ' + address.floor)
+                         .appendTo(a);
+            }
+
+            if (address.building) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_building').html() + ' ' + address.building)
+                         .appendTo(a);
+            }
+
+            if (address.block) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.block)
+                         .appendTo(a);
+            }
+
+            if (address.number || address.street) {
+                var street = '';
+                if (!address.number) {
+                    street = address.street;
+                } else if (!address.street) {
+                    street = address.number;
+                } else {
+                    street = address.number + ' ' + address.street;
+                }
+
+                $('<p/>').addClass('list-group-item-text')
+                         .text(street)
+                         .appendTo(a);
+            }
+
+            if (address.postCode || address.city) {
+                var city = '';
+                if (!address.postCode) {
+                    city = address.city;
+                } else if (!address.city) {
+                    city = address.postCode;
+                } else {
+                    city = address.postCode + ' ' + address.city;
+                }
+
+                $('<p/>').addClass('list-group-item-text')
+                         .text(city)
+                         .appendTo(a);
+            }
+
+            if (address.citySubDivision) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').html())
+                         .appendTo(a);
+            }
+
+            if (address.postBox) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text($('#contact_text_postBox').html()+ ' ' + address.postBox)
+                         .appendTo(a);
+            }
+
+            if (address.country) {
+                $('<p/>').addClass('list-group-item-text')
+                         .text(address.country)
+                         .appendTo(a);
+            }
+        },
+
+        cancel: function() {
+            $('#contact_address-form').find('input').val('');
+            $('#contact_address-form').css('display', 'none');
+            $('#contact_addressList').find('a').removeClass('active');
+
+            $('#contact_new-address').css('display', '');
+
+            $('#contact_delete-address').css('display', 'none');
+            $('#contact_update-address').css('display', 'none');
+            $('#contact_add-address').css('display', '');
+        },
+
+        clear : function() {
+            $('#contact_addressList').html('');
+            ContactAddressForm.cancel();
+        }
+    }
+
+</script>

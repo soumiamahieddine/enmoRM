@@ -1,0 +1,229 @@
+# batchProcessing/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "M"
+msgstr "L"
+msgctxt "monday"
+
+msgid "T"
+msgstr "M"
+msgctxt "tuesday"
+
+msgid "W"
+msgstr "M"
+msgctxt "wednesday"
+
+msgid "T"
+msgstr "J"
+msgctxt "thursday"
+
+msgid "F"
+msgstr "V"
+msgctxt "friday"
+
+msgid "S"
+msgstr "S"
+msgctxt "saturday"
+
+msgid "S"
+msgstr "D"
+msgctxt "sunday"
+
+msgid "JAN"
+msgstr "JAN"
+msgctxt "month"
+
+msgid "FEB"
+msgstr "FEV"
+msgctxt "month"
+
+msgid "MAR"
+msgstr "MAR"
+msgctxt "month"
+
+msgid "APR"
+msgstr "AVR"
+msgctxt "month"
+
+msgid "MAI"
+msgstr "MAI"
+msgctxt "month"
+
+msgid "JUN"
+msgstr "JUIN"
+msgctxt "month"
+
+msgid "JUL"
+msgstr "JUIL"
+msgctxt "month"
+
+msgid "AUG"
+msgstr "OCT"
+msgctxt "month"
+
+msgid "SEP"
+msgstr "SEP"
+msgctxt "month"
+
+msgid "OCT"
+msgstr "OCT"
+msgctxt "month"
+
+msgid "NOV"
+msgstr "NOV"
+msgctxt "month"
+
+msgid "DEC"
+msgstr "DEC"
+msgctxt "month"
+
+msgid "Task name"
+msgstr "Nom de la tâche"
+
+msgid "Task"
+msgstr "Tâche"
+
+msgid "task(s)"
+msgstr "tâche(s)"
+
+msgid "New task"
+msgstr "Nouvelle tâche"
+
+msgid "Edit a task"
+msgstr "Editer une tâche"
+
+msgid "Batch scheduling"
+msgstr "Planificateur"
+
+msgid "New scheduling"
+msgstr "Nouvelle planification"
+
+msgid "Select a task"
+msgstr "Selectionner une tâche"
+
+msgid "Select a scheduling name"
+msgstr "Selectionner une planification"
+
+msgid "Select a service account"
+msgstr "Selectionner un compte de service"
+
+msgid "Daily"
+msgstr "Tous les jours"
+
+msgid "Weekly"
+msgstr "Hebdomadaire"
+
+msgid "Monthly"
+msgstr "Mensuel"
+
+msgid "Start time"
+msgstr "Heure de début"
+
+msgid "Repetition"
+msgstr "Repétition"
+
+msgid "Every"
+msgstr "Toutes les"
+
+msgid "hour(s)"
+msgstr "heure(s)"
+
+msgid "End time"
+msgstr "Heure de fin"
+
+msgid "Week days"
+msgstr "Jours de la semaine"
+
+msgid "Month"
+msgstr "Mois"
+
+msgid "Days"
+msgstr "Jours"
+
+msgid "until"
+msgstr "jusqu'à"
+
+msgid "New scheduling created"
+msgstr "Nouvelle planification créée"
+
+msgid "Scheduling updated"
+msgstr "Planification modifiée"
+
+msgid "Scheduling deleted"
+msgstr "Planification supprimée"
+
+msgid "Task execution triggered"
+msgstr "Planification executée"
+
+msgid "Status updated"
+msgstr "Status modifié"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Errors"
+msgstr "Erreur"
+
+msgid "Delete a scheduled task"
+msgstr "Supprimer une tâche plannifiée"
+
+msgid "Are you sur to delete this scheduled task ?"
+msgstr "Etes vous sûr de vouloir supprimer cette tâche plannifiée ?"
+
+msgid "The task will be executed the last day of months with less than selected days."
+msgstr "La tâche sera éxècutée le dernier jour du mois si les jours selectionnés n'existent pas"
+
+msgid "Last execution"
+msgstr "Derniere exécution"
+
+msgid "Next execution"
+msgstr "Prochaine exécution"
+
+msgid "Executed by"
+msgstr "Exécuté par"
+
+msgid "Launched by"
+msgstr "Lancé par"
+
+msgid "Route wrong."
+msgstr "La route de la tâche est fausse"
+
+msgid "Scheduling name"
+msgstr "Nom de la planification"
+
+msgid "Log scheduling"
+msgstr "Evenement d'une planification"
+
+msgid "Search logs scheduling"
+msgstr "Recherche d'événement de planification"
+
+msgid "Task created"
+msgstr "Tâche créée"
+
+msgid "Task updated"
+msgstr "Tâche modifiée"
+
+msgid "Task deleted"
+msgstr "Tâche supprimée"
+
+msgid "Execute"
+msgstr "Exécuter"
+
+msgid "Execution error"
+msgstr "Erreur d'exécution"
+
+msgid "Play"
+msgstr "Lecture"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Logs scheduling list"
+msgstr "Liste d'évènement de planification"

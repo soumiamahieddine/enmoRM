@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4></h4>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table table-bordered table-condensed dataTable" style="margin: 0;" id="list">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User / Service</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge events ?>
+                        <tr class="auditEvent small" data-json="[?merge .json() ?]" data-event="[?merge .eventDate ?]#[?merge .eventType ?]#[?merge .userName ?]#[?merge .message ?]">
+                            <td><?merge .eventDate.format('d-m-Y H:i:s') ?></td>
+                            <td><?merge .userName ?></td>
+                            <td><?merge .message ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#list").on('click', '.auditEvent', function () {
+        datas = $(this).attr('data-event');
+        datas = datas.split("#");
+        $('#audit_eventDate').html(datas[0]);
+        $('#audit_eventType').html(datas[1]);
+        $('#audit_userName').html(datas[2]);
+        $('#audit_message').html(datas[3]);
+    })
+</script>

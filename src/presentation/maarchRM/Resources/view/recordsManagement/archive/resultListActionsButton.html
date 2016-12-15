@@ -1,0 +1,20 @@
+<ul data-translate-catalog="recordsManagement/messages" class="dropdown-menu multipleActionMenu" role="menu" aria-labelledby="actions">
+    <?merge hasModificationPrivilege.bool() ?>
+    <li class="editRetentionRule" data-type="retentionRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify retention rule</a></li>
+    <?merge hasModificationPrivilege.bool() ?>
+    <li class="editAccessRule" data-type="accessRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify access rule</a></li>
+    <?merge hasModificationPrivilege.bool() ?>
+    <li class="freeze" data-type="freeze"><a href="#"><i class="fa fa-lock">&nbsp;</i>&nbsp;Freeze</a></li>
+    <?merge hasModificationPrivilege.bool() ?>
+    <li class="unfreeze" data-type="unfreeze"><a href="#"><i class="fa fa-unlock">&nbsp;</i>&nbsp;Unfreeze</a></li>
+    <?merge hasModificationPrivilege.bool() ?>
+    <li class="divider"></li>
+    <?merge hasDestructionPrivilege.bool() ?>
+    <li class="flagForDestruction" data-type="flagForDestruction"><a href="#"><i class="fa fa-trash">&nbsp;</i>&nbsp;Flag for destruction</a></li>
+    <?merge hasDestructionPrivilege.bool() ?>
+    <li class="cancelDestruction" data-type="cancelDestruction"><a href="#"><i class="fa fa-undo">&nbsp;</i>&nbsp;Cancel destruction request</a></li>
+    <?merge hasDestructionPrivilege.bool() ?>
+    <li class="divider"></li>
+    <?merge hasIntegrityCheckPrivilege.bool() ?>
+    <li class="checkHash" data-type="checkHash"><a href="#"><i class="fa fa-database">&nbsp;</i>&nbsp;Verify integrity</a></li>
+</ul>

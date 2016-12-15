@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<div class="row" data-translate-catalog="audit/messages">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4><?merge events.count() ?> result(s)</h4>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table id="list" class="table dataTable">
+                    <thead>
+                        <tr>
+                            <?merge multipleInstance.bool() ?>
+                            <th class="date">Instance</th>
+                            <th class="date">Date</th>
+                            <th class="user">Account</th>
+                            <th class="path">Event</th>
+                            <th class="status">Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge events ?>
+                        <tr>
+                            <?merge multipleInstance.bool() ?>
+                            <td class="instance"><?merge .instanceName ?></td>
+                            <td class="date"><?merge .eventDate ?></td>
+                            <td class="user"><?merge .accountName ?></td>
+                            <td class="path"><?merge .path ?></td>
+                            
+                            <td class="status">
+                                <?merge .status.ifeq(1) ?><strong class="text-success fa fa-check" disabled=""></strong>
+                                <?merge .status.ifeq("") ?><strong class="text-danger fa fa-times" disabled="">&nbsp;</strong>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-small pull-right fa fa-eye viewEvent"  title="View" data-eventId="[?merge .eventId ?]">
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

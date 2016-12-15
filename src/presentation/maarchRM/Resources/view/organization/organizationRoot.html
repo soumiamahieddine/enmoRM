@@ -1,0 +1,24 @@
+<ul>
+    <li class="organizationNode" lang="en" data-translate-catalog="organization/messages">
+        <span class="root" id="[?merge .orgId?]" data-orgname="[?merge .displayName?]" data-ownerorgid="[?merge .orgId?]" style="padding:8px">
+            <i class="fa">&nbsp;</i>&nbsp;
+            <b class="showDetails" style="cursor:pointer; font-weight:normal"><?merge .displayName?></b>&nbsp;&nbsp;
+
+            <div class="dropdown btn-group">
+                <i class="menu fa fa-bars dropdown-toggle"  data-toggle="dropdown" style="cursor:pointer"></i>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="addChildOrganization"><a href="#contain"><i class="fa fa-plus" >&nbsp;</i>Add a child organization</a></li>
+                    <li class="addChildOrgUnit"><a href="#contain"><i class="fa fa-plus" >&nbsp;</i>Add a child organization unit</a></li>
+                    <li class="moveOrganization"><a href="#contain"><i class="fa fa-share">&nbsp;</i>Move</a></li>
+                    <li class="deleteOrganization"><a href="#contain"><i class="fa fa-trash-o" >&nbsp;</i>Delete</a></li>
+                </ul>
+            </div>
+        </span>
+
+        <input type="checkbox" class="hide" style="width:20px; height:20px"/>
+        <?merge .organization.bool() ?>
+        <ul>
+            <?merge .organization /organization/organizationNode.html ?>
+        </ul>
+    </li>
+</ul>

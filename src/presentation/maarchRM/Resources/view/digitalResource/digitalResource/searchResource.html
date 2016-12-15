@@ -1,0 +1,248 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain" >
+<div class="container-fluid" data-translate-catalog="digitalResource/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-folder-open-o"></i>
+            Digital resources
+        </h1>
+    </div>
+</div>
+
+<div class="container-fluid" lang="en" data-translate-catalog="digitalResource/messages"> 
+    <div class="row">
+        <form class="well form-horizontal">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Profile name</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="profileSelection">
+                                <option value=""> </option>
+                                <?merge cluster ?>
+                                <option value="[?merge .clusterId ?]"><?merge .clusterName ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="metadatas"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-offset-4 col-lg-4">
+                        <button type="button" class="btn btn-primary btn-block" id="search" disabled title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container-fluid" id="resultGlobalResearch"></div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="viewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContainer">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">File</h4>
+            </div>
+            <div id='iframeContent'></div>
+            <div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $('#app_maarchRM_main').ready(function() {
+        $('#search').on('click', function(){
+            $('#search').attr('disabled', '');
+            var datas = serialize();
+            ajax($(this), {
+                type: 'POST',
+                url: '/digitalResource/search/getResultSearch',
+                data: JSON.stringify(datas),
+                dataType : 'html',
+                contentType: 'application/json',
+                async: true,
+                success: function(response) {
+                    $('#resultGlobalResearch').html('');
+                    $('#resultGlobalResearch').append(response);
+                    $('#search').removeAttr('disabled');
+
+                }
+            });
+        });
+        
+        $('#profileSelection').on('change', function() {
+            if(this.value != '') {
+                $.ajax({
+                    type: "GET",
+                    url: '/digitalResource/search/getProfileMetadata?profileId='+this.value,
+                    dataType: 'html',
+                    success: function(response) {
+                        $('#metadatas').html(response);
+                        $('#search').removeAttr('disabled');
+                    }
+                });
+            } else {
+                $('#metadatas').html('');
+                $('#search').attr('disabled', '');
+            }
+            
+        });
+
+    });
+
+    $("#contain").on("click", "#export", function() {
+        $.ajax({
+            type: "POST",
+            url: '/digitalResource/digitalResource/result.csv',
+            data: $('form').serialize(),
+            dataType : 'text',
+            async: true,
+            success: function(response) {
+                var url = "data:application/octet-stream;base64," + btoa(response);
+                window.open(url, 'export');
+            }
+        });
+    });
+    
+    $("#contain").on("click", "[data-viewer]", function() {
+        $.ajax({
+            type: "POST",
+            url: '/digitalResource/retrieve/contents?resId=' + $(this).attr('data-viewer'),
+            dataType : 'html',
+            async: true,
+            success: function(response) {
+                $('#iframeContent').html(response);
+                $('#viewModal').modal();
+            }
+        });
+    });
+
+    function printMetadatas(list) {
+        list.reverse();
+
+        var nameList = $('#metadataList');
+        var propertiesList = $('#metadataPropreties');
+        //elements
+        var label = $('<label/>')
+                    .addClass('col-sm-3')
+                    .addClass('control-label');
+        var input = $('<input/>')
+                    .addClass('form-control');
+        var clearBtn = $('<button/>')
+                        .attr('type', 'button')
+                        .addClass('btn btn-warning btn-block')
+                        .append(
+                            $('<i/>').addClass('fa fa-refresh').html('&nbsp')
+                        );
+
+        //activePanel
+        var firstTab;
+        var firstPanel;
+
+        //clear
+        nameList.html('');
+        propertiesList.html('').removeClass('panel');
+
+        $.each(list, function() {
+            var identifier = this['id'];
+            //tabList
+            var metadata = $('<li/>')
+                        .append(
+                            $('<a/>')
+                            .html(this.objectClass)
+                            .attr('data-toggle', 'pill')
+                            .attr('onclick', 'load(\'#'+identifier+ '\')')
+                            .attr('style', 'border-bottom-right-radius: 0; border-top-right-radius: 0;')
+                        );
+            nameList.prepend(metadata);
+
+            var tabPanel = $('<div/>')
+                            .addClass('tab-pane')
+                            .attr('id', identifier)
+                            .attr('data-className', this.objectClass);
+            propertiesList.prepend(tabPanel).addClass('panel');
+
+            firstTab = metadata;
+            firstPanel = tabPanel;
+            inputList:
+
+            //panel List
+            $.each(this.properties, function() {
+                switch(this['type']) {
+                    case "string":
+                        input.attr('type', 'text');
+                        break;
+                    default:
+                        input.attr('type', 'text');
+                }
+                var property = $('<div/>')
+                            .addClass('form-group')
+                            .append(
+                                label.clone().html(this.name)
+                            )
+                            .append(
+                                $('<div/>')
+                                    .addClass('col-sm-9')
+                                    .append(
+                                        input.clone().attr('name', this.name)
+                                    )
+                            );
+                tabPanel.append(property);
+            });
+        });
+
+        if(list.length) {
+            clearBtn.on('click', function() {
+                propertiesList.find('input[type="text"], input[type="date"]').val('');
+            });
+            propertiesList.append($('<div/>').addClass('col-xs-offset-11').append(clearBtn));
+        }
+
+        firstTab.addClass('active');
+        firstPanel.addClass('active');
+    }
+
+    function serialize() {
+        var panels = $('#metadataPropreties').find('.tab-pane');
+        var metadatas = {};
+
+        $.each(panels, function() {
+            var metadataObject = {};
+            var inputs = $(this).find('input[type="text"], input[type="date"], input[type="numeric"]');
+            var radioBtn = $(this).find('input[type="radio"]').parent('.active').children('input');
+            var objectClass = $(this).attr('data-classname');
+
+            $.each(inputs, function() {
+                if(this.value != "" || objectClass=='fileInfo') {
+                    metadataObject[this.name]=this.value;
+                }
+            });
+
+            $.each(radioBtn, function() {
+                if(this.value != "" || objectClass=='fileInfo') {
+                    metadataObject[this.name]=this.value;
+                }
+            });
+
+            if(!$.isEmptyObject(metadataObject) || objectClass=='fileInfo') {
+                metadatas[objectClass] = metadataObject;
+            }
+        });
+        
+        console.log(metadatas);
+
+        return metadatas;
+    }
+
+</script>

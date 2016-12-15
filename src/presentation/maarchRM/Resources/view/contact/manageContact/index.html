@@ -1,0 +1,115 @@
+<!--#
+This file is part of the registeredMail package.
+(c) Maarch Cyril Vazquez <cyril.vazquez@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+    <div class="container-fluid" lang="en" data-translate-catalog="contact/contact">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-list-ul"></i>
+                Contacts
+            </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid" lang="en" data-translate-catalog="contact/contact">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge contacts.count() ?> contact(s)</h4>
+                        </div>
+                        <div class="pull-right btn-group">
+                            <button type="button" class="btn btn-default btn-sm" id="addNewContact" title="Add"><span class="fa fa-plus">&nbsp;</span>Add</button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable" id="listContacts" data-translate-catalog="contact/contact">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th style="min-width:100px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge contacts ?>
+                                <tr>
+                                    <td><?merge .displayName ?></td>
+                                    <td><?merge .contactType ?></td>
+                                    <td>
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="btn btn-info" data-edit="[?merge .contactId ?]" title="Update"><i class="fa fa-edit"></i></button>
+                                            <button type="button" class="btn btn-danger" data-delete="[?merge .contactId ?]" data-displayName="[?merge .displayName ?]" title="Delete"><i class="fa fa-trash-o"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- modal -->
+    <div class="modal fade" id="confirmDelete" lang="en" data-translate-catalog="contact/contact">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete the contact</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to delete <span id="confirmDeleteContactName"></span> from your contact ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="No">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirmDeleteSubmit" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    $('#addNewContact').on("click", function () {
+        load('/contact')
+    });
+    
+    $('[data-edit]').on("click", function () {
+        load('/contact/'+$(this).attr("data-edit"));
+    });
+    
+    $('[data-delete]').on("click", function () {
+        $('#confirmDeleteContactName').text($(this).attr("data-displayName"));
+        $('#confirmDeleteSubmit').attr("data-contactId", $(this).attr("data-delete"));
+        $('#confirmDelete').modal('show');
+    });
+    
+    $('#confirmDeleteSubmit').on("click", function () {
+        $('#confirmDelete').modal('hide');
+        
+        $.ajax({
+            type: "DELETE",
+            async: false,
+            url: "/contact/" + $(this).attr("data-contactId"),
+            dataType: "json",
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    $('#confirmDelete').one('hidden.bs.modal', function () {
+                        load('/contacts');
+                    });
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+</script>

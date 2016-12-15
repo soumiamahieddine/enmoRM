@@ -1,0 +1,122 @@
+<div class="panel panel-default dataForm" data-form-ns="orgUnit" id="organization_moveForm">
+    <div class="panel-heading">
+        <h4>Move <small name="displayName"></small></h4>
+    </div>
+    <div class="panel-body">
+        <form>
+            <input type="hidden" name="orgId">
+            <input type="hidden" name="newParentOrgId">
+            <input type="hidden" name="newOwnerOrgId">
+
+            <div class="form control">
+                <h2>Move to : <span id="organization_newParent">Root</span></h2>
+                <i>Select a new position for the organization</i>
+            </div>
+            <br/>
+            <div class="form control">
+                <button type="button" class="btn btn-success" id="organization_submitMove" title="Move">Move</button>
+                <button type="button" class="btn btn-warning" id="organization_cancelMove" title="Cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <span class="hide" id="root_text">Root</span>
+</div>
+
+<script>
+    //cancel
+    $("#organization_cancelMove").on('click', function() {
+        OrganizationShifting.close();
+    });
+
+    $('#organization_orgTree').on('change', 'input[type="checkbox"]', function() {
+        OrganizationShifting.change($(this));
+    });
+
+    $('#organization_submitMove').on('click', function() {
+        var orgForm = $('#organization_moveForm');
+        var orgId = orgForm.find('input[name="orgId"]').val();
+        var newParentOrgId = orgForm.find('input[name="newParentOrgId"]').val();
+        var newOwnerOrgId = orgForm.find('input[name="newOwnerOrgId"]').val();
+
+        OrganizationShifting.move(orgId, newParentOrgId, newOwnerOrgId);
+
+    });
+
+    OrganizationShifting = {
+        show: function(element) {
+            var orgName = element.data('orgname');
+            var select = element.closest('li').find('input[type="checkbox"]');
+            var orgForm = $('#organization_moveForm');
+            orgForm.find('input[name="orgId"]').val(element.attr('id'));
+            orgForm.find('small[name="displayName"]').html(orgName);
+
+            if (element.closest('li').hasClass('organizationNode')) {
+                $('#organization_orgTree').find('.organizationNode').children('input[type="checkbox"]').not(select).removeClass('hide');
+                $('#organization_submitMove').prop('disabled', false).data("orgType", "organization");
+            } else {
+                $('#organization_orgTree').find('input[type="checkbox"]').not(select).removeClass('hide');
+                $('#organization_submitMove').prop('disabled', true).data("orgType", "orgUnit");
+            }
+
+            $('#organization_moveForm').css('display', '');
+        },
+
+        change: function(element) {
+            var orgForm = $('#organization_moveForm');
+            var organization = element.closest('li').find('span:first');
+
+            if (!element.prop('checked')) {
+                $('#organization_newParent').html($('#root_text').html());
+                orgForm.find('input[name="newParentOrgId"]').val("");
+                orgForm.find('input[name="newOwnerOrgId"]').val("");
+
+                if ($('#organization_submitMove').data('orgType') == "orgUnit") {
+                    $('#organization_submitMove').prop('disabled', true);
+                }
+
+                return;
+            }
+
+            var orgName = organization.data("orgname");
+            var newParentOrgId = organization.attr("id");
+            var newOwnerOrgId = null;
+
+            if ($('#organization_submitMove').data('orgType') == "orgUnit") {
+                newOwnerOrgId = organization.data("ownerorgid");
+            }
+
+            $('#organization_submitMove').prop('disabled', false);
+            $('#organization_orgTree').find('input[type="checkbox"]:checked').not(element).prop('checked', false);
+
+            orgForm.find('input[name="newParentOrgId"]').val(newParentOrgId);
+            orgForm.find('input[name="newOwnerOrgId"]').val(newOwnerOrgId);
+            $('#organization_newParent').html(orgName);
+        },
+
+        move: function(orgId, newParentOrgId, newOwnerOrgId) {
+            $.ajax({
+                url         : "/organization/"+orgId+"/parent",
+                type        : "PUT",
+                data        : JSON.stringify({newOwnerOrgId : newOwnerOrgId, newParentOrgId : newParentOrgId}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success: function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    Tree.loadTree();
+                    OrganizationShifting.close();
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            })
+        },
+
+        close: function() {
+            $('#organization_moveForm').css('display', 'none');
+            $('#organization_moveForm').find('input').val('');
+            $('#organization_orgTree').find('input[type="checkbox"]').prop('checked', false).addClass('hide');
+            $('#organization_newParent').html($('#root_text').html());
+        }
+    }
+
+</script>

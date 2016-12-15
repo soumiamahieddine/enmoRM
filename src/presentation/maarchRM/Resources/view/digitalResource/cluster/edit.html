@@ -1,0 +1,91 @@
+<div data-form-ns="cluster" class="dataForm"  data-translate-catalog="digitalResource/cluster">
+    <div class="container-fluid">
+        <div class="page-header">
+            <?merge cluster.clusterId.ifeq('') ?>
+            <h1>
+                <i class="fa fa-tasks-open-o"></i>
+                Edit a new cluster
+            </h1>
+            <?merge cluster.clusterId.ifne('') ?>
+            <h1>
+                <i class="fa fa-tasks-open-o"></i>
+                Edit a cluster
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <?hinclude digitalResource/cluster/clusterForm.html ?>
+        <?hinclude digitalResource/cluster/clusterRepositoryForm.html ?>
+    </div>
+    <div class="panel-footer clearfix">
+        <div class="pull-right" id="clusterButtonGroup">
+            <button type="button" class="btn btn-warning" id="cancel" title="Cancel"><span class="fa fa-undo"></span> Cancel</button>
+            <?merge cluster.clusterId.ifeq('') ?>
+            <button type="button" class="btn btn-success" id="submit" title="Add"><span class="fa fa-plus"></span> Add</button>
+            <?merge cluster.clusterId.ifne('') ?>
+            <button type="button" class="btn btn-success" id="update" title="Save"><span class="fa fa-save"></span> Save</button>
+        </div>
+    </div>
+    <span class="hide" id="spaces_text">The name should not contain spaces</span>
+</div>
+
+<script>
+    $('#app_maarchRM_main').ready(function () {
+        // dataForm initialisation
+        $(".dataForm").dataForm();
+    });
+
+    $('#submit').on('click', function () {
+        var dataForm = $(this).closest('.dataForm');
+        var data = dataForm.data().dataForm.serialize();
+        
+        ajax($(this), {
+            type        : "POST",
+            url         : '/cluster',
+            data        : JSON.stringify(data),
+            dataType    : 'json',
+            contentType : 'application/json',
+            async       : false,
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load("/clusters");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    $('#update').on('click', function () {
+        var dataForm = $(this).closest('.dataForm');
+        var data = dataForm.data().dataForm.serialize();
+        
+        if(data.cluster.clusterName.indexOf(" ") != -1) {
+            gritter.show($('#spaces_text').html(), false);
+            return;
+        }
+        
+        ajax($(this), {
+            type: "PUT",
+            url: '/cluster/'+data.cluster.clusterId,
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                load("/clusters");
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    $('#cancel').on('click', function () {
+        load("/clusters");
+    });
+
+</script>

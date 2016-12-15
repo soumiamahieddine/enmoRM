@@ -1,0 +1,13 @@
+<li lang="en" data-translate-catalog="organization/messages">
+    <span class="node [?merge .bundleChecked.then('disabled', '') ?]">
+        <i class="navIcon fa">&nbsp;</i>
+        <div class="btn-group" data-toggle="buttons" >
+            <label class="privilegeRadio btn btn-toggle [?merge .granted.then('btn-success active', 'btn-danger') ?] [?merge .bundleChecked.then('disabled', '') ?]">
+                <?merge .granted @checked ?>
+                <input type="checkbox" class="controllerRadioBtn" value='[?merge .bundle ?]/[?merge .api ?]'><div class="label"><?merge .granted.then("On" , "Off") ?></div>
+            </label>
+        </div>
+        &nbsp;&nbsp;
+        <?merge .api ?>&nbsp;&nbsp;
+    </span>
+</li>

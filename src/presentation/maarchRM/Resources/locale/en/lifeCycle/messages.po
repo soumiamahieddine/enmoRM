@@ -1,0 +1,39 @@
+# lifeCycle/messages
+# Language: en
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "eventId"
+msgstr "Event identifier"
+
+msgid "eventType"
+msgstr "Event type"
+
+msgid "timestamp"
+msgstr "Timestamp"
+
+msgid "objectClass"
+msgstr "Object class"
+
+msgid "objectId"
+msgstr "Object identifier"
+
+msgid "operationResult"
+msgstr "Operation result"
+
+msgid "description"
+msgstr "Description"
+
+msgid "resId"
+msgstr "Resource identifier"
+
+msgid "hashAlgorithm"
+msgstr "Algorithm"
+
+msgid "hash"
+msgstr "Hash"
+
+msgid "address"
+msgstr "Address"
+
+msgid "depositorOrgRegNumber"
+msgstr "Depositor identifier"

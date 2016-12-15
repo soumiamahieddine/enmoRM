@@ -1,0 +1,173 @@
+<div data-translate-catalog="digitalResource/conversionRule">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-tasks-open-o"></i>
+                Edit a new conversion rule
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-8 col-lg-6">
+            <form class="well">
+                <input type="text" class="form-control hide" id="conversionServicesEncoded" value="[?merge conversionServicesEncoded ?]"/>
+                <div class="form-group">
+                    <label for="puid">Puid<span style="color: red">&nbsp;*</span></label>
+                    <select class="form-control" id="puid" name="puid">
+                        <option value="">Select a format</option>
+                        <?merge inputFormats ?>
+                        <option value="[?merge .puid ?]"><?merge .name ?></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="conversionRuleService">Conversion service<span style="color: red">&nbsp;*</span></label>
+                    <select class="form-control" id="conversionService" name="conversionService" disabled="">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="targetPuid">Target Puid<span style="color: red">&nbsp;*</span></label>
+                    <select class="form-control" id="targetPuid" name="targetPuid" disabled="">
+                    </select>
+                </div>
+            </form>
+            <div class="clearfix">
+                <div class="pull-right" id="conversionRuleBtnGrp">
+                    <button type="button" class="btn btn-warning" data-cancel="" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                    <button type="button" class="btn btn-success" id="createConversionRule" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <span id="empty_text">The fields with a star are compulsory.</span>
+    </div>
+</div>
+
+<script>
+    $('#app_maarchRM_main').ready(function () {
+        
+        $("#puid").on("change", function () {
+            $("#conversionService").html("");
+            $("#conversionService").attr("disabled", "");
+            $("#targetPuid").html("");
+            $("#targetPuid").attr("disabled", "");
+
+            if ($("#puid :selected").val() == "") {
+                return;
+            }
+            
+            $("#conversionService").removeAttr("disabled");
+            
+            var conversionServices = JSON.parse($("#conversionServicesEncoded").val());
+
+            $.each(conversionServices, function(){
+                var obj = $(this)[0];
+                var val = $("#puid :selected").val();
+                $.each(obj.inputFormats, function(){
+                    if ($(this)[0].puid == val) {
+                        createConversionService(obj);
+                        return false;
+                    }
+                });
+            });
+            
+            createConversionService("");
+            $("#conversionService").val("");
+        });
+        
+        function createConversionService(obj) {
+            var option = $(document.createElement('option'));
+            option.val(obj.serviceName);
+            option.text(obj.softwareName);
+            option.prependTo($("#conversionService"));
+        }
+        
+        $("#conversionService").on("change", function () {
+            $("#targetPuid").html("");
+            $("#targetPuid").attr("disabled", "");
+            
+            if ($("#conversionService :selected").val() == "") {
+                return;
+            }
+            
+            $("#targetPuid").removeAttr("disabled");
+            
+            var conversionServices = JSON.parse($("#conversionServicesEncoded").val());
+
+            $.each(conversionServices, function(){
+                var obj = $(this)[0];
+                if ($("#conversionService :selected").val() == obj.serviceName) {
+                    createTargetPuid(obj.outputFormats);
+                }
+            });
+            
+            var option = $(document.createElement('option'));
+            option.val("");
+            option.text("");
+            option.prependTo($("#targetPuid"));
+        });
+        
+        function createTargetPuid(outputFormats) {
+            $.each(outputFormats, function(key, value){
+                var option = $(document.createElement('option'));
+                option.val(key);
+                option.text(value.name);
+                option.prependTo($("#targetPuid"));
+            });
+        }
+        
+        $('#createConversionRule').on('click', function () {
+            if ($("#puid :selected").val() == "") {
+                gritter.show($("#empty_text").text(), false);
+                return;
+            }
+            if ($("#conversionService :selected").val() == "") {
+                gritter.show($("#empty_text").text(), false);
+                return;
+            }
+            if ($("#targetPuid :selected").val() == "") {
+                gritter.show($("#empty_text").text(), false);
+                return;
+            }
+            
+            $(this).prop("disabled", true);
+           
+            var parameters = {
+                conversionRule : serializeConversionRule()
+            }
+
+            ajax($(this), {
+                type: "POST",
+                url: '/digitalResource/conversionRule',
+                data: JSON.stringify(parameters),
+                dataType: 'json',
+                contentType: 'application/json',
+                async: false,
+                success: function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        load("/digitalResource/conversionRules");
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+            $(this).prop("disabled", false);
+        });
+        
+        $('#conversionRuleBtnGrp').on('click', '[data-cancel]', function () {
+            load("/digitalResource/conversionRules");
+        });
+
+        function serializeConversionRule() {
+            var conversionRule = new Object();
+            conversionRule.puid = $("#puid :selected").val();
+            conversionRule.conversionService = $("#conversionService :selected").val();
+            conversionRule.targetPuid = $("#targetPuid :selected").val();
+            
+            return conversionRule;
+        }
+    });
+
+</script>

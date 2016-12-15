@@ -1,0 +1,64 @@
+# documentManagement/document
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
+
+msgid "File name"
+msgstr "Nom du fichier"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "bytes"
+msgstr "octets"
+
+msgid "title"
+msgstr "Titre"
+
+msgid "creation"
+msgstr "Création"
+
+msgid "receipt"
+msgstr "Réception"
+
+msgid "submission"
+msgstr "Soumission"
+
+msgid "valid"
+msgstr "Validation"
+
+msgid "issue"
+msgstr "Publication"
+
+msgid "response"
+msgstr "Réponse"
+
+msgid "available"
+msgstr "Disponibilité"
+
+msgid "category"
+msgstr "Catégorie"
+
+msgid "Fields"
+msgstr "Champs"
+
+msgid "Add field"
+msgstr "Ajouter un champ"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Keyword"
+msgstr "Mot clé"
+
+msgid "Boolean"
+msgstr "Booléen"
+
+msgid "Numeric"
+msgstr "Numérique"
+

@@ -1,0 +1,161 @@
+<!--#
+    This file is part of the medona package.
+    (c) Maarch Alexis RAGOT <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="containList" class="row" data-translate-catalog="documentManagement/messages">
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">
+                <h4><?merge documents.count() ?> document(s)</h4>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-default" type="button" id="convertSelectedDocument" title="Convert selected documents">
+                    <span class="fa fa-copy">&nbsp;</span>Convert selected documents
+                </button>
+            </div>
+        </div>
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="documentList_selectAll"/></th>
+                        <th>Identifiant</th>
+                        <th>Archive name
+                        <th>Creacted date</th>
+                        <th>Size</th>
+                        <th>Puid</th>
+                        <th>Copy</th>                       
+                        <th/>
+                    </tr>
+                </thead>
+                <tbody  id="documentList_table">
+                    <?merge documents ?>
+                        <tr id="[?merge .archiveId ?]/[?merge .docId ?]/[?merge .resId ?]">
+                            <td>
+                                <input type="checkbox" value="[?merge .docId ?]"/>
+                            </td>
+                            <td><?merge .docId ?></td>
+                            <td><?merge .archiveName ?>
+                            <td><?merge .created ?></td>
+                            <td><?merge .size ?></td>
+                            <td><?merge .puid ?></td>
+                            <td><i class ="fa [?merge .copy.then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-primary viewDocument" title="View"><span class="fa fa-eye">&nbsp;</span></button>
+                                    <button type="button" class="btn btn-warning" data-conversion="[?merge .docId ?]/[?merge .resId ?]" title="Convert document"><span class="fa fa-copy">&nbsp;</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="errorEmptyNode">No archives selected.</span>
+        <span id="errorNotConverted">The document has not been converted.</span>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $("#documentList_selectAll").on('click', function () {
+        $('table.dataTable').find('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    })
+
+    $(".paginate_button").on('click', '.paginate_button', function () {
+        $('#documentList_table').find('input[type="checkbox"]').prop('checked', false);
+    })
+    
+    $("#documentList_table").on('click', ".viewDocument", function() {
+        archiveDocumentViewer.load($(this).closest('tr').attr('id'));
+    });
+    
+    function getSelectedDocuments() {
+        var docIds = [];
+
+        $.each($('#documentList_table').find('input[type="checkbox"]:checked'), function (index, value) {
+            docIds.push($(this).val());
+        })
+
+        return docIds;
+    }
+
+    $("#convertSelectedDocument").on("click", function (){
+        $(this).prop("disabled", true);
+        var result = null;
+        
+        if ($(this).attr("data-conversion") != null || $(this).attr("data-conversion") != undefined) {
+            result = [$(this).attr("data-conversion")];
+        } else {
+            result = getSelectedDocuments();
+        }
+        
+        if(result.length <= 0) {
+            $(this).prop("disabled", false);
+            gritter.show($("#errorEmptyNode").html(),false);
+            return;
+        }
+        
+        var parameter = {
+            documentIds : result
+        };
+
+        ajax($(this), {
+            type        : 'PUT',
+            url         : '/medona/Conversion',
+            data        : parameter,
+            dataType    : 'json',
+            contenttype : 'application/json',
+            async       : true,
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $(this).prop("disabled", false);
+    });
+    
+    $("[data-conversion]").on("click", function () {
+        $(this).prop("disabled", "disabled");
+        ajax($(this), {
+            type        : 'PUT',
+            url         : '/RecordsManagement/Convert/'+$(this).attr("data-conversion"),
+            dataType    : 'json',
+            contenttype : 'application/json',
+            async       : true,
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                $("#archive_search").click();
+            },
+            error       : function (response) {
+                gritter.show($('#errorNotConverted').html(), false);
+            }
+        });
+        $(this).remoprop("disabled", false);
+    });
+
+    archiveDocumentViewer = {
+        load: function(archiveId, action) {
+                    
+            var url = "/recordsManagement/contents/" + archiveId;
+            if (action) {
+                url = action + archiveId;
+            }
+            
+            window.open(url, 'document');
+        },
+        
+        loadDoc: function(docId, action) {
+            var url = "/recordsManagement/document/" + docId;
+            if (action) {
+                url = action + docId;
+            }
+            window.open(url, 'document');
+        }
+    }
+</script>

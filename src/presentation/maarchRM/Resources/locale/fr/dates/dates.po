@@ -1,0 +1,17 @@
+# dates/dates
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "days"
+msgstr "jours"
+
+msgid "months"
+msgstr "mois"
+
+msgid "years"
+msgstr "années"
+
+msgid "years"
+msgstr "ans"
+msgctxt "unit"
+

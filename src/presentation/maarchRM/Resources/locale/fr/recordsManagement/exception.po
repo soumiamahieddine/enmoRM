@@ -1,0 +1,64 @@
+# recordsManagement/exception
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Access denied"
+msgstr "Accès refusé"
+
+msgid "You are not allowed to access to this archive !"
+msgstr "Vous n'avez pas les droits d'accès à cette archive !"
+
+msgid "This archive could not be found on the repository."
+msgstr "L'archive n'a pas été trouvée sur les sites de dépôt."
+
+msgid "Not found"
+msgstr "Archive manquante"
+
+msgid "Archive with identifier '%s' doesn't exists"
+msgstr "L'archive avec l'identifiant '%s' n'existe pas"
+
+msgid "Archive identifiers are identical"
+msgstr "Les identifiants d'archive sont identiques"
+
+msgid "Archive relationship already exists"
+msgstr "La relation d'archive existe déjà"
+
+msgid "Permission denied: Your organization can't proceed to this action. She isn't an depositors organization."
+msgstr "Permission non accordée: Votre organisation ne peut pas effectuer cette action. Elle n'est pas une organisation déposante."
+
+msgid "Error with the Data system"
+msgstr "so the operation could not be completed. Erreur avec le système de donnée"
+
+msgid "You must chose an archive name"
+msgstr "Vous devez choisir un nom d'archive"
+
+msgid "You must chose an archival profile"
+msgstr "Vous devez choisir un profil d'archivage"
+
+msgid "You must chose an archival agreement"
+msgstr "Vous devez choisir une convention d'archivage"
+
+msgid "You must chose a service level"
+msgstr "Vous devez choisir un niveau de service"
+
+msgid "You must define all mandatory values of archive description"
+msgstr "Vous devez définir tous les champs obligatoires de la description d'archives"
+
+msgid "You must define top of mind"
+msgstr "Vous devez définir l'entête du message"
+
+msgid "You must define a data object package"
+msgstr "Vous devez définir les données de gestion"
+
+msgid "You must insert a document"
+msgstr "Vous devez insérer un document"
+
+msgid "Message sent successfully"
+msgstr "Message envoyé avec succès"
+
+msgid "Document read error"
+msgstr "Erreur de lecture du document"
+
+msgid "An error occurend while attempting to read the document!"
+msgstr "Une erreur s'est produite à la lecture du document!"
+

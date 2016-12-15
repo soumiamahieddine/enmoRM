@@ -1,0 +1,217 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<form class="form-horizontal" id="archiveForm">
+    <div class="form-group">
+        <label class="col-md-3">Archive name</label>
+        <div class="col-md-9">
+            <input class="form-control archiveInput" name="archiveName" placeholder="Archive name"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3">Identifier</label>
+        <div class="col-md-9">
+            <input class="form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3">Archival profile</label>
+        <div class="col-md-9">
+            <select class="form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
+                <option value=""></option>
+                <?merge archivalProfiles ?>
+                <option value="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name ?></option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3">Retention rule</label>
+        <div class="col-md-5">
+            <select class="form-control archiveInput" name="retentionRuleCode" id="retentionRule">
+                <option value=""></option>
+                <?merge retentionRules ?>
+                <option value="[?merge .code ?]" data-duration="[?merge .durationText ?]" data-final-disposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <p class="help-block"><i id="retentionRuleText"></i></p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3">Retention start date</label>
+        <div class="col-md-9">
+            <input class="form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $('#app_maarchRM_main').ready(function (){
+        $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+    });
+
+    // ARCHIVE
+    $('#archivalProfile').on('change', function() {
+        ArchiveForm.loadProfile();
+        ArchiveForm.displayDocumentDescription();
+    });
+
+    $('#retentionRule').on('change', function() {
+        ArchiveForm.displayRetentionRulesInfo();
+    });
+    
+    var ArchiveForm = {
+        send : function() {
+            var archive = this.serialize();
+
+            if (archive < 0) {
+                return;
+            }
+            
+            $.ajax({
+                type        : 'POST',
+                url         : "/archive",
+                data        : JSON.stringify({archive : archive}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        ArchiveForm.clear();
+                        // Todo
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+        loadProfile : function() {
+            var value = $('#archivalProfile').val();
+            var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
+
+            if (value == '' || selectedProfile.retentionRuleCode == '') {
+                $('#retentionRule').val('').trigger('change').removeAttr("disabled");
+            } else {
+                $('#retentionRule').val(selectedProfile.retentionRuleCode).trigger('change').attr("disabled", "disabled");
+            }
+
+            if (value == '' || selectedProfile.retentionStartDate == '' || selectedProfile.retentionStartDate == "definedLater" || selectedProfile.retentionStartDate == null) {
+                $("#archiveForm").find("[name=retentionStartDate]").closest(".form-group").removeClass("hide");
+                $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+            } else {
+                 $("#archiveForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
+            }
+        },
+        displayDocumentDescription : function() {
+            var value = $('#archivalProfile').val();
+            $('#archivalProfileFields').empty();
+            
+            if (value == "") {
+                Metadata.acceptUserIndex(true);
+                return;
+            }
+            
+            var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
+            
+            Metadata.acceptUserIndex(selectedProfile.documentProfile[0].acceptUserIndex);
+            
+            $.each(selectedProfile.documentProfile[0].documentDescription, function(key, value) {
+                Metadata.addDocumentDescription(value);
+            });
+        },
+        displayRetentionRulesInfo : function() {
+            var value = $('#retentionRule').val();
+            var selected = $('#retentionRule').find('option:selected');
+
+            if (value == '') {
+                $('#retentionRuleText').empty();
+                return;
+            }
+
+            var duration = selected.data('duration');
+
+            var finalDisposition = selected.data('final-disposition');
+            var numeric = duration.slice(1, -1);
+            var unit = duration.substr(duration.length-1);
+            var retentionRuleText = $('#retentionRule_text').text();
+
+            switch (unit) {
+                case 'D' : unit = $("#days_text").text();
+                           break;
+
+                case 'M' : unit = $("#months_text").text();
+                           break;
+
+                case 'Y' : unit = $("#years_text").text();
+                           break;
+            }
+
+            switch (finalDisposition) {
+                case 'destruction'  : finalDisposition = $("#destruction_text").text();
+                           break;
+
+                case 'preservation' : finalDisposition = $("#preservation_text").text();
+                           break;
+            }
+            retentionRuleText = retentionRuleText.replace(/%s1/g, finalDisposition);
+            retentionRuleText = retentionRuleText.replace(/%s2/g, numeric+' '+unit);
+            $('#retentionRuleText').html(retentionRuleText);
+        },
+        serialize : function() {
+            var form = $('#archiveForm');
+            var inputs = form.find('.archiveInput');
+            var archive = {}
+
+            inputs.each(function() {
+                if ($(this).val()) {
+                    archive[$(this).attr('name')] = $(this).val();
+                }
+            })
+
+            archive['document'] = [];
+
+            var doc = Metadata.serialize($('#allFields'));
+            if (doc === true) {
+                return -1;
+            }
+
+            if (archive["archivalProfileReference"] != "" && archive["archivalProfileReference"] != undefined) {
+                doc.category = $('#archivalProfile').find('option:selected').data('json').documentProfile[0].reference;
+            } else {
+                if (archive["retentionStartDate"] == "" || archive["retentionStartDate"] == undefined) {
+                    gritter.show($('#retentionStartDateMissing_error').text(), false);
+                    return -2;
+                }
+                if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
+                    gritter.show($('#retentionRuleCodeMissing_error').text(), false);
+                    return -2;
+                }
+                
+            }
+
+            doc.digitalResource = ArchiveDocument.serialize($('#collapsedoc1'))
+            if (doc.digitalResource == -1) {
+                gritter.show($('#documentMissing_error').text(), false);
+                return -2;
+            }
+
+            archive['document'].push(doc);
+
+            return archive;
+        },
+
+        clear : function() {
+            var inputs = $('#archiveForm').find('.archiveInput').val('').trigger('change');
+
+            $('#archivalProfile').prop('selectedIndex', 0).change();
+            $("#documentList").find(".removeFile").click();
+            Metadata.clear($('#allFields'));
+        }
+    }
+</script>

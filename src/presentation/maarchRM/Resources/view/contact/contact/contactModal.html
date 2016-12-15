@@ -1,0 +1,124 @@
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-lg" style="width:80%">
+        <div class="modal-content" >
+            <div data-translate-catalog="contact/contact">
+                <div class="container-fluid" style="margin-top:24px">
+                    <ul class="nav nav-tabs nav-justified">
+                        <li class="active">
+                            <a href="#contact_modalTab" id="contactTabBtn" data-toggle="tab">Contact</a>
+                        </li>
+                        <li>
+                            <a href="#address_modalTab" id="addressTabBtn" data-toggle="tab">Address</a>
+                        </li>
+                        <li>
+                            <a href="#communication_modalTab" id="communicationTabBtn" data-toggle="tab">Communication</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="container-fluid">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="contact_modalTab" style="padding:14px">
+                            <?hinclude contact/manageContact/contactInformationForm.html ?>
+                        </div>
+                        <div class="tab-pane" id="address_modalTab" style="padding:14px">
+                            <?hinclude contact/manageContact/addressForm.html ?>
+                        </div>
+                        <div class="tab-pane" id="communication_modalTab" style="padding:14px">
+                            <?hinclude contact/manageContact/communicationForm.html ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal" title="Cancel">Cancel</button>
+                <button type="button" class="btn btn-success" id="contactModal_Save" title="Save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?hinclude contact/manageContact/suppressionModals.html ?>
+
+<script type="text/javascript">
+    $('#contactModal_Save').on('click', function() {
+        ContactModal.save();
+    })
+
+    ContactModal = {
+        newOrgContact: false,
+        self         : false,
+
+        load: function(contact, newOrgContact, self) {
+            this.newOrgContact = newOrgContact;
+            this.self = self;
+            
+            ContactInformation.close();
+            ContactAddressForm.clear();
+            ContactCommunicationForm.clear();
+
+            if (contact && contact.contactType == 'organization'){
+                ContactInformation.setOrgType();
+                $('#addressTabBtn').click();
+                $('#contactTabBtn').closest('li').css('display', 'none');
+
+            } else if (self) {
+                ContactInformation.setOrgType();
+                $('#addressTabBtn').click();
+                $('#contactTabBtn').closest('li').css('display', 'none');
+
+                $('#contact_orgName').val($("#modifyOrganization").data('organization').orgName);
+                $('#contact_displayName').val($("#modifyOrganization").data('organization').displayName);
+                
+            } else {
+                ContactInformation.setPersonType();
+                $('#contactTabBtn').closest('li').css('display', '');
+                $('#contactTabBtn').click();
+            }
+
+            if (contact) {
+                ContactInformation.load(contact);
+            }
+
+            $('#contactModal').modal();
+        },
+
+        save : function(button) {
+            if (this.newOrgContact) {
+                var contactObject = ContactInformation.serialize();
+                contactObject.address = ContactAddressForm.serializeList();
+                contactObject.communication = ContactCommunicationForm.serializeList();
+
+                ajax(button, {
+                    type        : 'POST',
+                    url         : '/Organization/' + $("#modifyOrganization").data('organization').orgId + '/Contact',
+                    data        : JSON.stringify({contact: contactObject, isSelf: ContactModal.self}),
+                    dataType    : 'json',
+                    contentType : 'application/json',
+                    async       : false,
+                    success     : function (response) {
+                        if (response.status) {
+                            gritter.show(response.message, response.status, response.errors);
+                            $('#contactModal').modal('hide');
+                        } else {
+                            var message = "";
+                            $.each(response.errors, function (key, error) {
+                                message = error.message;
+                            });
+                            gritter.show(message, false);
+                        }
+                    },
+                    error       : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        res = false;
+                    }
+                });
+
+
+            } else {
+                if (ContactInformation.save()) {
+                    ContactInformation.close();
+                    $('#contactModal').modal('hide');
+                }
+            }
+        }
+    }
+</script>

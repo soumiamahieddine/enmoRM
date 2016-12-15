@@ -1,0 +1,24 @@
+# archiveDestruction/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveDestruction"
+msgstr "Destruction d'archive"
+msgctxt "bundle"
+
+msgid "messageDestructionSending"
+msgstr "Message de destruction envoyé"
+msgctxt "interface"
+
+msgid "messageDestructionHistory"
+msgstr "Historique des messages de destruction"
+msgctxt "interface"
+
+msgid "messageDestructionReception"
+msgstr "Message de destruction reçu"
+msgctxt "interface"
+
+msgid "destroy"
+msgstr "Destruction"
+msgctxt "interface"
+

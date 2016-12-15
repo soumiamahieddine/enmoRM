@@ -1,0 +1,112 @@
+<?merge user ?>
+<form class="form-horizontal" id="user_userInformationForm">
+    <div class="col-xs-12">
+        <br/>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Display name <span style="color : red">*</span></label>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <?merge allowUserModification.not().then('disabled') @disabled?>
+                    <input type="text" class="form-control" name="displayName" placeholder="Display name">
+                    <span class="input-group-btn">
+                        <a class="btn btn-default" role="button" data-toggle="collapse" id="user_showNamesForm" href="#user_names" aria-expanded="false">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="collapse well" id="user_names">
+            <div class="form-group">
+                <label for="lastName" class="col-md-3 control-label">Last name</label>
+                <div class="col-md-9">
+                    <?merge allowUserModification.not().then('disabled') @disabled?>
+                    <input type="text" class="form-control" name="lastName" placeholder="Last name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstName" class="col-md-3 control-label">First name</label>
+                <div class="col-md-9">
+                    <?merge allowUserModification.not().then('disabled') @disabled?>
+                    <input type="text" class="form-control" name="firstName" placeholder="First name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Title</label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <?merge allowUserModification.not().then('disabled') @disabled?>
+                        <input type="text" class="form-control" name="title" placeholder="Title">
+                        <div class="input-group-btn liste">
+                            <?merge allowUserModification.not().then('disabled') @disabled?>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">&nbsp; <span class="caret"></span></button>
+                            <ul id="titleNameList" class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="#" class="titleSelection">Mme</a></li>
+                                <li><a href="#" class="titleSelection">M.</a></li>
+                                <li><a href="#" class="titleSelection">Dr</a></li>
+                                <li><a href="#" class="titleSelection">Me</a></li>
+                                <li><a href="#" class="titleSelection">Pr</a></li>
+                                <li><a href="#" class="titleSelection">Dir</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="emailAddress" class="col-md-3 control-label">Email <span style="color : red">*</span></label>
+            <div class="col-md-9">
+                <?merge allowUserModification.not().then('disabled') @disabled?>
+                <input type="text" class="form-control" id="emailAddress" name="emailAddress" placeholder="Email address">
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+
+// Show names 
+    $('#user_showNamesForm').on('click', function() {
+        var icon = $(this).find('i');
+
+        if (icon.hasClass('fa-plus')) {
+            icon.removeClass('fa-plus').addClass('fa-minus');
+        } else {
+            icon.removeClass('fa-minus').addClass('fa-plus');
+
+        }
+    })
+
+// Display name
+    $('#user_userInformationForm').on('keyup', 'input[name="displayName"]', function() {
+        var displayName = $(this);
+
+        if (displayName.val() == '') {
+            displayName.removeClass('enteredByUser');
+        }
+        else if (!displayName.hasClass('enteredByUser')) {
+            displayName.addClass('enteredByUser');
+        }
+    })
+
+    $('#user_userInformationForm').on('change', 'input[name="firstName"], input[name="lastName"]', function() {
+        var displayName = $('#user_userInformationForm').find('input[name="displayName"]');
+
+        if (displayName.hasClass('enteredByUser')) {
+            return;
+        }
+
+        var firstName = $('#user_names').find('input[name="firstName"]');
+        var lastName = $('#user_names').find('input[name="lastName"]');
+        
+        if ( firstName.val() + lastName.val() != '') {
+            displayName.val($.trim(firstName.val() + ' ' + lastName.val()));
+        }
+    })
+
+// Title
+    $("#user_userInformationForm").on('click', ".titleSelection", function () {
+       $("#user_userInformationForm").find('input[name="title"]').val($(this).html());
+    });
+
+</script>

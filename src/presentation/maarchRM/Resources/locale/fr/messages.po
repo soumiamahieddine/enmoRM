@@ -1,0 +1,539 @@
+# messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Logout"
+msgstr "Déconnexion"
+msgctxt "layout"
+
+msgid "Profile"
+msgstr "Profil"
+msgctxt "layout"
+
+msgid "Invoices archives"
+msgstr "Archives de factures"
+msgctxt "layout"
+
+msgid "Search"
+msgstr "Recherche"
+msgctxt "layout"
+
+msgid "Archive relationship"
+msgstr "Relations entre archives"
+msgctxt "layout"
+
+msgid "Life cycle journal"
+msgstr "Journal du cycle de vie"
+msgctxt "layout"
+
+msgid "Life cycle events formats"
+msgstr "Formats d'événements du journal"
+msgctxt "layout"
+
+msgid "Logs archives"
+msgstr "Archives de journaux"
+msgctxt "layout"
+
+msgid "Messages"
+msgstr "Bordereaux"
+msgctxt "layout"
+
+msgid "Content type"
+msgstr "Type de contenu"
+msgctxt "layout"
+
+msgid "Conversion requests"
+msgstr "Demandes de conversion"
+msgctxt "layout"
+
+msgid "Documents search"
+msgstr "Recherche de documents"
+msgctxt "layout"
+
+msgid "created message"
+msgstr "Création de bordereaux"
+msgctxt "layout"
+
+msgid "Transfer"
+msgstr "Transfert"
+msgctxt "layout"
+
+msgid "Received archive transfers"
+msgstr "Transferts reçus"
+msgctxt "layout"
+
+msgid "Sent archive transfers"
+msgstr "Transferts émis"
+msgctxt "layout"
+
+msgid "Archive transfer history"
+msgstr "Historique"
+msgctxt "layout"
+
+msgid "Delivery"
+msgstr "Communication"
+msgctxt "layout"
+
+msgid "Received delivery requests"
+msgstr "Demandes reçues"
+msgctxt "layout"
+
+msgid "Sent delivery requests"
+msgstr "Demandes émises"
+msgctxt "layout"
+
+msgid "Delivery requests history"
+msgstr "Historique"
+msgctxt "layout"
+
+msgid "Authorization"
+msgstr "Autorisation"
+msgctxt "layout"
+
+msgid "Roles"
+msgstr "Rôles"
+msgctxt "layout"
+
+msgid "Received authorization requests"
+msgstr "Demandes reçues"
+msgctxt "layout"
+
+msgid "Sent authorization requests"
+msgstr "Demandes émises"
+msgctxt "layout"
+
+msgid "Notifications"
+msgstr "Notifications"
+msgctxt "layout"
+
+msgid "Modification"
+msgstr "Modification"
+msgctxt "layout"
+
+msgid "In process"
+msgstr "En cours de traitement"
+msgctxt "layout"
+
+msgid "Processed"
+msgstr "Traité"
+msgctxt "layout"
+
+msgid "Administration"
+msgstr "Administration"
+msgctxt "layout"
+
+msgid "Security"
+msgstr "Sécurité"
+msgctxt "layout"
+
+msgid "Users"
+msgstr "Utilisateurs"
+msgctxt "layout"
+
+msgid "Service accounts"
+msgstr "Comptes de service"
+msgctxt "layout"
+
+msgid "Groups"
+msgstr "Groupes"
+msgctxt "layout"
+
+msgid "Organization"
+msgstr "Organisation"
+msgctxt "layout"
+
+msgid "Organization types"
+msgstr "Types d'organisation"
+msgctxt "layout"
+
+msgid "Organigramme"
+msgstr "Organigramme"
+msgctxt "layout"
+
+msgid "UO types"
+msgstr "Types d'UO"
+msgctxt "layout"
+
+msgid "Storage management"
+msgstr "Gestion du stockage"
+msgctxt "layout"
+
+msgid "Repositories"
+msgstr "Sites de dépôt"
+msgctxt "layout"
+
+msgid "Clusters"
+msgstr "Grappes de dépôt"
+msgctxt "layout"
+
+msgid "Formats"
+msgstr "Formats"
+msgctxt "layout"
+
+msgid "List of formats"
+msgstr "Liste des formats"
+msgctxt "layout"
+
+msgid "Conversion rules"
+msgstr "Règles de conversion"
+msgctxt "layout"
+
+msgid "Archive management"
+msgstr "Gestion de l'archive"
+msgctxt "layout"
+
+msgid "Profiles"
+msgstr "Profils"
+msgctxt "layout"
+
+msgid "Access rules"
+msgstr "Règles d'accès"
+msgctxt "layout"
+
+msgid "Retention rules"
+msgstr "Tableau de gestion"
+msgctxt "layout"
+
+msgid "Archival agreements"
+msgstr "Accords de versement"
+msgctxt "layout"
+
+msgid "Service level"
+msgstr "Niveaux de service"
+msgctxt "layout"
+
+msgid "Audit"
+msgstr "Journal de l'application"
+msgctxt "layout"
+
+msgid "Event format"
+msgstr "Formats d'événements"
+msgctxt "layout"
+
+msgid "Deposit"
+msgstr "Dépôt"
+msgctxt "layout"
+
+msgid "Description fields"
+msgstr "Champs de description"
+msgctxt "layout"
+
+msgid "Batch processing"
+msgstr "Gestion du planificateur"
+msgctxt "layout"
+
+msgid "Scheduling"
+msgstr "Planificateur"
+msgctxt "layout"
+
+msgid "Task"
+msgstr "Tâche"
+msgctxt "layout"
+
+msgid "Logs schedulings"
+msgstr "Evénement planificateur"
+msgctxt "layout"
+
+msgid "Control authority management"
+msgstr "Gestion des autorités de contrôle"
+msgctxt "layout"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Value"
+msgstr "Valeur"
+
+msgid "Parameters"
+msgstr "Paramètres"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "New"
+msgstr "Nouveau"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Suppress"
+msgstr "Supprimer"
+
+msgid "Edit"
+msgstr "Editer"
+
+msgid "Update"
+msgstr "Modifier"
+
+msgid "Modify"
+msgstr "Modifier"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "View"
+msgstr "Afficher"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Su"
+msgstr "Dim"
+msgctxt "dayOfWeek"
+
+msgid "Mo"
+msgstr "Lun"
+msgctxt "dayOfWeek"
+
+msgid "Tu"
+msgstr "Mar"
+msgctxt "dayOfWeek"
+
+msgid "We"
+msgstr "Mer"
+msgctxt "dayOfWeek"
+
+msgid "Th"
+msgstr "Jeu"
+msgctxt "dayOfWeek"
+
+msgid "fr"
+msgstr "Ven"
+msgctxt "dayOfWeek"
+
+msgid "Sa"
+msgstr "Sam"
+msgctxt "dayOfWeek"
+
+msgid "January"
+msgstr "Janvier"
+
+msgid "February"
+msgstr "Février"
+
+msgid "March"
+msgstr "Mars"
+
+msgid "April"
+msgstr "Avril"
+
+msgid "May"
+msgstr "Mai"
+
+msgid "June"
+msgstr "Juin"
+
+msgid "July"
+msgstr "Juillet"
+
+msgid "August"
+msgstr "Août"
+
+msgid "September"
+msgstr "Septembre"
+
+msgid "October"
+msgstr "Octobre"
+
+msgid "November"
+msgstr "Novembre"
+
+msgid "December"
+msgstr "Décembre"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Search form"
+msgstr "Recherche"
+
+msgid "Processing..."
+msgstr "Traitement..."
+
+msgid "Search:"
+msgstr "Filtre:"
+
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Show _MENU_ entries"
+msgstr "Montrer _MENU_ lignes"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Montrer _START_ à _END_ de _TOTAL_ lignes"
+
+msgid "Showing 0 to 0 of 0 entries"
+msgstr "Montrer 0 à 0 de 0 lignes"
+
+msgid "(filtered from _MAX_ total entries)"
+msgstr "(filtré depuis _MAX_ lignes totales)"
+
+msgid "Loading..."
+msgstr "Chargement..."
+
+msgid "No matching records found"
+msgstr "Aucun enregistrements correspondants trouvés"
+
+msgid "No data available in table"
+msgstr "Pas de données disponibles dans le tableau"
+
+msgid "First"
+msgstr "Premier"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Last"
+msgstr "Dernier"
+
+msgid ": activate to sort column ascending"
+msgstr ": activer pour trier la colonne en ascendante"
+
+msgid ": activate to sort column descending"
+msgstr ": activer pour trier la colonne en descendant"
+
+msgid "All"
+msgstr "Tous"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "displayed on"
+msgstr "affichés sur"
+msgctxt "male"
+
+msgid "displayed on"
+msgstr "affichées sur"
+msgctxt "female"
+
+msgid "found"
+msgstr "trouvés"
+msgctxt "male"
+
+msgid "found"
+msgstr "trouvées"
+msgctxt "female"
+
+msgid "User role"
+msgstr "Rôles utilisateur"
+
+msgid "Null value not allowed for property %1$s"
+msgstr "Valeur nulle non permis pour la propriété %1$s"
+
+msgid "Empty value not allowed for property %1$s"
+msgstr "Valeur vide non permis pour la propriété %1$s"
+
+msgid "Value for property %1$s is not a valid %2$s"
+msgstr "Valeur pour la propriété %1$s n'est pas un %2$s valide"
+
+msgid "Array expected for property %1$s"
+msgstr "Tableau attendu pour la propriété %1$s"
+
+msgid "Number of items exceeds maximum count of %2$d for property %1$s"
+msgstr "Le nombre d'items de %2$d dépasse le maximum pour la propriété %1$s"
+
+msgid "Minimum number of items of %2$d required for property %1$s"
+msgstr "Le nombre minimum d'items de %2$d est requis pour la propriété %1$s"
+
+msgid "%2$d items expected for property %1$s"
+msgstr "%2$d items attendus pour la propriété %1$s"
+
+msgid "String value is not in enumerated values for property %1$s"
+msgstr "La valeur de la chaîne n'est pas dans les valeurs énumérées pour la propriété %1$s"
+
+msgid "String value exceeds maximum length of %2$d for property %1$s"
+msgstr "La valeur de la chaîne dépasse la taille maximum de %2$d pour la propriété %1$s"
+
+msgid "Minimum string length of %2$d required for property %1$s"
+msgstr "La taille minimum requis de la chaîne est %2$d pour la propriété %1$s"
+
+msgid "String value does not match required length of %2$d for property %1$s"
+msgstr "La valeur de la chaîne n'a pas la taille requise de %2$d pour la propriété %1$s"
+
+msgid "String value does not match pattern %2$d for property %1$s"
+msgstr "La valeur de la chaîne ne respecte pas le pattern %2$d pour la propriété %1$s"
+
+msgid "Numeric value exceeds precision of %2$s.%3$s for property %1$s"
+msgstr "La valeur numérique dépasse la précision de %2$s.%3$s pour la propriété %1$s"
+
+msgid "An error occured while processing your request."
+msgstr "Une erreur est survenue durant le traitement de votre requête."
+
+msgid "Key already exists"
+msgstr "La clé existe déjà"
+
+msgid "The fields with a star are compulsory."
+msgstr "Les champs avec une étoile sont obligatoire"
+
+msgid "You don't avec any role that enables you tu use search."
+msgstr "Vous n'avez aucun rôle permettant l'utilisation de la recherche d'archive ou de document."
+
+#
+# Exceptions
+#
+
+msgid "Validation error"
+msgstr "Erreur de validation"
+
+msgid "Invalid message"
+msgstr "Données invalides"
+
+msgid "Bad request"
+msgstr "Données invalides"
+
+msgid "Null value not allowed"
+msgstr "Champ vide non permis"
+
+msgid "Empty value not allowed"
+msgstr "Champ vide non permis"
+
+msgid "The value of '%1$s' not respect the type '%2$s'"
+msgstr "La valeur de '%1$s' ne respecte pas le type '%2$s'"
+
+msgid "The field '%1$s' is required"
+msgstr "Le champs '%1$s' est requis"
+
+msgid "Conversion rule '%1$s' exist."
+msgstr "Le règle de conversation '%1$s' existe déjà"
+
+msgid "The relation control authority and orignator already exists."
+msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
+
+msgid "None control authority parameters."
+msgstr "Aucune autorité de contrôle parametré."
+
+msgid "String value does not match pattern"
+msgstr "La valeur ne respecte pas le format"
+
+msgid "An error occured during the process of your request. Please contact the administrator of the application."
+msgstr "Une erreur est survenue durant le traitement de votre requête. Veuillez contacter l'administrateur de l'application."
+
+msgid "Invalid id '%1$s': Ids must contain only alphanumeric, underscores and dashes"
+msgstr "Identifiant invalide '%1$s': Les identifiants doivent doivent contenir uniquement des lettres, chiffres, tirets bas et hauts."

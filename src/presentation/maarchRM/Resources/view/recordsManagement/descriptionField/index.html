@@ -1,0 +1,522 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="recordsManagement/descriptionField">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-cubes"></i>
+                Description fields
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid" data-translate-catalog="recordsManagement/descriptionField">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><span id='tableItemNumber'><?merge descriptionFields.count() ?></span> description field(s)</h4>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable" id="descriptionField_tableList">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Label</th>
+                                    <th>Type</th>
+                                    <th style="min-width:100px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge descriptionFields ?>
+                                <tr>
+                                    <td><?merge .name ?></td>
+                                    <td><?merge .label ?></td>
+                                    <td><?merge .type ?></td>
+                                    <td class="action_btn">
+                                        <div class="btn-group pull-right">
+                                            <button type="button" data-descriptionFieldName="[?merge .name ?]" class="editDescriptionField btn btn-warning" title="Edit">
+                                                <span class="fa fa-fw fa-edit"></span>
+                                            </button>
+                                            <button type="button" data-descriptionFieldName="[?merge .name ?]" class="deleteDescriptionField btn btn-danger" title="Delete">
+                                                <span class="fa fa-fw fa-trash"></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-12">
+                    <h3>Description field</h3>
+                </div>
+                <div class="col-md-12" id="descriptionField_formContent">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Type<span style="color:red">&nbsp;*</span></label>
+                            <div class="col-md-9">
+                                <div class="btn-group" data-toggle="buttons" id="documentDescriptionPropertiesType">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="name"/>Keyword
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="text"/>Text
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="date"/>Date
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="number"/>Number
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="boolean"/>Boolean
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="fieldName">
+                            <label class="col-md-2 control-label">Name<span style="color:red">&nbsp;*</span></label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="fieldName" placeholder="Name"/>
+                            </div>
+                        </div>
+                        <div class="form-group" id="propertyLabel">
+                            <label class="col-md-2 control-label">Label<span style="color:red">&nbsp;*</span></label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="label" placeholder="Label"/>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="namePropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group hide" id="nameSelectPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <select class="form-control" name="defaultValue">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group hide" id="textPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="datePropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control datePicker" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="numberPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <input type='number' class="form-control" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="booleanPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-7">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                                    </label>
+                                    <label class="btn btn-default active">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="keywordEnumForm">
+                            <label class="col-md-2 control-label">Enumeration</label>
+                            <div class="col-md-7">
+                                <div class="input-group">
+                                    <input type='text' id="inputAddEnumField" class="form-control" name="keywordEnumField"/>
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-success" id="btnAddEnumField"><span class="fa fa-plus"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="list-group col-md-9 hide" id="keywordEnumList">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-9">
+                    <div class="pull-right" id="descriptionField_formBtn">
+                        <button type="button" class="btn btn-default" id="descriptionField_formCancelBtn">Cancel</button>
+                        <button type="button" class="btn btn-success" id="descriptionField_formSaveBtn">Save</button>
+                        <button type="button" class="btn btn-warning hide" id="descriptionField_formModifyBtn">Modify</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hide" data-translate-catalog="recordsManagement/descriptionField">
+        <span id="message_confirmDelete">Are you sure to delete this row ?</span>
+        <span id="message_requiredFields">You must define all required fields</span>
+    </div>
+    
+    <div class="hide">
+        <!-- DOCUMENT PROPERTY TEMPLATE -->
+        <div class="list-group-item col-md-offset-3 col-md-9" id="keywordEnumTemplate">
+            <div class="col-xs-11">
+                <strong class="keywordEnumLabel"></strong>
+            </div>
+            <div class="col-xs-1 text-right">
+                <span class="deleteKeywordEnum" title="delete"><i class="fa fa-times"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    $("#descriptionField_formBtn").on('click', "#descriptionField_formCancelBtn", function () {
+        clearForm();
+    });
+    
+    $("#descriptionField_tableList").on('click', '.editDescriptionField', function () {
+        var descriptionFieldName = $(this).attr("data-descriptionFieldName");
+
+        $("#descriptionField_tableList > button").prop("disabled", true);
+
+        $.ajax({
+            url: '/descriptionField/' + descriptionFieldName,
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.status) {
+                    clearForm();
+                    $("#descriptionField_formModifyBtn").removeClass("hide");
+                    $("#descriptionField_formSaveBtn").addClass("hide")
+                    mergeForm(response.descriptionField);
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+
+        $("#descriptionField_tableList > button").removeProp("disabled");
+    });
+    
+    $("#descriptionField_tableList").on('click', '.deleteDescriptionField', function () {
+        /*if (!confirm($("#message_confirmDelete").text())) {
+            return;
+        }*/
+
+        var descriptionFieldName = $(this).attr("data-descriptionFieldName");
+        
+        $("#descriptionField_tableList > button").prop("disabled", true);
+
+        $.ajax({
+            url: '/descriptionField/' + descriptionFieldName,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load('/descriptionFields');
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        
+        $("#descriptionField_tableList > button").removeProp("disabled");
+    });
+
+
+    $("#descriptionField_formBtn").on('click', "#descriptionField_formSaveBtn", function () {
+        var data = new Object();
+        data.descriptionField = serialize();
+
+        if (!checkRequiredFields(data.descriptionField)) {
+            gritter.show($("#message_requiredFields").text(), false);
+            return;
+        }
+        
+        $.ajax({
+            url: '/descriptionField',
+            type: 'POST',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load('/descriptionFields');
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    $("#descriptionField_formBtn").on('click', "#descriptionField_formModifyBtn", function () {
+        var data = new Object();
+        data.descriptionField = serialize();
+
+        if (!checkRequiredFields(data.descriptionField)) {
+            gritter.show($("#message_requiredFields").text(), false);
+            return;
+        }
+
+        $.ajax({
+            url: '/descriptionField/'+data.descriptionField.name,
+            type: 'PUT',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load('/descriptionFields');
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    $("#keywordEnumList").on('click', ".deleteKeywordEnum", function () {
+        var label = $(this).closest(".list-group-item").find('.keywordEnumLabel').text();
+
+        $(this).closest(".list-group-item").remove();
+        $('#nameSelectPropertyDefaultValue').find('[value='+label+']').remove();
+        
+        var nbResult = $("#keywordEnumList").find(".list-group-item").length;
+        if (nbResult == 0) {
+            $('#namePropertyDefaultValue').removeClass('hide');
+            $('#nameSelectPropertyDefaultValue').addClass('hide');
+        }
+    });
+
+    $("#keywordEnumForm").on('click', "#btnAddEnumField", function () {
+        if ($("#inputAddEnumField").val() === "" || $("#inputAddEnumField").val() === null || $("#inputAddEnumField").val() === undefined) {
+            return;
+        }
+
+        var template = $("#keywordEnumTemplate").clone();
+        template.removeAttr("id");
+        template.find(".keywordEnumLabel").text($("#inputAddEnumField").val());
+        
+        $("#keywordEnumList").append(template);
+        $('#namePropertyDefaultValue').addClass('hide');
+        $('#nameSelectPropertyDefaultValue').removeClass('hide');
+        
+        var option = $("<option></option>").val($("#inputAddEnumField").val()).text($("#inputAddEnumField").val());
+        $('#nameSelectPropertyDefaultValue').find('select').append(option);
+        
+        $("#inputAddEnumField").val("");
+    });
+
+    // Properties form
+    $('input[type=radio][name=type]').on('change', function() {
+        var type = $(this).val();
+        
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList').addClass('hide');
+
+        switch (type) {
+            case "name" :
+                $('#keywordEnumForm').removeClass('hide');
+                $('#keywordEnumList').removeClass('hide');
+                $('#namePropertyDefaultValue').removeClass('hide');
+                
+                break;
+
+            case "text" : 
+                $('#textPropertyDefaultValue').removeClass('hide');
+                break;
+
+            case "date" : 
+                $('#datePropertyDefaultValue').removeClass('hide');
+                break;
+
+            case "number" :
+                $('#numberPropertyDefaultValue').removeClass('hide');
+                break;
+
+            case "boolean" :
+                $('#booleanPropertyDefaultValue').removeClass('hide');
+                break;
+        }
+    });
+    
+    function clearForm() {
+        $("#descriptionField_formContent").find("select").prop('selectedIndex', 0).change();
+        $("#descriptionField_formContent").find('input[type="text"], input[type="number"], select').val('');
+        $("#descriptionField_formContent").find('input[type="checkbox"]').prop('checked', false);
+        
+        $('#fieldName').find('input').removeAttr("disabled");
+
+        $('#documentDescriptionPropertiesType').find('.active').removeClass("active");
+        
+        $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
+        $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
+        
+        $('#namePropertyDefaultValue').addClass('hide');
+        $('#nameSelectPropertyDefaultValue').addClass('hide');
+        $('#textPropertyDefaultValue').addClass('hide');
+        $('#datePropertyDefaultValue').addClass('hide');
+        $('#numberPropertyDefaultValue').addClass('hide');
+        $('#booleanPropertyDefaultValue').addClass('hide');
+        
+        $('#descriptionField_formModifyBtn').addClass('hide');
+        $('#descriptionField_formSaveBtn').removeClass('hide');
+        
+        $('#keywordEnumList').empty();
+        $('#keywordEnumForm').addClass('hide');
+        $('#keywordEnumList').addClass('hide');
+    }
+
+    function mergeForm(descriptionField) {
+        console.log(descriptionField);
+        $('#documentDescriptionPropertiesType').find('input[type=radio][name=type][value='+descriptionField.type+']').parent().addClass("active");
+        $('#propertyLabel').find('input').val(descriptionField.label);
+        $('#fieldName').find('input').val(descriptionField.name).attr("disabled",true);
+        
+        switch (descriptionField.type) {
+            case "text" :
+                $('#textPropertyDefaultValue').removeClass('hide');
+                $('#textPropertyDefaultValue').find("input").val(descriptionField.default);
+                break;
+
+            case "name" :
+                if (descriptionField.enumeration !== "" && descriptionField.enumeration !== null && descriptionField.enumeration !== undefined) {
+                    $.each(descriptionField.enumeration, function (key, item) {
+                        $("#inputAddEnumField").val(item);
+                        $("#btnAddEnumField").click();
+                    });
+                    $("#nameSelectPropertyDefaultValue").find("select").val(descriptionField.default);
+                    $("#keywordEnumForm").removeClass("hide");
+                    $("#keywordEnumList").removeClass("hide");
+                } else {
+                    $('#namePropertyDefaultValue').removeClass('hide');
+                    $('#namePropertyDefaultValue').find("input").val(descriptionField.default);
+                }
+                
+                break;
+
+            case "date" : 
+                $('#datePropertyDefaultValue').removeClass('hide');
+                $('#datePropertyDefaultValue').find("input").val(descriptionField.default);
+                break;
+
+            case "number" :
+                $('#numberPropertyDefaultValue').removeClass('hide');
+                $('#numberPropertyDefaultValue').find("input").val(descriptionField.default);
+                break;
+
+            case "boolean" :
+                $('#booleanPropertyDefaultValue').removeClass('hide');
+                $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
+                
+                if (descriptionField.default == 1 || descriptionField.default == 0) {
+                    $('#booleanPropertyDefaultValue').find('[value="'+descriptionField.default+'"]').parent().addClass("active");
+                } else {
+                    $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
+                }
+                break;
+        }
+    }
+
+    function checkRequiredFields(descriptionField) {
+        var requiredFields = ["name", "label", "type"];
+        
+        var error = 0;
+        $.each(requiredFields, function( i, val ) {
+            if (descriptionField[val] == null || descriptionField[val] == "undefined" || descriptionField[val] == "") {
+                error++;
+                return;
+            }
+        });
+        
+        if (error > 0) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function serialize () {
+        var type = $('.active > input[type=radio][name=type]').val();
+        
+        var property = {
+            name         : $('#fieldName').find('input').val(),
+            label        : $('#propertyLabel').find('input').val(),
+            type         : type,
+        }
+        
+        
+        // Default value
+        switch(property['type']) {
+            case "name":
+                property = serializeName(property);
+                break;
+            case "text":
+                property['default'] = $('#textPropertyDefaultValue').find('input').val();
+                break;
+            case "boolean":
+                switch ($('#booleanPropertyDefaultValue').find('input:checked').val()) {
+                    case "1": property['default'] = true;
+                              break;
+                    default: property['default'] = false;
+                              break;
+                }
+                break;
+            case "number":
+                property['default'] = $('#numberPropertyDefaultValue').find('input').val();
+                break;
+            case "date":
+                property['default'] = $('#datePropertyDefaultValue').find('input').val();
+                break;
+        }
+
+        //console.log(property);
+        
+        return property;
+    }
+    
+    function serializeName(property) {
+        var nbResult = $("#keywordEnumList").find(".list-group-item").length;
+        if (nbResult == 0) {
+            property['default'] = $('#namePropertyDefaultValue').find('input').val();
+        } else {
+            var keywordEnum = new Array();
+            $.each($("#keywordEnumList").find(".keywordEnumLabel"), function (key, item) {
+                keywordEnum.push($.trim($(item).text()));
+            });
+            property['enumeration'] = keywordEnum;
+
+            property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
+        }
+         
+        return property;
+    }
+</script>

@@ -1,0 +1,58 @@
+<div class="panel panel-default dataForm" id="positionMoveForm">
+    <div class="panel-heading">
+        <h4>Move position<small></small></h4>
+    </div>
+    <div class="panel-body">
+        <form>
+            <input type="hidden" name="subjectId">
+            <input type="hidden" name="objectId">
+            <div class="form-group">
+                <label>New parent name</label>
+                <select class="form-control" name="newSubjectId">
+                    <?merge list ?>
+                    <option value="[?merge .subjectId ?]"> <?merge .name ?></option>
+                </select>
+            </div>
+        </form>
+        <button type="button" class="btn btn-success" id="movePosition" title="Save">Save</button>
+        <button type="button" class="btn btn-warning" id="cancelMovePosition" title="Cancel">Cancel</button>
+    </div>
+</div>
+
+
+<script>
+    //cancel position moving
+    $("#cancelMovePosition").on('click', function(){
+        $('#positionMoveForm').css('display', 'none');
+    })
+
+    //move a position
+    $("#positionMoveForm").on('click', '#movePosition', function(){
+        $('button').attr('disabled', 'true');
+        newSubjectId = $('[name="newSubjectId"]').find('option:selected').val();
+        if(newSubjectId == ""){
+            newSubjectId = null;
+        }
+        var position = {
+            newSubjectId : newSubjectId,
+            subjectId : $('[name="subjectId"]').val(),
+            objectId : $('[name="objectId"]').val()
+        };
+        
+        $.ajax({
+            url: "/filePlan/movePosition",
+            type: "PUT",
+            data: JSON.stringify(position),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                $('#positionMoveForm').css('display', 'none');
+                reloadTree();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    })
+</script>

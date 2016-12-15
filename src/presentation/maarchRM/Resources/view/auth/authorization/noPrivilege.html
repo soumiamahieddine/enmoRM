@@ -1,0 +1,39 @@
+<!-- Modal -->
+<div class="modal fade" id="noRightsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">NON AUTORISE</h4>
+            </div>
+            <div class="modal-body">
+                Vous ne disposez pas des autorisations n&eacute;cessaires pour r&eacute;aliser cette action.
+            </div>
+            <div class="modal-footer">
+                <?merge asyncRequest.bool().not() ?>
+                <button type="button" id="back" class="btn btn-primary btn-block" title="Back">
+                    <span class="fa fa-arrow-left fa-fw"></span>
+                </button>
+                <?merge asyncRequest.bool() ?>
+                <button type="button" id="closeNoRight" class="btn btn-primary btn-block" data-dismiss="modal" title="Close">
+                    <span class="fa fa-arrow-left fa-fw"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#app_maarchRM_main').ready(function() {
+        $('#noRightsModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+        });
+
+        $('#noRightsModal').modal('show');
+
+        $('#back').on('click', function() {
+            parent.history.back();
+            return false;
+        });
+    });
+</script>

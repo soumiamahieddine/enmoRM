@@ -1,0 +1,193 @@
+<div id="contain" data-translate-catalog="auth/messages">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1 class="page-header">
+                    <?merge user.accountId.bool() ?>
+                    <span>User modification</span> <small><?merge user.displayName ?></small>
+                    <?merge user.accountId.bool().not() ?>
+                    <span>New user</span>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">User account</div>
+                <div class="panel-body">
+                    <?merge user ?>
+                    <form class='form-horizontal row' id="user_userAccountForm">
+                        <div class="col-xs-12">
+                            <br/>
+                            <div class="form-group">
+                                <label for="accountName" class="col-md-3 control-label">User name<span style="color : red">*</span></label>
+                                <div class="col-md-9">
+                                    <?merge profile.bool().not() ?>
+                                    <input type="text" class="form-control" id="accountName" name="accountName" placeholder="User name">
+                                    <?merge profile.bool() ?>
+                                    <input type="text" class="form-control" id="accountName" name="accountName" placeholder="User name" disabled>
+                                </div>
+                            </div>
+                            <?merge user.accountId.bool().not() ?>
+                            <div class="form-group">
+                                <label for="password" class="col-md-3 control-label">Password<span style="color : red">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                </div>
+                            </div>
+                            <?merge user.accountId.bool().not() ?>
+                            <div class="form-group">
+                                <label for="verification" class="col-md-3 control-label">Password verification<span style="color : red">*</span></label>
+                                <div class="col-md-9">
+                                    <input type="password" class="form-control" id="verification" name="verification" placeholder="Password verification">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#userInformationsTab" data-toggle="tab">User information</a></li>
+                <?merge profile.bool().not() ?>
+                <li><a href="#userRoleTab" data-toggle="tab">User role</a></li>
+                <?merge user.accountId.bool()?>
+                <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
+            </ul>
+            <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                <div class="panel-body clearfix">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="userInformationsTab">
+                            <!-- User information form -->
+                            <?hinclude auth/userAccount/userManagement/personInformationForm.html ?>
+                        </div>
+                        <div class="tab-pane fade" id="adminTab">
+                            <!-- User information form -->
+                            <?hinclude auth/userAccount/userManagement/userAdministrationForm.html ?>
+                        </div>
+                        <?merge profile.bool().not() ?>
+                        <div class="tab-pane fade" id="userRoleTab">
+                            <?hinclude auth/authorization/roleInformationForm.html ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 pull-right">
+                <div class="form-group">
+                    <div class="">
+                        <button type="button" class="btn btn-warning" id="userAccountCancelBtn" title="Cancel"><i class="fa fa-undo"></i> Cancel</button>
+                        <button id="user_saveUser" type="button" class="btn btn-success" title="Save" data-useraccountid="[?merge user.accountId ?]"><i class="fa fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modals for disabling user -->
+        <?hinclude auth/userAccount/admin/modalsForDisabling.html ?>
+
+        <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
+        <span class="hide" id="invalidEmail_text">Email malformed</span>
+        <span class="hide" id="empty_text">The fields with a star are compulsory.</span>
+        
+    </div>
+</div>
+
+<script >
+
+    $("#userAccountCancelBtn").on('click', function () {
+        history.back();
+    });
+    
+//create
+    $("#user_saveUser").on('click', function () {
+
+        var user = serialize();
+
+        if (!validateEmail(user.emailAddress)) {
+            gritter.show($('#invalidEmail_text').html(), false);
+            return false;
+        }
+        
+        var url = "/userAccount";
+        var type = "POST";
+
+        var accountId = $(this).data("useraccountid");
+
+
+        if (user.password != user.verification) {
+            gritter.show($('#badPasswordVerification_text').html(), false);
+            return;
+        }
+
+        if (accountId != undefined) {
+            url = "/userAccount/" + accountId;
+            type = "PUT";
+        }
+        
+        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.email == "") {
+            gritter.show($('#empty_text').html(), false);
+            return;
+        }
+
+
+        ajax($(this),{
+            async       : false,
+            url         : url,
+            type        : type,
+            data        : JSON.stringify({userAccount: user}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load('/userAccounts');
+                }
+            },
+            error       : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    function serialize() {
+        var userAccount = {
+            accountId: $('#user_saveUser').attr("data-useraccountid")
+            //roles: []
+        };
+
+        var userAccountInfo = $('#user_userAccountForm').find('input');
+        var inputs = $('#user_userInformationForm').find('input').add(userAccountInfo);
+
+        $.each(inputs, function () {
+            userAccount[$(this).attr('name')] = jQuery.trim($(this).val());
+        })
+
+        roleConfig = $("#user_RoleContain").attr('data-publicarchive');
+        //parametre.roleMembers.push(null);
+        if (!roleConfig){ 
+            var roles = $("#listRoles").find('.active');
+            
+            if (roles.size() > 0) {
+                userAccount.roles = [];
+                $.each(roles, function () {
+                    userAccount.roles.push($(this).data('id'));
+                });
+            }
+        } else {
+            userAccount.roles = [];
+            role = $("#user_RoleContain").find('select');
+            userAccount.roles.push(role.val());
+        }
+
+        return userAccount;
+    }
+
+    function validateEmail($email) {
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        return emailReg.test($email);
+    }
+</script>

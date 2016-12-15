@@ -1,0 +1,34 @@
+# recordsManagement/archiveRelationship
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "The archive relationship has been remove"
+msgstr "La relation d'archive a été supprimée"
+
+msgid "The archive relationship has been created"
+msgstr "La relation d'archive a été créée"
+
+msgid "Archive relationship"
+msgstr "Relation entre archives"
+
+msgid "Archive identifier"
+msgstr "Identifiant d'archive"
+
+msgid "Relationship type"
+msgstr "Type de relation"
+
+msgid "Please select a relationship type"
+msgstr "Sélectionnez un type de relation"
+
+msgid "Related archive identifier"
+msgstr "Identifiant d'archive en relation"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Add a relationship"
+msgstr "Ajouter une relation"
+
+msgid "Search"
+msgstr "Rechercher"
+

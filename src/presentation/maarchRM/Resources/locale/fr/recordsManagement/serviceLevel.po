@@ -1,0 +1,69 @@
+# recordsManagement/serviceLevel
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Service levels"
+msgstr "Niveaux de service"
+
+msgid "service level(s)"
+msgstr "niveau(x) de service"
+
+msgid "Add a service level"
+msgstr "Ajouter un niveau de service"
+
+msgid "New service level"
+msgstr "Nouveau niveau de service"
+
+msgid "Detect format"
+msgstr "Détection de format"
+
+msgid "Validate format"
+msgstr "Validation de format"
+
+msgid "Convert on deposit"
+msgstr "Convertir au dépôt"
+
+msgid "default"
+msgstr "par défaut"
+
+msgid "set default"
+msgstr "utiliser par défaut"
+
+msgid "Cluster"
+msgstr "Grappe"
+
+msgid "Check for virus"
+msgstr "Contrôle antivirus"
+
+msgid "Store metadata"
+msgstr "Stocker les métadonnées"
+
+msgid "Redundancy"
+msgstr "Redondance"
+
+msgid "Edit a service level"
+msgstr "Editer un niveau de service"
+
+msgid "Service level created."
+msgstr "Niveau de service créé."
+
+msgid "Service level updated."
+msgstr "Niveau de service modifié."
+
+msgid "Service level removed."
+msgstr "Niveau de service supprimé."
+
+msgid "The default service level is changed."
+msgstr "Niveau de service par défaut modifié."
+
+msgid "Reference is empty"
+msgstr "La référence est vide"
+
+msgid "The  default service level or used can't be deleted."
+msgstr "Le niveau de service par défaut ou utilisé ne peut être supprimé."
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "reference"
+msgstr "Référence"

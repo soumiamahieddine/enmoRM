@@ -1,0 +1,210 @@
+# recordsManagement/archivalProfile
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Profiles"
+msgstr "Profils"
+
+msgid "profile(s)"
+msgstr "profil(s)"
+
+msgid "Profile reference"
+msgstr "Référence du profil"
+
+msgid "Add a profile"
+msgstr "Ajouter un profil"
+
+msgid "New profile"
+msgstr "Nouveau profil"
+
+msgid "Archival profile"
+msgstr "Profil d'archivage"
+
+msgid "Description class"
+msgstr "Description de l'archive"
+
+msgid "Profile rules"
+msgstr "Données de gestion"
+
+msgid "Retention start date"
+msgstr "Date de référence"
+
+msgid "Retention duration"
+msgstr "Durée de conservation"
+
+msgid "Final disposition"
+msgstr "Sort final"
+
+msgid "Document description"
+msgstr "Description des documents"
+
+msgid "Access entries"
+msgstr "Accès"
+
+msgid "Edit a profile"
+msgstr "Modification du profil"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Property"
+msgstr "Propriété"
+
+msgid "Used"
+msgstr "Utilisé"
+
+msgid "Required"
+msgstr "Requis"
+
+msgid "Allow multiple documents"
+msgstr "Conteneur de documents"
+
+msgid "Allow user indexes"
+msgstr "Autorise les index utilisateurs"
+
+msgid "Retention rules"
+msgstr "Règles de conservation"
+
+msgid "Deposit date"
+msgstr "Date de dépôt"
+
+msgid "Last communication date"
+msgstr "Date de dernière communication"
+
+msgid "Description object property"
+msgstr "Propriété de description de l'objet"
+
+msgid "Action route"
+msgstr "Route d'action"
+
+msgid "Years"
+msgstr "Années"
+
+msgid "Days"
+msgstr "Jours"
+
+msgid "Months"
+msgstr "Mois"
+
+msgid "Access rules"
+msgstr "Règle d'accès"
+
+msgid "Group"
+msgstr "Groupe"
+
+msgid "Read"
+msgstr "Lecture"
+
+msgid "Access rule"
+msgstr "Règles d'accès"
+
+msgid "Retention rule"
+msgstr "Règle de conservation"
+
+msgid "Access rule code"
+msgstr "Code"
+
+msgid "Retention rule code"
+msgstr "Code"
+
+msgid "Access rule duration"
+msgstr "Durée de non-communicabilité"
+
+msgid "To be defined later"
+msgstr "À définir plus tard"
+
+msgid "Created date"
+msgstr "Date de création"
+
+msgid "Date of publication"
+msgstr "Date de publication"
+
+msgid "Integrity on deposit"
+msgstr "Contrôle au versement"
+
+msgid "Profiles directory"
+msgstr "Répertoire des profils"
+
+msgid "Profile file"
+msgstr "Fichier de profil"
+
+msgid "preservation"
+msgstr "Conserver"
+
+msgid "destruction"
+msgstr "Détruire"
+
+msgid "year(s)"
+msgstr "an(s)"
+
+msgid "month(s)"
+msgstr "mois"
+
+msgid "day(s)"
+msgstr "jour(s)"
+
+msgid "Illimited"
+msgstr "Illimité"
+
+msgid "Deposit"
+msgstr "Déposer"
+
+msgid "Retrieve"
+msgstr "Consulter"
+
+msgid "Destroy"
+msgstr "Eliminer"
+
+msgid "Click or drop a file"
+msgstr "Cliquer ou déposer un fichier"
+
+msgid "File name"
+msgstr "Nom du fichier"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "Replace file"
+msgstr "Remplacer le fichier"
+
+msgid "Download file"
+msgstr "Télécharger le fichier"
+
+msgid "Archival profile created"
+msgstr "Profil d'archive créé"
+
+msgid "Archival profile updated"
+msgstr "Profil d'archive modifié"
+
+msgid "Archival profile deleted"
+msgstr "Profil d'archive supprimé"
+
+msgid "Archival profile uploaded"
+msgstr "Profil d'archive téléversé"
+
+msgid "Select a access rule code"
+msgstr "Selectionnez une règles d'accès"
+
+msgid "Select a retention start date"
+msgstr "Selectionnez une date de référence"
+
+msgid "Select a retention rule code"
+msgstr "Selectionnez une règle de conservation"
+
+msgid "The profile can't be deleted. It's used in an archival agreement"
+msgstr "Un profil utilisé ne peut être supprimé."
+
+msgid "Can't upload file. You have to save the profile first."
+msgstr "Impossible de téléverser le fichier. Le profil doit d'abord être enregistré."
+
+msgid "The profile file's extention must be rng or xsd."
+msgstr "Le fichier de profil doit se terminer par .xsd ou .rng"
+
+msgid "reference"
+msgstr "Identifiant"

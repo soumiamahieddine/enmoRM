@@ -1,0 +1,42 @@
+# exceptions/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Validation error"
+msgstr "Erreur de validation"
+
+msgid "Invalid message"
+msgstr "Données invalides"
+
+msgid "Bad request"
+msgstr "Données invalides"
+
+msgid "Null value not allowed"
+msgstr "Champ vide non permis"
+
+msgid "Empty value not allowed"
+msgstr "Champ vide non permis"
+
+msgid "The value of '%1$s' not respect the type '%2$s'"
+msgstr "La valeur de '%1$s' ne respecte pas le type '%2$s'"
+
+msgid "The field '%1$s' is required"
+msgstr "Le champs '%1$s' est requis"
+
+msgid "Conversion rule '%1$s' exist."
+msgstr "Le règle de conversation '%1$s' existe déjà"
+
+msgid "The relation control authority and orignator already exists."
+msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
+
+msgid "None control authority parameters."
+msgstr "Aucune autorité de contrôle parametré."
+
+msgid "String value does not match pattern"
+msgstr "La valeur ne respecte pas le format"
+
+msgid "An error occured during the process of your request. Please contact the administrator of the application."
+msgstr "Une erreur est survenue durant le traitement de votre requête. Veuillez contacter l'administrateur de l'application."
+
+msgid "The format identification failed."
+msgstr "Le format du fichier n'a pas pu être identifié."

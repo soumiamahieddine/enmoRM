@@ -1,0 +1,22 @@
+<table class="table table-striped table-condensed" data-translate-catalog="recordsManagement/archiveRelationship">
+    <thead>
+        <th>Relationship type</th>
+        <th>Archive identifier</th>
+        <th>Description</th>
+        <th></th>
+    </thead>
+    <tbody id="tbodyRelationship">
+        <?merge archiveRelationships.bool() ?>
+        <div id="alreadyExiste">
+            <?merge archiveRelationships ?>
+            <tr>
+                <td><?merge .typeCode ?></td>
+                <td><?merge .relatedArchiveId ?></td>
+                <td><?merge .description ?></td>
+                <td><button type="button" class="btn btn-danger deleteRelationship" title="Delete" data-relationship-relatedArchiveId="[?merge .relatedArchiveId ?]" data-relationship-typeCode="[?merge .typeCode ?]"><span class="fa fa-trash"></span></button></td>
+            </tr>
+        </div>
+        <div id="other">
+        </div>
+    </tbody>
+</table>

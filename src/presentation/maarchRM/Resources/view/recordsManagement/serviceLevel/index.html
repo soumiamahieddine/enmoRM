@@ -1,0 +1,143 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" >
+<div class="container-fluid" data-translate-catalog="recordsManagement/serviceLevel">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-dashboard">&nbsp;</i>Service levels
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="recordsManagement/serviceLevel">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><span id='tableItemNumber'><?merge serviceLevel.count() ?></span> service level(s)</h4>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="addNewServiceLevel" class="btn btn-default btn-sm" title="Add"><i class="fa fa-plus fa-fw">&nbsp;</i>Add</button>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable" id="tableListServiceLevel">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Detect format</th>
+                                <th>Validate format</th>
+                                <th>Check for virus</th>
+                                <th>Convert on deposit</th>
+                                <th>Cluster</th>
+                                <th></th>
+                                <th style="min-width:100px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge serviceLevel ?>
+                            <tr id="[?merge .serviceLevelId ?]">
+                                <td><?merge .reference ?></td>
+                                <td><i class ="fa [?merge .control.contains('formatDetection').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
+                                <td><i class ="fa [?merge .control.contains('formatValidation').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
+                                <td><i class ="fa [?merge .control.contains('virusCheck').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
+                                <td><i class ="fa [?merge .control.contains('convertOnDeposit').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
+                                <td><?merge .clusterName ?></td>
+                                <td><button class="btn btn-xs [?merge .default.then('btn-primary disabled isDefault', 'setDefault btn-default') ?]" style="visibility:[?merge .default.then('visible', 'hidden') ?]"><?merge .default.then('default', 'set default').translate('recordsManagement/serviceLevel', '') ?></buton> <i class ="fa [?merge .default.then('default', '') ?]">&nbsp;</i></td>
+                                <td class="action_btn">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" data-edit-serviceLevel="[?merge .serviceLevelId?]" class="btn btn-info" title="Edit">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </button>
+                                        <button type="button" class="deleteServiceLevel btn btn-danger" title="Delete">
+                                            <span class="fa fa-fw fa-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="default_label">default</span>
+        <span id="setDefault_label">set default</span>
+    </div>
+</div>
+
+
+</div>
+
+<script type="application/javascript">
+    $("#tableListServiceLevel").on('click', "[data-edit-serviceLevel]", function(){
+        load('/serviceLevel/' + $(this).attr("data-edit-serviceLevel"));
+    })
+    
+$("#addNewServiceLevel").on('click', function(){
+    load("/serviceLevel");
+})
+
+
+//set default button
+$("#contain").on('mouseenter', 'tr', function(){
+    $(this).find('.setDefault').css('visibility', 'visible');
+})
+
+$("#contain").on('mouseleave', 'tr', function(){
+    $(this).find('.setDefault').css('visibility', 'hidden');
+})
+
+//set default button
+$("#contain").on('click', '.setDefault', function(){
+    var button = $(this);
+    var parameters = {
+        serviceLevel : button.closest('tr').attr('id')
+    };
+    
+    $.ajax({
+        url         : '/serviceLevel/'+button.closest('tr').attr('id')+'/setDefault',
+        type        : 'PUT',
+        data        : JSON.stringify(parameters),
+        content     : 'application/json',
+        dataType    : 'json',
+        success  : function(response){
+            gritter.show(response.message, response.status, response.errors);
+            if(response.status) {
+                $('.isDefault').removeClass('isDefault btn-primary disabled').addClass('setDefault btn-default').css('visibility', 'hidden').text($('#setDefault_label').html())
+                button.css('visibility','visible').removeClass('setDefault btn-default').addClass('isDefault btn-primary disabled').text($('#default_label').html());
+            }
+        },
+        error    : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    })
+    $(this).find('.setDefault').removeClass('hide');
+})
+
+//delete
+$("#contain").on('click', '.deleteServiceLevel', function(){
+    var tr = $(this).closest('tr');
+    $.ajax({
+        url      : '/serviceLevel/'+tr.attr('id'),
+        type     : 'DELETE',
+        dataType : 'json',
+        success  : function(response){
+            gritter.show(response.message, response.status, response.errors);
+            if(response.status) {
+                tr.remove();
+            }
+        },
+        error    : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    })
+})
+
+</script>

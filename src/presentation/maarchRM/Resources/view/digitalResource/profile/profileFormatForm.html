@@ -1,0 +1,77 @@
+<div id="contain" >
+<div class="col-lg-5">
+    <form class="form-horizontal" role="form">
+        <div class="well">
+            <!-- puid -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="Puid">Puid</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" placeholder="Puid" id="puid" />
+                </div>    
+            </div>
+            <div class="clearfix">
+                <button type="button" class="btn btn-primary col-sm-9 col-sm-offset-2" id="addProfileFormatBtn" data-add-format title="Add profile format">Add profile format</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-lg-5" data-form-ns="profileFormat" data-form-rel="toMany">
+    <div class="well">
+        <h3>Profile formats</h3>
+        <div id="profileRepositories" class="table-responsive">
+            <table class="table table-striped table-condensed">
+                <thead>
+                    <th>Puid</th>
+                    <th></th>
+                </thead>
+                <tbody id='tbodyFormat'>
+                    <?merge profile.profileFormat.bool()?>
+                    <div>
+                        <?merge profile.profileFormat ?>
+                        <div>
+                            <?merge . ?>
+                            <tr>
+                                <td><?merge .puid ?></td>
+                                <td>
+                                    <form class="hide">
+                                        <input type="hidden" name="profileId" value='[?merge profile.profileId ?]'/>
+                                        <input type="hidden" name="puid"/>
+                                    </form>
+                                    <button type="button" class="btn btn-danger" title="Delete"><span class="fa fa-trash"></span>&nbsp;Delete</button>
+                                </td>
+                            </tr>
+                        </div>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $('#contain').ready(function() {
+        $("#contain").on('click', '[data-delete-format]', function(){
+            $(this).parent().parent().remove();
+        });
+        
+        $('#addProfileFormatBtn').on('click', function(){
+            if ($('#puid').val()) {
+                var puid = $('#puid').val();
+                
+                var tr = $(document.createElement('tr'));
+                $(document.createElement('td')).text(puid).appendTo(tr);
+                var lastTd = $(document.createElement('td')).appendTo(tr);
+
+                var form = $(document.createElement('form')).attr('class', 'hide').appendTo(lastTd);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'puid').attr('value', puid).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'profileId').attr('value', $('#profileId').val()).appendTo(form);
+
+                var button = $(document.createElement('button')).attr('type', 'button').attr('data-delete-format', '').attr('class', 'btn btn-danger').appendTo(lastTd);
+                $(document.createElement('span')).attr('class', 'fa fa-trash').appendTo(button);
+                button.append(' Delete');
+
+                $('#tbodyFormat').append(tr);
+            }
+        });
+    });
+</script>

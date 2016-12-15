@@ -1,0 +1,349 @@
+<div class="panel panel-default" id="organization_organizationForm">
+    <div class="panel-heading">
+        <h4><span class="orgFormTitle">Organization</span> <small class="displayName"></small></h4>
+    </div>
+    <div class="panel-body">
+        <form>
+            <input type="hidden" name="orgId">
+            <input type="hidden" name="ownerOrgId">
+            <input type="hidden" name="parentOrgId">
+            <input type="hidden" name="isOrgUnit">
+
+            <div class="form-group">
+                <label>Organization name <span style="color: red">*</span></label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="orgName" placeholder="Organization name">
+                    <span class="input-group-btn">
+                        <a class="btn btn-default" role="button" data-toggle="collapse" id="organization_showOrgNamesForm" href="#organization_orgNames" aria-expanded="false">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="collapse well" id="organization_orgNames">
+                <div class="form-group">
+                    <label>Other name</label>
+                    <input type="text" class="form-control" name="otherOrgName" placeholder="Other name">
+                </div>
+                  <div class="form-group">
+                    <label>Display name <span style="color: red">*</span></label>
+                    <input type="text" class="form-control" name="displayName" placeholder="Display name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Registration number <span style="color: red">*</span></label>
+                <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
+            </div>
+            <div id="organization_orgUnitInfo">
+                <div class="form-group">
+                    <label>Organization role</label>
+                    <div class="dropdown">
+                        <button id="oganization_addOrgRole" class="btn btn-default" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add role">
+                            Add role
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" id="oganization_selectOrgRole">
+                            <?merge orgRole ?>
+                            <li><a href="#" data-code="[?merge .code ?]"><?merge .description ?></a></li>
+                        </ul>
+                    </div>
+                    <br/>
+                    <div id="organization_orgRoleList" class="btn-toolbar"></div>
+                    <br/>
+                </div>
+                <?merge publicArchives.not() ?>
+                <div class="form-group">
+                    <label>Organization type</label>
+                    <select class="form-control" name="orgTypeCode">
+                        <option value=""></option>
+                        <?merge orgType ?>
+                        <option value="[?merge .code ?]"><?merge .name?></option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Begin date</label>
+                        <input type="text" class="form-control datePicker" name="beginDate" placeholder="Begin date">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>End date</label>
+                        <input type="text" class="form-control datePicker" name="endDate" placeholder="End date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" name="description" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Legal classification</label>
+                    <input type="text" class="form-control" name="legalClassification" placeholder="Legal classification">
+                </div>
+                <div class="form-group">
+                    <label>Business type</label>
+                    <input type="text" class="form-control" name="businessType" placeholder="Business type">
+                </div>
+            </div>
+            <?merge publicArchives.not() ?>
+            <div class="form-group">
+                <label>Tax identifier</label>
+                <input type="text" class="form-control" name="taxIdentifier" placeholder="Tax identifier">
+            </div>
+        </form>
+        <button type="button" class="btn btn-warning" id="organization_cancel" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+        <button type="button" class="btn btn-success" id="organization_submit" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+    </div>
+    <span id="parent_text" class='hide'>Parent</span>
+    <span id="organization_text" class='hide'>Organization</span>
+    <span id="orgUnit_text" class='hide'>Organization unit</span>
+
+    <div class="modal fade" id="organization_closingConfimationForModification">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modification not saved</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        The modifications are not saved. Do you want to close the form anyway ?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">No</button>
+                    <button type="button" class="btn btn-primary" id="organization_confirmClosing" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script>
+
+    // Display name
+    $('#organization_organizationForm').on('change', 'input[name="orgName"]', function() {
+        $('#organization_orgNames').find('input[name="displayName"]').val($(this).val());
+    })
+
+    // Submit 
+    $('#organization_submit').on('click', function() {
+        OrganizationForm.submit();
+    })
+
+    // Cancel
+    $("#organization_cancel").on('click', function() {
+        OrganizationForm.closeForm();
+    })
+
+    // Show orgNames 
+    $('#organization_showOrgNamesForm').on('click', function() {
+        var icon = $(this).find('i');
+
+        if (icon.hasClass('fa-plus')) {
+            icon.removeClass('fa-plus').addClass('fa-minus');
+        } else {
+            icon.removeClass('fa-minus').addClass('fa-plus');
+
+        }
+    })
+
+    // Modification
+    $('#organization_organizationForm').on('change', 'input, select, textarea', function() {
+        OrganizationForm.hasModification = true;
+    })
+    $('#oganization_selectOrgRole').on('click', 'li', function(){
+        OrganizationForm.hasModification = true;
+    })
+
+    // Add role
+    $('#oganization_selectOrgRole').on('click', 'a', function() {
+        OrganizationForm.addRole($(this).data('code'));
+    })
+
+    // Remove role
+    $('#organization_orgRoleList').on('click', '.removeRole', function() {
+        var role = $(this).closest('div');
+        var code = $(this).closest('div').data('code');
+
+       role.remove();
+       $('#oganization_selectOrgRole').find('[data-code="' + code + '"]').parent().css('display', '');
+
+    })
+
+    $('#organization_confirmClosing').on('click', function() {
+        $('#organization_closingConfimationForModification').modal('hide');
+        OrganizationForm.closeForm();
+    })
+
+    var OrganizationForm = {
+        hasModification: false,
+
+        newOrg: function(parentName, parentId, ownerOrgId) {
+            var orgForm = $('#organization_organizationForm');
+
+            orgForm.css('display', '');
+            if (parentName != undefined) {
+                orgForm.find('small.displayName').html($('#parent_text').html() + ' : ' + parentName);
+                orgForm.find('input[name="parentOrgId"]').val(parentId);
+            }
+
+            if (ownerOrgId != undefined) {
+                orgForm.find('[name="isOrgUnit"]').prop('checked', true);
+                orgForm.find('[name="ownerOrgId"]').val(ownerOrgId);
+                orgForm.find('.orgFormTitle').html($('#orgUnit_text').html());
+            } else {
+                $('#organization_orgUnitInfo').css('display', 'none');
+                orgForm.find('.orgFormTitle').html($('#organization_text').html());
+            }
+        },
+
+        load: function(organization) {
+            var orgForm = $('#organization_organizationForm');
+
+            orgForm.find('small.displayName').html(organization.displayName);
+            $.each(organization, function(key, value) {
+                orgForm.find('[name="'+ key +'"]').val(value);
+            })
+            if (organization.isOrgUnit) {
+                orgForm.find('[name="isOrgUnit"]').prop('checked', true); 
+                orgForm.find('.orgFormTitle').html($('#orgUnit_text').html());
+            } else {
+                $('#organization_orgUnitInfo').css('display', 'none');
+                orgForm.find('.orgFormTitle').html($('#organization_text').html());
+            }
+
+            if (organization.orgRoleCodes) {
+                $.each(organization.orgRoleCodes, function() {
+                    OrganizationForm.addRole(this);
+                })    
+            }
+
+            orgForm.css('display','');
+        },
+
+        submit: function() {
+            var action = "/organization";
+            var method = "POST";
+
+            var organization = OrganizationForm.serialize();
+
+            if(organization.orgId != null) {
+                var action = "/organization/" + organization.orgId;
+                var method = "PUT";
+            }
+            
+            if(organization.displayName == null || organization.registrationNumber == null) {
+                gritter.show($('#empty_text').html(),false);
+                return false;
+            }
+            
+            ajax($('#organization_submit'), {
+                url         : action,
+                type        : method,
+                data        : JSON.stringify({'organization' : organization}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if(response.status) {
+                        OrganizationForm.closeForm();
+                        
+                        if(method == "POST") {
+                            organization.orgId = response.orgId;
+                            Tree.addNode(organization.parentOrgId, organization);
+                        } else {
+                            Tree.updateNode(organization);
+                        }
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            })
+        },
+
+        addRole: function(code) {
+            roleOption = $('#oganization_selectOrgRole').find('[data-code="' + code + '"]');
+            description = roleOption.html();
+            roleOption.parent().css('display', 'none');
+
+            var btnGroup = $('<div/>')
+                .data('code', code)
+                .addClass('btn-group')
+                .appendTo('#organization_orgRoleList');
+
+            var btn = $('<button/>')
+                .addClass('btn btn-default btn-sm')
+                .prop('disabled', true)
+                .html(description)
+                .appendTo(btnGroup);
+
+            var delBtn = $('<a/>')
+                .addClass('btn btn-default btn-sm removeRole')
+                .appendTo(btnGroup);
+
+            var i = $('<i/>')
+                .addClass('text-danger fa fa-times fa-fw')
+                .appendTo(delBtn);
+        },
+
+        serialize: function() {
+            var orgObject={
+                orgRoleCodes : []
+            };
+
+            var inputs = $('#organization_organizationForm').find('input, select, textarea');
+            $.each(inputs, function() {
+                var value = $(this).val();
+                if(value == "") {
+                    value = null;
+                }
+                orgObject[$(this).attr('name')] = value;
+            })
+
+            orgObject.isOrgUnit = $('#organization_organizationForm').find('[name="isOrgUnit"]').prop('checked');
+
+            var orgRoles = $('#organization_orgRoleList').find('div');
+            $.each(orgRoles, function() {
+                orgObject.orgRoleCodes.push($(this).data('code'));
+            })
+
+            if (orgObject.displayName == '') {
+                orgObject.displayName = orgObject.orgName;
+            }
+
+            return orgObject;
+        },
+
+        close: function() {
+
+            if(this.hasModification) {
+                $('#organization_closingConfimationForModification').modal();
+            } else {
+                this.closeForm();
+            }
+        },
+
+        closeForm: function() {
+            this.hasModification = false;
+            var form = $('#organization_organizationForm'); 
+            form.find('input, select, textarea').val('');
+            form.find('small.displayName').html('');
+            form.find('[name="isOrgUnit"]').prop('checked', false);
+            form.css('display', 'none');
+            $('#organization_orgRoleList').html('');
+            $('#oganization_selectOrgRole').find('li').css('display', '');
+            $('#organization_orgUnitInfo').css('display', '');
+
+            var nameForm = $('#organization_showOrgNamesForm');
+            if (nameForm.find('i').hasClass('fa-minus')) {
+                nameForm.click();
+            }
+
+            Tree.unselect();
+        }
+    }
+
+</script>

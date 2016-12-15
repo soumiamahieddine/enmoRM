@@ -1,0 +1,351 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="digitalResource/format">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-files-o"></i>
+                Formats
+            </h1>
+                Version PRONOM :  <?merge description[0] ?> |
+                Date :   <?merge description[1] ?>      
+        </div>
+    </div>
+    <div class="container-fluid" data-translate-catalog="digitalResource/format">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge formats.count() ?> format(s)</h4> 
+
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable table-hover" >
+                            <thead>
+                                <tr>
+                                    <th>Puid</th>
+                                    <th>Name</th>
+                                    <th>Version</th>
+                                    <th class="hidden"></th>
+                                    <th class="hidden"></th>
+                                    <th class="hidden"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge formats ?>
+                                <tr data-format="">
+                                    <td name="puid"><?merge .puid ?></td>
+                                    <td name="name"><?merge .name ?></td>
+                                    <td name="version"><?merge .version ?></td>
+                                    <td class="hidden" name="mediatype"><?merge .mediatype ?></td>
+                                    <td class="hidden" name="mimetype"><?merge .mimetype.implode(', ') ?></td>
+                                    <td class="hidden" name="extension"><?merge .extension.implode(', ') ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-12">
+                <div class="well ">
+                    <h3>Format information</h3>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td class="col-sm-3"><b>Puid</b></td>
+                                <td id="puid"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Name</b></td>
+                                <td id="name"></td>
+                            </tr>
+                            <tr>
+                                <td ><b>Version</b></td>
+                                <td id="version"></td>
+                            </tr>
+                            <tr>
+                                <td ><b>Mimetype</b></td>
+                                <td id="mimetype"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Extension</b></td>
+                                <td id="extension"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Media</b></td>
+                                <td><i id="icon" class=""></i>&nbsp;<span id="mediatype"></span></td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                </div>
+                <input type="file" id="inputFormatFile" class="hide">
+                <br/>
+                <div id="formatFileDropZone">
+                    <i class="fa fa-file-text fileIcon">&nbsp;</i>
+                    <h4>Click or drop a file<h4>
+                </div>
+
+                <div id="formatFileInfo" class="hide col-md-8 col-md-offset-2">
+                    <br/>
+                    <table>
+                        <tr>
+                            <td><i class="fa fa-file-text fileIcon">&nbsp;</i></td>
+                            <td>
+                                <dl class="dl-horizontal">
+                                    <dt>File name</dt>
+                                    <dd id="formatFile_fileName"></dd>
+
+                                    <dt>Size</dt>
+                                    <dd id="formatFile_fileSize"></dd>
+                                </dl>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <div class="row">
+                        <div class="pull-right ">
+                            <button class="btn btn-warning" id="formatFileCancel" title="Cancel"><i class='fa fa-times'>&nbsp;</i> Cancel</button>
+                            <button class="btn btn-success" id="fileCheckFormat_submit" title="Import"><i class='fa fa-level-down'>&nbsp;</i>Check format</button>
+                        </div>
+                    </div>
+                    <span class="hide" id="byte_text">byte</span>
+                    <span class="hide" id="checkFormat_text">Check format</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="formatModal" tabindex="-1" role="dialog" aria-labelledby="formatModalLabel" data-translate-catalog="digitalResource/format">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="formatModalLabel">File information</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="format-mimetype">Mimetype</label>
+                    <input type="text" class="form-control" id="format-mimetype" placeholder="Mimetype" readonly=""/>
+                </div>
+                <div class="form-group">
+                    <label for="format-puid">Puid</label>
+                    <input type="text" class="form-control" id="format-puid" placeholder="Puid" readonly=""/>
+                </div>
+                <div class="form-group">
+                    <label for="format-hashMD5">Hash MD5</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="format-hashMD5" placeholder="Hash MD5" readonly=""/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" data-hash-copy="hashMD5"><span class="fa fa-copy"></span></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="format-hashSHA256">Hash SHA256</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="format-hashSHA256" placeholder="Hash SHA256" readonly=""/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" data-hash-copy="hashSHA256"><span class="fa fa-copy"></span></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="format-hashSHA512">Hash SHA512</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="format-hashSHA512" placeholder="Hash SHA512" readonly=""/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" data-hash-copy="hashSHA512"><span class="fa fa-copy"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #formatFileDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 30px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+    .fileIcon {
+        font-size: 300%;
+    }
+</style>
+<script type="application/javascript">
+    /* ------ MESSAGE FILE ------ */
+
+    // Drag & drop
+    $("#formatFileDropZone").on('dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    })
+
+    $("#formatFileDropZone").on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#formatFileDropZone').css('opacity', '1');
+    })
+
+    $("#formatFileDropZone").on('dragleave', function(e) {
+        $('#formatFileDropZone').css('opacity', '0.5');
+    })
+
+    $('#formatFileDropZone').on('drop', function(e) {
+            if(e.originalEvent.dataTransfer){
+                if(e.originalEvent.dataTransfer.files.length) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $('#formatFileDropZone').css('opacity', '0.5');
+                    uploadMessage(e.originalEvent.dataTransfer.files[0]);
+                }   
+            }
+        }
+    );
+
+    // Files browser
+    $('#formatFileDropZone').on('click', function() {
+        $('#inputFormatFile').click();
+    })
+
+    $('#inputFormatFile').on('change', function() {
+        uploadMessage($(this).context.files[0]);
+    })
+
+    // Cancel
+    $('#formatFileCancel').on('click', function() {
+        $('#formatFileDropZone').removeClass('hide');
+        $('#formatFileInfo').addClass('hide');
+        $('#inputFormatFile').val('');
+    })
+
+    // Submit
+    $('#fileCheckFormat_submit').on('click', function() {
+        var icon = $('<i/>').addClass('fa fa-spinner fa-spin');
+        var submitButton = $('#fileCheckFormat_submit');
+        submitButton.find('i').removeClass('fa-level-down').addClass('fa-spin fa-spinner');
+        var file = serialize();
+        $('.btn').prop('disabled', 'true');
+        ajax($(this), {
+            type        : 'POST',
+            url         : '/digitalResource/format/fileformatinformation',
+            /*data        : {
+                    contents  : file.contents,
+                    extension : file.extension
+            },*/
+            data : JSON.stringify({contents  : file.contents, extension : file.extension}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                console.log(response);
+                if(!response.status) {
+                    gritter.show(response.message, response.status, response.errors);
+                } else {
+                    $('#formatFileCancel').click();
+                    $('#format-mimetype').val(response.mimetype);
+                    $('#format-puid').val(response.puid);
+                    $('#format-hashMD5').val(response.hashMD5);
+                    $('#format-hashSHA256').val(response.hashSHA256);
+                    $('#format-hashSHA512').val(response.hashSHA512);
+                    $('#formatModal').modal();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        submitButton.html(" " + $('#checkFormat_text').text());
+        $('<i/>').addClass('fa fa-level-down').prependTo(submitButton);
+        $('.btn').removeProp('disabled');
+    })
+
+
+/* ------ FUNCTION ------ */
+
+    function uploadMessage(file) {
+        oFileReader = new FileReader();
+        oFileReader.readAsDataURL(file);
+        oFileReader.onload = function() {
+            $('#inputFormatFile').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
+            $('#formatFile_fileName').html(file.name);
+            $('#formatFile_fileSize').html(file.size + ' ' + $('#byte_text').html());
+            $('#formatFileDropZone').addClass('hide');
+            $('#formatFileInfo').removeClass('hide');
+        }
+    }
+
+    function serialize() {
+        var jsonObject = {
+            contents : $('#inputFormatFile').data('base64'),
+            extension: $('#formatFile_fileName').text().slice(($('#formatFile_fileName').text().lastIndexOf(".") - 1 >>> 0) + 2),
+        };
+
+        return jsonObject;
+    }
+    /* --------------------------------------- */
+    
+    // Cancel
+    $('[data-hash-copy]').on('click', function() {
+        $("#format-" + $(this).attr('data-hash-copy')).select();
+        document.execCommand("copy");
+        document.getSelection().removeAllRanges();
+    })
+    
+    $("#contain").on('mouseenter', '[data-format]', function() {
+        $(this).find('td').each(function() {
+            $("#" + $(this).attr('name')).text($(this).text());
+        });
+
+        switch ($("#mediatype").text()) {
+            case 'application':
+                icon = 'fa-file-code-o';
+                break;
+
+            case 'message':
+                icon = 'fa-file-envelope-o';
+                break;
+
+            case 'audio':
+                icon = 'fa-file-audio-o';
+                break;
+
+            case 'video':
+                icon = 'fa-file-video-o';
+                break;
+
+            case 'text':
+                icon = 'fa-file-text-o';
+                break;
+
+            case 'image':
+                icon = 'fa-file-image-o';
+                break;
+
+            case 'model':
+                icon = 'fa-file-cube-o';
+                break;
+
+            default:
+                icon = 'fa-file-o';
+        }
+        $("#icon").removeAttr('class');
+        $("#icon").addClass('fa ' + icon);
+        
+    });
+</script>

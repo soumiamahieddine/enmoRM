@@ -1,0 +1,526 @@
+<!--#
+    This file is part of the recordsManagement package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="recordsManagement/messages">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-search"></i>
+                Indexing modification
+            </h1>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/messages">
+        <div class="col-md-12">
+            <div class="panel-group col-md-5" id="fieldList" role="tablist" >
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" data-translate-catalog="documentManagement/document">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#fieldList" href="#collapseFields">
+                                Fields
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFields" class="panel-collapse collapse in" role="tabpanel" data-translate-catalog="documentManagement/document">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div id="allFields">
+                                    <input type="hidden" id="existingIndexes" value="[?merge existingIndexes ?]"/>
+                                    <div id="archivalProfileFields">
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small>Archive name</small>
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input class="form-control input-sm" data-type="name" name="archiveName"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small>Archive identifier</small>
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input class="form-control input-sm" data-type="name" name="originatorArchiveId" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?merge archivalProfileFields ?>
+                                        <div>
+                                            <?merge .descriptionField.type.ifeq('name') ?>
+                                            <div>
+                                                <?merge .descriptionField.enumeration.ifeq('') ?>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label text-primary">
+                                                        <small><?merge .descriptionField.label ?></small>
+                                                        <?merge .required.bool() ?>
+                                                        <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                    </label>
+                                                    <div class="col-md-8">
+                                                        <?merge .required.bool().then('true') @data-required?>
+                                                        <input type="text" class="form-control input-sm" data-type="name" name="[?merge .descriptionField.name ?]" />
+                                                    </div>
+                                                </div>
+                                                <?merge .descriptionField.enumeration.ifne('') ?>
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label text-primary">
+                                                        <small><?merge .descriptionField.label ?></small>
+                                                        <?merge .required.bool() ?>
+                                                        <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                    </label>
+                                                    <div class="col-md-8">
+                                                        <?merge .required.bool().then('true') @data-required?>
+                                                        <select class="form-control input-sm" data-type="name" name="[?merge .descriptionField.name ?]" data-type="select">
+                                                            <option value=""></option>
+                                                             <?merge .descriptionField.enumeration ?>
+                                                            <option value="[?merge . ?]"><?merge . ?></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <?merge .descriptionField.type.ifeq('boolean') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small><?merge .descriptionField.label ?></small>
+                                                    <?merge .required.bool() ?>
+                                                    <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <div class="btn-group" data-toggle="buttons">
+                                                        <label class="btn btn-default">
+                                                            <?merge .required.bool().then('true') @data-required?>
+                                                            <input type="radio" name="[?merge .descriptionField.name ?]" data-type="boolean" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                                                        </label>
+                                                        <label class="btn btn-default active">
+                                                            <?merge .required.bool().then('true') @data-required?>
+                                                            <input type="radio" name="[?merge .descriptionField.name ?]" data-type="boolean" autocomplete="off" value="" checked>&nbsp;
+                                                        </label>
+                                                        <label class="btn btn-default">
+                                                            <?merge .required.bool().then('true') @data-required?>
+                                                            <input type="radio" name="[?merge .descriptionField.name ?]" data-type="boolean" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <?merge .descriptionField.type.ifeq('number') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small><?merge .descriptionField.label ?></small>
+                                                    <?merge .required.bool() ?>
+                                                    <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <?merge .required.bool().then('true') @data-required?>
+                                                    <input type="number" class="form-control input-sm" data-type="number" name="[?merge .descriptionField.name ?]" />
+                                                </div>
+                                            </div>
+
+                                            <?merge .descriptionField.type.ifeq('date') ?>
+                                            <div class="form-group col-md-12">  
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small><?merge .descriptionField.label ?></small>
+                                                    <?merge .required.bool() ?>
+                                                    <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <?merge .required.bool().then('true') @data-required?>
+                                                    <input type="text" class="form-control input-sm datePicker" data-type="date" name="[?merge .descriptionField.name ?]" />
+                                                </div>
+                                            </div>
+
+                                            <?merge .descriptionField.type.ifeq('text') ?>
+                                            <div class="form-group col-md-12">
+                                                <label class="col-md-3 control-label text-primary">
+                                                    <small><?merge .descriptionField.label ?></small>
+                                                    <?merge .required.bool() ?>
+                                                    <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <?merge .required.bool().then('true') @data-required?>
+                                                    <textarea class="form-control input-sm" data-type="text" name="[?merge .descriptionField.name ?]"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="customFields">
+                                        <?merge customFields ?>
+                                        <div>
+                                            <?merge .type.ifeq('name') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary name"><small><?merge .name ?></small></label>
+                                                <div class="input-group col-md-8">
+                                                    <input type="text" class="form-control input-sm value" data-type="name" name="[?merge .name ?]" />
+                                                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                                                </div>
+                                            </div>
+
+                                            <?merge .type.ifeq('boolean') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary name"><small><?merge .name ?></small></label>
+                                                <div class="input-group col-md-8">
+                                                    <input type="checkbox" class="form-control input-sm value" data-type="boolean" name="[?merge .name ?]" data-toggle="toggle"/>
+                                                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                                                </div>
+                                            </div>
+
+                                            <?merge .type.ifeq('number') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary name"><small><?merge .name ?></small></label>
+                                                <div class="input-group col-md-8">
+                                                    <input type="number" class="form-control input-sm value" data-type="number" name="[?merge .name ?]" />
+                                                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                                                </div>
+                                            </div>
+
+                                            <?merge .type.ifeq('date') ?>
+                                            <div class="form-group">  
+                                                <label class="col-md-3 control-label text-primary name"><small><?merge .name ?></small></label>
+                                                <div class="input-group col-md-8">
+                                                    <input type="text" class="form-control input-sm datePicker value" data-type="date" name="[?merge .name ?]" />
+                                                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                                                </div>
+                                            </div>
+
+                                            <?merge .type.ifeq('text') ?>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label text-primary name"><small><?merge .name ?></small></label>
+                                                <div class="input-group col-md-8">
+                                                    <textarea class="form-control input-sm value" data-type="text" name="[?merge .name ?]"></textarea>
+                                                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?merge acceptUserIndex ?>
+                                <div class="form-group">
+                                    <div class="dropup col-xs-12" id="customFieldAddBtn">
+                                        <button type="button" class="btn btn-sm btn-info pull-right" title="Add field" data-toggle="dropdown">
+                                            &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+                                        </button>
+                                        <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                                            <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                                            <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
+                                            <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+                                            <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
+                                            <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="col-md-5">
+            <div class="pull-right">
+                <button type="button" class="btn btn-warning" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-success" id="modifyBtn">Modify</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="hide">
+    <!-- TEXT VARIABLE -->
+    <div data-translate-catalog="documentManagement/documentMetadata">
+        <span id="date_text">Date</span>
+        <span id="number_text">Number</span>
+        <span id="keyword_text">Keyword</span>
+    </div>
+
+    <!-- ERROR MESSAGE -->
+    <div data-translate-catalog="recordsManagement/message">
+        <span id="fieldLabel_error">You must define all required fields.</span>
+        <span id="customFieldLabel_error">You must define or remove all custom blank fields.</span>
+    </div>
+
+    <div data-translate-catalog="documentManagement/documentMetadata">
+        <!-- CUSTOM TEXT FIELD TEMPLATE -->
+        <div>
+            <div class="form-group" id="customTextFieldTemplate">
+                <div class="col-md-3">
+                    <input type="text" class="form-control input-sm name" placeholder="Label"/>
+                </div>
+                <div class="input-group col-md-8">
+                    <input type="text" class="form-control input-sm value" placeholder="Text"/>
+                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
+        <div id="customTextareaFieldTemplate">
+           <div class="form-group">
+                <div class="col-md-3">
+                    <input type="text" class="form-control input-sm name" placeholder="Label"/>
+                </div>
+                <div class="input-group col-md-8">
+                    <textarea class="form-control input-sm value" rows="2" placeholder="Text"></textarea>
+                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                </div>
+            </div> 
+        </div>
+        
+        <!-- CUSTOM BOOLEAN FIELD TEMPLATE -->
+        <div id="customBooleanFieldTemplate">
+            <div class="form-group">
+                <div class="col-md-3">
+                    <input type="text" class="form-control input-sm name" placeholder="Label"/>
+                </div>
+                <div class="input-group col-md-8">
+                    <input type="checkbox" class="value"/>
+                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+    // METADATAS
+    $('#customFieldAddBtn').on('click', ".addCustomField", function(e) {
+        e.preventDefault();
+        Metadata.addCustomField($(this));
+    });
+
+    $('#modifyBtn').on('click', function(e) {
+        e.preventDefault();
+        Metadata.send();
+    });
+
+    $('#cancelBtn').on('click', function(e) {
+        load("http://maarchrm/recordsManagement/archives/indexSearchForm");
+    });
+
+    $('#customFields').on('click', '.removeField', function(e) {
+        e.preventDefault();
+        Metadata.removeField($(this));
+    });
+
+    var Metadata = {
+        loadExistingIndexes : function () {
+            var existingIndexes = JSON.parse($("#existingIndexes").val());
+
+            $.each(existingIndexes.fields, function (key, object) {
+                var field = $("#allFields [name="+key+"]:first");
+
+                switch (object.type) {
+                    case "text":
+                    case "name":
+                    case "number":
+                        field.val(object.value);
+                        break;
+                    case "date":
+                        if (field.length != 0) {
+                            field.data("datepicker").setDate(new Date(object.value));
+                        }
+                        break;
+                    case "boolean":
+                        if (field.hasClass("value")) {
+                            if (object.value == 1) {
+                                field.bootstrapToggle('on');
+                            }
+                        } else {
+                            field = field.closest("div");
+                            field.find('.active').removeClass("active");
+                            if (object.value == 1 || object.value == 0) {
+                                field.find('[value="'+object.value+'"]').parent().addClass("active");
+                            } else {
+                                field.find('[value=""]').parent().addClass("active");
+                            }
+                        }
+                        break;
+                    default:
+                        console.log("error on " + key);
+                        return;
+                        break;
+                }
+            });
+        },
+
+        removeField : function(source) {
+            source.closest('.form-group').parent().remove();
+        },
+
+        addCustomField : function(source) {
+            var target = $("#customFields");
+            var template = $('#customTextFieldTemplate').clone();
+            var type = source.attr('data-type');
+
+            var field = null;
+
+            switch (type) {
+                case 'text'   :
+                    template = $('#customTextareaFieldTemplate').clone();
+                    field = template.find('.value');
+                    break;
+                case 'name':
+                    field = template.find('input');
+                    break;
+                case 'number' : 
+                    field = template.find('.value');
+                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
+                    break;
+                case 'date':
+                    field = template.find('.value');
+                    field.attr('placeholder', $('#date_text').text());
+                    field.datepicker({
+                        language:$('#wrapper').attr('lang'),
+                        autoclose:true
+                    });
+                    break;
+                case 'boolean':
+                    var template = $('#customBooleanFieldTemplate').clone();
+                    field = template.find("input").last();
+                    field.bootstrapToggle();
+                    break;
+                default:
+                    console.log("Error invalid type");
+                    return;
+                    break;
+            }
+
+            field.attr('data-type', type);
+            template.removeAttr('id').appendTo(target);
+
+        },
+        
+        serialize : function() {
+            var inputsArchivalProfile = $("#allFields").find("#archivalProfileFields").find('input, textarea, select');
+            var inputsCustom = $("#allFields").find("#customFields").children();
+            var metadatas = new Array();
+            
+            var flagEmptyRequiredField = false;
+            var flagEmptyCustomField = false;
+            
+            $.each(inputsArchivalProfile, function() {
+                var value = $.trim($(this).val());
+                var type = $(this).attr("data-type");
+                
+                if (type == "boolean") {
+                    if (!$(this).parent().hasClass("active")) {
+                        return;
+                    }
+
+                    value = $(this).val();
+                }
+                
+                var name = $(this).attr('name');
+                var required = $(this).attr('data-required');
+
+                if (required == "true" && (value === "" || value === null || value === undefined)) {
+                    flagEmptyRequiredField = true;
+                    $(this).closest(".form-group").addClass('has-error');
+                    return;
+                } else if (required != "true" && (value === "" || value === null || value === undefined)) {
+                    return;
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+
+                /*if ($(this).attr("data-origin") != "user") {
+                    metadatas[name] = value;
+                }*/
+
+                var metadata = {
+                    type : type,
+                    name : name,
+                    value: value
+                }
+
+                metadatas.push(metadata);
+            });
+            
+            $.each(inputsCustom, function() {
+                var valueInput = $(this).find('.value');
+                var labelInput = $(this).find('.name');
+
+                var metadata = {
+                    type : valueInput.data('type'),
+                    name : labelInput.val(),
+                    value: $.trim(valueInput.val())
+                }
+
+                if (metadata.name == "" || metadata.name == undefined || metadata.name == null) {
+                    metadata.name = labelInput.text();
+                }
+
+                if (metadata.type == "boolean") {
+                    metadata.value = valueInput.prop("checked");
+                }
+
+                if (metadata.value === '' || metadata.value == undefined || metadata.value == null || metadata.name == ''|| metadata.name == undefined || metadata.name == null) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    flagEmptyCustomField = true;
+                    return;
+
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+
+                metadatas.push(metadata);
+            });
+            
+            var result = metadatas;
+            
+            if (flagEmptyRequiredField) {
+                result = true
+                gritter.show($('#fieldLabel_error').text(), false);
+            }
+            if (flagEmptyCustomField) {
+                result = true
+                gritter.show($('#customFieldLabel_error').text(), false);
+            }
+
+            return result;
+        },
+        
+        send : function () {
+            var existingIndexes = JSON.parse($("#existingIndexes").val());
+
+            var index = Metadata.serialize();
+            index.push(existingIndexes.fields['archiveId']);
+            index.push(existingIndexes.fields["originatorOrgRegNumber"]);
+            index.push(existingIndexes.fields["docId"]);
+            index.push(existingIndexes.fields["category"]);
+
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsManagement/archive/modifyIndex",
+                data        : JSON.stringify({index : index}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        load('/recordsManagement/archives/indexSearchForm');
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        }
+    }
+
+    $('#app_maarchRM_main').ready(function () {
+        Metadata.loadExistingIndexes();
+    });
+</script>

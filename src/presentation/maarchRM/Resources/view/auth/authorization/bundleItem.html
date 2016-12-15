@@ -1,0 +1,25 @@
+<ul>
+    <li>
+        <span class="root" style="width:40%">
+            <h5> <i class="navIcon fa">&nbsp;</i>
+                <?merge .bundle?>&nbsp;&nbsp;
+                <div style="float:right">
+                    <div class="btn-group" data-toggle="buttons" >
+                        <label class="bundleRadio btn btn-toggle [?merge .granted.then('btn-success active', 'btn-default') ?]">
+                            <?merge .granted @checked ?>
+                            <input type="checkbox" class="bundleRadioBtn" value='[?merge .bundle ?]/*'><i class="fa [?merge .granted.then('fa-link', 'fa-unlink') ?]">&nbsp;</i>
+                        </label>
+                    </div>&nbsp;
+                    <!--input type='checkbox' data-bundleName='[?merge .getName() ?]' class="fullBundleCheck" value='[?merge .getName() ?]/*'-->
+                    <i class="fa fa-caret-down toggleContext" style="[?merge .granted.then('', 'visibility:collapse') ?]">&nbsp;</i>
+                </div>
+                <div class='contextArea' style="display:none">
+                    <br/>
+                    <textarea style="color:black"><?merge .context ?></textarea>
+                </div>
+            </h5>
+        </span>
+        <ul>
+        </ul>
+    </li>
+</ul>

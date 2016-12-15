@@ -1,0 +1,58 @@
+# digitalResource/repository
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Repository"
+msgstr "Dépôt"
+
+msgid "repositorie(s)"
+msgstr "dépôt(s)"
+
+msgid "Repositories management"
+msgstr "Sites de dépôt"
+
+msgid "Repository name"
+msgstr "Nom du site"
+
+msgid "Repository type"
+msgstr "Type"
+
+msgid "Repository uri"
+msgstr "Chemin"
+
+msgid "Edit a repository"
+msgstr "Modifier un dépôt"
+
+msgid "Edit a new repository"
+msgstr "Déclarer un dépôt"
+
+msgid "Repository parameters"
+msgstr "Paramètres"
+
+msgid "Repository options"
+msgstr "Options"
+
+msgid "Repository created"
+msgstr "Site de dépôt créé"
+
+msgid "Repository updated"
+msgstr "Site de dépôt modifié"
+
+msgid "Service not found."
+msgstr "Service non trouvé"
+
+msgid "Add a repository"
+msgstr "Ajouter un site de dépôt"
+
+msgid "Repository name is empty"
+msgstr "Le nom du dépôt est vide"
+
+msgid "Repository type is emty"
+msgstr "Le type dépôt est vide"
+
+msgid "Repository Uri is empty"
+msgstr "L'URI du dépôt est vide"
+
+msgid "Reference"
+msgstr "Référence"
+

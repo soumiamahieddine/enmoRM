@@ -1,0 +1,43 @@
+<div data-translate-catalog="recordsManagement/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h2>Archive integrities</h2>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div>
+            <span><strong><?merge archives["count"] ?></strong> archives check</span>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <th>Archive identifier</th>
+                    <th>Result</th>
+                </thead>
+                <tbody>
+                    <div>
+                        <?merge archives['success'] ?>
+                        <tr class="success">
+                            <td><?merge . ?></td>
+                            <td>
+                                <span class="fa fa-check"></span>
+                            </td>
+                        </tr>
+                        <?merge archives['error'] ?>
+                        <tr class="danger">
+                            <td><?merge . ?></td>
+                            <td>
+                                <span class="fa fa-close"></span>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+</div>

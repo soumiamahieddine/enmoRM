@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4><?merge digitalResources.count() ?> Results</h4>
+                </div>
+                <div class="pull-right btn-group">
+                    <button type="button" role='button' id="export" class="btn btn-info" title="Export"><i class="fa fa-download"></i> Export</button>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table dataTable">
+                    <thead>
+                        <tr>
+                            <th>File name</th>
+                            <th>File extension</th>
+                            <th>Mime type</th>
+                            <th>PUID</th>
+                            <th>Size</th>
+                            <th>Created</th>
+                            <th>createdBy</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge digitalResources ?>
+                        <tr>
+                            <td><?merge .fileName ?></td>
+                            <td><?merge .fileExtension ?></td>
+                            <td><?merge .mimetype ?></td>
+                            <td><?merge .puid ?></td>
+                            <td><?merge .size ?></td>
+                            <td><?merge .created ?></td>
+                            <td><?merge .createdBy ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-success btn-sm" data-viewer='[?merge .resId?]' title="View"><span class="fa fa-eye"></span>&nbsp;View</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

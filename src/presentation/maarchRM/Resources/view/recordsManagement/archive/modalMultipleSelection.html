@@ -1,0 +1,68 @@
+<div class="modal fade bs-example-modal-lg" id="multipleSelectionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div data-translate-catalog="recordsManagement/messages">
+                <div style="display:none">
+                    <span id="mtext_freeze">Freeze</span>
+                    <span id="mtext_unfreeze">Unfreeze</span>
+                    <span id="mtext_flagForRestitution">Flag for restitution</span>
+                    <span id="mtext_validateRestitution">Validate restitution</span>
+                    <span id="mtext_cancelRestitution">Cancel restitution</span>
+                    <span id="mtext_flagForDestruction">Flag for destruction</span>
+                    <span id="mtext_cancelDestruction">Cancel destruction</span>
+                </div>
+                <div class="container-fluid">
+                    <div class="page-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h3 id="multipleSelectionModal_title"></h3>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="sidebarModal" class="sidebar-offcanvas col-sm-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4><span data-translate-context="validationModal"></span><strong id="multipleSelectionModal_selected" style="color:red"></strong> <span data-translate-context="validationModal">archives selected.</span></h4>
+                                <h4><span data-translate-context="validationModal">The modification will be applied on </span><strong id="multipleSelectionModal_relevant" style="color:red"></strong> <span data-translate-context="validationModal">archives.</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="multipleSelectionModal_validate" class="btn btn-success" data-dismiss="modal" title="Ok"><i class="fa fa-check">&nbsp;</i>OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#multipleSelectionModal_validate").on('click', function () {
+        $.ajax({
+            url         : $(this).data('action'),
+            type        : "PUT",
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    $('#archive_search').click();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    })
+
+multipleSelectionModal = {
+    load: function(action, selected, relevant, title) {
+        $('#multipleSelectionModal_validate').data('action', action);
+        $('#multipleSelectionModal_selected').html(selected);
+        $('#multipleSelectionModal_relevant').html(relevant);
+        $('#multipleSelectionModal_title').html($('#mtext_'+title).html());
+
+        $('#multipleSelectionModal').modal();
+    }
+}
+</script>

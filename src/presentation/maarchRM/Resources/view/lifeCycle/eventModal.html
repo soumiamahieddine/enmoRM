@@ -1,0 +1,141 @@
+<div class="modal fade" id="showEvent" tabindex="-1" role="dialog" aria-labelledby="event" aria-hidden="true" data-translate-catalog="lifeCycle/messages">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h3>Event</h3>
+                </div>
+                <div class="modal-body" id="eventModalContent">
+                    <div class="row">
+                        <dl class="dl-horizontal" id="eventData">
+                            <dt>Identifier</dt><dd name='eventId'></dd>
+                            <dt>Type</dt><dd name="eventType"></dd>
+                            <dt>Timestamp</dt><dd name="timestamp"></dd>
+                            <dt name="objectClass"></dt><dd name="objectId"></dd>
+                            <dt>Account name</dt><dd name="accountId"></dd>
+                            <dt>Operation result</dt><dd name="operationResult"></dd>
+                        </dl>
+                    </div>
+
+                    <div class="row">
+                        <dl class="dl-horizontal" id="eventDescription">
+                            <dt>Description</dt><dd name="description"></dd>
+                        </dl>
+                    </div>
+
+                    <div class="row hide" id="eventCertificate">
+                        <div class="col-xs-offset-1">
+                            <button type="button" class="btn btn-warning" id="showEventCertificate" title="Certificate"><i class="fa fa-eye">&nbsp;</i>Certificate</button>
+                        </div>
+                        <br/>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel panel-default col-md-10 col-md-offset-1">
+                            <div class="panel-body">
+                                <dl id="eventInfo">
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span id="success_text" class="hide"><span class="text-success">Success</span></span>
+    <span id="failure_text" class="hide"><span class="text-danger">Failure</span></span>
+</div>
+
+<div class="modal fade" id="certificateModal" tabindex="-1" role="dialog" aria-labelledby="event" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="certificateContent">
+        </div>
+    </div>
+</div>
+
+<script>
+
+$('#showEventCertificate').on('click', function(){
+    eventCertificate.load($(this).data('url'));
+})
+
+eventInfo = {
+    load: function(eventId) {
+        $.ajax({
+            type        : "GET",
+            url         : "/lifeCycle/event/" + eventId,
+            dataType    : 'json',
+            success     : function (response) {
+                if (response.operationResult) {
+                    response.operationResult = $('#success_text').html();
+                } else {
+                    response.operationResult = $('#failure_text').html();
+                }
+
+                var element = $('#eventData').find('dt[name], dd[name]');
+                $.each(element, function() {
+                    var e = $(this)
+                    var name = e.attr('name');
+
+                    e.html(response[name]);
+                    delete response[name];
+                });
+
+                $('#eventDescription').find('[name="description"]').html(response.description);
+                delete response.description;
+
+                $('#eventCertificate').addClass('hide');
+                /*if (response.certificateClass && response.certificateId) {
+                    var url = '/' + response.certificateClass + '/certificate/' + response.certificateId;
+                    $('#eventCertificate').removeClass('hide');
+                    $('#showEventCertificate').data('url', url);
+
+                    delete response.certificateClass;
+                    delete response.certificateId;
+                }*/
+
+                var eventInfo = $('#eventInfo');
+                eventInfo.html('');
+                $.each(response, function(key, value) {
+                    console.log(value);
+                    if (value != "") {
+                        $('<dt></dt>').text(key).appendTo(eventInfo);
+                        $('<dd></dd>').text(value).css('word-break', 'break-all').appendTo(eventInfo);
+                    } else {
+                        console.log("cocuou");
+                    }
+                })
+
+                $('#showEvent').modal();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    }
+}
+
+eventCertificate = {
+    load: function(url) {
+        $.ajax({
+            url         : url,
+            type        : "GET",
+            success     : function (response) {
+                $('#certificateContent').html(response);
+                $('#certificateModal').modal();
+            },
+            error       : function (response) {
+                gritter.show(response.responseText, false);
+            }
+        });
+    }
+}
+
+</script>

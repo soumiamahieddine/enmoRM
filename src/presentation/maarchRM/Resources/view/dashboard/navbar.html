@@ -1,0 +1,264 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" data-translate-catalog translate="no" data-translate-context="layout">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" onclick="load('/', 'HTML_NO_LAYOUT')">
+                <img class="img-responsive pull-left" style="max-width:32px; max-height:32px;" src="[?merge .logo ?]"/>
+                &nbsp; 
+                <span style='font-family:electrolize;'>
+                    <?merge .navbarTitle ?>
+                    <span style='[?merge .["style"] ?]'><?merge .["value"] ?></span>
+                    
+                    <?merge .navbarTitle.not() ?>
+                    <span><span style='font-size:44px;'>m</span><span style='font-size:32px; font-weight:bold;'>aarch R</span><span style='font-size:44px;'>m</span></span>
+                </span>
+            </a>
+
+        </div>
+        <ul class="nav navbar-nav navbar-right hidden-xs">
+            <?merge .positions.count().ifgt(0) ?>
+            <li class="dropdown" >
+                <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
+                    <i class="fa fa-sitemap fa-fw" ></i>&nbsp;<span name="currentOrganization" ><?merge .currentOrganization.displayName ?></span>&nbsp;&nbsp;<?merge .positions.count().ifgt(1) ?><i class="fa fa-caret-down"></i>
+                </a>
+                <?merge .positions.count().ifgt(1) ?>
+                <ul class="dropdown-menu dropdown-user">
+                    <?merge .positions ?>
+                    <li>
+                        <a onclick="load('#')" name="selectOrg" data-orgid="[?merge .orgId?]">
+                            <span name="selectedOrgUnit"><?merge .organization.orgName ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown" id="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')" id="dropUsers">
+                    <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                    <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li>
+                        <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
+                            <i class="fa fa-user fa-fw"></i> Profile
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a onclick="load('/user/logout')" translate="yes">
+                            <i class="fa fa-sign-out fa-fw"></i> Logout 
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script>
+    /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
+
+    function load(url, data)
+    {
+        var loading = false;
+
+        if (url == "#") {
+            return;
+        }
+        
+        setTimeout(function () {
+            if (!loading) {
+                $("#loadingModal").css('display', '');
+            }
+        }, 300);
+
+        $("#app_maarchRM_main").empty();
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            dataType: 'html',
+            success: function (response) {
+                loading = true;
+                // Avoid multiple script src requests  
+                window.history.pushState({"html": response.html}, "", url);
+                $('#app_maarchRM_main').html(response)
+                    .find('script').each(function () {
+                        if ($('script[src="' + $(this).attr("src") + '"]').length) {
+                            $(this).remove();
+                        }
+                    })
+                    .find('link').each(function () {
+                        if ($('link[href="' + $(this).attr("href") + '"]').length) {
+                            $(this).remove();
+                        }
+                    });
+
+                $("#loadingModal").css('display', 'none');
+            }
+        });
+    }
+
+    function back(url, data)
+    {
+        if (url == "#") {
+            return;
+        }
+        if (url.indexOf("#") > 0) {
+            return;
+        }
+
+        $("#loadingModal").show();
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            dataType: 'html',
+            async: false,
+            success: function (response) {
+                var $html = $('<div/>').html(response);
+                $html.find('script').each(function () {
+                    if ($('script[src="' + $(this).attr("src") + '"]').length) {
+                        $(this).remove();
+                    }
+                });
+                $html.find('link').each(function () {
+                    if ($('link[href="' + $(this).attr("href") + '"]').length) {
+                        $(this).remove();
+                    }
+                });
+
+                $('#app_maarchRM_main').empty();
+
+                $('#app_maarchRM_main').append($html);
+                $("#loadingModal").hide();
+
+            }
+        });
+    }
+
+    function ajax(button, request, timeout) {
+        
+        var icon = null;
+        var activeButtons = $('.btn').not('[disabled]');
+
+        if (button) {
+            icon = button.find('.fa').attr('class');
+        }
+
+        if (!timeout) {
+            timeout = 500;
+        }
+
+        var beforeSend = request.beforeSend;
+        request.beforeSend = function() {
+            if (beforeSend) {
+                beforeSend();
+            }
+            
+            activeButtons.prop('disabled', true);
+            if (icon) {
+                button.find('.fa').removeClass(icon).addClass('fa fa-spinner fa-spin');
+            }
+        }
+
+        var ajaxComplete = request.complete;
+        request.complete = function() {
+            if (ajaxComplete) {
+                ajaxComplete();
+            }
+                
+            loading = setTimeout(function() {
+                ajaxEnd(activeButtons, button, icon);
+            }, 500);
+        }
+
+        return $.ajax(request);
+    }
+
+    function ajaxEnd(activeButtons, button, icon) {
+        activeButtons.prop('disabled', false);
+        if (icon) {
+            button.find('.fa').removeClass('fa-spinner fa-spin').addClass(icon);
+        }
+    }
+
+    window.onpopstate = function (e) {
+        back(window.location.href);
+    };
+
+    window.onbeforeunload = function (e) {
+    };
+
+    $(document).ready(function () {
+        $('#side-menu').metisMenu();
+
+        // sidebar
+        $(window).bind("load resize", function () {
+            $('#page-wrapper').css('min-height', $(window).height() - 50);
+            if ($(this).width() < 768) {
+                $('div.sidebar-collapse').addClass('collapse');
+            } else {
+                $('div.sidebar-collapse').removeClass('collapse');
+            }
+        });
+
+        $('#showSidebar').fadeOut(0);
+
+        $('[name="selectOrg"]').on('click', function () {
+            var orgId = $(this).attr('data-orgid');
+
+            $('[name="currentOrganization"]').text($(this).find('[name="selectedOrgUnit"]').first().text());
+            $.ajax({
+                type: "PUT",
+                url: "/currentPosition/"+ orgId,
+                async: false
+            });
+
+            var location = window.location.pathname.split('/');
+            location.splice(0, 1);
+            load("/"+location.join("/"));
+        });
+
+        $('[data-currentuserid]').on('click', function () {
+            load('/myProfile');
+        });
+    });
+    $(document).on("click", '#hideSidebar', function () {
+        $("#sidebar-wrapper").fadeOut(200, function () {
+            $("#page-wrapper").animate({marginLeft: '0px'}, 250, function () {
+                $('#showSidebar').fadeIn();
+            });
+        });
+    });
+
+    $(document).on("click", '#showSidebar', function () {
+        $('#showSidebar').fadeOut();
+        $("#page-wrapper").animate({marginLeft: '250px'}, 250, function () {
+            $("#sidebar-wrapper").fadeIn();
+        });
+    });
+
+    //Haut, haut, bas, bas, gauche, droite, gauche, droite, B, A
+    var k = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    var n = 0;
+    $(document).keydown(function (e) {
+        if (e.keyCode === k[n++]) {
+            if (n === k.length) {
+                n=0;
+                $(this).raptorize({
+                    'enterOn' : 'timer', //timer, konami-code, click
+                    'delayTime' : 1000 //time before raptor attacks on timer mode
+                });
+                
+                return !1;
+            }
+        } else
+            k = 0;
+    });
+
+</script>

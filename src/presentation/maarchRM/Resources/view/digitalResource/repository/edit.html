@@ -1,0 +1,234 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div data-translate-catalog="digitalResource/repository">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-hdd-o"></i>
+                <?merge repository.repositoryId.ifeq('') ?><span>Edit a new repository</span>
+                <?merge repository.repositoryId.ifne('') ?><span>Edit a repository</span>
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-6">
+            <?merge repository ?>
+            <form id="repositoryForm" class="form-horizontal" role="form">
+                <input class="hide" name="repositoryId"/>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="repositoryName">Name <span style="color: red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Name" name="repositoryName"/>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="repositoryReference">Reference <span style="color: red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Reference" name="repositoryReference"/>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="repositoryType">Type<span style="color: red">*</span></label>
+                    <div class="col-sm-8">
+                        <!--input type="text" class="form-control" placeholder="Type" name="repositoryType" id="repositoryType" /-->
+                        <select class="form-control" name="repositoryType" id='repositoryType'>
+                            <option value="" >...</option>
+                            <?merge repositoryTypes ?>
+                            <option value="[?merge . ?]"><?merge . ?></option>
+                        </select>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="repositoryUri">Uri<span style="color: red">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Uri" name="repositoryUri"/>
+                    </div>    
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="maxSize">Size</label>
+                    <div class="col-sm-5">
+                        <div class="input-group col-xd-12">
+                            <input type="number" class="form-control" placeholder="Size" name="maxSize" />
+                            <span class="input-group-addon">Gb</span>
+                        </div>    
+                    </div>    
+                </div>           
+            </form>
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Repository options</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <input type="text" class="form-control input-sm" placeholder="Name" id="optionName"/>                        
+                                </th>
+                                <th>
+                                    <input type="text" class="form-control input-sm" placeholder="Value" id="optionValue"/>    
+                                </th>
+                                <th style="vertical-align:middle;">
+                                    <button type='button' id="addOption" class="btn btn-primary btn-sm" title="Add option"><i class="fa fa-plus"></i></button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="options" data-form-ns="parameters">
+                            <?merge repository.parameters.bool() ?>
+                        <div>
+                            <?merge repository.parameters ?>
+                            <tr>
+                                <td>&nbsp;<?merge .paramName ?></td>
+                                <td>&nbsp;<?merge .paramVal ?></td>
+                                <td >
+                                    <button class="btn btn-danger btn-sm deleteOption" type="button" title="Delete"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+                    <div style="display:none">
+                        <span id="empty_text">The fields with a star are compulsory.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <br/>
+            <div class="pull-right">
+                <button type="button" id="cancel" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                <button type="button" id="validateForm" class="btn btn-success" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class='hide'>
+        <span id="delete_text">Delete</span>
+        <span id="emptyField_text">The fields with a star are compulsory.</span>
+    </div>
+</div>
+
+
+
+<script>
+
+    // Repository form
+    $('#validateForm').on('click', function () {
+        RepositoryForm.validateForm();
+    });
+    $('#cancel').on('click', function () {
+        load("/repositories");
+    });
+
+    // Options
+    $('#addOption').on('click', function () {
+        RepositoryForm.addOption();
+    });
+
+    $('#options').on('click', '.deleteOption', function () {
+        RepositoryForm.removeOption($(this));
+    });
+
+    var RepositoryForm = {
+
+        validateForm : function() {
+            var repositoryObject = this.serialize();
+            var type = 'POST';
+            var repositoryId = "";
+
+            if (!repositoryObject.repositoryName 
+                || !repositoryObject.repositoryReference 
+                || !repositoryObject.repositoryType
+                || !repositoryObject.repositoryUri) {
+             
+                gritter.show($('#emptyField_text').html(),false);
+
+                return -1;
+            }
+
+            if (repositoryObject.repositoryId) {
+                repositoryId = '/'+repositoryObject.repositoryId;
+                type = 'PUT';
+            }
+
+            $.ajax({
+                type        : type,
+                url         : '/repository'+repositoryId,
+                data        : JSON.stringify({repository: repositoryObject}),
+                dataType    : 'json',
+                contentType : 'application/json',
+                async       : false,
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status == true) {
+                        load("/repositories");
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+
+        },
+
+        serialize : function() {
+            var repositoryObject = {};
+            var options=[];
+            var inputs = $('#repositoryForm').find('input, select');
+            var optionLines = $('#options').find('tr');
+
+            $.each(inputs, function() {
+                repositoryObject[$(this).attr('name')] = $(this).val();
+            })
+
+            $.each(optionLines, function() {
+                var option = {
+                    paramName : $(this).find('td:nth-child(1)').html(),
+                    paramVal : $(this).find('td:nth-child(2)').html(),
+                }
+
+                options.push(option);
+            })
+
+            repositoryObject.parameters = options;
+
+            return repositoryObject;
+        },
+
+        addOption: function() {
+            var name = $('#optionName').val();
+            var value = $('#optionValue').val();
+
+            if (name && value) {
+                $('<tr/>').append($('<td/>').html(' ' + name))
+                    .append($('<td/>').html(' ' + value))
+                    .append($('<td/>').append($('<button/>').addClass('btn btn-danger btn-sm deleteOption')
+                                          .attr('type', 'button')
+                                          .attr('title', $('#delete_text').html())
+                                          .append($('<i/>').addClass('fa fa-trash'))))
+                    .prependTo($('#options'));
+
+                $('#optionName').val('');
+                $('#optionValue').val('');
+            }
+
+        },
+
+        removeOption: function(e) {
+            e.closest('tr').remove();
+        }
+    }
+    
+
+
+</script>

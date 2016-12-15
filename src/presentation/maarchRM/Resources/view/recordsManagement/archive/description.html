@@ -1,0 +1,53 @@
+<div data-translate-catalog="recordsManagement/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h3>Archive</h3>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active">
+                <a href="#informationsTab" data-toggle="tab">Information</a>
+            </li>
+            <?merge archive.descriptionObject.bool() ?>
+            <li>
+                <a href="#descriptionTab" data-toggle="tab">Description</a>
+            </li>
+            <?merge archive.document.count().bool() ?>
+            <li>
+                <a href="#documentsTab" data-toggle="tab">Document(s)</a>
+            </li>
+            <li>
+                <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
+            </li>
+            <?merge archive.relationships.bool() ?>
+            <li>
+                <a href="#relationshipTab" data-toggle="tab">Relationships</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="informationsTab">
+                <?hinclude recordsManagement/archive/managementInfo.html ?>
+            </div>
+            <div class="tab-pane" id="descriptionTab" style="padding:14px">
+                <!-- Custom description object will be displayed here -->
+            </div>
+            <div class="tab-pane" id="documentsTab" style="padding:14px">
+                <?hinclude recordsManagement/archive/documents.html ?>
+            </div>
+            <div class="tab-pane" id="lifeCycleTab" style="padding:14px">
+                <?hinclude recordsManagement/archive/lifeCycle.html ?>
+            </div>
+            <div class="tab-pane" id="relationshipTab" style="padding:14px">
+                <?hinclude recordsManagement/archive/relationships.html ?>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+</div>

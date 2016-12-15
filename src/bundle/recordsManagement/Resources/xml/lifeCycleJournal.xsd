@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xsd:schema 
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+  elementFormDefault='qualified'>
+
+    <!-- Life Cycle Journal -->
+    <xsd:element name='journal' type='journalType' />
+
+    <xsd:complexType name='journalType'>
+        <xsd:sequence>
+            <xsd:element ref='previousJournal' minOccurs='0' />
+            <xsd:element ref='lifeCycleEvent' minOccurs='0' maxOccurs='unbounded' />
+        </xsd:sequence>
+        <xsd:attribute name='created' type='xsd:date' use='required'/>
+        <xsd:attribute name='id' type='xsd:string' use='required'/>
+    </xsd:complexType>
+
+    <xsd:element name='previousJournal' type='previousJournalType'>
+        <xsd:sequence>
+            <xsd:element name='hash' type="hashType" />
+        </xsd:sequence>
+        <xsd:attribute name='uri' type='xsd:string' use='required'/>
+        <xsd:attribute name='id' type='xsd:string' use='required'/>
+    </xsd:element>
+    
+    <!-- Life Cycle Event -->
+    <xsd:element name='event' type='eventType' />
+
+    <xsd:complexType name='eventType'>
+        <xsd:choice>
+            <xsd:element name='deposit' type='depositType' />
+        </xsd:choice>
+        <xsd:attribute name='date' type='xsd:date' use='required'/>
+        <xsd:attribute name='type' type='xsd:string' use='required'/>
+        <xsd:attribute name='id' type='xsd:string' use='required'/>
+    </xsd:complexType>
+    
+      
+    <!-- Types -->
+	<xsd:complexType name='hashType'>
+		<xsd:simpleContent>
+			<xsd:extension base='xsd:base64Binary'>
+				<xsd:attribute name='algorithm' type='xsd:string' use='required' />
+			</xsd:extension>			
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+</xsd:schema>

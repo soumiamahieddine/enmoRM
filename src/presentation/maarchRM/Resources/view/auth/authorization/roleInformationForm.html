@@ -1,0 +1,52 @@
+<div id="user_RoleContain" data-publicarchive="[?merge publicArchive ?]" data-roles="[?merge user.roles ?]">
+    <form class="">
+        <div class="row">
+                <div class="col-md-12">
+                    <br/>
+                    <label>Role</label>
+                    <?merge publicArchive.ifeq('') ?>
+                    <div class="form-group">
+                        <div class="list-group" id="listRoles">
+                            <?merge roles ?>
+                            <a class="list-group-item" data-id="[?merge .roleId ?]"><?merge .roleName ?></a>
+                        </div>
+                    </div>
+                    <?merge publicArchive.ifeq('1') ?>
+                    <div class="form-group">
+                        <select class="form-control" name="role" id="role" data-role="[?merge user.roles[0].roleId ?]">
+                            <option value="">Select a role</option>
+                            <?merge roles ?>
+                            <option value="[?merge .roleId ?]"><?merge .roleName ?></option>
+                        </select>
+                    </div>
+                </div>
+        </div>
+        <span class="hide" id="remove_text">Remove</span>
+    </form>
+</div>
+
+<script>
+    $('#user_RoleContain').ready(function() {
+        roles = $('#user_RoleContain').data("roles");
+        if (roles) {
+            if (!$("#user_RoleContain").attr('data-publicarchive')) {
+                 $.each(roles,function (index, value) {
+                     if($('#listRoles').find("[data-id='" + value.roleId + "']").length > 0 ) {
+                         $('#listRoles').find("[data-id='" + value.roleId + "']").addClass('active');
+                     }
+                 });
+            } else {
+                $("#user_RoleContain option[value='" + roles[0].roleId + "']").prop('selected',true);
+            }
+        }
+    });
+    
+    $('#listRoles').on('click', 'a', function(){
+       var a = $(this);
+       if( !a.hasClass('active')) {
+            a.addClass('active'); 
+        } else {
+            a.removeClass('active');
+        }
+    });
+</script>

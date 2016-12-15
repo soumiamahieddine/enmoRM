@@ -1,0 +1,110 @@
+<div id="contain" >
+    <div data-translate-catalog="batchProcessing/messages">
+        <div class="container-fluid">
+            <div class="page-header">
+                <h1>
+                    <i class="fa fa-qrcode"></i>
+                    <?merge task.taskId.bool().not() ?>
+                    <span>New task</span>
+                    <?merge task.taskId.bool() ?>
+                    <span>Edit a task </span>
+                </h1>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <?merge task ?>
+            <form class="form-horizontal">
+                <div class="row">
+                    <input type="hidden" id="taskId" name="taskId">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Route <span style="color: red">*</span></label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="route" name="route" placeholder="Route">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Description <span style="color: red">*</span></label>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="description" name="description" placeholder="description" style="resize: none; resize: vertical"></textarea>
+                            </div>
+                        </div>
+                    </div>               
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer clearfix">
+            <div class="pull-right">
+                
+                <button type="button" id="taskCancelBtn" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                <?merge task.taskId.bool().not() ?>
+                <button type="button" id="add" class="btn btn-success" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                <?merge task.taskId.bool() ?>
+                <button type="button" id="save" class="btn btn-success" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script>
+    $("#taskCancelBtn").on("click", function (){
+        load('/Batchprocessing/tasks');
+    });
+
+    //save
+    $("#contain").on('click', '#save', function () {
+        var parameters = {
+            task : serialize()
+        };
+
+        sendRequest('/Batchprocessing/task/' + parameters.task.taskId, 'PUT', parameters, $(this));
+    });
+    
+    //add
+    $("#contain").on('click', '#add', function () {
+        var parameters = {
+            task : serialize()
+        };
+
+        sendRequest('/Batchprocessing/task', 'POST', parameters, $(this));
+    });
+
+    function sendRequest(url, type, data, button) {
+        if (data.task.route == "" || data.task.description == "") {
+            gritter.show($('#empty_text').html(), false);
+            return;
+        }
+
+        ajax(button, {
+            url: url,
+            type: type,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType : 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load("/Batchprocessing/tasks");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    }
+
+    function serialize() {
+        serializedObject = {
+            taskId: $('#taskId').val(),
+            route: $('#route').val(),
+            description: $('#description').val()
+        }
+
+        return serializedObject;
+    }
+</script>

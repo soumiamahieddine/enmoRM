@@ -1,0 +1,84 @@
+# recordsManagement/retentionRule
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Retention rules"
+msgstr "Tableau de gestion"
+
+msgid "Retention rule"
+msgstr "Règle de conservation"
+
+msgid "Add a retention rule"
+msgstr "Ajouter une règle"
+
+msgid "rule(s)"
+msgstr "règle(s)"
+
+msgid "Edit retention rule"
+msgstr "Edition de la règle de rétention"
+
+msgid "Delete the retention rule"
+msgstr "Supprimer la règle"
+
+msgid "Update the retention rule"
+msgstr "Modifier la règle"
+
+msgid "Are you sure to modify this retention rule ?"
+msgstr "Etes-vous sure de vouloir modifier la règle de rétention ?"
+
+msgid "Are you sure to delete this retention rule ?"
+msgstr "Etes-vous sure de vouloir supprimer la règle de rétention ?"
+
+msgid "Retention rule code"
+msgstr "Code de la règle"
+
+msgid "Retention duration"
+msgstr "Durée de rétention"
+
+msgid "Final disposition"
+msgstr "Sort final"
+
+msgid "Label"
+msgstr "Titre"
+
+msgid "Days"
+msgstr "Jours"
+
+msgid "Months"
+msgstr "Mois"
+
+msgid "Years"
+msgstr "Années"
+
+msgid "Preservation"
+msgstr "Conservation"
+
+msgid "Unlimited"
+msgstr "Illimité"
+
+msgid "Retention rule created."
+msgstr "Règle ajoutée."
+
+msgid "Retention rule updated."
+msgstr "Règle modifiée."
+
+msgid "Retention rule deleted."
+msgstr "Règle supprimée."
+
+msgid "Retention rule not deleted."
+msgstr "Règle non supprimée."
+
+msgid "The operation could not be completed because the retention rule doesn't exist."
+msgstr "Suppression impossible! La règle n'existe pas."
+
+msgid "Y"
+msgstr "an(s)"
+msgctxt "duration"
+
+msgid "M"
+msgstr "mois"
+msgctxt "duration"
+
+msgid "D"
+msgstr "jour(s)"
+msgctxt "duration"

@@ -1,0 +1,70 @@
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="lifeCycle/messages">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-newspaper-o"></i>
+                Life cycle journals
+            </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row" data-translate-catalog="lifeCycle/messages">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge journals.count() ?> result(s)</h4>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Opening timestamp</th>
+                                    <th>Closing timestamp</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge journals ?>
+                                <tr>
+                                    <td><?merge .timestamp ?></td>
+                                    <td><?merge .closingTimestamp ?></td>
+                                    <td>
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="btn btn-warning btn-sm openJournal" title="Open the journal" data-journal-id="[?merge .journalId ?]"><span class="fa fa-fw fa-eye">&nbsp;</span></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Journal modal-->
+        <div class="modal fade bs-example-modal-lg" id="journalModal" tabindex="-1" role="dialog" aria-labelledby="journalModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" id="journalModal_container">
+                </div>
+            </div>
+        </div>  
+
+    </div>
+</div>
+
+<script>
+    $('#contain').on('click', '.openJournal', function(){
+        ajax($(this), {
+            type: 'GET',
+            url: '/journal/'+$(this).data('journal-id')+'/0',
+            dataType: 'html',
+            success: function (response) {
+                $('#journalModal_container').html(response);
+                $('#journalModal').modal();
+            }
+        });
+    })
+</script>

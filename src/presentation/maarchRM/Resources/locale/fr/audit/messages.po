@@ -1,0 +1,1296 @@
+# audit/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "audit"
+msgstr "Journal de l'application"
+msgctxt "bundle"
+
+msgid "displayEntries"
+msgstr "Affichage des entrées"
+msgctxt "interface"
+
+msgid "entry"
+msgstr "Entrées"
+msgctxt "model"
+
+msgid "entryInfo"
+msgstr "Informations sur les entrées"
+msgctxt "model"
+
+msgid "entryRelationship"
+msgstr "Relation entre les entrées"
+msgctxt "model"
+
+msgid "entryType"
+msgstr "Types d'entrée"
+msgctxt "model"
+
+msgid "audit"
+msgstr "Piste d'audit"
+
+msgid "Entry origin"
+msgstr "Origine de l'entrée"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "User :"
+msgstr "Utilisateur :"
+
+msgid "Object class :"
+msgstr "Classe de l'objet :"
+
+msgid "Object identifier :"
+msgstr "Identifiant de l'objet :"
+
+msgid "Audit search"
+msgstr "Événements de l'application"
+
+msgid "Entry date to"
+msgstr "Date d'entrée du"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "from"
+msgstr "au"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Entry type"
+msgstr "Type d'entrée"
+
+msgid "User identifier"
+msgstr "Identifiant utilisateur"
+
+msgid "Object class"
+msgstr "Classe de l'objet"
+
+msgid "Object identifier"
+msgstr "Identifiant de l'objet"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "result(s)"
+msgstr "résultat(s)"
+
+msgid "Entry date"
+msgstr "Date d'entrée"
+
+msgid "Entry"
+msgstr "Entrée"
+
+msgid "Select an object class"
+msgstr "Sélectionner une classe d'objet"
+
+msgid "Select an entry type"
+msgstr "Sélectionner un type d'entrée"
+
+msgid "Read"
+msgstr "Lecture"
+
+msgid "Create"
+msgstr "Création"
+
+msgid "Event type"
+msgstr "Type d'événement"
+
+msgid "Event"
+msgstr "Evénement"
+
+msgid "Account"
+msgstr "Compte"
+
+msgid "Select an event"
+msgstr "Sélectionnez un événement"
+
+msgid "Input"
+msgstr "Entrée"
+
+msgid "Output"
+msgstr "Sortie"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Errors"
+msgstr "Erreur"
+
+msgid "all"
+msgstr "Tous"
+
+msgid "noErrors"
+msgstr "Succès"
+
+msgid "errors"
+msgstr "Erreur"
+
+msgid "Wording"
+msgstr "Libellé"
+
+msgid "Search term"
+msgstr "Terme"
+
+msgid "Term"
+msgstr "Terme"
+
+msgid "recordsManagement/accessRule/readIndex"
+msgstr "Lecture des règles de communicabilité"
+
+msgid "recordsManagement/accessRule/read_code_"
+msgstr "Lecture d'une règle de communicabilité"
+
+msgid "recordsManagement/accessRule/create"
+msgstr "Création d'une règle de communicabilité"
+
+msgid "recordsManagement/accessRule/update"
+msgstr "Modification d'une règle de communicabilité"
+
+msgid "recordsManagement/accessRule/delete_code_"
+msgstr "Suppression d'une règle de communicabilité"
+
+msgid "recordsManagement/archivalProfile/readIndex"
+msgstr "Lecture de tous les profils d'archive"
+
+msgid "recordsManagement/archivalProfile/readNew"
+msgstr "Nouveau profil"
+
+msgid "recordsManagement/archivalProfile/read_archivalProfileId_"
+msgstr "Lecture d'un profil d'archive"
+
+msgid "recordsManagement/archivalProfile/readByreference_reference_"
+msgstr "Lecture d'un profil par sa référence"
+
+msgid "recordsManagement/archivalProfile/readProfiledescription_archivalProfileReference_"
+msgstr "Lecture de la description d'un profil"
+
+msgid "recordsManagement/archivalProfile/create"
+msgstr "Création d'un profil d'archive"
+
+msgid "recordsManagement/archivalProfile/update"
+msgstr "Modification d'un profil d'archive"
+
+msgid "recordsManagement/archivalProfile/delete_archivalProfileId_"
+msgstr "Suppression d'un profil d'archive"
+
+msgid "recordsManagement/archivalProfile/createArchivalprofileUpload_profileReference_"
+msgstr "Téléversement d'un profil"
+
+msgid "recordsManagement/archivalProfile/readExport_profileName_"
+msgstr "Export du fichier de profil"
+
+msgid "recordsManagement/archiveCompliance/readPeriodic"
+msgstr "Vérification périodique de l'intégrité des archives"
+
+msgid "recordsManagement/archiveDescription/read_archiveId_"
+msgstr "Lecture d'une description d'archive"
+
+msgid "recordsManagement/archiveDescription/read_descriptionClass__descriptionId_"
+msgstr "Lecture d'une description d'archive en fonction de sa classe"
+
+msgid "recordsManagement/archive/readDocument_docId_"
+msgstr "Lecture d'information d'un document d'archive"
+
+msgid "recordsManagement/archive/readContents_archiveId_"
+msgstr "Lecture d'un document d'archive"
+
+msgid "recordsManagement/archive/readContentsbydescription_descriptionClass__descriptionId_"
+msgstr "Lecture d'un document d'archive en fonction de sa description"
+
+msgid "recordsManagement/archive/read_archiveId_Exists"
+msgstr "Vérification de l'existence d'une archive"
+
+msgid "recordsManagement/archive/createDeliverybydescription"
+msgstr "Création d'une archive en fonction de sa description"
+
+msgid "recordsManagement/archive/read_archiveId_Retentionrule"
+msgstr "Lecture d'une archive en fonction de sa durée de rétention"
+
+msgid "recordsManagement/archive/readAccessrule_archiveId_"
+msgstr "Lecture d'une règle d'accès en fonction d'une archive"
+
+msgid "recordsManagement/archive/readContentsbyoriginatorarchiveid"
+msgstr "Lecture du contenu par originatorArchiveId"
+
+msgid "recordsManagement/archiveRelationship/newRelationship"
+msgstr "Préparation à la création d'une nouvelle relation"
+
+msgid "recordsManagement/archiveRelationship/createRelationship"
+msgstr "Création d'une relation entre deux archives"
+
+msgid "recordsManagement/archiveRelationship/deleteRelationship"
+msgstr "Suppression d'une relation entre deux archives"
+
+msgid "recordsManagement/archiveRelationship/getByArchiveId"
+msgstr "Lecture d'une relation en fonction d'une archive"
+
+msgid "recordsManagement/archives/read"
+msgstr "Lecture de toutes les archives"
+
+msgid "recordsManagement/archives/updateFreeze"
+msgstr "Gel d'une archive"
+
+msgid "recordsManagement/archives/updateUnfreeze"
+msgstr "Dégel d'une archive"
+
+msgid "recordsManagement/archives/readRetentionrule"
+msgstr "Lecture de toutes les règles de rétention"
+
+msgid "recordsManagement/archives/updateRetentionrule"
+msgstr "Modification d'une règle de rétention"
+
+msgid "recordsManagement/archives/readAccessrule"
+msgstr "Lecture de toutes les règles d'accès"
+
+msgid "recordsManagement/archives/updateAccessrule"
+msgstr "Modification d'une règle d'accès"
+
+msgid "recordsManagement/archives/createDelivery"
+msgstr "Demande de communication d'une archive"
+
+msgid "recordsManagement/archives/updateSetforrestitution"
+msgstr "Paramétrer une archive pour la restitution"
+
+msgid "recordsManagement/archives/updateDisposearchives"
+msgstr "Modification d'un dépôt d'archive"
+
+msgid "recordsManagement/archives/cancelDestruction"
+msgstr "Annuler une destruction"
+
+msgid "recordsManagement/archives/updateDocumentsconversion"
+msgstr "Demande de conversion d'une archive"
+
+msgid "recordsManagement/archives/updateDocumentsconvert_documentId_"
+msgstr "Conversion d'un document"
+
+msgid "recordsManagement/archives/readIntegritycheck"
+msgstr "Vérification d'intégrité de l'archive"
+
+msgid "recordsManagement/descriptionClass/readIndex"
+msgstr "Liste des modèles de description"
+
+msgid "recordsManagement/log/find"
+msgstr "Liste des journaux de l'application"
+
+msgid "recordsManagement/log/read"
+msgstr "Lecture des journaux de l'application"
+
+msgid "recordsManagement/log/create"
+msgstr "Création d'un journal de l'application"
+
+msgid "recordsManagement/log/update"
+msgstr "Modification d'un journal de l'application"
+
+msgid "recordsManagement/log/delete"
+msgstr "Suppression d'un journal de l'application"
+
+msgid "recordsManagement/log/form"
+msgstr "Recherche des journaux de l'application"
+
+msgid "recordsManagement/retentionRule/readIndex"
+msgstr "Lecture de toutes les règles de rétention"
+
+msgid "recordsManagement/retentionRule/create"
+msgstr "Création d'une règle de rétention"
+
+msgid "recordsManagement/retentionRule/read_code_"
+msgstr "Lecture d'une règle de rétention"
+
+msgid "recordsManagement/retentionRule/update"
+msgstr "Modification d'une règle de rétention"
+
+msgid "recordsManagement/retentionRule/delete_code_"
+msgstr "Suppression d'une règle de rétention"
+
+msgid "recordsManagement/serviceLevel/readIndex"
+msgstr "Lecture des différents niveaux de service"
+
+msgid "recordsManagement/serviceLevel/read"
+msgstr "Lecture des différents niveaux de service"
+
+msgid "recordsManagement/serviceLevel/create"
+msgstr "Création d'un niveau de service"
+
+msgid "recordsManagement/serviceLevel/read_serviceLevelId_"
+msgstr "Lecture d'un niveau de service"
+
+msgid "recordsManagement/serviceLevel/update"
+msgstr "Modification d'un niveau de service"
+
+msgid "recordsManagement/serviceLevel/delete_serviceLevelId_"
+msgstr "Suppression d'un niveau de service"
+
+msgid "recordsManagement/serviceLevel/updateSetdefault_serviceLevelId_"
+msgstr "Mettre un niveau de service par défaut"
+
+msgid "documentManagement/fulltext/read"
+msgstr "Lecture fulltext"
+
+msgid "lifeCycle/event/read_eventId_"
+msgstr "Lecture d'un événement du cycle de vie"
+
+msgid "lifeCycle/event/readEventtypelist"
+msgstr "Liste des types d'événement"
+
+msgid "lifeCycle/event/readSearch"
+msgstr "Lecture de tous les événements du cycle de vie"
+
+msgid "lifeCycle/journal/readList"
+msgstr "Lecture de tous les journaux du cycle de vie"
+
+msgid "lifeCycle/journal/read_journalId_"
+msgstr "Lecture d'un journal du cycle de vie"
+
+msgid "lifeCycle/journal/createChainjournal"
+msgstr "Chainage des journaux du cycle de vie"
+
+msgid "lifeCycle/journal/checkIntegrity"
+msgstr "Vérfication de l'intégrité des journaux du cycle de vie"
+
+msgid "medona/archivalAgreement/readIndex"
+msgstr "Lecture de toutes les conventions d'archivage"
+
+msgid "medona/archivalAgreement/readNewagreement"
+msgstr "Préparation d'une création d'une convention d'archivage"
+
+msgid "medona/archivalAgreement/read_archivalAgreementId_"
+msgstr "Lecture d'une convention d'archivage"
+
+msgid "medona/archivalAgreement/create"
+msgstr "Création d'une convention d'archivage"
+
+msgid "medona/archivalAgreement/update"
+msgstr "Modification d'une convention d'archivage"
+
+msgid "medona/archivalAgreement/delete_archivalAgreementId_"
+msgstr "Suppression d'une convention d'archivage"
+
+msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
+msgstr "Liste des bordereaux d'autorisation de communication envoyés"
+
+msgid "medona/archiveAuthorization/readCommunicationincominglist"
+msgstr "Liste des bordereaux d'autorisation de communication reçus"
+
+msgid "medona/archiveAuthorization/readCommunicationcount"
+msgstr "Nombre de bordereaux d'autorisation de communication"
+
+msgid "medona/archiveAuthorization/readDestructionoutgoinglist"
+msgstr "Liste des bordereaux d'autorisation de destruction envoyés"
+
+msgid "medona/archiveAuthorization/readDestructionincominglist"
+msgstr "Liste des bordereaux d'autorisation de destruction reçus"
+
+msgid "medona/archiveAuthorization/readDestructioncount"
+msgstr "Nombre de bordereaux d'autorisation de destruction"
+
+msgid "medona/archiveAuthorization/updateOriginatingagencyrequestacceptance_messageId_"
+msgstr "Validation d'une autorisation par le producteur"
+
+msgid "medona/archiveAuthorization/updateOriginatingagencyrequestrejection"
+msgstr "Rejet d'une autorisation par le producteur"
+
+msgid "medona/archiveAuthorization/updateControlauthorityrequestacceptance_messageId_"
+msgstr "Validation d'une autorisation par l'autorité de contrôle"
+
+msgid "medona/archiveAuthorization/updateControlauthorityrequestrejection"
+msgstr "Rejet d'une autorisation par l'autorité de contrôle"
+
+msgid "medona/archiveAuthorization/read_messageId_"
+msgstr "Lecture d'une demande d'autorisation"
+
+msgid "medona/archiveAuthorization/read_messageId_Export"
+msgstr "Export d'un bordereau d'autorisation"
+
+msgid "medona/archiveAuthorization/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'une pièce jointe d'un bordereau de demande d'autorisation"
+
+msgid "medona/archiveAuthorization/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'une demande d'autorisation"
+
+msgid "medona/archiveAuthorization/readCount"
+msgstr "Nombre de bordereaux d'autorisation"
+
+msgid "medona/archiveAuthorization/readSearch"
+msgstr "Recherche de bordereaux d'autorisation"
+
+msgid "medona/archiveAuthorization/updateArchive"
+msgstr "Archivage des bordereaux d'autorisation"
+
+msgid "medona/archiveAuthorization/update_messageId_Archive"
+msgstr "Archivage d'un bordereau d'autorisation"
+
+msgid "medona/archiveDelivery/readIncominglist"
+msgstr "Liste des bordereaux de demandes de communication reçus"
+
+msgid "medona/archiveDelivery/readOutgoinglist"
+msgstr "Liste des bordereaux de demandes de communication envoyés"
+
+msgid "medona/archiveDelivery/readCount"
+msgstr "Nombre de bordereaux de demande de communication"
+
+msgid "medona/archiveDelivery/updateSendauthorizationrequest_messageId_"
+msgstr "Demande d'autorisation pour une demande de communication"
+
+msgid "medona/archiveDelivery/updateRequestacceptance_messageId_"
+msgstr "Acceptation d'une demande de communication"
+
+msgid "medona/archiveDelivery/updateRequestrejection"
+msgstr "Rejet d'une demande de communication"
+
+msgid "medona/archiveDelivery/updateRequestvalisation_messageId_"
+msgstr "Validation d'une demande de communication"
+
+msgid "medona/archiveDelivery/readSearchoutgoing"
+msgstr "Lecture de toutes les demandes de communication reçues"
+
+msgid "medona/archiveDelivery/updateProcessBatch"
+msgstr "Traitement des demandes de communication"
+
+msgid "medona/archiveDelivery/readValidate"
+msgstr "Lecture de toutes les demandes de communication validées"
+
+msgid "medona/archiveDelivery/read_messageId_"
+msgstr "Lecture d'une demande de communication"
+
+msgid "medona/archiveDelivery/read_messageId_Export"
+msgstr "Export d'une demande de communication"
+
+msgid "medona/archiveDelivery/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'une pièce jointe d'un bordereau de communication"
+
+msgid "medona/archiveDelivery/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'une demande de communication"
+
+msgid "medona/archiveDelivery/readSearch"
+msgstr "Lecture de toutes les demandes de communication reçues"
+
+msgid "medona/archiveDelivery/updateArchive"
+msgstr "Archivage des demandes de communication"
+
+msgid "medona/archiveDelivery/update_messageId_Archive"
+msgstr "Archivage d'une demande de communication"
+
+msgid "medona/archiveDestruction/readIncominglist"
+msgstr "Liste des bordereaux de demande de destruction reçus"
+
+msgid "medona/archiveDestruction/readOutgoinglist"
+msgstr "Liste des bordereaux de demande de destruction envoyés"
+
+msgid "medona/archiveDestruction/readCount"
+msgstr "Nombre de bordereaux de demande de destruction"
+
+msgid "medona/archiveDestruction/updateRequestvalidation_messageId_"
+msgstr "Validation de la demande de destruction"
+
+msgid "medona/archiveDestruction/updateRequestrejection"
+msgstr "Rejet d'une demande de destruction"
+
+msgid "medona/archiveDestruction/updateProcessall"
+msgstr "Traitement des demandes de destruction"
+
+msgid "medona/archiveDestruction/read_messageId_"
+msgstr "Lecture d'une demande de destruction"
+
+msgid "medona/archiveDestruction/read_messageId_Export"
+msgstr "Export d'un bordereau de demande de destruction"
+
+msgid "medona/archiveDestruction/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'une pièce jointe d'un bordereau de destruction"
+
+msgid "medona/archiveDestruction/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'une demande de destruction"
+
+msgid "medona/archiveDestruction/readSearch"
+msgstr "Lecture de toutes les demandes de destruction reçues"
+
+msgid "medona/archiveDestruction/updateArchive"
+msgstr "Archivage des demandes de destruction"
+
+msgid "medona/archiveDestruction/update_messageId_Archive"
+msgstr "Archivage d'une demande de destruction"
+
+msgid "medona/archiveNotification/readList"
+msgstr "Liste des bordereaux de notification"
+
+msgid "medona/archiveNotification/readCount"
+msgstr "Nombre de bordereaux notification"
+
+msgid "medona/archiveNotification/read_messageId_"
+msgstr "Lecture d'un bordereau de notification"
+
+msgid "medona/archiveNotification/read_messageId_Export"
+msgstr "Export d'un bordereau de notification"
+
+msgid "medona/archiveNotification/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'une pièce jointe d'un bordereau de notification"
+
+msgid "medona/archiveNotification/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'une notification"
+
+msgid "medona/archiveNotification/readSearch"
+msgstr "Recherche de bordereaux de notification"
+
+msgid "medona/archiveNotification/updateArchive"
+msgstr "Archivage des bordereaux de notification"
+
+msgid "medona/archiveNotification/update_messageId_Archive"
+msgstr "Archivage d'un bordereau de notification"
+
+msgid "medona/archiveRestitution/readIncominglist"
+msgstr "Liste des bordereaux de demande de restitution reçus"
+
+msgid "medona/archiveRestitution/readRestitutionlist"
+msgstr "Liste des bordereaux de demande de restitution"
+
+msgid "medona/archiveRestitution/readOutgoinglist"
+msgstr "Liste des bordereaux de demande de restitution envoyés"
+
+msgid "medona/archiveRestitution/readCount"
+msgstr "Nombre de bordereaux de demande de restitution"
+
+msgid "medona/archiveRestitution/updateRequestacceptance_messageId_"
+msgstr "Acceptation d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/updateRequestrejection"
+msgstr "Rejet d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/updateRequestreplyacceptance_messageId_"
+msgstr "Acceptation d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/updateRequestreplyrejection"
+msgstr "Rejet d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/updateProcessBatch"
+msgstr "Traitement des demandes de restitution"
+
+msgid "medona/archiveRestitution/updateProcess_message_"
+msgstr "Traitement d'une demande de restitution"
+
+msgid "medona/archiveRestitution/updateValidateBatch"
+msgstr "Validation des demandes de restitution"
+
+msgid "medona/archiveRestitution/read_messageId_"
+msgstr "Lecture des bordereaux de demande de restitution"
+
+msgid "medona/archiveRestitution/read_messageId_Export"
+msgstr "Export d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'une pièce jointe d'un bordereau de demande de restitution"
+
+msgid "medona/archiveRestitution/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'une demande de restitution"
+
+msgid "medona/archiveRestitution/readSearch"
+msgstr "Recherche de bordereaux de demande de restitution"
+
+msgid "medona/archiveRestitution/updateArchive"
+msgstr "Archivage des bordereaux de demande de restitution"
+
+msgid "medona/archiveRestitution/update_messageId_Archive"
+msgstr "Archivage d'un bordereau de demande de restitution"
+
+msgid "medona/archiveTransfer/readIncominglist"
+msgstr "Liste des bordereaux de demande de transfert reçus"
+
+msgid "medona/archiveTransfer/readOutgoinglist"
+msgstr "Liste des bordereaux de demande de transfert envoyés"
+
+msgid "medona/archiveTransfer/readCount"
+msgstr "Nombre de bordereaux de demande de transfert"
+
+msgid "medona/archiveTransfer/create"
+msgstr "Creation d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/updateValidateBatch"
+msgstr "Validation des bordereaux de demande de transfert"
+
+msgid "medona/archiveTransfer/updateValidate_messageId_"
+msgstr "Validation d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/updateProcessBatch"
+msgstr "Traitement des bordereaux de demande de transfert"
+
+msgid "medona/archiveTransfer/updateRequestacceptance_messageId_"
+msgstr "Acceptation d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/updateRequestrejection"
+msgstr "Rejet d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/updateProcess_messageId_"
+msgstr "Traitement d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/read_messageId_"
+msgstr "Lecture d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/read_messageId_Export"
+msgstr "Export d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'un bordereau de demande de transfert en fonction d'une archive"
+
+msgid "medona/archiveTransfer/updateEndtransaction_messageId_"
+msgstr "Modification de fin de transaction d'un bordereau de demande de transfert"
+
+msgid "medona/archiveTransfer/readSearch"
+msgstr "Recherche de messages de demande de transfert"
+
+msgid "medona/archiveTransfer/updateArchive"
+msgstr "Archivage des messages de demande de transfert"
+
+msgid "medona/archiveTransfer/update_messageId_Archive"
+msgstr "Archivage d'un bordereau de demande de transfert"
+
+msgid "medona/documentConversion/readProcessAll"
+msgstr "Traitement de toutes les conversions"
+
+msgid "medona/documentConversion/readList"
+msgstr "Liste des bordereaux de conversion"
+
+msgid "medona/message/read_messageId_"
+msgstr "Lecture d'un bordereau"
+
+msgid "medona/message/read_messageId_Export"
+msgstr "Export d'un bordereau"
+
+msgid "medona/message/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture d'un bordereau en fonction d'une archive"
+
+msgid "medona/message/updateEndtransaction_messageId_"
+msgstr "Fin de transaction d'un bordereau"
+
+msgid "medona/message/readCount"
+msgstr "Nombre de bordereaux"
+
+msgid "medona/message/readSearch"
+msgstr "Recherche de bordereaux"
+
+msgid "medona/message/updateArchive"
+msgstr "Archivage des bordereaux"
+
+msgid "medona/message/update_messageId_Archive"
+msgstr "Archivage d'un bordereau"
+
+msgid "financialRecords/accountingRecord/readList"
+msgstr "Lecture de tous les documents comptables"
+
+msgid "financialRecords/accountingRecord/create"
+msgstr "Création d'un document comptable"
+
+msgid "financialRecords/accountingRecord/read_accountingRecordId_"
+msgstr "Lecture d'un document comptable"
+
+msgid "financialRecords/accountingRecord/update_accountingRecordId_"
+msgstr "Modification d'un document comptable"
+
+msgid "financialRecords/accountingRecord/delete_accountingRecordId_"
+msgstr "Suppression d'un document comptable"
+
+msgid "financialRecords/accountingRecord/readForm"
+msgstr "Formulaire de recherche des documents comptables"
+
+msgid "digitalResource/cluster/readList"
+msgstr "Lecture de toutes les grappes de dépôt"
+
+msgid "digitalResource/cluster/read_clusterId_"
+msgstr "Lecture d'une grappe de dépôt"
+
+msgid "digitalResource/cluster/create"
+msgstr "Création d'une grappe de dépôt"
+
+msgid "digitalResource/cluster/update"
+msgstr "Modification d'une grappe de dépôt"
+
+msgid "digitalResource/contentType/read"
+msgstr "Lecture des types de contenu"
+
+msgid "digitalResource/contentType/create"
+msgstr "Création d'un type de contenu"
+
+msgid "digitalResource/contentType/read_name_"
+msgstr "Lecture d'un type de contenu"
+
+msgid "digitalResource/contentType/update_name_"
+msgstr "Modification d'un type de contenu"
+
+msgid "digitalResource/conversionRule/readList"
+msgstr "Liste des règles de conversion"
+
+msgid "digitalResource/conversionRule/read_conversionRuleId_"
+msgstr "Lecture d'une règle de conversion"
+
+msgid "digitalResource/conversionRule/create"
+msgstr "Création d'une règle de conversion"
+
+msgid "digitalResource/conversionRule/update"
+msgstr "Modification d'une règle de conversion"
+
+msgid "digitalResource/conversionRule/delete_conversionRuleId_"
+msgstr "Suppression d'une règle de conversion"
+
+msgid "digitalResource/format/readList"
+msgstr "Lecture de tous les formats"
+
+msgid "digitalResource/format/readFind_query_"
+msgstr "Recherche de format"
+
+msgid "digitalResource/format/createFileformatinformation"
+msgstr "Information sur le format d'un document"
+
+msgid "digitalResource/repository/readList"
+msgstr "Lecture de tous les sites de dépôt"
+
+msgid "digitalResource/repository/read_repositoryId_"
+msgstr "Lecture d'un site de dépôt"
+
+msgid "digitalResource/repository/create"
+msgstr "Création d'un site de dépôt"
+
+msgid "digitalResource/repository/update"
+msgstr "Modification d'un site de dépôt"
+
+msgid "organization/orgContact/createOrgcontact"
+msgstr "Création d'un contact dans une organisation"
+
+msgid "organization/orgContact/readOrgcontact_orgId_Org"
+msgstr "Lecture d'un contact en fonction de son organisation"
+
+msgid "organization/orgContact/readOrgcontact_contactId_Contact"
+msgstr "Lecture d'un contact d'une organisation"
+
+msgid "organization/orgContact/deleteOrgcontact"
+msgstr "Suppression d'un contact dans une organisation"
+
+msgid "organization/orgRole/readList"
+msgstr "Lecture de tous les rôles"
+
+msgid "organization/orgType/readList"
+msgstr "Lecture de tous les types d'organisation"
+
+msgid "organization/orgType/create"
+msgstr "Création d'un type d'organisation"
+
+msgid "organization/orgType/read_code_"
+msgstr "Lecture d'un type d'organisation"
+
+msgid "organization/orgType/update_code_"
+msgstr "Modification d'un type d'organisation"
+
+msgid "organization/organization/readIndex"
+msgstr "Lecture de toutes les organisations"
+
+msgid "organization/organization/readTree"
+msgstr "Lecture de l'arbre des organisations"
+
+msgid "organization/organization/readSearch"
+msgstr "Recherche d'organisation"
+
+msgid "organization/organization/create"
+msgstr "Création d'une organisation"
+
+msgid "organization/organization/read_orgId_"
+msgstr "Lecture d'une organisation"
+
+msgid "organization/organization/readByregnumber_registrationNumber_"
+msgstr "Lecture d'une organisation en fonction de son numéro d'immatriculation"
+
+msgid "organization/organization/readByrole_role_"
+msgstr "Lecture d'une organisation en fonction d'un rôle"
+
+msgid "organization/organization/readOrgList"
+msgstr "Liste des organisations"
+
+msgid "organization/organization/readUserpositions_orgId_"
+msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur"
+
+msgid "organization/organization/createUserposition_orgId__userAccountId_"
+msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur et de son identifiant"
+
+msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgstr "Création d'une position d'un utilisateur dans une organisation"
+
+msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"
+msgstr "Mise par défaut d'une position d'un utilisateur"
+
+msgid "organization/organization/deleteUserposition_orgId__userAccountId_"
+msgstr "Suppression d'une position d'un utilisateur"
+
+msgid "organization/organization/deleteServiceposition_orgId__serviceAccountId_"
+msgstr "Suppression d'une position de compte de service d'une organisation"
+
+msgid "organization/organization/deleteContactposition_orgId__contactId_"
+msgstr "Suppression d'un contact d'une organisation"
+
+msgid "organization/organization/readServicepositions_orgId_"
+msgstr "Lecture d'une organisation en fonction d'une position d'un service"
+
+msgid "organization/organization/readHasrole_registrationNumber__role_"
+msgstr "Vérification qu'une organisation possède un rôle"
+
+msgid "organization/organization/update_orgId_"
+msgstr "Modification d'une organisation"
+
+msgid "organization/organization/updateMove_orgId_"
+msgstr "Déplacement d'une organisation"
+
+msgid "organization/organization/delete_orgId_"
+msgstr "Suppression d'une organisation"
+
+msgid "organization/organization/read_orgId_Addresses"
+msgstr "Lecture de toutes les adresses d'une organisation"
+
+msgid "organization/organization/read_orgId_Communications"
+msgstr "Lecture de toutes les communications d'une organisation"
+
+msgid "organization/organization/read_orgId_Contacts"
+msgstr "Lecture de tous les contacts d'une organisation"
+
+msgid "organization/organization/create_orgId_Contact_contactId_"
+msgstr "Création d'un contact dans une organisation"
+
+msgid "organization/servicePosition/updateCurrent_orgId_"
+msgstr "Changement de position de travail d'un compte de service"
+
+msgid "organization/servicePosition/read"
+msgstr "Lecture des positions d'un compte de service"
+
+msgid "organization/servicePosition/read_serviceAccountId_"
+msgstr "Lecture de la position courante d'un compte de service"
+
+msgid "organization/servicePosition/readOrgs"
+msgstr "Lecture des organisations disponibles pour un compte de service"
+
+msgid "organization/servicePosition/readServices"
+msgstr "Lecture des services disponibles pour un compte de service"
+
+msgid "organization/userPosition/updateCurrent_orgId_"
+msgstr "Modification d'une position"
+
+msgid "organization/userPosition/read"
+msgstr "Lecture d'une position"
+
+msgid "organization/userPosition/readOrgs"
+msgstr "Lecture des organisations disponibles pour un utilisateur"
+
+msgid "organization/userPosition/readServices"
+msgstr "Lecture des services disponibles pour un utilisateur"
+
+msgid "auth/authentication/createUserlogin"
+msgstr "Connexion"
+
+msgid "auth/authentication/deleteUserlogin"
+msgstr "Déconnexion"
+
+msgid "auth/authentication/update_userName_Password"
+msgstr "Modification du mot de passe utilisateur"
+
+msgid "auth/publicUserStory/read"
+msgstr "Lecture de tous les utilisateurs publics"
+
+msgid "auth/publicUserStory/create"
+msgstr "Création d'un utilisateur public"
+
+msgid "auth/publicUserStory/delete"
+msgstr "Suppression d'un utilisateur public"
+
+msgid "auth/role/readIndex"
+msgstr "Lecture de tous les rôles"
+
+msgid "auth/role/readNewrole"
+msgstr "Préparation à la création d'un nouveau rôle"
+
+msgid "auth/role/read_roleId_"
+msgstr "Lecture d'un rôle"
+
+msgid "auth/role/read_roleId_Privileges"
+msgstr "Lecture des privilèges d'un rôle"
+
+msgid "auth/role/read_roleId_Accessrules"
+msgstr "Lecture des règles d'accès d'un rôle"
+
+msgid "auth/role/create"
+msgstr "Création d'un rôle"
+
+msgid "auth/role/create_roleId_Privilege"
+msgstr "Création de privilèges pour un rôle"
+
+msgid "auth/role/create_roleId_Accessrule"
+msgstr "Création de règles d'accès pour un rôle"
+
+msgid "auth/role/update_roleId_"
+msgstr "Modification d'un rôle"
+
+msgid "auth/role/update_roleId_Status_status_"
+msgstr "Modification du statut d'un rôle"
+
+msgid "auth/role/deletePrivilege"
+msgstr "Suppression d'un privilège d'un rôle"
+
+msgid "auth/role/deleteAccessrule"
+msgstr "Suppression d'une règle d’accès d'un rôle"
+
+msgid "auth/role/delete_roleId_"
+msgstr "Suppression d'un rôle"
+
+msgid "auth/role/readRoles_query_"
+msgstr "Lecture de plusieurs rôles"
+
+msgid "auth/roleMember/readIndex"
+msgstr "Lecture de tous les rôles"
+
+msgid "auth/roleMember/readByrole_roleId_"
+msgstr "Lecture d'un rôle"
+
+msgid "auth/roleMember/readByuseraccount_userAccountId_"
+msgstr "Lecture d'un rôle en fonction d'un utilisateur"
+
+msgid "auth/roleMember/create"
+msgstr "Création d'un membre de rôle"
+
+msgid "auth/roleMember/delete_roleId__userAccountId_"
+msgstr "Suppression d'un membre de rôle"
+
+msgid "auth/serviceAccount/readIndex"
+msgstr "Lecture de tous les comptes de service"
+
+msgid "auth/serviceAccount/readSearch"
+msgstr "Recherche de compte de service"
+
+msgid "auth/serviceAccount/readNewservice"
+msgstr "Nouveau compte de service"
+
+msgid "auth/serviceAccount/read_serviceAccountId_"
+msgstr "Lecture d'un compte de service"
+
+msgid "auth/serviceAccount/create"
+msgstr "Création d'un compte de service"
+
+msgid "auth/serviceAccount/update"
+msgstr "Modification d'un compte de service"
+
+msgid "auth/serviceAccount/updateEnable_serviceAccountId_"
+msgstr "Activation d'un compte de service"
+
+msgid "auth/serviceAccount/updateDisable_serviceAccountId_"
+msgstr "Désactivation d'un compte de service"
+
+msgid "auth/serviceAccount/createServicetoken"
+msgstr "Création d'un jeton pour un compte de service"
+
+msgid "auth/serviceAccount/readQuery_query_"
+msgstr "Autocompletion des comptes de service"
+
+msgid "auth/userAccount/readIndex"
+msgstr "Liste des utilisateurs"
+
+msgid "auth/userAccount/readUserlist"
+msgstr "Lecture de tous les comptes utilisateur"
+
+msgid "auth/userAccount/readSearch"
+msgstr "Recherche des utilisateurs"
+
+msgid "auth/userAccount/readQuery_query_"
+msgstr "Lecture de plusieurs comptes utilisateur"
+
+msgid "auth/userAccount/readNew"
+msgstr "Préparation à la création d'un compte utilisateur"
+
+msgid "auth/userAccount/create"
+msgstr "Création d'un compte utilisateur"
+
+msgid "auth/userAccount/createUseraccount"
+msgstr "Création d'un nouveau compte utilisateur"
+
+msgid "auth/userAccount/read_userAccountId_"
+msgstr "Lecture d'un compte utilisateur"
+
+msgid "auth/userAccount/read_userAccountId_Information"
+msgstr "Lecture des informations en rapport avec un compte utilisateur"
+
+msgid "auth/userAccount/update_userAccountId_"
+msgstr "Modification d'un compte utilisateur"
+
+msgid "auth/userAccount/read_userAccountId_Privileges"
+msgstr "Lecture des privilèges d'un compte utilisateur"
+
+msgid "auth/userAccount/readHasprivilege"
+msgstr "Lecture d'un privilège"
+
+msgid "auth/userAccount/readAccessrule_objectClass_"
+msgstr "Lecture des règles d'accès d'un compte utilisateur en fonction d'une classe d’objet"
+
+msgid "auth/userAccount/updateDisable_userAccountId__replacingUserAccountId_"
+msgstr "Désactivation d'un compte utilisateur"
+
+msgid "auth/userAccount/updateEnable_userAccountId_"
+msgstr "Activation d'un compte utilisateur"
+
+msgid "auth/userAccount/updateLock_userAccountId_"
+msgstr "Blocage d'un compte utilisateur"
+
+msgid "auth/userAccount/updateUnlock_userAccountId_"
+msgstr "Déblocage d'un compte utilisateur"
+
+msgid "auth/userAccount/updatePassword_userAccountId_"
+msgstr "Modification du mot de passe utilisateur"
+
+msgid "auth/userAccount/updatePasswordchangerequest_userAccountId_"
+msgstr "Demande de changement de mot de passe utilisateur"
+
+msgid "contact/communicationMean/readIndex"
+msgstr "Lecture de toutes les communications"
+
+msgid "contact/communicationMean/create"
+msgstr "Création d'une communication"
+
+msgid "contact/communicationMean/read_code_"
+msgstr "Lecture d'une communication"
+
+msgid "contact/communicationMean/update_code_"
+msgstr "Modification d'une communication"
+
+msgid "contact/communicationMean/delete_code_"
+msgstr "Suppression d'une communication"
+
+msgid "contact/contact/readIndex"
+msgstr "Lecture de tous les contacts"
+
+msgid "contact/contact/create"
+msgstr "Création d'un contact"
+
+msgid "contact/contact/read_contactId_"
+msgstr "Lecture d'un contact"
+
+msgid "contact/contact/update_contactId_"
+msgstr "Modification d'un contact"
+
+msgid "contact/contact/delete_contactId_"
+msgstr "Suppression d'un contact"
+
+msgid "contact/contact/read_contactId_Address"
+msgstr "Lecture des adresses d'un contact"
+
+msgid "contact/contact/create_contactId_Address"
+msgstr "Création d'une adresse d'un contact"
+
+msgid "contact/contact/readAddress_addressId_"
+msgstr "Recherche d'une adresse"
+
+msgid "contact/contact/updateAddress_addressId_"
+msgstr "Modification d'une adresse"
+
+msgid "contact/contact/deleteAddress_addressId_"
+msgstr "Suppression d'une adresse"
+
+msgid "contact/contact/create_contactId_Communication"
+msgstr "Création d'une communication d'un contact"
+
+msgid "contact/contact/read_contactId_Communication"
+msgstr "Lecture des communications d'un contact"
+
+msgid "contact/contact/read_contactId_Communication_comMeanCode_"
+msgstr "Lecture d'une communication d'un contact"
+
+msgid "contact/contact/readCommunication_communicationId_"
+msgstr "Lecture d'une communication"
+
+msgid "contact/contact/updateCommunication_communicationId_"
+msgstr "Modification d'une communication"
+
+msgid "contact/contact/deleteCommunication_communicationId_"
+msgstr "Suppression d'une communication"
+
+msgid "lifeCycle/eventFormat/createEventformat"
+msgstr "Création d'un format d'événement"
+
+msgid "lifeCycle/eventFormat/deleteEventformat_type_"
+msgstr "Suppression d'un format d'événement"
+
+msgid "lifeCycle/eventFormat/readEventformatEdit"
+msgstr "Préparation à la modification d'un format d'événement"
+
+msgid "lifeCycle/eventFormat/readEventformatlist"
+msgstr "Liste des formats d'événements"
+
+msgid "lifeCycle/eventFormat/updateEventformat"
+msgstr "Modification d'un format d'événement"
+
+msgid "batchProcessing/task/readIndex"
+msgstr "Lecture de toutes les taches"
+
+msgid "batchProcessing/task/create"
+msgstr "Creation d'une tache"
+
+msgid "batchProcessing/task/delete_taskId_"
+msgstr "Suppression d'une tache"
+
+msgid "batchProcessing/task/read_taskId_"
+msgstr "Lecture d'une tache"
+
+msgid "batchProcessing/task/update_taskId_"
+msgstr "Modification d'une tache"
+
+msgid "batchProcessing/scheduling/readSchedulings"
+msgstr "Lecture de toutes les taches planifiées"
+
+msgid "batchProcessing/scheduling/readExecute_schedulingId_"
+msgstr "Execution manuel d'une tache planifiée"
+
+msgid "batchProcessing/scheduling/create"
+msgstr "Creation d'une planification de tache"
+
+msgid "batchProcessing/scheduling/update"
+msgstr "Modification d'une planification de tache"
+
+msgid "batchProcessing/scheduling/updateChangestatus"
+msgstr "Changement du status d'une tache planifiée"
+
+msgid "batchProcessing/scheduling/updateProcess"
+msgstr "Execution automatiques des taches planifiées"
+
+msgid "batchProcessing/scheduling/readTasks"
+msgstr "Lecture de toutes les taches pour la planifications"
+
+msgid "batchProcessing/scheduling/delete_schedulingId_"
+msgstr "Suppression d'une planification de tache"
+ 	
+msgid "archivesPubliques/contentDescription/createSearch"
+msgstr "Lecture de toutes les archives publiques"
+
+msgid "archivesPubliques/contentDescription/readFinddocuments"
+msgstr "Recherche de documents d'archives publiques"
+
+msgid "archivesPubliques/contentDescription/create"
+msgstr "Lecture de toutes les archives publiques"
+
+msgid "archivesPubliques/contentDescription/read_contentDescriptionId_"
+msgstr "Lecture d'une archive publique"
+
+msgid "archivesPubliques/contentDescription/update"
+msgstr "Modification d'une archive publique"
+
+msgid "archivesPubliques/contentDescription/delete_contentDescriptionId_"
+msgstr "Suppression d'une archive publique"
+
+msgid "archivesPubliques/thesaurus/read_query_"
+msgstr "Recherche thesaurus"
+
+msgid "businessRecords/adminDescription/readList"
+msgstr "Liste de documents administratifs"
+
+msgid "businessRecords/adminDescription/create"
+msgstr "Création d'un document administratif"
+
+msgid "businessRecords/adminDescription/read_adminDescriptionId_"
+msgstr "Lecture d'un document administratif"
+
+msgid "businessRecords/adminDescription/update"
+msgstr "Modification d'un document administratif"
+
+msgid "businessRecords/adminDescription/delete_adminDescriptionId_"
+msgstr "Suppression d'un document administratif"
+
+msgid "businessRecords/adminDescription/readForm"
+msgstr "Recherche de documents administratifs"
+
+msgid "businessRecords/docNature/read"
+msgstr "Liste des natures de document administratif"
+
+msgid "businessRecords/docNature/create"
+msgstr "Création d'une nature de document administratif"
+
+msgid "businessRecords/docNature/read_docNatureCode_"
+msgstr "Lecture d'une nature de document administratif par son code"
+
+msgid "businessRecords/docNature/read_docNatureDocType_"
+msgstr "Lecture d'une nature de document administratif par son type"
+
+msgid "businessRecords/docNature/update"
+msgstr "Modification d'une nature de document administratif"
+
+msgid "businessRecords/docNature/delete_docNatureCode_"
+msgstr "Suppression d'une nature de document administratif"
+
+msgid "businessRecords/employee/readQuery_query_"
+msgstr "Recherche d'employés"
+
+msgid "businessRecords/thirdParty/read"
+msgstr "Lecture d'un tiers d'un document administratif"
+
+msgid "businessRecords/thirdParty/create"
+msgstr "Création d'un tiers d'un document administratif"
+
+msgid "businessRecords/thirdParty/read_thirdPartyCode_"
+msgstr "Lecture d'un tiers d'un document administratif via son code"
+
+msgid "businessRecords/thirdParty/update"
+msgstr "Mis à jour d'un tiers d'un document administratif"
+
+msgid "businessRecords/thirdParty/delete_thirdPartyCode_"
+msgstr "Suppression d'un tiers d'un document administratif"
+
+msgid "businessRecords/thirdParty/readQuery_query_"
+msgstr "Recherche d'un tiers d'un document administratif"
+
+msgid "valophisHabitat/avisEcheance/create"
+msgstr "Création d'un avis d'écheance valophis habitat"
+
+msgid "valophisHabitat/avisEcheance/delete_avisEcheanceId_"
+msgstr "Suppression d'un avis d'écheance valophis habitat"
+
+msgid "valophisHabitat/avisEcheance/find"
+msgstr "Liste des avis d'écheance valophis habitat"
+
+msgid "valophisHabitat/avisEcheance/readForm"
+msgstr "Recherche d'avis d'écheance valophis habitat"
+
+msgid "valophisHabitat/avisEcheance/read_avisEcheanceId_"
+msgstr "Recherche d'un avis d'écheance valophis habitat"
+
+msgid "valophisHabitat/avisEcheance/update"
+msgstr "Modification d'un avis d'écheance valophis habitat"
+
+msgid "groupamaCartes/carteAdherent/create"
+msgstr "Création d'une carte adhérent"
+
+msgid "groupamaCartes/carteAdherent/createListdoc"
+msgstr "Liste Doc web service"
+
+msgid "groupamaCartes/carteAdherent/createOpendoc"
+msgstr "Open doc web service"
+
+msgid "groupamaCartes/carteAdherent/delete_carteAdherentId_"
+msgstr "Suppression d'une carte adhérent"
+
+msgid "groupamaCartes/carteAdherent/find"
+msgstr "Liste de carte adhérent"
+
+msgid "groupamaCartes/carteAdherent/readForm"
+msgstr "Recherche de carte adhérent"
+
+msgid "groupamaCartes/carteAdherent/read_carteAdherentId_"
+msgstr "Recherche d'une carte adhérent"
+
+msgid "groupamaCartes/carteAdherent/update"
+msgstr "Modification d'une carte adhérent"
+
+msgid "recordsManagement/descriptionField/create"
+msgstr "Création d'un champ de description"
+
+msgid "recordsManagement/descriptionField/delete_name_"
+msgstr "Suppression d'un champ de description"
+
+msgid "recordsManagement/descriptionField/readIndex"
+msgstr "Lecture de tous les champs de description"
+
+msgid "recordsManagement/descriptionField/read_name_"
+msgstr "Lecture d'un champ de description"
+
+msgid "recordsManagement/descriptionField/update"
+msgstr "Modification d'un champ de description"

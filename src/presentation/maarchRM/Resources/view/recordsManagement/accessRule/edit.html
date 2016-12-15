@@ -1,0 +1,278 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div data-translate-catalog="recordsManagement/accessRule">
+    <div class="modal-header">
+        <h2>
+            <i class="fa fa-qrcode"></i>
+            <span id="newAccessRuleTitle">New access code</span>
+            <span id="editAccessRuleTitle" class="hide">Edit an access code </span><small id="accessRuleTitle"></small>
+        </h2>
+    </div>
+    <div class="modal-body container-fluid">
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Code <span style="color: red">*</span></label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="code" name="code" placeholder="Code">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Description</label>
+                        <div class="col-md-8">
+                            <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Access rule duration</label>
+                        <div class="col-md-8 form-inline">
+                            <input type="number" class="form-control" id="accesRuleDuration" name="accessRuleDuration" >
+                            <select id="accessRuleDurationUnit" name="accessRuleDurationUnit" class="form-control">
+                                <option value='D'>Day(s)</option>
+                                <option value='M'>Month(s)</option>
+                                <option value='Y'>Year(s)</option>
+                                <option value='*'>unlimited</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <span class="hide" id="codeError_txt">Access Code is empty.</span>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Access entries</label>
+                        <div class="input-group">
+                            <select class="form-control" id="orgUnitId">
+                                <option value=""></option>
+                                <?merge orgUnits ?>
+                                <option value="[?merge orgUnits.key() ?]"><?merge .displayName ?></option>
+                            </select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" id="originatorAccess" type="button">Originator</button>
+                                <button class="btn btn-success" id="addAccessEntrie" type="button"><i class="fa fa-plus"/></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 col-md-offset-2">
+                    <ul class="list-group" id="accessEntries">
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer clearfix">
+        <div class="pull-right">
+            
+            <button type="button" id="accessRuleCancelBtn" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+            <button type="button" id="save" class="btn btn-success" title="Save" data-code="">
+                <span><i class="fa fa-save">&nbsp;</i>Save</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script>
+    $("#accessRuleCancelBtn").on("click", function (){
+        AccessRuleModal.close();
+    });
+
+    $("#save").on('click', function () {
+        AccessRuleModal.save();
+    });
+
+    $("#accessRuleDurationUnit").on('change', function () {
+        if ($('#accessRuleDurationUnit').val() === '*') {
+            $('#accesRuleDuration').attr('disabled', 'disabled');
+        } else {
+            $('#accesRuleDuration').removeAttr('disabled');
+        }
+    });
+
+    $('#originatorAccess').on('click', function() {
+        $(this).toggleClass('active btn-info btn-default');
+    });
+
+    $("#addAccessEntrie").on('click', function () {
+        AccessRuleModal.addAccessEntrie();
+    });
+
+    $("#accessEntries").on('click', '.removeAccessEntry', function () {
+        $(this).closest('li').remove();
+    });
+
+    var AccessRuleModal = {
+        modal: $('#accessRuleModal'),
+
+        load : function (accessRule) {
+            if(accessRule) {
+
+                $('#newAccessRuleTitle').addClass('hide');
+                $('#editAccessRuleTitle').removeClass('hide');
+                $('#accessRuleTitle').html(accessRule.code);
+
+
+                $.each(accessRule, function(key, value) {
+                    AccessRuleModal.modal.find("[name='"+key+"']").val(value);
+                })
+
+                $('#code').prop('disabled', true);
+
+                $('#save').data('code', accessRule.code);
+
+                $.each(accessRule.accessEntry, function() {
+                    AccessRuleModal.loadAccessEntrie($(this)[0]);
+                });
+            }
+
+            this.modal.modal();
+
+        },
+
+        save : function () {
+            var accessRule = this.serialize()
+
+            if (accessRule.code == "") {
+                gritter.show($('#empty_text').html(), false);
+                return;
+            }
+        
+            if($("#save").data('code')) {
+                type= 'PUT';
+                url= '/accessRule/'+$("#save").data('code');
+            } else {
+                type= 'POST';
+                url='/accessRule';
+            }
+        
+            ajax($("#save"), {
+                url         : url,
+                type        : type,
+                data        : JSON.stringify({accessRule : accessRule}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        AccessRuleModal.close();
+
+                        $('#accessRuleModal').one('hidden.bs.modal', function () {
+                            load("/accessRules");
+                        });
+                    }
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+
+        },
+
+        addAccessEntrie : function() {
+            var accessEntry = {
+                orgUnitId : $('#orgUnitId').val(),
+                originatorAccess : $('#originatorAccess').hasClass('active')
+            }
+
+            if (accessEntry.orgUnitId == "") {
+                return;
+            }
+
+            $('#orgUnitId').val('');
+            if (accessEntry.originatorAccess) $('#originatorAccess').click();
+
+            this.loadAccessEntrie(accessEntry);
+        },
+
+        loadAccessEntrie : function(accessEntry) {
+            var slectedOption = $('#orgUnitId').find('option[value="'+accessEntry.orgUnitId+'"]');
+
+            var li = $('<li/>').addClass('list-group-item clearfix')
+                               .data('org-unit-id', accessEntry.orgUnitId)
+                               .data('originator-access', accessEntry.originatorAccess)
+                               .html(slectedOption.html());
+
+            var span = $('<span/>').addClass('pull-right').appendTo(li);
+
+            if (accessEntry.originatorAccess) {
+                $('<a/>').addClass('btn btn-default btn-xs disabled')
+                         .attr('aria-label', "Originator")
+                         .attr('href','#')
+                         .html($("#originatorAccess").text())
+                         .appendTo(span);
+            }
+
+            $('<a/>').attr('href','#')
+                     .addClass('text-danger removeAccessEntry')
+                     .html(
+                        $('<i/>').addClass("fa fa-times fa-fw")
+                     ) 
+                     .appendTo(span);
+            
+            li.appendTo($("#accessEntries"));
+            slectedOption.addClass('hide');
+        },
+
+        serialize : function() {
+            if ($('#accessRuleDurationUnit').val() == "*") {
+                accessRuleDuration = 'P' + 999999999 + 'Y';
+
+            } else if ($('#accesRuleDuration').val() == 0) {
+                accessRuleDuration = 0;
+
+            } else {
+                accessRuleDuration = 'P' + $('#accesRuleDuration').val() + $('#accessRuleDurationUnit').val();
+            }
+
+            var accessEntries = [];
+
+            $('#accessEntries').find('li').each(function () {
+                var accessEntry = {
+                    orgUnitId : $(this).data('org-unit-id'),
+                    originatorAccess : $(this).data('originator-access') ? 1 : 0
+                };
+                accessEntries.push(accessEntry);
+            });
+
+            serializedObject = {
+                code: $('#code').val(),
+                duration: accessRuleDuration,
+                description: $('#description').val(),
+                accessEntry : accessEntries
+            }
+
+                return serializedObject;
+        },
+
+        close : function () {
+            this.modal.modal('hide');
+            $('#newAccessRuleTitle').removeClass('hide');
+            $('#editAccessRuleTitle').addClass('hide');
+            $('#accessRuleTitle').html("");
+            $('#code').prop('disabled', false);
+            
+            $('#save').data('code', "");
+
+            $("#accessEntries").html('');
+            if ($('#originatorAccess').hasClass('active')) $('#originatorAccess').click();
+            $('#orgUnitId').find('option').removeClass('hide');
+            
+            this.modal.find('input, textarea, select').val('');
+        }
+    }
+
+</script>

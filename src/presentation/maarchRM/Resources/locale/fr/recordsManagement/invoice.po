@@ -1,0 +1,79 @@
+# recordsManagement/invoice
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Search invoice"
+msgstr "Recherche de facture"
+
+msgid "Customer name"
+msgstr "Nom du client"
+
+msgid "Customer number"
+msgstr "Numéro du client"
+
+msgid "Invoice number"
+msgstr "N° de facture"
+
+msgid "Purchase order reference"
+msgstr "Référence du bon de commande"
+
+msgid "PO number"
+msgstr "N° de commande"
+
+msgid "Min amount"
+msgstr "Montant minimum"
+
+msgid "Max amount"
+msgstr "Montant maximum"
+
+msgid "Min date"
+msgstr "Date minimum"
+
+msgid "Max date"
+msgstr "Date maximum"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "result(s)"
+msgstr "résultat(s)"
+
+msgid "Results"
+msgstr "Résultats"
+
+msgid "Invoice reference"
+msgstr "Référence de la facture"
+
+msgid "Invoice date"
+msgstr "Date de la facture"
+
+msgid "Seller name"
+msgstr "Nom du fournisseur"
+
+msgid "Buyer name"
+msgstr "Nom du client"
+
+msgid "Buyer contact info"
+msgstr "Contact client"
+
+msgid "Credit terms"
+msgstr "Conditions de règlement"
+
+msgid "Tax amount"
+msgstr "Montant TVA"
+
+msgid "Currency"
+msgstr "Devise"
+
+msgid "Customer"
+msgstr "Client"
+
+msgid "Supplier"
+msgstr "Fournisseur"
+
+msgid "Total amount"
+msgstr "Montant total"
+

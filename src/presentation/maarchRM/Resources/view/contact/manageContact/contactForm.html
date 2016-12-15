@@ -1,0 +1,66 @@
+<div class="container-fluid" lang="en" data-translate-catalog="contact/contact">
+    <div class="page-header">
+        <?merge contact.contactId.bool() ?>
+        <h1>
+            <i class="fa fa-user">&nbsp;</i>Edit contact
+        </h1>
+        <?merge contact.contactId.bool().not() ?>
+        <h1>
+            <i class="fa fa-user">&nbsp;</i>New contact
+        </h1>
+    </div>
+</div>
+
+<div class="container-fluid" lang="en" data-translate-catalog="contact/contact"> 
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#contactInformationsTab" data-toggle="tab">Information</a></li>
+                <li class=""><a href="#addressTab" data-toggle="tab">Address</a></li>
+                <li class=""><a href="#communicationTab" data-toggle="tab">Communication</a></li>
+            </ul>
+            <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active dataForm" id="contactInformationsTab" >
+                            <?hinclude contact/manageContact/contactInformationForm.html ?>
+                        </div>
+                        <div class="tab-pane fade" id="addressTab">
+                            <?hinclude contact/manageContact/addressForm.html ?>
+                        </div>
+                        <div class="tab-pane fade" id="communicationTab">
+                            <?hinclude contact/manageContact/communicationForm.html ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer clearfix">
+                <div class="pull-right ">
+                    <button type="button" class="btn btn-warning" id="contact_forwardToContacts" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                    <?merge contact.contactId.bool().not() ?>
+                    <button type="button" class="btn btn-success" id="contact_addContact" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                    <?merge contact.contactId.bool() ?>
+                    <button type="button" class="btn btn-success" id="contact_modifyContact" data-contactId="[?merge contact.contactId ?]" title="Modify"><i class="fa fa-save">&nbsp;</i>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?hinclude contact/manageContact/suppressionModals.html ?>
+
+
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script type="text/javascript">
+    $("#contact_forwardToContacts").on("click", function () {
+        load('/contacts')
+    });
+
+    $("#contact_addContact, #contact_modifyContact").on("click", function () {
+        if (ContactInformation.save()) {
+            load("/contacts");
+        }
+    });
+
+</script>

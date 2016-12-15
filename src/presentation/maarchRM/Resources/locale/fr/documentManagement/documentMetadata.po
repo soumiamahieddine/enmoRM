@@ -1,0 +1,91 @@
+# documentManagement/documentMetadata
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Subject"
+msgstr "Sujet"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Publisher"
+msgstr "Editeur"
+
+msgid "Contributor"
+msgstr "Contributeur"
+
+msgid "Date of creation"
+msgstr "Date de création"
+
+msgid "Date of issue"
+msgstr "Date de publication"
+
+msgid "Date of reception"
+msgstr "Date de réception"
+
+msgid "Date of response"
+msgstr "Date de réponse"
+
+msgid "Date of submission"
+msgstr "Date de soumission"
+
+msgid "Date of availablity"
+msgstr "Date de disponibilité"
+
+msgid "Date of modification"
+msgstr "Date de modification"
+
+msgid "Date of validity"
+msgstr "Date de validité"
+
+msgid "Category"
+msgstr "Catégorie"
+
+msgid "Spatial coverage"
+msgstr "Couverture spatiale"
+
+msgid "Temporal coverage"
+msgstr "Couverture temporelle"
+
+msgid "Custom text"
+msgstr "Text libre"
+
+msgid "Custom keyword"
+msgstr "Mots clés libres"
+
+msgid "Custom date"
+msgstr "Date libre"
+
+msgid "Custom numeric"
+msgstr "Nombre libre"
+
+msgid "Label"
+msgstr "Libellé"
+
+msgid "Keyword"
+msgstr "Mot-clé"
+
+msgid "Number"
+msgstr "Nombre"
+
+msgid "Field"
+msgstr "Champs"
+
+msgid "Required"
+msgstr "Requis"
+
+msgid "Add field"
+msgstr "Ajouter un champ"
+

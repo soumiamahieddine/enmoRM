@@ -1,0 +1,243 @@
+<div class="modal fade" id="accessRuleModal" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" data-translate-catalog="recordsManagement/messages">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3>Edit archive</h3>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="sidebar-offcanvas col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <input type="hidden" name="archiveId">
+                            <h4>Access rule</h4>
+                            <div class="table-responsive">
+                                <table class="table table-condensed table-condensed">
+                                    <tbody>
+                                        <tr><td><strong>Start date</strong></td><td><input class='form-control input-sm ruleInputAccess datePicker' name="accessRuleStartDate"></td></tr>
+                                        <tr><td><strong>Code</strong></td><td>
+                                            <select id="accessRuleCode" name="accessRuleCode" class="form-control input-sm ruleInputAccess">
+                                                    <option value="">Select a access rule code</option>
+                                                    <?merge accessRules ?>
+                                                    <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
+                                            </select><br>
+                                            <dl>
+                                                <dt>Access rule duration <span id="accessRuleDuration"></span></dt>
+                                            </dl>
+                                        </td></tr>
+                                        <tr><td><strong>Comment</strong></td>
+                                            <td><div>
+                                                    <textarea class="form-control" id ="comment" name="comment" placeholder="Comment"></textarea>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--<tr><td><strong>Duration</strong></td><td>
+                                            <div class="form-inline">
+                                                <input class='form-control input-sm ruleInputAccess' name="accessRuleDuration">
+                                                <select name="accessRuleDurationUnit" class="form-control input-sm ruleInputAccess">
+                                                    <option value='D'>Day(s)</option>
+                                                    <option value='M'>Month(s)</option>
+                                                    <option value='Y'>Year(s)</option>
+                                                </select>
+                                            </div>
+                                        </td></tr>-->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default" data-translate-context="validationModal" id="accessRuleModal_multipleSelection">
+                        <div class="panel-body">
+                            <h4><strong style="color:red"><span id="accessRuleModal_selected"></span></strong> archives selected.</h4>
+                            <h4>The modification will be applied on <strong style="color:red"><span id="accessRuleModal_relevant"></span></strong> archives.</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="saveAccessRule" class="btn btn-success" disabled data-dismiss="modal" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.datepicker{z-index:1151 !important;}
+</style>
+<div style="display:none">
+    <span id="text_D">day(s)</span>
+    <span id="text_M">month(s)</span>
+    <span id="text_Y">year(s)</span>
+</div>
+
+<script>
+
+    $('#accessRuleModal').on('keyup change', 'input, select', function() {
+        var modal = $('#accessRuleModal');
+
+        var accessRuleStartDate = modal.find('[name="accessRuleStartDate"]').val();
+        var accessRuleCode = $('#accessRuleCode').val();
+        
+        if(accessRuleStartDate && accessRuleCode) {
+            $('#saveAccessRule').prop('disabled', false);
+        } else {
+            $('#saveAccessRule').prop('disabled', true);
+        }
+
+    })
+
+    $("#contain").on('keyup change','#comment',function(){
+        var modal = $('#accessRuleModal');
+        var accessRuleStartDate = modal.find('[name="accessRuleStartDate"]').val();
+        var accessRuleCode = $('#accessRuleCode').find(":selected").val();
+        var comment = $('#comment').val();
+        
+        if(accessRuleStartDate && accessRuleCode && comment) {
+            $('#saveAccessRule').prop('disabled', false);
+        }
+    })
+    // Save the accessRule
+    $("#saveAccessRule").on('click', function () {
+        var url = '/recordsManagement/archive/accessRule';
+        var type = 'PUT';
+        var accessRule = accessRuleModal.serialize();
+        var parameters = { accessRule: accessRule};
+        var archiveIds = $(this).data('archiveids');
+        var comment = $("#comment").val();
+        
+        parameters.comment = comment;
+        
+        if(archiveIds!="") {
+            parameters.archiveIds = archiveIds;
+        } else {
+            parameters.archiveIds = accessRule.archiveId;
+        }
+
+        $.ajax({
+            url         : url,
+            type        : type,
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    accessRuleModal.close();
+                    $('#archive_search').click();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    })
+
+    $("#contain").on('change', '#accessRuleCode', function () {
+        accessRuleModal.loadAccessCode();
+    })
+
+
+    var accessRuleModal = {
+        load: function(archiveId) {
+
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archive/accessRule/" + archiveId,
+                dataType    : 'json',
+                success     : function (response) {
+                    var rule = response.accessRule;
+                    var modal = $('#accessRuleModal');
+
+                    if (rule.accessRuleDuration) {
+                        rule.accessRuleDurationUnit = rule.accessRuleDuration.substring(rule.accessRuleDuration.length-1);
+                        rule.accessRuleDuration = rule.accessRuleDuration.substring(1, rule.accessRuleDuration.length-1);
+                    }
+
+                    $.each(rule, function(key, value) {
+                        modal.find("[name='" +key+ "']").val(value);
+                    })
+
+                    $('#saveAccessRule').data("archiveids", "");
+                    $('#accessRuleModal_multipleSelection').css('display', 'none');
+
+                    accessRuleModal.loadAccessCode();
+
+                    modal.modal();
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        loadMultiple: function(selected, relevant, ids) {
+            var modal = $('#accessRuleModal');
+
+            $('#saveAccessRule').data("archiveids", ids);
+            $('#accessRuleModal_multipleSelection').css('display', '');
+
+            $('#accessRuleModal_selected').html(selected);
+            $('#accessRuleModal_relevant').html(relevant);
+
+            modal.find('input, select').val('');
+            modal.modal();
+        },
+
+        close: function() {
+            $('#accessRuleModal').modal('hide');
+        },
+
+        serialize: function() {
+            var accessRule = {}
+            var inputs = $('#accessRuleModal').find('input, select');
+            var retentionRule = $('#accessRuleModal').find('select').find('option:selected').data('json');
+
+            console.log(retentionRule);
+
+            $.each(inputs, function() {
+                var a = $(this);
+                if(a.attr('name') != "archiveIds") {
+                    accessRule[a.attr('name')] = a.val();
+                }
+            })
+
+            accessRule['accessRuleDuration'] = retentionRule.duration;
+
+            return accessRule;
+        },
+
+        loadAccessCode: function() {
+            var accessRuleCode = $("#accessRuleCode").find(':selected').data('json');
+            var accessRules = "";
+            var accessRuleTable = $('#accessRuleTable');
+
+            if (accessRuleCode) {
+                if (accessRuleCode.duration) {
+                var accessRules = accessRuleCode.accessRules;
+                var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+                $('#accessRule').css("display", 'block');
+                $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                
+                } else {
+                    $('#accessRule').css("display", 'block');
+                    $('#accessRuleDuration').html(accessRuleCode.durationUnit);
+                }
+
+            } else {
+                $('#accessRule').css("display", 'none');
+            }
+            
+            if(accessRules){
+                if (!accessRules.length) {
+                    $('#accessRuleTable').css('display', 'none');
+                } else {
+                    var checked = $('<i>').addClass('fa fa-check').html('&nbsp;');
+                }
+            }
+        }
+    }
+</script>

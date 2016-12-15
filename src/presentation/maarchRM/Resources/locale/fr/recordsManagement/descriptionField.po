@@ -1,0 +1,40 @@
+# recordsManagement/descriptionField
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Keyword"
+msgstr "Mot clé"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Number"
+msgstr "Nombre"
+
+msgid "Boolean"
+msgstr "Booléen"
+
+msgid "Description field"
+msgstr "Champ de description"
+
+msgid "Description fields"
+msgstr "Champs de description"
+
+msgid "description field(s)"
+msgstr "Champ(s) de description"
+
+msgid "Default value"
+msgstr "Valeur par défaut"
+
+msgid "Enumeration"
+msgstr "Énumération"
+
+msgid "Description field created"
+msgstr "Champ de description créé"
+
+msgid "Description field updated"
+msgstr "Champ de description modifié"
+
+msgid "Description field deleted"
+msgstr "Champ de description supprimé"
+

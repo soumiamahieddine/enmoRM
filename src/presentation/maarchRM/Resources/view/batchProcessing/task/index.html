@@ -1,0 +1,87 @@
+<div id="contain" >
+<div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-send"></i>
+            Task
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><span id='tableItemNumber'><?merge task.count() ?></span> task(s)</h4>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="addNewTask" class="btn btn-default btn-sm" title="Add"><i class="fa fa-plus fa-fw">&nbsp;</i>Add</button>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Description</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge task ?>
+                            <tr>
+                                <td><?merge .route ?></td>
+                                <td><?merge .description ?></td>
+                                <td class="action_btn">
+                                    <div class="btn-group pull-right">
+                                        <a onclick="load('/Batchprocessing/Task/[?merge .taskId?]')" class="btn btn-info" title="edit">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </a>
+                                        <button type="button" data-taskid="[?merge .taskId ?]" class="deleteTask btn btn-danger" title="Delete">
+                                                <span class="fa fa-fw fa-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- dataTable -->
+<!-- <script src="/public/bundle/digitalResource/js/dataTables_1.9.4/dataTables.min.js"></script> -->
+
+<script type="application/javascript">
+$("#contain").on('click', '#addNewTask', function(){
+    load("/Batchprocessing/task");
+})
+
+$("#contain").on('click', '.deleteTask', function () {
+        var button = $(this);
+        var taskId = button.data('taskid');
+
+        ajax(button, {
+            url: '/Batchprocessing/task/' + taskId,
+            type: 'DELETE',
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errros);
+                if (response.status) {
+                    var itemsNumber = $('#tableItemNumber');
+                    var number = itemsNumber.html();
+                    itemsNumber.html(number - 1);
+                    button.closest('tr').remove();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    })
+
+
+</script>

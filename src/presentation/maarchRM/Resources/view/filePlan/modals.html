@@ -1,0 +1,80 @@
+<div class="modal fade" id="deleteFilePlanConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete the file plan</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure to delete this file plan ? This action will also delete the positions above !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmFilePlanDelete" title="Yes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletePositionConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete the position</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure to delete this position ? This action will also delete the positions above !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmPositionDelete" title="Yes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#confirmFilePlanDelete').on('click', function(){
+        $.ajax({
+            url: '/filePlan/deleteFilePlan/'+$(this).attr('data-subjectId'),
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                reloadTree();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $('#deleteFilePlanConfirmation').modal('hide');
+    });
+
+    $('#confirmPositionDelete').on('click', function(){
+        
+        var objectId = $('#confirmPositionDelete').attr('data-objectId');
+        var subjectId = $('#confirmPositionDelete').attr('data-subjectId');
+        $.ajax({
+            url: '/filePlan/deleteFilePlanPosition/'+objectId + '/' + subjectId,
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                response = JSON.parse(response);
+                gritter.show(response.message, response.status, response.errors);
+                reloadTree();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $('#deletePositionConfirmation').modal('hide');
+    });
+</script>

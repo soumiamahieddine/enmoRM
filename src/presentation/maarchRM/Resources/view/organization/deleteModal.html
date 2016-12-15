@@ -1,0 +1,41 @@
+<div class="modal fade" id="organization_confirmDeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete organization</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure to delete this organization ? This action will also delete the organizations and persons above !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="organization_confirmDelete" title="Yes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#organization_confirmDelete').on('click', function(){
+        var orgId = $(this).data('orgid');
+        $.ajax({
+            url: '/organization/'+orgId,
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                Tree.removeNode($('#'+orgId).closest('li'));
+            },
+            error    : function(response) {
+                console.log(response);
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+        $('#organization_confirmDeleteModal').modal('hide');
+    });
+</script>

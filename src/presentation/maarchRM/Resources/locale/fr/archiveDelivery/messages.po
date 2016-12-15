@@ -1,0 +1,52 @@
+# archiveDelivery/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveDelivery"
+msgstr "Communication d'archive"
+msgctxt "bundle"
+
+msgid "accountingRecord"
+msgstr "Archive"
+msgctxt "interface"
+
+msgid "archiveRelationship"
+msgstr "Relation entre archive"
+msgctxt "interface"
+
+msgid "contentDescription"
+msgstr "Description du contenu"
+msgctxt "interface"
+
+msgid "delivery"
+msgstr "Communication"
+msgctxt "interface"
+
+msgid "document"
+msgstr "Document"
+msgctxt "interface"
+
+msgid "log"
+msgstr "Historique d'évenement"
+msgctxt "interface"
+
+msgid "messageDeliveryHistory"
+msgstr "Historique des messages de communications"
+msgctxt "interface"
+
+msgid "messageDeliveryReception"
+msgstr "Messages de communication reçu"
+msgctxt "interface"
+
+msgid "messageDeliveSending"
+msgstr "Messages de communication envoyé"
+msgctxt "interface"
+
+msgid "messageDeliveryValidate"
+msgstr "Messages de communication validé"
+msgctxt "interface"
+
+msgid "retrieve"
+msgstr "Récupération d'archive"
+msgctxt "interface"
+

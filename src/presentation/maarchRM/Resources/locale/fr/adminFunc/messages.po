@@ -1,0 +1,28 @@
+# adminFunc/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "adminFunc"
+msgstr "Administration fonctionnelle"
+msgctxt "bundle"
+
+msgid "auth"
+msgstr "Sécurité"
+msgctxt "interface"
+
+msgid "contact"
+msgstr "Contact"
+msgctxt "interface"
+
+msgid "event"
+msgstr "Evenement"
+msgctxt "interface"
+
+msgid "orgTree"
+msgstr "Arbre de l'organisation"
+msgctxt "interface"
+
+msgid "orgType"
+msgstr "Type d'organisation"
+msgctxt "interface"
+

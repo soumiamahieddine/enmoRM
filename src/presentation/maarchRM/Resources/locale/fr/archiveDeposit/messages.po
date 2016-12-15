@@ -1,0 +1,24 @@
+# archiveDeposit/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveDeposit"
+msgstr "Dépot d'archive"
+msgctxt "bundle"
+
+msgid "archiveTransferSending"
+msgstr "Message de transfert envoyé"
+msgctxt "interface"
+
+msgid "messageTransferHistory"
+msgstr "Historique des messages de tranfert"
+msgctxt "interface"
+
+msgid "messageTransferReception"
+msgstr "Message de transfert reçu"
+msgctxt "interface"
+
+msgid "deposit"
+msgstr "Faire un dépot"
+msgctxt "interface"
+

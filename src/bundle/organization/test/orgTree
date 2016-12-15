@@ -1,0 +1,18 @@
+[READ]
+GET http://maarchRM.svc/organization/orgTree
+
+[READ]
+GET http://maarchRM.svc/organization/orgTree/getelementsformove/_orgUnitId_
+
+[UPDATE]
+PUT http://maarchRM.svc/organization/orgTree/move
+
+{
+    "orgUnitId": "ARCHIVE_DEPARTEMENTALE_92_SERVICE_CONTROL",
+    "newParentOrgUnitId" : "giPWrt3XqvmuO1",
+    "newOwnerOrgId" :"giPUP1vHL1pkUFt"
+}
+
+[READ]
+GET http://maarchRM.svc/organization/orgTree/Persons/_orgUnitId_
+

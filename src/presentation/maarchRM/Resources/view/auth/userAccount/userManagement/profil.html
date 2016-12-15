@@ -1,0 +1,90 @@
+<div class="container-fluid" lang="en" data-translate-catalog="auth/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-user"></i> Profil</h1>
+    </div>
+</div>
+
+<div class="container-fluid dataForm" data-form-ns="contact" lang="en" data-translate-catalog="auth/messages"> 
+    <div class="row">
+        <div class="col-lg-8 col-sm-12">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#contactInformationsTab" data-toggle="tab">Information</a></li>
+            </ul>
+            <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <?merge userPerson ?>
+                        <div class="tab-pane fade in active" id="userPersonTab">
+                            <h3>Informations</h3>
+                            <form class="well form-horizontal">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <a class="col-sm-9 col-xs-offset-3" href="#">
+                                            <button type="button" id="resetImage" class="close">&times;</button>
+                                            <img id="photo" class="img-responsive img-rounded col-sm-12" src="[?merge contactObject.photoUrl.ifeq('').then('/public/bundle/contact/img/contact.png',contactObject.photoUrl) ?]" alt=""/>
+                                        </a>
+                                        <input type="file" accept="image/x-png, image/jpeg" class="form-control hide" name="photo">
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="form-group">
+                                            <input type="hidden" id="userId" class="form-control" name="userId"/>                                            
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="displayName" class="col-sm-2 control-label">Display name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Display name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="firstname" class="col-sm-2 control-label">First name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastname" class="col-sm-2 control-label">Last name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="birthName" class="col-sm-2 control-label">Birth name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="birthName" name="birthName" placeholder="Birth name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="title" class="col-sm-2 control-label">Title</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="salutation" name="title" placeholder="Title">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="gender" class="col-sm-2 control-label">Gender</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="gender" name="gender" placeholder="Gender">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="dateOfBirth" class="col-sm-2 control-label">Date of birth</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="dateOfBirth" name="dateOfBirth" placeholder="Date of birth">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer clearfix">
+                    <div class="pull-right ">
+                        <button type="button" class="btn btn-danger" title="Cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-form-submit title="Save">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

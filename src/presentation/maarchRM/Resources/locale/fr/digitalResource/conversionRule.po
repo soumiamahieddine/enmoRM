@@ -1,0 +1,43 @@
+# digitalResource/conversionRule
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Conversion rules"
+msgstr "Règles de conversion"
+
+msgid "Conversion rule(s)"
+msgstr "Règle(s) de conversion"
+
+msgid "Add a conversion rule"
+msgstr "Ajouter une règle de conversion"
+
+msgid "Conversion service"
+msgstr "Service de conversion"
+
+msgid "Target Puid"
+msgstr "Puid cible"
+
+msgid "Select a format"
+msgstr "Sélectionnez un format"
+
+msgid "Edit a new conversion rule"
+msgstr "Éditer une nouvelle règle de conversion"
+
+msgid "Puid is empty"
+msgstr "Le Puid est vide"
+
+msgid "Conversion service is emty"
+msgstr "Le service de conversion est vide"
+
+msgid "Target Puid is empty"
+msgstr "Le Puid cible est vide"
+
+msgid "Conversion rule created"
+msgstr "Règle de conversion créée"
+
+msgid "Conversion rule updated"
+msgstr "Règle de conversion modifiée"
+
+msgid "Conversion rule deleted"
+msgstr "Règle de conversion supprimée"
+

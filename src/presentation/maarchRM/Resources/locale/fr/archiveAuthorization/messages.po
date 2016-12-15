@@ -1,0 +1,16 @@
+# archiveAuthorization/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveAuthorization"
+msgstr "Message d'autorisation"
+msgctxt "bundle"
+
+msgid "messageAuthorizationReception"
+msgstr "Réception de message d'autorisation"
+msgctxt "interface"
+
+msgid "messageAuthorizationSending"
+msgstr "Envoie de message d'autorisation"
+msgctxt "interface"
+

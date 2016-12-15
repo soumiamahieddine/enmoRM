@@ -1,0 +1,52 @@
+# adminArchive/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "adminArchive"
+msgstr "Administration des archives"
+msgctxt "bundle"
+
+msgid "accessRule"
+msgstr "Règle d'acces"
+msgctxt "interface"
+
+msgid "archivalAgreement"
+msgstr "Convention d'archivage"
+msgctxt "interface"
+
+msgid "archivalProfile"
+msgstr "Profils"
+msgctxt "interface"
+
+msgid "contentType"
+msgstr "Type de contenu"
+msgctxt "interface"
+
+msgid "journal"
+msgstr "Journal"
+msgctxt "interface"
+
+msgid "retentionRule"
+msgstr "Règle de retention"
+msgctxt "interface"
+
+msgid "serviceLevel"
+msgstr "Niveau de service"
+msgctxt "interface"
+
+msgid "adminFunc"
+msgstr "Administration fonctionelle"
+msgctxt "bundle"
+
+msgid "adminTech"
+msgstr "Administration technique"
+msgctxt "bundle"
+
+msgid "archiveAuthorization"
+msgstr "Message d'autorisation"
+msgctxt "bundle"
+
+msgid "archiveConversion"
+msgstr "Conversion de format"
+msgctxt "bundle"
+

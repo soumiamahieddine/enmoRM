@@ -1,0 +1,314 @@
+# organization/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "organization"
+msgstr "Organisations"
+msgctxt "bundle"
+
+msgid "orgTree"
+msgstr "Administration des organisations"
+msgctxt "interface"
+
+msgid "orgUnitType"
+msgstr "Administration des types de services"
+msgctxt "interface"
+
+msgid "person"
+msgstr "Personnes des organisations"
+msgctxt "model"
+
+msgid "orgRole"
+msgstr "Roles des organisations"
+msgctxt "model"
+
+msgid "orgType"
+msgstr "Types des organisations"
+msgctxt "model"
+
+msgid "orgUnit"
+msgstr "Services"
+msgctxt "model"
+
+msgid "orgUnitType"
+msgstr "Types de services"
+msgctxt "model"
+
+msgid "organization"
+msgstr "Organisations"
+msgctxt "model"
+
+msgid "position"
+msgstr "Positions des personnes"
+msgctxt "model"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "Organization unit"
+msgstr "Service"
+
+msgid "Describe the hierarchical structure and relationships"
+msgstr "Décrit la structure hiérarchique et les relations"
+
+msgid "Organization type"
+msgstr "Type d'organisation"
+
+msgid "Organization tree"
+msgstr "Arbre organisationnel"
+
+msgid "New organization"
+msgstr "Nouvelle organisation"
+
+msgid "Add a new organization"
+msgstr "Ajouter une nouvelle organisation"
+
+msgid "Information"
+msgstr "Informations"
+
+msgid "Organization name"
+msgstr "Nom"
+
+msgid "Other name"
+msgstr "Autre nom"
+
+msgid "Display name"
+msgstr "Nom affiché"
+
+msgid "Legal classification"
+msgstr "Forme juridique"
+
+msgid "Business type"
+msgstr "Code APE"
+
+msgid "Position set to default"
+msgstr "Position mise par défaut"
+
+msgid "default"
+msgstr "défaut"
+
+msgid "set default"
+msgstr "Par défaut"
+
+msgid "Begin date"
+msgstr "Date de début"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Organization role"
+msgstr "Rôle(s)"
+
+msgid "Add role"
+msgstr "Ajouter un rôle"
+
+msgid "Tax identifier"
+msgstr "Numéro de TVA intraco"
+
+msgid "Registration number"
+msgstr "Identifiant"
+
+msgid "Organization unit members"
+msgstr "Membres de l'unité organisationnelle"
+
+msgid "Recorded persons"
+msgstr "Personnes enregistrées"
+
+msgid "New person"
+msgstr "Nouvelle personne"
+
+msgid "Person"
+msgstr "Personne"
+
+msgid "Legal form"
+msgstr "Forme légale"
+
+msgid "Done"
+msgstr "Terminer"
+
+msgid "Hide persons"
+msgstr "Cacher les personnes"
+
+msgid "Show persons"
+msgstr "Afficher les personnes"
+
+msgid "Funtion"
+msgstr "Fonction"
+
+msgid "Roles"
+msgstr "Rôles"
+
+msgid "Move organization unit"
+msgstr "Déplacer l'unité organisationnelle"
+
+msgid "Root"
+msgstr "Racine"
+
+msgid "Move to :"
+msgstr "Déplacer vers :"
+
+msgid "Select a new position for the organization"
+msgstr "Sélectionnez une nouvelle position pour l'organisation"
+
+msgid "Move"
+msgstr "Déplacer"
+
+msgid "Manage users"
+msgstr "Gérer les utilisateurs"
+
+msgid "Manage contacts"
+msgstr "Gérer les contacts"
+
+msgid "Owner Organization Id"
+msgstr "Identifiant de l'organisation parente"
+
+msgid "Organization contacts"
+msgstr "Contacts de l'organisation"
+
+msgid "Add a child organization"
+msgstr "Ajouter une organisation enfant"
+
+msgid "Add a child organization unit"
+msgstr "Ajouter un service enfant"
+
+msgid "Organization users"
+msgstr "Utilisateurs de l'organisation"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "Submit"
+msgstr "Valider"
+
+msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
+msgstr "Les premier et dernier caractères doivent être des lettre. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
+
+msgid "Are you sure to delete this organization ? This action will also delete the organizations and persons above !"
+msgstr "Êtes-vous sûr de vouloir supprimer l'organisation ? Cette action supprime aussi les organisations et les personnes qui y sont associées !"
+
+msgid "Modification not saved"
+msgstr "Modifications non enregistrées"
+
+msgid "The modifications are not saved. Do you want to close the form anyway ?"
+msgstr "Les modifications ne sont pas enregistrées. Voulez-vous quand même fermer ce formulaire ?"
+
+msgid "Archival agency"
+msgstr "Service d'Archives"
+
+msgid "Archive control authority"
+msgstr "Service de contrôle"
+
+msgid "Archive originating agency"
+msgstr "Service producteur"
+
+msgid "Archive depositor agency"
+msgstr "Service versant"
+
+msgid "Archive requester"
+msgstr "Demandeur d'archive"
+
+msgid "The system owner"
+msgstr "Opérateur d'archivage"
+
+msgid "Linked to organization"
+msgstr "Contact lié à l'organisation"
+
+msgid "Organization contact"
+msgstr "Contact de l'organisation"
+
+msgid "Organization added"
+msgstr "Organisation ajoutée"
+
+msgid "Organization and his childrens are deleted"
+msgstr "L'organisation et ses enfants ont été supprimés"
+
+msgid "Organization updated"
+msgstr "Organisation modifiée"
+
+msgid "New person added"
+msgstr "Personne ajoutée"
+
+msgid "Person updated"
+msgstr "Personne modifiée"
+
+msgid "Person removed"
+msgstr "Personne retirée"
+
+msgid "Contact removed"
+msgstr "Contact supprimé"
+
+msgid "Contact updated"
+msgstr "Contact modifié"
+
+msgid "Organization unit added"
+msgstr "Unité organisationnelle ajoutée"
+
+msgid "Organization unit updated"
+msgstr "Unité organisationnelle modifiée"
+
+msgid "The organization unit is moved"
+msgstr "Unité organisationnelle déplacée"
+
+msgid "Organization unit and his childrens are deleted"
+msgstr "L'unité organisationnelle et ses enfants ont été supprimés"
+
+msgid "Organization unit type added"
+msgstr "Type d'unité organisationnelle ajouté"
+
+msgid "Organization unit type updated"
+msgstr "Type d'unité organisationnelle modifié"
+
+msgid "Person position created"
+msgstr "Position d'une personne créée"
+
+msgid "Person position deleted"
+msgstr "Position d'une personne supprimée"
+
+msgid "User added to the organization"
+msgstr "Utilisateur ajouté à l'organisation"
+
+msgid "User removed"
+msgstr "Utilisateur supprimé"
+
+msgid "Missing display name"
+msgstr "Veuillez saisir le nom affiché."
+
+msgid "The contact has been added to the organization"
+msgstr "Le contact a été ajouté à l'organisation."
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "Function"
+msgstr "Fonction"
+
+msgid "Organization unit name"
+msgstr "Service"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "Organization types"
+msgstr "Types d'organisation"
+
+msgid "organization type(s)"
+msgstr "type(s) d'organisation"
+
+msgid "Organization type created"
+msgstr "Type d'organisation créé"
+
+msgid "Organization type updated"
+msgstr "Type d'organisation mis à jour"
+

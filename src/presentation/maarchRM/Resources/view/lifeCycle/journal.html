@@ -1,0 +1,59 @@
+<div data-translate-catalog="lifeCycle/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h2>Life cycle journal</h2>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge events.count() ?> result(s)</h4>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable">
+                            <thead>
+                            </thead>
+                            <tbody>
+                                <?merge events ?>
+                                <tr rowspan="2">
+                                    <td class='col-xs-12'>
+                                        <?merge . $event ?>
+                                        <table class='col-xs-12'>
+                                            <tr class="danger">
+                                                <td>
+                                                    <strong>
+                                                        <?merge .eventType ?>&nbsp;<i class="fa [?merge .operationResult.then('fa-check-circle text-success', 'fa-times-circle text-danger') ?]">&nbsp;</i><br/>
+                                                        <?merge .timestamp ?><br/>
+                                                    </strong>
+                                                    <em><?merge .description ?></em><br/>
+                                                </td>
+                                                <td>
+                                                    Class : <?merge .objectClass ?><br/> 
+                                                    Identifier : <?merge .objectId ?><br/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan=2>
+                                                    <?merge .format ?>
+                                                    <span><?merge .print() $format ?><?merge .print() ?> : <?merge $event.attr($format) ?><br/></span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+        <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+    </div>
+</div>

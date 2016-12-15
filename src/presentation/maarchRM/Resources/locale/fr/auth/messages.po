@@ -1,0 +1,645 @@
+# auth/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "adminTech"
+msgstr "Administration technique"
+msgctxt "userStoryGroup"
+
+msgid "adminStorage"
+msgstr "Gérer le stockage"
+msgctxt "userStory"
+
+msgid "adminFormat"
+msgstr "Gérer les formats"
+msgctxt "userStory"
+
+msgid "adminEventFormat"
+msgstr "Gérer les formats d'évenement du cycle de vie"
+msgctxt "userStory"
+
+msgid "task"
+msgstr "Gérer les tâches"
+msgctxt "userStory"
+
+msgid "destruction"
+msgstr "Destruction"
+msgctxt "userStory"
+
+msgid "adminFunc"
+msgstr "Administration fonctionnelle"
+msgctxt "userStoryGroup"
+
+msgid "adminOrganization"
+msgstr "Gérer l'organisation fonctionnelle"
+msgctxt "userStory"
+
+msgid "adminAuthorization"
+msgstr "Gérer les rôles"
+msgctxt "userStory"
+
+msgid "adminOrgContact"
+msgstr "Gérer les contacts dans l'organisation"
+msgctxt "userStory"
+
+msgid "adminOrgUser"
+msgstr "Gérer les utilisateurs dans l'organisation"
+msgctxt "userStory"
+
+msgid "adminServiceaccount"
+msgstr "Gérer les comptes de services"
+msgctxt "userStory"
+
+msgid "adminUseraccount"
+msgstr "Gérer les utilisateurs"
+msgctxt "userStory"
+
+msgid "batchScheduling"
+msgstr "Gérer les tâches planifiées"
+msgctxt "userStory"
+
+msgid "contact"
+msgstr "Gérer les contacts"
+msgctxt "userStory"
+
+msgid "adminArchive"
+msgstr "Administration archivistique"
+msgctxt "userStoryGroup"
+
+msgid "adminAccessRule"
+msgstr "Gérer les règles d'accès"
+msgctxt "userStory"
+
+msgid "adminRetentionRule"
+msgstr "Gérer le tableau de gestion"
+msgctxt "userStory"
+
+msgid "archivalAgreement"
+msgstr "Gérer les accords de versement"
+msgctxt "userStory"
+
+msgid "archivalProfile"
+msgstr "Gérer les profils d'archive"
+msgctxt "userStory"
+
+msgid "controlAuthority"
+msgstr "Gérer les autorités de contrôle"
+msgctxt "userStory"
+
+msgid "descriptionField"
+msgstr "Gérer les champs de description"
+msgctxt "userStory"
+
+msgid "serviceLevel"
+msgstr "Gérer les niveau de service"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# Journal
+# ---------------------------------------------------------
+
+msgid "journal"
+msgstr "Journaux"
+msgctxt "userStoryGroup"
+
+msgid "lifeCycleJournal"
+msgstr "Consulter le journal du cycle de vie"
+msgctxt "userStory"
+
+msgid "audit"
+msgstr "Consulter le journal de l'application"
+msgctxt "userStory"
+
+msgid "logBatchScheduling"
+msgstr "Historique de  plannification"
+msgctxt "userStory"
+
+msgid "searchLogArchive"
+msgstr "Rechercher les journaux archivés"
+msgctxt "userStory"
+
+msgid "archiveManagement"
+msgstr "Gérer l'archive"
+msgctxt "userStoryGroup"
+
+msgid "modify"
+msgstr "Modifier les règles de gestion d'une archive"
+msgctxt "userStory"
+
+msgid "migration"
+msgstr "Gérer les migrations de format"
+msgctxt "userStory"
+
+msgid "checkIntegrity"
+msgstr "Contrôler la conformité et l'intégrité"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# Delivery
+# ---------------------------------------------------------
+
+msgid "delivery"
+msgstr "Communication"
+msgctxt "userStoryGroup"
+
+msgid "deliveryRequestReply"
+msgstr "Récupérer les communications"
+msgctxt "userStory"
+
+msgid "deliveryHistory"
+msgstr "Historique des communications"
+msgctxt "userStory"
+
+msgid "deliveryRequest"
+msgstr "Demander la communication"
+msgctxt "userStory"
+
+msgid "deliveryAuthorizationRequest"
+msgstr "Traiter les demandes d'autorisation"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# Destruction
+# ---------------------------------------------------------
+
+msgid "destruction"
+msgstr "Élimination"
+msgctxt "userStoryGroup"
+
+msgid "destructionHistory"
+msgstr "Historique des éliminations"
+msgctxt "userStory"
+
+msgid "destructionRequest"
+msgstr "Demander l'élimination"
+msgctxt "userStory"
+
+msgid "destructionAuthorizationRequest"
+msgstr "Traiter les demandes d'autorisation"
+msgctxt "userStory"
+
+msgid "destructionProcess"
+msgstr "Traiter les demandes de destruction"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# Restitution
+# ---------------------------------------------------------
+
+msgid "restitution"
+msgstr "Restitution"
+msgctxt "userStoryGroup"
+
+msgid "restitutionHistory"
+msgstr "Historique des restitutions"
+msgctxt "userStory"
+
+msgid "restitutionRequest"
+msgstr "Demander la restitution"
+msgctxt "userStory"
+
+# Accept/reject restitution request
+msgid "restitutionRequestValidation"
+msgstr "Valider les demandes de restitution"
+msgctxt "userStory"
+
+# Process restitution
+msgid "restitutionRequestProcess"
+msgstr "Traiter les demandes de restitution"
+msgctxt "userStory"
+
+msgid "restitutionValidation"
+msgstr "Récupérer les restitutions"
+msgctxt "userStory"
+
+# 
+# Commit restitution destruction
+msgid "restitutionProcess"
+msgstr "Traiter les restitutions acquittées"
+msgctxt "userStory"
+
+
+# ---------------------------------------------------------
+# Transfer (incoming)
+# ---------------------------------------------------------
+
+msgid "incomingTransfer"
+msgstr "Versement"
+msgctxt "userStoryGroup"
+
+msgid "transferImport"
+msgstr "Importer un bordereau"
+msgctxt "userStory"
+
+msgid "transferHistory"
+msgstr "Historique des versements"
+msgctxt "userStory"
+
+msgid "processTransfer"
+msgstr "Traiter les versements"
+msgctxt "userStory"
+
+msgid "transferSend"
+msgstr "Mes bordereaux à traiter"
+msgctxt "userStory"
+ 
+# ---------------------------------------------------------
+# Search/retrieve
+# ---------------------------------------------------------
+
+msgid "archiveRetrieval"
+msgstr "Rechercher et consulter"
+msgctxt "userStoryGroup"
+
+msgid "searchPublicArchive"
+msgstr "Accéder au registre des entrées"
+msgctxt "userStory"
+
+msgid "searchAdminArchive"
+msgstr "Recherche d'archives admnistratives"
+msgctxt "userStory"
+
+msgid "retrieve"
+msgstr "Consulter données et métadonnées"
+msgctxt "userStory"
+
+msgid "originatorAccess"
+msgstr "Notifications"
+msgctxt "userStoryGroup"
+
+msgid "requestCommunication"
+msgstr "Demande de communication"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# ???
+# ---------------------------------------------------------
+
+msgid "receiveNotifications"
+msgstr "Consulter les notifications"
+msgctxt "userStory"
+
+msgid "archiveDeposit"
+msgstr "Dépôt unitaire"
+msgctxt "userStoryGroup"
+
+
+# ---------------------------------------------------------
+# Admin panel
+# ---------------------------------------------------------
+
+msgid "Authorization roles"
+msgstr "Rôles utilisateur"
+
+msgid "authorization role(s)"
+msgstr "rôle(s) d'autorisation"
+
+msgid "Role name"
+msgstr "Nom du rôle"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Administrator"
+msgstr "Administrateur"
+
+msgid "Select a role"
+msgstr "Selectionner un rôle"
+
+msgid "Add a role"
+msgstr "Ajouter un rôle"
+
+msgid "New role"
+msgstr "Nouveau rôle"
+
+msgid "Edit role"
+msgstr "Modification du rôle"
+
+msgid "Disabled"
+msgstr "Désactivé"
+
+msgid "Role members"
+msgstr "Membres du rôle"
+
+msgid "Role privileges"
+msgstr "Privilèges du rôle"
+
+msgid "Access rules"
+msgstr "Règles d'accès"
+
+msgid "Privileges"
+msgstr "Privilèges"
+
+msgid "Rules"
+msgstr "Règles"
+
+msgid "Show"
+msgstr "Aperçu"
+
+msgid "Lock"
+msgstr "Bloquer"
+
+msgid "Unlock"
+msgstr "Débloquer"
+
+msgid "New role created."
+msgstr "Nouveau rôle crée"
+
+msgid "Role updated."
+msgstr "Role modifié"
+
+msgid "Status changed."
+msgstr "Statuts modifié"
+
+msgid "The name is empty."
+msgstr "Le nom est vide."
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "roleModification"
+msgstr "Modification du rôle"
+msgctxt "audit"
+
+msgid "roleCreation"
+msgstr "Création du rôle"
+msgctxt "audit"
+
+msgid "StatutRoleModification"
+msgstr "Modification du statut du rôle"
+msgctxt "audit"
+
+msgid "roleDelete"
+msgstr "Suppression du rôle"
+msgctxt "audit"
+
+msgid "admin"
+msgstr "Administration des utilisateurs"
+msgctxt "interface"
+
+msgid "userInformation"
+msgstr "Informations des utilisateurs"
+msgctxt "model"
+
+msgid "Login"
+msgstr "Connexion"
+
+msgid "Username"
+msgstr "Nom utilisateur"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Sign in"
+msgstr "Se connecter"
+
+msgid "Password must change"
+msgstr "Le mot de passe doit être changé"
+
+msgid "Caps Lock On"
+msgstr "Verrouillage majuscule activé"
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "New user"
+msgstr "Nouvel utilisateur"
+
+msgid "Add an user"
+msgstr "Ajouter un utilisateur"
+
+msgid "User modification"
+msgstr "Modification"
+
+msgid "User name"
+msgstr "Identifiant"
+
+msgid "Full name"
+msgstr "Nom complet"
+
+msgid "Email"
+msgstr "Courriel"
+
+msgid "Email address"
+msgstr "Adresse de courrier électronique"
+
+msgid "Service account created"
+msgstr "Compte de service créé"
+
+msgid "Service already exist"
+msgstr "Le service n'existe déjà."
+
+msgid "Last login date"
+msgstr "Date de la dernière connexion"
+
+msgid "Last IP address"
+msgstr "Dernière adresse IP"
+
+msgid "Locked"
+msgstr "Verrouillé"
+
+msgid "Unlocked"
+msgstr "Déverrouillé"
+
+msgid "Last password change date"
+msgstr "Date du dernier changement de mot de passe"
+
+msgid "Disable"
+msgstr "Désactiver"
+
+msgid "Enable"
+msgstr "Activer"
+
+msgid "Reset password"
+msgstr "Réinitialiser le mot de passe"
+
+msgid "Password verification"
+msgstr "Confirmation du mot de passe"
+
+msgid "User account"
+msgstr "Compte utilisateur"
+
+msgid "User information"
+msgstr "Information utilisateur"
+
+msgid "Roles"
+msgstr "Rôles"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "Profils"
+msgstr "Profil"
+
+msgid "Display name"
+msgstr "Nom affiché"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "First name"
+msgstr "Prénom"
+
+msgid "Last name"
+msgstr "Nom"
+
+msgid "E-Mail"
+msgstr "Courriel"
+
+msgid "Email malformed"
+msgstr "Courriel malformé"
+
+msgid "Choose group"
+msgstr "Choisir un groupe"
+
+msgid "Enable user"
+msgstr "Activer l'utilisateur"
+
+msgid "Delete a user"
+msgstr "Supprimer un utilisateur"
+
+msgid "Do you really want to delete this user ?"
+msgstr "Etes-vous sûr de vouloir supprimer cet utilisateur ?"
+
+msgid "Are you sure to reactive this user ?"
+msgstr "Etes-vous sûr de vouloir réactiver cet utilisateur ?"
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Edit profile"
+msgstr "Modification des informations"
+
+msgid "Change password"
+msgstr "Modification du mot de passe"
+
+msgid "Old password"
+msgstr "Ancien mot de passe"
+
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
+msgid "Username not registered or wrong password."
+msgstr "Nom d'utilisateur ou mot de passe incorrect."
+
+msgid "User connected"
+msgstr "Utilisateur connecté"
+
+msgid "User is disabled"
+msgstr "L'utilisateur est désactivé"
+
+msgid "The password is the same as the precedent."
+msgstr "Le mot de passe est le même que le précédent."
+
+msgid "Request a password change"
+msgstr "Demander un nouveau mot de passe"
+
+msgid "User added"
+msgstr "Utilisateur ajouté"
+
+msgid "User updated"
+msgstr "Utilisateur modifié"
+
+msgid "User locked"
+msgstr "Utilisateur verrouillé"
+
+msgid "User unlocked"
+msgstr "Utilisateur déverrouillé"
+
+msgid "User enable"
+msgstr "Utilisateur activé"
+
+msgid "User disable"
+msgstr "Utilisateur désactivé"
+
+msgid "Password has been changed"
+msgstr "Mot de passe modifié"
+
+msgid "Request to changed password sent."
+msgstr "Demande de changement du mot de passe envoyée"
+
+msgid "Disable user"
+msgstr "Désactiver un utilisateur"
+
+msgid "You are about to disable this user. Please chose a replacing user to complete this action."
+msgstr "Vous êtes sur le point de désactiver cet utilisateur. Veuillez choisir un utilisateur de remplacement pour valider cette action."
+
+msgid "authenticationSuccess"
+msgstr "Authentification réussie"
+msgctxt "audit"
+
+msgid "authenticationFailure"
+msgstr "Authentification échouée"
+msgctxt "audit"
+
+msgid "userAdd"
+msgstr "Utilisateur ajouté"
+msgctxt "audit"
+
+msgid "userModification"
+msgstr "Utilisateur modifié"
+msgctxt "audit"
+
+msgid "userAddUserException"
+msgstr "Utilisateur non-ajouté"
+msgctxt "audit"
+
+msgid "Invalid user information"
+msgstr "Les informations saisies comportent des erreurs."
+
+msgid "User name is required."
+msgstr "Le nom d'utilisateur est requis"
+
+msgid "Password is required."
+msgstr "Le mot de passe est requis"
+
+msgid "Passwords does not match"
+msgstr "Les mots de passe sont différents"
+
+msgid "Service name"
+msgstr "Nom du service"
+
+msgid "Token date"
+msgstr "Date de la clé"
+
+msgid "Token changed"
+msgstr "Clé générée"
+
+msgid "Service account(s)"
+msgstr "Compte(s) de service"
+
+msgid "Manage service account"
+msgstr "Gestion des comptes de service"
+
+msgid "Add a service account"
+msgstr "Ajouter un compte de service"
+
+msgid "Generate token"
+msgstr "Générer une clé"
+
+msgid "Edit service account"
+msgstr "Éditer un compte de service"
+
+msgid "Service account is disabled"
+msgstr "Compte de service désactivé"
+
+msgid "Service account is enabled"
+msgstr "Compte de service activé"
+
+msgid "Service account updated"
+msgstr "Compte de service modifié"
+
+msgid "The fields contain white spaces."
+msgstr "Le champs contient des espaces"
+
+msgid "The fields is empty."
+msgstr "Le champs est vide"
+
+msgid "Passwords are not the same"
+msgstr "Les mots de passe sont pas identiques"

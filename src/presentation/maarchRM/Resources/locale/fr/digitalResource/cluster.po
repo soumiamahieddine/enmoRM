@@ -1,0 +1,105 @@
+# digitalResource/cluster
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Cluster"
+msgstr "Grappe de dépôt"
+
+msgid "Clusters"
+msgstr "Grappes de dépôt"
+
+msgid "cluster(s)"
+msgstr "grappe(s) de dépôt"
+
+msgid "Repositories management"
+msgstr "Sites de dépôt"
+
+msgid "Cluster identifier"
+msgstr "Identifiant"
+
+msgid "Cluster name"
+msgstr "Nom de la grappe"
+
+msgid "Cluster description"
+msgstr "Description de la grappe"
+
+msgid "Store metadata"
+msgstr "Métadonnées"
+
+msgid "Cluster repositories"
+msgstr "Sites de dépôt"
+
+msgid "New cluster"
+msgstr "Nouvelle grappe"
+
+msgid "Edit a cluster"
+msgstr "Modifier une grappe"
+
+msgid "Add repository"
+msgstr "Ajouter site de dépôt"
+
+msgid "Cluster Name"
+msgstr "Nom de la grappe"
+
+msgid "Edit a new cluster"
+msgstr "Nouvelle grappe"
+
+msgid "Repository name"
+msgstr "Nom du site de dépôt"
+
+msgid "Please to select a repository"
+msgstr "Sélectionnez un site de dépôt"
+
+msgid "Read priority"
+msgstr "Priorité de lecture"
+
+msgid "Write priority"
+msgstr "Priorité d'écriture"
+
+msgid "Delete priority"
+msgstr "Priorité de suppression"
+
+msgid "Enabled"
+msgstr "Activer"
+
+msgid "Disabled"
+msgstr "Désactiver"
+
+msgid "Validate cluster"
+msgstr "Valider la grappe de dépôt"
+
+msgid "Add cluster repository"
+msgstr "Ajouter le site de dépôt"
+
+msgid "Update cluster"
+msgstr "Modifier la grappe"
+
+msgid "Cluster created"
+msgstr "Grappe de dépôt créée"
+
+msgid "Cluster updated"
+msgstr "Grappe de dépôt modifiée"
+
+msgid "The form must be completed to add a cluster repository"
+msgstr "Le formulaire doit être complété pour ajouter une grappe de dépôt."
+
+msgid "The value of read priority must be a number"
+msgstr "La valeur pour la priorité de lecture doit être un chiffre"
+
+msgid "The value of write priority must be a number"
+msgstr "La valeur pour la priorité d'écriture doit être un chiffre"
+
+msgid "The value of delete priority must be a number"
+msgstr "La valeur pour la priorité de suppression doit être un chiffre"
+
+msgid "Cluster name is empty"
+msgstr "Le nom de la grappe dépôt est vide"
+
+msgid "Cluster repository is empty"
+msgstr "Les sites de dépôt sont vide"
+
+msgid "The name should not contain spaces"
+msgstr "Le nom ne doit pas contenir d'espace"
+
+msgid "clusterName"
+msgstr "Nom de la grappe"

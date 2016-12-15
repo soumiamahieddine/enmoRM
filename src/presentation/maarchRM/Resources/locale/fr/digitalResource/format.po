@@ -1,0 +1,34 @@
+# digitalResource/format
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Format information"
+msgstr "Information du format"
+
+msgid "Formats"
+msgstr "Formats"
+
+msgid "Click or drop a file"
+msgstr "Cliquer ou déposer un fichier"
+
+msgid "File name"
+msgstr "Nom du fichier"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Check format"
+msgstr "Vérifier le format"
+
+msgid "File information"
+msgstr "Information du fichier"
+
+msgid "Hash MD5"
+msgstr "Empreinte numérique MD5"
+
+msgid "Hash SHA256"
+msgstr "Empreinte numérique SHA256"
+
+msgid "Hash SHA512"
+msgstr "Empreinte numérique SHA512"
+

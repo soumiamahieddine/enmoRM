@@ -1,0 +1,31 @@
+# digitalResource/contentType
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Content type"
+msgstr "Type de contenu"
+
+msgid "content type(s)"
+msgstr "type(s) de contenu"
+
+msgid "Edit a new content type"
+msgstr "Édition d'un nouveau type de contenu"
+
+msgid "Edit a content type"
+msgstr "Édition d'un type de contenu"
+
+msgid "List of formats"
+msgstr "Liste des formats"
+
+msgid "Mediatype"
+msgstr "Type de média"
+
+msgid "Select a mediatype"
+msgstr "Sélectionner un type de média"
+
+msgid "Content type created"
+msgstr "Type de contenu créé"
+
+msgid "Content type updated"
+msgstr "Type de contenu mis à jour"
+

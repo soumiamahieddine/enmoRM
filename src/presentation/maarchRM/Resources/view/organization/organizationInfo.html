@@ -1,0 +1,124 @@
+<div class="container-fluid" id="organization_organizationInfo">
+    <ul class="nav nav-tabs nav-justified">
+        <li id="organizationInfo_informationTab" class="active">
+            <a href="#informationTab" data-toggle="tab">Information</a>
+        </li>
+        <li>
+           <a href="#contactTab" data-toggle="tab">Contact</a>
+        </li>
+        <li id="organizationInfo_usersTab">
+            <a href="#usersTab" data-toggle="tab">Users</a>
+        </li>
+    </ul>
+    <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+        <div class="tab-pane active" id="informationTab" style="padding:14px">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4 id="orgInfo_displayName"></h4>
+                    <br/>
+                    <div class="col-xs-12">
+                        <dl class="dl-horizontal">
+                            <dt>Organization name</dt>
+                            <dd id="orgInfo_orgName"></dd>
+
+                            <dt>Other name</dt>
+                            <dd id="orgInfo_otherOrgName"></dd>
+
+                            <dt>Registration number</dt>
+                            <dd id="orgInfo_registrationNumber"></dd>
+
+                            <dt>Organization role</dt>
+                            <dd id="orgInfo_orgRoles"></dd>
+
+                            <dt>Organization type</dt>
+                            <dd id="orgInfo_organizationType"></dd>
+
+                            <dt>Begin date</dt>
+                            <dd id="orgInfo_beginDate"></dd>
+
+                            <dt>End date</dt>
+                            <dd id="orgInfo_endDate"></dd>
+
+                            <dt>Description</dt>
+                            <dd id="orgInfo_description"></dd>
+
+                            <dt>Legal classification</dt>
+                            <dd id="orgInfo_legalClassification"></dd>
+
+                            <dt>Business type</dt>
+                            <dd id="orgInfo_businessType"></dd>
+
+                            <dt>Tax identifier</dt>
+                            <dd id="orgInfo_taxIdentifier"></dd>
+                        </dl>
+                    </div>
+                    <button title="Modify" class="btn btn-warning pull-right" id="modifyOrganization"><i class="fa fa-edit">&nbsp;</i>Modify</button>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="contactTab" style="padding:14px">
+            <?hinclude organization/contactPositionForm.html ?>
+        </div>
+        <div class="tab-pane" id="usersTab" style="padding:14px">
+            <?hinclude organization/userPositionForm.html ?>
+        </div>
+    </div>
+
+    <div class="hide">
+         <?merge orgRole ?>
+        <span id="text_[?merge .code ?]"><?merge .description ?></span>
+    </div>
+</div>
+
+<?hinclude contact/contact/contactModal.html ?>
+
+<script>
+    $("#modifyOrganization").on('click', function() {
+        OrgInfo.close();
+        OrganizationForm.load($(this).data('organization'));
+    });
+
+    var OrgInfo = {
+        load: function(organization) {
+            $("#modifyOrganization").data('organization', organization);
+
+            // Is orgUnit ?
+            if(organization.isOrgUnit) {
+                $('#organizationInfo_usersTab').css('display', '');
+            } else {
+                if ($('#organizationInfo_usersTab').hasClass('active')) {
+                    $('#organizationInfo_informationTab').find('a').click();
+                }
+                $('#organizationInfo_usersTab').css('display', 'none');
+            }
+
+            // Roles
+            if(organization.orgRoleCodes) {
+                var roles = [];
+                $.each(organization.orgRoleCodes, function(key, value) {
+                    roles.push($('#text_' + value).text());
+                });
+
+                organization.orgRoles = roles.join();
+            }
+
+            // Infos
+            $('#orgInfo_displayName').text(organization.displayName);
+            $('#informationTab').find('dt, dd').css('display', 'none');
+            $.each(organization, function(key, value) {
+                if (value !=null) {
+                    $('#orgInfo_' + key).css('display', '').html(value).prev().css('display', '');
+                }
+            });
+
+            // Users, contact
+            UsersForm.load(organization.users, organization.services);
+            ContactForm.load(organization.contacts);
+            $("#organization_organizationInfo").css('display', '');
+        },
+
+        close: function() {
+            $('#organization_organizationInfo').css('display', 'none');
+        }
+    }
+</script>

@@ -1,0 +1,76 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+
+<div class="container-fluid" data-translate-catalog="digitalResource/repository">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-times-circle"></i>
+            Flawed addresses
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="digitalResource/repository">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><?merge addresses.count() ?> addresses</h4>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable" id="addressList">
+                        <thead>
+                            <tr>
+                                <th>Repository reference</th>
+                                <th class="hidden-xs">Checking date</th>
+                                <th>Address</th>
+                                <th style="width:1%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge addresses ?>
+                            <tr>
+                                <td><?merge .repositoryReference ?></td>
+                                <td class="hidden-xs"><?merge .lastIntegrityCheck ?></td>
+                                <td><?merge .path ?></td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm checkIntegrity" data-address="[?merge .json ?]" title="Check integrity">
+                                        <span class="fa fa-fw fa-database"/>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">    
+    $("#addressList").on("click", '.checkIntegrity', function() {
+        console.log($(this).data('address'));
+        $.ajax({
+            type        : 'PUT',
+            url         : '/checkAddressIntegrity',
+            data        : JSON.stringify({address:$(this).data('address')}),
+            contentType: 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status);
+                load('/flawedAddresses');                                
+            },
+            error       : function (response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+
+        });
+    });
+
+</script>

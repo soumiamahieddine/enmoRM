@@ -1,0 +1,18 @@
+<li>
+    <span class="node">
+        <i class="navIcon fa">&nbsp;</i>
+        <div class="btn-group" data-toggle="buttons" >
+            <label class="privilegeRadio btn btn-toggle [?merge .granted.then('btn-success active', 'btn-danger') ?]">
+                <?merge .granted @checked ?>
+                <input type="checkbox" class="classRadioBtn" value='[?merge .bundle ?]/[?merge .object ?]'><div class="label"><?merge .granted.then("On" , "Off") ?></div>
+            </label>
+        </div>
+        &nbsp;&nbsp;
+        <?merge .object ?>&nbsp;&nbsp;
+        <i class="fa fa-caret-down toggleContext" style="[?merge .granted.then('', 'visibility:collapse') ?]">&nbsp;</i>
+        <div class='contextArea' style="display:none">
+            <br/>
+            <textarea style="color:black"><?merge .context ?></textarea>
+        </div>
+    </span>
+</li>

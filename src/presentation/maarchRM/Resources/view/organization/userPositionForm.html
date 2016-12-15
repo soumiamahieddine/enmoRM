@@ -1,0 +1,287 @@
+<div class="panel-group" id="users_accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="userTab">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#users_accordion" href="#organizationInfo_users" aria-expanded="true" aria-controls="organizationInfo_users">
+                    <i class="fa fa-user">&nbsp;</i>Users
+                </a>
+            </h4>
+        </div>
+        <div id="organizationInfo_users" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="userTab">
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <input type="hidden" name="orgId" >
+                    <div class="form-group ">
+                        <label class='col-md-2 control-label'>User</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control input-sm" placeholder="User" id="organization_userTypeahead"/>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class='col-md-2 control-label'>Function</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control input-sm" name="function" placeholder="Function"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       <button class="btn btn-success btn-sm col-xs-offset-8" type="button" id="organization_addUserPosition" title="Add" disabled><i class="fa fa-plus fa-fw"></i>Add</button>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <ul class="list-group col-md-8 col-md-offset-2" id="organization_userPositionList">
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="serviceTab">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#users_accordion" href="#organizationInfo_services" aria-expanded="false" aria-controls="organizationInfo_services">
+                    <i class="fa fa-laptop">&nbsp;</i>Services
+                </a>
+            </h4>
+        </div>
+        <div id="organizationInfo_services" class="panel-collapse collapse" role="tabpanel" aria-labelledby="serviceTab">
+            <div class="panel-body">
+                <ul class="list-group col-md-8 col-md-offset-2" id="organization_servicePositionList">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<span class="hide" id="remove_text">Remove</span>
+<span class="hide" id="modify_text">Modify</span>
+<span class="hide" id="default_text">default</span>
+<span class="hide" id="setDefault_text">set default</span>
+
+
+<script>
+    $('#users_accordion').ready(function() {
+        var users = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {url: '/user/todisplay', ttl: '0'},
+            limit: 100
+        });
+        users.initialize();
+
+        // initialize typeahead
+        $('#organization_userTypeahead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            }, 
+            {
+                name: 'users',
+                displayKey: 'displayName',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>No user found</span>";
+                    },
+                    suggestion: function(user) {
+                        var display = 
+                            "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>" 
+                                + user.displayName
+                                + "</span>"
+                                + "</span>";
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    users.get(query, function(suggestions) {
+                        var i = suggestions.length
+                        while (i--) {
+                            if ($('#organization_userPositionList').find('#'+ suggestions[i].accountId).length)
+                                suggestions.splice(i, 1);
+                        }
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $("#organization_userTypeahead").data('user', suggestion);
+            $('#organization_addUserPosition').prop('disabled', false);
+        });
+    });
+
+    $('#organization_userTypeahead').on('keyup', function(){
+        var btn = $('#organization_addUserPosition');
+        var input = $(this);
+
+            btn.prop('disabled', true);
+    })
+
+    //add a user
+    $("#organization_addUserPosition").on('click', function(){
+        UsersForm.addUser();
+    });
+
+    //remove a user
+    $("#organization_userPositionList").on('click', '.removePosition', function() {
+        UsersForm.removeUser($(this));
+    });
+
+    // set default
+    $("#organization_userPositionList").on('click', '.setDefaultBtn', function() {
+        UsersForm.setDefault($(this));
+    })
+
+    UsersForm = {
+        addUser: function() {
+            if ($('#organization_userTypeahead').attr('data-user')) {
+                return;
+            }
+
+            var suggestion = $('#organization_userTypeahead').data('user');
+            var accountId = suggestion.accountId
+            var orgId = $('#modifyOrganization').data('organization').orgId;
+            var userFunction = $('#organization_userPositionForm').find('input[name="function"]').val();
+
+            $.ajax({
+                url         : "/organization/"+orgId+"/userPosition/"+accountId,
+                data        : JSON.stringify({'function':userFunction}),
+                type        : "POST",
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        UsersForm.addUserToScreen(accountId, suggestion.displayName, userFunction);
+                        $('#organization_userTypeahead').val('').removeData('user');
+                        $('#organization_userPositionForm').find('[name="function"]').val('');
+                        $('#organization_addUserPosition').prop('disabled', false);
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            })
+        },
+
+        load: function(users, services) {
+            $('#organization_userPositionList').html('');
+            $('#organization_servicePositionList').html('');
+
+            if (users) {
+                $.each(users, function(){
+                    UsersForm.addUserToScreen(this['userAccountId'], this['displayName'], this['function'], this['default']);
+                })
+            }
+
+            if (services) {
+                $.each(services, function(){
+                    UsersForm.addServiceToScreen(this['serviceAccountId'], this['displayName']);
+                })
+            }
+        },
+
+        addUserToScreen: function(accountId, displayName, userFunction, setDefault) {
+            if (userFunction) {
+                displayName += " ("+userFunction+")";
+            }
+
+            var positionList = $('#organization_userPositionList');
+
+            var li = $('<li/>')
+                .attr('id', accountId)
+                .addClass('list-group-item clearfix')
+                .appendTo(positionList)
+                .html(displayName);
+                
+            var span = $('<span/>')
+                .addClass('pull-right')
+                .appendTo(li)
+                .on('mouseenter', function() {
+                    $(this).find('.setDefaultBtn').css('visibility', '');
+                })
+                .on('mouseleave', function() {
+                    $(this).find('.setDefaultBtn').css('visibility', 'hidden');
+                });
+
+            var defaultBtn = $('<a/>')
+                .addClass('btn btn-info btn-xs defaultBtn disabled')
+                .html($('#default_text').html())
+                .appendTo(span);
+
+            var setDefaultBtn = $('<a/>')
+                .addClass('btn btn-default btn-xs setDefaultBtn')
+                .css('visibility', 'hidden')
+                .html($('#setDefault_text').html())
+                .appendTo(span);
+
+            var a = $('<a/>')
+                .addClass('text-danger removePosition')
+                .attr('href', '#')
+                .attr('title', $('#remove_text').html())
+                .css('padding-left', '16px')
+                .appendTo(span);
+
+            var i = $('<i/>')
+                .addClass('fa fa-times fa-fw')
+                .html("&nbsp;")
+                .appendTo(a);
+
+            if (!setDefault) {
+                defaultBtn.css('display', 'none');
+            } else {
+                setDefaultBtn.css('display', 'none');
+            }
+        },
+
+        addServiceToScreen: function(accountId, displayName) {
+            var positionList = $('#organization_servicePositionList');
+
+            var li = $('<li/>')
+                .attr('id', accountId)
+                .addClass('list-group-item clearfix')
+                .appendTo(positionList)
+                .html(displayName);
+        },
+
+        setDefault: function(btn) {
+            var orgId = $('#modifyOrganization').data('organization').orgId;
+            var accountId = btn.closest('li').attr('id');
+
+            $.ajax({
+                url         : "/organization/"+orgId+"/userPosition/"+accountId+"/defaultPosition",
+                type        : "PUT",
+                dataType    : 'json',
+                success     : function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    btn.css('display', 'none');
+                    btn.parent().find('.defaultBtn').css('display', '');
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            })
+        },
+
+        removeUser: function(li) {
+            var orgId = $('#modifyOrganization').data('organization').orgId;
+            var accountId = li.closest('li').attr('id');
+
+            $.ajax({
+                url         : "/organization/"+orgId+"/userPosition/"+accountId,
+                type        : "DELETE",
+                dataType    : 'json',
+                success     : function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    li.closest('li').remove();
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            })
+        }
+    }
+
+</script>

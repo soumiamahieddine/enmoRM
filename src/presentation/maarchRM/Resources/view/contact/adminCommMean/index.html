@@ -1,0 +1,302 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Cyril Vazquez <cyril.vazquez@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+    #-->
+<div id="contain" >
+    <div class="container-fluid" lang="en" data-translate-catalog="contact/contact">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-list-ul"></i>
+                Communication
+                <small>Manage the communication means</small>
+            </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="well col-xs-12 col-md-5 pull-left" >
+                    <p id="commMeanListMessage" class="[?merge commMeans.bool().then('hide','') ?]">No communication means saved for contacts.</p>
+
+                    <div id="commMeanList" class="list-group">
+                        <?merge commMeans ?>
+                        <?merge . ?>
+                        <a data-commMean="[?merge .commMeanCode ?]" href="#" class="list-group-item [?merge .enabled.then('', 'disabled') ?]">
+                            <h4 class="list-group-item-heading"><?merge .commMeanName ?></h4>
+                        </a>
+                    </div>
+                    <button type="button" id="new-commMean" class="btn btn-primary" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                </div>
+                <form class="well col-xs-12 col-md-6 pull-right" id="commMean-form" style="display:none">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="commMeanCode">Communication mean code</label>
+                                    <input type="text" class="form-control" id="commMeanCode" name="commMeanCode" placeholder="Communication mean code">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label class="col-md-3 control-label">Enabled</label>
+                                <div class=" col-md-9">
+                                    <div class="btn-group btn-group-justified col-md-10" data-toggle="buttons">
+                                        <label id="enabledTrue" class="btn btn-info active" title="Yes">
+                                            <input type="radio" name="enabled" value="1" checked="checked" > Yes
+                                        </label>
+                                        <label id="enabledFalse" class="btn btn-info" title="No">
+                                            <input type="radio" name="enabled" value=""> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="commMeanName">Communication mean name</label>
+                                <input type="text" class="form-control" id="commMeanName" name="commMeanName" placeholder="Communication mean name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer clearfix">
+                        <div class="pull-right ">
+                            <button type="button" id="cancel" class="btn btn-warning" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                            <button type="button" id="delete" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o">&nbsp;</i>Delete</button>
+                            <button type="button" id="add" class="btn btn-success hide" title="Add"><i class="fa fa-save">&nbsp;</i>Add</button>
+                            <button type="button" id="update" class="btn btn-success hide" title="Update"><i class="fa fa-save">&nbsp;</i>Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="confirmDelete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete the communication mean</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Are you sure to delete this communication mean ?<br/>
+                        It will also delete saved informartion for this communication mean from contact.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                    <button type="button" class="btn btn-primary" id="confirmDeleteSubmit" title="yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#cancel").on('click', function () {
+        cancelForm('address');
+    });
+    
+    $("#confirmDeleteSubmit").on('click', function () {
+        deleteCommunication();
+    });
+    
+    $("#delete").on('click', function () {
+        $('#confirmDelete').modal('show');
+    });
+    
+    $("#add").on('click', function () {
+        addCommunication($(this));
+    });
+    
+    $("#update").on('click', function () {
+        addCommunication($(this));
+    });
+    
+    $("#contain").on('keyup', '#commMeanCode, #commMeanName', function () {
+        if ($('#commMeanCode').val() != "" && $('#commMeanName').val() != "") {
+            $("#add, #update").removeClass('hide');
+        }
+        else {
+            $("#add, #update").addClass('hide');
+        }
+    });
+    
+    $("#new-commMean").on('click', function () {
+        newCommMean();
+    });
+
+    //Load communication
+    $("#contain").on('click', 'a[data-commMean]', function () {
+
+        $('a[data-commMean]').removeClass('active');
+        $(this).addClass('active');
+
+        $('#commMean-form').css('display', '');
+        $('#commMeanCode').attr('disabled', 'true');
+        $('#delete').css('display', '');
+        $('#update').css('display', '');
+        $('#update').removeClass('hide');
+        $('#add').css('display', 'none');
+        $('#new-commMean').css('display', '');
+
+        ajax($(this), {
+            type: "GET",
+            url: '/contact/adminCommMean/editCommMean/' + $(this).attr('data-commMean'),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                mergeObject(response);
+            }
+        });
+    });
+
+    function addCommunication(button) {
+
+        $("#add, #update").prop('disabled', true);
+
+        if (!$('#commMeanCode').prop('disabled')) {
+            type = 'POST';
+            url = '/contact/adminCommMean/addCommMean';
+        }
+        else {
+            type = 'PUT';
+            url = '/contact/adminCommMean/modifyCommMean';
+        }
+
+        commObject = serializeObject();
+
+        ajax($(this), {
+            type: type,
+            url: url,
+            data: JSON.stringify(commObject),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                gritter.show(response.message, response.status);
+                if (response.status == true) {
+                    if (type == 'POST') {
+                        addOjectToList(commObject);
+                    }
+                    else {
+                        updateObjectToList(commObject);
+                    }
+                    cancelForm();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    }
+
+    function deleteCommunication() {
+        $('#confirmDelete').modal('hide');
+        $.ajax({
+            type: 'DELETE',
+            url: '/contact/adminCommMean/deleteCommMean/' + $('#commMeanCode').val(),
+            dataType: 'json',
+            contentType: 'application/json',
+            async: false,
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status == true) {
+                    $('#commMeanList').find('.active').remove();
+                    if ($('#commMeanList').find('a').length == 0) {
+                        $('#commMeanListMessage').removeClass('hide');
+                    }
+                    cancelForm();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    }
+
+    function addOjectToList(object) {
+        newCommunication = '<a data-commMean="' + object['commMeanCode'] + '" onclick="load(\'#\')" class="list-group-item';
+        if (object['enabled'] == "") {
+            newCommunication += ' disabled ';
+        }
+        newCommunication += '">';
+
+        newCommunication += '<h4 class="list-group-item-heading">' + object["commMeanName"] + '<\/h4>';
+
+        newCommunication += '<\/a>';
+        $('#commMeanList').append(newCommunication);
+
+        $('#commMeanListMessage').addClass('hide');
+    }
+
+    function updateObjectToList(object) {
+
+        //newCommunication='<h4 class="list-group-item-heading">'+object["commMeanName"]+'<\/h4>';
+        //$('#commMeanList').find('.active').html(newCommunication);
+        $('#commMeanList').find('.active').remove();
+        addOjectToList(object);
+    }
+
+    function serializeObject() {
+        communication = {
+            enabled: $('#commMean-form').find('.active').find('input').val()
+        };
+        $('input[type="text"]').each(function () {
+            communication[$(this).attr('name')] = $(this).val();
+        });
+
+        return communication;
+    }
+
+    function mergeObject(object) {
+        if (object['enabled']) {
+            $("#enabledTrue").addClass('active').find('input').attr('checked', 'true');
+            $("#enabledFalse").removeClass('active').find('input').removeAttr('checked');
+        }
+        else {
+            $("#enabledTrue").removeClass('active').find('input').removeAttr('checked');
+            $("#enabledFalse").addClass('active').find('input').attr('checked', 'true');
+        }
+        delete object.enabled;
+        $.each(object, function (key, value) {
+            $('input[name="' + key + '"]').val(value);
+        });
+    }
+
+    //cancel Form
+    function cancelForm() {
+        $('#commMean-form').find('input[type="text"]').val('');
+        $('#commMean-form').css('display', 'none');
+        $('a[data-address]').removeClass('active');
+        $('#commMeanList').find('a[data-commMean]').removeClass('active');
+
+        $('#new-commMean').css('display', '');
+        $('#commMeanCode').removeAttr('disabled');
+
+        $("#enabledTrue").addClass('active').find('input').attr('checked', 'true');
+        $("#enabledFalse").removeClass('active').find('input').removeAttr('checked');
+
+        $('#delete').css('display', 'none');
+        $('#update').css('display', 'none');
+        $('#add').css('display', '');
+    }
+
+    //new Form
+    function newCommMean() {
+        cancelForm();
+        $('#commMean-form').css('display', '');
+        $('#new-commMean').css('display', 'none');
+    }
+
+</script>

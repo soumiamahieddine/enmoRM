@@ -1,0 +1,58 @@
+# recordsManagement/log
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Search logs"
+msgstr "Recherche de journaux"
+
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
+msgid "Process identifier"
+msgstr "Identifiant du processus"
+
+msgid "Process name"
+msgstr "Nom du processus"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "result(s)"
+msgstr "résultat(s)"
+
+msgid "From date"
+msgstr "Date de début"
+
+msgid "To date"
+msgstr "Date de fin"
+
+msgid "lifeCycle"
+msgstr "Cycle de vie"
+
+msgid "Check integrity"
+msgstr "Vérifier l'intégrité"
+
+msgid "application"
+msgstr "Application"
+
+msgid "lifecycle"
+msgstr "Cycle de vie"
+
+msgid "system"
+msgstr "Système"
+
+msgid "Valid"
+msgstr "Valide"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Integrity check failed on this journal."
+msgstr "La vérification d'intégrité du journal a échoué."
+
+msgid "The journal is integrity is valid."
+msgstr "Le journal est intègre."
+

@@ -1,0 +1,155 @@
+<div class="well" data-translate-catalog="digitalResource/cluster">
+    <div class="row">
+        <div class="col-lg-5">
+            <form class="form-horizontal" role="form">
+                <h3>Cluster repositories <span style="color: red">*</span></h3>
+                <!-- Repository -->
+                <div class="form-group col-md-11">
+                    <label class="control-label">Repository name</label>
+                    <select class="form-control" id="repositoryId">
+                        <option value="">Please to select a repository</option>
+                        <?merge repositories ?>
+                        <option value="[?merge .repositoryId?]"><?merge .repositoryName ?></option>
+                        <?merge repositoriesHide ?>
+                        <option value="[?merge .repositoryId?]" class="hide"><?merge .repositoryName ?></option>
+                    </select>
+                </div>
+                <!-- read priority -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="readPriority">Read priority</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" placeholder="Read priority" id="readPriority" />
+                    </div>    
+                </div>
+                <!-- write priority -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="writePriority">Write priority</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" placeholder="Write priority" id="writePriority" />
+                    </div>    
+                </div>
+                <!-- deletePriority -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="deletePriority">Delete priority</label>
+                    <div class="col-md-6">
+                        <input type="number" class="form-control" placeholder="Delete priority" id="deletePriority" />
+                    </div>    
+                </div>
+                <div class="clearfix">
+                    <button type="button" class="btn btn-success col-sm-offset-4" data-add-repository title="Add repository"><span class="fa fa-plus">&nbsp;</span>Add repository</button>
+                </div>
+            </form>
+        </div>
+        <br/>
+        <div class="col-lg-7" data-form-ns="clusterRepository" data-form-rel="toMany">
+            <div id="clusterRepositories" class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <th>Repository name</th>
+                        <th>Read priority</th>
+                        <th>Write priority</th>
+                        <th>Delete priority</th>
+                        <th></th>
+                    </thead>
+                    <tbody id='tbodyRepository'>
+                        <?merge cluster.clusterRepository.bool()?>
+                        <div>
+                            <?merge cluster.clusterRepository ?>
+                            <div>
+                                <?merge . ?>
+                                <tr>
+                                    <td><?merge .repositoryName ?></td>
+                                    <td><?merge .readPriority ?></td>
+                                    <td><?merge .writePriority ?></td>
+                                    <td><?merge .deletePriority ?></td>
+                                    <td>
+                                        <form class="hide">
+                                            <input type="hidden" name="clusterId" value='[?merge cluster.clusterId ?]'/>
+                                            <input type="hidden" name="repositoryId" value='[?merge .repositoryId ?]'/>
+                                            <input type="hidden" name="readPriority" value='[?merge .readPriority ?]'/>
+                                            <input type="hidden" name="writePriority" value='[?merge .writePriority ?]'/>
+                                            <input type="hidden" name="deletePriority" value='[?merge .deletePriority ?]'/>
+                                        </form>
+                                        <button type="button" class="btn btn-danger" data-delete-repository title="Delete"><span class="fa fa-trash"></span></button>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hide" data-translate-catalog="digitalResource/cluster">
+    <div id="badValueRead">The value of read priority must be a number</div>
+    <div id="badValueWrite">The value of write priority must be a number</div>
+    <div id="badValueDelete">The value of delete priority must be a number</div>
+    <div id="clusterFormNotCompleted">The form must be completed to add a cluster repository</div>
+</div>
+<script>
+    $('#app_maarchRM_main').ready(function() {
+        $('#app_maarchRM_main').on('click', '[data-delete-repository]', function(){
+            var repositoryName = $(this).parent().parent().children().first().text();
+            $("select option:contains('"+repositoryName+"')").removeClass('hide');
+            $(this).parent().parent().remove();
+        });
+        
+        $('[data-add-repository]').on('click', function(){
+            if ($('#repositoryId').val() && $('#readPriority').val() && $('#deletePriority').val()) {
+                var repoId = $('#repositoryId').val();
+                var repoName = $('#repositoryId  option:selected').text();
+                var readPriority = $('#readPriority').val();
+                var writePriority = $('#writePriority').val();
+                var deletePriority = $('#deletePriority').val();
+                
+                var intRegex = /^\d+$/;
+                if(!intRegex.test(readPriority)) {
+                    $('#readPriority').parent().addClass('has-error');
+                    gritter.show($("#badValueRead").text(), false);
+                    return;
+                } else {
+                    $('#readPriority').parent().removeClass('has-error');
+                }
+                if(!intRegex.test(writePriority)) {
+                    $('#writePriority').parent().addClass('has-error');
+                    gritter.show($("#badValueWrite").text(), false);
+                    return;
+                } else {
+                    $('#writePriority').parent().removeClass('has-error');
+                }
+                if(!intRegex.test(deletePriority)) {
+                    $('#deletePriority').parent().addClass('has-error');
+                    gritter.show($("#badValueDelete").text(), false);
+                    return;
+                } else {
+                    $('#deletePriority').parent().removeClass('has-error');
+                }
+                
+                var tr = $(document.createElement('tr'));
+                $(document.createElement('td')).text(repoName).appendTo(tr);
+                $(document.createElement('td')).text(readPriority).appendTo(tr);
+                $(document.createElement('td')).text(writePriority).appendTo(tr);
+                $(document.createElement('td')).text(deletePriority).appendTo(tr);
+                var lastTd = $(document.createElement('td')).appendTo(tr);
+
+                var form = $(document.createElement('form')).attr('class', 'hide').appendTo(lastTd);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'repositoryId').attr('value', repoId).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'readPriority').attr('value', readPriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'writePriority').attr('value', writePriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'deletePriority').attr('value', deletePriority).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'clusterId').attr('value', $('#clusterId').val()).appendTo(form);
+
+                var button = $(document.createElement('button')).attr('type', 'button').attr('data-delete-repository', '').attr('class', 'btn btn-danger').appendTo(lastTd);
+                $(document.createElement('span')).attr('class', 'fa fa-trash').appendTo(button);
+
+                $('#tbodyRepository').append(tr);
+                
+                $('#repositoryId option:selected').addClass('hide');
+                $(this).closest('form').trigger("reset");
+            } else {
+                gritter.show($("#clusterFormNotCompleted").text(), false);
+            }
+        });
+    });
+</script>

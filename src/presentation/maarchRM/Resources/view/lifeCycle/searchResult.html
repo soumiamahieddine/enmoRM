@@ -1,0 +1,60 @@
+<div class="row" data-translate-catalog="lifeCycle/messages">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4><?merge events.count() ?> result(s)</h4>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table dataTable" id="reco">
+                    <thead>
+                        <tr>
+                            <?merge multipleInstance.bool() ?>
+                            <th>Instance</th>
+                            <th>Account name</th>
+                            <th>Timestamp</th>
+                            <th>Description</th>
+                            <th>Result</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge events ?>
+                        <tr>
+                            <?merge multipleInstance.bool() ?>
+                            <td><?merge .instanceName ?></td>
+                            <td><?merge .accountName?></td>
+                            <td><?merge .timestamp ?></td>
+                            <td data-type="[?merge .eventType ?]"><?merge .description ?></td>
+                            <td><i class="fa fa-[?merge .operationResult.then('check text-success', 'times text-danger') ?]"></i></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-warning btn-sm showEvent" title="Show the certificate" data-eventid='[?merge .eventId ?]' data-journal-id='[?merge .journalId ?]'><span class="fa fa-fw fa-eye">&nbsp;</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="showCertificate" tabindex="-1" role="dialog" aria-labelledby="certificate" aria-hidden="true" data-translate-catalog="lifeCycle/message">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="certificate">Event</h4>
+            </div>
+            <div class="modal-body" id="eventModalContent">
+                <p><strong>Address : </strong><span id ="m_address"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

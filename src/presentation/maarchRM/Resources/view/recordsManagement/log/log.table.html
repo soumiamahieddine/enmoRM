@@ -1,0 +1,23 @@
+<div class="table-responsive" data-translate-catalog="recordsManagement/log">
+    <table class="table table-condensed table-striped table-condensed">
+        <tbody>
+            <?merge log.archiveId.bool() ?>
+            <tr><td><strong>Archive identifier</strong></td><td><?merge log.archiveId ?></td></tr>
+            
+            <?merge log.fromDate.bool() ?>
+            <tr><td><strong>From date</strong></td><td><?merge log.fromDate ?></td></tr>
+            
+            <?merge log.toDate.bool() ?>
+            <tr><td><strong>To date</strong></td><td><?merge log.toDate ?></td></tr>
+            
+            <?merge log.type.bool() ?>
+            <tr><td><strong>Type</strong></td><td><?merge log.type ?></td></tr>
+            
+            <?merge log.processId.bool() ?>
+            <tr><td><strong>Process identifier</strong></td><td><?merge log.processId ?></td></tr>
+            
+            <?merge log.processName.bool() ?>
+            <tr><td><strong>Process name</strong></td><td><?merge log.processName ?></td></tr>
+        </tbody>
+    </table>
+</div>

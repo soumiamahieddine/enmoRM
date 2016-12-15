@@ -1,0 +1,419 @@
+<style>
+#drop_zone {
+    border: 2px dashed #bbb;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 100px;
+    text-align: center;
+    font: 20pt bold 'Vollkorn';
+    color: #bbb;
+}
+</style>
+
+
+<div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/depositArchive">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-file-archive-o"></i>
+            Deposit an archive
+        </h1>
+    </div>
+</div>
+
+
+
+<div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/depositArchive">
+    <form class="form-horizontal">
+        <div class="col-md-12">
+            <div class="col-md-5">
+                <!-- ARCHIVAL PROFILE -->
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Archival profile</label>
+                    <div class="form-group col-sm-7">
+                        <select class="form-control" id="archivalProfileReference" name="archivalProfileReference">
+                            <option value="">Select an archival profile</option>
+                            <?merge archivalProfiles ?>
+                            <option value="[?merge .reference ?]" data-descriptionClass="[?merge .descriptionClass ?]" data-descriptionSchema="[?merge .descriptionSchema ?]"><?merge .reference ?></option>
+                        </select>
+                    </div>
+                </div>
+                <!-- ARCHIVAL AGREEMENT -->
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Archival agreement</label>
+                    <div class="form-group col-sm-7">
+                        <select class="form-control" id="archivalAgreementReference" name="archivalAgreementReference">
+                            <option value="">Select an archival agreement</option>
+                            <?merge archivalAgreements ?>
+                            <option value="[?merge .reference ?]"><?merge .reference ?></option>
+                        </select>
+                    </div>
+                </div>
+                <!-- SERVICE LEVEL -->
+                <div class="form-group">
+                    <label class="col-sm-4 control-label">Service level</label>
+                    <div class="form-group col-sm-7">
+                        <select class="form-control" id="serviceLevelReference" name="serviceLevelReference">
+                            <?merge serviceLevels ?>
+                            <div>
+                                <?merge .default.ifeq('true') @selected ?>
+                                <option value="[?merge .reference ?]"><?merge .reference ?></option>
+                            </div>
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <button type="button" class="col-md-offset-3 btn btn-primary" id="sendArchive" data-button-submit title="Send archive"><span class="fa fa-paper-plane">&nbsp;</span>Send archive</button>
+                </div>
+                <br/>
+                <div class="">
+                    <div class="panel-group" id="accordion" role="tablist">
+                        <div class="panel panel-default hide" id="collapseDescriptionClass">
+                            <div class="panel-heading" role="tab" id="archiveDescriptionClassHeading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseArchiveDescriptionClass" aria-expanded="true" aria-controls="collapseArchiveDescriptionClass">
+                                        Archive's description
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseArchiveDescriptionClass" class="panel-collapse collapse" role="tabpanel" aria-labelledby="archiveDescriptionHeadingClass">
+                                <div class="panel-body">
+                                    <div class="well" id="descriptionClass">
+                                        <!-- ARCHIVE DESCRIPTION CLASS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default" id="collapseDescriptionSchema">
+                            <div class="panel-heading" role="tab" id="archiveDescriptionSchemaHeading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseArchiveDescriptionSchema" aria-expanded="true" aria-controls="collapseArchiveDescriptionSchema">
+                                        Xml description
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseArchiveDescriptionSchema" class="panel-collapse collapse" role="tabpanel" aria-labelledby="archiveDescriptionSchemaHeading">
+                                <div class="panel-body">
+                                    <div class="well" id="descriptionSchema">
+                                        <!-- ARCHIVE DESCRIPTION SCHEMA -->
+                                        <div class="form-group">
+                                            <label for="descriptionXml" class="control-label">Description schema</label>
+                                            <textarea style="height: 100px;" class="form-control" name="descriptionXml" id="descriptionXml" placeholder="Reference"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="retentionRuleHeading">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseRetentionRule" aria-expanded="false" aria-controls="collapseRetentionRule">
+                                        Retention rule
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseRetentionRule" class="panel-collapse collapse" role="tabpanel" aria-labelledby="retentionRuleHeading">
+                                <div class="panel-body">
+                                    TODO RENTENTION RULE FORM
+                                </div>
+                            </div>
+                        </div-->
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="col-md-7">
+                <!-- FILE -->
+                <div class="hide">
+                    <input type="file" class="form-control" name="file"/>
+                </div>
+                <div class="form-group col-md-12">
+                    <div id="drop_zone">Click or drop file here</div>
+                </div>
+                <div class="form-group hide col-md-12 well">
+                    <dl class="dl-horizontal col-md-6">
+                        <dt>File name :</dt><dd id="fileName"></dd>
+                        <dt>Size :</dt><dd id="fileSize"></dd>
+                    </dl>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-danger btn-sm hide" id="resetFile" title="Reset file"><span class="fa fa-trash-o">&nbsp;</span>Reset file</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hide col-md-12">
+                    <div class="form-group">
+                        <div class="input-group col-md-7">
+                            <input type="text"  class="form-control" readonly />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-danger" id="resetFile" title="Delete"><span class="fa fa-trash-o"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FILE CONTENT -->
+                <iframe class="hide" name="viewer" src="" width="100%"></iframe>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="hide" lang="en" data-translate-catalog="recordsManagement/exception">
+    <span data-exception-archivalProfile >You must chose an archival profile</span>
+    <span data-exception-archivalAgreement >You must chose an archival agreement</span>
+    <span data-exception-serviceLevel >You must chose a service level</span>
+    <span data-exception-mandatoryDescrpitionValues >You must define all mandatory values of archive description</span>
+</div>
+
+<script type="text/javascript">
+    
+    var digitalResource = new Object();
+
+    $('#app_maarchRM_main').ready(function() {
+        var height = $(window).height();
+        $("[name='viewer']").each(function () {
+            $(this).attr("height", 0.90*height);
+        });
+    });
+
+    function handleFileSelect(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        var files = evt.dataTransfer.files; // FileList object.
+        // files is a FileList of File objects. List some properties.
+        oFileReader = new FileReader();
+        oFileReader.readAsDataURL(files[0]);
+        oFileReader.onload = function() {
+            $('#drop_zone').hide();
+            $('#fileName').text(files[0].name);
+            $('#fileSize').text(files[0].size  + " octets");
+            $('#fileName').parent().parent().removeClass('hide');
+            $('#resetFile').removeClass('hide');
+            var contents = oFileReader.result;
+            digitalResource.handler = contents;
+            digitalResource.fileName = files[0].name;
+            digitalResource.size = files[0].size;
+            $("[name='viewer']").each(function () {
+                $(this).attr("src", contents);
+                $(this).removeClass('hide');
+            });
+        }
+    }
+
+    function handleDragOver(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }
+    
+    // Setup the dnd listeners.
+    var dropZone = document.getElementById('drop_zone');
+    dropZone.addEventListener('dragover', handleDragOver, false);
+    dropZone.addEventListener('drop', handleFileSelect, false);
+    
+    $('#app_maarchRM_main').ready(function() {
+        $("#drop_zone").on('click', function() {
+            $('[name="file"]')[0].click();
+        });
+        
+        $("[name='file']").on('change', function() {
+            if($('[name="file"]').val() == "") {
+                return;
+            }
+
+            oFile = $('[name="file"]')[0].files[0];
+            oFileReader = new FileReader();
+            oFileReader.readAsDataURL(oFile);
+            oFileReader.onload = function() {
+                $('#drop_zone').hide();
+                $('#fileName').text(oFile.name);
+                $('#fileSize').text(oFile.size + " octets");
+                $('#fileName').parent().parent().removeClass('hide');
+                $('#resetFile').removeClass('hide');
+                var contents = oFileReader.result;
+                digitalResource.handler = contents;
+                digitalResource.fileName = oFile.name;
+                digitalResource.size = oFile.size;
+                $("[name='viewer']").each(function () {
+                    $(this).attr("src", contents);
+                    $(this).removeClass('hide');
+                });
+            }
+        });
+        
+        $("#resetFile").on('click', function() {
+            $("#fileName").text("");
+            $("#fileSize").text("");
+            digitalResource.handler = "";
+            digitalResource.fileName = "";
+            $("#fileName").parent().parent().addClass("hide");
+            $('#resetFile').addClass("hide");
+            $("#drop_zone").show();
+            $("[name='warningMessageFile']").each(function (){
+                $(this).show();
+            });
+            $("[name='viewer']").each(function () {
+                $(this).attr("src", "");
+                $(this).addClass('hide');
+            });
+        });
+        
+        /**
+         * Manage archival profile
+         * - Get description class if exists
+         * - Get description schema if exists
+         * 
+         * @action When archival profile change
+         */
+        $('#archivalProfileReference').on('change', function(){
+            if($(this).val() === ""){
+                if ($('#collapseDescriptionClass').is(':visible')) {
+                    $('#collapseDescriptionClass').addClass('hide');
+                }
+                
+                $('#descriptionClass').html('');
+                $('#descriptionSchema').html('');
+                return;
+            }
+
+            if ($(this).find(":selected").attr("data-descriptionClass") !== "") {
+                $.ajax({
+                    type: 'GET',
+                    url: "/recordsManagement/archive/descriptionForm/" + $(this).find(":selected").val(),
+                    async: true,
+                    dataType : 'html',
+                    success: function(response) {
+                        $('#descriptionClass').html(response);
+                        if (!$('#collapseDescriptionClass').is(':visible')) {
+                            $('#collapseDescriptionClass').removeClass('hide');
+                        }
+                    }
+                });
+            } else {
+                if ($('#collapseDescriptionClass').is(':visible')) {
+                    $('#collapseDescriptionClass').addClass('hide');
+                }
+                $('#descriptionClass').html('');
+            }
+            
+            /*if ($(this).attr("descriptionSchema") !== "") {
+                // TODO
+                // recuperer le formulaire pour le description schema
+                // ATTENTION pas incompatible avec la description class
+                // Envoyer avec l'archive le resultat du formulaire de descriptionSchema
+                // Dans le parser qui recois l'archive, prévoir action si descriptionSchema existe
+            } else {
+                if ($('#collapseDescriptionSchema').is(':visible')) {
+                    $('#collapseDescriptionSchema').addClass('hide');
+                }
+                $('#descriptionSchema').html('');
+            }*/
+        });
+        
+        /**
+         * Construct archive object with data of this page and send the archive
+         * 
+         * @action When user click on submit button
+         */
+        $('[data-button-submit]').on('click', function(){
+            
+            if (!validationForm()) {
+                return;
+            }
+            
+            var archive = new Object();
+            
+            archive.archivalProfileReference = $("#archivalProfileReference").val();
+            archive.archivalAgreementReference = $("#archivalAgreementReference").val();
+            archive.serviceLevelReference = $("#serviceLevelReference").val();
+            
+            if ($("#archivalProfileReference").find(":selected").attr("data-descriptionClass") !== "") {
+                archive.descriptionClass = $("#archivalProfileReference").find(":selected").attr("data-descriptionClass");
+                var descriptionObject = new Object();
+                $('#descriptionClass').find('input, select').each(function () {
+                    descriptionObject[$(this).attr('name')] = $(this).val();
+                });
+
+                archive.descriptionObject = descriptionObject;
+            }
+            
+            if ($("#archivalProfileReference").find(":selected").attr("data-descriptionSchema") !== "") {
+                archive.descriptionSchema = $("#archivalProfileReference").find(":selected").attr("data-descriptionSchema");
+            }
+            archive.descriptionXml = $("#descriptionXml").val();
+            archive.document = new Array();
+            var document = new Object();
+            document.digitalResource = digitalResource;
+            document.type = "CDO";
+            archive.document.push(document);
+
+            var parameters = {
+              archive : archive  
+            };
+            $.ajax({
+                type: "POST",
+                url: "/recordsManagement/interactiveArchive",
+                data: JSON.stringify(parameters),
+                async: false,
+                contentType: 'application/json',
+                success: function(response) {
+                    var response = JSON.parse(response);
+                    if(response.status){
+                         $.gritter.add({
+                            text: response.message,
+                            class_name: "gritter-succes"
+                        });
+                        load("/recordsManagement/archive/depositForm");
+                    } else {
+                        $.gritter.add({
+                            text: response.message,
+                            class_name: "gritter-danger"
+                        });
+                    }
+                }
+            });
+        });
+    });
+    
+    function validationForm() {
+        //mandatoryDescrpitionValues
+        var archivalAgreement = $("#archivalAgreementReference").val();
+        var archivalProfile = $("#archivalProfileReference").val();
+        var serviceLevel = $("#serviceLevelReference").val();
+        
+        if ((archivalProfile == "") || (archivalProfile == null) || (archivalProfile == undefined)) {
+            createGritter("gritter-danger", $("[data-exception-archivalProfile]").text());
+            
+            return false;
+        }
+        if ((archivalAgreement == "") || (archivalAgreement == null) || (archivalAgreement == undefined)) {
+            createGritter("gritter-danger", $("[data-exception-archivalAgreement]").text());
+            
+            return false;
+        }
+        if ((serviceLevel == "") || (serviceLevel == null) || (serviceLevel == undefined)) {
+            createGritter("gritter-danger", $("[data-exception-serviceLevel]").text());
+            
+            return false;
+        }
+        
+        $("#descriptionClass").find(".has-error :first-child").each(function () {
+            if (($(this).val() == "") || ($(this).val() == null) || ($(this).val() == undefined)) {
+                createGritter("gritter-danger", $("[data-exception-mandatoryDescrpitionValues]").text());
+                return false;
+            }
+        });
+        
+        return true;
+    }
+    
+    function createGritter(type, text) {
+        $.gritter.add({
+            text: text,
+            class_name: type
+        });
+    }
+    
+</script>

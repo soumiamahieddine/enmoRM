@@ -1,0 +1,21 @@
+[CREATE]
+POST http://maarchRM/auth/role/privilege
+
+{
+    "privilege":{
+        "userStory":"test/test",
+        "roleId":"ADMIN"
+    }
+}
+
+
+
+[DELETE]
+DELETE http://maarchRM.test/auth/role/privilege
+
+{
+    "privilege":{
+        "userStory":"test/test",
+        "roleId":"ADMIN"
+    }
+}

@@ -1,0 +1,531 @@
+# medona/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "almedona"
+msgstr "Bordereau d'échange"
+msgctxt "bundle"
+
+msgid "archivalAgreement"
+msgstr "Convention d'archivage"
+msgctxt "interface"
+
+msgid "message"
+msgstr "Bordereau"
+msgctxt "interface"
+
+msgid "archivalAgreement"
+msgstr "Convention d'archivage"
+msgctxt "model"
+
+msgid "message"
+msgstr "Bordereau"
+msgctxt "model"
+
+msgid "messageStatus"
+msgstr "Statut du bordereau"
+msgctxt "model"
+
+msgid "archiveTransferReceipt"
+msgstr "Transfert d'archive reçu"
+msgctxt "audit"
+
+msgid "messageCreate"
+msgstr "Création d'un bordereau"
+msgctxt "audit"
+
+msgid "archivalAgreementModification"
+msgstr "Modification de la convention d'archivage"
+msgctxt "audit"
+
+msgid "Messages"
+msgstr "Bordereaux"
+
+msgid "You don't avec any role that enables you tu use messages."
+msgstr "Vous n'avez aucun rôle permettant l'utilisation des bordereaux."
+
+msgid "Deposit"
+msgstr "Versement"
+
+msgid "Received transfers"
+msgstr "Transferts reçus"
+
+msgid "Transfer incoming list"
+msgstr "Transferts à traiter"
+
+msgid "Transfer outgoing list"
+msgstr "Transferts à traiter"
+
+msgid "Delivery incoming list"
+msgstr "Demande de communication"
+
+msgid "Destruction incoming list"
+msgstr "Demande d'éliminatiion"
+
+msgid "Transfer history"
+msgstr "Historique des transferts entrants"
+
+msgid "Sent transfers"
+msgstr "Transferts envoyés"
+
+msgid "Transfers history"
+msgstr "Historique des transferts"
+
+msgid "Received notifications"
+msgstr "Notifications reçues"
+
+msgid "Notifications history"
+msgstr "Historique de Notifications"
+
+msgid "Sent delivery request"
+msgstr "Demandes de communication émises"
+
+msgid "Received delivery request"
+msgstr "Demandes de communication reçues"
+
+msgid "Delivery request history"
+msgstr "Historique des demandes de communication"
+
+msgid "Communication authorization"
+msgstr "Autorisation de communication"
+
+msgid "Destruction authorization"
+msgstr "Autorisation de destruction"
+
+msgid "Received Authorization request"
+msgstr "Demandes d'autorisation reçues"
+
+msgid "Sending Authorization request"
+msgstr "Demandes d'autorisation émises"
+
+msgid "Restitution"
+msgstr "Restitutions"
+
+msgid "Restitution request"
+msgstr "Demandes de restitution"
+
+msgid "Sending restitution request"
+msgstr "Demandes de restitution émises"
+
+msgid "Received restitution request"
+msgstr "Demandes de restitution reçues"
+
+msgid "Restitution history"
+msgstr "Historique des demandes de restitution"
+
+msgid "Transfer request"
+msgstr "Demande de transfert"
+
+msgid "Sent transfers request"
+msgstr "Demandes de transfert émises"
+
+msgid "Received transfers request"
+msgstr "Demandes de transfert reçues"
+
+msgid "Transfers history request"
+msgstr "Historique des demandes de transfert"
+
+msgid "Destruction"
+msgstr "Destruction"
+
+msgid "Destruction request"
+msgstr "Demande d'élimination"
+
+msgid "Sent destruction request"
+msgstr "Demandes d'élimination émises"
+
+msgid "Received destruction request"
+msgstr "Demandes d'élimination reçues"
+
+msgid "Destruction history"
+msgstr "Historique des demandes d'élimination"
+
+msgid "ArchiveConversionRequest"
+msgstr "Demande de conversion"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Sender"
+msgstr "Émetteur"
+
+msgid "Recipient"
+msgstr "Destinataire"
+
+msgid "Impacted archive"
+msgstr "Archive impacté"
+
+msgid "Size (bytes)"
+msgstr "Taille (octets)"
+
+msgid "Data object count"
+msgstr "Nombre d'objets"
+
+msgid "From date"
+msgstr "Date de début"
+
+msgid "To date"
+msgstr "Date de fin"
+
+msgid "Message identifier"
+msgstr "Référence du bordereau"
+
+msgid "Request communication"
+msgstr "Demande de communication"
+
+msgid "ArchiveDeliveryRequest"
+msgstr "Demande de communication d'archive"
+
+msgid "ArchiveDeliveryRequestReply"
+msgstr "Communication d'archive"
+
+msgid "ArchiveDestructionRequest"
+msgstr "Demande d'élimination d'archive"
+
+msgid "ArchiveDestructionRequestReply"
+msgstr "Réponse à la demande d'élimination d'archive"
+
+msgid "Send request"
+msgstr "Envoyer demande"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Send"
+msgstr "Envoyer"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Authorization request content"
+msgstr "Contenu de la requête d'autorisation"
+
+msgid "Authorization reason"
+msgstr "Raison de l'autorisation :"
+
+msgid "Request date"
+msgstr "Date de la requête :"
+
+msgid "Archival agency"
+msgstr "Service d'Archives"
+
+msgid "Transferring agency"
+msgstr "Service versant"
+
+msgid "Originating agency"
+msgstr "Service producteur"
+
+msgid "Requester"
+msgstr "Demandeur"
+
+msgid "Originator"
+msgstr "Service producteur"
+
+msgid "Control authority"
+msgstr "Autorité de contrôle"
+
+msgid "AuthorizationOriginatingAgencyRequest"
+msgstr "Demande d'autorisation au service producteur"
+
+msgid "AuthorizationOriginatingAgencyRequestReply"
+msgstr "Réponse à la demande d'autorisation"
+
+msgid "ArchiveDestructionNotification"
+msgstr "Notification de destruction"
+
+msgid "ArchiveModificationNotification"
+msgstr "Notification de modification"
+
+msgid "ArchivalProfileModificationNotification"
+msgstr "Notification de modification de profil"
+
+msgid "AuthorizationControlAuthorityRequest"
+msgstr "Demande d'autorisation au service de contrôle"
+
+msgid "AuthorizationControlAuthorityRequestReply"
+msgstr "Réponse à la demande d'autorisation"
+
+msgid "Comment(s)"
+msgstr "Commentaire(s)"
+
+msgid "Authorization"
+msgstr "Autorisation"
+
+msgid "Hash"
+msgstr "Empreinte numérique"
+
+msgid "Hash algorithm"
+msgstr "Algorithme"
+
+msgid "Sender organization"
+msgstr "Émetteur"
+
+msgid "Archival profile"
+msgstr "Profil d'archivage"
+
+msgid "Service level"
+msgstr "Niveau de service"
+
+msgid "Message received"
+msgstr "Message reçu"
+
+msgid "Message validated"
+msgstr "Message validé"
+
+msgid "The message is in error status"
+msgstr "Le message est en erreur"
+
+msgid "The message has already been received ('%s' Ref. '%s' from '%s')"
+msgstr "Le message est déjà enregistré ('%s' Ref. '%s' par '%s')"
+
+msgid "The attachment of binary data object"
+msgstr "Les pièces joints n'ont pas été trouvées"
+
+msgid "The reply message was not found."
+msgstr "Le message de réponse n'a pas été trouvé."
+
+msgid "Identifer"
+msgstr "Identifiant"
+
+msgid "File name"
+msgstr "Nom du fichier"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Reply code"
+msgstr "Code de réponse"
+
+msgid "ArchiveTransfer"
+msgstr "Transfert d'archive"
+
+msgid "ArchiveTransferReply"
+msgstr "Réponse au transfert d'archive"
+
+msgid "ArchiveRestitution"
+msgstr "Restitution"
+
+msgid "ArchiveRestitutionRequest"
+msgstr "Demande de restitution"
+
+msgid "ArchiveRestitutionRequestReply"
+msgstr "Réponse à la demande de restitution"
+
+msgid "Unit identifier(s)"
+msgstr "Identifiant(s) d'archives"
+
+msgid "Management metadata"
+msgstr "Métadonnées de gestion"
+
+msgid "Profile modification"
+msgstr "Modification de profil"
+
+msgid "Message import"
+msgstr "Import de bordereau"
+
+msgid "Click or drop a message file"
+msgstr "Cliquer ou déposer un bordereau"
+
+msgid "add attachement"
+msgstr "Ajouter des pièces jointes"
+
+msgid "End"
+msgstr "Terminer"
+
+msgid "Accept"
+msgstr "Accepter"
+
+msgid "Reject"
+msgstr "Rejeter"
+
+msgid "Active"
+msgstr "Activé"
+
+msgid "Validate"
+msgstr "Valider"
+
+msgid "Process"
+msgstr "Traiter"
+
+msgid "Not active"
+msgstr "Non activé"
+
+msgid "sent"
+msgstr "Envoyé"
+
+msgid "received"
+msgstr "Reçu"
+
+msgid "valid"
+msgstr "Valide"
+
+msgid "accepted"
+msgstr "Accepté"
+
+msgid "rejected"
+msgstr "Rejeté"
+
+msgid "acknowledge"
+msgstr "Acquitté"
+
+msgid "derogation"
+msgstr "Dérogation"
+
+msgid "processed"
+msgstr "Traité"
+
+msgid "invalid"
+msgstr "Invalide"
+
+msgid "validated"
+msgstr "Validé"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "authorization_wait"
+msgstr "En attente d'autorisation"
+
+msgid "Appraisal rule"
+msgstr "Règle de conservation"
+
+msgid "Access restrition rule"
+msgstr "Règle de communicabilité"
+
+msgid "Duration"
+msgstr "Durée"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "Transaction closed"
+msgstr "Transaction terminée"
+
+msgid "Message accepted"
+msgstr "Message accepté"
+
+msgid "Message rejected"
+msgstr "Message rejeté"
+
+msgid "Message validated"
+msgstr "Message validé"
+
+msgid "Authorization request send to originator agency"
+msgstr "Demande d'autorisation envoyée au service producteur"
+
+msgid "Authorization request send to control authority"
+msgstr "Demande d'autorisation envoyée à l'autorité de contrôle"
+
+msgid "Authorization accepted"
+msgstr "Autorisation acceptée"
+
+msgid "Authorization rejected"
+msgstr "Autorisation rejetée"
+
+msgid "Message processed"
+msgstr "Message traité"
+
+msgid "Invalid message"
+msgstr "Message invalide"
+
+msgid "Malformed XML"
+msgstr "Fichier XML malformé"
+
+msgid "expected '>'"
+msgstr "Fermeture de balise oubliée"
+
+msgid "Conversion requests"
+msgstr "Demandes de conversion"
+
+msgid "conversion request(s)"
+msgstr "demande(s) de conversion"
+
+msgid "Select a type of message"
+msgstr "Sélectionnez un type de messageal"
+
+msgid "Transfer"
+msgstr "Transfert"
+
+msgid "Delivery"
+msgstr "Communication"
+
+msgid "Archive id"
+msgstr "Identifiant d'archive"
+
+msgid "Description class"
+msgstr "Classe de description"
+
+msgid "Res id"
+msgstr "Id"
+
+msgid "Object id"
+msgstr "Identifiant d'objet"
+
+msgid "Archiver name"
+msgstr "Service d'Archives"
+
+msgid "Depositor name"
+msgstr "Service Versant"
+
+msgid "Originator name"
+msgstr "Service Producteur"
+
+msgid "Archival agreements"
+msgstr "Accords de versement"
+
+msgid "From"
+msgstr "Depuis"
+
+msgid "To"
+msgstr "jusqu'au"
+
+msgid "Associate the control authority to originator"
+msgstr "Associer une autorité de contrôle à un producteur"
+
+msgid "Control authority"
+msgstr "Autorité de contrôle"
+
+msgid "Select a control authority"
+msgstr "Selectionner une autorité de contrôle"
+
+msgid "Select a originator"
+msgstr "Selectionner un producteur"
+
+msgid "Default"
+msgstr "Défaut"
+
+msgid "Relation created"
+msgstr "Relation créée"
+
+msgid "Relation updated"
+msgstr "Relation modifiée"
+
+msgid "Relation deleted"
+msgstr "Relation supprimée"
+
+msgid "The relation control authority and orignator already exists."
+msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà."
+
+msgid "Relation not deleted."
+msgstr "Relation non-supprimée"
+
+msgid "Notification history"
+msgstr "Historique des notifications"
+
+msgid "Type of message"
+msgstr "Type de message"
+
+msgid "Are you sur to delete this archive ?"
+msgstr "Etes vous sûr de vouloir supprimer cette archive ?"
+
+msgid "Delete an archive"
+msgstr "Suppression d'une archive"

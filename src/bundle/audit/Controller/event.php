@@ -1,0 +1,312 @@
+<?php
+/*
+ * Copyright (C) 2015 Maarch
+ *
+ * This file is part of bundle audit.
+ *
+ * Bundle audit is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Bundle audit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with bundle audit.  If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace bundle\audit\Controller;
+
+/**
+ * Controller for the audit trail event
+ *
+ * @package Audit
+ */
+class event
+{
+
+    protected $sdoFactory;
+    protected $separateInstance;
+
+    /**
+     * Constructor
+     * @param \dependency\sdo\Factory $sdoFactory
+     * @param string                  $separateInstance Read only instance events
+     */
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false)
+    {
+        $this->sdoFactory = $sdoFactory;
+
+        $this->separateInstance = $separateInstance;
+    }
+
+    /**
+     * Create a new audit trail event
+     * @param string $path      The path of called service
+     * @param mixed  $variables The path variables
+     * @param mixed  $input     The input data
+     * @param string $output    The output data
+     * @param bool   $status    The result of action: success or failure (business exception)
+     * @param mixed  $info      The info on caller process/client/system
+     *
+     * @return id The identifier of the newly added event
+     */
+    public function add($path, array $variables = null, $input = null, $output = null, $status = false, $info = null)
+    {
+        $event = \laabs::newInstance('audit/event');
+        $event->eventId = \laabs::newId();
+        $event->eventDate = \laabs::newTimestamp();
+
+        if ($accountToken = \laabs::getToken('AUTH')) {
+            $event->accountId = $accountToken->accountId;
+        } else {
+            $event->accountId = "__system__";
+        }
+
+        $event->path = $path;
+        $event->status = $status;
+
+        if (count($variables)) {
+            $event->variables = \laabs::newJson($variables);
+        }
+        if (isset($input)) {
+            $event->input = \laabs::newJson($input);
+        }
+        if (isset($output)) {
+            $event->output = (string) $output;
+        }
+
+        if (!isset($info)) {
+            $info = array();
+            if (isset($_SERVER['REMOTE_ADDR'])) {
+                $info['remoteIp'] = $_SERVER['REMOTE_ADDR'];
+            }
+
+            if (count($info)) {
+                $event->info = \laabs::newJson($info);
+            }
+        } else {
+            $event->info = \laabs::newJson($info);
+        }
+        
+        if ($currentOrganization = \laabs::getToken("ORGANIZATION")) {
+            $organizationController = \laabs::newController('organization/organization');
+            $organization = $organizationController->read($currentOrganization->ownerOrgId);
+
+            $event->orgRegNumber = $organization->registrationNumber;
+            $event->orgUnitRegNumber = $currentOrganization->registrationNumber;
+        }
+        $event->instanceName = \laabs::getInstanceName();
+        
+        $this->sdoFactory->create($event);
+
+        return $event->eventId;
+    }
+
+    /**
+     * Find events for a given type
+     * @param string $eventType The type of event
+     *
+     * @return audit/events[] The array of audit events for the object
+     */
+    public function byType($eventType)
+    {
+        $queryString = "path='$eventType'";
+        if ($this->separateInstance) {
+            $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
+        }
+
+        $events = $this->sdoFactory->find('audit/event', $queryString);
+
+        return $events;
+    }
+
+    /**
+     * Find entries for a given type domain
+     * @param string $domain The domain of event
+     *
+     * @return audit/eventInfo[] The array of audit entries for the object
+     */
+    public function byDomain($domain)
+    {
+        $queryString = "eventType='$domain/*'";
+        if ($this->separateInstance) {
+            $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
+        }
+
+        $entries = $this->sdoFactory->find('audit/eventInfo', $queryString);
+
+        return $entries;
+    }
+
+    /**
+     * Find events for a identified user
+     * @param string $accountId The type of object
+     *
+     * @return audit/event[] The array of audit events for the object
+     */
+    public function byAccount($accountId)
+    {
+        $queryString = "accountId='$accountId' OR serviceAccountId='$accountId'";
+
+        if ($this->separateInstance) {
+            $queryString = "instanceName = '".\laabs::getInstanceName()."' AND " . $queryString;
+        }
+
+        $events = $this->sdoFactory->find('audit/event', "accountId='$accountId'");
+        
+        if ($events) {
+            return $events;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find events for a given type domain
+     * @param timestamp $fromdate
+     * @param timestamp $todate
+     *
+     * @return audit/eventInfo[] The array of audit evesnt for the object
+     */
+    public function byDate($fromdate = null, $todate = null)
+    {
+        $args = array();
+        if ($fromdate) {
+            $args[] = "eventDate>='$fromdate'";
+        }
+        if ($todate) {
+            $args[] = "eventDate<='$todate'";
+        }
+        if ($this->separateInstance) {
+            $args[] = "instanceName = '".\laabs::getInstanceName()."'";
+        }
+
+        $events = $this->sdoFactory->find('audit/event', implode(' and ', $args));
+
+        return $events;
+    }
+
+    /**
+     * Get result of search form
+     * @param timestamp $toDate
+     * @param timestamp $fromDate
+     * @param string    $event
+     * @param string    $accountId
+     * @param string    $status
+     * @param string    $term      Term to search
+     * @param string    $wording   Wording to search
+     *
+     * @return Array Array of audit/event object
+     */
+    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
+    {
+
+        $events = array();
+        $queryParts = array();
+        $queryParams = array();
+        if ($fromDate) {
+            $queryParams['fromDate'] = $fromDate;
+            $queryParts['fromDate'] = "eventDate >= :fromDate";
+        }
+        if ($toDate) {
+            $queryParams['eventDate'] = $toDate->add(new \DateInterval('PT23H59M59S'));
+            $queryParts['eventDate'] = "eventDate <= :eventDate";
+        }
+
+        if ($event) {
+            $queryParams['path'] = $event;
+            $queryParts['path'] = "path=:path";
+
+            $pathRouter = new \core\Route\PathRouter($event);
+            $reflectionPath = $pathRouter->path;
+        }
+        if ($accountId) {
+            $queryParams['accountId'] = $accountId;
+            $queryParts['accountId'] = "accountId = :accountId";
+        }
+        if ($status) {
+            if ($status != 'all') {
+                $queryParams['status'] = $status;
+                $queryParts['status'] = "status = :status";
+            }
+        }
+        if ($term) {
+            $wordings = explode(",", $wording);
+            $queryParts['term'] = null;
+            
+            foreach ($wordings as $wording) {
+                if($wording == 'all') {
+                    $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
+                } else {
+                    if ($queryParts['term']) {
+                        $queryParts['term'] .= " OR ".$wording." = '*".$term."*'";
+                    } else {
+                        $queryParts['term'] = "(".$wording." = '*".$term."*'";
+                    }
+                }
+            }
+            
+           if ($wording != 'all') {
+               $queryParts['term'] .= ")";
+           }
+        }
+        if ($this->separateInstance) {
+            $queryParts['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";
+        }
+
+        $queryString = implode(' AND ', $queryParts );
+        //$length = \laabs::getRequestMaxCount();
+        $length = 400;
+        $events = $this->sdoFactory->find("audit/event", $queryString, $queryParams, ">eventDate", 0, $length);
+
+        $users = \laabs::callService('auth/userAccount/readIndex');
+        foreach ($users as $i => $user) {
+            $users[(string) $user->accountId] = $user;
+            unset($users[$i]);
+        }
+
+        $services = \laabs::callService('auth/serviceAccount/readIndex');
+        foreach ($services as $i => $service) {
+            $services[(string) $service->accountId] = $service;
+            unset($services[$i]);
+        }
+
+        foreach ($events as $i => $event) {
+            if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
+                $event->accountName = $users[(string) $event->accountId]->accountName;
+            } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
+                $event->accountName = $services[(string) $event->accountId]->accountName;
+            } else {
+                $event->accountName = "__system__";
+            }
+
+            $event->origin = strtok($event->path, LAABS_URI_SEPARATOR);
+            $event->typeCode = strtok(LAABS_URI_SEPARATOR);
+        }
+
+        /*if (count($events) >= $length) {
+            $count = $this->sdoFactory->count("audit/event", $queryString, $queryParams);
+            
+            \laabs::setResponseCode(206);
+            \laabs::setResponseCount($count);
+        }*/
+        
+        return $events;
+    }
+    
+    /**
+     * Get event
+     * @param string $eventId
+     * 
+     * @return audit/event Object
+     */
+    public function getEvent($eventId)
+    {
+        $event = $this->sdoFactory->read("audit/event", $eventId);
+    
+        return $event;
+    }
+}

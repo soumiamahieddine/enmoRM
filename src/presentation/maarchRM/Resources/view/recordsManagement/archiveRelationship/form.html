@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Alexis Ragot <alexis.ragot@maarch.org>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div id="contain" >
+<div data-translate-catalog="recordsManagement/archiveRelationship">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-exchange"></i>
+                <span>Archive relationship</span>
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div id="addForm" class="col-md-5 well">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Archive identifier</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="archiveId" name="archiveId" placeholder="Archive identifier">
+                                <div class="input-group-btn">
+                                    <button type="button" id="search" class="btn btn-primary" title="Search"><span class="fa fa-search fa-fw"></span>&nbsp;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Relationship type</label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="relationshipType" name="relationshipType" disabled>
+                                <option value="">Please select a relationship type</option>
+                                <?merge relationType ?>
+                                <option value="[?merge . ?]"><?merge . ?></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Related archive identifier</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="relatedArchiveId" name="relatedArchiveId" placeholder="Related archive identifier" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Description</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="description" name="description" disabled>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="addRelationship" class="btn btn-success" title="Add a relationship" disabled><span class="fa fa-plus">&nbsp;</span>Add a relationship</button>
+                    </div>
+                </form>
+            </div>
+            <div id="relationshipResult" class=" col-md-offset-1 col-md-6 table-responsive">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="hide">
+        <button type="button" id="searchBtn" class="btn btn-primary" title="Search"><span class="fa fa-search fa-fw"></span>&nbsp;</button>
+        <button type="button" id="changeArchiveBtn" class="btn btn-danger" title="Cancel"><span class="fa fa-remove fa-fw"></span>&nbsp;</button>
+
+        <div id="delete_text">Delete</div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    /* ----------------------------------------------------------------------------------------------------*/
+    /* -- SEARCH ARCHIVE -- */
+
+    // Load an archive
+    $("#contain").on('click', '#search', function() {
+        if ($('#archiveId').val().trim() == "") {
+            return;
+        }
+        searchBtn = $(this);
+
+        searchBtn.prop('disabled', true);
+
+        $.ajax({
+            type     : 'GET',
+            url      : '/recordsManagement/archive/'+$('#archiveId').val()+'/exists',
+            dataType : 'json',
+            async    : true,
+            success  : function(response) {
+                if (response.status) {
+                    getRelationships();
+
+                    inputGroup = searchBtn.parent();
+                    searchBtn.remove();
+                    $('#changeArchiveBtn').clone().attr('id', 'changeArchive').appendTo(inputGroup);
+
+                    $('#changeArchive').removeClass('hide')
+                    $("#archiveId").attr("disabled", "");
+
+                } else {
+                    $('#relationshipResult').html('');
+                    gritter.show(response.message, response.status);
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    // Remove a loaded archive from the sreen
+    $("#contain").on('click', '#changeArchive', function() {
+        cancelBtn = $(this);
+
+        inputGroup = cancelBtn.parent();
+        cancelBtn.remove();
+        $('#searchBtn').clone().attr('id', 'search').appendTo(inputGroup);
+
+        $("#archiveId").val("").prop("disabled", false);
+        $('#relatedArchiveId').val("").prop("disabled", true);
+        $('#relationshipType').val("").prop("disabled", true);
+        $('#description').val("").prop("disabled", true);
+        $('#addRelationship').prop("disabled", true);
+
+        $('#relationshipResult').html('');
+    });
+
+    // Load an archive on blur
+    $("#contain").on("blur",'#archiveId', function () {
+        $("#search").click();
+    });
+
+    // Disable on enable inputs on changes
+    $("#contain").on('keyup change', '.form-control', function(){
+        if (($('#archiveId').val() != "") && ($('#relatedArchiveId').val() != "") && ($('#relationshipType').val() != "")) {
+            $('#addRelationship').prop('disabled', false);
+        } else {   
+            $('#addRelationship').prop('disabled', true);
+        }
+    })
+    
+
+    /* ----------------------------------------------------------------------------------------------------*/
+    /* -- ARCHIVAL RELATIONSHIP -- */
+
+    // Add relationship on Enter key press
+    $('#app_maarchRM_main').keypress(function(e){
+        if (e.which != 13) {
+             return;
+        }
+
+        e.preventDefault();
+        if($("#archiveId").is(':focus')){
+            $("#search").click();
+        }
+    });
+
+    // Add a new relationship
+    $("#contain").on("click",'#addRelationship', function () {
+        if (($('#archiveId').val() != "") && ($('#relatedArchiveId').val() != "") && ($('#relationshipType').val() != "")) {
+            var relationship = new Object();
+            relationship.archiveId = $('#archiveId').val();
+            relationship.relatedArchiveId = $('#relatedArchiveId').val();
+            relationship.typeCode = $('#relationshipType').val();
+            relationship.description = $('#description').val();
+            
+            var parameters = {
+                relationship : relationship
+            };
+            $(this).attr('disabled', '');
+            $.ajax({
+                type        : 'POST',
+                url         : '/recordsManagement/relationship',
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                async       : true,
+                success     : function(response) {
+                    var response = JSON.parse(response);
+                    if (response.status) {
+
+                        addRelationship(relationship);
+
+                        $('#relatedArchiveId').val("");
+                        $('#relationshipType').val("");
+                        $('#description').val("");
+                        $('#addRelationship').val("");
+                        $('#addRelationship').prop('disabled', true);
+                        
+                        $.gritter.add({
+                            text: response.message,
+                            class_name: "gritter-primary"
+                        });
+                        
+                    } else {
+                        $.gritter.add({
+                            text: response.message,
+                            class_name: "gritter-danger"
+                        });
+                    }
+                }
+            });
+            $(this).removeAttr('disabled');
+        }
+    });
+
+
+    // Delete a relationship 
+    $("#contain").on("click",'.deleteRelationship', function () {
+        var toDelete = $(this);
+        
+        var relationship = new Object();
+        relationship.archiveId = $('#archiveId').val();
+        relationship.relatedArchiveId = $(this).attr("data-relationship-relatedArchiveid");
+        relationship.typeCode = $(this).attr("data-relationship-typeCode");
+        
+        var parameters = {
+                relationship : relationship
+            };
+        $(this).prop('disabled', true);
+        $.ajax({
+            type        : 'DELETE',
+            url         : '/recordsManagement/relationship',
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            async       : true,
+            success     : function(response) {
+                var response : JSON.parse(response);
+                if (response.status) {
+                    toDelete.closest("tr").remove();
+                    $.gritter.add({
+                        text: response.message,
+                        class_name: "gritter-success"
+                    });
+                } else {
+                    $.gritter.add({
+                        text: response.message,
+                        class_name: "gritter-danger"
+                    });
+                }
+            }
+        });
+        $(this).removeAttr('disabled');
+    });
+
+
+    /* ----------------------------------------------------------------------------------------------------*/
+    /* -- FUNCTION -- */
+
+    // Get relationships
+    function getRelationships() {
+        $.ajax({
+            type: 'GET',
+            url: '/recordsManagement/relationship/'+$('#archiveId').val(),
+            dataType : 'html',
+            async: true,
+            success: function(response) {
+                $('#relatedArchiveId').removeAttr("disabled");
+                $('#relationshipType').removeAttr("disabled");
+                $('#description').removeAttr("disabled");
+                $('#relationshipResult').html(response);
+            }
+        });
+    }
+
+    // Add a new relation
+    function addRelationship(relationship) {
+        var tr = $(document.createElement('tr'));     
+        var tdRelatedArchiveId = $(document.createElement('td'));
+        tdRelatedArchiveId.text(relationship.relatedArchiveId);
+                        
+        var tdCode = $(document.createElement('td'));
+        tdCode.text(relationship.typeCode);
+                        
+        var tdDescription = $(document.createElement('td'));
+        tdDescription.text(relationship.description);
+                        
+        var tdButton = $(document.createElement('td'));
+                        
+        var buttonDelete = $(document.createElement('button'));
+        buttonDelete.attr("type", "button");
+        buttonDelete.attr("class", "btn btn-danger");
+        buttonDelete.attr("title", $('#delete_text').html());
+        buttonDelete.attr("data-relationship-delete", "");
+        buttonDelete.attr("data-relationship-relatedArchiveId", relationship.relatedArchiveId);
+        buttonDelete.attr("data-relationship-typeCode", relationship.typeCode);
+                        
+        var span = $(document.createElement('span'));
+        span.attr("class", "fa fa-trash");
+                        
+        tr.append(tdCode);
+        tr.append(tdRelatedArchiveId);
+        tr.append(tdDescription);
+        tr.append(tdButton);
+        tdButton.append(buttonDelete);
+        buttonDelete.append(span);
+                        
+        $("#tbodyRelationship").append(tr);
+    }
+    
+</script>

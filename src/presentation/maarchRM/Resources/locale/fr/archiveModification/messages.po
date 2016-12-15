@@ -1,0 +1,16 @@
+# archiveModification/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "archiveModification"
+msgstr "Modification d'archive"
+msgctxt "bundle"
+
+msgid "archiveModificationNotification"
+msgstr "Notification des messages de modification"
+msgctxt "interface"
+
+msgid "modify"
+msgstr "Modification"
+msgctxt "interface"
+

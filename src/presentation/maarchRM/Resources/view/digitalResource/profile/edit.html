@@ -1,0 +1,124 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<?merge profile ?>
+<div id="contain" >
+    <div data-form-ns="profile" class="dataForm">
+        <div class="container-fluid">
+            <div class="page-header">
+                <?merge profile.profileId.ifeq('') ?>
+                <h1>
+                    <i class="fa fa-folder-open-o"></i>
+                    Edit a new profile
+                </h1>
+                <?merge profile.profileId.ifne('') ?>
+                <h1>
+                    <i class="fa fa-folder-open-o"></i>
+                    Edit a profile
+                </h1>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
+                <li><a href="#profileRepository" data-toggle="tab">Profile repositories</a></li>
+                <li><a href="#profileMetadata" data-toggle="tab">Profile metadatas</a></li>
+                <li><a href="#profileformat" data-toggle="tab">Profile formats</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="profile">
+                    <br/>
+                    <?hinclude digitalResource/profile/profileForm.html ?>
+                </div>
+                <div class="tab-pane fade" id="profileRepository">
+                    <br/>
+                    <?hinclude digitalResource/profile/profileRepositoryForm.html ?>
+                </div>
+                <div class="tab-pane fade" id="profileMetadata">
+                    <br/>
+                    <?hinclude digitalResource/profile/profileMetadataForm.html ?>
+                </div>
+                <div class="tab-pane fade" id="profileformat">
+                    <br/>
+                    <?hinclude digitalResource/profile/profileformatForm.html ?>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid row">
+            <button type="button" class="btn btn-warning" data-cancel title="Cancel"><span class="fa fa-refresh">&nbsp;</span>Cancel</button>
+            <?merge profile.profileId.ifeq('') ?>
+            <button type="button" class="btn btn-success" data-submit title="Validate profile"><span class="fa fa-save">&nbsp;</span>Validate profile</button>
+            <?merge profile.profileId.ifne('') ?>
+            <button type="button" class="btn btn-success" data-update title="Update profile"><span class="fa fa-save">&nbsp;</span>Update profile</button>
+        </div>
+    </div>
+</div>
+<script>
+    $('#contain').ready(function () {
+        // dataForm initialisation
+        $(".dataForm").dataForm();
+
+        $('[data-submit]').on('click', function () {
+            var dataForm = $(this).closest('.dataForm');
+            var data = dataForm.data().dataForm.serialize();
+            var parameters = {
+                profile: data
+            };
+            ajax($(this), {
+                type: "POST",
+                url: '/digitalResource/adminProfile/create',
+                data: JSON.stringify(parameters),
+                //dataType: 'json',
+                contentType: 'application/json',
+                async: false,
+                success: function (response) {
+                    var response = JSON.parse(response);
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        load("/digitalResource/adminProfile/index");
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        });
+
+        $('[data-update]').on('click', function () {
+            var dataForm = $(this).closest('.dataForm');
+            var data = dataForm.data().dataForm.serialize();
+            var parameters = {
+                profile: data
+            };
+            ajax($(this), {
+                type: "POST",
+                url: '/digitalResource/adminProfile/update',
+                data: JSON.stringify(parameters),
+                //dataType: 'json',
+                contentType: 'application/json',
+                async: false,
+                success: function (response) {
+                    var response = JSON.parse(response);
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        load("/digitalResource/adminProfile/index");
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        });
+
+        $('[data-cancel]').on('click', function () {
+            load("/digitalResource/adminProfile/index");
+            //window.location = '/digitalResource/adminProfile/index'
+        });
+    });
+
+</script>

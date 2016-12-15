@@ -1,0 +1,804 @@
+# recordsManagement/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "recordsManagement"
+msgstr "Archives"
+msgctxt "bundle"
+
+msgid "accessRule"
+msgstr "Gestion des codes d'accès"
+msgctxt "interface"
+
+msgid "archivalAgreement"
+msgstr "Gestion des conventions d'archivage"
+msgctxt "interface"
+
+msgid "archivalProfile"
+msgstr "Gestion des profils d'archivage"
+msgctxt "interface"
+
+msgid "archiveRelationship"
+msgstr "Gestion de relations entre archives"
+msgctxt "interface"
+
+msgid "deposit"
+msgstr "Dépôt d'archives"
+msgctxt "interface"
+
+msgid "lifeCycleJournal"
+msgstr "Consultation du journal de cycle de vie"
+msgctxt "interface"
+
+msgid "log"
+msgstr "Consultation du journal"
+msgctxt "interface"
+
+msgid "modify"
+msgstr "Modification d'archives"
+msgctxt "interface"
+
+msgid "retrieve"
+msgstr "Recherche d'archives"
+msgctxt "interface"
+
+msgid "serviceLevel"
+msgstr "Gestion des niveaux de service"
+msgctxt "interface"
+
+msgid "retentionRule"
+msgstr "Gestion des règles de rétention"
+msgctxt "interface"
+
+msgid "message"
+msgstr "Gestion de messages"
+msgctxt "interface"
+
+msgid "document"
+msgstr "Document"
+msgctxt "model"
+
+msgid "accessRule"
+msgstr "Règles d'accès"
+msgctxt "model"
+
+msgid "archivalAgreement"
+msgstr "Conventions d'archivage"
+msgctxt "model"
+
+msgid "archivalProfile"
+msgstr "Profils d'archivage"
+msgctxt "model"
+
+msgid "disposalDate"
+msgstr "Date d'élimination"
+msgctxt "model"
+
+msgid "archive"
+msgstr "Archives"
+msgctxt "model"
+
+msgid "archiveRelationship"
+msgstr "Relations entre archives"
+msgctxt "model"
+
+msgid "archiveRelationshipType"
+msgstr "Types de relations entre archives"
+msgctxt "model"
+
+msgid "disposalRule"
+msgstr "Règles d'éliminations"
+msgctxt "model"
+
+msgid "log"
+msgstr "Logs"
+msgctxt "model"
+
+msgid "archiveDescription"
+msgstr "Description de profil"
+msgctxt "model"
+
+msgid "retentionRule"
+msgstr "Règles de rétention"
+msgctxt "model"
+
+msgid "serviceLevel"
+msgstr "Niveaux de service"
+msgctxt "model"
+
+msgid "archiveRetentionRule"
+msgstr "Règle de rétention de l'archive"
+msgctxt "model"
+
+msgid "message"
+msgstr "Messages"
+msgctxt "model"
+
+msgid "certificateOfCompliance"
+msgstr "Attestation de conformité"
+msgctxt "model"
+
+msgid "certificateOfReception"
+msgstr "Certificat de réception"
+msgctxt "model"
+
+msgid "certificateOfValidation"
+msgstr "Certificat de validation"
+msgctxt "model"
+
+msgid "certificateOfDeposit"
+msgstr "Certificat de dépôt"
+msgctxt "model"
+
+msgid "certificateOfModification"
+msgstr "Certificat de modification"
+msgctxt "model"
+
+msgid "certificateOfDestruction"
+msgstr "Certificat de destruction"
+msgctxt "model"
+
+msgid "certificateOfRestitution"
+msgstr "Certificat de restitution"
+msgctxt "model"
+
+msgid "certificateOfProfileCreation"
+msgstr "Certificat de création de profil"
+msgctxt "model"
+
+msgid "certificateOfProfileModification"
+msgstr "Certificat de modification de profil"
+msgctxt "model"
+
+msgid "certificateOfProfileDestruction"
+msgstr "Certificat de destruction de profil"
+msgctxt "model"
+
+msgid "recordsManagement/archive"
+msgstr "Archive"
+
+msgid "Archive information"
+msgstr "Information de l'archive"
+
+msgid "Document information :"
+msgstr "Information du document :"
+
+msgid "Description metadata"
+msgstr "Métadonnées descriptives"
+
+msgid "File extension"
+msgstr "Extension du fichier"
+
+msgid "Life cycle events"
+msgstr "Evénements du cycle de vie"
+
+msgid "Archive identifier"
+msgstr "Côte"
+
+msgid "Originator archive identifier"
+msgstr "Identifiant du producteur"
+
+msgid "Archive name"
+msgstr "Intitulé"
+
+msgid "Archive address"
+msgstr "Adresse de stockage"
+
+msgid "Description class"
+msgstr "Classe de description"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Agreement reference"
+msgstr "Convention d'archivage"
+
+msgid "Service level"
+msgstr "Niveau de service"
+
+msgid "Description level"
+msgstr "Niveau de description"
+
+msgid "digitalResourceId"
+msgstr "Id de ressource électronique"
+
+msgid "archiver"
+msgstr "Service d'Archives"
+msgctxt "org"
+
+msgid "depositor"
+msgstr "Service Versant"
+msgctxt "org"
+
+msgid "originator"
+msgstr "Service producteur"
+msgctxt "org"
+
+msgid "Originator"
+msgstr "Service Producteur"
+
+msgid "Archiver"
+msgstr "Service d'Archives"
+
+msgid "Depositor"
+msgstr "Service Versant"
+
+msgid "Access rule code"
+msgstr "Code d'accès"
+
+msgid "Communication date"
+msgstr "Date de communicabilité"
+
+msgid "File name"
+msgstr "Nom de fichier"
+
+msgid "Indexing / keyword"
+msgstr "Indexation / Mot-clé"
+
+msgid "Integrity"
+msgstr "Intégrité"
+
+msgid "Size (octets)"
+msgstr "Taille (octets)"
+
+msgid "Preservation"
+msgstr "Conservation"
+
+msgid "Access entries"
+msgstr "Accès"
+
+msgid "Read only"
+msgstr "Lecture seule"
+
+msgid "Deposit date"
+msgstr "Date de dépôt"
+
+msgid "Date of deposit from"
+msgstr "Date de dépôt du"
+
+msgid "to"
+msgstr "au"
+msgctxt "date"
+
+msgid "Language"
+msgstr "Langage"
+
+msgid "Edit archive"
+msgstr "Modification d'archive"
+
+msgid "Unfreeze"
+msgstr "Dégeler"
+
+msgid "Freeze"
+msgstr "Geler"
+
+msgid "Change disposal rule"
+msgstr "Modifier la règle de conservation"
+
+msgid "Restore profile rule"
+msgstr "Restaurer la règle du profil"
+
+msgid "Specific rule"
+msgstr "Règle spécifique"
+
+msgid "Remove the specific rule"
+msgstr "Retirer la règle"
+
+msgid "Day(s)"
+msgstr "Jour(s)"
+
+msgid "Month(s)"
+msgstr "Mois"
+
+msgid "Year(s)"
+msgstr "An(s)"
+
+msgid "Retention rule"
+msgstr "Règle de conservation"
+
+msgid "Start date"
+msgstr "Date de départ du calcul"
+
+msgid "Duration"
+msgstr "Durée"
+
+msgid "Final disposition"
+msgstr "Sort final"
+
+msgid "Disposal date"
+msgstr "Date d'élimination"
+
+msgid "Originator identifier"
+msgstr "Identifiant producteur"
+
+msgid "Originator req number"
+msgstr "Identifiant service producteur"
+
+msgid "Frozen"
+msgstr "Suspendu"
+
+msgid "Preserved"
+msgstr "Conservé"
+
+msgid "Waiting for restitution"
+msgstr "Restituable"
+
+msgid "Waiting for destruction"
+msgstr "Eliminable"
+
+msgid "Restituted"
+msgstr "Restitué"
+
+msgid "Request of communication"
+msgstr "Demander la communication"
+
+msgid "Flag for restitution"
+msgstr "Demander la restitution"
+
+msgid "Validate restitution"
+msgstr "Valider la restitution"
+
+msgid "Cancel restitution request"
+msgstr "Annuler la demande de restitution"
+
+msgid "Flag for destruction"
+msgstr "Demander l'élimination"
+
+msgid "Cancel destruction request"
+msgstr "Annuler la demande de destruction"
+
+msgid "Verify integrity"
+msgstr "Vérifier l'intégrité"
+
+msgid "Edit access rule"
+msgstr "Modifier la règle d'accès"
+
+msgid "You not have the permission to view the documents of archive"
+msgstr "Vous n'avez pas la permission de visualiser les documents de cette archive"
+
+msgid "You not have the permission to view the informations of archive"
+msgstr "Vous n'avez pas la permission de visualiser les informations de cette archive"
+
+msgid "Archival profile"
+msgstr "Profil d'archivage"
+
+msgid "Retention start date"
+msgstr "Date de référence"
+
+msgid "Retention duration"
+msgstr "Durée de conservation"
+
+msgid "Certificate of deposit"
+msgstr "Attestation de dépôt"
+
+msgid "Certificate of compliance"
+msgstr "Attestation de conformité"
+
+msgid "Certificate of deletion"
+msgstr "Attestation de suppression"
+
+msgid "Archival agreement"
+msgstr "Accord de versement"
+
+msgid "Search archives"
+msgstr "Recherche d'archives"
+
+msgid "Archive identifier of originator"
+msgstr "Identifiant d'archive producteur"
+
+msgid "Expired"
+msgstr "Echue"
+
+msgid "Not expired"
+msgstr "Non échue"
+
+msgid "Expired status"
+msgstr "DUA"
+
+msgid "result(s)"
+msgstr "résultat(s)"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "From date"
+msgstr "Date de début"
+
+msgid "To date"
+msgstr "Date de fin"
+
+msgid "frozen"
+msgstr "Gelée"
+
+msgid "disposable"
+msgstr "Elimination demandée"
+
+msgid "disposed"
+msgstr "Détruite"
+
+msgid "restituted"
+msgstr "Restituée"
+
+msgid "restituable"
+msgstr "Restitution demandée"
+
+msgid "preserved"
+msgstr "Conservée"
+
+msgid "destruction"
+msgstr "Détruire"
+
+msgid "preservation"
+msgstr "Conserver"
+
+msgid "Disposable archives"
+msgstr "Archives à terme"
+
+msgid "disposable archive(s)"
+msgstr "archive(s) à terme"
+
+msgid "Disposable archives only"
+msgstr "Archives expirées seulement"
+
+msgid "Set for disposal"
+msgstr "Marquer pour élimination"
+
+msgid "Print"
+msgstr "Imprimer"
+
+msgid "Timestamp :"
+msgstr "Horodatage :"
+
+msgid "Archive identifier :"
+msgstr "Identifiant de l'archive :"
+
+msgid "Archiver name :"
+msgstr "Nom du service d'archive :"
+
+msgid "Originator name:"
+msgstr "Nom du service producteur :"
+
+msgid "Hash"
+msgstr "Empreinte numérique"
+
+msgid "Archival agency :"
+msgstr "Service d'Archives :"
+
+msgid "Legal classification :"
+msgstr "Forme juridique :"
+
+msgid "Tax identifier :"
+msgstr "Numéro de TVA intraco :"
+
+msgid "Registration number :"
+msgstr "SIREN / SIRET :"
+
+msgid "Requesting agency :"
+msgstr "Service demandeur :"
+
+msgid "Depositor agency :"
+msgstr "Service versant :"
+
+msgid "Event type :"
+msgstr "Type d'évènement :"
+
+msgid "User :"
+msgstr "Utilisateur :"
+
+msgid "Mail :"
+msgstr "Courriel :"
+
+msgid "Telephone number :"
+msgstr "Numéro de téléphone :"
+
+msgid "Requesting organization :"
+msgstr "Organisation demandeur :"
+
+msgid "Life cycle"
+msgstr "Cycle de vie"
+
+msgid "Archival agency"
+msgstr "Service d'Archives"
+
+msgid "Requesting agency"
+msgstr "Service demandeur"
+
+msgid "Access rule duration"
+msgstr "Durée de la règle"
+
+msgid "year(s)"
+msgstr "an(s)"
+
+msgid "month(s)"
+msgstr "mois"
+
+msgid "day(s)"
+msgstr "jour(s)"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Archival status set to 'Dispose'."
+msgstr "Le statut de l'archive a été changé en 'à éliminer'."
+
+msgid "The archive is frozen."
+msgstr "L'archive a été gelée."
+
+msgid "The archive is unfrozen."
+msgstr "L'archive a été dégelée."
+
+msgid "Archival status updated."
+msgstr "Le statut de l'archive a été changé."
+
+msgid "Retention rule updated."
+msgstr "La règle de conservation a été modifiée."
+
+msgid "Disposal rule"
+msgstr "Règle de conservation"
+
+msgid "Disposal rule origin"
+msgstr "Règle appliquée"
+
+msgid "Archive Retention rule updated"
+msgstr "Règle de conservation de l'archive modifié"
+
+msgid "Certificate of reception created"
+msgstr "Certificat de réception créé"
+
+msgid "Certificate of validation created"
+msgstr "Certificat de validation créé"
+
+msgid "Certificate of modification created"
+msgstr "Certificat de modification créé"
+
+msgid "Certificate of profile modification created"
+msgstr "Certificat de modification de profil créé"
+
+msgid "Archive received"
+msgstr "Archive reçue"
+
+msgid "Archive validation succeeded"
+msgstr "Archive validé avec succès"
+
+msgid "Archive created"
+msgstr "Archive créé"
+
+msgid "Access Code modification"
+msgstr "Règle d'accès modifié"
+
+msgid "Retention rule updated"
+msgstr "Règle de conservation modifiée"
+
+msgid "Archive integrities"
+msgstr "Intégrité d'archive(s)"
+
+msgid "archives check"
+msgstr "archive(s) sélectionnée(s)"
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Select all"
+msgstr "Tous"
+
+msgid "For restitution"
+msgstr "Pour restitution"
+
+msgid "For destruction"
+msgstr "Pour destruction"
+
+msgid "Resource information"
+msgstr "Informations de la ressource"
+
+msgid "Hash algorithm"
+msgstr "Algorithme d'empreinte"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Addresses"
+msgstr "Adresses"
+
+msgid "Show the archive info"
+msgstr "Afficher les infos de l'archive"
+
+msgid "Archiver Name"
+msgstr "Service d'Archives"
+
+msgid "Depositor Name"
+msgstr "Service versant"
+
+msgid "Originator Name"
+msgstr "Service producteur"
+
+msgid "bits"
+msgstr "octets"
+
+msgid "Identifier"
+msgstr "Côte"
+
+msgid "Document type"
+msgstr "Type de document"
+
+msgid "No archives selected."
+msgstr "Pas d'archives sélectionnées."
+
+msgid "This action is not relevant for the selection."
+msgstr "Cette action n'est pas compatible avec les archives sélectionnées."
+
+msgid "This action is not relevant for this archive."
+msgstr "Cette action n'est pas compatible avec cette archive."
+
+msgid "Cancel destruction"
+msgstr "Annuler la destruction"
+
+msgid "archives selected."
+msgstr "archives sélectionnées."
+msgctxt "validationModal"
+
+msgid "Relationships"
+msgstr "Relations"
+
+msgid "Related archive"
+msgstr "Archive lié"
+
+msgid "Information"
+msgstr "Informations"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Modify retention rule"
+msgstr "Modifier règle de conservation"
+
+msgid "Modify access rule"
+msgstr "Modifier règle d'accès"
+
+msgid "Access rule"
+msgstr "Règle de communicabilité"
+
+msgid "The modification will be applied on"
+msgstr "La modification portera sur"
+msgctxt "validationModal"
+
+msgid "%1$s archive(s) flagged for restitution."
+msgstr "%1$s archive(s) marquée(s) pour restitution."
+
+msgid "%1$s archive(s) flagged for destruction."
+msgstr "%1$s archive(s) marquée(s) pour destruction."
+
+msgid "%1$s archive(s) flagged for conversion."
+msgstr "%1$s archive(s) marquée(s) pour conversion."
+
+msgid "%1$s document(s) converted."
+msgstr "%1$s document(s) converti(s)."
+
+msgid "%1$s archive(s) modified."
+msgstr "%1$s archive(s) modifiée(s)."
+
+msgid "%1$s archive(s) freezed."
+msgstr "%1$s archive(s) gelée(s)."
+
+msgid "%1$s archive(s) unfreezed."
+msgstr "%1$s archive(s) dégelée(s)."
+
+msgid "%1$s restitution(s) validated."
+msgstr "%1$s restitution(s) validée(s)."
+
+msgid "%1$s restitution(s) canceled."
+msgstr "%1$s restitution(s) annulée(s)."
+
+msgid "%1$s destruction(s) canceled."
+msgstr "%1$s destruction(s) annulée(s)."
+
+msgid "%1$s archive(s) can not be flagged."
+msgstr "%1$s archive(s) ne sont pas marquée(s)."
+
+msgid "%1$s archive(s) can not be modified."
+msgstr "%1$s archive(s) ne sont pas modifiée(s)."
+
+msgid "%1$s archive(s) can not be freezed."
+msgstr "%1$s archive(s) ne sont pas gelée(s)."
+
+msgid "%1$s archive(s) can not be unfreezed."
+msgstr "%1$s archive(s) ne sont pas dégelée(s)."
+
+msgid "%1$s restitution(s) can not be validate(s)."
+msgstr "%1$s restitution(s) ne sont pas validée(s)."
+
+msgid "%1$s restitution(s) can not be canceled.'"
+msgstr "%1$s restitution(s) ne sont pas annulée(s)."
+
+msgid "%1$s destruction(s) can not be canceled.'"
+msgstr "%1$s destruction(s) ne sont pas annulée(s)."
+
+msgid "Restitution message created"
+msgstr "Message de restitution créé."
+
+msgid "The archive has been deposited"
+msgstr "L'archive a été déposé"
+
+msgid "No organization unit"
+msgstr "Pas d'unité organisationnelle"
+
+msgid "You have to choose a working organization unit to proceed this action."
+msgstr "Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
+
+msgid "Permission denied: You have to choose a working organization unit to proceed this action."
+msgstr "Permission non accordée: Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
+
+msgid "The description class does not match with the archival profile."
+msgstr "La classe description ne correspond pas aux profil d'archivage."
+
+msgid "Archive not set for destruction."
+msgstr "Archive non prévue pour destruction."
+
+msgid "Disposal date not reached."
+msgstr "DUA non échue."
+
+msgid "Profil and data management not found"
+msgstr "Profil et données de gestion non-trouvé"
+
+msgid "Representation information"
+msgstr "Information de représentation"
+
+msgid "Preservation Description Information"
+msgstr "Information de pérennisation"
+
+msgid "Content data object"
+msgstr "Contenu de données"
+
+msgid "isConversionOf"
+msgstr "Conversion"
+
+msgid "The communication request has been send, check your requests list to follow the treatment"
+msgstr "Demande de communication envoyée, consultez votre liste de demandes pour en suivre le traitement"
+
+msgid "The communication request has been accepted, check your requests list to get the archived package"
+msgstr "Demande de communication acceptée, consultez votre liste de demandes pour obtenir le paquet archivé"
+
+msgid "The communication request is in derogation, check your requests list to follow the treatment"
+msgstr "Demande de communication en dérogation, consultez votre liste de demandes pour en suivre le traitement"
+
+msgid "Invalid action for this archive"
+msgstr "Action non valide pour cette archive"
+
+msgid "Parent archive"
+msgstr "Dossier"
+
+msgid "Children archives"
+msgstr "Objets contenus"
+
+msgid "A keyword label is missing."
+msgstr "Un libellé de mot clé n'a pas été renseigné."
+
+msgid "The document is missing."
+msgstr "Aucun document n'a été sélectionné."
+
+msgid "The indexes of the archive have been modified"
+msgstr "Les index de l'archive ont été modifiés"
+
+msgid "isTimestampOf"
+msgstr "Jeton d'horodatage"
+msgctxt "relationship"
+
+msgid "isConversionOf"
+msgstr "Document converti"
+msgctxt "relationship"
+
+msgid "Indexing modification"
+msgstr "Modification de l'index"
+
+msgid "Reference"
+msgstr "Côte"
+
+msgid "Select an access rule code"
+msgstr "Selectionnez une règle"
+
+
+msgid "Acces rule duration"
+msgstr "Durée de la règle"
+

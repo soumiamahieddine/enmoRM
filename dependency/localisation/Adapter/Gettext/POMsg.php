@@ -1,0 +1,42 @@
+<?php
+/*
+ * Copyright (C) 2015 Maarch
+ *
+ * This file is part of dependency localisation.
+ *
+ * Dependency localisation is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dependency localisation is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with dependency localisation.  If not, see <http://www.gnu.org/licenses/>.
+ */
+namespace dependency\localisation\Adapter\Gettext;
+
+/**
+ * PO message
+ *
+ * @package Localisation
+ * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
+ */
+class POMsg
+{
+    /* Constants */
+
+    /* Properties */
+    public $header = [];
+
+    public $msgctxt;
+
+    public $msgid;
+
+    public $msgid_plural;
+
+    public $msgstr;
+}

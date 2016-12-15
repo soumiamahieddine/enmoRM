@@ -1,0 +1,80 @@
+<div data-translate-catalog="recordsManagement/messages" id="resultsList">
+    <?merge results ?>
+    <div>
+        <div class="media">
+            <div class="media-left media-middle col-md-1">
+                <!--span class="media-object fa fa-archive fa-4x"></span-->
+                <i class="media-object fa fa-file fa-3x text-muted">&nbsp;</i>
+            </div>
+            <div class="media-body col-md-11">
+                <div class="pull-right">
+                    <?merge hasModificationPrivilege ?>
+                    <button type="button" class="btn btn-link" data-indexModification="[?merge .archiveId ?]"><span class="fa fa-edit fa-2x text-warning"></span></button>
+                    <?merge hasDestructionPrivilege ?>
+                    <button type="button" class="btn btn-link" data-removeArchive="[?merge .archiveId ?]"><span class="fa fa-remove fa-2x text-danger"></span></button>
+                </div>
+                <h4 class="media-heading text-info">
+                    <span class="viewDocument" style="cursor: pointer;" data-documentId="[?merge .docId ?]"><?merge .title ?></span>
+                </h4>
+                
+                <span class="text-success"><?merge .index.ucfirst() ?></span> - 
+                <span class="text-info"><?merge .originatorOrgName ?></span>
+                <p>
+                    <?merge .fields ?>
+                    <span>
+                        <?merge .value.bool() ?>
+                        <span class="text-muted" name="[?merge .name ?]"><b><?merge .label ?>:</b>&nbsp;<?merge .value ?>&nbsp;</span>
+                    </span>
+                </p>
+            </div>
+            
+        </div>
+        <br />
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#resultsList").on("click", ".viewDocument", function () {
+        var docId = $(this).attr("data-documentId");
+        var url = "/recordsManagement/document/" + docId;
+        var viewer = $('#viewer');
+        
+        $('#viewer').attr("style", "width:"+$("#fulltext_searchForm").width()+"px");
+        viewer.empty();
+
+        var iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style= "width: 100%; height: 800px;";
+        viewer.append(iframe);
+    });
+
+    $("#resultsList").on("click", "[data-indexModification]", function () {
+        var archiveId = $(this).attr("data-indexModification");
+        load("/recordsManagement/archive/index/"+archiveId+"/modification");
+    });
+
+    $("#resultsList").on("click", "[data-removeArchive]", function () {
+        var archiveIds = [];
+        archiveIds.push($(this).attr("data-removeArchive"));
+
+        $.ajax({
+            type        : 'PUT',
+            url         : "/recordsManagement/dispose",
+            data        : JSON.stringify({archiveIds : archiveIds}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+
+                if (response.status) {
+                    // todo
+                }
+            },
+            error       : function (response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+</script>

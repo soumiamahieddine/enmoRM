@@ -1,0 +1,34 @@
+<!-- Modal -->
+<div class="modal fade" id="noRightsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-translate-catalog="recordsManagement/messages">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">No organization unit</h4>
+            </div>
+            <div class="modal-body">
+                You have to choose a working organization unit to proceed this action.
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="back" class="btn btn-primary btn-block" title="Back">
+                    <span class="fa fa-arrow-left fa-fw"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#app_maarchRM_main').ready(function() {
+        $('#noRightsModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+        });
+
+        $('#noRightsModal').modal('show');
+
+        $('#back').on('click', function() {
+            window.top.close();
+            return false;
+        });
+    });
+</script>

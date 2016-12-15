@@ -1,0 +1,20 @@
+# adminTech/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "adminTech"
+msgstr "Administration technique"
+msgctxt "bundle"
+
+msgid "cluster"
+msgstr "Grappes de dépot"
+msgctxt "interface"
+
+msgid "repository"
+msgstr "Sites de dépôt"
+msgctxt "interface"
+
+msgid "conversion"
+msgstr "Conversion de format"
+msgctxt "interface"
+

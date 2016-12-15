@@ -1,0 +1,154 @@
+# medona/archivalAgreement
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Archival agreements"
+msgstr "Accords de versement"
+
+msgid "archival agreement(s)"
+msgstr "Accord(s) de versement"
+
+msgid "New agreement"
+msgstr "Nouvel accord de versement"
+
+msgid "New archival agreement"
+msgstr "Nouvel accord de versement"
+
+msgid "Add an agreement"
+msgstr "Ajouter un accord de versement"
+
+msgid "Edit an archival agreement"
+msgstr "Modification de l'accord de versement"
+
+msgid "Reference"
+msgstr "Identifiant"
+
+msgid "Archiver name"
+msgstr "Service d'Archives"
+
+msgid "Depositor name"
+msgstr "Service Versant"
+
+msgid "Originator"
+msgstr "Service Producteur"
+
+msgid "Archival profile"
+msgstr "Profil d'archive"
+
+msgid "Service level"
+msgstr "Niveau de service"
+
+msgid "Cluster"
+msgstr "Grappe de dépôt"
+
+msgid "Select a service level"
+msgstr "Sélectionnez un niveau de service"
+
+msgid "Select an archival profile"
+msgstr "Sélectionnez un profil d'archive"
+
+msgid "Select an archiver"
+msgstr "Sélectionnez un service d'Archives"
+
+msgid "Select an originator"
+msgstr "Sélectionnez un service producteur"
+
+msgid "Select a depositor"
+msgstr "Sélectionnez un service versant"
+
+msgid "Rules"
+msgstr "Règles"
+
+msgid "Max size of archives for the agreement"
+msgstr "Taille max pour l'accord"
+
+msgid "Max size of archives per year"
+msgstr "Taille max par année"
+
+msgid "Max size of archives per month"
+msgstr "Taille max par mois"
+
+msgid "Max size of archives per week"
+msgstr "Taille max par semaine"
+
+msgid "Max size of archives per day"
+msgstr "Taille max par jour"
+
+msgid "Max size per transfer"
+msgstr "Taille max par transfert"
+
+msgid "Begin date"
+msgstr "Date de début"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Presence of signing"
+msgstr "Présence d'une signature de bordereau"
+
+msgid "Automatic transfer acceptance"
+msgstr "Accepter automatiquement les transferts valides"
+
+msgid "Process small transfer"
+msgstr "Traiter automatiquement les petits transferts (2Mo)"
+
+msgid "List of allowed file formats"
+msgstr "Liste des formats autorisés"
+
+msgid "File format"
+msgstr "Format de fichier"
+
+msgid "Archival agreement created"
+msgstr "Accord de versement créé"
+
+msgid "Archival agreement updated"
+msgstr "Accord de versement modifié"
+
+msgid "Archival agreement deleted"
+msgstr "Accord de versement supprimé"
+
+msgid "The reference is empty."
+msgstr "La référence est vide."
+
+msgid "The name is empty."
+msgstr "Le nom est vide."
+
+msgid "The archiver is not selected."
+msgstr "Le service d'Archives n'est pas sélectionné."
+
+msgid "The depositor is not selected."
+msgstr "Le service versant n'est pas sélectionné."
+
+msgid "No originator selected."
+msgstr "Il n'y a pas de services producteurs."
+
+msgid "The begin date is empty."
+msgstr "La date de début est vide."
+
+msgid "The end date is empty."
+msgstr "La date de fin est vide."
+
+msgid "No validation activated"
+msgstr "Aucune validation"
+
+msgid "Format detection"
+msgstr "Détection de format"
+
+msgid "Format validation"
+msgstr "Validation de format"
+
+msgid "Virus check"
+msgstr "Détection de virus"
+
+msgid "Convert on deposit"
+msgstr "Conversion au versement"
+
+msgid "Media info"
+msgstr "Info média"
+
+msgid "Mbytes"
+msgstr "Mo"
+

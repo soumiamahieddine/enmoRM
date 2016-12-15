@@ -1,0 +1,134 @@
+<!--#
+    This file is part of the organization package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div class="panel panel-primary" id="orgType_orgTypeForm">
+    <div class="panel-heading">
+        <h4>Organization type</h4>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal col-xs-12">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Code<span style="color : red">*</span></label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="code" value="" data-input-code maxlength="30"/>
+                    <small class="help-block">The first and last character must be a letter. You must use only letters and the special character '_'</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Name<span style="color : red">*</span></label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="name" value=""/>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <button type="button" class="btn btn-warning col-sm-offset-3" id='orgType_cancelOrgTypeForm' title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                <button type="button" class="btn btn-success" id='orgType_saveOrgType' title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display:none">
+    <span id="empty_text">The fields with a star are compulsory.</span>
+</div>
+<script>
+    $("[name='code']").on("keyup", function(){
+        var input = $(this);
+        var patt = new RegExp("^[a-zA-Z]+([_]?[a-zA-Z]+)+$");
+        var formGroup = input.closest('.form-group');
+
+        if(patt.test(input.val())) {
+            formGroup.removeClass('has-error').addClass('has-success');
+        } else {
+            formGroup.removeClass('has-success').addClass('has-error');
+        }
+    });
+
+    $('#orgType_cancelOrgTypeForm').on('click', function() {
+        clearForm();
+    });
+
+    $('#orgType_saveOrgType').on('click', function() {
+        var type = "POST";
+        var url = "/organizationType";
+
+        var orgType = serializeOrgType();
+
+        if (orgType['code'] + orgType['name'] == "") {
+            gritter.show($('#empty_text').html(),false);
+            return false;
+        }
+
+        if ($('#orgType_orgTypeForm').find('[name=code]').prop('disabled')) {
+            type = "PUT";
+            url += "/" + orgType['code'];
+        }
+        
+        ajax($(this), {
+            type        : type,
+            url         : url,
+            data        : JSON.stringify({orgType : orgType}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function(response) {
+                if (response.status == true) {
+                    $.gritter.add({
+                        text: response.message,
+                        class_name: "gritter-primary"
+                    });
+                    clearForm();
+                    load('/organizationType/index');
+                } else {
+                    $.gritter.add({
+                        text: response.message,
+                        class_name: "gritter-danger"
+                    });
+                    for (var i=0; i<response.errors.length; i++) {
+                        $.gritter.add({
+                            text: data.errors[i],
+                            class_name: "gritter-danger"
+                        });
+                    }
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    function serializeOrgType() {
+        var form = $('#orgType_orgTypeForm');
+
+        var orgType = {
+            code : form.find('[name="code"]').val(),
+            name : form.find('[name="name"]').val()
+        }
+
+        return orgType;
+    }
+
+    function newOrgTypeFrom() {
+        $('#orgType_orgTypeForm').css('display', '');
+    }
+
+    function loadOrgTypeFrom(code, name) {
+        var form = $('#orgType_orgTypeForm');
+        form.css('display', '').find('[name="code"]').val(code).prop('disabled', true);
+        form.find('[name="name"]').val(name);
+        form.find('small').css('display', 'none');
+    }
+
+    function clearForm() {
+        var form =  $('#orgType_orgTypeForm')
+        form.css('display', 'none').find('[name="code"]').prop('disabled', false).closest('.form-group').removeClass('has-success has-error');
+        form.find('input').val('');
+        form.find('small').css('display', '');
+        enableIndex();
+    }
+
+</script>

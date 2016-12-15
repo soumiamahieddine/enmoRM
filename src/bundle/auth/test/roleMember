@@ -1,0 +1,26 @@
+[CREATE]
+POST http://maarchRM/auth/roleMember/
+
+{
+    "roleMember":{
+        "roleId":"ddenis",
+        "userAccountId":"UTILISATEUR"
+    }
+}
+
+
+[DELETE]
+DELETE http://maarchRM/auth/roleMember/
+
+{
+    "roleMember":{
+        "roleId":"ddenis",
+        "userAccountId":"UTILISATEUR"
+    }
+}
+
+[READ]
+GET http://maarchRM.svc/auth/roleMember/byrole/_roleId_
+
+[READ]
+GET http://maarchRM.svc/auth/roleMember/byUseraccount/_userAccountId_

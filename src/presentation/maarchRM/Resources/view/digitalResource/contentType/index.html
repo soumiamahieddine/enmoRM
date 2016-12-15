@@ -1,0 +1,71 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="digitalResource/contentType">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-files-o"></i>
+                Content type
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid" data-translate-catalog="digitalResource/contentType">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge contentTypes.count() ?> content type(s)</h4> 
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" id="btnAddContentType">
+                                <span class="fa fa-plus">&nbsp;</span>Add
+                            </button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable table-hover" >
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Mediatype</th>
+                                    <th style="width: 1%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge contentTypes ?>
+                                <tr>
+                                    <td><?merge .name ?></td>
+                                    <td><?merge .description ?></td>
+                                    <td><?merge .mediatype ?></td>
+                                    <td>
+                                        <button type="button" data-edit-contentType="[?merge .name ?]" class="btn btn-warning" title="Modify">
+                                            <span class="fa fa-edit"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    
+    $('#btnAddContentType').on('click', function() {
+        load("/digitalResource/contentType/new");
+    })
+    
+    $('[data-edit-contentType]').on('click', function() {
+        load("/digitalResource/contentType/edit/"+$(this).attr('data-edit-contentType'));
+    })
+</script>

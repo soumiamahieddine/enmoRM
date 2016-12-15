@@ -1,0 +1,90 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div class="container-fluid" data-translate-catalog="recordsManagement/accessRule">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-qrcode"></i>
+            Access codes
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="recordsManagement/accessRule">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><span id='tableItemNumber'><?merge accessRule.count() ?></span> code(s)</h4>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="addNewAccessCode" class="btn btn-default btn-sm" title="Add"><i class="fa fa-plus fa-fw">&nbsp;</i>Add</button>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Access rule duration</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge accessRule ?>
+                            <tr>
+                                <td><?merge .code ?></td>
+                                <td><?merge .description ?></td>
+                                <td><?merge .accessRuleDuration ?>&nbsp;<?merge .accessRuleDurationUnit ?><?merge .durationUnit ?></td>
+                                <td class="action_btn">
+                                    <div class="btn-group pull-right">
+                                        <a class="btn btn-info editAccessRule" data-code="[?merge .code?]" title="edit">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="accessRuleModal" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <?hinclude recordsManagement/accessRule/edit.html ?>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="application/javascript">
+$("#addNewAccessCode").on('click', function(){
+     $('#accessRuleModal').modal();
+})
+
+$(".editAccessRule").on('click', function(){
+     $.ajax({
+        type        : 'GET',
+        url         : '/accessRule/'+$(this).data('code'),
+        dataType    : 'json',
+        success     : function (response) {
+            AccessRuleModal.load(response);
+        },
+        error       : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    });
+})
+
+
+
+</script>

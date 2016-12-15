@@ -1,0 +1,72 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+
+<div class="container-fluid" data-translate-catalog="digitalResource/repository">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-hdd-o"></i>
+            Repositories management
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="digitalResource/repository">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><?merge repositories.count() ?> repositorie(s)</h4>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" id="addRepository" class="btn btn-default btn-sm" data-add title="Add"><i class="fa fa-plus fa-fw">&nbsp;</i>Add</button>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    <table class="table dataTable" id="tableListRepository">
+                        <thead>
+                            <tr>
+                                <th>Repository name</th>
+                                <th>Reference</th>
+                                <th>Repository type</th>
+                                <th class="visible-lg">Repository uri</th>
+                                <th style="width:1%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge repositories ?>
+                            <tr>
+                                <td><?merge .repositoryName ?></td>
+                                <td><?merge .repositoryReference ?></td>
+                                <td><?merge .repositoryType ?></td>
+                                <td class="visible-lg"><?merge .repositoryUri ?></td>
+                                <td class="action_btn">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-info btn-sm" data-repository-id="[?merge .repositoryId ?]" title="Edit">
+                                            <span class="fa fa-fw fa-edit"/>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">    
+    $("#tableListRepository").on("click", 'button', function(){
+        load('/repository/' + $(this).data("repository-id"));
+    });
+
+    $("#addRepository").on("click", function(){
+        load("/repository");
+    });
+        
+</script>

@@ -1,0 +1,83 @@
+<div class="row" data-translate-catalog="recordsManagement/messages" id="archiveList">
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">
+                <h4><?merge archive.count() ?> result(s)</h4>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-warning dropdown-toggle" type="button" id="archiveList_actions" data-toggle="dropdown" aria-expanded="true" title="Actions" disabled="disabled">
+                    <i class="fa fa-navicon">&nbsp;</i>&nbsp;Actions
+                    <span class="caret"></span>
+                </button>
+                <?hinclude recordsManagement/archive/resultListActionsButton.html ?>
+            </div>
+        </div>
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable" id="archiveList_table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="archiveList_selectAll"/></th>
+                        <th>Archive name</th>
+                        <th>Identifier</th>
+                        <th>Originator</th>
+                        <th>Profile</th>
+                        <th>Disposal date</th>
+                        <th>Status</th>
+                        <th style="min-width:150px;"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?merge archive ?>
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]">
+                        <td>
+                            <input type="checkbox" 
+                                data-archive-status="[?merge .status ?]" 
+                                data-final-disposition='[?merge .finalDisposition ?]' 
+                                data-disposable="[?merge .disposable ?]" 
+                                value="[?merge .archiveId ?]"/>
+                        </td>
+                        <td class="archiveName"><?merge .archiveName ?></td>
+                        <td><?merge .archiveId ?></td>
+                        <td class="originator"><?merge .originatorOrgName ?></td>
+                        <td class="profile"><?merge .archivalProfileReference ?>
+                        <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
+                        <td class="status"><?merge .statusDesc ?></td>
+                        <td>
+                            <div class="btn-group pull-right">
+                                <!--button type="button" class="btn btn-success btn-sm requestDelivery" id="requestCom" data-archiveid='[?merge .archiveId?]' title="Request of communication"><span class="fa fa-cloud-upload">&nbsp;</span></button-->
+                                <button type="button" class="btn btn-success btn-sm viewArchive" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
+                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-edit">&nbsp;</i>&nbsp;
+                                    <span class="caret"></span>
+                                </button>
+                                <?hinclude recordsManagement/archive/resultActionsButton.html ?>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?hinclude recordsManagement/archive/archiveManagement.html ?>
+</div>
+
+<script>
+    /* MULTIPLE ARCHIVE SELECTION*/
+
+    $("#archiveList_selectAll").on('click', function () {
+        $('table.dataTable').find('input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    });
+
+    $(".paginate_button").on('click', '.paginate_button', function () {
+        $("archiveList_actions").prop('disabled', true);
+        $('#archiveList_table').find('input[type="checkbox"]').prop('checked', false);
+    });
+
+    $("table.dataTable").on('click', function() {
+        if($('input[data-archive-status]:checked').length > 0) {
+            $("#archiveList_actions").prop('disabled', false);
+        } else {
+            $("#archiveList_actions").prop('disabled', true);
+        }
+    });
+</script>

@@ -1,0 +1,22 @@
+<lifeCycle xmlns:lc="maarch.com:laabs:lifeCycle">
+    <?merge .contentDescription.otherMetadata.events ?>
+    <lc:event>
+        <lc:eventId><?merge .eventId ?></lc:eventId>
+        <lc:eventType><?merge .eventType ?></lc:eventType>
+        <lc:description><?merge .description ?></lc:description>
+        <lc:accountId><?merge .accountId ?></lc:accountId>
+        <lc:timestamp><?merge .timestamp ?></lc:timestamp>
+        <lc:objectClass><?merge .objectClass ?></lc:objectClass>
+        <lc:objectId><?merge .objectId ?></lc:objectId>
+        <?merge .operationResult.ifeq('1') ?>
+        <lc:operationResult>1</lc:operationResult>
+        <?merge .operationResult.ifeq('0') ?>
+        <lc:operationResult>0</lc:operationResult>
+        <lc:resId><?merge .resId ?></lc:resId>
+        <lc:hashAlgorithm><?merge .hashAlgorithm ?></lc:hashAlgorithm>
+        <lc:address><?merge .address ?></lc:address>
+        <lc:originatorOrgRegNumber><?merge .originatorOrgRegNumber ?></lc:originatorOrgRegNumber>
+        <lc:depositorOrgRegNumber><?merge .depositorOrgRegNumber ?></lc:depositorOrgRegNumber>
+        <lc:archiverOrgRegNumber><?merge .archiverOrgRegNumber ?></lc:archiverOrgRegNumber>
+    </lc:event>
+</lifeCycle>

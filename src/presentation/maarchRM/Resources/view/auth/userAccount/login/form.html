@@ -1,0 +1,245 @@
+<div data-translate-catalog="auth/messages">
+
+    <div class="modal fade" id="signInModal">
+        <div class="modal-dialog">
+            <!--iframe src="useToSaveUsernameByBrowser.htm" id="temp" name="temp" style="display:none"></iframe-->
+            <!--form target="temp" method="POST" onsubmit="login();" id="loginForm"-->
+            <form id="loginForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="float:left;">
+                            <i class="fa fa-fw fa-unlock">&nbsp;</i>Login
+                        </h4>
+                        <span style="float:right;width:100px;height:30px;text-align:right;background:url('[?merge logo ?]');background-size:100% 100%;"></span>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" placeholder="Username" class="form-control" name="userName" id="userName" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" class="form-control" name="password" id="password">
+                        </div>
+                        <div class="form-group">
+                            <p class="help-block" id="signInMessage"></p>
+                        </div>
+                        <div id="capslockdiv" style="display: none; color: red;">
+                            Caps Lock On
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-lg btn-info btn-block" id="loginButton" type="button" title="Sign in">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changePasswordModal">
+        <div class="modal-dialog">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            <i class="fa fa-unlock">&nbsp;</i>Password must change
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="password" placeholder="New password" class="form-control" name="newPassword" id="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Confirm password" class="form-control" name="confirmPassword" id="confirmPassword">
+                        </div>
+                        <div class="form-group">
+                            <p class=" text-danger" id="changePasswordMessage"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-lg btn-info btn-block" id="changePassword" type="button" title="Sign in">Sign in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="hide">
+        <span id="loginPasswordNotSame">Passwords are not the same</span>
+    </div>
+</div>
+
+<script>
+    document.onkeydown = function (e) { //check if capslock key was pressed in the whole window
+        e = e || event;
+        if (typeof (window.lastpress) === 'undefined') {
+            window.lastpress = e.timeStamp;
+        }
+        if (typeof (window.capsLockEnabled) !== 'undefined') {
+            if (e.keyCode == 20 && e.timeStamp > window.lastpress + 50) {
+                window.capsLockEnabled = !window.capsLockEnabled;
+                $('#capslockdiv').toggle();
+            }
+            window.lastpress = e.timeStamp;
+            //sometimes this function is called twice when pressing capslock once, so I use the timeStamp to fix the problem
+        }
+
+    };
+
+    function check_capslock(e) { //check what key was pressed in the form
+        var s = String.fromCharCode(e.keyCode);
+        if (s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey) {
+            window.capsLockEnabled = true;
+            $('#capslockdiv').show();
+        }
+        else {
+            window.capsLockEnabled = false;
+            $('#capslockdiv').hide();
+        }
+    }
+
+    function check_capslock_form(where) {
+        if (!where) {
+            where = $(document);
+        }
+        where.find('input,select').each(function () {
+            if (this.type != "hidden") {
+                $(this).keypress(check_capslock);
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        check_capslock_form($(document)); //applies the capslock check to all input tags
+
+        $('#signInModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+        });
+
+        $('#changePassword').on('click', function () {
+            changePassword();
+        });
+
+        $('#loginButton').on('click', function () {
+            login();
+        });
+
+        $('#signInModal, #changePasswordModal').on('keyup', function (event) {
+            var modalId = $(this).attr('id');
+            if (event.keyCode == 13 && modalId == 'signInModal') {
+                login();
+            } else if (event.keyCode == 13 && modalId == 'changePasswordModal') {
+                changePassword();
+            } else if (event.keyCode == 27) {
+                parent.history.back();
+                return false;
+            }
+        });
+
+        $('.form-control').on('keyup', function () {
+            $(this).parent().removeClass('has-error');
+            $(this).closest('.modal-body').find('.help-block').text('');
+        });
+    });
+
+    $("#loginForm").submit(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    function login()
+    {
+        if (!$('#userName').val())
+            $('#userName').parent().addClass("has-error");
+        if (!$('#password').val())
+            $('#password').parent().addClass("has-error");
+
+        if ($('#userName').val().length == 0 || $('#password').val().length == 0) {
+            return false;
+        }
+
+        $('#loginButton').prop("disabled");
+
+        var parameters = {
+            userName: $('#userName').val(),
+            password: $('#password').val(),
+            requestPath: document.location.pathname
+        };
+        $.ajax({
+            type: "POST",
+            url: "/user/login",
+            data: JSON.stringify(parameters),
+            contentType : 'application/json',
+            async: false,
+            success: function (response) {
+                var response = JSON.parse(response);
+                if (response.status == true) {
+                    $(location).attr('href', "/");
+                } else if (response.passwordChangeRequired) {
+                    $('#signInModal').modal('hide');
+                    $('#changePasswordModal').modal({
+                        backdrop: 'static',
+                        keyboard: false,
+                    });
+                } else {
+                    $('#userName').parent().addClass("has-error");
+                    $('#password').parent().addClass("has-error");
+                    $('#password').val('');
+                    $('#signInMessage').text(response.message);
+                }
+            },
+            error    : function(response) {
+                var response = JSON.parse(response.responseText);
+                if (response.passwordChangeRequired) {
+                    $('#signInModal').modal('hide');
+                    $('#changePasswordModal').modal({
+                        backdrop: 'static',
+                        keyboard: false,
+                    });
+                } else if (response.status == false) {
+                    $('#userName').parent().addClass("has-error");
+                    $('#password').parent().addClass("has-error");
+                    $('#password').val('');
+                    $('#signInMessage').text(response.message);
+                }
+            }
+        });
+
+        $('#loginButton').removeAttr("disabled");
+    }
+
+    function changePassword()
+    {
+        var userName = $('#userName').val();
+        var password = $('#password').val();
+
+        if ($('#newPassword').val() != $('#confirmPassword').val()) {
+            $('#changePasswordMessage').text($("#loginPasswordNotSame").text());
+            return;
+        }
+        var parameters = {
+                userName: userName,
+                oldPassword: password,
+                newPassword: $('#newPassword').val(),
+                requestPath: document.location.pathname,
+            };
+        $.ajax({
+            type: "PUT",
+            url: "/user/"+ userName + "/password",
+            contentType : 'application/json',
+            data: JSON.stringify(parameters),
+            async: false,
+            success: function (response) {
+                var response = JSON.parse(response);
+                if (response.status == true) {
+                    location.reload();
+                } else {
+                    $('#newPassword').val('');
+                    $('#confirmPassword').val('');
+                    $('#changePasswordMessage').text(response.message);
+                }
+            }
+        });
+    }
+</script>

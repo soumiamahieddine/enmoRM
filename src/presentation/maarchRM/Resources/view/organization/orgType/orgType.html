@@ -1,0 +1,92 @@
+<!--#
+    This file is part of the organization package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+
+<div data-translate-catalog="organization/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-list-ul"></i>
+                Organization types
+            </h1>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6" id="orgType_index">
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4><?merge orgTypes.count() ?> organization type(s)</h4>
+                        </div>
+                        <div class="pull-right btn-group">
+                            <button type="button" class="btn btn-default" id="orgType_addNewOrgType" title="Add"><i class="fa fa-plus fa-fw"></i>Add</button>
+                        </div>
+                    </div>
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table dataTable" id="orgType_list">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th width="1%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge orgTypes ?>
+                                <tr>
+                                    <td class="code"><?merge .code ?></td>  
+                                    <td class="name"><?merge .name ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" title="Edit">
+                                            <span class="fa fa-fw fa-edit"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <?hinclude organization/orgType/edit.html ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#orgType_addNewOrgType').on('click', function() {
+        newOrgTypeFrom();
+        disableIndex();
+    });
+
+    $('#orgType_list').on('click', '.btn', function() {
+        var tr = $(this).closest("tr");
+        var code = tr.find('.code').html();
+        var name = tr.find('.name').html();
+
+        loadOrgTypeFrom(code, name);
+        disableIndex();
+    })
+
+    $('#app_maarchRM_main').ready(function() {
+        $('#orgType_orgTypeForm').css('display', 'none');
+    });
+
+    function disableIndex() {
+        $('#orgType_index').find('.btn').addClass('disabled');
+    }
+
+    function enableIndex() {
+        $('#orgType_index').find('.btn').removeClass('disabled');
+    }
+
+
+</script>

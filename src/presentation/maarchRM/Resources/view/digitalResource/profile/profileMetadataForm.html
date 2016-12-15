@@ -1,0 +1,169 @@
+<div id="contain" >
+<div class="col-lg-5">
+    <form class="form-horizontal" role="form">
+        <div class="well">
+            <!-- modelObjects -->
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="profileName">Object class</label>
+                <div class="col-sm-9">
+                    <select class="form-control" id="objectClass">
+                        <option value="">Please to select an object class</option>
+                        <?merge modelObjects ?>
+                        <option value="[?merge . ?]"><?merge . ?></option>
+                        <?merge modelObjectsHide ?>
+                        <option value="[?merge . ?]" class="hide"><?merge . ?></option>
+                    </select>
+                </div>    
+            </div>
+            <div class="form-inline">
+                <!-- Required -->
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="required"/> Required
+                    </label> 
+                </div>
+                <!-- Disposable -->
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="disposable"/> Disposable
+                    </label>
+                </div>
+                <!-- Descriptive -->
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="descriptive"/> Descriptive
+                    </label>
+                </div>
+                <br/><br/>
+                <div class="clearfix">
+                    <button type="button" class="btn btn-primary col-sm-9 col-sm-offset-2" data-add-metadata title="Add profile metadata">Add profile metadata</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-lg-7" data-form-ns="profileMetadata" data-form-rel="toMany">
+    <div class="well">
+        <h3>Profile metadatas</h3>
+        <div id="profileRepositories" class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <th>Object class</th>
+                    <th>Required</th>
+                    <th>Disposable</th>
+                    <th>Descriptive</th>
+                    <th></th>
+                </thead>
+                <tbody id='tbodyMetadata'>
+                    <?merge profile.profileMetadata.bool()?>
+                    <div>
+                        <?merge profile.profileMetadata ?>
+                        <div>
+                            <?merge . ?>
+                            <tr>
+                                <td><?merge .objectClass ?></td>
+                                <?merge .required.bool() ?>
+                                <td><span class="fa fa-check"></span></td>
+                                <?merge .required.not() ?>
+                                <td><span class="fa fa-close"></span></td>
+                                
+                                <?merge .disposable.bool() ?>
+                                <td><span class="fa fa-check"></span></td>
+                                <?merge .disposable.not() ?>
+                                <td><span class="fa fa-close"></span></td>
+                                
+                                <?merge .descriptive.bool() ?>
+                                <td><span class="fa fa-check"></span></td>
+                                <?merge .descriptive.not() ?>
+                                <td><span class="fa fa-close"></span></td>
+                                
+                                <td>
+                                    <form class="hide">
+                                        <input type="hidden" name="profileId" value='[?merge profile.profileId ?]'/>
+                                        <input type="hidden" name="objectClass"/>
+                                        <input type="hidden" name="required"/>
+                                        <input type="hidden" name="disposable"/>
+                                        <input type="hidden" name="descriptive"/>
+                                    </form>
+                                    <button type="button" class="btn btn-danger" data-delete-metadata title="Delete"><span class="fa fa-trash">&nbsp;</span>Delete</button>
+                                </td>
+                            </tr>
+                        </div>
+                    </div>
+                </tbody>
+            </table>      
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $('#contain').ready(function() {
+        $("#contain").on('click', '[data-delete-metadata]', function(){
+            var objectClass = $(this).parent().parent().children().first().text();
+            $("select [value='"+objectClass+"']").removeClass('hide');
+            $(this).parent().parent().remove();
+        });
+        
+        $('[data-add-metadata]').on('click', function(){
+            if ($('#objectClass').val()) {
+                var objectClass = $('#objectClass').val();
+                var required = $('#required').is(':checked');
+                if (required == true) {
+                    required = 1;
+                } else {
+                    required = 0;
+                }
+                var disposable = $('#disposable').is(':checked');
+                if (disposable == true) {
+                    disposable = 1;
+                } else {
+                    disposable = 0;
+                }
+                var descriptive = $('#descriptive').is(':checked');
+                if (descriptive == true) {
+                    descriptive = 1;
+                } else {
+                    descriptive = 0;
+                }
+
+                var tr = $(document.createElement('tr'));
+                $(document.createElement('td')).text(objectClass).appendTo(tr);
+                
+                if(required == 1) {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-check')).appendTo(tr);
+                } else {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-close')).appendTo(tr);
+                }
+                if(disposable == 1) {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-check')).appendTo(tr);
+                } else {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-close')).appendTo(tr);
+                }
+                if(descriptive == 1) {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-check')).appendTo(tr);
+                } else {
+                    $(document.createElement('td')).append($(document.createElement('span')).attr('class', 'fa fa-close')).appendTo(tr);
+                }
+                
+                var lastTd = $(document.createElement('td')).appendTo(tr);
+
+                var form = $(document.createElement('form')).attr('class', 'hide').appendTo(lastTd);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'objectClass').attr('value', objectClass).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'required').attr('value', required).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'disposable').attr('value', disposable).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'descriptive').attr('value', descriptive).appendTo(form);
+                $(document.createElement('input')).attr('type', 'hidden').attr('name', 'profileId').attr('value', $('#profileId').val()).appendTo(form);
+
+                var button = $(document.createElement('button')).attr('type', 'button').attr('data-delete-metadata', '').attr('class', 'btn btn-danger').appendTo(lastTd);
+                $(document.createElement('span')).attr('class', 'fa fa-trash').appendTo(button);
+                button.append(' Delete');
+
+                $('#tbodyMetadata').append(tr);
+                
+                $('#objectClass option:selected').addClass('hide');
+                $(this).closest('form').trigger("reset");
+            }
+            
+        });
+    });
+</script>

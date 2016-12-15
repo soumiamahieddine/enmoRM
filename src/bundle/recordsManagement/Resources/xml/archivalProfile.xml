@@ -1,0 +1,13 @@
+<archivalProfile>
+    <reference><?merge archivalProfile.reference ?></reference>
+    <retentionRule>
+        <code><?merge archivalProfile.retentionRuleCode ?></code>
+        <startDate><?merge archivalProfile.retentionStartDate ?></startDate>
+        <duration><?merge archivalProfile.retentionRuleDuration ?></duration>
+        <finalDisposition><?merge archivalProfile.retentionRuleFinalDisposition ?></finalDisposition>
+    </retentionRule>
+    <accessRule>
+        <code><?merge archivalProfile.accessRuleCode ?></code>
+        <duration><?merge archivalProfile.accessRuleDuration ?></duration>
+    </accessRule>
+</archivalProfile>

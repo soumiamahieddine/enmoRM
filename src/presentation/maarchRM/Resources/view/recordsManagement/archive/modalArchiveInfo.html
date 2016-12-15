@@ -1,0 +1,126 @@
+<!-- ARCHIVE DESCRIPTION -->
+<div class="modal fade" id="modalArchiveInfo" data-backdrop="true" data-keyboard="static" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalArchiveInfo_content">
+        </div>
+    </div>
+</div>
+
+<!-- ARCHIVE DOCUMENT -->
+<div class="modal fade" id="modalArchiveDocument" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalArchiveDocument">
+            <div data-translate-catalog="recordsManagement/messages">
+                <div class="container-fluid">
+                    <div class="">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <br/>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="fileContent" class="col-sm-12">
+                        <object id="archiveDocumentViewer" width="100%" data="[?merge url ?]" type="[?merge mimetype?]"></object>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?hinclude lifeCycle/eventModal.html ?>
+
+<style>
+    .breakAll{
+        word-break: break-all;
+    }
+</style>
+
+<script>
+    // View relate archive
+    $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
+        archiveInfoModal.load($(this).data('archiveid'));
+    })
+
+    // Show life cycle event 
+    $("#modalArchiveInfo").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    })
+
+    // Show document
+    $("#modalArchiveInfo").on('click', '.showArchiveDocument', function () {
+        archiveDocumentViewer.load($(this).data('doc-id'));
+    })
+    $("#modalArchiveInfo").on('click', '.showDocument', function () {
+        archiveDocumentViewer.loadDoc($(this).data('doc-id'));
+    })
+    $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
+        var docId = $(this).closest('.collapse').attr('id');
+        var resId = $(this).data('res-id');
+
+        archiveDocumentViewer.loadResource(docId, resId);
+    })
+
+    archiveInfoModal = {
+         load: function(archiveId) {
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archiveDescription/" + archiveId,
+                dataType    : 'html',
+                success     : function (response) {
+                    $('#modalArchiveInfo_content').empty().html(response);
+
+                    if (!$('#modalArchiveInfo_content').find('.close').length) {
+                        archiveInfoModal.addClosingButton();
+                    }
+
+                    if ($("#modalArchiveInfo").is(":visible")) {
+                        archiveInfoModal.close();
+                        $('#modalArchiveInfo').one('hidden.bs.modal', function () {
+                            $('#modalArchiveInfo').modal();
+                        })
+                    } else {
+                        $('#modalArchiveInfo').modal();
+                    }
+                }
+            });
+         },
+
+         close: function() {
+            $('#modalArchiveInfo').modal('hide');
+         },
+
+         addClosingButton: function() {
+            console.log("ok");
+            var pageHeader = $('#modalArchiveInfo').find('.page-header');
+            var button = $('<button/>').addClass('close').attr('data-dismiss', 'modal').prependTo(pageHeader);
+            var span = $('<span/>').prop('aria-hidden', 'true').html('&times;').appendTo(button);
+        }
+    }
+
+    archiveDocumentViewer = {
+        load: function(archiveId, action) {
+            var url = "/recordsManagement/contents/" + archiveId;
+            if (action) {
+                url = action + archiveId;
+            }
+            window.open(url, 'document');
+        },
+        
+        loadDoc: function(docId, action) {
+            var url = "/recordsManagement/document/" + docId;
+            if (action) {
+                url = action + docId;
+            }
+            window.open(url, 'document');
+        },
+
+        loadResource: function(docId, resId) {
+            var url = "/recordsManagement/digitalResource/" + docId + '/' + resId;
+            window.open(url, 'document');
+        }
+    }
+
+</script>
