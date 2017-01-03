@@ -78,11 +78,15 @@ class document
     public function resultList($documents)
     {
         $this->view->addContentFile("documentManagement/list.html");
-        
+
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setUnsortableColumns(0);
-        $dataTable->setUnsortableColumns(7);
+        $dataTable->setUnsortableColumns(4);
         $this->view->translate();
+
+        foreach ($documents as $document) {
+            $document->puid = \laabs::callService('digitalResource/format/readGet', $document->puid)->name;
+        }
 
         $this->view->setSource("documents", $documents);
         $this->view->merge();
