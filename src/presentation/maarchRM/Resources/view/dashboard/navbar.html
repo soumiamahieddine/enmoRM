@@ -50,7 +50,7 @@
                     <li class="divider"></li>
                     <li>
                         <a onclick="load('/user/logout')" translate="yes">
-                            <i class="fa fa-sign-out fa-fw"></i> Logout 
+                            <i class="fa fa-sign-out fa-fw"></i> Logout
                         </a>
                     </li>
                 </ul>
@@ -261,4 +261,13 @@
             k = 0;
     });
 
+    var keys = {};
+    $(window).on("keyup keydown", function (e) {
+        e = e || event;
+        keys[e.keyCode] = e.type === 'keydown';
+        
+        if (keys[17] && keys[18] && keys[81]) {
+            load('/user/logout');
+        }
+    });
 </script>
