@@ -555,8 +555,6 @@ trait archiveDepositTrait
                 }
             }
 
-            $this->sdoFactory->create($archive, 'recordsManagement/archive');
-
             // Store document and resources
             if (!$this->currentServiceLevel) {
                 if (isset($archive->serviceLevelReference)) {
@@ -574,7 +572,11 @@ trait archiveDepositTrait
                 }
             }
 
-            $archive->storagePath = $filePlanPosition;            if (isset($archive->document) && count($archive->document) > 0) {
+            $archive->storagePath = $filePlanPosition;
+
+            $this->sdoFactory->create($archive, 'recordsManagement/archive');
+
+            if (isset($archive->document) && count($archive->document) > 0) {
                 foreach ($archive->document as $document) {
                     $document->archiveId = $archive->archiveId;
 
