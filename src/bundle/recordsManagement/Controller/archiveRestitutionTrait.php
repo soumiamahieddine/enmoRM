@@ -43,73 +43,44 @@ trait archiveRestitutionTrait
 
     /**
      * Restitute an archive
-     * @param mixed  $archives     The idetifier of the archive or an array of archive id
-     * @param string $format       The format of output
-     * @param bool   $resourceFile Generate the resource file
+     * @param string $archiveId The idetifier of the archive
      *
-     * @return int The number of restituted archives
+     * @return recordsManagement/archive The restitue archive
      */
-    public function restitute($archives, $format, $resourceFile)
+    public function restitute($archiveId)
     {
-        $archiveSerializer = \laabs::newSerializer('recordsManagement/archive', 'xml');
-        $succeeded = 0;
+        $this->verifyIntegrity($archiveId);
 
-        if (!is_array($archives)) {
-            $archives = array($archives);
-        }
+        $archive = $this->retrieve($archiveId);
 
-        $childrenArchive = array();
+        $statusChanged = $this->setStatus((string) $archive->archiveId, "restituted");
 
-        foreach ($archives as $archiveId) {
-            $this->verifyIntegrity($archiveId);
+        $valid = count($statusChanged["success"]) ? true : false;
 
-            $relationships = $this->sdoFactory->find("recordsManagement/archiveRelationship", "archiveId = '$archiveId'");
-            foreach ($relationships as $relationship) {
-                $childrenArchive[] = $relationship->relatedArchiveId;
+        // Life cycle journal
+        $eventItems = array(
+            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+        );
+
+        $eventItems['resId'] = null;
+        $eventItems['hashAlgorithm'] = null;
+        $eventItems['hash'] = null;
+        $eventItems['address'] = $archive->storagePath;
+        $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'recordsManagement/archive', $archive->archiveId, $eventItems, $valid);
+
+        foreach ($archive->document as $document) {
+            if ($document->type == "CDO") {
+                $eventItems['resId'] = $document->digitalResource->resId;
+                $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
+                $eventItems['hash'] = $document->digitalResource->hash;
+                $eventItems['address'] = $document->digitalResource->address[0]->path;
+
+                $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'documentManagement/document', $document->docId, $eventItems, $valid);
             }
         }
 
-        array_unique(array_merge($childrenArchive, $archives));
-
-        foreach ($archives as $archiveId) {
-            $archive = $this->retrieve($archiveId);
-
-            $restitutionFile = $archiveSerializer->restitute($archive, !$resourceFile);
-            $archiveFilename = $this->restitutionDirectory.DIRECTORY_SEPARATOR.$archive->archiveId.".".$format;
-
-            file_put_contents($archiveFilename, $restitutionFile);
-
-            if ($resourceFile) {
-                $resourceFilename = $this->restitutionDirectory.DIRECTORY_SEPARATOR.$archive->archiveId;
-                if ($archive->digitalResource->fileExtension) {
-                    $resourceFilename .= ".".$archive->digitalResource->fileExtension;
-                }
-                file_put_contents($resourceFilename, $archive->digitalResource->getContents());
-            }
-
-            $this->setStatus($archive->archiveId, 'restitution');
-
-            $succeeded++;
-
-            // Life cycle journal
-            $eventInfo = array(
-                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-            );
-
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO") {
-                    $eventItems['resId'] = $document->digitalResource->resId;
-                    $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventItems['hash'] = $document->digitalResource->hash;
-                    $eventItems['address'] = $document->digitalResource->address[0]->path;
-
-                    $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'recordsManagement/archive', $archive->archiveId, $eventItems);
-                }
-            }
-        }
-
-        return $succeeded;
+        return $valid ? $archive : null;
     }
 
     /**
