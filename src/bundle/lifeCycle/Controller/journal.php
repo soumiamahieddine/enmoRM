@@ -923,7 +923,7 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $documentController = \laabs::newController('documentController/document');
+            $documentController = \laabs::newController('documentManagement/document');
             $journalDocument = $documentController->getArchiveDocuments($previousJournal->archiveId);
 
             $eventLine[9] = (string) $journalDocument->digitalResource->hashAlgorithm;
