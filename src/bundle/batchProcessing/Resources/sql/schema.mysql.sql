@@ -36,8 +36,7 @@ CREATE TABLE `batchProcessing.scheduling`
 CREATE TABLE `batchProcessing.logScheduling`
 (
   `logId` VARCHAR(255)  NOT NULL,
-  `name` text NOT NULL,
-  `task` text NOT NULL,
+  `schedulingId` VARCHAR(255)  NOT NULL,
   `executedBy` text NOT NULL,
   `launchedBy` text NOT NULL,
   `logDate` timestamp(6) NOT NULL,
