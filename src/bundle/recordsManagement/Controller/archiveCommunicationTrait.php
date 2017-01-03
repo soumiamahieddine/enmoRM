@@ -98,6 +98,42 @@ trait archiveCommunicationTrait
     }
 
     /**
+     * Restitute an archive
+     * @param string $archiveId The idetifier of the archive
+     *
+     * @return recordsManagement/archive The restitue archive
+     */
+    public function communicate($archiveId)
+    {
+        $this->verifyIntegrity($archiveId);
+
+        $archive = $this->retrieve($archiveId);
+
+        // Life cycle journal
+        $eventItems = array(
+            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+        );
+
+        $eventItems['resId'] = null;
+        $eventItems['hashAlgorithm'] = null;
+        $eventItems['hash'] = null;
+        $eventItems['address'] = $archive->storagePath;
+        $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'recordsManagement/archive', $archive->archiveId, $eventItems);
+
+        foreach ($archive->document as $document) {
+            $eventItems['resId'] = $document->digitalResource->resId;
+            $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
+            $eventItems['hash'] = $document->digitalResource->hash;
+            $eventItems['address'] = $document->digitalResource->address[0]->path;
+
+            $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'documentManagement/document', $document->docId, $eventItems);
+        }
+
+        return $archive;
+    }
+
+    /**
      * Retrieve an archive resource contents
      * @param string $originatorArchiveId    The archive identifier of the originator
      * @param string $originatorOrgRegNumber The originatoriOrgRegNumber
