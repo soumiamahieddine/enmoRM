@@ -114,6 +114,9 @@ msgstr "Numéro de TVA intraco"
 msgid "Registration number"
 msgstr "Identifiant"
 
+msgid "registrationNumber"
+msgstr "Identifiant"
+
 msgid "Organization unit members"
 msgstr "Membres de l'unité organisationnelle"
 
