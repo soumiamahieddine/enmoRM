@@ -55,6 +55,49 @@ trait archiveDestructionTrait
     }
 
     /**
+     * Eliminate archive
+     * @param string $archiveId The archive identifier
+     *
+     * @return bool
+     */
+    public function eliminate($archiveId)
+    {
+        $archive = $this->getDescription($archiveId);
+
+        $result = $this->setStatus($archiveId, 'disposed');
+
+        $eventItems = array(
+            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+        );
+
+        $logged = false;
+        if (isset($archive->document) && count($archive->document)) {
+            foreach ($archive->document as $document) {
+                if ($document->type == "CDO" && $document->copy != true) {
+                    $eventInfo['resId'] = (string) $document->digitalResource->resId;
+                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
+                    $eventInfo['hash'] = $document->digitalResource->hash;
+                    $eventInfo['address'] = $document->digitalResource->address[0]->path;
+
+                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+
+                    $logged = true;
+                }
+            }
+        }
+
+        if (!$logged) {
+            $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
+            $eventInfo['address'] = $archive->storagePath;
+            $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+        }
+
+
+        return $result;
+    }
+
+    /**
      * Cancel destruction
      * @param array $archiveIds Array of archive identifier
      *
@@ -94,52 +137,42 @@ trait archiveDestructionTrait
 
             try {
                 $this->destructArchive($archive);
+
                 if (\laabs::hasDependency("fulltext")) {
                     $documentToRemove = clone($document);
                     $documentToRemove->addField("archiveId", $archiveId, "name");
                     $fulltextController->delete($archive->archivalProfileReference, $documentToRemove);
                 }
+
+                $destructionResult = true;
             } catch (\Exception $e) {
-                // Life cycle journal
-                $eventInfo = array(
-                    'resId' => null,
-                    'hashAlgorithm' => null,
-                    'hash' => null,
-                    'address' => null,
-                    'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                    'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                );
-
-                foreach ($archive->document as $document) {
-                    if ($document->type == "CDO" && $document->copy != true) {
-                        $eventInfo['resId'] = $document->digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $document->digitalResource->hash;
-                        $eventInfo['address'] = $document->digitalResource->address[0]->path;
-                        break;
-                    }
-                }
-
-                //$this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, false);
-
+                $destructionResult = false;
                 continue;
             }
 
-            // Life cycle journal
-            $eventInfo = array(
-                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                );
+            $eventInfo['archiverOrgRegNumber'] = $archive->archiverOrgRegNumber;
+            $eventInfo['originatorOrgRegNumber'] = $archive->originatorOrgRegNumber;
 
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->copy != true) {
-                    $eventInfo['resId'] = $document->digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $document->digitalResource->hash;
-                    $eventInfo['address'] = $document->digitalResource->address[0]->path;
+            $logged = false;
+            if (isset($archive->document) && count($archive->document)) {
+                foreach ($archive->document as $document) {
+                    if ($document->type == "CDO" && $document->copy != true) {
+                        $eventInfo['resId'] = (string) $document->digitalResource->resId;
+                        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
+                        $eventInfo['hash'] = $document->digitalResource->hash;
+                        $eventInfo['address'] = $document->digitalResource->address[0]->path;
 
-                    $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+                        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
+
+                        $logged = true;
+                    }
                 }
+            }
+
+            if (!$logged) {
+                $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
+                $eventInfo['address'] = $archive->storagePath;
+                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
             }
 
             $archives['success'][] = $archive;
