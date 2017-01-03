@@ -15,6 +15,7 @@ INSERT INTO `lifeCycle.eventFormat` (`type`, `format`, `notification`, `message`
     ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s'),
     ('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber', FALSE, 'Communication de l''archive %6$s'),
     ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Restitution de l''archive %6$s'),
+    ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Élimination de l''archive %6$s'),
     ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de l''archive %6$s'),
     ('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Création du profil %6$s'),
     ('recordsManagement/ArchivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
