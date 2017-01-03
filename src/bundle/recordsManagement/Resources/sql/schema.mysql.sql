@@ -24,7 +24,7 @@ CREATE TABLE `recordsManagement.accessEntry`
 (
   `accessRuleCode` varchar(255) NOT NULL,
   `orgUnitId` varchar(255) NOT NULL,
-  `readOnly` boolean DEFAULT true
+  `originatorAccess` boolean DEFAULT true
 );
 
 
@@ -38,40 +38,6 @@ CREATE TABLE `recordsManagement.retentionRule`
   PRIMARY KEY (`code`)
 );
 
-
-CREATE TABLE `recordsManagement.serviceLevel`
-(
-  `serviceLevelId` varchar(255) NOT NULL,
-  `reference` varchar(255) NOT NULL,
-  `digitalResourceClusterId` text NOT NULL,
-  `control` text,
-  `default` boolean,
-  PRIMARY KEY (`serviceLevelId`),
-  UNIQUE (`reference`)
-);
-
-
-CREATE TABLE `recordsManagement.log`
-(
-  `archiveId` varchar(255) NOT NULL,
-  
-  `fromDate` timestamp(6) NOT NULL,
-  `toDate` timestamp(6) NOT NULL,
-  `processId` text,
-  `processName` text,
-  `type` text NOT NULL,
-
-  PRIMARY KEY (`archiveId`)
-);
-
-
-CREATE TABLE `recordsManagement.descriptionClass`
-(
-  `name` varchar(255) NOT NULL,
-  `label` text NOT NULL,
-
-PRIMARY KEY (`name`)
-);
 
 CREATE TABLE `recordsManagement.archivalProfile`
 (
@@ -96,11 +62,6 @@ CREATE TABLE `recordsManagement.archivalProfile`
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-
--- Table: `recordsManagement.descriptionField`
-
--- DROP TABLE `recordsManagement.descriptionField`;
-
 CREATE TABLE `recordsManagement.descriptionField`
 (
   `name` varchar(255) NOT NULL,
@@ -116,6 +77,7 @@ CREATE TABLE `recordsManagement.descriptionField`
   PRIMARY KEY (`name`)
 );
 
+
 CREATE TABLE `recordsManagement.archiveDescription`
 (
   `archivalProfileId` varchar(255) NOT NULL,
@@ -128,9 +90,6 @@ CREATE TABLE `recordsManagement.archiveDescription`
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Table: `recordsManagement.documentProfile`
-
--- DROP TABLE `recordsManagement.documentProfile`;
 
 CREATE TABLE `recordsManagement.documentProfile`
 (
@@ -147,9 +106,6 @@ CREATE TABLE `recordsManagement.documentProfile`
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Table: `recordsManagement.documentDescription`
-
--- DROP TABLE `recordsManagement.documentDescription`;
 
 CREATE TABLE `recordsManagement.documentDescription`
 (
@@ -162,6 +118,18 @@ CREATE TABLE `recordsManagement.documentDescription`
   FOREIGN KEY (`documentProfileId`)
     REFERENCES `recordsManagement.documentProfile` (`documentProfileId`) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+
+CREATE TABLE `recordsManagement.serviceLevel`
+(
+  `serviceLevelId` varchar(255) NOT NULL,
+  `reference` varchar(255) NOT NULL,
+  `digitalResourceClusterId` text NOT NULL,
+  `control` text,
+  `default` boolean,
+  PRIMARY KEY (`serviceLevelId`),
+  UNIQUE (`reference`)
 );
 
 
@@ -235,3 +203,27 @@ CREATE TABLE `recordsManagement.archiveRelationship`
 	  REFERENCES `recordsManagement.archive` (`archiveId`) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+
+CREATE TABLE `recordsManagement.log`
+(
+  `archiveId` varchar(255) NOT NULL,
+  
+  `fromDate` timestamp(6) NOT NULL,
+  `toDate` timestamp(6) NOT NULL,
+  `processId` text,
+  `processName` text,
+  `type` text NOT NULL,
+
+  PRIMARY KEY (`archiveId`)
+);
+
+
+CREATE TABLE `recordsManagement.descriptionClass`
+(
+  `name` varchar(255) NOT NULL,
+  `label` text NOT NULL,
+
+PRIMARY KEY (`name`)
+);
+
