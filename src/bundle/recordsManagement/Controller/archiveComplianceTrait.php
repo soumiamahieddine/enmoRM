@@ -64,15 +64,15 @@ trait archiveComplianceTrait
      * Periodic integrity compliance method
      * @param string $limit The limit
      * @param string $delay The delay
-     * 
+     *
      * @return array
      */
-    public function periodicIntegrityCompliance($limit=1000, $delay="P1M")
+    public function periodicIntegrityCompliance($limit = 1000, $delay = "P1M")
     {
         $this->limit = $limit;
         $this->delayDate = \laabs::newTimestamp()->sub(\laabs::newDuration($delay));
 
-        $archives = $this->sdoFactory->find('recordsManagement/archive', "status!=:notDeleted AND (lastCheckDate<=:delayDate OR (lastCheckDate=null AND depositDate<=:delayDate)) AND parentArchiveId=null", ['notDeleted'=>'disposed', 'delayDate'=>$this->delayDate], 'lastCheckDate, depositDate', 0, $limit);
+        $archives = $this->sdoFactory->find('recordsManagement/archive', "status!=:notDeleted AND (lastCheckDate<=:delayDate OR (lastCheckDate=null AND depositDate<=:delayDate)) AND parentArchiveId=null", ['notDeleted' => 'disposed', 'delayDate' => $this->delayDate], 'lastCheckDate, depositDate', 0, $limit);
 
         $archiveIds = [];
 
@@ -150,7 +150,7 @@ trait archiveComplianceTrait
         $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $valid);
 
         return $valid;
-    }      
+    }
 
     protected function checkResourceIntegrity($archive, $resource, $currentOrganization)
     {
@@ -191,8 +191,8 @@ trait archiveComplianceTrait
         $eventInfo['address'] = $resource->address[0]->path;
         $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
         $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
-        
-        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $valid);
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'digitalResource/digitalResource', $resource->resId, $eventInfo, $valid);
 
         foreach ($resource->relatedResource as $relatedResource) {
             if (!$this->checkResourceIntegrity($archive, $relatedResource, $currentOrganization)) {
@@ -202,5 +202,4 @@ trait archiveComplianceTrait
 
         return $valid;
     }
-
 }
