@@ -14,7 +14,7 @@
                         <div class="panel-body">
                             <h4><strong style="color:red"><span id="modal_selected"></span></strong> archives selected.</h4>
                             <h4>The modification will be applied on <strong style="color:red"><span id="modal_relevant"></span></strong> archives.</h4>
-                            <br/>
+                            <!--<br/>
                             <div class="table-responsive">
                                 <table id="archiveTable" class="table table-condensed">
                                     <thead>
@@ -28,14 +28,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
                 <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
-                <button id="save" class="btn btn-success" data-archiveIds="" data-dismiss="modal" title="Save"><i class="fa fa-check">&nbsp;</i>OK</button>
+                <button id="save" class="btn btn-success" data-archiveIds="" data-dismiss="modal" title="Save" disabled="disabled"><i class="fa fa-check">&nbsp;</i>OK</button>
             </div>
         </div>
     </div>
@@ -64,8 +64,15 @@
         ModificationModal.loadAccessCode();
     });
     
+    $("#comment").bind('input propertychange', function () {
+        if ($("#comment").val() == "") {
+            $("#save").prop("disabled",true);
+        } else {
+            $("#save").prop("disabled",false);
+        }
+    });
+    
     $("#save").on('click', function (e) {
-        console.log($(this).data("events" ));
         e.preventDefault();
         ModificationModal.save(); 
     });
@@ -208,11 +215,6 @@
                 type = 'PUT';
             }
 
-            if (!parameters.comment) {
-                gritter.show($('#empty_text').html(),false);
-                return;
-            }
-
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,
@@ -301,6 +303,11 @@
                     }
                 }
             });
+        },
+        
+        reset : function() {
+            $('#modificationModal').find('[name="identifier"]').val("");
+            $('#modificationModal').find('[name="comment"]').val("");
         }
     };
 
