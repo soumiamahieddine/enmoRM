@@ -411,7 +411,7 @@ msgid "Acceptance of the message"
 msgstr "Message accepté"
 
 msgid "Modification of retention rule"
-msgstr "Modification de la règle de retention"
+msgstr "Modification de la règle de conservation"
 
 msgid "Modification of access rule"
 msgstr "Modification de la règle de communicabilité"

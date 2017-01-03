@@ -27,7 +27,7 @@ msgstr "Journal"
 msgctxt "interface"
 
 msgid "retentionRule"
-msgstr "Règle de retention"
+msgstr "Règle de conservation"
 msgctxt "interface"
 
 msgid "serviceLevel"
