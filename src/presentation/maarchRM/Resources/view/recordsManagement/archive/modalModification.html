@@ -48,6 +48,7 @@
     <span id="mtext_cancelDestruction">Cancel destruction</span>
     <span id="mtext_freeze">Freeze</span>
     <span id="mtext_unfreeze">Unfreeze</span>
+    <span id="empty_text">The fields with a star are compulsory.</span>
 
     <span id="text_D">day(s)</span>
     <span id="text_M">month(s)</span>
@@ -93,19 +94,19 @@
             if (type == 'accessRule') {
                 $('#startDate, #code').css('display', '');
                 $('#duration, #finalDisposition').css('display', 'none');
-                this.loadRule(archiveId, archiveName, type)
+                this.loadRule(archiveId, archiveName, type);
 
             } else if (type == "retentionRule") { 
                 $('#startDate, #duration, #finalDisposition').css('display', '');
                 $('#code').css('display', 'none');
-                this.loadRule(archiveId, archiveName)
+                this.loadRule(archiveId, archiveName);
 
             } else {
                 $('#startDate, #code, #duration, #finalDisposition').css('display', 'none');
             }
             
             $('#save').data("archiveids", "");
-            $('#archiveModificationForm').css('display', '')
+            $('#archiveModificationForm').css('display', '');
             $('#modal_multipleSelection').css('display', 'none');
 
             this.modal.modal();
@@ -205,6 +206,11 @@
                 type = this.actionsType[this.modalType];
             } else {
                 type = 'PUT';
+            }
+
+            if (!parameters.comment) {
+                gritter.show($('#empty_text').html(),false);
+                return;
             }
 
             $.ajax({
