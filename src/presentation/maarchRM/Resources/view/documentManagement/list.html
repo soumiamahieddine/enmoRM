@@ -22,12 +22,9 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="documentList_selectAll"/></th>
-                        <th>Identifiant</th>
                         <th>Archive name
                         <th>Creacted date</th>
-                        <th>Size</th>
-                        <th>Puid</th>
-                        <th>Copy</th>                       
+                        <th>Libelle</th>                     
                         <th/>
                     </tr>
                 </thead>
@@ -37,12 +34,9 @@
                             <td>
                                 <input type="checkbox" value="[?merge .docId ?]"/>
                             </td>
-                            <td><?merge .docId ?></td>
                             <td><?merge .archiveName ?>
                             <td><?merge .created ?></td>
-                            <td><?merge .size ?></td>
                             <td><?merge .puid ?></td>
-                            <td><i class ="fa [?merge .copy.then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
                             <td>
                                 <div class="btn-group pull-right">
                                     <button type="button" class="btn btn-primary viewDocument" title="View"><span class="fa fa-eye">&nbsp;</span></button>
