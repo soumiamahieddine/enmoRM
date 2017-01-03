@@ -49,56 +49,33 @@ INSERT INTO `auth.account` (`accountType`, `accountId`, `lastName`, `firstName`,
     ('user', 'bbain', 'BAIN', 'Barbara', 'Mme.', 'Barbara BAIN', 'bbain', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 
 INSERT INTO `auth.account` (`accountType`, `accountId`, `displayName`, `accountName`, `emailAddress`, `enabled`) VALUES
-    ('service', 'Maarch_Service', 'Maarch_Service', 'Maarch_Service', 'info@maarch.org', true);
+    ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true);
 
 -- ROLE
 INSERT INTO `auth.role`(`roleId`, `roleName`, `description`, `enabled`) VALUES
     ('ADMIN', 'Administrateur', 'Groupe administrateur', true),
-    ('ARCHIVISTE', 'Archiviste', 'Groupe archiveur', true),
-    ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true),
-    ('SERVICE_VERSANT', 'Service versant', 'Groupe service versant', true),
-    ('CONTROL', 'Autorité de contrôle', 'Autorité de contrôle', true),
-    ('PRODUCTEUR', ' Producteur d''Archives', 'Groupe producteur d''Archives', true);
-
-
--- accessRule
-INSERT INTO `auth.accessRule`(`roleId`, `class`, `context`) VALUES
-    ('ADMIN', '', ''),
-    ('ARCHIVISTE', 'financialRecords/accountingRecord', ''),
-    ('UTILISATEUR', 'financialRecords/accountingRecord', '');
-
+    ('CORRESPONDANT_ARCHIVES', 'Archiviste', 'Correspondant d''archives', true),
+    ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true); 
 
 -- servicePrivilege
 INSERT INTO `auth.servicePrivilege`(`accountId`, `serviceURI`) VALUES
-    ('Maarch_Service', 'audit/event/createChainjournal'),
-    ('Maarch_Service', 'lifeCycle/journal/createChainjournal'),
-    ('Maarch_Service', 'recordsmanagement/archivecompliance/readperiodic'),
-    ('Maarch_Service', 'medona/ArchiveDelivery/updateProcessBatch'),
-    ('Maarch_Service', 'medona/ArchiveDestruction/updateProcessAll'),
-    ('Maarch_Service', 'medona/ArchiveRestitution/updateProcessBatch'),
-    ('Maarch_Service', 'medona/archiveTransfer/create'),
-    ('Maarch_Service', 'medona/ArchiveTransfer/updateProcessBatch'),
-    ('Maarch_Service', 'medona/ArchiveTransfer/updateValidateBatch'),
-    ('Maarch_Service', 'medona/documentConversion/readProcessAll'),
-    ('Maarch_Service', 'medona/archiveRestitution/updateValidateBatch'),
-    ('Maarch_Service', 'medona/message/updateArchive');
+    ('System', 'audit/event/createChainjournal'),
+    ('System', 'lifeCycle/journal/createChainjournal'),
+    ('System', 'recordsmanagement/archivecompliance/readperiodic');
 
 
 -- roleMember
 INSERT INTO `auth.roleMember`(`roleId`, `userAccountId`) VALUES
     ('ADMIN', 'superadmin'),
-    ('ARCHIVISTE', 'bblier'),
-    ('PRODUCTEUR', 'aastier'),
-    ('PRODUCTEUR', 'rreynolds'),
-    ('PRODUCTEUR', 'ppreboist'),
-    ('PRODUCTEUR', 'ccox'),
-    ('PRODUCTEUR', 'sstone'),
-    ('CONTROL', 'sstallone'),
+    ('CORRESPONDANT_ARCHIVES', 'bblier'),
+    ('UTILISATEUR', 'aastier'),
+    ('UTILISATEUR', 'sstallone'),
+    ('UTILISATEUR', 'rreynolds'),
     ('UTILISATEUR', 'aadams'),
-    ('SERVICE_VERSANT', 'bbain'),
-    ('SERVICE_VERSANT', 'aastier'),
-    ('SERVICE_VERSANT', 'rreynolds'),
-    ('SERVICE_VERSANT', 'cchaplin');
+    ('UTILISATEUR', 'ccox'),
+    ('UTILISATEUR', 'sstone'),
+    ('UTILISATEUR', 'cchaplin');
+
 
 
 -- privilege
@@ -106,22 +83,15 @@ INSERT INTO `auth.privilege`(`roleId`, `userStory`) VALUES
     ('ADMIN', 'adminTech/*'),
     ('ADMIN', 'adminFunc/*'),
 	
-    ('ARCHIVISTE', 'adminArchive/*'),
-    ('ARCHIVISTE', 'archiveRetrieval/*'),
-    ('ARCHIVISTE', 'archiveManagement/*'),
-    ('ARCHIVISTE', 'journal/*'),
-    ('ARCHIVISTE', 'archiveAuthorization/*'),
-    
-    ('PRODUCTEUR', 'archiveRetrieval/*'),
-    ('PRODUCTEUR', 'originatorAccess/*'),
-    ('PRODUCTEUR', 'archiveAuthorization/*'),
-    ('PRODUCTEUR', 'archiveManagement/migration'),
-	
-    ('CONTROL', 'archiveAuthorization/*'),
-	
+    ('CORRESPONDANT_ARCHIVES', 'adminArchive/*'),
+    ('CORRESPONDANT_ARCHIVES', 'archiveRetrieval/*'),
+    ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
+    ('CORRESPONDANT_ARCHIVES', 'journal/*'),
+    ('CORRESPONDANT_ARCHIVES', 'archiveAuthorization/*'),
+
     ('UTILISATEUR', 'archiveRetrieval/*'),
-	
-    ('SERVICE_VERSANT', 'archiveDeposit/*');
+    ('UTILISATEUR', 'archiveDeposit/*'),
+    ('UTILISATEUR', 'archiveManagement/modify');
 
 
     -- publicUserStory

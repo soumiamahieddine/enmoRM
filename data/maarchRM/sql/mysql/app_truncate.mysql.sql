@@ -9,11 +9,6 @@ delete from `recordsManagement.log`;
 
 -- schema lifeCycle
 delete from `lifeCycle.event`;
-delete from `lifeCycle.journal`;
-
--- schema medona
-delete from `medona.unitIdentifier`;
-delete from `medona.message`;
 
 -- schema digitalResource
 delete from `digitalResource.packedResource`;
@@ -25,14 +20,3 @@ delete from `digitalResource.digitalResource`;
 
 -- schema audit
 delete from `audit.event`;
-
--- schema businessRecords
-delete from `businessRecords.adminDescription`;
-
--- schema archivesPubliques
-delete from `archivesPubliques.keyword`;
-delete from `archivesPubliques.custodialHistory`;
-delete from `archivesPubliques.contentDescription`;
-
--- schema busiessRecords
-delete from `bankrecords1.customerRecords`;
