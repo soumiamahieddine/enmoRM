@@ -345,12 +345,6 @@ class document
                 $this->digitalResourceController->delete($resource->resId);
             }
 
-            /*if (!empty($document->descriptionClass)) {
-                $descriptionController = $this->useDescriptionController($document->descriptionClass);
-                $descriptionController->delete($document->descriptionId);
-            }*/
-
-            $this->sdoFactory->deleteChildren("documentManagement/documentRelationship", $document);
             $deleted = $this->sdoFactory->delete($document);
         } catch (\Exception $exception) {
             if ($transactionControl) {
