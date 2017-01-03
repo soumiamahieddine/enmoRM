@@ -467,6 +467,9 @@ msgstr "Classe de description"
 msgid "Res id"
 msgstr "Id"
 
+msgid "Object"
+msgstr "Objet"
+
 msgid "Object id"
 msgstr "Identifiant d'objet"
 
