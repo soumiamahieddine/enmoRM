@@ -14,14 +14,6 @@ CREATE TABLE `organization.orgRole`
   PRIMARY KEY (`code`)
 );
 
-CREATE TABLE `organization.servicePosition`
-(
-  `serviceAccountId` varchar(255) NOT NULL,
-  `orgId` varchar(255) NOT NULL,
-
-  PRIMARY KEY (`serviceAccountId`, `orgId`)
-);
-
 
 CREATE TABLE `organization.orgType`
 (
@@ -79,6 +71,16 @@ CREATE TABLE `organization.userPosition`
       REFERENCES `organization.organization` (`orgId`) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+
+CREATE TABLE `organization.servicePosition`
+(
+  `serviceAccountId` varchar(255) NOT NULL,
+  `orgId` varchar(255) NOT NULL,
+
+  PRIMARY KEY (`serviceAccountId`, `orgId`)
+);
+
 
 CREATE TABLE `organization.orgContact`
 (
