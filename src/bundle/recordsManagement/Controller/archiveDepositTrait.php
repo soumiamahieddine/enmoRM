@@ -116,7 +116,7 @@ trait archiveDepositTrait
 
         // Set archive name when mono document
         if (empty($archive->archiveName) && count($archive->digitalResources) == 1) {
-            if (isset($archive->document->digitalResources[0]->fileName)) {
+            if (isset($archive->digitalResources[0]->fileName)) {
                 $archive->archiveName = $archive->digitalResource[0]->fileName;
             }
         }
