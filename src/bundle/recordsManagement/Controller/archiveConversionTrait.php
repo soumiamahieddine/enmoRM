@@ -27,48 +27,6 @@ namespace bundle\recordsManagement\Controller;
 trait archiveConversionTrait
 {
     /**
-     * Flag for converison
-     * @param array $documentIds Array of document identifier
-     *
-     * @return bool
-     */
-    /*
-    public function conversion($documentIds)
-    {
-        // Medona
-        if (\laabs::hasBundle("medona")) {
-            $archiveConversionRequestController = \laabs::newController("medona/ArchiveConversionRequest");
-
-            $archiveIds = array();
-
-            $documentsByOriginator = array();
-            foreach ($documentIds as $documentId) {
-                $archiveDocumentDigitalResource = $this->sdoFactory->find('recordsManagement/archiveDocumentDigitalResource', "docId='".(string) $documentId."'")[0];
-                $archiveIds[] = $archiveDocumentDigitalResource->archiveId;
-
-                if (!isset($documentsByOriginator[$archiveDocumentDigitalResource->originatorOrgRegNumber])) {
-                    $documentsByOriginator[$archiveDocumentDigitalResource->originatorOrgRegNumber] = array();
-                }
-
-                $documentsByOriginator[$archiveDocumentDigitalResource->originatorOrgRegNumber][] = $archiveDocumentDigitalResource;
-            }
-
-            $senderOrg = \laabs::getToken('ORGANIZATION');
-            if (!$senderOrg) {
-                throw \laabs::newException('medona/invalidMessageException', "No current organization choosen");
-            }
-
-            foreach ($documentsByOriginator as $originatorOrgRegNumber => $documents) {
-                $recipientOrg = $this->organizationController->getOrgByRegNumber($originatorOrgRegNumber);
-
-                $archiveConversionRequestController->send((string) \laabs::newId(), $senderOrg, $recipientOrg, $documents);
-            }
-        }
-
-        return $documentIds;
-    }*/
-
-    /**
      * Convert archive
      * @param id $resId The resource identifier
      *
@@ -79,7 +37,7 @@ trait archiveConversionTrait
         $digitalResource = $this->digitalResourceController->retrieve($resId);
         $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
 
-        // Store document and resources
+        // Store resources
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
                 $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -95,22 +53,22 @@ trait archiveConversionTrait
      * Convert an archive resource
      * @param object $archive
      * @param object $digitalResource
-     * 
+     *
      * @return digitalResource
      */
     protected function convertResource($archive, $digitalResource)
     {
         $eventInfo = array(
             'resId' => $digitalResource->resId,
-            'hashAlgorithm' => $digitalResource->hashAlgorithm, 
-            'hash' => $digitalResource->hash, 
-            'address' => $digitalResource->address[0]->path, 
+            'hashAlgorithm' => $digitalResource->hashAlgorithm,
+            'hash' => $digitalResource->hash,
+            'address' => $digitalResource->address[0]->path,
             'convertedResId' => null,
             'convertedHashAlgorithm' => null,
             'convertedHash' => null,
             'convertedAddress' => null,
-            'softwareName' => null, 
-            'softwareVersion' => null
+            'softwareName' => null,
+            'softwareVersion' => null,
         );
 
         $transactionControl = !$this->sdoFactory->inTransaction();
