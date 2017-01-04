@@ -42,10 +42,10 @@ class archive
     protected $sdoFactory;
 
     /**
-     * Controller for archive documents
-     * @var documentManagement/Controller/document
+     * Controller for digital resource
+     * @var digitalResource/Controller/digitalResource
      */
-    protected $documentController;
+    protected $digitalResourceController;
 
     /**
      * Controller for access rules
@@ -172,7 +172,7 @@ class archive
 
         $this->sdoFactory = $sdoFactory;
 
-        $this->documentController = \laabs::newController("documentManagement/document");
+        $this->digitalResourceController = \laabs::newController("digitalResource/digitalResource");
 
         $this->archiveRelationshipController = \laabs::newController("recordsManagement/archiveRelationship");
 
