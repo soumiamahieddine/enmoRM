@@ -212,15 +212,8 @@ class journal
 
         if (!isset($this->journals[(string) $journal->archiveId])) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalDocuments = $archiveController->getDocuments($journal->archiveId);
-            $this->journals[(string) $journal->archiveId] = null;
-
-            foreach ($journalDocuments as $document) {
-                if ($document->type == "CDO") {
-                    $this->journals[(string) $journal->archiveId] = $document->digitalResource->getContents();
-                    break;
-                }
-            }
+            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            $this->journals[(string) $journal->archiveId] = $journalResource->getContents();
         }
 
         $journalFile = $this->journals[(string) $journal->archiveId];
@@ -411,16 +404,10 @@ class journal
 
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalDocuments = $archiveController->getDocuments($journalReference->archiveId);
-            $journalFile = null;
-
-            foreach ($journalDocuments as $document) {
-                if ($document->type == "CDO") {
-                    $journalFile = $document->digitalResource->getContents();
-                    $this->journalCursor = 0;
-                    break;
-                }
-            }
+            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            
+            $journalFile = $journalResource->getContents();
+            $this->journalCursor = 0;
 
             if ($journalFile == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
@@ -793,7 +780,7 @@ class journal
             return true;
         }
 
-        $journalDocument = $archiveController->getDocuments($journal->archiveId)[0];
+        $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
 
         $nextJournal = $logController->getNextJournal($journal);
 
@@ -811,8 +798,8 @@ class journal
             return true;
         }
 
-        $nextJournalDocument = $archiveController->getArchiveDocument($nextJournal->archiveId);
-        $nextJournalContents = $nextJournalDocument->digitalResource->getContents();
+        $nextJournalResource = $archiveController->getDigitalResources($nextJournal->archiveId)[0];
+        $nextJournalContents = $nextJournalResource->getContents();
 
         $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
 
@@ -830,7 +817,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[4];
             $chainedJournalHash = $chainEvent[5];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalDocument->digitalResource->getContents());
+            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
                 throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
@@ -849,7 +836,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[9];
             $chainedJournalHash = $chainEvent[10];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalDocument->digitalResource->getContents());
+            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
                 throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
@@ -869,6 +856,7 @@ class journal
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
+        $archiveController = \laabs::newController('recordsManagement/archive');
 
         $newJournal = \laabs::newInstance('recordsManagement/log');
         $newJournal->archiveId = \laabs::newId();
@@ -923,8 +911,7 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
-            $journalResource = $digitalResourceController->getResources($previousJournal->archiveId)[0];
+            $journalResource = $archiveController->getDigitalResources($previousJournal->archiveId)[0];
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;

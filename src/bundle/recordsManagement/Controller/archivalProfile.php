@@ -122,20 +122,6 @@ class archivalProfile
     }
 
     /**
-     * get a document profile by reference
-     * @param string $documentProfileReference The document profile reference
-     *
-     * @return recordsManagement/document The document profile object
-     */
-    public function getDocumentProfileByReference($documentProfileReference)
-    {
-        $documentProfile = $this->sdoFactory->read('recordsManagement/documentProfile', array('reference' => $documentProfileReference));
-        $documentProfile->documentDescription = $this->sdoFactory->readChildren("recordsManagement/documentDescription", $documentProfile);
-
-        return $documentProfile;
-    }
-
-    /**
      * get array of archival profile by description class
      * @param string $archivalProfileDescriptionClass The archival profile reference
      *

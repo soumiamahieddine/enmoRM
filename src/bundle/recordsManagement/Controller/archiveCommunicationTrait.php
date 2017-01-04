@@ -135,39 +135,12 @@ trait archiveCommunicationTrait
 
     /**
      * Retrieve an archive resource contents
-     * @param string $originatorArchiveId    The archive identifier of the originator
-     * @param string $originatorOrgRegNumber The originatoriOrgRegNumber
+     * @param string $archiveId The archive identifier
+     * @param string $resId     The resource identifier
      *
-     * @return documentManagement/document
+     * @return digitalResource/digitalResource
      */
-    public function getContentByOriginatorArchiveId($originatorArchiveId, $originatorOrgRegNumber = null)
-    {
-        $archive = $this->sdoFactory->find('recordsManagement/archive', "originatorArchiveId = '$originatorArchiveId' AND originatorOrgRegNumber = '$originatorOrgRegNumber'");
-
-        if (count($archive)) {
-            $archive = $archive[0];
-        } else {
-            throw \laabs::newException('recordsManagement/noDocumentException', "Archive not found");
-        }
-
-        if (!$this->checkCommunicability($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        $document = $this->documentController->getArchiveDocument($archive->archiveId, $original = false);
-
-        return $document;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $archiveId  The archive identifier
-     * @param string $documentId The docuement identifier
-     * @param string $resId      The resource identifier
-     *
-     * @return documentManagement/document
-     */
-    public function getContents($archiveId, $documentId, $resId)
+    public function getContents($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
@@ -175,102 +148,43 @@ trait archiveCommunicationTrait
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
-        $document = $this->documentController->getByResId($documentId, $resId);
+        $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        return $document;
+        return $digitalResource;
     }
 
     /**
      * Retrieve an archive resource contents
-     * @param string $descriptionClass The description object class
-     * @param string $descriptionId    The description object id
-     *
-     * @return documentManagement/document
-     */
-    public function getContentsByDescription($descriptionClass, $descriptionId)
-    {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', array('descriptionClass ' => $descriptionClass, 'descriptionId' => $descriptionId));
-
-        try {
-            $archive = $this->getByDescription($descriptionClass, $descriptionId);
-        } catch (\Exception $exception) {
-            throw $exception;
-        }
-
-        if (!$this->checkCommunicability($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        if (count($archive->document) == 0) {
-            return;
-        }
-
-        if ($archive->descriptionClass == 'recordsManagement/log') {
-            $logController = $this->useDescriptionController('recordsManagement/log');
-
-            $logController->checkIntegrity($archive->archiveId);
-        }
-
-        $contentResource = null;
-
-        foreach ($archive->digitalResources as $digitalResource) {
-            if (is_null($contentResource) || (string) $digitalResource->created > (string) $contentResource->created) {
-                $contentResource = $digitalResource;
-            }
-        }
-
-        return $contentResource;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $docId The document identifier
-     *
-     * @return documentManagement/document
-     */
-    public function getDocument($docId)
-    {
-        $document = $this->documentController->getById($docId);
-
-        $archive = $this->getDescription($document->archiveId);
-
-        if (!$this->checkCommunicability($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        return $document;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $docId The document identifier
      * @param string $resId The resource identifier
      *
-     * @return documentManagement/document
+     * @return digitalResource/digitalResource
      */
-    public function getDigitalResource($docId, $resId)
+    public function getDigitalResource($resId)
     {
-        $document = $this->documentController->getByResId($docId, $resId);
+        $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $archive = $this->getDescription($document->archiveId);
+        $archive = $this->getDescription($digitalResource->archiveId);
 
         if (!$this->checkCommunicability($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
-        return $document;
+        return $digitalResource;
     }
 
     /**
      * Retrieve an archive resource contents
      * @param string $archiveId The archive identifier
      *
-     * @return documentManagement/document[]
+     * @return digitalResource/digitalResource[]
      */
-    public function getDocuments($archiveId)
+    public function getDigitalResources($archiveId)
     {
-        $documents = $this->documentController->getArchiveDocuments($archiveId);
+        $digitalResources = [];
+        foreach ($this->digitalResourceController->getResourcesByArchiveId($archiveId) as $digitalResource) {
+            $digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
+        }
 
-        return $documents;
+        return $digitalResources;
     }
 }

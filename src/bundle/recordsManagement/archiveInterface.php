@@ -64,15 +64,6 @@ interface archiveInterface
 
     /**
      * Retrieve an archive content document (CDO)
-     * @param string $originatorArchiveId    The archive identifier of the originator
-     * @param string $originatorOrgRegNumber The originatoriOrgRegNumber
-     *
-     * @action recordsManagement/archive/getContentByOriginatorArchiveId
-     */
-    public function readContentsbyoriginatorarchiveid($originatorArchiveId, $originatorOrgRegNumber);
-
-    /**
-     * Retrieve an archive content document (CDO)
      *
      * @action recordsManagement/archive/getContents
      */

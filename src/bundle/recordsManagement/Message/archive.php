@@ -162,9 +162,9 @@ class archive
     /**
      * Documents
      *
-     * @var documentManagement/document[]
+     * @var digitalResource/digitalResource[]
      */
-    public $document;
+    public $digitalResources;
 
     /**
      * The archival agreement reference

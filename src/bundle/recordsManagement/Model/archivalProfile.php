@@ -115,13 +115,6 @@ class archivalProfile
     public $archiveDescription = array();
 
     /**
-     *  The list of document profiles
-     *
-     * @var recordsManagement/documentProfile[]
-     */
-    public $documentProfile = array();
-
-    /**
      *  The list of child archival profiles
      *
      * @var recordsManagement/archivalProfile[]

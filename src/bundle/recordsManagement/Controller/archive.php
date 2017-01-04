@@ -283,7 +283,7 @@ class archive
                 break;
         }
 
-        $digitalResourceCluster = $this->documentController->useDigitalResourceCluster($this->currentServiceLevel->digitalResourceClusterId, $mode, $limit);
+        $digitalResourceCluster = $this->digitalResourceController->useCluster($this->currentServiceLevel->digitalResourceClusterId, $mode, $limit);
 
         $control = explode(" ", $this->currentServiceLevel->control);
 
@@ -423,7 +423,8 @@ class archive
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
-        $archive->document = $this->documentController->getArchiveDocuments($archive->archiveId, $withContents = false);
+        
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
         if (isset($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
@@ -490,8 +491,8 @@ class archive
             $archive->descriptionObject = $descriptionController->read($archive->descriptionId);
         }
 
-        $archive->document = $this->documentController->getArchiveDocuments($archive->archiveId, $withContents);
-
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        
         $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
         foreach ($archive->contents as $content) {
             $this->getArchiveComponents($content, $withContents);
