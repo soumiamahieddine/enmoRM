@@ -220,14 +220,6 @@ class archive
     public $lifeCycleEvent;
 
     /**
-     * Documents
-     *
-     * @var documentManagement/document[]
-     * @xpath dm:document
-     */
-    public $document;
-
-    /**
      * The archival agreement reference
      *
      * @var string
@@ -273,6 +265,13 @@ class archive
      * @var recordManagement/archive[]
      */
     public $contents;
+
+    /**
+     * The digital resources
+     *
+     * @var digitalresource/digitalResource[]
+     */
+    public $digitalResources;
 
     /**
      * The archive relationship

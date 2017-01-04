@@ -585,10 +585,11 @@ class digitalResource
     /**
      * Convert resource to another format
      * @param object $digitalResource
+     * @param string $bucket
      *
      * @return object
      */
-    public function convert($digitalResource)
+    public function convert($digitalResource, $bucket = null)
     {
         $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
@@ -646,11 +647,22 @@ class digitalResource
         }
 
         $convertedResource = $this->createFromFile($tgtfile);
+        $convertedResource->resId = \laabs::newId();
+        $convertedResource->archiveId = $digitalResource->archiveId;
+        $convertedResource->puid = $conversionRule->targetPuid;
         $convertedResource->softwareName = $convertService["softwareName"];
         $convertedResource->softwareVersion = $convertService["softwareVersion"];
-        $convertedResource->resId = \laabs::newId();
-        $convertedResource->puid = $conversionRule->targetPuid;
         $this->getHash($convertedResource);
+
+        $convertedResource->relationshipType = "isConversionOf";
+
+        // Get previous 
+        while ($digitalResource->relatedResId != "" && $digitalResource->relationshipType == "isConversionOf") {
+            $digitalResource = $this->sdoFactory->read("digitalResource/digitalResource", $digitalResource->relatedResId);
+        }
+        $digitalResource->relatedResId = $digitalResource->resId;
+        
+        $convertedResource = $this->store($convertedResource, $digitalResource->clusterId, $bucket);
 
         return $convertedResource;
     }

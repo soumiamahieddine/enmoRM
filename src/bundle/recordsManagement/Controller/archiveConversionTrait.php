@@ -70,17 +70,14 @@ trait archiveConversionTrait
 
     /**
      * Convert archive
-     * @param id $documentId The document identifier
-     * @param id $resId      The resource identifier
+     * @param id $resId The resource identifier
      *
      * @return array The convert documents
      */
-    public function convert($documentId, $resId)
+    public function convert($resId)
     {
-        $document = $this->documentController->getByResId($documentId, $resId);
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $document->archiveId);
-        $storagePath = $archive->storagePath."/copies";
-
+        $digitalResource = $this->digitalResourceController->retrieve($resId);
+        $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
 
         // Store document and resources
         if (!$this->currentServiceLevel) {
@@ -91,13 +88,30 @@ trait archiveConversionTrait
             }
         }
 
-        $eventInfo = array('resId' => null, 'hashAlgorithm' => null, 'hash' => null, 'address' => null, 'softwareName' => null, 'softwareVersion' => null);
+        return $this->convertResource($archive, $digitalResource);
+    }
 
-        $eventInfo['docId'] = $document->docId;
-        $eventInfo['resId'] = $document->digitalResource->resId;
-        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-        $eventInfo['hash'] = $document->digitalResource->hash;
-        $eventInfo['address'] = $document->digitalResource->address[0]->path;
+    /**
+     * Convert an archive resource
+     * @param object $archive
+     * @param object $digitalResource
+     * 
+     * @return digitalResource
+     */
+    protected function convertResource($archive, $digitalResource)
+    {
+        $eventInfo = array(
+            'resId' => $digitalResource->resId,
+            'hashAlgorithm' => $digitalResource->hashAlgorithm, 
+            'hash' => $digitalResource->hash, 
+            'address' => $digitalResource->address[0]->path, 
+            'convertedResId' => null,
+            'convertedHashAlgorithm' => null,
+            'convertedHash' => null,
+            'convertedAddress' => null,
+            'softwareName' => null, 
+            'softwareVersion' => null
+        );
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -106,39 +120,34 @@ trait archiveConversionTrait
         }
 
         try {
-            $convertedResource = $this->documentController->convertDocument($document->digitalResource, $storagePath);
+            $convertedResource = $this->digitalResourceController->convert($digitalResource, $archive->storagePath.'/copies');
         } catch (\Exception $e) {
-            if (isset($convertedResource)) {
-                $this->digitalResourceController->rollbackStorage($convertedResource);
-            }
-
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
 
             if (isset($convertedResource)) {
+                $this->digitalResourceController->rollbackStorage($convertedResource);
+
                 $eventInfo['convertedResId'] = $convertedResource->resId;
                 $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
                 $eventInfo['convertedHash'] = $convertedResource->hash;
                 $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
                 $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-            } else {
-                $eventInfo['convertedResId'] = false;
-                $eventInfo['convertedHashAlgorithm'] = false;
-                $eventInfo['convertedHash'] = false;
-                $eventInfo['convertedAddress'] = false;
-                $eventInfo['software'] = false;
             }
 
             $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo, false);
             $archive->lifeCycleEvent[] = $event;
-
 
             throw $e;
         }
 
         if ($transactionControl) {
             $this->sdoFactory->commit();
+        }
+
+        if ($convertedResource == false) {
+            return;
         }
 
         $eventInfo['convertedResId'] = $convertedResource->resId;
