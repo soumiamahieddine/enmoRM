@@ -923,11 +923,11 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $documentController = \laabs::newController('documentManagement/document');
-            $journalDocument = $documentController->getArchiveDocuments($previousJournal->archiveId);
+            $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
+            $journalResource = $digitalResourceController->getResources($previousJournal->archiveId)[0];
 
-            $eventLine[9] = (string) $journalDocument->digitalResource->hashAlgorithm;
-            $eventLine[10] = (string) $journalDocument->digitalResource->hash;
+            $eventLine[9] = (string) $journalResource->hashAlgorithm;
+            $eventLine[10] = (string) $journalResource->hash;
         }
 
         fputcsv($journalFile, $eventLine);
