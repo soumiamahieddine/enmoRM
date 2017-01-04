@@ -28,7 +28,6 @@ namespace bundle\recordsManagement\Model;
  * @fkey [archivalProfileId] recordsManagement/archivalProfile [archivalProfileId]
  */
 class archiveDescription
-    extends objectDescription
 {
     /**
      * The identifier of the archival profile
@@ -36,4 +35,30 @@ class archiveDescription
      * @var id
      */
     public $archivalProfileId;
+
+    /**
+     * The name of the property
+     *
+     * @var string
+     */
+    public $fieldName;
+
+    /**
+     * The status of the property (required or not)
+     *
+     * @var boolean
+     */
+    public $required;
+        
+    /**
+     * The position in list
+     *
+     * @var int
+     */
+    public $position;
+
+    /**
+     * @var recordsManagement/descriptionField the description field from data dict
+     */
+    public $descriptionField;
 }

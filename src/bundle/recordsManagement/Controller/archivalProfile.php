@@ -158,33 +158,38 @@ class archivalProfile
      */
     public function readDetail($archivalProfile)
     {
-        // Read profile description
-        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        // Read retention rule
         if ($archivalProfile->retentionRuleCode) {
             $archivalProfile->retentionRule = $this->sdoFactory->read('recordsManagement/retentionRule', $archivalProfile->retentionRuleCode);
         }
 
+        // Read access rule
         if (!empty($archivalProfile->accessRuleCode)) {
             $archivalProfile->accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $archivalProfile->accessRuleCode);
         }
 
-        $documentDescriptionFields = $this->getDocumentDescriptionFields();
+        // Read profile description
+        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        if ($archivalProfile->descriptionClass == '') {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
+            }
+        } else {
+            // @todo: get descriptionClass properties and generate descriptionFields
+            $descriptionClass = 'recordsManagement/log';
+            $reflection = \laabs::getClass($descriptionClass);
+            foreach ($reflection->getProperties() as $pos => $reflectionProperty) {
+                $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+                $descriptionField->name = $reflectionProperty->name;
+                $descriptionField->label = $reflectionProperty->name;
+                $descriptionField->type = $reflectionProperty->getType();
 
-        $archivalProfile->documentProfile = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
-        foreach ($archivalProfile->documentProfile as $documentProfile) {
-            $documentProfile->documentDescription = $this->sdoFactory->readChildren('recordsManagement/documentDescription', $documentProfile, false, "position");
-            foreach ($documentProfile->documentDescription as $documentDescription) {
-                switch ($documentDescription->origin) {
-                    case 'documentManagement/document':
-                        $documentDescription->descriptionField = $documentDescriptionFields[$documentDescription->fieldName];
-                        break;
+                $archiveDescription = \laabs::newInstance('recordsManagement/archiveDescription');
+                $archiveDescription->fieldName = $descriptionField->name;
+                $archiveDescription->descriptionField = $descriptionField;
+                $archiveDescription->position = $pos;
 
-                    case 'user':
-                    default:
-                        $documentDescription->descriptionField = $this->descriptionFields[$documentDescription->fieldName];
-                        break;
-                }
-
+                $archivalProfile->archiveDescription[] = $archiveDescription;
             }
         }
     }
@@ -341,13 +346,17 @@ class archivalProfile
     protected function createDetail($archivalProfile)
     {
         if (!empty($archivalProfile->archiveDescription)) {
+            $position = 0;
             foreach ($archivalProfile->archiveDescription as $description) {
                 $description->archivalProfileId = $archivalProfile->archivalProfileId;
+                $description->position = $position;
+                $position++;
+
                 $this->sdoFactory->create($description, 'recordsManagement/archiveDescription');
             }
         }
 
-        if (!empty($archivalProfile->documentProfile)) {
+        /*if (!empty($archivalProfile->documentProfile)) {
             foreach ($archivalProfile->documentProfile as $documentProfile) {
                 if (empty($documentProfile->name)) {
                     $documentProfile->name = $archivalProfile->name;
@@ -369,18 +378,18 @@ class archivalProfile
 
                 }
             }
-        }
+        }*/
     }
 
     protected function deleteDetail($archivalProfile)
     {
         $this->sdoFactory->deleteChildren('recordsManagement/archiveDescription', $archivalProfile);
 
-        $documentProfiles = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
+        /*$documentProfiles = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
         foreach ($documentProfiles as $documentProfile) {
             $this->sdoFactory->deleteChildren('recordsManagement/documentDescription', $documentProfile);
         }
 
-        $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);
+        $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);*/
     }
 }

@@ -104,7 +104,7 @@ file that was distributed with this source code.
                                             </tr>
                                         </thead>
                                         <?merge archivalProfile.archiveDescription ?>
-                                        <tr data-origin="[?merge .origin?]" class="[?merge .archivalProfileId.ifne('').then('info', '') ?] [?merge .required.ifne('').then('danger', '') ?]">
+                                        <tr class="[?merge .archivalProfileId.ifne('').then('info', '') ?] [?merge .required.ifne('').then('danger', '') ?]">
                                             <td class="fieldName"><?merge .fieldName?></td>
                                             <td style="text-align:center"> 
                                                 <?merge .archivalProfileId.ifne('') @checked ?>
@@ -563,21 +563,21 @@ file that was distributed with this source code.
             serializedObject.retentionRuleCode = null;
         }
         
-        serializedObject.documentProfile = [{
-            name                : $("#name").val(),
-            reference           : $("#reference").val(),
-            documentDescription : PropertiesList.serialize(),
-        }];
-        
-        var description = $('#archiveDescription').find('.usedProperty:checked');
-        $.each(description, function () {
-            var tr = $(this).closest('tr');
-            var descriptionProperty = {};
-            descriptionProperty.fieldName = tr.find('.fieldName:first').html();
-            descriptionProperty.required = tr.find('.requiredProperty:first').prop('checked');
+        if ($('#descriptionClass').val() == "") {
+            serializedObject.archiveDescription = PropertiesList.serialize();
+        } else {
+            var description = $('#archiveDescription').find('.usedProperty:checked');
+            $.each(description, function () {
+                var tr = $(this).closest('tr');
+                var descriptionProperty = {};
+                descriptionProperty.fieldName = tr.find('.fieldName:first').html();
+                descriptionProperty.required = tr.find('.requiredProperty:first').prop('checked');
 
-            serializedObject.archiveDescription.push(descriptionProperty);
-        })
+                serializedObject.archiveDescription.push(descriptionProperty);
+            })
+        }
+        
+        console.log(serializedObject);
         
         return serializedObject;
     }

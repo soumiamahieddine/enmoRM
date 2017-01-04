@@ -23,8 +23,9 @@ namespace Presentation\maarchRM\Presenter\recordsManagement;
 
 /**
  * Bundle recordsManagement html serializer
- * @author Prosper De Laure <prosper.delaure@maarch.org>
- * @package recordsManagement
+ * 
+ * @package RecordsManagement
+ * @author  Prosper De Laure <prosper.delaure@maarch.org>
  */
 class archiveImport
 {
@@ -60,17 +61,14 @@ class archiveImport
     {
         $this->view->addContentFile("recordsManagement/archiveImport/import.html");
 
+       
         $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex', true);
-
-        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
-
-
-        //var_dump($retentionRules);
         for ($i = 0, $count = count($archivalProfiles); $i < $count; $i++) {
             $archivalProfiles[$i] = \laabs::callService('recordsManagement/archivalProfile/read_archivalProfileId_', $archivalProfiles[$i]->archivalProfileId);
             $archivalProfiles[$i]->json = json_encode($archivalProfiles[$i]);
         }
 
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         foreach ($retentionRules as $retentionRule) {
             $retentionRule->durationText = (string) $retentionRule->duration;
         }

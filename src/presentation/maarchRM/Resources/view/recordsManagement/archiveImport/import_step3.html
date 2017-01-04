@@ -171,22 +171,23 @@
     });
 
     var Metadata = {
-        addDocumentDescription : function(documentDescription) {
-            //console.log(documentDescription);
+        addArchiveDescription : function(archiveDescription) {
+            //console.log(archiveDescription);
             var target = $("#archivalProfileFields");
             var template = $('#inputFieldTemplate').clone();
-            var type = documentDescription.descriptionField.type;
-            var defaultVal = documentDescription.descriptionField.default;
-            var enumeration= documentDescription.descriptionField.enumeration;
-            var label = documentDescription.descriptionField.label;
-            var name = documentDescription.descriptionField.name;
-            var required = documentDescription.required;
-            var origin = documentDescription.origin;
+            var type = archiveDescription.descriptionField.type;
+            var defaultVal = archiveDescription.descriptionField.default;
+            var enumeration= archiveDescription.descriptionField.enumeration;
+            var label = archiveDescription.descriptionField.label;
+            var name = archiveDescription.descriptionField.name;
+            var required = archiveDescription.required;
+            var origin = archiveDescription.origin;
 
             var field = null;
 
             switch (type) {
                 case 'text':
+                case 'string':
                     template = $('#textareaFieldTemplate').clone();
                     field = template.find('textarea');
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
@@ -194,6 +195,7 @@
                     }
                     break;
                 case 'name':
+                case 'id':
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
@@ -220,6 +222,7 @@
                     }
                     break;
                 case 'date':
+                case 'timestamp':
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
                     field.datepicker({
@@ -309,8 +312,7 @@
         serialize : function(target) {
             var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
             var inputsCustom = target.find("#customFields").children();
-            var metadatas = {};
-            metadatas.descriptionObject = [];
+            var descriptionObject = [];
             
             var flagEmptyRequiredField = false;
             var flagEmptyCustomField = false;
@@ -340,17 +342,13 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if ($(this).attr("data-origin") != "user") {
-                    metadatas[name] = value;
-                }
-
                 var metadata = {
                     type : type,
                     name : name,
                     value: value
                 }
 
-                metadatas.descriptionObject.push(metadata);
+                descriptionObject.push(metadata);
             });
             
             $.each(inputsCustom, function() {
@@ -375,10 +373,10 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                metadatas.descriptionObject.push(metadata);
+                descriptionObject.push(metadata);
             });
             
-            var result = metadatas;
+            var result = descriptionObject;
             
             if (flagEmptyRequiredField) {
                 result = true;

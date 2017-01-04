@@ -57,7 +57,7 @@
     // ARCHIVE
     $('#archivalProfile').on('change', function() {
         ArchiveForm.loadProfile();
-        ArchiveForm.displayDocumentDescription();
+        ArchiveForm.displayArchiveDescription();
     });
 
     $('#retentionRule').on('change', function() {
@@ -67,6 +67,8 @@
     var ArchiveForm = {
         send : function() {
             var archive = this.serialize();
+            console.log(archive);
+            return;
 
             if (archive < 0) {
                 return;
@@ -108,7 +110,7 @@
                  $("#archiveForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
             }
         },
-        displayDocumentDescription : function() {
+        displayArchiveDescription : function() {
             var value = $('#archivalProfile').val();
             $('#archivalProfileFields').empty();
             
@@ -119,10 +121,10 @@
             
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
             
-            Metadata.acceptUserIndex(selectedProfile.documentProfile[0].acceptUserIndex);
+            Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
             
-            $.each(selectedProfile.documentProfile[0].documentDescription, function(key, value) {
-                Metadata.addDocumentDescription(value);
+            $.each(selectedProfile.archiveDescription, function(key, value) {
+                Metadata.addArchiveDescription(value);
             });
         },
         displayRetentionRulesInfo : function() {
@@ -166,7 +168,10 @@
         serialize : function() {
             var form = $('#archiveForm');
             var inputs = form.find('.archiveInput');
-            var archive = {}
+            var archive = {
+                digitalResource : [],
+                descriptionObject : null,
+            }
 
             inputs.each(function() {
                 if ($(this).val()) {
@@ -174,34 +179,25 @@
                 }
             })
 
-            archive['document'] = [];
-
-            var doc = Metadata.serialize($('#allFields'));
-            if (doc === true) {
+            archive.descriptionObject = Metadata.serialize($('#allFields'));
+            if (archive.descriptionObject === true) {
                 return -1;
             }
 
-            if (archive["archivalProfileReference"] != "" && archive["archivalProfileReference"] != undefined) {
-                doc.category = $('#archivalProfile').find('option:selected').data('json').documentProfile[0].reference;
-            } else {
-                if (archive["retentionStartDate"] == "" || archive["retentionStartDate"] == undefined) {
-                    gritter.show($('#retentionStartDateMissing_error').text(), false);
-                    return -2;
-                }
-                if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
-                    gritter.show($('#retentionRuleCodeMissing_error').text(), false);
-                    return -2;
-                }
-                
+            if (archive["retentionStartDate"] == "" || archive["retentionStartDate"] == undefined) {
+                gritter.show($('#retentionStartDateMissing_error').text(), false);
+                return -2;
             }
-
-            doc.digitalResource = ArchiveDocument.serialize($('#collapsedoc1'))
-            if (doc.digitalResource == -1) {
+            if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
+                gritter.show($('#retentionRuleCodeMissing_error').text(), false);
+                return -2;
+            }
+                
+            archive.digitalResource.push(ArchiveDocument.serialize($('#collapsedoc1')));
+            if (archive.digitalResource == -1) {
                 gritter.show($('#documentMissing_error').text(), false);
                 return -2;
             }
-
-            archive['document'].push(doc);
 
             return archive;
         },
