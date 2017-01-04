@@ -20,14 +20,6 @@ SELECT
 "archive"."descriptionId",
 "archive"."parentArchiveId",
 
-"document"."docId",
-"document"."type",
-"document"."control",
-"document"."copy",
-"document"."status" as "documentStatus",
-"document"."depositorDocId",
-"document"."originatorDocId",
-
 "digitalResource"."resId",
 "digitalResource"."clusterId",
 "digitalResource"."size",
@@ -45,5 +37,4 @@ SELECT
 "digitalResource"."relationshipType"
 
 FROM "recordsManagement"."archive"
-   JOIN "documentManagement"."document" ON "document"."archiveId"="archive"."archiveId"
-   JOIN "digitalResource"."digitalResource" ON "document"."docId"="digitalResource"."docId";
+   JOIN "digitalResource"."digitalResource" ON "archive"."archiveId"="digitalResource"."archiveId";

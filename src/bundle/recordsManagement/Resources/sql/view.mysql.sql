@@ -19,14 +19,6 @@ SELECT
 `recordsManagement.archive`.`descriptionId`,
 `recordsManagement.archive`.`parentArchiveId`,
 
-`documentManagement.document`.`docId`,
-`documentManagement.document`.`type`,
-`documentManagement.document`.`control`,
-`documentManagement.document`.`copy`,
-`documentManagement.document`.`status` as `documentStatus`,
-`documentManagement.document`.`depositorDocId`,
-`documentManagement.document`.`originatorDocId`,
-
 `digitalResource.digitalResource`.`resId`,
 `digitalResource.digitalResource`.`clusterId`,
 `digitalResource.digitalResource`.`size`,
@@ -44,5 +36,4 @@ SELECT
 `digitalResource.digitalResource`.`relationshipType`
 
 FROM `recordsManagement.archive`
-   JOIN `documentManagement.document` ON `documentManagement.document`.`archiveId`=`recordsManagement.archive`.`archiveId`
-   JOIN `digitalResource.digitalResource` ON `documentManagement.document`.`docId`=`digitalResource.digitalResource`.`docId`;
+   JOIN `digitalResource.digitalResource` ON `recordsManagement.archive`.`archiveId`=`digitalResource.digitalResource`.`archiveId`;
