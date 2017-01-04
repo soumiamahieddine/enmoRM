@@ -265,26 +265,22 @@ class log
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
         $journalResource->puid = "x-fmt/18";
         $journalResource->mimetype = "text/csv";
+        $journalResource->archiveId = $archive->archiveId;
         $digitalResourceController->getHash($journalResource, "SHA256");
-
-        // Add document
-        $document = \laabs::newInstance('documentManagement/document');
-        $document->archiveId = $archive->archiveId;
-        $document->type = "CDO";
-        $document->digitalResource = $journalResource;
 
         if ($timestampFileName) {
             // Create timestamp resource
             $timestampResource = $digitalResourceController->createFromFile($timestampFileName);
             $digitalResourceController->getHash($timestampResource, "SHA256");
 
-            $relationship = new \stdClass();
-            $relationship->resource = $timestampResource;
-            $relationship->typeCode = "isTimestampOf";
-            $document->digitalResource->relationship = array($relationship);
+            $timestampResource->archiveId = $journalResource->archiveId;
+            $timestampResource->relatedResId = $journalResource->resId;
+            $timestampResource->relationshipType = "isTimestampOf";
+
+            $archive->digitalResources[] = $timestampResource;
         }
 
-        $archive->document[] = $document;
+        $archive->digitalResources[] = $journalResource;
 
         $archive->descriptionObject = $log;
         $archive->descriptionId = $log->archiveId;
