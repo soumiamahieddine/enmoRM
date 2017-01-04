@@ -121,13 +121,13 @@ trait archiveCommunicationTrait
         $eventItems['address'] = $archive->storagePath;
         $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'recordsManagement/archive', $archive->archiveId, $eventItems);
 
-        foreach ($archive->document as $document) {
-            $eventItems['resId'] = $document->digitalResource->resId;
-            $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-            $eventItems['hash'] = $document->digitalResource->hash;
-            $eventItems['address'] = $document->digitalResource->address[0]->path;
+        foreach ($archive->digitalResources as $digitalResource) {
+            $eventItems['resId'] = $digitalResource->resId;
+            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+            $eventItems['hash'] = $digitalResource->hash;
+            $eventItems['address'] = $digitalResource->address[0]->path;
 
-            $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'documentManagement/document', $document->docId, $eventItems);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
         }
 
         return $archive;
@@ -208,24 +208,18 @@ trait archiveCommunicationTrait
         if ($archive->descriptionClass == 'recordsManagement/log') {
             $logController = $this->useDescriptionController('recordsManagement/log');
 
-            $integrity = $logController->checkIntegrity($archiveId);
+            $logController->checkIntegrity($archive->archiveId);
         }
 
-        $contentDocument = null;
+        $contentResource = null;
 
-        foreach ($archive->document as $document) {
-            if ($document->type == 'CDO') {
-                if (is_null($contentDocument) || (string) $document->digitalResource->created > (string) $contentDocument->digitalResource->created) {
-                    $contentDocument = $document;
-                }
+        foreach ($archive->digitalResources as $digitalResource) {
+            if (is_null($contentResource) || (string) $digitalResource->created > (string) $contentResource->created) {
+                $contentResource = $digitalResource;
             }
         }
 
-        if ($contentDocument) {
-            $this->documentController->getContent($contentDocument);
-
-            return $contentDocument;
-        }
+        return $contentResource;
     }
 
     /**
