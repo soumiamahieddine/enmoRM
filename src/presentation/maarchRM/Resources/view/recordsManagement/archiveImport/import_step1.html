@@ -167,7 +167,7 @@
             var form = $('#archiveForm');
             var inputs = form.find('.archiveInput');
             var archive = {
-                digitalResource : [],
+                digitalResources : [],
                 descriptionObject : null,
             }
 
@@ -191,8 +191,8 @@
                 return -2;
             }
                 
-            archive.digitalResource.push(ArchiveDocument.serialize($('#collapsedoc1')));
-            if (archive.digitalResource == -1) {
+            archive.digitalResources.push(ArchiveDocument.serialize($('#collapsedoc1')));
+            if (archive.digitalResources == -1) {
                 gritter.show($('#documentMissing_error').text(), false);
                 return -2;
             }

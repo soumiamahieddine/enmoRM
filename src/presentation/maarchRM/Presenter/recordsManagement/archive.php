@@ -45,8 +45,8 @@ class archive
     public function __construct(
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
-        \dependency\localisation\TranslatorInterface $translator
-    ) {
+        \dependency\localisation\TranslatorInterface $translator)
+    {
         $this->view = $view;
 
         $this->json = $json;
@@ -92,11 +92,12 @@ class archive
 
     /**
      * Get the list of owner originators oranizations
-     * @param object $curentService The user's current service
+     * @param object $currentService The user's current service
      *
      * @return The list of owner originators orgs
      */
-    protected function getOwnerOriginatorsOrgs($currentService) {
+    protected function getOwnerOriginatorsOrgs($currentService)
+    {
         $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
 
         $userPositionController = \laabs::newController('organization/userPosition');
@@ -146,24 +147,17 @@ class archive
         $archivalProfiles = $this->archivalProfileController->index(true);
         $allSearchFields = [];
 
-        $documentDescriptionFields = $this->archivalProfileController->getDocumentDescriptionFields();
-        foreach ($documentDescriptionFields as $documentDescriptionField) {
-            $documentDescriptionField->label = $this->view->translator->getText($documentDescriptionField->label, false, 'documentManagement/document');
-        }
-
         foreach ($archivalProfiles as $archivalProfile) {
             $this->archivalProfileController->readDetail($archivalProfile);
             $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->documentProfile as $documentProfile) {
-                foreach ($documentProfile->documentDescription as $documentDescription) {
-                    switch ($documentDescription->descriptionField->type) {
-                        case 'name':
-                        case 'date':
-                        case 'number':
-                        case 'boolean':
-                            $archivalProfile->searchFields[] = $documentDescription->descriptionField;
-                            $searchFields[] = $documentDescription->descriptionField;
-                    }
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                        $searchFields[] = $archiveDescription->descriptionField;
                 }
             }
         }
@@ -173,7 +167,6 @@ class archive
         $this->view->translate();
 
         $this->view->setSource("archivalProfiles", $archivalProfiles);
-        $this->view->setSource("documentDescriptionFields", $documentDescriptionFields);
         $this->view->merge();
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
@@ -251,12 +244,6 @@ class archive
 
                 if (isset($descriptionFields[$field->name])) {
                     $field->label = $descriptionFields[$field->name]->label;
-                } else {
-                    $label = $this->view->translator->getText($field->name, false, 'documentManagement/document');
-                    if ($label == $field->name) {
-                        $label = $this->view->translator->getText($field->name, false, 'recordsManagement/archive');
-                    }
-                    $field->label = $label;
                 }
             }
         }
@@ -278,7 +265,8 @@ class archive
      *
      * @return string The html result string
      */
-    public function fulltextModificationResult(){
+    public function fulltextModificationResult()
+    {
 
         $this->json->message = 'The indexes of the archive have been modified';
         $this->json->message = $this->translator->getText($this->json->message);
@@ -310,18 +298,12 @@ class archive
         $index->fields = $fields;
 
         $archivalProfileFields = [];
-        foreach ($archivalProfile->documentProfile as $documentProfile) {
-            if ($documentProfile->reference != $index->fields["category"]->value) {
-                continue;
+        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            if (isset($fields[$archiveDescription->descriptionField->name])) {
+                unset($fields[$archiveDescription->descriptionField->name]);
             }
 
-            foreach ($documentProfile->documentDescription as $documentDescription) {
-                if (isset($fields[$documentDescription->descriptionField->name])) {
-                    unset($fields[$documentDescription->descriptionField->name]);
-                }
-            }
-
-            $archivalProfileFields = $documentProfile->documentDescription;
+            $archivalProfileFields = $archiveDescription;
             break;
         }
 
@@ -402,7 +384,8 @@ class archive
     /**
      * Read users privileges on archives
      */
-    protected function readPrivilegesOnArchives() {
+    protected function readPrivilegesOnArchives()
+    {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
@@ -414,19 +397,19 @@ class archive
 
     /**
      * get a form to search resource
-     * @param documentManagement/document $document The resource object
+     * @param digitalResource/digitalResource $digitalResource The resource object
      *
      * @return string
      */
-    public function getContents($document = null)
+    public function getContents($digitalResource = null)
     {
-        if ($document) {
-            $contents = $document->digitalResource->getContents();
-            $mimetype = $document->digitalResource->mimetype;
+        if ($digitalResource) {
+            $contents = $digitalResource->getContents();
+            $mimetype = $digitalResource->mimetype;
 
             \laabs::setResponseType($mimetype);
             $response = \laabs::kernel()->response;
-            $response->setHeader("Content-Disposition", "inline; filename=".$document->digitalResource->fileName."");
+            $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->fileName."");
 
             return $contents;
         } else {
@@ -487,23 +470,19 @@ class archive
         );
         //var_dump($archive->childrenRelationships);
         //var_dump($archive->parentRelationships);
-
-        foreach ($archive->document as $document) {
-            $document->pathBasename = basename($document->digitalResource->address[0]->path);
-
-            if (!isset($document->digitalResource->relatedResource)) {
-                $document->digitalResource->relatedResource = [];
-                continue;
-            }
-
-            foreach ($document->digitalResource->relatedResource as $relatedResource) {
-                $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
-            }
-        }
-
         if ($archive->status == "disposed") {
-            $archive->document = null;
-            $archive->relationships = null;
+            $archive->digitalResources = null;
+        } else {
+            foreach ($archive->digitalResources as $digitalResource) {
+                if (!isset($digitalResource->relatedResource)) {
+                    $digitalResource->relatedResource = [];
+                    continue;
+                }
+
+                foreach ($digitalResource->relatedResource as $relatedResource) {
+                    $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
+                }
+            }
         }
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");

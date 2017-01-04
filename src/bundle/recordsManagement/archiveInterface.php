@@ -53,7 +53,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/getDigitalResource
      */
-    public function readDigitalresource_docId__resId_();
+    public function readDigitalresource_resId_();
 
     /**
      * Retrieve an archive by its id

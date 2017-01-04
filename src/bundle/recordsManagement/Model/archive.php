@@ -269,7 +269,7 @@ class archive
     /**
      * The digital resources
      *
-     * @var digitalresource/digitalResource[]
+     * @var digitalResource/digitalResource[]
      */
     public $digitalResources;
 

@@ -425,6 +425,10 @@ class archive
 
         
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        foreach ($archive->digitalResources as $digitalResource) {
+            $digitalResource->relatedResource = $this->digitalResourceController->getRelatedResources($digitalResource->resId);
+        }
+
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
         if (isset($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);

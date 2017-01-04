@@ -50,17 +50,9 @@
     })
 
     // Show document
-    $("#modalArchiveInfo").on('click', '.showArchiveDocument', function () {
-        archiveDocumentViewer.load($(this).data('doc-id'));
-    })
-    $("#modalArchiveInfo").on('click', '.showDocument', function () {
-        archiveDocumentViewer.loadDoc($(this).data('doc-id'));
-    })
     $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
-        var docId = $(this).closest('.collapse').attr('id');
         var resId = $(this).data('res-id');
-
-        archiveDocumentViewer.loadResource(docId, resId);
+        archiveDocumentViewer.loadResource(resId);
     })
 
     archiveInfoModal = {
@@ -108,17 +100,9 @@
             }
             window.open(url, 'document');
         },
-        
-        loadDoc: function(docId, action) {
-            var url = "/recordsManagement/document/" + docId;
-            if (action) {
-                url = action + docId;
-            }
-            window.open(url, 'document');
-        },
 
-        loadResource: function(docId, resId) {
-            var url = "/recordsManagement/digitalResource/" + docId + '/' + resId;
+        loadResource: function(resId) {
+            var url = "/recordsManagement/digitalResource/" + resId;
             window.open(url, 'document');
         }
     }
