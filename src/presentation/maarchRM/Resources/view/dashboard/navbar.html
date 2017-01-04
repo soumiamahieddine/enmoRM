@@ -151,7 +151,7 @@
         }
 
         if (!timeout) {
-            timeout = 500;
+            timeout = 300;
         }
 
         var beforeSend = request.beforeSend;
@@ -174,7 +174,7 @@
                 
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
-            }, 500);
+            }, timeout);
         }
 
         return $.ajax(request);
