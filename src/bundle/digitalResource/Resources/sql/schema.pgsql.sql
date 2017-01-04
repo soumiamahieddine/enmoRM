@@ -27,7 +27,7 @@ WITH (
 CREATE TABLE "digitalResource"."digitalResource"
 (
   "resId" text NOT NULL,
-  "docId" text,
+  "archiveId" text,
   "clusterId" text NOT NULL,
   "size" integer NOT NULL,
   "puid" text,
