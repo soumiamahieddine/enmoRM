@@ -140,7 +140,7 @@ trait archiveDepositTrait
 
             $this->validateArchiveDescriptionObject($archive);
         }
-        // Documents
+        // Resources
         if ($archive->digitalResources) {
             //$formatController = \laabs::newController("digitalResource/format");
             $droid = \laabs::newService('dependency/fileSystem/plugins/fid');
@@ -148,7 +148,7 @@ trait archiveDepositTrait
 
             foreach ($archive->digitalResources as $digitalResource) {
                 if (empty($digitalResource->archiveId)) {
-                    $digitalResource->archiveId = $archive->archiveId;       
+                    $digitalResource->archiveId = $archive->archiveId;
                 }
                 if (empty($digitalResource->resId)) {
                     $digitalResource->resId = \laabs::newId();
