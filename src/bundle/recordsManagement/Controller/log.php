@@ -251,7 +251,6 @@ class log
 
         $archiveController = \laabs::newController('recordsManagement/archive');
         $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
-        $orgController = \laabs::newController('organization/organization');
 
         // Create archive
         $archive = $archiveController->newArchive();
