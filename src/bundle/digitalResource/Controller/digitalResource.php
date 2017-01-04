@@ -289,36 +289,30 @@ class digitalResource
     }
 
     /**
-     * Get the original resource of document
-     * @param string $docId The document identifier
+     * Get resources of archive
+     * @param id $archiveId The archive identifier
      *
-     * @return digitalResource/digitalResource
+     * @return array Array of digitalResource object
      */
-    public function getOriginalResource($docId)
+    public function getResources($archiveId)
     {
-        $resource = $this->sdoFactory->find("digitalResource/digitalResource", "docId='$docId' AND relatedResId=null");
+        $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
-        if (count($resource) != 1) {
-            $resource = null;
-        } else {
-            $resource = $resource[0];
-        }
-
-        return $resource;
+        return $resources;
     }
 
     /**
      * Get related resources
-     * @param string $docId            The document identifier
+     * @param string $archiveId        The archive identifier
      * @param string $resId            The identifier of the converted or the original resource
      * @param string $relationshipType The relationship type with the resource identified by the second parameter
      *
      * @return digitalResource/digialResource[]
      */
-    public function getRelatedResources($docId, $resId, $relationshipType = null)
+    public function getRelatedResources($archiveId, $resId, $relationshipType = null)
     {
         // $relationshipType = isConversionOf OR isSignatureOf
-        $whereClause = "docId='$docId' AND relatedResId='$resId'";
+        $whereClause = "archiveId='$archiveId' AND relatedResId='$resId'";
 
         if ($relationshipType) {
             $whereClause .= " AND relationshipType='$relationshipType'";
@@ -379,7 +373,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." could not be retrieved.");
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->archiveId, $resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->retrieve($relatedResource->resId);
         }
@@ -494,7 +488,7 @@ class digitalResource
             $resource->address[] = $address;
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->archiveId, $resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->info($relatedResource->resId);
         }
@@ -515,7 +509,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/clusterException", "Resource not found");
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->archiveId, $resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->delete($relatedResource->resId);
         }

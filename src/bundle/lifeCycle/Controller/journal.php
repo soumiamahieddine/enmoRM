@@ -382,7 +382,7 @@ class journal
             unset($services[$i]);
         }
 
-         foreach ($events as $i => $event) {
+        foreach ($events as $i => $event) {
             if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
                 $event->accountName = $users[(string) $event->accountId]->accountName;
             } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
@@ -506,7 +506,7 @@ class journal
             }
 
             // Search on the next journal
-            if ($chain && $nextEvent == null) {                
+            if ($chain && $nextEvent == null) {
                 if ($this->openNextJournal()) {
                     $nextEvent = $this->getNextEvent($eventType);
                 }
@@ -923,11 +923,11 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $documentController = \laabs::newController('documentManagement/document');
-            $journalDocument = $documentController->getArchiveDocuments($previousJournal->archiveId);
+            $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
+            $journalResource = $digitalResourceController->getResources($previousJournal->archiveId)[0];
 
-            $eventLine[9] = (string) $journalDocument->digitalResource->hashAlgorithm;
-            $eventLine[10] = (string) $journalDocument->digitalResource->hash;
+            $eventLine[9] = (string) $journalResource->hashAlgorithm;
+            $eventLine[10] = (string) $journalResource->hash;
         }
 
         fputcsv($journalFile, $eventLine);
@@ -966,6 +966,35 @@ class journal
         }
 
         return $logController->archiveJournal($journalFilename, $newJournal, $timestampFileName);
+    }
+
+    /**
+     * Decode events format object from an event
+     * @param lifeCycle/event $event The event to decode
+     */
+    protected function decodeEventFormat($event)
+    {
+        if (isset($event->eventInfo)) {
+            if (!isset($this->eventFormats[$event->eventType])) {
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
+            }
+
+            $eventFormat = $this->eventFormats[$event->eventType]->format;
+            $i = 0;
+
+            $event->eventInfo = json_decode($event->eventInfo);
+            foreach ($eventFormat as $item) {
+                if (isset($event->eventInfo[$i])) {
+                    $event->{$item} = $event->eventInfo[$i];
+                } else {
+                    $event->{$item} = null;
+                }
+                $i++;
+            }
+        }
+        unset($event->eventInfo);
+
+        return $event;
     }
 
     /**
@@ -1010,34 +1039,6 @@ class journal
             }
         } catch (\Exception $e) {
         }
-
-        return $event;
-    }
-
-    /**
-     * Decode events format object from an event
-     * @param lifeCycle/event $event The event to decode
-     */
-    protected function decodeEventFormat($event) {
-        if (isset($event->eventInfo)) {
-            if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
-            }
-
-            $eventFormat = $this->eventFormats[$event->eventType]->format;
-            $i = 0;
-
-            $event->eventInfo = json_decode($event->eventInfo);
-            foreach ($eventFormat as $item) {
-                if (isset($event->eventInfo[$i])) {
-                    $event->{$item} = $event->eventInfo[$i];
-                } else {
-                    $event->{$item} = null;
-                }
-                $i++;
-            }
-        }
-        unset($event->eventInfo);
 
         return $event;
     }

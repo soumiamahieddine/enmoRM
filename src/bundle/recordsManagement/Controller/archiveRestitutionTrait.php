@@ -69,15 +69,13 @@ trait archiveRestitutionTrait
         $eventItems['address'] = $archive->storagePath;
         $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'recordsManagement/archive', $archive->archiveId, $eventItems, $valid);
 
-        foreach ($archive->document as $document) {
-            if ($document->type == "CDO") {
-                $eventItems['resId'] = $document->digitalResource->resId;
-                $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                $eventItems['hash'] = $document->digitalResource->hash;
-                $eventItems['address'] = $document->digitalResource->address[0]->path;
+        foreach ($archive->digitalResources as $digitalResource) {
+                $eventItems['resId'] = $digitalResource->resId;
+                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventItems['hash'] = $digitalResource->hash;
+                $eventItems['address'] = $digitalResource->address[0]->path;
 
-                $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'documentManagement/document', $document->docId, $eventItems, $valid);
-            }
+                $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems, $valid);
         }
 
         return $valid ? $archive : null;
