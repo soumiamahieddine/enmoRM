@@ -382,7 +382,7 @@ class journal
             unset($services[$i]);
         }
 
-         foreach ($events as $i => $event) {
+        foreach ($events as $i => $event) {
             if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
                 $event->accountName = $users[(string) $event->accountId]->accountName;
             } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
@@ -506,7 +506,7 @@ class journal
             }
 
             // Search on the next journal
-            if ($chain && $nextEvent == null) {                
+            if ($chain && $nextEvent == null) {
                 if ($this->openNextJournal()) {
                     $nextEvent = $this->getNextEvent($eventType);
                 }
@@ -969,6 +969,35 @@ class journal
     }
 
     /**
+     * Decode events format object from an event
+     * @param lifeCycle/event $event The event to decode
+     */
+    protected function decodeEventFormat($event)
+    {
+        if (isset($event->eventInfo)) {
+            if (!isset($this->eventFormats[$event->eventType])) {
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
+            }
+
+            $eventFormat = $this->eventFormats[$event->eventType]->format;
+            $i = 0;
+
+            $event->eventInfo = json_decode($event->eventInfo);
+            foreach ($eventFormat as $item) {
+                if (isset($event->eventInfo[$i])) {
+                    $event->{$item} = $event->eventInfo[$i];
+                } else {
+                    $event->{$item} = null;
+                }
+                $i++;
+            }
+        }
+        unset($event->eventInfo);
+
+        return $event;
+    }
+
+    /**
      * Get an event from a csv line
      * @param string $eventLine The scv line from the journal
      *
@@ -1010,34 +1039,6 @@ class journal
             }
         } catch (\Exception $e) {
         }
-
-        return $event;
-    }
-
-    /**
-     * Decode events format object from an event
-     * @param lifeCycle/event $event The event to decode
-     */
-    protected function decodeEventFormat($event) {
-        if (isset($event->eventInfo)) {
-            if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
-            }
-
-            $eventFormat = $this->eventFormats[$event->eventType]->format;
-            $i = 0;
-
-            $event->eventInfo = json_decode($event->eventInfo);
-            foreach ($eventFormat as $item) {
-                if (isset($event->eventInfo[$i])) {
-                    $event->{$item} = $event->eventInfo[$i];
-                } else {
-                    $event->{$item} = null;
-                }
-                $i++;
-            }
-        }
-        unset($event->eventInfo);
 
         return $event;
     }
