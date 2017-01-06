@@ -210,7 +210,9 @@ trait archiveDestructionTrait
                 }
             }
 
-            $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+            if (empty($archive->digitalResources)) {
+                $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+            }
 
             foreach ($archive->digitalResources as $digitalResource) {
                 $this->digitalResourceController->delete($digitalResource->resId);
