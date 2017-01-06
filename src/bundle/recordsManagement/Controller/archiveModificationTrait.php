@@ -120,15 +120,14 @@ trait archiveModificationTrait
                     'finalDisposition' => (string) $retentionRule->finalDisposition,
                     'previousStartDate' => (string) $retentionRule->previousStartDate,
                     'previousDuration' => (string) $retentionRule->previousDuration,
-                    'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition
-                    );
+                    'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
+                );
 
-                foreach ($archive->document as $document) {
-                    if ($document->type == "CDO" && $document->copy != true) {
-                        $eventInfo['resId'] = $document->digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $document->digitalResource->hash;
-                        $eventInfo['address'] = $document->digitalResource->address[0]->path;
+                foreach ($archive->digitalResources as $digitalResource) {
+                        $eventInfo['resId'] = $digitalResource->resId;
+                        $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                        $eventInfo['hash'] = $digitalResource->hash;
+                        $eventInfo['address'] = $digitalResource->address[0]->path;
 
                         $event = $this->lifeCycleJournalController->logEvent(
                             'recordsManagement/retentionRuleModification',
@@ -138,7 +137,6 @@ trait archiveModificationTrait
                             $operationResult
                         );
                         $archive->lifeCycleEvent = array($event);
-                    }
                 }
             }
         }
@@ -148,8 +146,8 @@ trait archiveModificationTrait
 
     /**
      * Modify the archive access
-     * @param recordsManagement/archiveAccessCode $accessRule    The access rule object
-     * @param array                               $archiveIds    The archives ids
+     * @param recordsManagement/archiveAccessCode $accessRule The access rule object
+     * @param array                               $archiveIds The archives ids
      *
      * @return bool
      */
@@ -207,12 +205,11 @@ trait archiveModificationTrait
                 );
 
 
-                foreach ($archive->document as $document) {
-                    if ($document->type == "CDO" && $document->copy != true) {
-                        $eventInfo['resId'] = $document->digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $document->digitalResource->hash;
-                        $eventInfo['address'] = $document->digitalResource->address[0]->path;
+                foreach ($archive->digitalResources as $digitalResource) {
+                        $eventInfo['resId'] = $digitalResource->resId;
+                        $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                        $eventInfo['hash'] = $digitalResource->hash;
+                        $eventInfo['address'] = $digitalResource->address[0]->path;
 
                         $event = $this->lifeCycleJournalController->logEvent(
                             'recordsManagement/accessRuleModification',
@@ -223,7 +220,6 @@ trait archiveModificationTrait
                         );
 
                         $archive->lifeCycleEvent = array($event);
-                    }
                 }
             }
         }
@@ -233,7 +229,7 @@ trait archiveModificationTrait
 
     /**
      * Suspend archives
-     * @param mixed     $archiveIds     Array of archive identifier
+     * @param mixed $archiveIds Array of archive identifier
      *
      * @return array
      */
@@ -330,7 +326,7 @@ trait archiveModificationTrait
 
                     $archive->lifeCycleEvent = array($event);
                 }
-            }  
+            }
         }
 
         return $res;
