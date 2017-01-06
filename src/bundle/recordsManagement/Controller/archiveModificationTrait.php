@@ -257,23 +257,21 @@ trait archiveModificationTrait
                 'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             );
 
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->copy != true) {
-                    $eventInfo['resId'] = $document->digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $document->digitalResource->hash;
-                    $eventInfo['address'] = $document->digitalResource->address[0]->path;
+            foreach ($archive->digitalResources as $digitalResource) {
+                $eventInfo['resId'] = $digitalResource->resId;
+                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventInfo['hash'] = $digitalResource->hash;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
 
-                    $event = $this->lifeCycleJournalController->logEvent(
-                        'recordsManagement/freeze',
-                        'recordsManagement/archive',
-                        $archive->archiveId,
-                        $eventInfo,
-                        $operationResult
-                    );
+                $event = $this->lifeCycleJournalController->logEvent(
+                    'recordsManagement/freeze',
+                    'recordsManagement/archive',
+                    $archive->archiveId,
+                    $eventInfo,
+                    $operationResult
+                );
 
-                    $archive->lifeCycleEvent = array($event);
-                }
+                $archive->lifeCycleEvent = array($event);
             }
         }
 
@@ -309,12 +307,11 @@ trait archiveModificationTrait
                 'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             );
 
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->copy != true) {
-                    $eventInfo['resId'] = $document->digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $document->digitalResource->hash;
-                    $eventInfo['address'] = $document->digitalResource->address[0]->path;
+            foreach ($archive->digitalResources as $digitalResource) {
+                    $eventInfo['resId'] = $digitalResource->resId;
+                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                    $eventInfo['hash'] = $digitalResource->hash;
+                    $eventInfo['address'] = $digitalResource->address[0]->path;
 
                     $event = $this->lifeCycleJournalController->logEvent(
                         'recordsManagement/unfreeze',
@@ -325,7 +322,6 @@ trait archiveModificationTrait
                     );
 
                     $archive->lifeCycleEvent = array($event);
-                }
             }
         }
 
@@ -351,16 +347,14 @@ trait archiveModificationTrait
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
         );
 
-        foreach ($archive->document as $document) {
-            if ($document->type == "CDO" && $document->copy != true) {
-                $eventInfo['resId'] = $document->digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $document->digitalResource->hash;
-                $eventInfo['address'] = $document->digitalResource->address[0]->path;
-                $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
+        foreach ($archive->digitalResources as $digitalResource) {
+            $eventInfo['resId'] = $digitalResource->resId;
+            $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+            $eventInfo['hash'] = $digitalResource->hash;
+            $eventInfo['address'] = $digitalResource->address[0]->path;
+            $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
 
-                $this->lifeCycleJournalController->logEvent('recordsManagement/addRelationship', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-            }
+            $this->lifeCycleJournalController->logEvent('recordsManagement/addRelationship', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
         }
 
         return true;
@@ -382,16 +376,8 @@ trait archiveModificationTrait
         // Certificate of modication
         $eventInfo = array('resId' => null, 'hashAlgorithm' => null, 'hash' => null, 'address' => null);
 
-        foreach ($archive->document as $document) {
-            if ($document->type == "CDO" && $document->copy != true) {
-                $eventInfo['resId'] = $document->digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $document->digitalResource->hash;
-                $eventInfo['address'] = $document->digitalResource->address[0]->path;
-                $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
-                break;
-            }
-        }
+        $eventInfo['address'] = $archive->storagePath;
+        $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
 
         $this->lifeCycleJournalController->logEvent('recordsManagement/deleteRelationship', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
 
