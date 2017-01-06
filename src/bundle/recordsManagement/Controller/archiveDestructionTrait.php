@@ -210,7 +210,11 @@ trait archiveDestructionTrait
                 }
             }
 
-            $this->documentController->deleteArchiveDocuments($archive->archiveId, $archive->archivalProfileReference);
+            $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+
+            foreach ($archive->digitalResources as $digitalResource) {
+                $this->digitalResourceController->delete($digitalResource->resId);
+            }
 
             if ($this->deleteDescription) {
                 // Relationship
