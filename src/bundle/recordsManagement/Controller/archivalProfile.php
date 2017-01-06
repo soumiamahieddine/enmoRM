@@ -161,21 +161,24 @@ class archivalProfile
                 $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
             }
         } else {
-            // @todo: get descriptionClass properties and generate descriptionFields
-            $descriptionClass = 'recordsManagement/log';
-            $reflection = \laabs::getClass($descriptionClass);
-            foreach ($reflection->getProperties() as $pos => $reflectionProperty) {
-                $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
-                $descriptionField->name = $reflectionProperty->name;
-                $descriptionField->label = $reflectionProperty->name;
-                $descriptionField->type = $reflectionProperty->getType();
+            $reflectionClass = \laabs::getClass($archivalProfile->descriptionClass);
 
-                $archiveDescription = \laabs::newInstance('recordsManagement/archiveDescription');
-                $archiveDescription->fieldName = $descriptionField->name;
-                $archiveDescription->descriptionField = $descriptionField;
-                $archiveDescription->position = $pos;
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if ($reflectionClass->hasProperty($archiveDescription->fieldName)) {
+                    $reflectionProperty = $reflectionClass->getProperty($archiveDescription->fieldName);
 
-                $archivalProfile->archiveDescription[] = $archiveDescription;
+                    $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+                    $descriptionField->name = $reflectionProperty->name;
+                    $descriptionField->label = $reflectionProperty->name;
+                    $descriptionField->type = $reflectionProperty->getType();
+
+                    $descriptionField->enumeration = $reflectionProperty->getEnumeration();
+                    if ($descriptionField->enumeration) {
+                        $descriptionField->type = 'name';
+                    }
+
+                    $archiveDescription->descriptionField = $descriptionField;
+                }
             }
         }
     }

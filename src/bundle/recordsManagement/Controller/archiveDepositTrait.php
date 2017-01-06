@@ -96,9 +96,8 @@ trait archiveDepositTrait
         // Use current profile
         if (isset($this->currentArchivalProfile)) {
             $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
-            if (!empty($this->currentArchivalProfile->descriptionClass)) {
+            if (empty($archive->descriptionClass) && !empty($this->currentArchivalProfile->descriptionClass)) {
                 $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
-                $archive->descriptionId = \laabs::objectId($archive->descriptionObject, $archive->descriptionClass);
             }
 
             if (!empty($this->currentArchivalProfile->retentionRuleCode)) {

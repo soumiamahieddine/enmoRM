@@ -92,14 +92,14 @@ interface archivesInterface
 
     /**
      * Find archives
-     * @param string $q     The query string
-     * @param string $index The index name
-     * @param int    $limit The result limit
+     * @param string $q       The query string
+     * @param string $profile The profile name
+     * @param int    $limit   The result limit
      *
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($q, $index = false, $limit = null);
+    public function readFind($q, $profile = false, $limit = null);
 
     /**
      * Read the access rule of multiple archives

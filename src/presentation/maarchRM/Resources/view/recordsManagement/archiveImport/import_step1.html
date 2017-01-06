@@ -177,14 +177,17 @@
                 }
             })
 
+            var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
+            archive.descriptionClass = selectedProfile.descriptionClass;
+
             archive.descriptionObject = Metadata.serialize($('#allFields'));
             if (archive.descriptionObject === true) {
                 return -1;
             }
 
             if (archive["retentionStartDate"] == "" || archive["retentionStartDate"] == undefined) {
-                gritter.show($('#retentionStartDateMissing_error').text(), false);
-                return -2;
+                //gritter.show($('#retentionStartDateMissing_error').text(), false);
+                //return -2;
             }
             if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
                 gritter.show($('#retentionRuleCodeMissing_error').text(), false);
