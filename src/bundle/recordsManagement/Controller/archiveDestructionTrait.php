@@ -72,18 +72,16 @@ trait archiveDestructionTrait
         );
 
         $logged = false;
-        if (isset($archive->document) && count($archive->document)) {
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->copy != true) {
-                    $eventInfo['resId'] = (string) $document->digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $document->digitalResource->hash;
-                    $eventInfo['address'] = $document->digitalResource->address[0]->path;
+        if (isset($archive->digitalResources) && count($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $eventInfo['resId'] = (string) $digitalResource->resId;
+                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventInfo['hash'] = $digitalResource->hash;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
 
-                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
 
-                    $logged = true;
-                }
+                $logged = true;
             }
         }
 
@@ -154,18 +152,16 @@ trait archiveDestructionTrait
             $eventInfo['originatorOrgRegNumber'] = $archive->originatorOrgRegNumber;
 
             $logged = false;
-            if (isset($archive->document) && count($archive->document)) {
-                foreach ($archive->document as $document) {
-                    if ($document->type == "CDO" && $document->copy != true) {
-                        $eventInfo['resId'] = (string) $document->digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $document->digitalResource->hash;
-                        $eventInfo['address'] = $document->digitalResource->address[0]->path;
+            if (isset($archive->digitalResources) && count($archive->digitalResources)) {
+                foreach ($archive->digitalResources as $digitalResource) {
+                    $eventInfo['resId'] = (string) $digitalResource->resId;
+                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                    $eventInfo['hash'] = $digitalResource->hash;
+                    $eventInfo['address'] = $digitalResource->address[0]->path;
 
-                        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
+                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
 
-                        $logged = true;
-                    }
+                    $logged = true;
                 }
             }
 
@@ -214,7 +210,13 @@ trait archiveDestructionTrait
                 }
             }
 
-            $this->documentController->deleteArchiveDocuments($archive->archiveId, $archive->archivalProfileReference);
+            if (empty($archive->digitalResources)) {
+                $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+            }
+
+            foreach ($archive->digitalResources as $digitalResource) {
+                $this->digitalResourceController->delete($digitalResource->resId);
+            }
 
             if ($this->deleteDescription) {
                 // Relationship
