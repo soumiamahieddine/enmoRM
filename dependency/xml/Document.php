@@ -18,6 +18,11 @@
  * along with dependency xml.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace dependency\xml;
+/**
+ * The XML Document service extends DOMDocument to provide additionnal features
+ * 
+ * @package Dependency_Xml
+ */
 class Document
     extends \DOMDocument
 {
@@ -259,5 +264,41 @@ class Document
         }
 
         return $object;
+    }
+
+    /**
+     * Remove empty elements and attributes
+     * @param DOMNode $node
+     */
+    public function removeEmptyNodes($node=null)
+    {
+        if (!$node) {
+            $node = $this->documentElement;
+        }
+
+        switch($node->nodeType) {
+            case \XML_ELEMENT_NODE:
+                $childNodeList = $node->childNodes;
+                if ($childNodeList->length == 0) {
+                    $node->parentNode->removeChild($node);
+                } else {
+                    for ($i=0, $l=$childNodeList->length; $i<$l; $i++) {
+                        $this->removeEmptyNodes($childNodeList->item($i));
+                    }
+                }
+                break;
+
+            case \XML_ATTRIBUTE_NODE:
+                if (empty($node->value)) {
+                    $node->parentNode->removeChild($node);
+                }
+                break;
+
+            case \XML_TEXT_NODE:
+                if (ctype_space($node->nodeValue) && $node->previousSibling && $node->previousSibling->nodeType == \XML_TEXT_NODE) {
+                    $node->nodeValue = trim($node->nodeValue);
+                }
+                break;
+        }
     }
 }

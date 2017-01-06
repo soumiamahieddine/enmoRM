@@ -17,9 +17,9 @@
             <li>
                 <a href="#descriptionTab" data-toggle="tab">Description</a>
             </li>
-            <?merge archive.document.count().bool() ?>
+            <?merge archive.digitalResources.count().bool() ?>
             <li>
-                <a href="#documentsTab" data-toggle="tab">Document(s)</a>
+                <a href="#digitalResourcesTab" data-toggle="tab">Document(s)</a>
             </li>
             <li>
                 <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
@@ -36,7 +36,7 @@
             <div class="tab-pane" id="descriptionTab" style="padding:14px">
                 <!-- Custom description object will be displayed here -->
             </div>
-            <div class="tab-pane" id="documentsTab" style="padding:14px">
+            <div class="tab-pane" id="digitalResourcesTab" style="padding:14px">
                 <?hinclude recordsManagement/archive/documents.html ?>
             </div>
             <div class="tab-pane" id="lifeCycleTab" style="padding:14px">
