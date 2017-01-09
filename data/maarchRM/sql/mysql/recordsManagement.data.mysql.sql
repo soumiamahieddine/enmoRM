@@ -77,12 +77,3 @@ INSERT INTO `recordsManagement.descriptionField` (`name`, `label`, `type`, `defa
     ('num_facture', 'Numéro de facture', 'name', null, null, null, null, null, null, null),
     ('client', 'Client', 'text', null, null, null, null, null, null, null),
     ('date_facture', 'Date de la facture', 'date', null, null, null, null, null, null, null);
-
-
-INSERT INTO `recordsManagement.documentProfile` (`archivalProfileId`, `documentProfileId`, `reference`, `name`, `required`, `acceptUserIndex`) VALUES
-    ('FACTURES_CLIENTS', 'DOCUMENT_PROFILE_01', 'FACTURES_CLIENTS', 'Factures', true, false);
-
-INSERT INTO `recordsManagement.documentDescription` (`documentProfileId`, `fieldName`, `origin`, `required`, `position`) VALUES
-    ('DOCUMENT_PROFILE_01', 'num_facture', 'recordsManagement/descriptionField', true, 0),
-    ('DOCUMENT_PROFILE_01', 'client', 'recordsManagement/descriptionField', false, 1),
-    ('DOCUMENT_PROFILE_01', 'date_facture', 'recordsManagement/descriptionField', true, 2);
