@@ -41,7 +41,7 @@
                 <ul class="nav nav-tabs" id="index" role="tablist">
                     <li role="presentation" class="active small"><a href="#all" data-toggle="tab">All</a></li>
                     <?merge archivalProfiles ?>
-                    <li role="presentation" class="small"><a href="#[?merge .reference?]" data-index="[?merge .reference?]" data-toggle="tab"><?merge .name ?></a></li>
+                    <li role="presentation" class="small"><a href="#[?merge .reference?]" data-index="[?merge .reference?]"  data-descriptionClass="[?merge .descriptionClass?]" data-toggle="tab"><?merge .name ?></a></li>
                 </ul>
             </div>
             <br/>
@@ -153,6 +153,12 @@
     // Reload search when changing profile
     $('#index').on('shown.bs.tab', function () {
         $('#fulltext_inputSearchBtn').click();
+
+        var descriptionclass = $('#index > .active > a').data('descriptionclass');
+        console.log(descriptionclass);
+        if (descriptionclass != undefined) {
+            $("#fulltext_inputSearch").attr('disabled', '');
+        }
     });
 
     $('#advancedSearchToggle').on('change', function() {
@@ -232,11 +238,8 @@
         // Get the query args
         var index = null;
         var selectedProfile = $('#index > .active > a').data('index');
-        if (selectedProfile !== undefined) {
-            var index = selectedProfile;
-        }
         
-        var searchFields = $('#'+index+' form input, #'+index+' form select');
+        var searchFields = $('#'+selectedProfile+' form input, #'+selectedProfile+' form select');
         var searchArgs = [];
         searchFields.each(function() {
             var value = $(this).val();
@@ -338,9 +341,9 @@
             type        : 'GET',
             url         : '/recordsManagement/archives/indexResult',
             data        : {
-                q     : q,
-                index : index,
-                limit : limit
+                q       : q,
+                profile : selectedProfile,
+                limit   : limit
             },
             dataType    : 'html',
             success     : function (response) {

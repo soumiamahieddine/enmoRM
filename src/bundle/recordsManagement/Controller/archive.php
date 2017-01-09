@@ -736,19 +736,18 @@ class archive
 
     /**
      * Find archives
-     * @param string $q     The query string
-     * @param string $index The index
-     * @param int    $limit The result limit
+     * @param string $q       The query string
+     * @param string $profile The index
+     * @param int    $limit   The result limit
      *
      * @return array The fulltext result
      */
-    public function find($q = null, $index = false, $limit = null)
+    public function find($q = null, $profile = false, $limit = null)
     {
-        $qTrim = trim($q);
-        if ($qTrim == null || empty($qTrim)) {
+        $q = trim($q);
+        if ($q == null || empty($q)) {
             throw new \bundle\recordsManagement\Exception\invalidParameterException("The query string is empty");
         }
-        $q = $qTrim;
 
         if ($limit < 1) {
             $limit = null;
@@ -756,16 +755,26 @@ class archive
 
         $profiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
 
-        $indexList = [];
-
+        $indexList = $descriptionClassList = [];
         foreach ($profiles as $profile) {
-            $indexList[] = $profile->reference;
+            if ($profile->descriptionClass == '') {
+                $indexList[] = $profile->reference;
+            } else {
+                $descriptionClassList[] = $profile->descriptionClass;
+            }
         }
 
-        if (!$index) {
+        if ($profile) {
+            if (in_array($profile, $indexList)) {
+                $index = [$profile];
+            } elseif (in_array($profile, $descriptionClassList)) {
+                $descriptionClass = [$profile];
+            } else {
+                return [];
+            }
+        } else {
             $index = $indexList;
-        } elseif (!in_array($index, $indexList)) {
-            return array();
+            $descriptionClass = $descriptionClassList;
         }
 
         $currentOrg = \laabs::getToken("ORGANIZATION");
@@ -774,22 +783,37 @@ class archive
             return array();
         }
 
-        $queryString = [];
-        $queryString[] = $q;
-
+        
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
         }
 
-        if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
-            $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
+        if (count($index)) {
+            $fulltextQueryString = [];
+            $fulltextQueryString[] = $q;
 
-            $queryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
+                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
+
+                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            }
+
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
         }
+        
+        if (count($descriptionClass)) {
+            $descriptionClassArgs = preg_split("# and #", $q);
+            var_dump($descriptionClassArgs);
 
-        $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
-        $results = $ft->find(\laabs\implode(" ", $queryString), $index, $limit);
+            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
+                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
 
-        return $results;
+                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            }
+        }
+        
+
+        return $ftresults;
     }
 }

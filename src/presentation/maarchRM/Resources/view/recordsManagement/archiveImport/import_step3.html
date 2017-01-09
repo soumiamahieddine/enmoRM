@@ -6,7 +6,7 @@
     file that was distributed with this source code.
 #-->
 
-<div class=" col-md-11">
+<div class="col-md-12">
     <div class="panel-group" id="fieldList" role="tablist" >
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" data-translate-catalog="documentManagement/document">
@@ -310,16 +310,25 @@
         },
 
         serialize : function(target) {
+            var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
             var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
-            var inputsCustom = target.find("#customFields").children();
-            var descriptionObject = [];
-            
+            var inputsCustom = target.find("#customFields").children();           
             var flagEmptyRequiredField = false;
             var flagEmptyCustomField = false;
-            
+
+            if (selectedProfile.descriptionClass != null) {
+                var descriptionObject = {};
+                var fulltext = false;
+            } else {
+                var descriptionObject = [];
+                var fulltext = true;
+            }
+
             $.each(inputsArchivalProfile, function() {
                 var value = $.trim($(this).val());
                 var type = $(this).attr("data-type");
+                var name = $(this).attr('name');
+                var required = $(this).attr('data-required');
                 
                 if (type == "boolean") {
                     if (!$(this).parent().hasClass("active")) {
@@ -327,10 +336,7 @@
                     }
 
                     value = $(this).val();
-                }
-                
-                var name = $(this).attr('name');
-                var required = $(this).attr('data-required');
+                }                
 
                 if (required == "true" && (value === "" || value === null || value === undefined)) {
                     flagEmptyRequiredField = true;
@@ -342,29 +348,29 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                var metadata = {
-                    type : type,
-                    name : name,
-                    value: value
-                }
+                if (fulltext) {
+                    var metadata = {
+                        type : type,
+                        name : name,
+                        value: value
+                    }
 
-                descriptionObject.push(metadata);
+                    descriptionObject.push(metadata);
+                } else {
+                    descriptionObject[name] = value;
+                }
             });
             
             $.each(inputsCustom, function() {
-                var valueInput = $(this).find('.value');
-                var labelInput = $(this).find('.name');
-                var metadata = {
-                    type : valueInput.data('type'),
-                    name : labelInput.val(),
-                    value: $.trim(valueInput.val())
-                }
+                var value = $.trim($(this).val());
+                var type = $(this).attr("data-type");
+                var name = $(this).find('.name').val();
                 
-                if (metadata.type == "boolean") {
-                    metadata.value = valueInput.prop("checked");
+                if (type == "boolean") {
+                    value = $(this).prop("checked");
                 }
 
-                if (metadata.value === '' || metadata.value == undefined || metadata.value == null || metadata.name == ''|| metadata.name == undefined || metadata.name == null) {
+                if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {
                     $(this).closest(".form-group").addClass('has-error');
                     flagEmptyCustomField = true;
                     return;
@@ -373,7 +379,17 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                descriptionObject.push(metadata);
+                if (fulltext) {
+                    var metadata = {
+                        type : type,
+                        name : name,
+                        value: value
+                    }
+
+                    descriptionObject.push(metadata);
+                } else {
+                    descriptionObject[name] = value;
+                }
             });
             
             var result = descriptionObject;
