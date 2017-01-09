@@ -27,14 +27,13 @@ namespace bundle\recordsManagement\Model;
  *
  * @pkey [archiveId]
  * @id [archiveId]
- * 
+ *
  * @fkey [parentArchiveId] recordsManagement/archive [archiveId]
  * @fkey [archivalProfileReference] recordsManagement/archivalProfile [reference]
  * @fkey [serviceLevelReference] recordsManagement/serviceLevel [reference]
  * @key  [descriptionId]
  * @key  [descriptionClass]
- * 
- * @xmlns dm maarch.org:laabs:documentManagement
+ *
  * @xmlns rm maarch.org:laabs:recordsManagement
  * @xmlns medona org:afnor:medona:1.0
  */
@@ -80,7 +79,7 @@ class archive
      * @var string
      */
     public $descriptionClass;
-    
+
     /**
      * The name of description identifier
      *
@@ -184,7 +183,7 @@ class archive
      * @var timestamp
      */
     public $lastDeliveryDate;
-    
+
     /**
      * @var timestamp
      */
