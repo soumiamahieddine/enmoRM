@@ -154,6 +154,7 @@ class archive
 
     /**
      * Documents
+     * Digital resources of archive
      *
      * @var digitalResource/digitalResource[]
      */
