@@ -93,10 +93,10 @@
     }
 
     archiveDocumentViewer = {
-        load: function(archiveId, action) {
-            var url = "/recordsManagement/contents/" + archiveId;
+        load: function(archiveIdResId, action) {
+            var url = "/recordsManagement/contents/" + archiveIdResId;
             if (action) {
-                url = action + archiveId;
+                url = action + archiveIdResId;
             }
             window.open(url, 'document');
         },

@@ -33,7 +33,7 @@
                 </thead>
                 <tbody  id="documentList_table">
                     <?merge documents ?>
-                        <tr id="[?merge .archiveId ?]/[?merge .docId ?]/[?merge .resId ?]">
+                        <tr id="[?merge .archiveId ?]/[?merge .resId ?]">
                             <td>
                                 <input type="checkbox" value="[?merge .docId ?]"/>
                             </td>
@@ -140,11 +140,11 @@
     });
 
     archiveDocumentViewer = {
-        load: function(archiveId, action) {
+        load: function(archiveIdResId, action) {
                     
             var url = "/recordsManagement/contents/" + archiveId;
             if (action) {
-                url = action + archiveId;
+                url = action + archiveIdResId;
             }
             
             window.open(url, 'document');

@@ -116,9 +116,9 @@ interface retrieveInterface
      *
      * @return recordsManagement/archive/getContents
      *
-     * @uses  recordsManagement/archive/readContents_archiveId__documentId__resId_
+     * @uses  recordsManagement/archive/readContents_archiveId__resId_
      */
-    public function readRecordsmanagementContents_archiveId__documentId__resId_();
+    public function readRecordsmanagementContents_archiveId__resId_();
 
     /**
      * Retrieve an archive content document (CDO)

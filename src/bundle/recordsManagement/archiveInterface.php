@@ -67,7 +67,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/getContents
      */
-    public function readContents_archiveId__documentId__resId_();
+    public function readContents_archiveId__resId_();
 
     /**
      * Retrieve the archive contents by its index class/identifier

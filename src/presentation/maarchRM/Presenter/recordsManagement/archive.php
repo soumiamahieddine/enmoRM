@@ -45,8 +45,8 @@ class archive
     public function __construct(
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
-        \dependency\localisation\TranslatorInterface $translator)
-    {
+        \dependency\localisation\TranslatorInterface $translator
+    ) {
         $this->view = $view;
 
         $this->json = $json;
@@ -88,53 +88,6 @@ class archive
         $this->view->merge();
 
         return $this->view->saveHtml();
-    }
-
-    /**
-     * Get the list of owner originators oranizations
-     * @param object $currentService The user's current service
-     *
-     * @return The list of owner originators orgs
-     */
-    protected function getOwnerOriginatorsOrgs($currentService)
-    {
-        $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
-
-        $userPositionController = \laabs::newController('organization/userPosition');
-        $orgController = \laabs::newController('organization/organization');
-
-        $owner = false;
-        $userServices = [];
-        $ownerOriginatorOrgs = [];
-
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
-        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
-            $userServices[] = $userService;
-            if (isset($userService->orgRoleCodes)) {
-                foreach ($userService->orgRoleCodes as $orgRoleCode) {
-                    if ($orgRoleCode == 'owner') {
-                        $owner = true;
-                    }
-                }
-            }
-        }
-        foreach ($userServices as $userService) {
-            foreach ($originators as $originator) {
-                if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
-                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
-
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
-                    }
-                    $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators[] = $originator;
-                }
-            }
-        }
-
-        return $ownerOriginatorOrgs;
     }
 
     /**
@@ -382,41 +335,29 @@ class archive
     }
 
     /**
-     * Read users privileges on archives
-     */
-    protected function readPrivilegesOnArchives()
-    {
-        $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
-        $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
-        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
-
-        $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
-        $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
-        $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
-    }
-
-    /**
-     * get a form to search resource
+     * Get resource contents
      * @param digitalResource/digitalResource $digitalResource The resource object
      *
      * @return string
      */
     public function getContents($digitalResource = null)
     {
-        if ($digitalResource) {
-            $contents = $digitalResource->getContents();
-            $mimetype = $digitalResource->mimetype;
-
-            \laabs::setResponseType($mimetype);
-            $response = \laabs::kernel()->response;
-            $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->fileName."");
-
-            return $contents;
-        } else {
+        if (!$digitalResource) {
             // @TODO : throw exception
             $contents = "<h4>This archive does not have any document.</h4>";
-            $mimetype = 'text/html';
+            \laabs::setResponseType('text/html');
+
+            return $contents;
         }
+
+        $contents = $digitalResource->getContents();
+        $mimetype = $digitalResource->mimetype;
+
+        \laabs::setResponseType($mimetype);
+        $response = \laabs::kernel()->response;
+        $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->fileName."");
+
+        return $contents;
     }
 
     /**
@@ -990,5 +931,66 @@ class archive
         }
 
         return $this->json->save();
+    }
+
+    /**
+     * Read users privileges on archives
+     */
+    protected function readPrivilegesOnArchives()
+    {
+        $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+        $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
+        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
+
+        $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
+        $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
+        $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
+    }
+
+    /**
+     * Get the list of owner originators oranizations
+     * @param object $currentService The user's current service
+     *
+     * @return The list of owner originators orgs
+     */
+    protected function getOwnerOriginatorsOrgs($currentService)
+    {
+        $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
+
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $orgController = \laabs::newController('organization/organization');
+
+        $owner = false;
+        $userServices = [];
+        $ownerOriginatorOrgs = [];
+
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
+        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
+            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
+            $userServices[] = $userService;
+            if (isset($userService->orgRoleCodes)) {
+                foreach ($userService->orgRoleCodes as $orgRoleCode) {
+                    if ($orgRoleCode == 'owner') {
+                        $owner = true;
+                    }
+                }
+            }
+        }
+        foreach ($userServices as $userService) {
+            foreach ($originators as $originator) {
+                if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
+                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
+                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
+
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
+                    }
+                    $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators[] = $originator;
+                }
+            }
+        }
+
+        return $ownerOriginatorOrgs;
     }
 }
