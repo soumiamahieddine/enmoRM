@@ -153,7 +153,7 @@ class archive
     public $lifeCycleEvent;
 
     /**
-     * Documents
+     * Digital resources of archive
      * Digital resources of archive
      *
      * @var digitalResource/digitalResource[]
