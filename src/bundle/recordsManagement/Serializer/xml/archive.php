@@ -63,7 +63,7 @@ class archive
         $this->xml->merge();
 
         $descriptionXml = \laabs::callOutputRoute(
-            'READ ' . $archive->descriptionClass . LAABS_URI_SEPARATOR . $archive->descriptionId,
+            'READ ' . $archive->descriptionClass . LAABS_URI_SEPARATOR . $archive->archiveId,
             "xml",
             $archive->descriptionObject
         );

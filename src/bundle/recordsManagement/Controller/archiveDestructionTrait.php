@@ -198,8 +198,8 @@ trait archiveDestructionTrait
 
         try {
             // Delete description
-            if (isset($archive->descriptionClass) && isset($archive->descriptionId)) {
-                $this->currentDescriptionController->delete($archive->descriptionId, $this->deleteDescription);
+            if (isset($archive->descriptionClass)) {
+                $this->currentDescriptionController->delete($archive->archiveId, $this->deleteDescription);
             }
 
             // Children archives

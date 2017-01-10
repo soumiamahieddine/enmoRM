@@ -23,7 +23,7 @@ namespace bundle\recordsManagement\Model;
  * Class model that represents a view
  *
  * @package RecordsManagement
- * @author Alexis RAGOT <alexis.ragot@maarch.org>
+ * @author  Alexis RAGOT <alexis.ragot@maarch.org>
  *
  * @pkey[docId]
  */
@@ -64,13 +64,6 @@ class archiveDocumentDigitalResource
      * @var string
      */
     public $descriptionClass;
-
-    /**
-     * The name of description identifier
-     *
-     * @var id
-     */
-    public $descriptionId;
 
     /**
      * The name of archival profile

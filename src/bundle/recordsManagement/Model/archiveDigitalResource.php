@@ -66,13 +66,6 @@ class archiveDigitalResource
     public $descriptionClass;
 
     /**
-     * The name of description identifier
-     *
-     * @var id
-     */
-    public $descriptionId;
-
-    /**
      * The name of archival profile
      *
      * @var string

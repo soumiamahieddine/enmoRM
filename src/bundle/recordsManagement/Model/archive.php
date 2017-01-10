@@ -31,8 +31,6 @@ namespace bundle\recordsManagement\Model;
  * @fkey [parentArchiveId] recordsManagement/archive [archiveId]
  * @fkey [archivalProfileReference] recordsManagement/archivalProfile [reference]
  * @fkey [serviceLevelReference] recordsManagement/serviceLevel [reference]
- * @key  [descriptionId]
- * @key  [descriptionClass]
  * 
  * @xmlns dm maarch.org:laabs:documentManagement
  * @xmlns rm maarch.org:laabs:recordsManagement
@@ -80,13 +78,6 @@ class archive
      * @var string
      */
     public $descriptionClass;
-    
-    /**
-     * The name of description identifier
-     *
-     * @var id
-     */
-    public $descriptionId;
 
     /**
      * The name of archival profile

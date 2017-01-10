@@ -132,29 +132,6 @@ interface retrieveInterface
     public function readRecordsmanagementContentsbyoriginatorarchiveid($originatorArchiveId, $originatorOrgRegNumber);
 
     /**
-     * Retrieve the archive contents by its index class/identifier
-     * @var qname  descriptionClass The description class
-     * @var string descriptionId    The description identifier
-     *
-     * @return recordsManagement/archive/getContents
-     *
-     * @uses recordsManagement/archive/readContentsbydescription_descriptionClass__descriptionId_
-     */
-    public function readRecordsmanagementArchivecontents_descriptionClass__descriptionId_();
-
-    /**
-     * Retrieve the archive description by its index class/identifier
-     * @var qname  descriptionClass The description class
-     * @var string descriptionId    The description identifier
-     *
-     * @return recordsManagement/archive/getDescription
-     *
-     * @uses recordsManagement/archiveDescription/read_descriptionClass__descriptionId_
-     */
-    public function readRecordsmanagementArchivedescription_descriptionClass__descriptionId_();
-
-
-    /**
      * Check if archive exists
      * @param string $archiveId The archive identifier
      *

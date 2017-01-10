@@ -33,13 +33,5 @@ interface archiveDescriptionInterface
      * @action recordsManagement/archive/getDescription
      */
     public function read_archiveId_();
-    
-    /**
-     * Retrieve the archive description by its index class/identifier
-     * 
-     * @action recordsManagement/archive/getByDescription
-     * 
-     */
-    public function read_descriptionClass__descriptionId_();
 
 }

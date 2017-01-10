@@ -215,7 +215,7 @@ class archive
             $this->useServiceLevel($operation);
         }
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $this->useDescriptionController($archive->descriptionClass);
         } elseif (!empty($archive->descriptionSchema)) {
             $documentRootNamespaceUri = $archive->descriptionXml->documentElement->namespaceURI;
@@ -344,22 +344,6 @@ class archive
     }
 
     /**
-     * Get the archive by description class and id
-     * @param string $descriptionClass
-     * @param string $descriptionId
-     *
-     * @return object
-     */
-    public function getByDescription($descriptionClass, $descriptionId)
-    {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', array('descriptionClass ' => $descriptionClass, 'descriptionId' => $descriptionId));
-
-        $this->getArchiveComponents($archive, false);
-
-        return $archive;
-    }
-
-    /**
      * Get the archives by originator
      * @param string $originatorOrgRegNumber
      *
@@ -412,17 +396,18 @@ class archive
 
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->descriptionId);
+
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         }
+        
 
         if ($archive->descriptionObject == null) {
             //throw \laabs::newException("recordsManagement/invalidArchiveDescriptionException", "Invalid description for this archive with archive identifier : '$archiveId'");
         }
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
-
         
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
         foreach ($archive->digitalResources as $digitalResource) {
@@ -490,12 +475,15 @@ class archive
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->descriptionId);
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         }
 
-        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        $archiveDigitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        foreach ($archiveDigitalResources as $digitalResource) {
+            $archive->digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
+        }
         
         $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
         foreach ($archive->contents as $content) {

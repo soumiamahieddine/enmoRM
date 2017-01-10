@@ -70,13 +70,6 @@ interface archiveInterface
     public function readContents_archiveId__documentId__resId_();
 
     /**
-     * Retrieve the archive contents by its index class/identifier
-     *
-     * @action recordsManagement/archive/getContentsByDescription
-     */
-    public function readContentsbydescription_descriptionClass__descriptionId_();
-
-    /**
      * Check if archive exists
      *
      * @action recordsManagement/archive/exists

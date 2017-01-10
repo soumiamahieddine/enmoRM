@@ -17,7 +17,6 @@ SELECT
 "archive"."finalDisposition",
 "archive"."disposalDate",
 "archive"."descriptionClass",
-"archive"."descriptionId",
 "archive"."parentArchiveId",
 
 "digitalResource"."resId",

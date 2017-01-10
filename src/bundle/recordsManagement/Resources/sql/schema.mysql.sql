@@ -142,10 +142,8 @@ CREATE TABLE `recordsManagement.archive`
   `parentArchiveId` varchar(255),
   
   `descriptionClass` varchar(255),
-  `descriptionId` varchar(255),
 
   PRIMARY KEY (`archiveId`),
-  UNIQUE (`descriptionClass`, `descriptionId`),
   FOREIGN KEY (`parentArchiveId`)
     REFERENCES `recordsManagement.archive` (`archiveId`) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,
