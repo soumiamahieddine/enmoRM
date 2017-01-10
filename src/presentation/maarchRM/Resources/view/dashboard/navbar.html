@@ -246,7 +246,7 @@
     //Haut, haut, bas, bas, gauche, droite, gauche, droite, B, A
     var k = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
     var n = 0;
-    $(document).keydown(function (e) {
+    $(window).keydown(function (e) {
         if (e.keyCode === k[n++]) {
             if (n === k.length) {
                 n=0;
@@ -261,4 +261,13 @@
             k = 0;
     });
 
+    var keys = {};
+    $(window).on("keyup keydown", function (e) {
+        e = e || event;
+        keys[e.keyCode] = e.type === 'keydown';
+        
+        if (keys[17] && keys[18] && keys[81]) {
+            load('/user/logout');
+        }
+    });
 </script>
