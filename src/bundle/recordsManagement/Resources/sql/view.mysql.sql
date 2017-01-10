@@ -16,7 +16,6 @@ SELECT
 `recordsManagement.archive`.`finalDisposition`,
 `recordsManagement.archive`.`disposalDate`,
 `recordsManagement.archive`.`descriptionClass`,
-`recordsManagement.archive`.`descriptionId`,
 `recordsManagement.archive`.`parentArchiveId`,
 
 `digitalResource.digitalResource`.`resId`,

@@ -125,7 +125,7 @@ trait archiveCommunicationTrait
             $eventItems['resId'] = $digitalResource->resId;
             $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
             $eventItems['hash'] = $digitalResource->hash;
-            $eventItems['address'] = $digitalResource->address[0]->path;
+            $eventItems['address'] = $archive->storagePath;
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
         }

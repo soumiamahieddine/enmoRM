@@ -30,8 +30,9 @@ interface archiveDescriptionInterface
     /**
      * Create the description object
      * @param object $description
+     * @param id     $archiveId
      */
-    public function create($description);
+    public function create($description, $archiveId);
 
     /**
      * Retrieve the description object
@@ -42,8 +43,9 @@ interface archiveDescriptionInterface
     /**
      * Update the description object
      * @param object $description
+     * @param id     $archiveId
      */
-    public function update($description);
+    public function update($description, $archiveId);
 
     /**
      * Delete the description object

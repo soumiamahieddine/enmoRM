@@ -185,10 +185,8 @@ CREATE TABLE "recordsManagement"."archive"
   "parentArchiveId" text,
   
   "descriptionClass" text,
-  "descriptionId" text,
 
   PRIMARY KEY ("archiveId"),
-  UNIQUE ("descriptionClass", "descriptionId"),
   FOREIGN KEY ("parentArchiveId")
     REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,

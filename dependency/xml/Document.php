@@ -279,12 +279,13 @@ class Document
         switch($node->nodeType) {
             case \XML_ELEMENT_NODE:
                 $childNodeList = $node->childNodes;
-                if ($childNodeList->length == 0) {
+                for ($i=0, $l=$childNodeList->length; $i<$l; $i++) {
+                    $this->removeEmptyNodes($childNodeList->item($i));
+                }
+
+                $childNodeList = $node->childNodes;
+                if ($childNodeList->length == 0 && !$node->hasAttributes()) {
                     $node->parentNode->removeChild($node);
-                } else {
-                    for ($i=0, $l=$childNodeList->length; $i<$l; $i++) {
-                        $this->removeEmptyNodes($childNodeList->item($i));
-                    }
                 }
                 break;
 

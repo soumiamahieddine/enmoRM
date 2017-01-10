@@ -25,9 +25,9 @@ namespace bundle\recordsManagement\Model;
  * @package RecordsManagement
  * @author  Alexis RAGOT <alexis.ragot@maarch.org>
  *
- * @pkey[resId]
+ * @pkey[docId]
  */
-class archiveDigitalResource
+class archiveDocumentDigitalResource
 {
     /**
      * The archive identifier
@@ -132,6 +132,64 @@ class archiveDigitalResource
      * @notempty
      */
     public $archiverOrgRegNumber;
+
+
+    /***********************************************/
+
+    /**
+     * The document identifier
+     *
+     * @var string
+     * @notempty
+     */
+    public $docId;
+
+    /**
+     * The type of document
+     *
+     * @var string
+     * @notempty
+     */
+    public $type;
+
+    /**
+     * Controls to make on the document
+     *
+     * @var string
+     */
+    public $control;
+
+    /**
+     * Define if the document is a copy
+     *
+     * @var bool
+     */
+    public $copy;
+
+    /**
+     * The document identifier of depositor
+     *
+     * @var string
+     */
+    public $depositorDocId;
+
+    /**
+     * The document identifier of originator
+     *
+     * @var string
+     */
+    public $originatorDocId;
+
+    /**
+     * Status of the document
+     *
+     * @var string
+     */
+    public $documentStatus;
+
+
+    /***********************************************/
+
 
     /**
      * The universal identifier

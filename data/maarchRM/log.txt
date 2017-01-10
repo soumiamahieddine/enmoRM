@@ -1,81 +1,11 @@
-[2016-12-08T10:47:46.489423+01:00] (0) 42703: ERREUR:  la colonne « repositoryReference » n'existe pas
-LINE 1: SELECT "repositoryId", "repositoryName", "repositoryReferenc...
-                                                 ^
-[2016-12-08T11:50:56.405106+01:00] (0) 42P01: ERREUR:  la relation « medona.controlAuthority » n'existe pas
-LINE 1: ...olAuthorityOrgUnitId", "originatorOrgUnitId" FROM "medona"."...
-                                                             ^
-[2016-12-08T11:59:42.568257+01:00] (0) 42703: ERREUR:  la colonne « name » n'existe pas
-LINE 1: SELECT "schedulingId", "name", "taskId", "frequency", "param...
-                               ^
-[2016-12-08T11:59:45.479220+01:00] (0) 42703: ERREUR:  la colonne « name » n'existe pas
-LINE 1: SELECT "schedulingId", "name", "taskId", "frequency", "param...
-                               ^
-[2016-12-12T14:51:55.759022+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T14:52:04.515907+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T14:52:08.497824+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T14:52:14.784309+01:00] (0) 42703: ERREUR:  la colonne « storagePath » n'existe pas
+[2017-01-09T16:01:55.890084+00:00] (0) 23502: ERROR:  null value in column "type" violates not-null constraint
+DETAIL:  Failing row contains (maarchRMAP_ojip0f-1e95-5nc5ei, null, null, null, null, null, null, , f, , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null).
+[2017-01-09T16:05:17.018957+00:00] (0) 23502: ERROR:  null value in column "archiveId" violates not-null constraint
+DETAIL:  Failing row contains (maarchRMAP_ojip0f-1e95-5nc5ei, null, null, null, null, null, null, , f, , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null).
+[2017-01-09T16:10:41.183342+00:00] (0) 23502: ERROR:  null value in column "archiveId" violates not-null constraint
+DETAIL:  Failing row contains (maarchRMAP_ojip0f-1e95-5nc5ei, null, null, null, null, null, null, , f, , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null).
+[2017-01-09T16:17:08.856058+00:00] (0) 42703: ERROR:  column "storagePath" of relation "archive" does not exist
 LINE 1: ... "depositorOrgRegNumber", "archiverOrgRegNumber", "storagePa...
                                                              ^
-[2016-12-12T14:52:25.633974+01:00] (0) 42703: ERREUR:  la colonne « storagePath » n'existe pas
-LINE 1: ... "depositorOrgRegNumber", "archiverOrgRegNumber", "storagePa...
-                                                             ^
-[2016-12-12T14:52:38.948989+01:00] (0) 42703: ERREUR:  la colonne « storagePath » n'existe pas
-LINE 1: ... "depositorOrgRegNumber", "archiverOrgRegNumber", "storagePa...
-                                                             ^
-[2016-12-12T16:15:09.709599+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T16:15:20.515297+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T16:15:41.842218+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-12T16:55:11.930281+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:49:13.868771+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:49:23.118587+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:49:26.767231+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:50:58.461164+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:52:16.813213+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:52:20.928037+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:52:28.485636+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:56:14.606432+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-13T14:58:28.875906+01:00] (0) 42P01: ERREUR:  la relation « archivesPubliques.archiveDescription » n'existe pas
-LINE 1: ...accessRuleComDate", "repositoryOrgRegNumber" FROM "archivesP...
-                                                             ^
-[2016-12-14T16:20:16.409044+01:00] (0) 42703: ERREUR:  la colonne « schedulingId » n'existe pas
-LINE 1: SELECT "logId", "schedulingId", "executedBy", "launchedBy", ...
-                        ^
-[2016-12-14T16:20:18.426930+01:00] (0) 42703: ERREUR:  la colonne « schedulingId » n'existe pas
-LINE 1: SELECT "logId", "schedulingId", "executedBy", "launchedBy", ...
-                        ^
-[2016-12-14T16:20:19.637609+01:00] (0) 42703: ERREUR:  la colonne « schedulingId » n'existe pas
-LINE 1: SELECT "logId", "schedulingId", "executedBy", "launchedBy", ...
-                        ^
-[2016-12-14T16:20:20.087568+01:00] (0) 42703: ERREUR:  la colonne « schedulingId » n'existe pas
-LINE 1: SELECT "logId", "schedulingId", "executedBy", "launchedBy", ...
-                        ^
+[2017-01-10T09:22:28.492412+00:00] (0) 23505: ERROR:  duplicate key value violates unique constraint "unitIdentifier_messageId_objectClass_objectId_key"
+DETAIL:  Key ("messageId", "objectClass", "objectId")=(maarchRMAP_ojk2m2-16e9-xgo3zs, recordsManagement/archive, maarchRMAP_ojk2m2-25a2-abcng1) already exists.
