@@ -116,7 +116,7 @@ trait archiveDepositTrait
         // Set archive name when mono document
         if (empty($archive->archiveName) && count($archive->digitalResources) == 1) {
             if (isset($archive->digitalResources[0]->fileName)) {
-                $archive->archiveName = $archive->digitalResource[0]->fileName;
+                $archive->archiveName = $archive->digitalResources[0]->fileName;
             }
         }
 
@@ -134,7 +134,7 @@ trait archiveDepositTrait
             $fulltextController->validateDescriptionFields($archive->descriptionObject);
         }
 
-        if (isset($archive->descriptionClass) && isset($archive->descriptionObject)) {
+        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
             $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $archive->descriptionClass);
 
             $this->validateArchiveDescriptionObject($archive);
