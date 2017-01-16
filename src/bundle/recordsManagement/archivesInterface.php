@@ -99,7 +99,7 @@ interface archivesInterface
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($q, $profile = false, $limit = null);
+    public function readFind($q, $profile = '', $limit = null);
 
     /**
      * Read the access rule of multiple archives

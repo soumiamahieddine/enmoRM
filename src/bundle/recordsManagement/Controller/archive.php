@@ -741,14 +741,14 @@ class archive
             $limit = null;
         }
 
-        $profiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
+        $archivalProfiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
 
         $indexList = $descriptionClassList = [];
-        foreach ($profiles as $profile) {
-            if ($profile->descriptionClass == '') {
-                $indexList[] = $profile->reference;
+        foreach ($archivalProfiles as $archivalProfile) {
+            if ($archivalProfile->descriptionClass == '') {
+                $indexList[] = $archivalProfile->reference;
             } else {
-                $descriptionClassList[] = $profile->descriptionClass;
+                $descriptionClassList[] = $archivalProfile->descriptionClass;
             }
         }
 
@@ -767,11 +767,10 @@ class archive
 
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
-        if ($currentOrg) {
+        if (!$currentOrg) {
             return array();
         }
 
-        
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
         }
@@ -790,9 +789,8 @@ class archive
             $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
         }
         
-        if (count($descriptionClass)) {
+        if (count($descriptionClassList)) {
             $descriptionClassArgs = preg_split("# and #", $q);
-            var_dump($descriptionClassArgs);
 
             if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
                 $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
