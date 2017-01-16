@@ -27,7 +27,8 @@ namespace bundle\recordsManagement\Controller;
 class archive
 {
 
-    use archiveDepositTrait,
+    //use archiveDepositTrait,
+    use archiveEntryTrait,
         archiveCommunicationTrait,
         archiveModificationTrait,
         archiveRestitutionTrait,
@@ -401,14 +402,14 @@ class archive
 
             $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         }
-        
+
 
         if ($archive->descriptionObject == null) {
             //throw \laabs::newException("recordsManagement/invalidArchiveDescriptionException", "Invalid description for this archive with archive identifier : '$archiveId'");
         }
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
-        
+
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
         foreach ($archive->digitalResources as $digitalResource) {
             $digitalResource->relatedResource = $this->digitalResourceController->getRelatedResources($digitalResource->resId);
@@ -484,7 +485,7 @@ class archive
         foreach ($archiveDigitalResources as $digitalResource) {
             $archive->digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
         }
-        
+
         $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
         foreach ($archive->contents as $content) {
             $this->getArchiveComponents($content, $withContents);
@@ -771,7 +772,6 @@ class archive
             return array();
         }
 
-        
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
         }
@@ -789,7 +789,7 @@ class archive
             $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
             $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
         }
-        
+
         if (count($descriptionClass)) {
             $descriptionClassArgs = preg_split("# and #", $q);
             var_dump($descriptionClassArgs);
@@ -800,7 +800,6 @@ class archive
                 $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
             }
         }
-        
 
         return $ftresults;
     }

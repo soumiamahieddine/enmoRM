@@ -32,22 +32,22 @@ trait archiveConversionTrait
      *
      * @return array The convert documents
      */
-    public function convert($resId)
-    {
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
-
-        // Store resources
-        if (!$this->currentServiceLevel) {
-            if (isset($archive->serviceLevelReference)) {
-                $this->useServiceLevel('deposit', $archive->serviceLevelReference);
-            } else {
-                $this->useServiceLevel('deposit');
-            }
-        }
-
-        return $this->convertResource($archive, $digitalResource);
-    }
+//    public function convert($resId)
+//    {
+//        $digitalResource = $this->digitalResourceController->retrieve($resId);
+//        $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
+//
+//        // Store resources
+//        if (!$this->currentServiceLevel) {
+//            if (isset($archive->serviceLevelReference)) {
+//                $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+//            } else {
+//                $this->useServiceLevel('deposit');
+//            }
+//        }
+//
+//        return $this->convertResource($archive, $digitalResource);
+//    }
 
     /**
      * Convert an archive resource
