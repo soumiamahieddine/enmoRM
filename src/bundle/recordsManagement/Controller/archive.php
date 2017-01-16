@@ -28,6 +28,7 @@ class archive
 {
 
     use archiveEntryTrait,
+        archiveAccessTrait,
         archiveCommunicationTrait,
         archiveModificationTrait,
         archiveRestitutionTrait,
@@ -428,11 +429,7 @@ class archive
         $archive->childrenRelationships = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
         $archive->parentRelationships = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
 
-        if (!$this->checkCommunicability($archive)) {
-            $archive->communicability = false;
-        } else {
-            $archive->communicability = true;
-        }
+        $archive->communicability = $this->accessVerification($archive);
 
         return $archive;
     }
@@ -622,86 +619,6 @@ class archive
         if (!empty($accessRuleCode)) {
             $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
         }
-    }
-
-    /**
-     * Check the current user access to an archive for the given operation (deposit, retrieve, modify, destruct)
-     * @param recordsManagement/archive $archive
-     *
-     * @return boolean
-     *
-     * @throws recordsManagement/accessDeniedException If access if denied
-     */
-    public function checkCommunicability($archive)
-    {
-        if (!$archive->accessRuleComDate) {
-            $communicationDelay = false;
-        } else {
-            // Calc diff between communicability date and curent date
-            $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
-        }
-
-        $currentService = \laabs::getToken("ORGANIZATION");
-        if (!$currentService) {
-            return false;
-        }
-
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
-
-        $userServices = array();
-        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
-            $userServices[] = $userService;
-
-            // User orgUnit is owner
-            if (isset($userService->orgRoleCodes) && (strpos((string) $userService->orgRoleCodes, 'owner') !== false)) {
-                return true;
-            }
-
-            // Archiver
-            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber) {
-                return true;
-            }
-
-            // Originator
-            if ($userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
-                return true;
-            }
-
-            // If date is in the past, public communication is allowed
-            if ($userService->ownerOrgId == $archive->originatorOwnerOrgId && (!$communicationDelay || $communicationDelay->invert == 0)) {
-                return true;
-            }
-        }
-
-        // Check user / service orgs with descendants
-        /*$accountToken = \laabs::getToken('AUTH');
-        
-        switch ($account->accountType) {
-            case 'user':
-                $userPositionController = \laabs::newController('organization/userPosition');
-                $accountOrgs = $userPositionController->listMyServices();
-                $positions = $userPositionController->getMyPositions();
-                break;        
-            case 'service':
-                $servicePositionController = \laabs::newController('organization/servicePosition');
-                $accountOrgs = $servicePositionController->listMyServices();
-                $positions = $servicePositionController->getMyPositions();
-                break;
-            default :
-                throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        if (in_array((string) $archive->originatorOrgRegNumber, $accountOrgs)) {
-            return true;
-        }
-
-        if (in_array($archive->archiverOrgRegNumber, $accountOrgs)) {
-            return true;
-        }*/
-
-        return false;
-        //throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
     }
 
     /**

@@ -144,7 +144,7 @@ trait archiveCommunicationTrait
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        if (!$this->checkCommunicability($archive)) {
+        if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
@@ -165,7 +165,7 @@ trait archiveCommunicationTrait
 
         $archive = $this->getDescription($digitalResource->archiveId);
 
-        if (!$this->checkCommunicability($archive)) {
+        if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 

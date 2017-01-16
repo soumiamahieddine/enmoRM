@@ -25,7 +25,7 @@ namespace bundle\recordsManagement\Controller;
  *
  * @author Alexis Ragot <alexis.ragot@maarch.org>
  */
-class archiveAccess
+trait archiveAccessTrait
 {
     /**
      * Get archive metadata
@@ -38,15 +38,52 @@ class archiveAccess
 
     /**
      * Validate archive access
+     *
      * @param string $archiveId The archive identifier
+     *
+     * @return boolean The result of the authorization access
      */
     public function accessVerification($archiveId)
     {
-        // Contrôler les droits (rôle acteur, règle applicable sur archive, droits sur profil…) sur données
+        $archive = $this->read($archiveId);
+
+        $comDateAccess = $this->accessComDateVerification($archive);
+
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            return false;
+        }
+
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
+
+        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
+            $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
+
+            // User orgUnit is owner
+            if (isset($userService->orgRoleCodes) && (strpos((string) $userService->orgRoleCodes, 'owner') !== false)) {
+                return true;
+            }
+
+            // Archiver
+            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber) {
+                return true;
+            }
+
+            // Originator
+            if ($userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
+                return true;
+            }
+
+            // If date is in the past, public communication is allowed
+            if ($userService->ownerOrgId == $archive->originatorOwnerOrgId && $comDateAccess) {
+                return true;
+            }
+        }
     }
 
     /**
      * Get archive package, data and metadata
+     *
      * @param string $archiveId The archive identifier
      */
     public function getPackage($archiveId)
@@ -56,6 +93,7 @@ class archiveAccess
 
     /**
      * Get an archive package for the communication
+     *
      * @param string $archiveId The archive identifier
      */
     public function getConmmunicationPackage($archiveId)
@@ -73,10 +111,30 @@ class archiveAccess
 
     /**
      * Log the archive access
+     *
      * @param recordsManagement/archive $archive The archive logged
      */
     public function logging($archive)
     {
         // Journaliser
+    }
+
+    /**
+     * Verification of the communication date for access
+     *
+     * @param recordsManagement/archive $archive The archive to verify
+     *
+     * @return boolean The access right
+     */
+    private function accessComDateVerification($archive)
+    {
+        $access = true;
+
+        if ($archive->accessRuleComDate) {
+            $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
+            $access = $communicationDelay->invert == 0 ? true : false;
+        }
+
+        return $access;
     }
 }

@@ -396,7 +396,7 @@ class archive
             $archive->accessRuleDurationUnit = substr($archive->accessRuleDuration, -1);
             $archive->accessRuleDuration = substr($archive->accessRuleDuration, 1, -1);
         }
-        $archive->visible = \laabs::newController("recordsManagement/accessRule")->isVisible($archive);
+        $archive->visible = \laabs::newController("recordsManagement/archive")->accessVerification($archive->archiveId);
 
         $archive->relationships = (
             !empty($archive->parentRelationships)
