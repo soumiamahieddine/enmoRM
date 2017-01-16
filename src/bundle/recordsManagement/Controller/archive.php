@@ -27,7 +27,6 @@ namespace bundle\recordsManagement\Controller;
 class archive
 {
 
-    //use archiveDepositTrait,
     use archiveEntryTrait,
         archiveCommunicationTrait,
         archiveModificationTrait,

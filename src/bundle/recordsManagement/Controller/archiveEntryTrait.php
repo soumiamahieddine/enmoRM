@@ -85,7 +85,7 @@ trait archiveEntryTrait
 
         $this->validateCompliance($archive);
         $this->completingMetadata($archive);
-        $this->convert($archive);
+        $this->convertArchive($archive);
         $this->generateAIP($archive);
         $this->deposit($archive);
         $this->sendResponse($archive);
@@ -189,7 +189,7 @@ trait archiveEntryTrait
      * Convert resources of archive
      * @param recordsManagement/archive $archive The archive to convert
      */
-    public function convert($archive)
+    public function convertArchive($archive)
     {
         if (empty($this->currentServiceLevel)) {
             $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -213,7 +213,7 @@ trait archiveEntryTrait
         }
 
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
-            $this->convert($archive->contents[$i]);
+            $this->convertArchive($archive->contents[$i]);
         }
     }
 
