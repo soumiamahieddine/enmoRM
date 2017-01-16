@@ -75,7 +75,7 @@ class accessRule
         $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
 
         $accessRule->accessEntry = $this->sdoFactory->readChildren('recordsManagement/accessEntry', $accessRule);
-        
+
         return $accessRule;
     }
 
