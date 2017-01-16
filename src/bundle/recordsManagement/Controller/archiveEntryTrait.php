@@ -67,6 +67,7 @@ trait archiveEntryTrait
 
     /**
      * Receive an archive
+     *
      * @param recordsManagement/archive $archive The archive to receive
      */
     public function receive($archive)
@@ -93,18 +94,8 @@ trait archiveEntryTrait
 
     /**
      * Validate the archive compliance
-     * @param recordsManagement/archive $archive The archive to validate
      *
-     * Si ref de profil, charger le profil
-     *      Si type Z42, valider méta descriptives
-     * Valider métadonnées de gestion
-     *      Si ref de niveau de service, charger le niveau, sinon cf profil
-     *      Si ref de règle de conservation, charger la règle, sinon cf profil
-     *      Si ref de règle d’accès, charger la règle, sinon cf profil
-     * Valider PJ
-     *      Empreinte VS celle transmise
-     *      Format : transmis ou non, détection si activé ds niveau de service,
-     *      Format : erreur si étection pas activée et pas transmis
+     * @param recordsManagement/archive $archive The archive to validate
      */
     public function validateCompliance($archive)
     {
@@ -116,14 +107,8 @@ trait archiveEntryTrait
 
     /**
      * Complete the archive metadata
-     * @param recordsManagement/archive $archive The archive to complete
      *
-     * Si profil, renseigner le schéma de description (descriptionClass)
-     * Compléter règles de gestion
-     *      Appliquer la règle de conservation : report info ref, calcul date fin
-     *      Appliquer la règle d’accès: report info ref, calcul date fin accès
-     *      Report ref niveau de service du profil
-     *      Compléter les acteurs
+     * @param recordsManagement/archive $archive The archive to complete
      */
     public function completingMetadata($archive)
     {
@@ -187,6 +172,7 @@ trait archiveEntryTrait
 
     /**
      * Convert resources of archive
+     *
      * @param recordsManagement/archive $archive The archive to convert
      */
     public function convertArchive($archive)
@@ -227,17 +213,9 @@ trait archiveEntryTrait
 
     /**
      * Deposit a new archive
+     *
      * @param recordsManagement/archive $archive          The archive to deposit
      * @param string                    $filePlanPosition The file plan position
-     *
-     * Stocker les ressources
-     *      Déterminer le chemin de stockage
-     *      Déterminer la grappe de stockage
-     *      Stocker
-     *      Enregistrer les métadonnées techniques (chemin et infos)
-     * Enregistrer les métadonnées descriptives (fulltext ou descirptionClass)
-     * Enregistrer les métadonnées de gestion
-     * Enregistrer les archives contenues
      */
     public function deposit($archive, $filePlanPosition = null)
     {
@@ -296,8 +274,10 @@ trait archiveEntryTrait
 
     /**
      * Validate archive description object
-     * @param type $archive
-     * @return type
+     *
+     * @param recordsManagement/archivalProfile $archive The archive object
+     *
+     * @return recordsManagement/archivalProfile The archive object
      */
     private function validateArchiveDescriptionObject($archive)
     {
@@ -317,6 +297,7 @@ trait archiveEntryTrait
 
     /**
      * Check if an object correspond to an archival profile
+     *
      * @param mixed                             $object          The metadata object to check
      * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
      *
@@ -361,6 +342,7 @@ trait archiveEntryTrait
 
     /**
      * Validate the archive management metadata
+     *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
     private function validateManagementMetadata($archive)
@@ -391,6 +373,7 @@ trait archiveEntryTrait
 
     /**
      * Validate the archive management metadata
+     *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
     private function validateAttachments($archive)
@@ -434,6 +417,7 @@ trait archiveEntryTrait
 
     /**
      * Store archive resources
+     *
      * @param recordsManagement/archive $archive          The archive to deposit
      * @param string                    $filePlanPosition The file plan position
      */
@@ -467,6 +451,7 @@ trait archiveEntryTrait
 
     /**
      * Store archive resources
+     *
      * @param recordsManagement/archive $archive The archive to deposit
      */
     private function storeDescriptiveMetadata($archive)
@@ -491,6 +476,7 @@ trait archiveEntryTrait
 
     /**
      * Resolve the storage path
+     *
      * @param array $values Array of value to resolve the path
      *
      * @return string The storage path
@@ -520,9 +506,8 @@ trait archiveEntryTrait
 
     /**
      * Log the archive entry
-     * @param recordsManagement/archive $archive The archive logged
      *
-     * Enregistrer les traces dans le journal
+     * @param recordsManagement/archive $archive The archive logged
      */
     private function loggingDeposit($archive)
     {
