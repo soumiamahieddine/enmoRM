@@ -275,24 +275,17 @@ trait archiveEntryTrait
     /**
      * Validate archive description object
      *
-     * @param recordsManagement/archivalProfile $archive The archive object
+     * @param recordsManagement/archive $archive The archive object
      *
-     * @return recordsManagement/archivalProfile The archive object
      */
     private function validateArchiveDescriptionObject($archive)
     {
-        if (!empty($archive->archivalProfileReference)) {
+        if (isset($this->currentArchivalProfile))) {
             if (!empty($archive->descriptionClass) && !empty($archive->descriptionObject)) {
                 $this->validateDescriptionObject($archive->descriptionObject, $this->currentArchivalProfile);
             }
+            // Validate fulltext
         }
-
-        if (isset($this->currentArchivalProfile) && isset($archive->descriptionClass) && isset($archive->descriptionObject)) {
-            $this->validateDescriptionObject($archive->descriptionObject, $this->currentArchivalProfile);
-        }
-
-
-        return $archive;
     }
 
     /**
@@ -456,7 +449,7 @@ trait archiveEntryTrait
      */
     private function storeDescriptiveMetadata($archive)
     {
-        if (isset($archive->descriptionClass) && isset($archive->descriptionObject)) {
+        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
             $descriptionController->create($archive->descriptionObject, $archive->archiveId);
         } elseif (\laabs::hasDependency('fulltext')) {

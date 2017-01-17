@@ -130,6 +130,10 @@
             oFileReader = new FileReader();
             oFileReader.readAsDataURL(file);
 
+            if ($("#archiveForm").find("[name=archiveName]").val() == '') {
+                $("#archiveForm").find("[name=archiveName]").val(file.name.replace(/\.[^/.]+$/, ""));
+            }
+
             oFileReader.onload = function() {
                 var base64 = oFileReader.result.replace(/^data:.*?;base64,/, "");
 

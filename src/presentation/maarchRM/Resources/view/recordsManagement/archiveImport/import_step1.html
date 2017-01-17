@@ -178,7 +178,9 @@
             })
 
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
-            archive.descriptionClass = selectedProfile.descriptionClass;
+            if (selectedProfile != undefined) {
+                archive.descriptionClass = selectedProfile.descriptionClass;
+            }
 
             archive.descriptionObject = Metadata.serialize($('#allFields'));
             if (archive.descriptionObject === true) {
@@ -207,7 +209,7 @@
             var inputs = $('#archiveForm').find('.archiveInput').val('').trigger('change');
 
             $('#archivalProfile').prop('selectedIndex', 0).change();
-            $("#documentList").find(".removeFile").click();
+            ArchiveDocument.clear();
             Metadata.clear($('#allFields'));
         }
     }
