@@ -281,9 +281,8 @@ trait archiveEntryTrait
      * Validate archive description object
      *
      * @param recordsManagement/archive $archive The archive object
-     *
      */
-    private function validateArchiveDescriptionObject($archive)
+    protected function validateArchiveDescriptionObject($archive)
     {
         if (isset($this->currentArchivalProfile)) {
             if (!empty($archive->descriptionClass) && !empty($archive->descriptionObject)) {
@@ -301,7 +300,7 @@ trait archiveEntryTrait
      *
      * @return boolean The result of the validation
      */
-    private function validateDescriptionObject($object, $archivalProfile)
+    protected function validateDescriptionObject($object, $archivalProfile)
     {
         if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
             // todo : error
@@ -343,7 +342,7 @@ trait archiveEntryTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    private function validateManagementMetadata($archive)
+    protected function validateManagementMetadata($archive)
     {
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", $archive->archivalProfileReference)) {
             // todo : error
@@ -374,7 +373,7 @@ trait archiveEntryTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    private function validateAttachments($archive)
+    protected function validateAttachments($archive)
     {
         if (!$archive->digitalResources) {
             return;
@@ -419,7 +418,7 @@ trait archiveEntryTrait
      * @param recordsManagement/archive $archive          The archive to deposit
      * @param string                    $filePlanPosition The file plan position
      */
-    private function storeResources($archive, $filePlanPosition = null)
+    protected function storeResources($archive, $filePlanPosition = null)
     {
         $nbResources = count($archive->digitalResources);
 
@@ -452,7 +451,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to deposit
      */
-    private function storeDescriptiveMetadata($archive)
+    protected function storeDescriptiveMetadata($archive)
     {
         if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
@@ -479,7 +478,7 @@ trait archiveEntryTrait
      *
      * @return string The storage path
      */
-    private function resolveStoragePath($values)
+    public function resolveStoragePath($values)
     {
         $filePlanPosition = $this->storePath;
         $values = is_array($values) ? $values : get_object_vars($values);
@@ -507,7 +506,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive logged
      */
-    private function loggingDeposit($archive)
+    protected function loggingDeposit($archive)
     {
         $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
