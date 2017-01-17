@@ -655,13 +655,11 @@ class digitalResource
 
         $convertedResource->relationshipType = "isConversionOf";
 
-        // Get previous 
+        // Get previous
         while ($digitalResource->relatedResId != "" && $digitalResource->relationshipType == "isConversionOf") {
             $digitalResource = $this->sdoFactory->read("digitalResource/digitalResource", $digitalResource->relatedResId);
         }
         $digitalResource->relatedResId = $digitalResource->resId;
-        
-        $convertedResource = $this->store($convertedResource, $digitalResource->clusterId, $bucket);
 
         return $convertedResource;
     }
