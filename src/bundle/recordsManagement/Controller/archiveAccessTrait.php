@@ -30,10 +30,28 @@ trait archiveAccessTrait
     /**
      * Get archive metadata
      * @param string $archiveId The archive identifier
+     *
+     * @return recordsManagement/archive The archive metadata
      */
     public function getMetadata($archiveId)
     {
-        // Récupérer les métadonnées
+        $archive = $this->read($archiveId);
+
+        if (!$this->accessVerification($archive)) {
+            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        }
+
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+
+        $nbResource = count($archive->digitalResources);
+
+        for ($i = 0; $i < $nbResource; $i++) {
+            $archive->digitalResources[$i] = $this->digitalResourceController->info($archive->digitalResources[$i]->resId);
+        }
+
+        $this->logging($archive);
+
+        return $archive;
     }
 
     /**
@@ -64,13 +82,8 @@ trait archiveAccessTrait
                 return true;
             }
 
-            // Archiver
-            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber) {
-                return true;
-            }
-
-            // Originator
-            if ($userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
+            // Archiver or Originator
+            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber || $userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
                 return true;
             }
 
@@ -85,10 +98,28 @@ trait archiveAccessTrait
      * Get archive package, data and metadata
      *
      * @param string $archiveId The archive identifier
+     *
+     * @return recordsManangement/archive The archive package (data and metadata)
      */
     public function getPackage($archiveId)
     {
-        // Récupérer les paquets (data+méta)
+        $archive = $this->read($archiveId);
+
+        if (!$this->accessVerification($archive)) {
+            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        }
+
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+
+        $nbResource = count($archive->digitalResources);
+
+        for ($i = 0; $i < $nbResource; $i++) {
+            $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($archive->digitalResources[$i]->resId);
+        }
+
+        $this->logging($archive);
+
+        return $archive;
     }
 
     /**
@@ -98,15 +129,35 @@ trait archiveAccessTrait
      */
     public function getConmmunicationPackage($archiveId)
     {
-        // Constituer les paquets à communiquer
+        // Constituer les paquets à communiquer avec aip
+
+        // $archive = $this->read($archiveId);
+
+        // if (!$this->accessVerification($archive)) {
+        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        // }
+
+        // $this->logging($archive);
     }
 
     /**
      * Send archive for consultation
+     *
+     * @param string $archiveId The archive identifier
+     *
+     * @return recordsManagement/archive The archive package
      */
-    public function sendForConsultation()
+    public function sendForConsultation($archiveId)
     {
-        // Envoyer pour consultation simple
+        // Envoyer pour consultation simple avec historique
+
+        // $archive = $this->read($archiveId);
+
+        // if (!$this->accessVerification($archive)) {
+        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        // }
+
+        // $this->logging($archive);
     }
 
     /**
@@ -116,7 +167,21 @@ trait archiveAccessTrait
      */
     public function logging($archive)
     {
-        // Journaliser
+        // Journaliser la consultation
+        $eventItems['resId'] = null;
+        $eventItems['hashAlgorithm'] = null;
+        $eventItems['hash'] = null;
+        $eventItems['address'] = $archive->storagePath;
+        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
+
+        foreach ($archive->digitalResources as $digitalResource) {
+            $eventItems['resId'] = $digitalResource->resId;
+            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+            $eventItems['hash'] = $digitalResource->hash;
+            $eventItems['address'] = $archive->storagePath;
+
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
+        }
     }
 
     /**

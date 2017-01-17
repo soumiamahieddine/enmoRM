@@ -412,7 +412,7 @@ class archive
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
         foreach ($archive->digitalResources as $digitalResource) {
-            $digitalResource->relatedResource = $this->digitalResourceController->getRelatedResources($digitalResource->resId);
+            $digitalResource->relatedResource = $this->digitalResourceController->info($digitalResource->resId);
         }
 
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
@@ -705,7 +705,7 @@ class archive
             $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
             $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
         }
-        
+
         if (count($descriptionClassList)) {
             $descriptionClassArgs = preg_split("# and #", $q);
 
