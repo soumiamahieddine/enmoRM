@@ -411,8 +411,8 @@ class archive
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
-        foreach ($archive->digitalResources as $digitalResource) {
-            $digitalResource->relatedResource = $this->digitalResourceController->info($digitalResource->resId);
+        foreach ($archive->digitalResources as $i => $digitalResource) {
+            $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
         }
 
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);

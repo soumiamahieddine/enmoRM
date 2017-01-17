@@ -419,7 +419,6 @@ class archive
                     $digitalResource->relatedResource = [];
                     continue;
                 }
-
                 foreach ($digitalResource->relatedResource as $relatedResource) {
                     $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
                 }

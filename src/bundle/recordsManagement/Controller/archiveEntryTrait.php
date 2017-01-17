@@ -116,13 +116,10 @@ trait archiveEntryTrait
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
 
+        // Retention rule
         $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
-        $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
-
         $archive->retentionDuration =  $retentionRule->duration;
         $archive->finalDisposition =  $retentionRule->finalDisposition;
-        $archive->accessRuleDuration = $accessRule->duration;
-
         if ($archive->retentionStartDate == "depositDate") {
                 $archive->retentionStartDate = $archive->depositDate;
         }
@@ -141,14 +138,22 @@ trait archiveEntryTrait
         }
 
         $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
-        $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
-
+        
+        // Access rule
+        if (!empty($archive->accessRuleCode)) {
+            $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
+            $archive->accessRuleDuration = $accessRule->duration;
+            $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
+        }
+        
+        // Service level
         if (empty($this->currentServiceLevel)) {
             $this->useServiceLevel('deposit', $archive->serviceLevelReference);
         }
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
 
+        // Originator
         if (empty($archive->originatorOrgRegNumber)) {
             $archive->originatorOrgRegNumber = \laabs::getToken("ORGANIZATION")->registrationNumber;
         }
@@ -280,7 +285,7 @@ trait archiveEntryTrait
      */
     private function validateArchiveDescriptionObject($archive)
     {
-        if (isset($this->currentArchivalProfile))) {
+        if (isset($this->currentArchivalProfile)) {
             if (!empty($archive->descriptionClass) && !empty($archive->descriptionObject)) {
                 $this->validateDescriptionObject($archive->descriptionObject, $this->currentArchivalProfile);
             }
