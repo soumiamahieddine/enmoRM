@@ -138,14 +138,14 @@ trait archiveEntryTrait
         }
 
         $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
-        
+
         // Access rule
         if (!empty($archive->accessRuleCode)) {
             $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
             $archive->accessRuleDuration = $accessRule->duration;
             $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
         }
-        
+
         // Service level
         if (empty($this->currentServiceLevel)) {
             $this->useServiceLevel('deposit', $archive->serviceLevelReference);
