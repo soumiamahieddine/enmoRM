@@ -91,7 +91,7 @@ class digitalResource
 
         // Basic path information
         $pathinfo = pathinfo($filename);
-        $resource->fileName = $pathinfo['basename'].(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s").".".$pathinfo['extension'];
         if (isset($pathinfo['extension'])) {
             $resource->fileExtension = $pathinfo['extension'];
         }
@@ -659,7 +659,7 @@ class digitalResource
         while ($digitalResource->relatedResId != "" && $digitalResource->relationshipType == "isConversionOf") {
             $digitalResource = $this->sdoFactory->read("digitalResource/digitalResource", $digitalResource->relatedResId);
         }
-        $digitalResource->relatedResId = $digitalResource->resId;
+        $convertedResource->relatedResId = $digitalResource->resId;
 
         return $convertedResource;
     }
