@@ -62,13 +62,6 @@ trait archiveConversionTrait
             'resId' => $digitalResource->resId,
             'hashAlgorithm' => $digitalResource->hashAlgorithm,
             'hash' => $digitalResource->hash,
-            'address' => $digitalResource->address[0]->path,
-            'convertedResId' => null,
-            'convertedHashAlgorithm' => null,
-            'convertedHash' => null,
-            'convertedAddress' => null,
-            'softwareName' => null,
-            'softwareVersion' => null,
         );
 
         $transactionControl = !$this->sdoFactory->inTransaction();
@@ -90,7 +83,6 @@ trait archiveConversionTrait
                 $eventInfo['convertedResId'] = $convertedResource->resId;
                 $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
                 $eventInfo['convertedHash'] = $convertedResource->hash;
-                $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
                 $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
             }
 
@@ -111,7 +103,6 @@ trait archiveConversionTrait
         $eventInfo['convertedResId'] = $convertedResource->resId;
         $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
         $eventInfo['convertedHash'] = $convertedResource->hash;
-        $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
         $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
 
         $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
