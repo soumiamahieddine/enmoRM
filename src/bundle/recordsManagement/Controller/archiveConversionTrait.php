@@ -70,6 +70,8 @@ trait archiveConversionTrait
         if ($transactionControl) {
             $this->sdoFactory->commit();
         }
+
+        return $convertedResource;
     }
 
     /**
