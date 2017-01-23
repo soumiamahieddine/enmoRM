@@ -47,10 +47,10 @@ trait archiveConversionTrait
             $digitalResource = $this->digitalResourceController->retrieve($resId);
             $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
             $convertedResource = $this->convertResource($archive, $digitalResource);
-            $this->digitalResourceController->store($convertedResource, $this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
 
             $status = false;
             if ($convertedResource != false) {
+                $this->digitalResourceController->store($convertedResource, $this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
                 $status = true;
             }
 
@@ -111,7 +111,7 @@ trait archiveConversionTrait
         $conversionRules = \laabs::newController("digitalResource/conversionRule")->index();
 
         if (empty($conversionRules)) {
-            return;
+            return false;
         }
 
         if (!$this->currentServiceLevel) {
