@@ -112,46 +112,15 @@ trait archiveEntryTrait
      */
     public function completingMetadata($archive)
     {
+        $this->completingArchivalProfileCodes($archive);
+
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
 
-        // Retention rule
-        $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
-        $archive->retentionDuration =  $retentionRule->duration;
-        $archive->finalDisposition =  $retentionRule->finalDisposition;
-        if ($archive->retentionStartDate == "depositDate") {
-                $archive->retentionStartDate = $archive->depositDate;
-        }
-
-        if (is_string($archive->retentionStartDate)) {
-            $qname = \laabs\explode("/", $archive->retentionStartDate);
-            if ($qname[0] == "description") {
-                $i = 0;
-                while ($archive->descriptionObject[$i]->name != $qname[1]) {
-                    $i++;
-                }
-                $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
-            } else {
-                // todo
-            }
-        }
-
-        $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
-
-        // Access rule
-        if (!empty($archive->accessRuleCode)) {
-            $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
-            $archive->accessRuleDuration = $accessRule->duration;
-            $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
-        }
-
-        // Service level
-        if (empty($this->currentServiceLevel)) {
-            $this->useServiceLevel('deposit', $archive->serviceLevelReference);
-        }
-
-        $archive->serviceLevelReference = $this->currentServiceLevel->reference;
+        $this->completingRetentionRule($archive);
+        $this->completingAccessRule($archive);
+        $this->completingServiceLevel($archive);
 
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
@@ -175,6 +144,85 @@ trait archiveEntryTrait
         }
     }
 
+    /**
+     * Complete management codes with the archival profile
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    public function completingArchivalProfileCodes($archive)
+    {
+        if (empty($this->currentArchivalProfile)) {
+            $this->useReferences($archive, 'deposit');
+        }
+
+        $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
+        $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
+        $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
+
+        if (isset($this->currentArchivalProfile->retentionStartDate) && $this->currentArchivalProfile->retentionStartDate != "definedLater") {
+            $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
+        }
+    }
+    /**
+     * Complete the access rule metadata
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    public function completingAccessRule($archive)
+    {
+        if (empty($archive->accessRuleCode)) {
+            // todo : error
+        }
+
+        $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
+        $archive->accessRuleDuration = $accessRule->duration;
+        $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
+    }
+
+    /**
+     * Complete the retention rule metadata
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    public function completingRetentionRule($archive)
+    {
+        $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
+        $archive->retentionDuration =  $retentionRule->duration;
+        $archive->finalDisposition =  $retentionRule->finalDisposition;
+
+        if ($archive->retentionStartDate == "depositDate") {
+                $archive->retentionStartDate = $archive->depositDate;
+        }
+
+        if (is_string($archive->retentionStartDate)) {
+            $qname = \laabs\explode("/", $archive->retentionStartDate);
+            if ($qname[0] == "description") {
+                $i = 0;
+                while ($archive->descriptionObject[$i]->name != $qname[1]) {
+                    $i++;
+                }
+                $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
+            } else {
+                // todo
+            }
+        }
+
+        $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
+    }
+
+    /**
+     * Complete the service level
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    public function completingServiceLevel($archive)
+    {
+        if (empty($this->currentServiceLevel)) {
+            $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+        }
+
+        $archive->serviceLevelReference = $this->currentServiceLevel->reference;
+    }
     /**
      * Convert resources of archive
      *
@@ -221,6 +269,8 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive          The archive to deposit
      * @param string                    $filePlanPosition The file plan position
+     *
+     * @return recordsManagement/archive The archive
      */
     public function deposit($archive, $filePlanPosition = null)
     {
@@ -268,6 +318,8 @@ trait archiveEntryTrait
         }
 
         $this->loggingDeposit($archive);
+
+        return $archive;
     }
 
     /**
@@ -354,17 +406,6 @@ trait archiveEntryTrait
 
         if (isset($archive->accessRuleCode) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->accessRuleCode)) {
             // todo : error
-        }
-
-        if (empty($this->currentArchivalProfile)) {
-            return;
-        }
-        $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
-        $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
-        $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
-
-        if (isset($this->currentArchivalProfile->retentionStartDate) && $this->currentArchivalProfile->retentionStartDate != "definedLater") {
-            $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
         }
     }
 
@@ -533,7 +574,7 @@ trait archiveEntryTrait
 
         if (!$logged) {
             $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-            $eventInfo['address'] = $filePlanPosition;
+            $eventInfo['address'] = $archive->storagePath;
             $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
             $archive->lifeCycleEvent[] = $event;
         }
