@@ -584,11 +584,10 @@ class digitalResource
     /**
      * Convert resource to another format
      * @param object $digitalResource
-     * @param string $bucket
      *
      * @return object
      */
-    public function convert($digitalResource, $bucket = null)
+    public function convert($digitalResource)
     {
         $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
