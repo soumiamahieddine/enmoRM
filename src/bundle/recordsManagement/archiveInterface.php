@@ -99,4 +99,11 @@ interface archiveInterface
      * @action recordsManagement/fulltext/updateArchiveIndex
      */
     public function updateIndex($index);
+
+     /**
+     * Convert and store a resource
+     *
+     * @action recordsManagement/archive/convertAndStore
+     */
+    public function updateInteractiveconversion_resId_();
 }

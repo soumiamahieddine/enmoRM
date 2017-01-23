@@ -186,13 +186,6 @@ interface archivesInterface
      */
     public function updateDocumentsconversion($documentIds);
 
-    /**
-     * Flag archives for conversion
-     *
-     * @action recordsManagement/archive/convert
-     */
-    public function updateDocumentsconvert_documentId__resId_();
-
     /*
         PRESERVATION
     */

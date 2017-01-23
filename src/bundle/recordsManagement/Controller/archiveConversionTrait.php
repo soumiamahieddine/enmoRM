@@ -27,17 +27,91 @@ namespace bundle\recordsManagement\Controller;
 trait archiveConversionTrait
 {
     /**
-     * Convert archive
+     * Convert and store the resource
+     *
      * @param id $resId The resource identifier
      *
-     * @return array The convert documents
+     * @return digitalResource/digitalResource The converted resource
+     */
+    public function convertAndStore($resId)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        $convertedResource = null;
+
+        try {
+            $digitalResource = $this->digitalResourceController->retrieve($resId);
+            $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
+            $convertedResource = $this->convertResource($archive, $digitalResource);
+            $this->digitalResourceController->store($convertedResource, $this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
+
+            $status = false;
+            if ($convertedResource != false) {
+                $status = true;
+            }
+
+            $this->loggingConversion($digitalResource, $convertedResource, $status);
+        } catch (\Exception $e) {
+            if (isset($convertedResource)) {
+                $this->digitalResourceController->rollbackStorage($convertedResource);
+            }
+
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+    }
+
+    /**
+     * Convert a resource by the it's identifier
+     *
+     * @param id $resId The resource identifier
+     *
+     * @return digitalResource/digitalResource The converted resource
      */
     public function convert($resId)
     {
         $digitalResource = $this->digitalResourceController->retrieve($resId);
         $archive = $this->sdoFactory->read("recordsManagement/archive", $digitalResource->archiveId);
 
-        // Store resources
+        $convertedResource = $this->convertResource($archive, $digitalResource);
+
+        $status = false;
+        if ($convertedResource != false) {
+            $status = true;
+        }
+
+        $this->loggingConversion($digitalResource, $convertedResource, $status);
+
+        return $convertedResource;
+    }
+
+    /**
+     * Convert a resource
+     *
+     * @param recordsManagement/archive       $archive         The archive
+     * @param digitalResource/digitalResource $digitalResource The digital resource to convert
+     *
+     * @return digitalResource/digitalResource The converted resource
+     */
+    public function convertResource($archive, $digitalResource)
+    {
+        $conversionRules = \laabs::newController("digitalResource/conversionRule")->index();
+
+        if (empty($conversionRules)) {
+            return;
+        }
+
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
                 $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -46,24 +120,6 @@ trait archiveConversionTrait
             }
         }
 
-        return $this->convertResource($archive, $digitalResource);
-    }
-
-    /**
-     * Convert an archive resource
-     * @param object $archive
-     * @param object $digitalResource
-     *
-     * @return digitalResource
-     */
-    protected function convertResource($archive, $digitalResource)
-    {
-        $eventInfo = array(
-            'resId' => $digitalResource->resId,
-            'hashAlgorithm' => $digitalResource->hashAlgorithm,
-            'hash' => $digitalResource->hash,
-        );
-
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
@@ -71,7 +127,7 @@ trait archiveConversionTrait
         }
 
         try {
-            $convertedResource = $this->digitalResourceController->convert($digitalResource, $archive->storagePath.'/copies');
+            $convertedResource = $this->digitalResourceController->convert($digitalResource);
         } catch (\Exception $e) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -79,15 +135,9 @@ trait archiveConversionTrait
 
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
-
-                $eventInfo['convertedResId'] = $convertedResource->resId;
-                $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
-                $eventInfo['convertedHash'] = $convertedResource->hash;
-                $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
             }
 
-            $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo, false);
-            $archive->lifeCycleEvent[] = $event;
+            $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
 
             throw $e;
         }
@@ -97,17 +147,55 @@ trait archiveConversionTrait
         }
 
         if ($convertedResource == false) {
-            return;
+            return $convertedResource;
         }
 
-        $eventInfo['convertedResId'] = $convertedResource->resId;
-        $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
-        $eventInfo['convertedHash'] = $convertedResource->hash;
-        $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-
-        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-        $archive->lifeCycleEvent[] = $event;
-
         return $convertedResource;
+    }
+    /**
+     * Logging of the conversion event
+     *
+     * @param digitalResource/digitalResource $originalResource  The original resource
+     * @param digitalResource/digitalResource $convertedResource The converted resource
+     * @param boolean                         $status            The status of the conversion event
+     *
+     * @return digitalResource
+     */
+    private function loggingConversion($originalResource, $convertedResource = null, $status = false)
+    {
+        if (empty($originalResource->archiveId)) {
+            $originalResource->archiveId = null;
+        }
+
+        $eventInfo = array(
+            'hashAlgorithm' => $originalResource->hashAlgorithm,
+            'hash' => $originalResource->hash,
+        );
+
+        if (!empty($originalResource->resId)) {
+            $eventInfo['resId'] = $originalResource->resId;
+        }
+
+        if (!empty($originalResource->address)) {
+            $eventInfo['address'] = $originalResource->address[0]->path;
+        }
+
+        if (!empty($convertedResource->address)) {
+            $eventInfo['convertedAddress'] = $originalResource->address[0]->path;
+        }
+
+        if (isset($convertedResource)) {
+            if (!empty($convertedResource->resId)) {
+                $eventInfo['convertedResId'] = $convertedResource->resId;
+            }
+
+            $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
+            $eventInfo['convertedHash'] = $convertedResource->hash;
+            $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
+        }
+
+        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $originalResource->archiveId, $eventInfo, $status);
+
+        return $event;
     }
 }
