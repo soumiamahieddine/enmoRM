@@ -248,7 +248,10 @@ trait archiveEntryTrait
         $nbArchiveObjects = count($archive->contents);
 
         for ($i = 0; $i < $nbResources; $i++) {
-            $archive->digitalResources[] = $this->convertResource($archive, $archive->digitalResources[$i]);
+            $convertedResource = $this->convertResource($archive, $archive->digitalResources[$i]);
+            if ($convertedResource != false) {
+                $archive->digitalResources[] = $convertedResource;
+            }
         }
 
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
@@ -283,7 +286,9 @@ trait archiveEntryTrait
         $nbArchiveObjects = count($archive->contents);
 
         try {
-            $this->storeResources($archive, $filePlanPosition);
+            if (!empty($archive->digitalResources)) {
+                $this->storeResources($archive, $filePlanPosition);
+            }
 
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
