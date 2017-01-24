@@ -589,11 +589,11 @@ class digitalResource
      */
     public function convert($digitalResource)
     {
-        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
-
-        if (!$conversionRule) {
+        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
             return false;
         }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
         $configuration =  \laabs::configuration('dependency.fileSystem');
 
