@@ -237,9 +237,6 @@ file that was distributed with this source code.
 
     // Submit
     $('#fileCheckFormat_submit').on('click', function() {
-        var icon = $('<i/>').addClass('fa fa-spinner fa-spin');
-        var submitButton = $('#fileCheckFormat_submit');
-        submitButton.find('i').removeClass('fa-level-down').addClass('fa-spin fa-spinner');
         var file = serialize();
         $('.btn').prop('disabled', 'true');
         ajax($(this), {
@@ -270,8 +267,6 @@ file that was distributed with this source code.
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         });
-        submitButton.html(" " + $('#checkFormat_text').text());
-        $('<i/>').addClass('fa fa-level-down').prependTo(submitButton);
         $('.btn').removeProp('disabled');
     })
 
