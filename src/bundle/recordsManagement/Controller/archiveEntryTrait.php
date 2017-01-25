@@ -156,8 +156,13 @@ trait archiveEntryTrait
         }
 
         $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
-        $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
-        $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
+
+        if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
+            $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
+        }
+        if (!empty($this->currentArchivalProfile->accessRuleCode)) {
+            $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
+        }
 
         if (isset($this->currentArchivalProfile->retentionStartDate) && $this->currentArchivalProfile->retentionStartDate != "definedLater") {
             $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
@@ -170,13 +175,14 @@ trait archiveEntryTrait
      */
     public function completingAccessRule($archive)
     {
-        if (empty($archive->accessRuleCode)) {
-            // todo : error
+        if (!empty($archive->accessRuleCode)) {
+            $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
+            $archive->accessRuleDuration = $accessRule->duration;
         }
 
-        $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
-        $archive->accessRuleDuration = $accessRule->duration;
-        $archive->accessRuleComDate = $archive->retentionStartDate->shift($archive->accessRuleDuration);
+        if (!empty($archive->accessRuleStartDate) && !empty($archive->accessRuleDuration)) {
+            $archive->accessRuleComDate = $archive->accessRuleStartDate->shift($archive->accessRuleDuration);
+        }
     }
 
     /**
@@ -186,28 +192,33 @@ trait archiveEntryTrait
      */
     public function completingRetentionRule($archive)
     {
-        $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
-        $archive->retentionDuration =  $retentionRule->duration;
-        $archive->finalDisposition =  $retentionRule->finalDisposition;
+        if (!empty($archive->retentionRuleCode)) {
+            $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
 
-        if ($archive->retentionStartDate == "depositDate") {
-                $archive->retentionStartDate = $archive->depositDate;
-        }
+            $archive->retentionDuration =  $retentionRule->duration;
+            $archive->finalDisposition =  $retentionRule->finalDisposition;
 
-        if (is_string($archive->retentionStartDate)) {
-            $qname = \laabs\explode("/", $archive->retentionStartDate);
-            if ($qname[0] == "description") {
-                $i = 0;
-                while ($archive->descriptionObject[$i]->name != $qname[1]) {
-                    $i++;
+            if ($archive->retentionStartDate == "depositDate") {
+                    $archive->retentionStartDate = $archive->depositDate;
+            }
+
+            if (is_string($archive->retentionStartDate)) {
+                $qname = \laabs\explode("/", $archive->retentionStartDate);
+                if ($qname[0] == "description") {
+                    $i = 0;
+                    while ($archive->descriptionObject[$i]->name != $qname[1]) {
+                        $i++;
+                    }
+                    $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
+                } else {
+                    // todo
                 }
-                $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
-            } else {
-                // todo
             }
         }
 
-        $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
+        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration)) {
+            $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
+        }
     }
 
     /**
