@@ -149,6 +149,7 @@ CREATE TABLE "recordsManagement"."serviceLevel"
 CREATE TABLE "recordsManagement"."archive"
 (
   "archiveId" text NOT NULL,
+  "archiverArchiveId" text,
   "originatorArchiveId" text,
   "depositorArchiveId" text,
   
@@ -174,6 +175,13 @@ CREATE TABLE "recordsManagement"."archive"
   "accessRuleDuration" text,
   "accessRuleStartDate" date,
   "accessRuleComDate" date,
+  
+  "classificationRuleCode" text,
+  "classificationRuleDuration" text,
+  "classificationRuleStartDate" date,
+  "classificationEndDate" date,
+  "classificationLevel" text,
+  "classificationOwner" text,
   
   "depositDate" timestamp NOT NULL,
   "lastCheckDate" timestamp,
