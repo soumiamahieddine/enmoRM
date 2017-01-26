@@ -125,6 +125,48 @@ class archive
     public $accessRuleComDate;
 
     /**
+     * The classification rule code
+     *
+     * @var string
+     */
+    public $classificationRuleCode;
+
+    /**
+     * The classification duration, before archive is unclassified
+     *
+     * @var duration
+     */
+    public $classificationRuleDuration;
+
+    /**
+     * The classification start date
+     *
+     * @var date
+     */
+    public $classificationRuleStartDate;
+
+    /**
+     * The classification end date
+     *
+     * @var date
+     */
+    public $classificationEndDate;
+
+    /**
+     * The classification level
+     *
+     * @var string
+     */
+    public $classificationLevel;
+
+    /**
+     * The classification owner identification
+     *
+     * @var string
+     */
+    public $classificationOwner;
+
+    /**
      * The status
      *
      * @var string

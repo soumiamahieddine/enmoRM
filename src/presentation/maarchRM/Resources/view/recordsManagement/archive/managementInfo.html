@@ -17,6 +17,7 @@
                     <td><strong>Archive name</strong></td>
                     <td><?merge archive.archiveName ?></td>
                 </tr>
+                <?merge archive.archivalAgreementReference.bool() ?>
                 <tr>
                     <td><strong>Archival agreement</strong></td>
                     <td><?merge archive.archivalAgreementReference ?></td>
@@ -25,7 +26,6 @@
                     <td><strong>Profile</strong></td>
                     <td><?merge archive.archivalProfileReference ?></td>
                 </tr>
-
                 <tr>
                     <td><strong>Service level</strong></td>
                     <td><?merge archive.serviceLevelReference ?></td>
@@ -82,6 +82,32 @@
                         <?merge archive.accessRuleComDate.bool() ?>
                         <span>
                             <b>Communication date</b>:&nbsp;<?merge archive.accessRuleComDate ?>
+                        </span>
+                    </td>
+                </tr>
+                <?merge archive.classificationLevel.bool() ?>
+                <tr>
+                    <td><strong>Classification rule</strong></td>
+                    <td>
+                        <b>Level</b>:&nbsp;<?merge archive.classificationLevel ?>
+                        <br/>
+                        <b>Owner</b>:&nbsp;<?merge archive.classificationOwner ?>
+                        <br/>
+                        <b>Start date</b>:&nbsp;<?merge archive.classificationRuleStartDate ?>
+                        <br/>
+                        <b>Classification rule code</b>:&nbsp;<?merge archive.classificationRuleCode ?>
+                        <br/>
+                        <span>
+                            <b>Duration</b>:&nbsp;
+                            <?merge archive.classificationRuleDuration ?>&nbsp;
+                            <?merge archive.classificationRuleDurationUnit.ifeq('Y') ?><span>Year(s)</span>
+                            <?merge archive.classificationRuleDurationUnit.ifeq('M') ?><span>Month(s)</span>
+                            <?merge archive.classificationRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
+                            <br/>
+                        </span>
+                        <?merge archive.classificationEndDate.bool() ?>
+                        <span>
+                            <b>Declassification date</b>:&nbsp;<?merge archive.classificationEndDate ?>
                         </span>
                     </td>
                 </tr>

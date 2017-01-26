@@ -37,7 +37,9 @@ namespace bundle\recordsManagement\Model;
  */
 class archive
 {
-
+    /* ************************************************************************
+     * Identification
+     *********************************************************************** */
     /**
      * The archive identifier
      *
@@ -46,6 +48,14 @@ class archive
      * @notempty
      */
     public $archiveId;
+
+    /**
+     * Archiver organisation Archive identifier
+     *
+     * @var string
+     * @xpath rm:archiverArchiveId
+     */
+    public $archiverArchiveId;
 
     /**
      * Originator organisation Archive identifier
@@ -71,13 +81,9 @@ class archive
      */
     public $archiveName;
 
-    /**
-     * The name of description class
-     *
-     * @var string
-     */
-    public $descriptionClass;
-
+    /* ************************************************************************
+     * Management Refs
+     *********************************************************************** */
     /**
      * The name of archival profile
      *
@@ -92,6 +98,16 @@ class archive
      */
     public $serviceLevelReference;
 
+    /**
+     * The archival agreement reference
+     *
+     * @var string
+     */
+    public $archivalAgreementReference;
+
+    /* ************************************************************************
+     * Management Data
+     *********************************************************************** */
     /**
      * The restriction rule code
      *
@@ -159,64 +175,51 @@ class archive
     public $accessRuleComDate;
 
     /**
-     * The deposit date of the archive
-     *
-     * @var timestamp
-     */
-    public $depositDate;
-
-    /**
-     * @var timestamp
-     */
-    public $lastCheckDate;
-
-    /**
-     * @var timestamp
-     */
-    public $lastDeliveryDate;
-
-    /**
-     * @var timestamp
-     */
-    public $lastModificationDate;
-
-    /**
-     * The status
-     *
-     * @var string
-     * @enumeration [received, pending, preserved, frozen, disposable, disposed, restitued]
-     */
-    public $status;
-
-    /**
-     * The parent archive identifier
+     * The classification rule code
      *
      * @var string
      */
-    public $parentArchiveId;
-
-    /* Aggregates */
-    /**
-     * The descriptive metadata object
-     * @xpath rm:descriptionObject/*
-     */
-    public $descriptionObject;
+    public $classificationRuleCode;
 
     /**
-     * The life cycle events
+     * The classification duration, before archive is unclassified
      *
-     * @var recordsManagement/lifeCycleEvent[]
+     * @var duration
      */
-    public $lifeCycleEvent;
+    public $classificationRuleDuration;
 
     /**
-     * The archival agreement reference
+     * The classification start date
+     *
+     * @var date
+     */
+    public $classificationRuleStartDate;
+
+    /**
+     * The classification end date
+     *
+     * @var date
+     */
+    public $classificationEndDate;
+
+    /**
+     * The classification level
      *
      * @var string
      */
-    public $archivalAgreementReference;
+    public $classificationLevel;
 
     /**
+     * The classification owner identification
+     *
+     * @var string
+     */
+    public $classificationOwner;
+
+    /* ************************************************************************
+     * Management Org
+     *********************************************************************** */
+     /**
      * Registration number of originator organisation
      *
      * @var string
@@ -249,6 +252,79 @@ class archive
      */
     public $archiverOrgRegNumber;
 
+    /* ************************************************************************
+     * Life Cycle
+     *********************************************************************** */
+    /**
+     * The deposit date of the archive
+     *
+     * @var timestamp
+     */
+    public $depositDate;
+
+    /**
+     * @var timestamp
+     */
+    public $lastCheckDate;
+
+    /**
+     * @var timestamp
+     */
+    public $lastDeliveryDate;
+
+    /**
+     * @var timestamp
+     */
+    public $lastModificationDate;
+
+    /**
+     * The life cycle events
+     *
+     * @var recordsManagement/lifeCycleEvent[]
+     */
+    public $lifeCycleEvent;
+
+    /**
+     * The status
+     *
+     * @var string
+     * @enumeration [received, pending, preserved, frozen, disposable, disposed, restitued]
+     */
+    public $status;
+
+    /* ************************************************************************
+     * Description
+     *********************************************************************** */
+    /**
+     * The name of description class
+     *
+     * @var string
+     */
+    public $descriptionClass;
+
+    /**
+     * The descriptive metadata object
+     * @xpath rm:descriptionObject/*
+     */
+    public $descriptionObject;
+
+    /**
+     * The storage path
+     *
+     * @var string
+     */
+    public $storagePath;
+
+    /* ************************************************************************
+     * Structure
+     *********************************************************************** */
+    /**
+     * The parent archive identifier
+     *
+     * @var string
+     */
+    public $parentArchiveId;
+
     /**
      * The contained archives list
      *
@@ -270,11 +346,4 @@ class archive
      * @xpath rm:archiveRelationship
      */
     public $archiveRelationship;
-
-    /**
-     * The storage path
-     *
-     * @var string
-     */
-    public $storagePath;
 }
