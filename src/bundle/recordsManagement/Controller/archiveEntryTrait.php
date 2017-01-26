@@ -305,7 +305,7 @@ trait archiveEntryTrait
             $archive->depositDate = \laabs::newTimestamp();
 
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
-
+            
             $this->storeDescriptiveMetadata($archive);
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {

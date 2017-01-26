@@ -366,7 +366,7 @@ trait archiveDepositTrait
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
-
+        
         try {
             if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
                 $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
