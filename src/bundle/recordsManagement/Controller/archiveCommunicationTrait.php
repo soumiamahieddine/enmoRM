@@ -121,13 +121,15 @@ trait archiveCommunicationTrait
         $eventItems['address'] = $archive->storagePath;
         $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'recordsManagement/archive', $archive->archiveId, $eventItems);
 
-        foreach ($archive->digitalResources as $digitalResource) {
-            $eventItems['resId'] = $digitalResource->resId;
-            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-            $eventItems['hash'] = $digitalResource->hash;
-            $eventItems['address'] = $archive->storagePath;
+        if ( $archive->digitalResources) {
+            foreach ((array) $archive->digitalResources as $digitalResource) {
+                $eventItems['resId'] = $digitalResource->resId;
+                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventItems['hash'] = $digitalResource->hash;
+                $eventItems['address'] = $archive->storagePath;
 
-            $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
+                $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
+            }
         }
 
         return $archive;
