@@ -2,30 +2,30 @@
     <div class="panel-heading">
         <h4>File plan position <small></small></h4>
     </div>
+    <?merge position ?>
     <div class="panel-body">
-        <?merge position ?>
         <form>
-            <input type="hidden" name="subjectId" data-subjectId="">
-            <input type="hidden" name="objectClass" data-objectClass="">
+            <input type="hidden" name="ownerFilePlanCode" data-owner="">
+            <input type="hidden" name="parentCode" data-parentCode="" >
             <div class="form-group">
-                <label>Id</label>
-                <?merge position.objectId.bool() @disabled ?>
-                <input type="text" class="form-control" name="objectId" placeholder="Id">
+                <label>Code</label>
+                <?merge position.positionCode.bool() @disabled ?>
+                <input type="text" class="form-control" name="positionCode" placeholder="file plan position code">
             </div>
             <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="form-control" name="label" placeholder="Name">
+                <label>Display name</label>
+                <input type="text" class="form-control" name="displayName" placeholder="display name">
             </div>
         </form>
-        <button type="button" class="btn btn-success" id="addPosition" title="Save">Save</button>
-        <button type="button" class="btn btn-warning" id="cancelPosition" title="Cancel">Cancel</button>
+        <button type="button" class="btn btn-success" id="addPosition">Save</button>
+        <button type="button" class="btn btn-warning" id="cancelPosition">Cancel</button>
     </div>
 </div>
 
 <script>
 
     //cancel modification
-    $("#cancelPosition").on('click', function () {
+    $(document).on('click', "#cancelPosition", function () {
         $('#filePlanPositionForm').css('display', 'none');
     });
 
@@ -36,16 +36,16 @@
         var action = "/filePlan/addFilePlanPosition";
         var method = "POST";
 
-        if ($('#filePlanPositionForm [name="objectId"]').attr('disabled')) {
+        if ($('#filePlanPositionForm [name="positionCode"]').attr('disabled')) {
             var action = "/filePlan/modifyFilePlanPosition";
             var method = "PUT";
         }
 
         var position = {
-            objectId: $('#formContainer').find("[name='objectId']").val(),
-            label: $('#formContainer').find("[name='label']").val(),
-            objectClass: $("[name='objectClass']").val(),
-            subjectId: $("[name='subjectId']").val()
+            positionCode: $('#formContainer').find("[name='positionCode']").val(),
+            displayName: $('#formContainer').find("[name='displayName']").val(),
+            ownerFilePlanCode: $('[name="ownerFilePlanCode"]').val(),
+            parentCode: $('[name="parentCode"]').val()
         }
 
         var parametre = {
@@ -57,14 +57,14 @@
             type: method,
             data: JSON.stringify(parametre),
             contentType: 'application/json',
-            dataType: 'json',
             success: function (response) {
-                gritter.show(response.message, response.status, response.errors);
+                response = JSON.parse(response);
+                requestResult(response.message, response.status);
                 $('#filePlanPositionForm').css('display', 'none');
                 reloadTree();
             },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            error: function (response) {
+                requestResult(response.responseText, false);
             }
         })
     })
@@ -72,7 +72,7 @@
     //edit a file plan position
     $("#contain").on('click', "#modifyPosition", function () {
         var positionCode = $(this).closest('span').attr("data-positionCode");
-
+        console.log("modifyPosition");
         $.ajax({
             url: "/filePlan/editFilePlanPosition/" + positionCode,
             type: "GET",
@@ -81,7 +81,7 @@
                 loadForm(response, 'filePlanPositionForm');
             },
             error: function (response) {
-                gritter.show(response.responseText, false);
+                requestResult(response.responseText, false);
             }
         })
     });

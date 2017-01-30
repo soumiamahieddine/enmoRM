@@ -26,7 +26,7 @@
                             <h4 >File plan tree</h4>
                         </div>
                         <div class="pull-right">
-                            <button class="btn btn-info" type="button" id="newFilePlan" title="Add a new file plan">Add a new file plan</button>
+                            <button class="btn btn-info" type="button" id="newFilePlan">Add a new file plan</button>
                         </div>
                     </div>
                     <div class="panel-body" >
@@ -40,7 +40,7 @@
             </div>
         </div>
         <!-- modals for delete confirmation -->
-        <?hinclude filePlan/modals.html ?>
+        <?hinclude filePlan/view/modals.html ?>
     </div>
 </div>
 
@@ -48,126 +48,98 @@
 <script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
 
 <script>
-    $('#app_maarchRM_main').ready(function () {
+    $(document).ready(function () {
         initTree();
     });
 
     $('#contain').on('click', '#newFilePlan', function () {
         $.ajax({
-            url: "/filePlan/newfileplan",
+            url: "/filePlan/newFilePlan",
             type: "GET",
             success: function (response) {
                 $('#formContainer').html(response);
             },
             error: function (response) {
-                gritter.show(response.responseText, false);
+                requestResult(response.responseText, false);
             }
         })
     })
 
     //edit a file plan
     $('#contain').on('click', '[name="modifyFilePlan"]', function () {
-        subjectId = $(this).attr("data-subjectId");
+        filePlanCode = $(this).attr("data-code");
         $.ajax({
-            url: "/filePlan/editFilePlan/" + subjectId,
+            url: "/filePlan/editFilePlan/" + filePlanCode,
             type: "GET",
             success: function (response) {
                 $('#formContainer').html(response);
             },
             error: function (response) {
-                gritter.show(response.responseText, false);
+                requestResult(response.responseText, false);
             }
         })
     });
 
     //delete a file plan
     $("#contain").on('click', "[name='deleteFilePlan']", function () {
-        var subjectId = $(this).closest('span').attr("data-subjectId");
-        $('#confirmFilePlanDelete').attr('data-subjectId', subjectId);
+        var filePlanCode = $(this).closest('span').attr("data-filePlanCode");
+        $('#confirmFilePlanDelete').attr('data-filePlanCode', filePlanCode);
         $('#deleteFilePlanConfirmation').modal('show');
     });
 
-    //delete a object
-    $("#contain").on('click', "[name='deletePosition']", function () {
-        var objectId = $(this).closest('span').attr("data-objectId");
-        var subjectId = $(this).closest('span').attr("data-subjectId");
-        $('#confirmPositionDelete').attr('data-objectId', objectId);
-        $('#confirmPositionDelete').attr('data-subjectId', subjectId);
-        $('#deletePositionConfirmation').modal('show');
-    });
-    
     //display the file plan position form
-    $('#contain').on('click', "[name='addPlan']", function () {
+    $('#contain').on('click', "[name='addPosition']", function () {
         var positionInformation = $(this).closest('span');
-        var parentSubjectId = positionInformation.attr("data-subjectId");
+        var ownerFilePlanCode = positionInformation.attr("data-filePlanCode");
+        var parentCode = positionInformation.attr("data-positionCode");
+        var subtitle = $(this).attr("data-subTitle");
+        console.log(ownerFilePlanCode);
         $.ajax({
-            url: "/filePlan/newFilePlan",
+            url: "/filePlan/newFilePlanPosition",
             type: "GET",
             success: function (response) {
                 $('#formContainer').html(response);
-                $('[name="parentSubjectId"]').val(parentSubjectId);
+                $('[name="ownerFilePlanCode"]').val(ownerFilePlanCode);
+                $('[name="parentCode"]').val(parentCode);
                 //loadForm(response, 'filePlanPositionForm', subtitle);
             }
         })
     });
-
-    $('#contain').on('click', "[name='modifyPosition']", function () {
-
-        objectId = $(this).closest('span').attr("data-objectId");
-        subjectId = $(this).closest('span').attr("data-subjectId");
-
-        $.ajax({
-            url: "/filePlan/editFilePlanPosition/" + objectId + "/" + subjectId,
-            type: "GET",
-            contentType: 'application/json',
-            success: function (response) {
-                $('#formContainer').html(response);
-            },
-            error: function (response) {
-                gritter.show(response.responseText, false);
-            }
-        });
-    });
     
-    //show the form to move a position
-    $('#contain').on('click', "[name='movePosition']", function () {
-        var objectId = $(this).attr("data-objectId");
-        var subjectId = $(this).attr("data-subjectId");
+    $('#contain').on('click', "[name='modifyPosition']", function(){
+        var positionCode = $(this).closest('span').attr("data-positionCode");
         $.ajax({
-            url: "/filePlan/getElementsForMovePosition/" + subjectId,
+            url: "/filePlan/editFilePlanPosition/"+positionCode,
             type: "GET",
             contentType: 'application/json',
-            success: function (response) {
+            success: function(response) {
                 $('#formContainer').html(response);
-                $('#formContainer').find('[name="objectId"]').val(objectId);
-                $('#formContainer').find('[name="subjectId"]').val(subjectId);
             },
-            error: function (response) {
-                gritter.show(response.responseText, false);
+            error: function(response) {
+                requestResult(response.responseText, false);
             }
         })
     });
-
-    //show the form to move a plan
-    $('#contain').on('click', "[name='movePlan']", function () {
-        var subjectId = $(this).attr("data-subjectId");
+        //show the form to move a position
+    $('#contain').on('click', "[name='movePosition']", function(){
+        var positionCode = $(this).attr("data-positionCode");
         $.ajax({
-            url: "/filePlan/getElementsForMoveSubject/" + subjectId,
+            url: "/filePlan/getElementsForMove/"+positionCode,
             type: "GET",
             contentType: 'application/json',
-            success: function (response) {
+            success: function(response) {
                 $('#formContainer').html(response);
-                $('#formContainer').find('[name="subjectId"]').val(subjectId);
+                $('#formContainer').find('[name="positionCode"]').val(positionCode);
             },
-            error: function (response) {
-                gritter.show(response.responseText, false);
+            error: function(response) {
+                requestResult(response.responseText, false);
             }
         })
     });
     
     function reloadTree() {
         $.ajax({
-            url: "/filePlan/gettree",
+            url: "/filePlan/getTree",
             type: "GET",
             dataType: 'html',
             success: function (response) {
@@ -175,15 +147,27 @@
                 initTree();
             },
             error: function (response) {
-                gritter.show(response.responseText, false);
+                requestResult(response.responseText, false);
             }
         })
     }
 
+    function requestResult(message, status) {
+        var class_name = "gritter-danger";
+        if (status) {
+            class_name = "gritter-primary";
+        }
+        
+        $.gritter.add({
+            text: message,
+            class_name: class_name
+        });
+        $('.btn').removeProp('disabled');
+    }
 
     function clearForm() {
         $('#formContainer').off();
         $('#formContainer').html('');
     }
-
+    
 </script>

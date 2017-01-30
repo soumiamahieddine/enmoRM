@@ -1,0 +1,54 @@
+<!--#
+    This file is part of the maarchRM package.
+    (c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div lang="en" data-translate-catalog="filePlan/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-folder-open"></i>
+                File plan
+            </h1>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button id="new subject" class="btn btn-default"><i class="fa fa-plus">&nbsp;</i>New subject</button>
+        <div id="filePlanTree" class="tree" style="padding:20px 0 0 50px">
+            <?merge filePlan ?>
+            <ul>
+                <?hinclude /filePlan/subjectNode.html ?>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <?hinclude /filePlan/subjectForm.html ?>
+    </div>
+</div>
+
+<script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
+<script>
+
+FilePlan = {
+    tree: $('#filePlanTree'),
+
+    selectNode: function(node) {
+        this.unselectNode()
+        node.children('span').removeClass('node-primary').addClass('node-warning');
+    },
+
+    unselectNode: function() {
+        this.tree.find('.node-warning').removeClass('node-warning').addClass('node-primary');
+    }
+}
+
+$(document).on('ready', function() {
+    BootstrapTree.init($('#filePlanTree'));
+})
+
+$('.node-primary').on('click', function() {
+    FilePlan.selectNode($(this).closest('li'));
+})
+</script>

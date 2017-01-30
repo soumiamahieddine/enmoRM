@@ -11,8 +11,8 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
-                <button type="button" class="btn btn-primary" id="confirmFilePlanDelete" title="Yes">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmFilePlanDelete">Yes</button>
             </div>
         </div>
     </div>
@@ -31,8 +31,8 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
-                <button type="button" class="btn btn-primary" id="confirmPositionDelete" title="Yes">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmPositionDelete">Yes</button>
             </div>
         </div>
     </div>
@@ -42,37 +42,33 @@
 <script>
     $('#confirmFilePlanDelete').on('click', function(){
         $.ajax({
-            url: '/filePlan/deleteFilePlan/'+$(this).attr('data-subjectId'),
+            url: '/filePlan/deleteFilePlan/'+$(this).attr('data-filePlanCode'),
             type: 'DELETE',
             contentType: 'application/json',
             dataType: 'json',
             success: function(response) {
-                gritter.show(response.message, response.status, response.errors);
+                requestResult(response.message, response.status);
                 reloadTree();
             },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            error: function(response) {
+                requestResult(response.responseText, false);
             }
         });
         $('#deleteFilePlanConfirmation').modal('hide');
     });
 
     $('#confirmPositionDelete').on('click', function(){
-        
-        var objectId = $('#confirmPositionDelete').attr('data-objectId');
-        var subjectId = $('#confirmPositionDelete').attr('data-subjectId');
         $.ajax({
-            url: '/filePlan/deleteFilePlanPosition/'+objectId + '/' + subjectId,
+            url: '/filePlan/deleteFilePlanPosition/'+$(this).attr('data-positionCode'),
             type: 'DELETE',
             contentType: 'application/json',
-            dataType: 'json',
             success: function(response) {
                 response = JSON.parse(response);
-                gritter.show(response.message, response.status, response.errors);
+                requestResult(response.message, response.status);
                 reloadTree();
             },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            error: function(response) {
+                requestResult(response.responseText, false);
             }
         });
         $('#deletePositionConfirmation').modal('hide');

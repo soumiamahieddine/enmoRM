@@ -7808,7 +7808,7 @@ th.visible-print, td.visible-print {
 }
 .tree li::before {
     border-left:1px solid #999;
-    bottom:50px;
+    bottom:10px;
     height:100%;
     top:0;
     width:1px
@@ -7854,14 +7854,34 @@ th.visible-print, td.visible-print {
     color:#000
 }*/
 
-.tree .root{
+.node-default {
+    color: #333;
+    background-color: #fff
+}
+
+.tree .root, .node-success {
     color: white;
     background-color: #45a469
 }
 
-.tree .node{
+.tree .node, .node-primary {
     color: white;
     background-color: #3d80ab
+}
+
+.node-info {
+    color: white;
+    background-color: #31b0d5
+}
+
+.node-warning {
+    color: white;
+    background-color: #ec971f
+}
+
+.node-danger {
+    color: white;
+    background-color: #c9302c
 }
 
 @font-face {

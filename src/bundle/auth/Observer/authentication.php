@@ -71,7 +71,7 @@ class authentication
 
         } elseif ($requestAuth = \core\Kernel\abstractKernel::get()->request->authentication) {
             $username = $_SERVER['PHP_AUTH_USER'];
-            $account = $this->sdoFactory->read("auth/account", $username);
+            $account = $this->sdoFactory->read("auth/account", array("accountName" => $username));
 
             $password = $_SERVER['PHP_AUTH_PW'];
 

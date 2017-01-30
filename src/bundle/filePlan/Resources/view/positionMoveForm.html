@@ -1,0 +1,63 @@
+<div class="panel panel-default dataForm" id="positionMoveForm">
+    <div class="panel-heading">
+        <h4>Move a file plan position <small></small></h4>
+
+    </div>
+    <div class="panel-body">
+        <form>
+            <input type="hidden" name="positionCode">
+            <div class="form-group">
+                <label>New parent name</label>
+                <select class="form-control" name="newParentPositionCode">
+                    <?merge list ?>
+                    <option value="[?merge .filePlanCode ?][?merge .ownerFilePlanCode ?]" data-parentcode="[?merge .parentCode ?]"> <?merge .displayName ?></option>
+                </select>
+            </div>
+        </form>
+        <button type="button" class="btn btn-success" id="movePosition">Save</button>
+        <button type="button" class="btn btn-warning" id="cancelMovePosition">Cancel</button>
+    </div>
+</div>
+
+
+<script>
+    //cancel position moving
+    $("#contain").on('click', "#cancelMovePosition", function(){
+        $('#positionMoveForm').css('display', 'none');
+    })
+
+    //selection of a new parent
+    $("#contain").on('change', 'select[name="newParentPositionCode"]', function(){
+        var ownerCode = $('option:selected', this).attr('data-ownerCode');
+        $('#positionMoveForm').find('[name="newOwnerFilePlanCode"]').val(ownerCode);
+    })
+
+    //move a position
+    $("#positionMoveForm").on('click', '#movePosition', function(){
+        $('button').attr('disabled', 'true');
+        newParentPositionCode = $('[name="newParentPositionCode"]').find('option:selected').data('parentcode');
+        if(newParentPositionCode == ""){
+            newParentPositionCode = null;
+        }
+        var positonMoveForm = {
+            newParentPositionCode : newParentPositionCode,
+            positionCode : $('[name="positionCode"]').val(),
+            newOwnerFilePlanCode :  $('[name="newParentPositionCode"]').find('option:selected').val()
+        };
+        $.ajax({
+            url: "/filePlan/movePosition",
+            type: "PUT",
+            data: JSON.stringify(positonMoveForm),
+            contentType: 'application/json',
+            success: function(response) {
+                response = JSON.parse(response);
+                requestResult(response.message, response.status);
+                $('#positionMoveForm').css('display', 'none');
+                reloadTree();
+            },
+            error: function(response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    })
+</script>

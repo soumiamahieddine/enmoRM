@@ -67,6 +67,7 @@ class Exception
         } else {
             $this->json->message = $this->translator->getText(
                 "An error occured during the process of your request. Please contact the administrator of the application.");
+            $this->json->exception = $exception;
         }
         
         if (isset($exception->errors)) {
