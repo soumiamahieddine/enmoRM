@@ -353,8 +353,17 @@ msgstr "Activé"
 msgid "Validate"
 msgstr "Valider"
 
+msgid "Processing"
+msgstr "En cours de traitement"
+
 msgid "Process"
 msgstr "Traiter"
+
+msgid "Acknowledge"
+msgstr "Acquitter"
+
+msgid "Destroy"
+msgstr "Détruire"
 
 msgid "Not active"
 msgstr "Non activé"
@@ -467,6 +476,9 @@ msgstr "Classe de description"
 msgid "Res id"
 msgstr "Id"
 
+msgid "Object"
+msgstr "Objet"
+
 msgid "Object id"
 msgstr "Identifiant d'objet"
 
@@ -524,8 +536,14 @@ msgstr "Historique des notifications"
 msgid "Type of message"
 msgstr "Type de message"
 
-msgid "Are you sur to delete this archive ?"
-msgstr "Etes vous sûr de vouloir supprimer cette archive ?"
+msgid "validation warning"
+msgstr "Attention : vous êtes sur le point de finaliser votre demande de restitution d'archives ; votre accord entraînera la restitution immédiate au service producteur et les archives concernées seront dès lors détruites chez l’opérateur d’archivage, après acquittement par le service producteur de la bonne fin de la restitution. Ce processus de restitution est irréversible !"
 
-msgid "Delete an archive"
-msgstr "Suppression d'une archive"
+msgid "acknowledge warning"
+msgstr "Attention : votre accord implique que vous reconnaissiez avoir récupéré, vérifié et intégré l'ensemble des archives restituées sur votre système d'information, quel qu'il soit (PC, GED, tablettes...), et libère dès lors l’opérateur d’archivage de tout engagement sur ces archives sachant qu’il se doit de les détruire dès réception de votre accord."
+
+msgid "Destroy an archive"
+msgstr "Destruction d'une archive"
+
+msgid "destroy elimination warning"
+msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimination (ce processus de restitution) ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
