@@ -203,13 +203,9 @@
     
     //Cancel
     $("#tokenRegenerate").on("click", function(){
-        
-        $.ajax($(this), {
+        ajax($(this), {
             url         : "/Serviceaccount/"+ $("#serviceAccountId").val() + "/token",
             type        : "GET",
-            data        : {
-                serviceName : $("#accountName").val()
-            },
             dataType    : "json",
             success  : function(response){
                 $('#serviceToken').text(response.cookie);
