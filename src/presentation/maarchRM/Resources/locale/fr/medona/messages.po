@@ -305,6 +305,9 @@ msgstr "Taille"
 msgid "Reply code"
 msgstr "Code de réponse"
 
+msgid "Acknowledgement"
+msgstr "Accusé de réception"
+
 msgid "ArchiveTransfer"
 msgstr "Transfert d'archive"
 
