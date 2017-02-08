@@ -165,11 +165,11 @@ trait archiveCommunicationTrait
     {
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $archive = $this->getDescription($digitalResource->archiveId);
+        //$archive = $this->getDescription($digitalResource->archiveId);
 
-        if (!$this->accessVerification($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
+        //if (!$this->accessVerification($archive)) {
+        //    throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        //}
 
         return $digitalResource;
     }

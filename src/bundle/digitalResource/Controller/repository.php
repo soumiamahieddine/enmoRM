@@ -154,8 +154,8 @@ class repository
 
     /**
      * Store a resource on repository (after opening it)
-     * @param digitalResource/repository      $repository
-     * @param digitalResource/digitalResource $resource
+     * @param digitalResource/repository      $repository The repository id
+     * @param digitalResource/digitalResource $resource   The digital resource to store
      * @param string                          $collection The name of a colection/bucket/directory to store resources in
      *
      * @return digitalResource/address
@@ -166,12 +166,8 @@ class repository
 
         $contents = $resource->getContents();
 
-        if ($metadata = $resource->getMetadata()) {
-            $uri = $repositoryService->create($contents, $metadata, $collection);
-        } else {
-            $uri = $repositoryService->create($contents, null, $collection);
-        }
-
+        $uri = $repositoryService->create($contents, $collection);
+        
         if (!$uri) {
             throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository ".$repository->repositoryId);
         }

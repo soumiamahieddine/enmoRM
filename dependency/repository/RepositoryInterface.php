@@ -39,13 +39,12 @@ Interface RepositoryInterface
 
     /**
      * Create a new resource
-     * @param string $data       The contents to store
-     * @param object $metadata   The object of metadata to store
-     * @param string $collection The name of a collection to which add resource
+     * @param string $data The contents to store
+     * @param string $path The path to store
      * 
      * @return mixed The address/uri/identifier of stored resource on repository
      */
-    public function create($data, $metadata=null, $collection=null);
+    public function create($data, $path=null);
 
     /**
      * Get a resource in repository
@@ -58,13 +57,12 @@ Interface RepositoryInterface
 
     /**
      * Update a resource in repository
-     * @param mixed  $address  The address/uri/identifier of stored resource on repository
-     * @param string $data     The contents to store. If ignored, only metadata will be updated
-     * @param object $metadata The object of metadata metadata to update. If igniored metadata remains as before on repo
+     * @param mixed  $address The address/uri/identifier of stored resource on repository
+     * @param string $data    The contents to store. If ignored, only metadata will be updated
      * 
      * @return bool
      */
-    public function update($address, $data=null, $metadata=null);
+    public function update($address, $data=null);
 
     /**
      * Delete resource in repository

@@ -68,12 +68,11 @@ class Repository
     /**
      * Create a resource
      * @param string $data       The resource contents
-     * @param string $metadata   The metadata to store
      * @param string $collection The name of a collection to which add resource
      *
      * @return string The URI of the resource
      */
-    public function create($data, $metadata=null, $collection=null)
+    public function create($data, $collection=null)
     {
         // Retrieve current pattern directory name
         $address = $this->getDir($collection);
@@ -82,9 +81,9 @@ class Repository
 
         $this->addFile($address, $data);
 
-        if (!is_null($metadata)) {
+        /*if (!is_null($metadata)) {
             $this->addFile($address . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
-        }
+        }*/
 
         return $address;
     }
