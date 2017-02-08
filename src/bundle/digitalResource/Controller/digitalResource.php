@@ -261,7 +261,12 @@ class digitalResource
             $resource->clusterId = $this->currentCluster->clusterId;
             $resource->created = \laabs::newTimestamp();
 
-            $this->sdoFactory->create($resource);
+            $this->sdoFactory->create($resource, 'digitalResource/digitalResource');
+
+            $archiveDigitalResourceRel = \laabs::newInstance('digitalResource/archiveDigitalResourceRel');
+            $archiveDigitalResourceRel->resId = $resource->resId;
+            $archiveDigitalResourceRel->archiveId = $resource->archiveId;
+            $this->sdoFactory->create($archiveDigitalResourceRel);           
 
             $this->clusterController->storeResource($this->currentCluster, $resource, $collection);
 
@@ -296,7 +301,7 @@ class digitalResource
      */
     public function getResourcesByArchiveId($archiveId)
     {
-        $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
+        $resources = $this->sdoFactory->find("digitalResource/archiveDigitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
         return $resources;
     }
@@ -566,7 +571,7 @@ class digitalResource
      * Verify integrity of resource
      * @param digitalResource/digitalResource $resource The digital resource
      *
-     * @return digitalResource/digitalResource The digitalResouce object verify
+     * @return digitalResource/digitalResource The digitalResource object verify
      *
      * @throws digitalResource/resourceNotFoundException
      */

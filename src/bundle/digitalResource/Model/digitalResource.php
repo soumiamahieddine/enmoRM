@@ -41,13 +41,6 @@ class digitalResource
     public $resId;
 
     /**
-     * The archive identifier
-     *
-     * @var id
-     */
-    public $archiveId;
-
-    /**
      * The storing profile identifier
      *
      * @var id

@@ -27,7 +27,6 @@ WITH (
 CREATE TABLE "digitalResource"."digitalResource"
 (
   "resId" text NOT NULL,
-  "archiveId" text,
   "clusterId" text NOT NULL,
   "size" integer NOT NULL,
   "puid" text,
@@ -48,6 +47,17 @@ CREATE TABLE "digitalResource"."digitalResource"
  FOREIGN KEY ("relatedResId")
       REFERENCES "digitalResource"."digitalResource" ("resId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+-- DROP TABLE "digitalResource"."archiveDigitalResourceRel";
+
+CREATE TABLE "digitalResource"."archiveDigitalResourceRel"
+(
+  "archiveId" text,
+  "resId" text
 )
 WITH (
   OIDS=FALSE
@@ -197,3 +207,26 @@ CREATE TABLE "digitalResource"."conversionRule"
 WITH (
   OIDS=FALSE
 );
+
+-- View: "digitalResource"."archiveDigitalResource"
+
+-- DROP VIEW "digitalResource"."archiveDigitalResource";
+
+CREATE OR REPLACE VIEW "digitalResource"."archiveDigitalResource" AS 
+ SELECT "archiveDigitalResourceRel"."archiveId",
+    "digitalResource"."resId",
+    "digitalResource"."clusterId",
+    "digitalResource"."size",
+    "digitalResource"."puid",
+    "digitalResource"."mimetype",
+    "digitalResource"."hash",
+    "digitalResource"."hashAlgorithm",
+    "digitalResource"."fileExtension",
+    "digitalResource"."fileName",
+    "digitalResource"."mediaInfo",
+    "digitalResource"."created",
+    "digitalResource"."updated",
+    "digitalResource"."relatedResId",
+    "digitalResource"."relationshipType"
+   FROM "digitalResource"."archiveDigitalResourceRel"
+     JOIN "digitalResource"."digitalResource" ON "digitalResource"."resId" = "archiveDigitalResourceRel"."resId";

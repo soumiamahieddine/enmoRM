@@ -499,7 +499,8 @@ trait archiveEntryTrait
 
         for ($i = 0; $i < $nbResources; $i++) {
             $archive->digitalResources[$i]->archiveId = $archive->archiveId;
-            $this->digitalResourceController->store($archive->digitalResources[$i], $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
+            $resStoragePath = $filePlanPosition.'/'.$archive->digitalResources[$i]->resId;
+            $this->digitalResourceController->store($archive->digitalResources[$i], $this->currentServiceLevel->digitalResourceClusterId, $resStoragePath);
         }
     }
 
@@ -544,15 +545,9 @@ trait archiveEntryTrait
         preg_match_all("/\<(.*?)\>/", $this->storePath, $matches);
 
         foreach ($matches[1] as $key => $match) {
-            if ((intval($match) != 0 && is_int(intval($match))) || $match == "Y" || $match == "m" || $match == "d") {
-                continue;
+            if (isset($values[$match])) {
+                $filePlanPosition = str_replace($matches[0][$key], (string) $values[$match], $filePlanPosition);
             }
-
-            if (!isset($values[$match])) {
-                $values[$match] = $match;
-            }
-
-            $filePlanPosition = str_replace($matches[0][$key], (string) $values[$match], $filePlanPosition);
         }
 
         return $filePlanPosition;
