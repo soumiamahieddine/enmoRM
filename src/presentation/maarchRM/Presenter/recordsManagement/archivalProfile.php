@@ -179,9 +179,16 @@ class archivalProfile
 
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
+        $organizationController = \laabs::newController('organization/organization');
         $accessRules = $accessRuleController->index();
         foreach ($accessRules as $accessRule) {
-            $accessRule->json = json_encode($accessRuleController->edit($accessRule->code));
+            $completeAccessRule = $accessRuleController->edit($accessRule->code);
+
+            foreach ($completeAccessRule->accessEntry as $accessEntry) {
+                $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgUnitId)->displayName;
+            }
+
+            $accessRule->json = json_encode($completeAccessRule);
             if ($accessRule->duration != null) {
                 $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
                 $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);

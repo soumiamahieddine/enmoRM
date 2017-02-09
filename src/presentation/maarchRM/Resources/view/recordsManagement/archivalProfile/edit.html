@@ -87,7 +87,7 @@ file that was distributed with this source code.
                                         <label class="col-md-2 control-label">Description class</label>
                                         <div class="col-md-10">
                                             <select id="descriptionClass" name="descriptionClass" class="form-control">
-                                                <option value="" selected='true' data-properties="" data-dateproperties="[?merge dateFields ?]"></option>
+                                                <option value="" selected data-properties="" data-dateproperties="[?merge dateFields ?]"></option>
                                                 <?merge descriptionClassList ?>
                                                 <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
                                             </select>
@@ -131,7 +131,8 @@ file that was distributed with this source code.
                                         <div class="form-group">
                                             <label class="col-md-2 control-label">Retention rule code</label>
                                             <div class="col-md-10">
-                                                <select id="code" name="retentionRuleCode" class="form-control">                                               <option value="">Select a retention rule code</option>
+                                                <select id="code" name="retentionRuleCode" class="form-control">
+                                                    <option value="">Select a retention rule code</option>
                                                     <?merge retentionRules ?>
                                                     <option value='[?merge .code ?]' 
                                                             data-duration="[?merge .retentionDuration ?]" 
@@ -516,24 +517,15 @@ file that was distributed with this source code.
 
     function loadAccessEntry(accessEntry) {
         var li = $('<li/>')
-            .html(accessEntry.orgUnitId)
+            .html(accessEntry.displayName)
             .addClass('list-group-item')
             .appendTo($('#accessEntries'));
         
-        var badge = $('<span/>')
-            .addClass('badge')
-            .html('<i class="fa fa-eye"></i>')
-            .appendTo(li);
+        $('<span/>').addClass('pull-right').html('<i class="fa fa-eye fa-2x text-primary">&nbsp;</i>').appendTo(li);
 
-        if (accessEntry.readOnly == false) {
-            var badge = $('<span/>')
-            .addClass('badge')
-            .html('<i class="fa fa-times"></i>')
-            .appendTo(li);
-            var badge = $('<span/>')
-            .addClass('badge')
-            .html('<i class="fa fa-edit"></i>')
-            .appendTo(li);            
+        if (accessEntry.originatorAccess == true) {
+            $('<span/>').addClass('pull-right').html('<i class="fa fa-times fa-2x text-danger">&nbsp;</i>').appendTo(li);
+            $('<span/>').addClass('pull-right').html('<i class="fa fa-edit fa-2x text-warning">&nbsp;</i>').appendTo(li);            
         }   
     }
 
