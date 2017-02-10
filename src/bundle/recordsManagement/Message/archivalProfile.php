@@ -96,13 +96,6 @@ class archivalProfile
      * @var boolean
      */
     public $acceptUserIndex;
-    
-    /**
-     * The archive accepts multiple documents
-     *
-     * @var boolean
-     */
-    public $acceptMultipleDocuments;
 
     /**
      *  The list of profile description
