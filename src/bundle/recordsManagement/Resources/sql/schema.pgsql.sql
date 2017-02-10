@@ -70,7 +70,6 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "description" text,
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
-  "acceptMultipleDocuments" boolean default false,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
