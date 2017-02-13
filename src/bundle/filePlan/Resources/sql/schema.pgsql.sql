@@ -9,16 +9,19 @@ CREATE SCHEMA "filePlan"
 
 -- DROP TABLE filePlan."subject";
 
-CREATE TABLE "filePlan"."subject"
+CREATE TABLE "filePlan"."folder"
 (
-  "subjectId" text NOT NULL,
+  "folderId" text NOT NULL,
   "name" text NOT NULL UNIQUE,
-  "parentSubjectId" text ,
+  "parentFolderId" text ,
   "description" text ,
+  "ownerOrgId" text ,
+  "disabled" boolean ,
 
-  CONSTRAINT "subject_pkey" PRIMARY KEY ("subjectId"),
-  CONSTRAINT "subject_filePlan_fkey" FOREIGN KEY ("parentSubjectId")
-      REFERENCES "filePlan"."subject" ("subjectId") MATCH SIMPLE
+  CONSTRAINT "folder_pkey" PRIMARY KEY ("folderId"),
+  CONSTRAINT "filePlan_name_parentFolderId_key" UNIQUE ("name", "parentFolderId"),
+  CONSTRAINT "folderId_filePlan_fkey" FOREIGN KEY ("parentFolderId")
+      REFERENCES "filePlan"."folder" ("folderId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -32,15 +35,11 @@ WITH (
 
 CREATE TABLE "filePlan"."position"
 (
-  "objectId" text NOT NULL,
-  "objectClass" text NOT NULL,
-  "label" text NOT NULL,
-  "subjectId" text NOT NULL,
+  "folderId" text NOT NULL,
+  "archiveId" text NOT NULL,
   
-  CONSTRAINT position_Key UNIQUE ("objectId","subjectId"),
-  CONSTRAINT "positionId_Pkey" PRIMARY KEY ("objectId","subjectId"),
-  CONSTRAINT "position_filePlan_fkey" FOREIGN KEY ("objectId")
-      REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
+  CONSTRAINT "position_filePlan_fkey" FOREIGN KEY ("folderId")
+      REFERENCES "filePlan"."folder" ("folderId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (

@@ -780,7 +780,7 @@ class journal
             return true;
         }
 
-        $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+        $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
 
         $nextJournal = $logController->getNextJournal($journal);
 

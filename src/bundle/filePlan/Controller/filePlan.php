@@ -20,10 +20,10 @@
 namespace bundle\filePlan\Controller;
 
 /**
- * Control of the file plan
+ * Controler of the file plan
  *
  * @package filePlan
- * @author  Prosper De Laure <delaure.prosper@maarch.org> 
+ * @author  Prosper DE LAURE (maarch) <prosper.delaure@maarch.org> 
  */
 class filePlan {
 
@@ -31,7 +31,7 @@ class filePlan {
 
     /**
      * Constructor
-     * @param object $sdoFactory The model for organization
+     * @param object $sdoFactory The model for file plan
      *
      * @return void
      */
@@ -40,45 +40,44 @@ class filePlan {
     }
 
     /**
-     * Get the file plan's list
+     * Get the file plan's tree
      *
-     * @return array The list of file plans with their position
+     * @return array The list of file plan folder with their position
      */
     public function getTree() {
-        $subjects = $this->sdoFactory->find('filePlan/subject');
-
+        $folders = $this->sdoFactory->find('filePlan/folder');
 
         // sort by parent
         $roots = [];
-        $subjectList = [];
+        $folderList = [];
 
-        foreach ($subjects as $subject) {
-            $parentSubjectId = (string) $subject->parentSubjectId;
+        foreach ($folders as $folder) {
+            $parentFolderId = (string) $folder->parentFolderId;
 
-            if ($parentSubjectId == null) {
-                $roots[] = $subject;
+            if ($parentFolderId == null) {
+                $roots[] = $folder;
             } else {
-                if (!isset($subjectList[$parentSubjectId])) {
-                    $subjectList[$parentSubjectId] = [];
+                if (!isset($folderList[$parentFolderId])) {
+                    $folderList[$parentFolderId] = [];
                 }
-                $subjectList[$parentSubjectId][] = $subject;
+                $folderList[$parentFolderId][] = $folder;
             }
         }
         
-        return $this->buildTree($roots, $subjectList);
+        return $this->buildTree($roots, $folderList);
     }
 
     /**
      * Build the file plan tree
      *
      */
-    protected function buildTree($roots, $subjectList)
+    protected function buildTree($roots, $folderList)
     {
-        foreach ($roots as $subject) {
-            $subjectId = (string) $subject->subjectId;
+        foreach ($roots as $folder) {
+            $folderId = (string) $folder->folderId;
 
-            if (isset($subjectList[$subjectId])) {
-                $subject->subject = $this->buildTree($subjectList[$subjectId], $subjectList);
+            if (isset($folderList[$folderId])) {
+                $folder->folder = $this->buildTree($folderList[$folderId], $folderList);
             }
         }
 

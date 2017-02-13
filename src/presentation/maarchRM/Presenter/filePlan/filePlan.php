@@ -23,25 +23,22 @@ namespace presentation\maarchRM\Presenter\filePlan;
  * Serializer html journal
  *
  * @package lifeCycle
- * @author  Maarch Prosper DE LAURE <prosper.delaure@maarch.com>
+ * @author  Maarch Prosper DE LAURE (Maarch) <prosper.delaure@maarch.com>
  */
 class filePlan
 {
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
-    
     private $eventsFormat;
-
     private $translator;
 
     /**
      * Constuctor of archival Agreement html serializer
      * @param \dependency\html\Document $view         The view
-     * @param \dependency\sdo\Factory   $sdoFactory   The sdo factory
-     * @param array                     $eventsFormat The events format
      * @param \dependency\json\JsonObject                  $json
      * @param \dependency\localisation\TranslatorInterface $translator
+     *
      */
     public function __construct(
             \dependency\html\Document $view,

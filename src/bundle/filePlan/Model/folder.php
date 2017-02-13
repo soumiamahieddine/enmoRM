@@ -19,26 +19,56 @@
  */
 namespace bundle\filePlan\Model;
 /**
- * Class model that link an archive to a file plan folder 
+ * Class model that represents a file plan folder
  *
  * @package filePlan
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
  *
- * @fkey [folderId] filePlan/folder [folderId]
+ * @pkey [folderId]
+ * @fkey [parentFolderId] filePlan/folder [folderId]
  */
-class position
+class folder
 {
     /**
-     * The identifier of the archive linked to the folder
+     * The folder identifier
      * @var id
      */
     public $folderId;
 
     /**
-     * The folder identifier 
+     * The name of the folder
+     * @var string
+     * 
+     */
+    public $name;
+    
+    /**
+     * The parent folder identifer
+     * @var string
+     * 
+     */
+    public $parentFolderId;
+    
+    /**
+     * The description 
+     * @var string
+     * 
+     */
+    public $description;
+
+    /**
+     * The folder owner organization identifier
      * @var string
      * @notempty
+     * 
      */
-    public $folderId;
+    public $ownerOrgId;
 
+    /**
+     * The folder availability status for modification
+     * @var boolean
+     * 
+     */
+    public $disabled;
+    
 }

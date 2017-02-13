@@ -278,7 +278,7 @@ class digitalResource
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
-
+            var_dump($exception);
             throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created", null, $exception);
         }
 

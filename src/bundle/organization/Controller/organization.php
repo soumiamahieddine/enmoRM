@@ -670,7 +670,7 @@ class organization
             return array();
         }
 
-        $contact = \laabs::callService('contact/contact/read_contactId_', $orgContacts[0]->contactId);
+        $contact = \laabs::callService('contact/contact/read_contactId_', (string) $orgContacts[0]->contactId);
 
         return $contact->communication;
     }

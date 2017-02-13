@@ -36,6 +36,7 @@ class digitalResource
      * The universal identifier
      *
      * @var id
+     * @xpath @oid
      */
     public $resId;
 
