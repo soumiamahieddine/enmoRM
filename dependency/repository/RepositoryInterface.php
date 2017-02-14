@@ -44,7 +44,7 @@ Interface RepositoryInterface
      * 
      * @return mixed The address/uri/identifier of stored resource on repository
      */
-    public function create($data, $path=null);
+    public function create($data, $path);
 
     /**
      * Get a resource in repository
