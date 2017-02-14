@@ -256,6 +256,7 @@
             active.remove();
         },
         fillTemplate : function(property) {
+            console.log(property);
             var template = $('#descriptionPropertyTemplate').clone().attr('data-json', JSON.stringify(property)).removeAttr('id');
 
             template.find('.propertyLabel').append(property['label']);
@@ -317,7 +318,7 @@
         var option = $('<option/>').appendTo($("#descriptionClassProperties"));
 
         $.each(properties, function () {
-            option.clone().val(this).text(this).appendTo($("#descriptionClassProperties"));
+            option.clone().val(this.name).text(this.label).appendTo($("#descriptionClassProperties"));
         });
     })
 

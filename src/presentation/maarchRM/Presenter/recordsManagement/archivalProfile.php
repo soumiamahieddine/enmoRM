@@ -126,9 +126,6 @@ class archivalProfile
                 }
             }
 
-            var_dump(json_decode($descriptionClasses[0]->properties));
-            exit;
-
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
