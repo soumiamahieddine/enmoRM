@@ -7797,7 +7797,7 @@ th.visible-print, td.visible-print {
 .tree li {
     list-style-type:none;
     margin:0;
-    padding:10px 5px 0 5px;
+    padding:6px 5px 0 5px;
     position:relative
 }
 .tree li::before, .tree li::after {
@@ -7832,7 +7832,6 @@ th.visible-print, td.visible-print {
 .tree li span {
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
-    border:1px solid #999;
     border-radius:5px;
     display:inline-block;
     padding:3px 8px;
@@ -7855,31 +7854,37 @@ th.visible-print, td.visible-print {
 }*/
 
 .node-default {
+    border:1px solid #999;
     color: #333;
     background-color: #fff
 }
 
 .tree .root, .node-success {
+    border:1px solid #999;
     color: white;
     background-color: #45a469
 }
 
 .tree .node, .node-primary {
+    border:1px solid #999;
     color: white;
     background-color: #3d80ab
 }
 
 .node-info {
+    border:1px solid #999;
     color: white;
     background-color: #31b0d5
 }
 
 .node-warning {
+    border:1px solid #999;
     color: white;
     background-color: #ec971f
 }
 
 .node-danger {
+    border:1px solid #999;
     color: white;
     background-color: #c9302c
 }
