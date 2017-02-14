@@ -180,7 +180,7 @@
             } else {
                 var select = $('#descriptionClassProperties');
             }
-            select.find('option[value="'+fieldName+'"]').addClass('hide');
+            select.find('option[value="'+fieldName+'"]').hide();
 
         },
         showInPropertyList : function(fieldName) {
@@ -189,7 +189,7 @@
             } else {
                 var select = $('#descriptionClassProperties');
             }
-            select.find('option[value="'+fieldName+'"]').removeClass('hide');
+            select.find('option[value="'+fieldName+'"]').show();
         }
     }
 
