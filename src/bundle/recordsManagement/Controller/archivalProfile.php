@@ -172,7 +172,7 @@ class archivalProfile
                     if (isset($reflectionProperty->tags['label'])) {
                         $descriptionField->label = $reflectionProperty->tags['label'][0];
                     } else {
-                        $descriptionField->label = $descriptionProperty->name;
+                        $descriptionField->label = $reflectionProperty->name;
                     }
 
                     $descriptionField->type = $reflectionProperty->getType();
