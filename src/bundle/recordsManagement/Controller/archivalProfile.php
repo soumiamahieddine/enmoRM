@@ -169,7 +169,12 @@ class archivalProfile
 
                     $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
                     $descriptionField->name = $reflectionProperty->name;
-                    $descriptionField->label = $reflectionProperty->name;
+                    if (isset($reflectionProperty->tags['label'])) {
+                        $descriptionField->label = $reflectionProperty->tags['label'][0];
+                    } else {
+                        $descriptionField->label = $descriptionProperty->name;
+                    }
+
                     $descriptionField->type = $reflectionProperty->getType();
 
                     $descriptionField->enumeration = $reflectionProperty->getEnumeration();
