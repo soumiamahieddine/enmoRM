@@ -17,23 +17,14 @@
 <div class="container-fluid" data-translate-catalog="recordsManagement/archive">
     <div class="row" id="import_step1_container">
         <div class="col-md-6">
-            <?hinclude recordsManagement/archiveImport/import_step2.html ?>
-            <?hinclude recordsManagement/archiveImport/import_step1.html ?>
+            <?hinclude recordsManagement/archiveImport/archiveForm.html ?>
+            <hr/>
+            <?hinclude recordsManagement/archiveImport/descriptionForm.html ?>
         </div>
         <div class="col-md-6">
-            
-            <?hinclude recordsManagement/archiveImport/import_step3.html ?>
-        </div>
-        
-    </div>
-    
-
-    <div class="row">
-        <div class="col-xs-12">
-            <button class="btn btn-success pull-right" id="import"><i class="fa fa-paper-plane-o"></i>&nbsp;Import</button>
+            <?hinclude recordsManagement/archiveImport/documentForm.html ?>    
         </div>
     </div>
-
 </div>
 
 <script type="text/javascript">

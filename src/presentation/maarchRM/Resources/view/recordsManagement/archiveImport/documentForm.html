@@ -1,0 +1,162 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div class="panel-group" id="documentList" role="tablist">
+    <div class="panel panel-default" id="documentTe">
+        <div id="collapsedoc1" class="panel-collapse collapse in" data-translate-catalog="documentManagement/document">
+            <div class="panel-body">
+                <input type="file" class="filesBrowser hide">
+                <div class="col-md-12">
+                    <div class="documentDropZone">
+                        <i class="fa fa-file-text fileIcon">&nbsp;</i>
+                        <h4>Click or drop a document</h4>
+                    </div>
+                </div>
+                <div class="fileInfo hide">
+                    <div class="row">
+                        <br/>
+                            <table class="col-md-8 col-md-offset-2">
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-file-text fileIcon">&nbsp;</i>
+                                        <br>
+                                        <span class="btn-link removeFile">Replace</span>
+                                    </td>
+                                    <td>
+                                        <dl class="dl-horizontal">
+                                            <dt>File name</dt>
+                                            <dd class="fileName"></dd>
+
+                                            <dt>Size</dt>
+                                            <dd class="fileSize"></dd>
+
+                                            <dt>Type</dt>
+                                            <dd class="fileType"></dd>
+                                        </dl>
+                                    </td>
+                                </tr>
+                            </table>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .documentDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 50px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+    .fileIcon {
+        font-size: 400%;
+    }
+    textarea {
+        resize: vertical;
+    }
+</style>
+
+<script type="text/javascript">
+    // DOCUMENTS
+    $(".removeFile").on('click', function(e) {
+        ArchiveDocument.clear($(this).closest("[id^='collapsedoc']"));
+        $('.documentDropZone').click();
+    });
+
+    $('.documentDropZone').on('dragenter', function(e) {
+        ArchiveDocument.dragenter(e, $(this));
+    });
+
+    $('.documentDropZone').on('dragover', function(e) {
+        ArchiveDocument.dragover(e, $(this));
+    });
+
+    $('.documentDropZone').on('dragleave', function(e) {
+        ArchiveDocument.dragleave(e, $(this));
+    });
+
+    $('.documentDropZone').on('drop', function(e) {
+        ArchiveDocument.drop(e, $(this));
+    });
+
+    $('.documentDropZone').on('click', function() {
+        $(this).closest('.panel-collapse').find('.filesBrowser').click();
+    });
+
+    $('.filesBrowser').on('change', function() {
+        ArchiveDocument.upload($(this).context.files[0], $(this).closest('.panel-collapse'));
+    });
+
+    var ArchiveDocument = {
+        dragenter: function(e, documentZone) {
+            e.preventDefault();
+            e.stopPropagation();
+        },
+        dragover: function(e, documentZone) {
+            e.preventDefault();
+            e.stopPropagation();
+            documentZone.css('opacity', '1');
+        },
+        dragleave: function(e, documentZone) {
+            documentZone.css('opacity', '0.5');
+        },
+        drop: function(e, documentZone) {
+            if(e.originalEvent.dataTransfer){
+                if(e.originalEvent.dataTransfer.files.length) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    documentZone.css('opacity', '0.5');
+                    this.upload(e.originalEvent.dataTransfer.files[0], documentZone.closest('.panel-body'));
+                }   
+            }
+        },
+        upload: function(file, documentZone) {
+            oFileReader = new FileReader();
+            oFileReader.readAsDataURL(file);
+
+            if ($("#archiveForm").find("[name=archiveName]").val() == '') {
+                $("#archiveForm").find("[name=archiveName]").val(file.name.replace(/\.[^/.]+$/, ""));
+            }
+
+            oFileReader.onload = function() {
+                var base64 = oFileReader.result.replace(/^data:.*?;base64,/, "");
+
+                documentZone.find('.filesBrowser').data('base64', base64);           
+                documentZone.find('.fileName').html(file.name);
+                documentZone.find('.fileSize').html(file.size + ' ' + $('#byte_text').html());
+                documentZone.find('.fileType').html(file.type);
+                documentZone.find('.documentDropZone').addClass('hide');
+                documentZone.find('.fileInfo').removeClass('hide');
+            };
+        },
+        serialize : function(target) {
+            var digitalResource = {
+                fileName : target.find('.fileName').html(),
+                handler : target.find('.filesBrowser').data('base64')
+            }
+
+            if (!digitalResource.handler) {
+                digitalResource = -1;
+            }
+
+            return digitalResource;
+        },
+        clear : function(target) {
+            target.find('.filesBrowser').data('base64', '').val('');
+            target.find('.fileName').html('');
+            target.find('.fileSize').html('');
+            target.find('.fileType').html('');
+            target.find('.documentDropZone').removeClass('hide');
+            target.find('.fileInfo').addClass('hide');
+        }
+    }
+</script>
