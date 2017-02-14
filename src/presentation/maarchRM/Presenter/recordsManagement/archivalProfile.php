@@ -121,7 +121,7 @@ class archivalProfile
                     $properties = json_encode($properties);
                     $dateProperties = json_encode($dateProperties);
 
-                    $descriptionClass->dateProperties = $dateProperties;
+                    //$descriptionClass->dateProperties = $dateProperties;
                     $descriptionClass->properties = $properties;
                 }
             }
@@ -168,6 +168,7 @@ class archivalProfile
         $accessRules = $accessRuleController->index();
         foreach ($accessRules as $accessRule) {
             $completeAccessRule = $accessRuleController->edit($accessRule->code);
+            $accessRule->description = $completeAccessRule->description;
 
             foreach ($completeAccessRule->accessEntry as $accessEntry) {
                 $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgUnitId)->displayName;

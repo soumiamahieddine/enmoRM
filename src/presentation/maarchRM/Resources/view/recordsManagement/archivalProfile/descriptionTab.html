@@ -1,7 +1,7 @@
 
 <div class="form-group col-md-12">
-    <label class="col-md-2 control-label">Description class</label>
-    <div class="col-md-3">
+    <label class="col-lg-2 col-md-4 control-label">Description class</label>
+    <div class="col-lg-5 col-md-8">
         <select id="descriptionClass" name="descriptionClass" class="form-control">
             <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
             <?merge descriptionClassList ?>
@@ -9,9 +9,33 @@
         </select>
     </div>
 </div>
-<div class="col-md-6">
-    <div class="col-md-11 table-responsive">
-        <table class="col-md-offset-2 table table-striped" id="archiveDescriptionTable">
+
+
+
+<div class="form-group col-md-12" id="archiveDescriptionForm">
+    <label class="col-lg-2 col-md-4 control-label">Field<span style="color:red">&nbsp;*</span></label>
+    <div class="input-group col-lg-5 col-md-8">
+        <select class="form-control" id="descriptionFields" name="type">
+            <option value=""/>
+            <?merge descriptionFields ?>
+            <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
+        </select>
+        <select class="form-control hide" id="descriptionClassProperties" name="type">
+        </select>
+        <span class="input-group-addon">
+            <span>Required</span>&nbsp;&nbsp;<input type="checkbox" name="required" id="requiredField"/>
+        </span>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-success" id="addProperty"><span class="fa fa-plus"></span></button>
+        </span>
+    </div>
+</div>
+
+
+
+<div class="col-md-12">
+    <div class="col-lg-8 col-md-10 col-sm-12 table-responsive">
+        <table class="table table-striped col-md-offset-1" id="archiveDescriptionTable">
             <thead>
                 <tr>
                     <th>Property</th>
@@ -26,66 +50,32 @@
     </div>
 </div>
 
-<div class="col-md-5 col-md-offset-1">
-    <div class="row">
-        <div class="panel panel-default" id="archiveDescriptionForm">
-            <div class="panel-body">
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Field<span style="color:red">&nbsp;*</span></label>
-                    <div class="col-md-7">
-                        <select class="form-control" id="descriptionFields" name="type">
-                            <option value=""/>
-                                <?merge descriptionFields ?>
-                                <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
-                        </select>
-                        <select class="form-control hide" id="descriptionClassProperties" name="type">
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group" id="requiredField">
-                    <label class="col-md-3 control-label">Required</label>
-                    <div class="col-md-7">
-                        <input type="checkbox" name="required"/>
-                    </div>
-                </div>
-                <div class="pull-right ">
-                    <button type="button" id="cancelProperty" class="btn btn-warning"><i class="fa fa-times">&nbsp;</i>Cancel</button>
-                    <button type="button" id="addProperty" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Add</button>
-                    <button type="button" id="modifyProperty" class="btn btn-success hide"><i class="fa fa-edit">&nbsp;</i>Modify</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="hide">
+    <input type="hidden" id="archiveDescriptionJson" data-json="[?merge archivalProfile.archiveDescription.json() ?]">
 
-    <div class="row">
-        <input type="hidden" id="archiveDescriptionJson" data-json="[?merge archivalProfile.archiveDescription.json() ?]">
-    </div>
+    <!-- ERROR MESSAGES -->
+    <span id="emptyName_error">A name must be provide for the property.</span>
+    <span id="emptyLabe_error">A label must be provide for the property.</span>
 
-    <div class="hide">
-        <!-- ERROR MESSAGES -->
-        <span id="emptyName_error">A name must be provide for the property.</span>
-        <span id="emptyLabe_error">A label must be provide for the property.</span>
+    <!-- TYPE -->
+    <span id="text_text">text</span>
+    <span id="name_text">name</span>
+    <span id="date_text">date</span>
+    <span id="number_text">number</span>
+    <span id="boolean_text">boolean</span>
 
-        <!-- TYPE -->
-        <span id="text_text">text</span>
-        <span id="name_text">name</span>
-        <span id="date_text">date</span>
-        <span id="number_text">number</span>
-        <span id="boolean_text">boolean</span>
-
-        <table>
-            <!-- CUSTOM PROPERTY TEMPLATE -->
-            <tr id="descriptionPropertyTemplate" data-json="" style="cursor: pointer;">
-                <td class="propertyLabel"><span class="fa fa-arrows-v">&nbsp;&nbsp;</span></td>
-                <td class="requiredProperty">
-                     <i class="fa fa-check-square-o"></i>
-                </td>
-                <td class="text-right">
-                    <span class="deleteProperty" title="delete"><i class="fa fa-times"></i></span>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table>
+        <!-- CUSTOM PROPERTY TEMPLATE -->
+        <tr id="descriptionPropertyTemplate" data-json="" style="cursor: pointer;">
+            <td class="propertyLabel"><span class="fa fa-arrows-v">&nbsp;&nbsp;</span></td>
+            <td class="requiredProperty">
+                 <i class="fa fa-check-square-o"></i>
+            </td>
+            <td class="text-right">
+                <span class="deleteProperty" title="delete"><i class="fa fa-times"></i></span>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <script type="text/javascript" src="/public/dependency/html/js/jQueryUI_1.10.4/jqueryUI.js"></script>
@@ -134,7 +124,7 @@
             $('#descriptionFields').find('option[value="'+property.fieldName+'"]').prop('selected', true);
 
             if(property.required === true) {
-                $('#requiredField').find('input').prop('checked', true);
+                $('#requiredField').prop('checked', true);
             }
 
             // custom property
@@ -173,7 +163,7 @@
             var property = {
                 fieldName    : type.val(),
                 label        : selectedOption.text(),
-                required     : $('#requiredField').find('input').is(':checked'),
+                required     : $('#requiredField').is(':checked'),
             }
 
             return property;
@@ -256,7 +246,6 @@
             active.remove();
         },
         fillTemplate : function(property) {
-            console.log(property);
             var template = $('#descriptionPropertyTemplate').clone().attr('data-json', JSON.stringify(property)).removeAttr('id');
 
             template.find('.propertyLabel').append(property['label']);
@@ -284,6 +273,11 @@
 
             $.each(findingElement, function (key, value) {
                 var element = JSON.parse($(value).attr("data-json"));
+
+                if (element == undefined || element == "") {
+                    return;
+                }
+
                 var property = new Object();
                 property.fieldName = element.fieldName;
                 property.required = element.required;
