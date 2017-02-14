@@ -95,7 +95,7 @@ file that was distributed with this source code.
                                                             data-duration="[?merge .retentionDuration ?]" 
                                                             data-duration-unit='[?merge .retentionDurationUnit ?]'
                                                             data-final-disposition='[?merge .finalDisposition ?]'>
-                                                        <?merge .code ?>
+                                                        <?merge .label ?>
                                                     </option>
                                                 </select>
                                             </div>
@@ -141,7 +141,7 @@ file that was distributed with this source code.
                                                 <select id="accessRuleCode" name="accessRuleCode" class="form-control">
                                                     <option value="">Select a access rule code</option>
                                                     <?merge accessRules ?>
-                                                    <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .code ?></option>
+                                                    <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .description ?></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -209,7 +209,8 @@ file that was distributed with this source code.
         loadAccessCode();
 
         //date properties
-        var datesProperties = $('#descriptionClass').find(':selected').data('dateproperties');
+        //var datesProperties = $('#descriptionClass').find(':selected').data('dateproperties');
+        var datesProperties = null;
         var requiredProperty = $('.requiredProperty:checked');
 
         var currentRetentionStartDate = $('#retentionStartDate > input').val();
