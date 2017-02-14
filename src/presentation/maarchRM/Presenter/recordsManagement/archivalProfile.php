@@ -126,6 +126,9 @@ class archivalProfile
                 }
             }
 
+            var_dump(json_decode($descriptionClasses[0]->properties));
+            exit;
+
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
@@ -306,9 +309,9 @@ class archivalProfile
 
     /**
      * List properties method
-     * @param type $class
-     * @param type $properties
-     * @param type $dateProperties
+     * @param type $class          The class to get properties from
+     * @param type $properties     The existing list, to be completed
+     * @param type $dateProperties 
      * @param type $containerClass
      */
 
@@ -320,18 +323,29 @@ class archivalProfile
             if (in_array($property->name, $fields)) {
                 continue;
             }
+
+            $descriptionProperty = \laabs::newInstance('recordsManagement/descriptionField');
+            $descriptionProperty->name = $property->name;
+
+            if (isset($property->tags['label'])) {
+                $descriptionProperty->label = $property->tags['label'][0];
+            } else {
+                $descriptionProperty->label = $descriptionProperty->name;
+            }
+
             $type = $property->getType();
+            $descriptionProperty->type = $type;
 
             if ($containerClass) {
                 $qualifiedName = $containerClass.LAABS_URI_SEPARATOR.$property->name;
             } else {
                 $qualifiedName = $property->name;
             }
-
+            
             if ($type == "date" || $type == "timestamp") {
-                array_push($dateProperties, $qualifiedName);
+                array_push($dateProperties, $descriptionProperty);
             }
-            array_push($properties, $qualifiedName);
+            array_push($properties, $descriptionProperty);
             if (!$property->isScalar()) {
                 if ($property->isArray()) {
                     $type = substr($type, 0, -2);
