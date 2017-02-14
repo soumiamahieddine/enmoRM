@@ -266,9 +266,9 @@ class digitalResource
             $archiveDigitalResourceRel = \laabs::newInstance('digitalResource/archiveDigitalResourceRel');
             $archiveDigitalResourceRel->resId = $resource->resId;
             $archiveDigitalResourceRel->archiveId = $resource->archiveId;
-            $this->sdoFactory->create($archiveDigitalResourceRel);           
+            $this->sdoFactory->create($archiveDigitalResourceRel);
 
-            $this->clusterController->storeResource($this->currentCluster, $resource, $collection);
+            $this->clusterController->storeResource($this->currentCluster, $resource, $collection.'/'.$resource->resId);
 
             if ($resource->relatedResource) {
                 foreach ($resource->relatedResource as $relatedResource) {

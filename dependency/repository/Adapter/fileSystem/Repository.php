@@ -32,8 +32,6 @@ class Repository
 
     protected $root;
 
-    protected $collection = "<app>/<Y>/<m>/<d>/<1000>";
-
     protected $shred = true;
 
     /* Methods */
@@ -67,50 +65,43 @@ class Repository
 
     /**
      * Create a resource
-     * @param string $data       The resource contents
-     * @param string $collection The name of a collection to which add resource
+     * @param string $data The resource contents
+     * @param string $path The path
      *
      * @return string The URI of the resource
      */
-    public function create($data, $collection=null)
+    public function create($data, $path)
     {
-        // Retrieve current pattern directory name
-        $address = $this->getDir($collection);
-        
-        $address .= DIRECTORY_SEPARATOR . $this->getName($address);
+        $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
-        $this->addFile($address, $data);
+        $this->addFile($path, $data);
 
-        /*if (!is_null($metadata)) {
-            $this->addFile($address . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
-        }*/
-
-        return $address;
+        return $path;
     }
 
     /**
      * Get a resource in repository
-     * @param mixed   $address The address/uri/identifier of stored resource on repository
-     * @param integer $mode    A bitmask of what to read 0=nothing - only touch | 1=data | 2=metadata | 3 data+metadata
+     * @param mixed   $path The path/uri/identifier of stored resource on repository
+     * @param integer $mode A bitmask of what to read 0=nothing - only touch | 1=data | 2=metadata | 3 data+metadata
      * 
      * @return mixed The contents of resource
      */
-    public function read($address, $mode=1)
+    public function read($path, $mode=1)
     {
         switch ($mode) {
             case 0 :
-                return $this->checkFile($address);
+                return $this->checkFile($path);
 
             case 1 :
-                return $this->readFile($address);
+                return $this->readFile($path);
 
             case 2 :
-                return $this->readFile($address . '.metadata');
+                return $this->readFile($path . '.metadata');
             case 3 :
                 $data = array();
-                $data[0] = $this->readFile($address);
-                if ($this->checkFile($address . ".metadata")) {
-                    $data[1] = json_decode($this->readFile($address . '.metadata'));
+                $data[0] = $this->readFile($path);
+                if ($this->checkFile($path . ".metadata")) {
+                    $data[1] = json_decode($this->readFile($path . '.metadata'));
                 } else {
                     $data[1] = null;
                 }
@@ -125,23 +116,23 @@ class Repository
 
      /**
      * Update a resource
-     * @param string $address  The URI of the resource
+     * @param string $path     The URI of the resource
      * @param string $data     The content
      * @param object $metadata The new metadata to update or insert 
      *
      * @return bool
      */
-    public function update($address, $data=null, $metadata=null)
+    public function update($path, $data=null, $metadata=null)
     {
         if (!is_null($data)) {
-            $this->updateFile($address, $data);
+            $this->updateFile($path, $data);
         }
         
         if (!is_null($metadata)) {
-            if ($this->checkFile($address . ".metadata")) {
-                $this->updateFile($address . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
+            if ($this->checkFile($path . ".metadata")) {
+                $this->updateFile($path . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
             } else {
-                $this->addFile($address . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
+                $this->addFile($path . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
             }
         }
 
@@ -150,16 +141,16 @@ class Repository
 
      /**
      * Delete a resource
-     * @param string $address The URI of the resource
+     * @param string $path The URI of the resource
      *
      * @return bool
      */
-    public function delete($address)
+    public function delete($path)
     {
-        $this->deleteFile($address);
+        $this->deleteFile($path);
         
-        if ($this->checkFile($address . ".metadata")) {
-            $this->deleteFile($address. ".metadata");
+        if ($this->checkFile($path . ".metadata")) {
+            $this->deleteFile($path. ".metadata");
         }
         
         return true;
@@ -168,55 +159,21 @@ class Repository
     /* 
      * Non public methods
      */
-    /**
+/**
      * Get the directory to store
-     * @param string $collection The name or pattern for the collection
+     * @param string $pattern The name or pattern for the collection
      * 
      * @return string The diretory name
      */
-    protected function getDir($collection=false)
+    protected function getDir($pattern)
     {
-        if ($collection) {
-            $dirPattern = str_replace(LAABS_URI_SEPARATOR, DIRECTORY_SEPARATOR, $collection);
-        } else {
-            $dirPattern = str_replace(LAABS_URI_SEPARATOR, DIRECTORY_SEPARATOR, $this->collection);
-        }
-
         // Create sub path from pattern
         $dir = false;
-        $steps = explode(DIRECTORY_SEPARATOR, $dirPattern);
+        $steps = explode(DIRECTORY_SEPARATOR, $pattern);
         foreach ($steps as $step) {
-            if (preg_match_all("/\<[^\>]+\>/", $step, $variables)) {
-                foreach ($variables[0] as $variable) {
-                    $token = substr($variable, 1, -1);
-                    switch (true) {
-                        case $token == 'app':
-                            $step = str_replace($variable, \laabs::getApp(), $step);
-                            break;
-
-                        case $token == 'inst':
-                            if ($instanceName = \laabs::getInstanceName()) {
-                                $step = str_replace($variable, \laabs::getInstanceName(), $step);
-                            } else {
-                                $step = "inst";
-                            }
-                            break;
-
-                        case ctype_digit($token):
-                            $step = $this->getPackage($dir, $token);
-                            break;
-
-                        default:
-                            $step = str_replace($variable, date($token), $step);
-                    }
-
-                }
-            }
+            $step = $this->getName($step, $dir);
 
             $dir .= DIRECTORY_SEPARATOR . $step;
-
-            $illegal = array_merge(array_map('chr', range(0, 31)), array("<", ">", ":", '"', "|", "?", "*", ".."));
-            $dir = str_replace($illegal, "_", $dir);
 
             if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
                 mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0777, true);
@@ -224,6 +181,44 @@ class Repository
         }
 
         return $dir;
+    }
+
+    protected function getName($name, $dir)
+    {
+        if (preg_match_all("/\<[^\>]+\>/", $name, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case $token == 'app':
+                        $name = str_replace($variable, \laabs::getApp(), $name);
+                        break;
+
+                    case $token == 'inst':
+                        if ($instanceName = \laabs::getInstanceName()) {
+                            $name = str_replace($variable, \laabs::getInstanceName(), $name);
+                        } else {
+                            $name = "inst";
+                        }
+                        break;
+
+                    case ctype_digit($token):
+                        $name = $this->getPackage($dir, $token);
+                        break;
+
+                    
+                    case substr($token, 0, 5) == 'date(':
+                        $format = substr($token, 5, -1);
+                        $name = str_replace($variable, date($format), $name);
+                        break;
+                }
+
+            }
+        }
+
+        $illegal = array_merge(array_map('chr', range(0, 31)), array("<", ">", ":", '"', "|", "?", "*", ".."));
+        $name = str_replace($illegal, "_", $name);
+
+        return $name;
     }
 
     protected function getPackage($dir, $packSize)
@@ -261,52 +256,44 @@ class Repository
         return $package;
     }
 
-    protected function getName($address)
-    {  
-        $current = 0;
-        $length = 8;
-        
-        $decnames = preg_grep("#^\d+$#", scandir($this->root . DIRECTORY_SEPARATOR . $address));
-        
-        if (count($decnames) > 0) {
-            sort($decnames); 
-            $current = intval(end($decnames));
-        }
-
-        return str_pad($current+1, $length, "0", STR_PAD_LEFT);
-    }
-
-    protected function addFile($address, $data)
+    protected function addFile($path, $data)
     {
-        $filename = $this->root . DIRECTORY_SEPARATOR . $address;
+        $dir = dirname($path);
+        $dir = $this->getDir($dir);
+
+        // Sanitize name
+        $name = basename($path);
+        $name = $this->getName($name, $dir);
+        
+        $filename = $this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $name;
 
         if (!$fp = fopen($filename, 'x')) {
-            throw new \Exception("Can't open file at address $address for creation.");
+            throw new \Exception("Can't open file at path $path for creation.");
         }
         $wl = fwrite($fp, $data);
         if (!$wl) {
-            throw new \Exception("Can't write at address $address.");
+            throw new \Exception("Can't write at path $path.");
         }
 
         if ($wl != strlen($data)) {
             if (!unlink($filename)) {
-                throw new \Exception("Error writing at address $address, and the partial resource couldn't be deleted.");
+                throw new \Exception("Error writing at path $path, and the partial resource couldn't be deleted.");
             }
-            throw new \Exception("Error writing at address $address.");
+            throw new \Exception("Error writing at path $path.");
         }
         fclose($fp);
 
         if (hash('md5', $data) != hash_file('md5', $filename)) {
             if (!unlink($filename)) {
-                throw new \Exception("Error writing at address $address, but the partial resource couldn't be deleted.");
+                throw new \Exception("Error writing at path $path, but the partial resource couldn't be deleted.");
             }
-            throw new \Exception("Error writing at address $address.");
+            throw new \Exception("Error writing at path $path.");
         }
     }
 
-    protected function checkFile($address)
+    protected function checkFile($path)
     {
-        $filename = $this->root . DIRECTORY_SEPARATOR . $address;
+        $filename = $this->root . DIRECTORY_SEPARATOR . $path;
 
         if (!file_exists($filename)) {
             return false;
@@ -315,43 +302,43 @@ class Repository
         return true;
     }
 
-    protected function readFile($address)
+    protected function readFile($path)
     {
-        $filename = $this->root . DIRECTORY_SEPARATOR . $address;
+        $filename = $this->root . DIRECTORY_SEPARATOR . $path;
 
         if (!file_exists($filename)) {
-            throw new \Exception("Can not find resource at address $address");
+            throw new \Exception("Can not find resource at path $path");
         }
 
         if (!$data = file_get_contents($filename)) {
-            throw new \Exception("Can not read at address $address");
+            throw new \Exception("Can not read at path $path");
         }
 
         return $data;
     }
 
-    protected function updateFile($address, $data)
+    protected function updateFile($path, $data)
     {
-        $filename = $this->root . DIRECTORY_SEPARATOR . $address;
+        $filename = $this->root . DIRECTORY_SEPARATOR . $path;
 
         if (!file_exists($filename)) {
-            throw new \Exception("This file $address doesn't exist");
+            throw new \Exception("This file $path doesn't exist");
         }
 
         $backup = $filename . '.save';
 
         if (rename($filename, $backup)) {
-            throw new \Exception("Impossible to create the temporary file at address $address");
+            throw new \Exception("Impossible to create the temporary file at path $path");
         }
 
         if (!$fp = fopen($filename, 'x')) {
-            throw new \Exception("File at address $address coul not be opened");
+            throw new \Exception("File at path $path coul not be opened");
         }
 
         if (!$wl = fwrite($fp, $data)) {
             fclose($fp);
             if (!unlink($filename)) {
-                throw new \Exception("Impossible to write at address $address - The backup " . $address . ".save" . " is available");
+                throw new \Exception("Impossible to write at path $path - The backup " . $path . ".save" . " is available");
             }
 
             rename($backup, $filename);
@@ -361,7 +348,7 @@ class Repository
         if ($wl != strlen($data)) {
             fclose($fp);
             if (!unlink($filename)) {
-                throw new \Exception("Error in writing the file $address and it's impossible to delete but a backup " . $address . ".save" . " is available");
+                throw new \Exception("Error in writing the file $path and it's impossible to delete but a backup " . $path . ".save" . " is available");
             }
             
             rename($backup, $filename);
@@ -371,7 +358,7 @@ class Repository
         if (!hash('md5', $data) != hash_file('md5', $filename)) {
             fclose($fp);
             if (!unlink($filename)) {
-                throw new \Exception("Error, the hash of data isn't equals at file hash and it's impossible to delete but a backup " . $address . ".save" . " is avaialble");
+                throw new \Exception("Error, the hash of data isn't equals at file hash and it's impossible to delete but a backup " . $path . ".save" . " is avaialble");
             }
 
             rename($backup, $filename);
@@ -379,18 +366,18 @@ class Repository
         }
 
         if (!unlink($backup)) {
-            throw new \Exception("Impossible to delete a backup " . $address . ".save");
+            throw new \Exception("Impossible to delete a backup " . $path . ".save");
         }
 
         fclose($fp);
     }
 
-    private function deleteFile($address)
+    private function deleteFile($path)
     {  
-        $filename = $this->root . DIRECTORY_SEPARATOR . $address;
+        $filename = $this->root . DIRECTORY_SEPARATOR . $path;
 
         if (!file_exists($filename)) {
-             throw new \Exception("No resource found at address $address");
+             throw new \Exception("No resource found at path $path");
         }
 
         if ($this->shred) {
@@ -431,15 +418,15 @@ class Repository
         
 
         if (!unlink($filename)) {
-            throw new \Exception("Can not delete at address $address");
+            throw new \Exception("Can not delete at path $path");
         }
 
         return true;
     }
 
-    protected function writeMetadata($address, $metadata)
+    protected function writeMetadata($path, $metadata)
     {
-        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($address);
+        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($path);
 
         $mdf = $dir . DIRECTORY_SEPARATOR . 'metadata';
         $mdh = fopen($mdf, "a");
@@ -452,7 +439,7 @@ class Repository
 
         $stat = fstat($mdh);
 
-        $jsonMetadata = $address . "=" . json_encode($metadata, \JSON_PRETTY_PRINT) . "\n";
+        $jsonMetadata = $path . "=" . json_encode($metadata, \JSON_PRETTY_PRINT) . "\n";
 
         fwrite($mdh, $jsonMetadata);
 
@@ -461,9 +448,9 @@ class Repository
         fclose($mdh);
     }
 
-    protected function readMetadata($address)
+    protected function readMetadata($path)
     {
-        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($address);
+        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($path);
 
         $mdf = $dir . DIRECTORY_SEPARATOR . 'metadata';
         if (!is_file($mdf)) {
@@ -478,8 +465,8 @@ class Repository
 
         while (!feof($mdh)) {
             $line = fgets($mdh);
-            if (strpos($line, $address) === 0) {
-                $jsonMetadata = substr($line, strlen($address) + 1);
+            if (strpos($line, $path) === 0) {
+                $jsonMetadata = substr($line, strlen($path) + 1);
 
                 $metadata = json_decode($jsonMetadata);
             }
@@ -492,16 +479,16 @@ class Repository
         return $metadata;
     }
 
-    protected function updateMetadata($address, $metadata)
+    protected function updateMetadata($path, $metadata)
     {
-        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($address);
+        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($path);
 
         $mdf = $dir . DIRECTORY_SEPARATOR . 'metadata';
         if (!is_file($mdf)) {
-            return $this->writeMetadata($address, $metadata);
+            return $this->writeMetadata($path, $metadata);
         }
 
-        $jsonMetadata = $address . '=' . json_encode($metadata, \JSON_PRETTY_PRINT) . "\n";
+        $jsonMetadata = $path . '=' . json_encode($metadata, \JSON_PRETTY_PRINT) . "\n";
         
         $mdh = fopen($mdf, "r+");
 
@@ -514,7 +501,7 @@ class Repository
         $found = false;
         while (!feof($mdh)) {
             $line = fgets($mdh);
-            if (strpos($line, $address) === 0) {
+            if (strpos($line, $path) === 0) {
                 $found = true;
                 $line = $jsonMetadata;
             }
@@ -534,9 +521,9 @@ class Repository
         fclose($mdh);
     }
 
-    protected function deleteMetadata($address)
+    protected function deleteMetadata($path)
     {
-        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($address);
+        $dir = $this->root . DIRECTORY_SEPARATOR . dirname($path);
 
         $mdf = $dir . DIRECTORY_SEPARATOR . 'metadata';
         if (!is_file($mdf)) {
@@ -554,7 +541,7 @@ class Repository
         $found = false;
         while (!feof($mdh)) {
             $line = fgets($mdh);
-            if (strpos($line, $address) === 0) {
+            if (strpos($line, $path) === 0) {
                 $found = true;
                 $line = false;
             }
