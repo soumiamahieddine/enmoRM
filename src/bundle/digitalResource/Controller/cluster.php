@@ -246,23 +246,16 @@ class cluster
      * Store a resource on cluster (after opening it)
      * @param digitalResource/cluster         $cluster
      * @param digitalResource/digitalResource $resource
-     * @param string                          $collection
+     * @param string                          $path
      */
-    public function storeResource($cluster, $resource, $collection = null)
+    public function storeResource($cluster, $resource, $path)
     {
-        $address = null;
-
         foreach ($cluster->clusterRepository as $priority => $clusterRepository) {
             if ($clusterRepository->repository == null) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
 
-            // Re-use storage path in first repository on current if same type
-            if (!is_null($address)) {
-                $collection = \laabs\dirname($address->path);
-            }
-
-            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource, $collection);
+            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource, $path);
 
             if (!$address) {
                 throw \laabs::newException("digitalResource/clusterException", $address." not found");

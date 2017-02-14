@@ -481,11 +481,13 @@ trait archiveEntryTrait
 
         if (empty($filePlanPosition)) {
             if (!$this->storePath) {
-                $filePlanPosition = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber."/<10000>/".$archive->archiveId;
+                $filePlanPosition = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber."/".$archive->archiveId;
             } else {
-                $filePlanPosition = $this->resolveStoragePath($archive);
-            }
+                $filePlanPosition = $this->storePath;
+            } 
         }
+
+        $filePlanPosition = $this->resolveStoragePath($archive, $filePlanPosition);
 
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
@@ -498,9 +500,9 @@ trait archiveEntryTrait
         $archive->storagePath = $filePlanPosition;
 
         for ($i = 0; $i < $nbResources; $i++) {
-            $archive->digitalResources[$i]->archiveId = $archive->archiveId;
-            $resStoragePath = $filePlanPosition.'/'.$archive->digitalResources[$i]->resId;
-            $this->digitalResourceController->store($archive->digitalResources[$i], $this->currentServiceLevel->digitalResourceClusterId, $resStoragePath);
+            $digitalResource = $archive->digitalResources[$i];
+            $digitalResource->archiveId = $archive->archiveId;
+            $this->digitalResourceController->store($digitalResource, $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
         }
     }
 
@@ -532,25 +534,44 @@ trait archiveEntryTrait
     /**
      * Resolve the storage path
      *
-     * @param array $values Array of value to resolve the path
+     * @param array  $values  Array of value to resolve the path
+     * @param string $pattern The pattern to resolve
      *
      * @return string The storage path
      */
-    public function resolveStoragePath($values)
+    public function resolveStoragePath($values, $pattern=null)
     {
-        $filePlanPosition = $this->storePath;
+        if (!$pattern) {
+            $pattern = $this->storePath;
+        }
+
         $values = is_array($values) ? $values : get_object_vars($values);
 
         $matches = array();
-        preg_match_all("/\<(.*?)\>/", $this->storePath, $matches);
+        if (preg_match_all("/\<[^\>]+\>/", $pattern, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case $token == 'app':
+                        $pattern = str_replace($variable, \laabs::getApp(), $pattern);
+                        break;
 
-        foreach ($matches[1] as $key => $match) {
-            if (isset($values[$match])) {
-                $filePlanPosition = str_replace($matches[0][$key], (string) $values[$match], $filePlanPosition);
+                    case $token == 'instance':
+                        if ($instanceName = \laabs::getInstanceName()) {
+                            $pattern = str_replace($variable, \laabs::getInstanceName(), $pattern);
+                        } else {
+                            $pattern = "instance";
+                        }
+                        break;
+
+                    case isset($values[$token]):
+                        $pattern = str_replace($variable, (string) $values[$token], $pattern);
+                        break;
+                }
             }
         }
 
-        return $filePlanPosition;
+        return $pattern;
     }
 
     /**
