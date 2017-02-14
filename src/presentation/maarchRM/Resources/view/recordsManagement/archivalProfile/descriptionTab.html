@@ -35,26 +35,8 @@
                     <div class="col-md-7">
                         <select class="form-control" id="descriptionFields" name="type">
                             <option value=""/>
-                            <option data-type="text" value="originatorDocId">Identifier</option>
-                            <option data-type="text" value="language">Language</option>
-                            <option data-type="text" value="description">Description</option>
-                            <option data-type="name" value="publisher">Publisher</option>
-                            <option data-type="name" value="contributor">Contributor</option>
-                            <option data-type="date" value="creation">Date of creation</option>
-                            <option data-type="date" value="issue">Date of issue</option>
-                            <option data-type="date" value="reception">Date of reception</option>
-                            <option data-type="date" value="response">Date of response</option>
-                            <option data-type="date" value="submission">Date of submission</option>
-                            <option data-type="date" value="available">Date of availablity</option>
-                            <option data-type="date" value="update">Date of modification</option>
-                            <option data-type="date" value="valid">Date of validity</option>
-                            <option data-type="text" value="spatialCoverage">Spatial coverage</option>
-                            <option data-type="text" value="temporalCoverage">Temporal coverage</option>
-                            <?merge descriptionFields.bool() ?>
-                            <div>
                                 <?merge descriptionFields ?>
                                 <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
-                            </div>
                         </select>
                         <select class="form-control hide" id="descriptionClassProperties" name="type">
                         </select>
