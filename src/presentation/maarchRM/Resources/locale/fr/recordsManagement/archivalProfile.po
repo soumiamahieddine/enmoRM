@@ -208,3 +208,9 @@ msgstr "Le fichier de profil doit se terminer par .xsd ou .rng"
 
 msgid "reference"
 msgstr "Identifiant"
+
+msgid "Custom description fields"
+msgstr "Champs de description personnalisés"
+
+msgid "Field"
+msgstr "Champ"

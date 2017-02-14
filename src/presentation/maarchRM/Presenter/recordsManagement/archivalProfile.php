@@ -118,16 +118,6 @@ class archivalProfile
 
                     $this->listProperties($class, $properties, $dateProperties);
 
-                    if ($descriptionClass->name == $archivalProfile->descriptionClass) {
-                        foreach ($properties as $property) {
-                            if (!in_array($property, $requiredProperties)) {
-                                $archiveDescription = new \stdClass();
-                                $archiveDescription->fieldName = $property;
-
-                                array_push($archivalProfile->archiveDescription, $archiveDescription);
-                            }
-                        }
-                    }
                     $properties = json_encode($properties);
                     $dateProperties = json_encode($dateProperties);
 
@@ -135,20 +125,15 @@ class archivalProfile
                     $descriptionClass->properties = $properties;
                 }
             }
-            
+
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
             foreach ($descriptionFields as $descriptionField) {
                 if ($descriptionField->type == 'date') {
-                    $dateFields[] = $descriptionField->name;                
+                    $dateFields[] = $descriptionField->name;
                 }
             }
-
-            //description class selector
-            //$descriptionClassSlector = $this->view->getElementById("descriptionClass");
-            
-            //$this->view->merge($descriptionClassSlector);
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng";

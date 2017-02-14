@@ -1,0 +1,348 @@
+
+<div class="form-group col-md-12">
+    <label class="col-md-2 control-label">Description class</label>
+    <div class="col-md-3">
+        <select id="descriptionClass" name="descriptionClass" class="form-control">
+            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
+            <?merge descriptionClassList ?>
+            <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
+        </select>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="col-md-11 table-responsive">
+        <table class="col-md-offset-2 table table-striped" id="archiveDescriptionTable">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Required</th>
+                    <th style="width: 1%"></th>
+                </tr>
+            </thead>
+            <tbody id="archiveDescription">
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="col-md-5 col-md-offset-1">
+    <div class="row">
+        <div class="panel panel-default" id="archiveDescriptionForm">
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Field<span style="color:red">&nbsp;*</span></label>
+                    <div class="col-md-7">
+                        <select class="form-control" id="descriptionFields" name="type">
+                            <option value=""/>
+                            <option data-type="text" value="originatorDocId">Identifier</option>
+                            <option data-type="text" value="language">Language</option>
+                            <option data-type="text" value="description">Description</option>
+                            <option data-type="name" value="publisher">Publisher</option>
+                            <option data-type="name" value="contributor">Contributor</option>
+                            <option data-type="date" value="creation">Date of creation</option>
+                            <option data-type="date" value="issue">Date of issue</option>
+                            <option data-type="date" value="reception">Date of reception</option>
+                            <option data-type="date" value="response">Date of response</option>
+                            <option data-type="date" value="submission">Date of submission</option>
+                            <option data-type="date" value="available">Date of availablity</option>
+                            <option data-type="date" value="update">Date of modification</option>
+                            <option data-type="date" value="valid">Date of validity</option>
+                            <option data-type="text" value="spatialCoverage">Spatial coverage</option>
+                            <option data-type="text" value="temporalCoverage">Temporal coverage</option>
+                            <?merge descriptionFields.bool() ?>
+                            <div>
+                                <?merge descriptionFields ?>
+                                <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
+                            </div>
+                        </select>
+                        <select class="form-control hide" id="descriptionClassProperties" name="type">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="requiredField">
+                    <label class="col-md-3 control-label">Required</label>
+                    <div class="col-md-7">
+                        <input type="checkbox" name="required"/>
+                    </div>
+                </div>
+                <div class="pull-right ">
+                    <button type="button" id="cancelProperty" class="btn btn-warning"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                    <button type="button" id="addProperty" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                    <button type="button" id="modifyProperty" class="btn btn-success hide"><i class="fa fa-edit">&nbsp;</i>Modify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <input type="hidden" id="archiveDescriptionJson" data-json="[?merge archivalProfile.archiveDescription.json() ?]">
+    </div>
+
+    <div class="hide">
+        <!-- ERROR MESSAGES -->
+        <span id="emptyName_error">A name must be provide for the property.</span>
+        <span id="emptyLabe_error">A label must be provide for the property.</span>
+
+        <!-- TYPE -->
+        <span id="text_text">text</span>
+        <span id="name_text">name</span>
+        <span id="date_text">date</span>
+        <span id="number_text">number</span>
+        <span id="boolean_text">boolean</span>
+
+        <table>
+            <!-- CUSTOM PROPERTY TEMPLATE -->
+            <tr id="descriptionPropertyTemplate" data-json="" style="cursor: pointer;">
+                <td class="propertyLabel"><span class="fa fa-arrows-v">&nbsp;&nbsp;</span></td>
+                <td class="requiredProperty">
+                     <i class="fa fa-check-square-o"></i>
+                </td>
+                <td class="text-right">
+                    <span class="deleteProperty" title="delete"><i class="fa fa-times"></i></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="/public/dependency/html/js/jQueryUI_1.10.4/jqueryUI.js"></script>
+<!-- custom field JS -->
+<script type="text/javascript">
+
+    $('#addProperty').on('click', function(e) {
+        PropertiesForm.add();
+    });
+
+    $('#modifyProperty').on('click', function(e) {
+        PropertiesForm.add(true);
+    });
+
+    $('#cancelProperty').on('click', function() {
+        PropertiesForm.clear();
+        PropertiesList.unselect();
+
+    });
+
+    // Properties list
+    $('#archiveDescription').on('click', '.deleteProperty', function(e) {
+        //e.preventDefault();
+        //e.stopPropagation();
+        e.stopImmediatePropagation()
+        PropertiesList.remove($(this));
+        PropertiesForm.clear();
+    });
+    
+
+    var PropertiesForm = {
+        form : $('#archiveDescriptionForm'),
+        load : function(property) {
+            this.clear();
+
+            if(!property) {
+                PropertiesList.unselect();
+                return;
+            }
+
+            // submit buttons
+            $('#addProperty').addClass('hide');
+            $('#modifyProperty').removeClass('hide');
+            
+            // property fields
+            $('#descriptionFields').find('option[value="'+property.fieldName+'"]').prop('selected', true);
+
+            if(property.required === true) {
+                $('#requiredField').find('input').prop('checked', true);
+            }
+
+            // custom property
+            if($('#descriptionFields').val() == '') {
+                $('#descriptionFields').find('option[value="custom"][data-type="'+property['type']+'"]').prop('selected', true);
+            }
+
+        },
+        add : function(update) {
+            var property = this.serialize();
+
+            if(property.fieldName == "") {
+                gritter.show($('#emptyName_error').html(), false);
+                return;
+            }
+
+            this.hideInPropertyList(property.fieldName);
+
+            if (update === true) {
+                PropertiesList.update(property);
+            } else {
+                PropertiesList.add(property);
+            }
+            this.clear();
+            PropertiesList.unselect();
+
+        },
+        serialize : function() {
+            if ($('#descriptionClass').val() == "") {
+                var type = $('#descriptionFields');
+            } else {
+                var type = $('#descriptionClassProperties');
+            }
+
+            var selectedOption = type.find('option:selected');
+            var property = {
+                fieldName    : type.val(),
+                label        : selectedOption.text(),
+                required     : $('#requiredField').find('input').is(':checked'),
+            }
+
+            return property;
+        },
+        clear : function() {
+            this.form.find('input[type="text"], input[type="number"], select').val('');
+            this.form.find('input[type="checkbox"]').attr('checked', false);
+            $('#addProperty').removeClass('hide');
+            $('#modifyProperty').addClass('hide');
+        },
+        hideInPropertyList : function(fieldName) {
+            if ($('#descriptionClass').val() == "") {
+                var select = $('#descriptionFields');
+            } else {
+                var select = $('#descriptionClassProperties');
+            }
+            select.find('option[value="'+fieldName+'"]').addClass('hide');
+
+        },
+        showInPropertyList : function(fieldName) {
+            if ($('#descriptionClass').val() == "") {
+                var select = $('#descriptionFields');
+            } else {
+                var select = $('#descriptionClassProperties');
+            }
+            select.find('option[value="'+fieldName+'"]').removeClass('hide');
+        }
+    }
+
+    var PropertiesList = {
+        list : $('#archiveDescription'),
+        selected : function(e) {
+            this.unselect();
+            e.addClass('active');
+        },
+        unselect : function() {
+            this.list.find('.active').removeClass('active');
+        },
+        add : function(property) {
+            var template = this.fillTemplate(property);
+            template.appendTo(this.list);
+        },
+        loadExisting : function() {
+            var json = $("#archiveDescriptionJson").attr("data-json");
+
+            if (json == "" || json == "undefined" || json == null) {
+                return;
+            }
+
+            var archiveDescription = JSON.parse(json);
+            
+            archiveDescription.sort(function(a, b) {
+                return a.position - b.position;
+            });
+            
+            $.each(archiveDescription, function (key, value) {
+                PropertiesForm.hideInPropertyList(value.fieldName);
+                if ($('#descriptionClass').val() == "") {
+                    var select = $('#descriptionFields');
+                } else {
+                    var select = $('#descriptionClassProperties');
+                }
+            
+                var property = {
+                    fieldName    : value.fieldName,
+                    label        : select.find('option[value="'+value.fieldName+'"]').text(),
+                    required     : value.required,
+                }
+
+                var template = PropertiesList.fillTemplate(property);
+                template.appendTo(PropertiesList.list);
+            });
+        },
+        update : function(property) {
+            var active = this.list.find('.active');
+            var json = JSON.parse(active.attr("data-json"));
+            var template = this.fillTemplate(property);
+
+            active.after(template);
+            active.remove();
+        },
+        fillTemplate : function(property) {
+            var template = $('#descriptionPropertyTemplate').clone().attr('data-json', JSON.stringify(property)).removeAttr('id');
+
+            template.find('.propertyLabel').append(property['label']);
+
+            if (property['required'] == true) {
+                template.addClass("danger");
+                template.find('.requiredProperty').find("i").addClass("fa-check-square-o");
+            } else {
+                template.find('.requiredProperty').find("i").addClass("fa-square-o");
+            }
+            
+            return template;
+        },
+        remove : function(e) {
+            var e = e.closest('tr');
+
+            PropertiesForm.showInPropertyList(JSON.parse(e.attr('data-json')).fieldName);
+            e.remove();
+        },
+
+        serialize : function() {
+            archiveDescription = [];
+            
+            var findingElement = $("#archiveDescription").find("tr");
+
+            $.each(findingElement, function (key, value) {
+                var element = JSON.parse($(value).attr("data-json"));
+                var property = new Object();
+                property.fieldName = element.fieldName;
+                property.required = element.required;
+                archiveDescription.push(property);
+            });
+            
+            return archiveDescription;
+        }
+    }
+</script>
+
+<!-- description class JS -->
+<script  type="text/javascript">
+    //load description object properties
+    $("#contain").on('change', '#descriptionClass', function () {
+        
+        var dateProperties = $(this).find(':selected').data('dateproperties');
+        var properties = $('option:selected', this).data('properties');
+        var archiveDescription = $('#archiveDescription');
+        archiveDescription.empty()
+
+        if (properties) {
+            $("#descriptionClassProperties").removeClass("hide");
+            $("#descriptionFields").addClass("hide");
+        } else {
+            $("#descriptionClassProperties").addClass("hide");
+            $("#descriptionFields").removeClass("hide");
+        }
+        
+        $("#descriptionClassProperties").empty();
+
+        var option = $('<option/>').appendTo($("#descriptionClassProperties"));
+
+        $.each(properties, function () {
+            option.clone().val(this).text(this).appendTo($("#descriptionClassProperties"));
+        });
+    })
+
+    $('#app_maarchRM_main').ready(function() {
+        $("#archiveDescription").sortable();
+        $("#archiveDescription").disableSelection();
+        $('#descriptionClass').change();
+        PropertiesList.loadExisting();
+    })
+</script>
