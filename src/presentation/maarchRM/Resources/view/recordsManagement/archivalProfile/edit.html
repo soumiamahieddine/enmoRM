@@ -396,7 +396,9 @@ file that was distributed with this source code.
             $('#accessRule').css("display", 'none');
         }
 
-        if(accessEntries) {
+        $('#accessEntries').empty();
+        
+        if(accessEntries != "") {
             for(var i=0; i<accessEntries.length; i++) {
                 loadAccessEntry(accessEntries[i]);
             }
