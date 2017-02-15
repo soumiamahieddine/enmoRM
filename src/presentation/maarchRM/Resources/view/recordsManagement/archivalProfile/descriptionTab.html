@@ -25,17 +25,15 @@
 
 <div class="col-md-12">
     <div class="col-lg-6 col-md-9 col-sm-12 table-responsive">
-        <table class="table table-condensed col-md-offset-1" id="archiveDescriptionTable">
+        <table class="table col-md-offset-1" id="archiveDescriptionTable">
             <thead>
                 <tr>
                     <th>Property</th>
-                    <th>Required</th>
-                    <th style="width: 1%"></th>
+                    <th style="width: 5%">Required</th>
+                    <th style="width: 5%"></th>
                 </tr>
-            </thead>
-            <tbody id="archiveDescription">
                 <tr id="archiveDescriptionForm">
-                    <td>
+                    <th>
                         <select class="form-control" id="descriptionFields" name="type">
                             <option value=""/>
                             <?merge descriptionFields ?>
@@ -43,14 +41,17 @@
                         </select>
                         <select class="form-control hide" id="descriptionClassProperties" name="type">
                         </select>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <input type="checkbox" class="pull-left" name="required" id="requiredField"/>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <button type="button" class="btn btn-success" id="addProperty"><span class="fa fa-plus"></span></button>
-                    </td>
+                    </th>
                 </tr>
+            </thead>
+            <tbody id="archiveDescription">
+                
             </tbody>
         </table>
     </div>
@@ -87,7 +88,7 @@
 <!-- custom field JS -->
 <script type="text/javascript">
 
-    $('#archiveDescription').on('click', "#addProperty", function(e) {
+    $('#archiveDescriptionForm').on('click', "#addProperty", function(e) {
         PropertiesForm.add();
     });
 
@@ -274,7 +275,7 @@
         serialize : function() {
             archiveDescription = [];
             
-            var findingElement = $("#archiveDescription").find("tr").not(":first");
+            var findingElement = $("#archiveDescription").find("tr");
 
             $.each(findingElement, function (key, value) {
                 var element = JSON.parse($(value).attr("data-json"));
@@ -301,9 +302,9 @@
         var dateProperties = $(this).find(':selected').data('dateproperties');
         var properties = $('option:selected', this).data('properties');
         var archiveDescription = $('#archiveDescription');
-        var fieldForm = archiveDescription.find('tr').first()
+        //var fieldForm = archiveDescription.find('tr').first()
         archiveDescription.empty()
-        archiveDescription.append(fieldForm);
+        //archiveDescription.append(fieldForm);
 
         if (properties) {
             $("#descriptionClassProperties").removeClass("hide");

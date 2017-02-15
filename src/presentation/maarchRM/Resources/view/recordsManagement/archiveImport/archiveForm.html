@@ -24,6 +24,7 @@
             <input class="form-control" disabled ='true' name="filePlanPosition" placeholder="File plan position"/>
         </div>
     </div>
+
     <div class="col-xs-12">
         <button class="btn btn-success pull-right" id="import"><i class="fa fa-paper-plane-o"></i>&nbsp;Import</button>
     </div>
@@ -51,16 +52,16 @@
                     <option value="[?merge .code ?]" data-duration="[?merge .durationText ?]" data-final-disposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
                 </select>
             </div>
-            
+            <div class="col-md-3">
+                <p class="help-block"><i id="retentionRuleText"></i></p>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-md-3">Retention start date</label>
             <div class="col-md-3">
                 <input class="form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
             </div>
-            <div class="col-md-3">
-                <p class="help-block"><i id="retentionRuleText"></i></p>
-            </div>
+            
         </div>
     </div>
 </form>
