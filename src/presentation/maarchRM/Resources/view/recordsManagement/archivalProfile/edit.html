@@ -62,12 +62,6 @@ file that was distributed with this source code.
                 <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
                     <?merge archivalProfile.type.ifeq('1').not() ?>
                     <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
-                    
-                    <!--?merge archivalProfile.type.ifeq('1').not() ?>
-                    <li role="presentation" id="descriptionClassTabBtn"><a href="#descriptionClassTab" aria-controls="descriptionClassTab" role="tab" data-toggle="tab">Description class</a></li>
-                    <?merge archivalProfile.type.ifeq('1').not() ?>
-                    <li role="presentation" id="documentDescriptionTabBtn" ><a href="#documentDescriptionTab" aria-controls="documentDescriptionTab" role="tab" data-toggle="tab">Document description</a></li-->
-                    
                     <?merge archivalProfile.type.ifeq('1').not() ?>
                     <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
                 </ul>
@@ -159,8 +153,7 @@ file that was distributed with this source code.
                                             <table class="table table-condensed">
                                                 <thead>
                                                     <th>Service</th>
-                                                    <th>Lecture</th>
-                                                    <th>Modification / Suppression</th>
+                                                    <th>Originator</th>
                                                 </thead>
                                                 <tbody id="accessEntries">
 
@@ -418,12 +411,11 @@ file that was distributed with this source code.
 
         var tr = $('<tr/>');
         $('<td/>').text(accessEntry.displayName).appendTo(tr);
-        $('<td/>').append(iconeSucess).appendTo(tr);
         
         if (accessEntry.originatorAccess == true) {
             $('<td/>').append(iconeSucess).appendTo(tr);
         } else {
-            $('<td/>').append(iconeError).appendTo(tr);
+            $('<td/>').appendTo(tr);
         }
         
         $('#accessEntries').append(tr);

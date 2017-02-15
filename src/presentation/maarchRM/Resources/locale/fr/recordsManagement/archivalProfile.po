@@ -214,3 +214,9 @@ msgstr "Champs de description personnalisés"
 
 msgid "Field"
 msgstr "Champ"
+
+msgid "A field must not be empty"
+msgstr "Le champ ne doit pas être vide"
+
+msgid "Originator"
+msgstr "Producteur"

@@ -1,5 +1,5 @@
 
-<div class="form-group col-md-12">
+<!--div class="form-group col-md-12">
     <label class="col-lg-2 col-md-4 control-label">Description class</label>
     <div class="col-lg-5 col-md-8">
         <select id="descriptionClass" name="descriptionClass" class="form-control">
@@ -8,34 +8,24 @@
             <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
         </select>
     </div>
-</div>
-
-
-
-<div class="form-group col-md-12" id="archiveDescriptionForm">
-    <label class="col-lg-2 col-md-4 control-label">Field<span style="color:red">&nbsp;*</span></label>
-    <div class="input-group col-lg-5 col-md-8">
-        <select class="form-control" id="descriptionFields" name="type">
-            <option value=""/>
-            <?merge descriptionFields ?>
-            <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
-        </select>
-        <select class="form-control hide" id="descriptionClassProperties" name="type">
-        </select>
-        <span class="input-group-addon">
-            <span>Required</span>&nbsp;&nbsp;<input type="checkbox" name="required" id="requiredField"/>
-        </span>
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-success" id="addProperty"><span class="fa fa-plus"></span></button>
-        </span>
+</div-->
+<div class="form-group col-md-12">
+    <div class="col-lg-6 col-md-9 col-sm-12">
+        <label class="col-md-offset-1 col-lg-2 col-md-4 control-label">Description class</label>
+        <div class="col-lg-8 col-md-10">
+            <select id="descriptionClass" name="descriptionClass" class="form-control">
+                <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
+                <?merge descriptionClassList ?>
+                <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
+            </select>
+        </div>
     </div>
 </div>
 
 
-
 <div class="col-md-12">
-    <div class="col-lg-8 col-md-10 col-sm-12 table-responsive">
-        <table class="table table-striped col-md-offset-1" id="archiveDescriptionTable">
+    <div class="col-lg-6 col-md-9 col-sm-12 table-responsive">
+        <table class="table table-condensed col-md-offset-1" id="archiveDescriptionTable">
             <thead>
                 <tr>
                     <th>Property</th>
@@ -44,18 +34,33 @@
                 </tr>
             </thead>
             <tbody id="archiveDescription">
-                
+                <tr id="archiveDescriptionForm">
+                    <td>
+                        <select class="form-control" id="descriptionFields" name="type">
+                            <option value=""/>
+                            <?merge descriptionFields ?>
+                            <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
+                        </select>
+                        <select class="form-control hide" id="descriptionClassProperties" name="type">
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox" class="pull-left" name="required" id="requiredField"/>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success" id="addProperty"><span class="fa fa-plus"></span></button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<div class="hide">
+<div class="hide" data-translate-catalog="recordsManagement/archivalProfile">
     <input type="hidden" id="archiveDescriptionJson" data-json="[?merge archivalProfile.archiveDescription.json() ?]">
 
     <!-- ERROR MESSAGES -->
-    <span id="emptyName_error">A name must be provide for the property.</span>
-    <span id="emptyLabe_error">A label must be provide for the property.</span>
+    <span id="emptyName_error">A field must not be empty</span>
 
     <!-- TYPE -->
     <span id="text_text">text</span>
@@ -72,7 +77,7 @@
                  <i class="fa fa-check-square-o"></i>
             </td>
             <td class="text-right">
-                <span class="deleteProperty" title="delete"><i class="fa fa-times"></i></span>
+                <button type="button" class="deleteProperty btn btn-danger" title="delete"><i class="fa fa-minus"></i></button>
             </td>
         </tr>
     </table>
@@ -82,7 +87,7 @@
 <!-- custom field JS -->
 <script type="text/javascript">
 
-    $('#addProperty').on('click', function(e) {
+    $('#archiveDescription').on('click', "#addProperty", function(e) {
         PropertiesForm.add();
     });
 
@@ -269,7 +274,7 @@
         serialize : function() {
             archiveDescription = [];
             
-            var findingElement = $("#archiveDescription").find("tr");
+            var findingElement = $("#archiveDescription").find("tr").not(":first");
 
             $.each(findingElement, function (key, value) {
                 var element = JSON.parse($(value).attr("data-json"));
@@ -293,11 +298,12 @@
 <script  type="text/javascript">
     //load description object properties
     $("#contain").on('change', '#descriptionClass', function () {
-        
         var dateProperties = $(this).find(':selected').data('dateproperties');
         var properties = $('option:selected', this).data('properties');
         var archiveDescription = $('#archiveDescription');
+        var fieldForm = archiveDescription.find('tr').first()
         archiveDescription.empty()
+        archiveDescription.append(fieldForm);
 
         if (properties) {
             $("#descriptionClassProperties").removeClass("hide");
