@@ -153,13 +153,18 @@ file that was distributed with this source code.
                                                     <th class="col-md-4">Access rule duration</th>
                                                     <td  class="col-md-8" id="accessRuleDuration"></td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Access entries</th>
-                                                    <td >
-                                                        <ul id="accessEntries" class="list-group">
-                                                        </ul>
-                                                    </td>
-                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-10 col-md-offset-2" id="accessEntriesTable">
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <th>Service</th>
+                                                    <th>Lecture</th>
+                                                    <th>Modification / Suppression</th>
+                                                </thead>
+                                                <tbody id="accessEntries">
+
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div> 
@@ -397,8 +402,9 @@ file that was distributed with this source code.
         }
 
         $('#accessEntries').empty();
-        
+        $("#accessEntriesTable").hide();
         if(accessEntries != "") {
+            $("#accessEntriesTable").show();
             for(var i=0; i<accessEntries.length; i++) {
                 loadAccessEntry(accessEntries[i]);
             }
@@ -407,17 +413,20 @@ file that was distributed with this source code.
     }
 
     function loadAccessEntry(accessEntry) {
-        var li = $('<li/>')
-            .html(accessEntry.displayName)
-            .addClass('list-group-item')
-            .appendTo($('#accessEntries'));
-        
-        $('<span/>').addClass('pull-right').html('<i class="fa fa-eye fa-2x text-primary">&nbsp;</i>').appendTo(li);
+        var iconeSucess  = $('<span/>').html('<i class="fa fa-check fa-2x text-success">&nbsp;</i>');
+        var iconeError  = $('<span/>').html('<i class="fa fa-times fa-2x text-danger">&nbsp;</i>');
 
+        var tr = $('<tr/>');
+        $('<td/>').text(accessEntry.displayName).appendTo(tr);
+        $('<td/>').append(iconeSucess).appendTo(tr);
+        
         if (accessEntry.originatorAccess == true) {
-            $('<span/>').addClass('pull-right').html('<i class="fa fa-times fa-2x text-danger">&nbsp;</i>').appendTo(li);
-            $('<span/>').addClass('pull-right').html('<i class="fa fa-edit fa-2x text-warning">&nbsp;</i>').appendTo(li);            
-        }   
+            $('<td/>').append(iconeSucess).appendTo(tr);
+        } else {
+            $('<td/>').append(iconeError).appendTo(tr);
+        }
+        
+        $('#accessEntries').append(tr);
     }
 
     function serialize() {
