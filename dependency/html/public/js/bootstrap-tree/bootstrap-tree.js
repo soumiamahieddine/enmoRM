@@ -17,7 +17,6 @@ var BootstrapTree = {
         $('.parent_li').find('span:first')
                        .find('.fa[data-closed-icon]:first')
                        .each(function() {
-                            console.log($(this).data('closed-icon'));
                             $(this).addClass($(this).data('closed-icon'));
                        })
 
@@ -45,13 +44,14 @@ var BootstrapTree = {
             ul = $('<ul/>').appendTo(parent);
 
             parent.addClass('parent_li')
-              .find('span:first')
-              .find('.fa:first')
-              .addClass(this.openedIcon)
-              .on('click', BootstrapTree.toggleNode);
+                  .find('span:first')
+                  .find('.fa:first')
+                  .addClass(this.openedIcon)
+                  .on('click', BootstrapTree.toggleNode);
         }
         //this.openNode(ul);
         element.appendTo(ul);
+        console.log('ok');
     },
 
     removeNode: function(element) {
@@ -88,7 +88,7 @@ var BootstrapTree = {
             openedIcon = 'fa-minus-square';
         }
 
-        if (children.is(':visible')) {
+        if (i.hasClass(openedIcon)) {
             children.hide('fast');
             i.addClass(closedIcon).removeClass(openedIcon);
         }
@@ -102,5 +102,31 @@ var BootstrapTree = {
 
     findNode: function(tree, text) {
         this.openNode(tree.find("li:contains('"+text+"')"));
+    },
+
+    move: function(element, target) {
+        if (!element || !target) {
+            return;
+        }
+
+        var ul = target.find('> ul');
+        if (ul.length == 0) {
+            ul = $('<ul/>').appendTo(target);
+
+            target.addClass('parent_li')
+                  .find('span:first')
+                  .find('.fa:first')
+                  .addClass(this.openedIcon)
+                  .on('click', BootstrapTree.toggleNode);
+        }
+        ul.append(element);
+
+        var targetUl = target.find('ul');
+        if (targetUl.length == 0) {
+            targetUl.remove();
+        }
+
+        return newElement;
     }
+
 }

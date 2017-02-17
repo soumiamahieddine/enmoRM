@@ -14,41 +14,145 @@
             </h1>
         </div>
     </div>
-    <div class="col-md-6">
-        <button id="new subject" class="btn btn-default"><i class="fa fa-plus">&nbsp;</i>New subject</button>
-        <div id="filePlanTree" class="tree" style="padding:20px 0 0 50px">
+    <div class="col-md-4">
+        <div>
+        </div>
+        <div id="filePlanTree" class="tree">
+            <br/>
             <?merge filePlan ?>
             <ul>
-                <?hinclude /filePlan/subjectNode.html ?>
+                <?hinclude /filePlan/organizationNode.html ?>
             </ul>
         </div>
     </div>
-    <div class="col-md-6">
-        <?hinclude /filePlan/subjectForm.html ?>
+    <div class="col-md-8">
+        <--!?hinclude /filePlan/subjectForm.html ?-->
     </div>
+    <?hinclude /filePlan/moveFolderModal.html ?>
 </div>
 
+<style>
+    .folder {
+        padding: 0px !important; 
+        min-width:150px !important;
+    }
+    .folder > b {
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .folder > i {
+        font-size: 24px;
+    }
+    #trash {
+        color: #444;
+        visibility: hidden;
+    }
+</style>
+
+<script type="text/javascript" src="/public/dependency/html/js/jQueryUI_1.10.4/jqueryUI.js"></script>
 <script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
 <script>
 
-FilePlan = {
-    tree: $('#filePlanTree'),
-
-    selectNode: function(node) {
-        this.unselectNode()
-        node.children('span').removeClass('node-primary').addClass('node-warning');
+FolderNode = {
+    select: function(e) {
+        e.find('i')
+         .css("font-size", "34px")
+         .siblings()
+         .css("font-size", "24px");
     },
 
-    unselectNode: function() {
-        this.tree.find('.node-warning').removeClass('node-warning').addClass('node-primary');
+    unselect: function(e) {
+        e.find('i')
+         .css("font-size", "24px")
+         .siblings()
+         .css("font-size", "14px");
     }
 }
 
-$(document).on('ready', function() {
-    BootstrapTree.init($('#filePlanTree'));
+OrganizationNode = {
+    select: function(e) {
+        e.removeClass('node-default')
+         .addClass('node-warning');
+    },
+
+    unselect: function(e) {
+        e.removeClass('node-warning')
+         .addClass('node-default');
+    }
+}
+
+FolderDroppableOption = {
+    over: function(event, ui) {
+       FolderNode.select($(this));
+    },
+    out: function(event, ui) {
+       FolderNode.unselect($(this));
+    },
+    drop: function(event, ui) {
+        FolderNode.unselect($(this));
+        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+    }
+}
+
+OrganizationDroppableOption = {
+    over: function(event, ui) {
+       OrganizationNode.select($(this));
+    },
+    out: function(event, ui) {
+       OrganizationNode.unselect($(this));
+       
+    },
+    drop: function(event, ui) {
+        OrganizationNode.unselect($(this));
+        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+    }
+}
+
+$('#app_maarchRM_main').ready(function() {
+    var options = {
+       closedIcon : 'fa-folder',
+       openedIcon: 'fa-folder-open' 
+    }
+    BootstrapTree.init($('#filePlanTree'), options);
 })
 
-$('.node-primary').on('click', function() {
-    FilePlan.selectNode($(this).closest('li'));
+// Folder selection
+$('#filePlanTree').on('mouseenter', '.folder > b', function() { 
+    if ($(this).css('font-size') != '24px') {
+        $(this).addClass('label label-default');
+    }
+});
+$('#filePlanTree').on('mouseleave', '.folder > b', function() { 
+    $(this).removeClass('label label-default');
 })
+
+// Drag'n drop handling 
+$('.folder').draggable({
+    revert : true,
+    drag : function() {
+        $('#trash').css('visibility', 'visible');
+    },
+    stop: function() {
+        $('#trash').css('visibility', 'hidden');
+    }
+})
+
+$('.folder').droppable(FolderDroppableOption);
+$('.orgNode').droppable(OrganizationDroppableOption);
+$('#trash').droppable({
+    over: function(event, ui) {
+       $(this).removeClass('disabled');
+              //.addClass('btn-warning')
+              //.removeClass('btn-default');
+    },
+    out: function(event, ui) {
+       $(this).addClass('disabled');
+              //.removeClass('btn-warning')
+              //.addClass('btn-default');
+    },
+    drop: function(event, ui) {
+       $(this).addClass('disabled');
+    }
+})
+
 </script>

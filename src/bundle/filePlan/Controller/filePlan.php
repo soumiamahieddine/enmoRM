@@ -33,7 +33,6 @@ class filePlan {
      * Constructor
      * @param object $sdoFactory The model for file plan
      *
-     * @return void
      */
     public function __construct(\dependency\sdo\Factory $sdoFactory) {
         $this->sdoFactory = $sdoFactory;
@@ -45,7 +44,16 @@ class filePlan {
      * @return array The list of file plan folder with their position
      */
     public function getTree() {
-        $folders = $this->sdoFactory->find('filePlan/folder');
+        // Find the user orgUnit
+        $organizations = \laabs::callService("organization/userPosition/read");
+        $orgIds = [];
+
+        foreach ($organizations as $key => $userPosition) {
+            $orgIds[] = (string) $userPosition->orgId;
+            $organizations[$key] = $userPosition->organization;
+        }
+        
+        $folders = $this->sdoFactory->find('filePlan/folder', "ownerOrgId=['".\laabs\implode("', '", $orgIds)."']");
 
         // sort by parent
         $roots = [];
@@ -64,20 +72,73 @@ class filePlan {
             }
         }
         
-        return $this->buildTree($roots, $folderList);
+        $roots = $this->buildForlderTree($roots, $folderList);
+        $orgById = [];
+        $orgByParent = [];
+        $orgRoots = [];
+
+        foreach ($organizations as $organization) {
+            $orgById[(string) $organization->orgId] = $organization;
+        }
+
+        foreach ($roots as $root) {
+            if (!isset($orgById[(string) $root->ownerOrgId]->folder)) {
+                $orgById[(string) $root->ownerOrgId]->folder = [];
+            }
+
+            $orgById[(string) $root->ownerOrgId]->folder[] = $root;   
+        }
+
+        // Org tree structure
+        foreach ($organizations as $organization) {
+            if (!in_array((string) $organization->parentOrgId, $orgIds)) {
+                $orgRoots[] = $organization;
+            } else {
+                if (!isset($orgByParent[(string) $organizations->parentOrgId])) {
+                    $orgByParent[(string) $organizations->parentOrgId] = [];
+                }
+
+                $orgByParent[(string) $organizations->parentOrgId][] = $organizations;
+            }
+        }
+
+        return $this->buildOrgTree($orgRoots, $orgByParent);
     }
 
     /**
      * Build the file plan tree
+     * @param array $roots      The list of parent folders
+     * @param array $folderList The list of folders sorted by parentId
      *
+     * @return array The folder tree
      */
-    protected function buildTree($roots, $folderList)
+    protected function buildForlderTree($roots, $folderList)
     {
         foreach ($roots as $folder) {
             $folderId = (string) $folder->folderId;
 
             if (isset($folderList[$folderId])) {
-                $folder->folder = $this->buildTree($folderList[$folderId], $folderList);
+                $folder->folder = $this->buildForlderTree($folderList[$folderId], $folderList);
+            }
+        }
+
+        return $roots;
+    }
+
+    /**
+     * Build the organization tree
+     * @param array $roots   The list of parent organization
+     * @param array $orgList The list of organization sorted by parentId
+     *
+     * @return array The organization tree
+     */
+    protected function buildOrgTree($roots, $orgList)
+    {
+        foreach ($roots as $organization) {
+            $organizationId = (string) $organization->orgId;
+
+            if (isset($orgList[$organizationId])) {
+                $organization->organization = $this->buildOrgTree($orgList[$organizationId], $orgList);
             }
         }
 

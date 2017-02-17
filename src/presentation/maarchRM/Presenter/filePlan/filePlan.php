@@ -63,11 +63,23 @@ class filePlan
     public function showTree($filePlan)
     {
         $this->view->addContentFile('filePlan/filePlanTree.html');
+        $this->markTreeLeaf($filePlan);
 
         $this->view->translate();
         $this->view->setSource("filePlan", $filePlan);
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    /**
+     * Mark leaf for html merging
+     */
+    protected function markTreeLeaf($tree) {
+        foreach ($tree as $node) {
+            if (!isset($node->organization) && !isset($node->folder)) {
+                $node->isLeaf = true;
+            }
+        }
     }
 }

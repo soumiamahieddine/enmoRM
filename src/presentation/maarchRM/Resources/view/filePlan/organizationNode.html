@@ -1,0 +1,11 @@
+<li id="[?merge .orgId ?]" lang="en" data-translate-catalog="filePlan/messages">
+    <span class="orgNode node-default">
+        <i class="fa"/>
+        <b style="font-size: 14px"><?merge .orgName ?></b>
+    </span>
+
+    <?merge .isLeaf.not() ?>
+    <ul>
+        <?merge .folder /filePlan/folderNode.html ?>
+    </ul>
+</li>

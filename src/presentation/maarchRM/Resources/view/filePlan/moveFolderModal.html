@@ -1,0 +1,53 @@
+<div class="modal fade" id="moveFolderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            Move folder
+        </div>
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
+                    </div>
+                    <div class="col-xs-10">
+                        <h4>Do you want to move <span id="moveElementName"></span> into <span id="targetElementName"></span> ?</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                <button type="button" id="move" data-form-name="" data-json="" data-parent="" class="btn btn-success" data-dismiss="modal">Oui</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+MoveModal = {
+    target: null,
+    element: null,
+
+    show: function(element, target) {
+        this.target = target;
+        this.element = element;
+        $('#moveElementName').html(element.find('b').html());
+        $('#targetElementName').html(target.find('b').html());
+        $('#moveFolderModal').modal();
+    },
+
+    move: function() {
+        console.log(this.target);
+        console.log(this.element);
+        if (this.element && this.target) {
+            var newElement = BootstrapTree.move(this.element, this.target);
+            newElement.draggable({revert : true});
+            newElement.droppable(FolderDroppableOption);
+        }
+    }
+}
+
+$('#move').click(function() {
+    MoveModal.move();
+})
+
+</script>
