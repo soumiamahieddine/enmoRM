@@ -19,6 +19,16 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-md-3">Archival profile</label>
+        <div class="col-md-9">
+            <select class="form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
+                <option value=""></option>
+                <?merge archivalProfiles ?>
+                <option value="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name ?></option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-md-3">File plan position</label>
         <div class="col-md-9">
             <input class="form-control" disabled ='true' name="filePlanPosition" placeholder="File plan position"/>
@@ -33,16 +43,6 @@
         <a data-toggle="collapse" href="#management">Management metadata</a>
     </h4>
     <div id="management" class="panel-collapse in">
-        <div class="form-group">
-            <label class="col-md-3">Archival profile</label>
-            <div class="col-md-6">
-                <select class="form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
-                    <option value=""></option>
-                    <?merge archivalProfiles ?>
-                    <option value="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name ?></option>
-                </select>
-            </div>
-        </div>
         <div class="form-group">
             <label class="col-md-3">Retention rule<span style="color: red">&nbsp;*</span></label>
             <div class="col-md-6">
@@ -212,8 +212,9 @@
                 return -2;
             }
                 
-            archive.digitalResources.push(ArchiveDocument.serialize($('#collapsedoc1')));
-            if (archive.digitalResources == -1) {
+            //archive.digitalResources.push(ArchiveDocument.serialize($('#collapsedoc1')));
+            archive.digitalResources = DocumentList.serialize();
+            if (archive.digitalResources == null) {
                 gritter.show($('#documentMissing_error').text(), false);
                 return -2;
             }
