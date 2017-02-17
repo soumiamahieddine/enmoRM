@@ -20,6 +20,53 @@
             </a>
 
         </div>
+        
+        <ul class="nav navbar-nav">
+	    <?merge .menu ?>
+            <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]" style="cursor:pointer;width: 250px">
+                <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <i class="[?merge ['class'] ?]"></i>
+                    <?merge ['label'] ?>
+                    <?merge ['submenu'].count().bool() ?>
+                    <span class="pull-right fa fa-chevron-down"></span>
+                </a>
+                <?merge ['submenu'].count().bool() ?>
+                <ul class="dropdown-menu" role="menu">
+                    <?merge ['submenu'] ?>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                            <i class="[?merge ['class'] ?]"></i> 
+                            <?merge ['label'] ?>
+                            <?merge ['submenu'].count().bool() ?>
+                            <span class="pull-right fa fa-chevron-right"></span>
+                        </a>
+                        <?merge ['submenu'].count().bool() ?>
+                        <ul class="dropdown-menu">
+                            <?merge ['submenu'] ?>
+                            <li>
+                                <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                    <i class="[?merge ['class'] ?]"></i> 
+                                    <?merge ['label'] ?>
+                                    <?merge ['submenu'].count().bool() ?>
+                                    <span class="fa fa-chevron-right"></span>
+                                </a>
+                                <?merge ['submenu'].count().bool() ?>
+                                <ul class="dropdown-menu">
+                                    <?merge ['submenu'] ?>
+                                    <li>
+                                        <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                            <i class="[?merge ['class'] ?]"></i> 
+                                            <?merge ['label'] ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>			            
+                </ul>
+            </li>
+            
+        </ul>
         <ul class="nav navbar-nav navbar-right hidden-xs">
             <?merge .positions.count().ifgt(0) ?>
             <li class="dropdown" >
@@ -269,5 +316,16 @@
         if (keys[17] && keys[18] && keys[81]) {
             load('/user/logout');
         }
+    });
+
+    $(window).ready(function() {
+        // For the Second level Dropdown menu, highlight the parent	
+        $( ".dropdown-menu" )
+            .mouseenter(function() {
+                $(this).parent('li').addClass('active');
+            })
+            .mouseleave(function() {
+                $(this).parent('li').removeClass('active');
+            });
     });
 </script>
