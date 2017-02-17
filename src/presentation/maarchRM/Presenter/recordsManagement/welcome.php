@@ -48,7 +48,7 @@ class welcome
     {
         //$this->view->addHeaders();
         //$this->view->useLayout();
-        $this->view->addContentFile("recordsManagement/welcome/welcomePage.html");
+        $this->view->addContentFile("dashboard/welcomePage.html");
 
         $this->view->translate();
         
@@ -70,7 +70,7 @@ class welcome
     {
         //$this->view->addHeaders();
         //$this->view->useLayout();
-        $this->view->addContentFile("recordsManagement/welcome/error.html");
+        $this->view->addContentFile("dashboard/error.html");
 
         $this->view->translate();
 
