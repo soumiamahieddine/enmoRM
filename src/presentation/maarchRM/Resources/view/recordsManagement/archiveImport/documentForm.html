@@ -5,54 +5,41 @@
     For the full copyright and license information, please view the LICENSE
     file that was distributed with this source code.
 #-->
-<div class="panel-group" id="documentList" role="tablist">
-    <div class="panel panel-default" id="documentTe">
-        <div id="collapsedoc1" class="panel-collapse collapse in" data-translate-catalog="documentManagement/document">
-            <div class="panel-body">
-                <input type="file" class="filesBrowser hide">
-                <div class="col-md-12">
-                    <div class="documentDropZone">
-                        <i class="fa fa-file-text fileIcon">&nbsp;</i>
-                        <h4>Click or drop a document</h4>
-                    </div>
-                </div>
-                <div class="fileInfo hide">
-                    <div class="row">
-                        <br/>
-                            <table class="col-md-8 col-md-offset-2">
-                                <tr>
-                                    <td>
-                                        <i class="fa fa-file-text fileIcon">&nbsp;</i>
-                                        <br>
-                                        <span class="btn-link removeFile">Replace</span>
-                                    </td>
-                                    <td>
-                                        <dl class="dl-horizontal">
-                                            <dt>File name</dt>
-                                            <dd class="fileName"></dd>
-
-                                            <dt>Size</dt>
-                                            <dd class="fileSize"></dd>
-
-                                            <dt>Type</dt>
-                                            <dd class="fileType"></dd>
-                                        </dl>
-                                    </td>
-                                </tr>
-                            </table>
-                        <br/>
-                    </div>
-                </div>
+<div id="documentForm">
+    <form>
+        <input type="file" id="document_filesBrowser" class="hide" multiple=""/>
+        <div class="row">
+            <div id="document_XMLDropZone" class="col-md-8 col-md-offset-2">
+                <i class="fa fa-file-text fileIcon">&nbsp;</i>
+                <h4>Click or drop a document</h4>
             </div>
+            <br>
         </div>
-    </div>
+    </form>
+    <form class="col-lg-8 col-md-10 col-md-offset-2">
+        <br/>
+        <br/>
+        <br/>
+        <table id="documentList" class="table" style="display: none">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size (byte)</th>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </form>
 </div>
 
 <style type="text/css">
-    .documentDropZone {
+    #document_XMLDropZone {
         border: 2px dashed grey;
         cursor: pointer;
-        padding: 50px;
+        padding: 80px;
         text-align: center;
         color: grey;
         opacity: 0.5;
@@ -60,103 +47,148 @@
     .fileIcon {
         font-size: 400%;
     }
-    textarea {
-        resize: vertical;
-    }
 </style>
 
 <script type="text/javascript">
-    // DOCUMENTS
-    $(".removeFile").on('click', function(e) {
-        ArchiveDocument.clear($(this).closest("[id^='collapsedoc']"));
-        $('.documentDropZone').click();
-    });
 
-    $('.documentDropZone').on('dragenter', function(e) {
-        ArchiveDocument.dragenter(e, $(this));
-    });
+    var DocumentForm = {
+    	documentFileInput: $('#document_filesBrowser'),
 
-    $('.documentDropZone').on('dragover', function(e) {
-        ArchiveDocument.dragover(e, $(this));
-    });
-
-    $('.documentDropZone').on('dragleave', function(e) {
-        ArchiveDocument.dragleave(e, $(this));
-    });
-
-    $('.documentDropZone').on('drop', function(e) {
-        ArchiveDocument.drop(e, $(this));
-    });
-
-    $('.documentDropZone').on('click', function() {
-        $(this).closest('.panel-collapse').find('.filesBrowser').click();
-    });
-
-    $('.filesBrowser').on('change', function() {
-        ArchiveDocument.upload($(this).context.files[0], $(this).closest('.panel-collapse'));
-    });
-
-    var ArchiveDocument = {
-        dragenter: function(e, documentZone) {
-            e.preventDefault();
-            e.stopPropagation();
+        reset: function() {
+            this.documentFileInput.data('base64', '').val('');
         },
-        dragover: function(e, documentZone) {
-            e.preventDefault();
-            e.stopPropagation();
-            documentZone.css('opacity', '1');
-        },
-        dragleave: function(e, documentZone) {
-            documentZone.css('opacity', '0.5');
-        },
-        drop: function(e, documentZone) {
-            if(e.originalEvent.dataTransfer){
-                if(e.originalEvent.dataTransfer.files.length) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    documentZone.css('opacity', '0.5');
-                    this.upload(e.originalEvent.dataTransfer.files[0], documentZone.closest('.panel-body'));
-                }   
-            }
-        },
-        upload: function(file, documentZone) {
-            oFileReader = new FileReader();
+
+        upload: function(file) {
+            var oFileReader = new FileReader();
             oFileReader.readAsDataURL(file);
 
-            if ($("#archiveForm").find("[name=archiveName]").val() == '') {
-                $("#archiveForm").find("[name=archiveName]").val(file.name.replace(/\.[^/.]+$/, ""));
-            }
+            oFileReader.onload = function (e) {
+                var fileObject = {
+                    binary  : null,
+                    size    : null,
+                    fileName: null,
+                    type    : null
+                }
 
-            oFileReader.onload = function() {
-                var base64 = oFileReader.result.replace(/^data:.*?;base64,/, "");
-
-                documentZone.find('.filesBrowser').data('base64', base64);           
-                documentZone.find('.fileName').html(file.name);
-                documentZone.find('.fileSize').html(file.size + ' ' + $('#byte_text').html());
-                documentZone.find('.fileType').html(file.type);
-                documentZone.find('.documentDropZone').addClass('hide');
-                documentZone.find('.fileInfo').removeClass('hide');
+                fileObject.binary = oFileReader.result.replace(/^data:.*?;base64,/, "");
+                fileObject.fileName = file.name;
+                fileObject.size = file.size;
+                fileObject.type = file.type;
+                
+                DocumentList.addDocument(fileObject);
             };
-        },
-        serialize : function(target) {
-            var digitalResource = {
-                fileName : target.find('.fileName').html(),
-                handler : target.find('.filesBrowser').data('base64')
-            }
-
-            if (!digitalResource.handler) {
-                digitalResource = -1;
-            }
-
-            return digitalResource;
-        },
-        clear : function(target) {
-            target.find('.filesBrowser').data('base64', '').val('');
-            target.find('.fileName').html('');
-            target.find('.fileSize').html('');
-            target.find('.fileType').html('');
-            target.find('.documentDropZone').removeClass('hide');
-            target.find('.fileInfo').addClass('hide');
         }
     }
+
+    var DocumentList = {
+        table: $('#documentList'),
+        list: $('#documentList').find('tbody'),
+
+        addDocument: function(fileObject) {
+            
+            var tr = $('<tr/>').attr('data-binary', fileObject.binary).appendTo(this.list);
+
+            $('<td>').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
+            $('<td>').attr('name', 'size').text(fileObject.size).appendTo(tr);
+            $('<td>').attr('name', 'type').text(fileObject.type).appendTo(tr);
+
+            var button = $('<button>')
+                    .attr('type', 'button')
+                    .addClass('deleteDocument')
+                    .addClass("btn btn-link pull-right");
+            var i = $('<i/>').addClass('fa fa-times text-danger').appendTo(button);
+            $('<td>').append(button).appendTo(tr);
+
+            
+            if (this.table.is(":hidden")) {
+                if ($('#archiveForm [name=archiveName]').val() == "") {
+                    $('#archiveForm [name=archiveName]').val(fileObject.fileName);
+                }
+
+                this.table.show();
+            }
+        },
+
+        removeDocument: function(button) {
+            button.closest('tr').remove();
+            
+            if (this.list.find("tr").length == 0) {
+                this.table.hide();
+            }
+        },
+
+        serialize: function() {
+            var tr = this.list.find('tr');
+
+            var digitalResources = [];
+
+            $.each(tr, function(){
+                var digitalResource = {
+                    handler     : null,
+                    size        : null,
+                    fileName    : null,
+                    mimetype    : null
+                }
+                digitalResource.handler = $(this).attr('data-binary');
+                digitalResource.fileName = $(this).find("[name=fileName]").text();
+                digitalResource.size = $(this).find("[name=size]").text();
+                digitalResource.mimetype = $(this).find("[name=type]").text();
+                
+                digitalResources.push(digitalResource);
+                
+            });
+
+            if (digitalResources.length == 0) {
+                digitalResources = null;
+            }
+
+            return digitalResources;
+        }
+    }
+
+    $('#documentList').on('click', '.deleteDocument', function() {
+        DocumentList.removeDocument($(this));
+    })
+
+    // Drag & drop
+    $('#document_XMLDropZone').on('dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    })
+
+    $('#document_XMLDropZone').on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#document_XMLDropZone').css('opacity', '1');
+    })
+
+    $("#document_XMLDropZone").on('dragleave', function(e) {
+        $('#document_XMLDropZone').css('opacity', '0.5');
+    })
+
+    $('#document_XMLDropZone').on('drop', function(e) {
+        if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        $('#document_XMLDropZone').css('opacity', '0.5');
+
+        for (var i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
+            DocumentForm.upload(e.originalEvent.dataTransfer.files[i]);
+        }
+    })
+
+    // Files browser
+    $('#document_XMLDropZone').on('click', function() {
+        $('#document_filesBrowser').click();
+    })
+
+    $('#document_filesBrowser').on('change', function() {
+        for (var i = 0; i < $(this).context.files.length; i++) {
+            DocumentForm.upload($(this).context.files[i]);
+        }
+        DocumentForm.reset();
+    })
 </script>
