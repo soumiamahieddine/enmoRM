@@ -94,7 +94,7 @@ class Exception
     {
         //$this->view->addHeaders();
         //$this->view->useLayout();
-        $this->view->addContentFile("recordsManagement/welcome/error.html");
+        $this->view->addContentFile("dashboard/error.html");
 
         if (method_exists($exception, "setMessage")) {
             $this->view->setSource('error', $exception);
