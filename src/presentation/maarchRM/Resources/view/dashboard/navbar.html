@@ -22,7 +22,7 @@
         </div>
         
         <div class="collapse navbar-collapse" id='leMenu'>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
                 <?merge .positions.count().ifgt(0) ?>
                 <li class="dropdown" >
                     <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
@@ -73,8 +73,8 @@
                             <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
                                 <i class="[?merge ['class'] ?]"></i> 
                                 <?merge ['label'] ?>
-                                <?merge ['submenu'].count().bool() ?>
-                                <i class="pull-right fa fa-chevron-right"></i>
+                                <!--<?merge ['submenu'].count().bool() ?>
+                                <i class="pull-right fa fa-chevron-right"></i-->
                             </a>
                             <?merge ['submenu'].count().bool() ?>
                             <ul class="dropdown-menu" style="width: inherit">
