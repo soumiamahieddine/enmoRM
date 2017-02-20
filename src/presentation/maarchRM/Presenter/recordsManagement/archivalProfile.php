@@ -171,7 +171,7 @@ class archivalProfile
             $accessRule->description = $completeAccessRule->description;
 
             foreach ($completeAccessRule->accessEntry as $accessEntry) {
-                $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgUnitId)->displayName;
+                $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgRegNumber)->displayName;
             }
 
             $accessRule->json = json_encode($completeAccessRule);

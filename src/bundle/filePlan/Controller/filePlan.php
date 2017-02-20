@@ -22,19 +22,20 @@ namespace bundle\filePlan\Controller;
 /**
  * Controler of the file plan
  *
- * @package filePlan
+ * @package FilePlan
  * @author  Prosper DE LAURE (maarch) <prosper.delaure@maarch.org> 
  */
-class filePlan {
+class filePlan
+{
 
     protected $sdoFactory;
 
     /**
      * Constructor
      * @param object $sdoFactory The model for file plan
-     *
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory) {
+    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    {
         $this->sdoFactory = $sdoFactory;
     }
 
@@ -43,17 +44,18 @@ class filePlan {
      *
      * @return array The list of file plan folder with their position
      */
-    public function getTree() {
+    public function getTree()
+    {
         // Find the user orgUnit
-        $organizations = \laabs::callService("organization/userPosition/read");
-        $orgIds = [];
+        $userPositions = \laabs::callService("organization/userPosition/read");
+        $orgRegNumbers = [];
 
-        foreach ($organizations as $key => $userPosition) {
-            $orgIds[] = (string) $userPosition->orgId;
+        foreach ($userPositions as $key => $userPosition) {
+            $orgRegNumbers[] = (string) $userPosition->organization->registrationNumber;
             $organizations[$key] = $userPosition->organization;
         }
-        
-        $folders = $this->sdoFactory->find('filePlan/folder', "ownerOrgId=['".\laabs\implode("', '", $orgIds)."']");
+
+        $folders = $this->sdoFactory->find('filePlan/folder', "ownerOrgRegNumber = ['".\laabs\implode("', '", $orgRegNumbers)."']");
 
         // sort by parent
         $roots = [];
@@ -73,25 +75,25 @@ class filePlan {
         }
         
         $roots = $this->buildForlderTree($roots, $folderList);
-        $orgById = [];
+        $orgByRegNumber = [];
         $orgByParent = [];
         $orgRoots = [];
 
         foreach ($organizations as $organization) {
-            $orgById[(string) $organization->orgId] = $organization;
+            $orgByRegNumber[(string) $organization->registrationNumber] = $organization;
         }
 
         foreach ($roots as $root) {
-            if (!isset($orgById[(string) $root->ownerOrgId]->folder)) {
-                $orgById[(string) $root->ownerOrgId]->folder = [];
+            if (!isset($orgByRegNumber[(string) $root->ownerOrgRegNumber]->folder)) {
+                $orgByRegNumber[(string) $root->ownerOrgRegNumber]->folder = [];
             }
 
-            $orgById[(string) $root->ownerOrgId]->folder[] = $root;   
+            $orgByRegNumber[(string) $root->ownerOrgRegNumber]->folder[] = $root;   
         }
 
         // Org tree structure
         foreach ($organizations as $organization) {
-            if (!in_array((string) $organization->parentOrgId, $orgIds)) {
+            if (!in_array((string) $organization->parentOrgId, $orgByRegNumber)) {
                 $orgRoots[] = $organization;
             } else {
                 if (!isset($orgByParent[(string) $organizations->parentOrgId])) {
@@ -143,6 +145,109 @@ class filePlan {
         }
 
         return $roots;
+    }
+
+    /**
+     * Create a folder
+     * @param string  $name
+     * @param string  $ownerOrgRegNumber
+     * @param string  $parentFolderId
+     * @param string  $description
+     * @param boolean $disabled
+     * 
+     * @return boolean
+     */
+    public function add($name, $ownerOrgRegNumber, $parentFolderId=null, $description=null, $disabled=false)
+    {
+        // Validate :
+        // OwnerOrgRegNumber exists
+        // ParentFolderId exists if sent
+        // Couple parentFolderId + name is unique
+
+        $folder = \laabs::newInstance('filePlan/folder');
+        $folder->folderId = \laabs::newId();
+        $folder->name = $name;
+        $folder->ownerOrgRegNumber = $ownerOrgRegNumber;
+        $folder->parentFolderId = $parentFolderId;
+        $folder->description = $description;
+        $folder->disabled = $disabled;
+
+        $this->sdoFactory->create($folder);
+
+        return true;
+    }
+
+    /**
+     * Move a folder on a new position
+     * @param string $folderId
+     * @param string $parentFolderId
+     * 
+     * @return boolean
+     */
+    public function move($folderId, $parentFolderId=null)
+    {
+        $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
+
+        // Check 
+        if ($parentFolderId) {
+            $parentFolder = $this->sdoFactory->read('filePlan/folder', $parentFolderId);
+            if ($parentFolder->ownerOrgRegNumber != $folder->ownerOrgRegNumber) {
+                throw \Exception("Can't move to another service !");
+            }
+        }
+
+        $folder->parentFolderId = $parentFolderId;
+
+        $this->sdoFactory->update($folder);
+
+        return true;
+    }
+
+    /**
+     * Update a folder
+     * @param string  $folderId
+     * @param string  $name
+     * @param string  $description
+     * @param boolean $disabled
+     * 
+     * @return boolean
+     */
+    public function update($folderId, $name, $description=null, $disabled=false)
+    {
+        $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
+
+        // Validate :
+        // Couple parentFolderId + new name is unique
+
+        $folder->name = $name;
+        $folder->description = $description;
+        $folder->disabled = $disabled;
+
+        $this->sdoFactory->update($folder);
+
+        return true;
+    }
+
+    /**
+     * Delete a folder
+     * @param string $folderId
+     * 
+     * @return boolean
+     */
+    public function delete($folderId)
+    {
+        $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
+
+        $positionController = \laabs::newController('filePlan/position');
+        $archivesCount = $positionController->count($folder->ownerOrgRegNumber, $folderId);
+
+        if ($archivesCount > 0) {
+            return false;
+        }
+
+        $this->sdoFactory->delete('filePlan/folder', $folderId);
+
+        return true;
     }
 
 }

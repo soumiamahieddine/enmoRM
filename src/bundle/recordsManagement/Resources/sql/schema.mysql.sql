@@ -23,7 +23,7 @@ CREATE TABLE `recordsManagement.accessRule`
 CREATE TABLE `recordsManagement.accessEntry`
 (
   `accessRuleCode` varchar(255) NOT NULL,
-  `orgUnitId` varchar(255) NOT NULL,
+  `orgRegNumber` varchar(255) NOT NULL,
   `originatorAccess` boolean DEFAULT true
 );
 

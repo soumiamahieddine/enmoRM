@@ -134,7 +134,7 @@ abstract class abstractPosition
             $services[(string) $service->orgId] = (string) $service->registrationNumber;
             $services = array_merge($services, $this->readDescandantService((string) $service->orgId));
 
-            $childrenOrgIds = $this->sdoFactory->index('organization/organization' ,'orgId', "parentOrgId = '$service->ownerOrgId' AND isOrgUnit = false");
+            $childrenOrgIds = $this->sdoFactory->index('organization/organization', 'orgId', "parentOrgId = '$service->ownerOrgId' AND isOrgUnit = false");
 
             foreach ($childrenOrgIds as $orgId) {
                 $services = array_merge($services, $this->readDescandantService((string) $orgId));

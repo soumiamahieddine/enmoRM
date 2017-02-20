@@ -31,7 +31,7 @@ class folder
 {
     /**
      * The folder identifier
-     * @var id
+     * @var string
      */
     public $folderId;
 
@@ -62,7 +62,7 @@ class folder
      * @notempty
      * 
      */
-    public $ownerOrgId;
+    public $ownerOrgRegNumber;
 
     /**
      * The folder availability status for modification

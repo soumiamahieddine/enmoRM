@@ -28,7 +28,7 @@ WITH (
 CREATE TABLE "recordsManagement"."accessEntry"
 (
   "accessRuleCode" text NOT NULL,
-  "orgUnitId" text NOT NULL,
+  "orgRegNumber" text NOT NULL,
   "originatorAccess" boolean default true
 )
 WITH (
@@ -70,6 +70,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "description" text,
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
+  "acceptMultipleDocuments" boolean default false,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -148,12 +149,13 @@ CREATE TABLE "recordsManagement"."serviceLevel"
 CREATE TABLE "recordsManagement"."archive"
 (
   "archiveId" text NOT NULL,
-  "archiverArchiveId" text,
   "originatorArchiveId" text,
   "depositorArchiveId" text,
-  
+  "archiverArchiveId" text,
+    
   "archiveName" text,
   "storagePath" text,
+  "filePlanPosition" text,
 
   "originatorOrgRegNumber" text NOT NULL,
   "originatorOwnerOrgId" text,
@@ -166,21 +168,14 @@ CREATE TABLE "recordsManagement"."archive"
   
   "retentionRuleCode" text,
   "retentionStartDate" date,
-  "retentionDuration" text,
-  "finalDisposition" text,
+  "retentionDuration" text NOT NULL,
+  "finalDisposition" text NOT NULL,
   "disposalDate" date,
 
   "accessRuleCode" text,
   "accessRuleDuration" text,
   "accessRuleStartDate" date,
   "accessRuleComDate" date,
-  
-  "classificationRuleCode" text,
-  "classificationRuleDuration" text,
-  "classificationRuleStartDate" date,
-  "classificationEndDate" date,
-  "classificationLevel" text,
-  "classificationOwner" text,
   
   "depositDate" timestamp NOT NULL,
   "lastCheckDate" timestamp,

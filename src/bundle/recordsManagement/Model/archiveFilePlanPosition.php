@@ -20,35 +20,27 @@
 namespace bundle\recordsManagement\Model;
 
 /**
- * Class model that represents an acces to profile for a given org unit
+ * The basic information about an archive unit in file plan
  *
  * @package RecordsManagement
  * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
  *
- * @fkey [accessRuleCode] recordsManagement/accessRule [code]
+ * @pkey [archiveId]
  */
-class accessEntry
+class archiveFilePlanPosition
 {
-    /**
-     * The access rule code
-     *
-     * @var name
-     * @notempty
-     */
-    public $accessRuleCode;
 
     /**
-     * The associated organization unit identifier
+     * The archive identifier
      *
      * @var string
-     * @notempty
      */
-    public $orgRegNumber;
+    public $archiveId;
 
     /**
-     * The access is read only
+     * The folder identifier
      *
-     * @var boolean
+     * @var string
      */
-    public $originatorAccess;
-} // END class accessEntry
+    public $filePlanPosition;
+}

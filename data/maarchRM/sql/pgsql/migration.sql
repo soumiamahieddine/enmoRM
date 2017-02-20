@@ -11,6 +11,8 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationEndDate" dat
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationLevel" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationOwner" text;
 
+ALTER TABLE "recordsManagement"."accessEntry" RENAME COLUMN "orgUnitId" TO "orgRegNumber";
+
 CREATE TABLE "digitalResource"."archiveDigitalResourceRel"
 (
   "archiveId" text,
@@ -41,4 +43,6 @@ CREATE OR REPLACE VIEW "digitalResource"."archiveDigitalResource" AS
    FROM "digitalResource"."archiveDigitalResourceRel"
      JOIN "digitalResource"."digitalResource" ON "digitalResource"."resId" = "archiveDigitalResourceRel"."resId";
 	 
+	 
 ALTER TABLE "digitalResource"."digitalResource" DROP COLUMN "archiveId";
+

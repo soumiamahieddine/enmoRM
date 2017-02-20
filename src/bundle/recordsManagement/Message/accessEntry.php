@@ -30,10 +30,10 @@ class accessEntry
     /**
      * The associated organization unit identifier
      * 
-     * @var id
+     * @var string
      * @notempty
      */
-    public $orgUnitId;
+    public $orgRegNumber;
 
     /**
      * The acces sis read only

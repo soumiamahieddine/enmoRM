@@ -66,7 +66,7 @@ class archivalProfile
                 return array();
             }
             
-            $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', "orgUnitId = ['".implode("', '", $currentOrgs)."']");
+            $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', "orgRegNumber = ['".implode("', '", $currentOrgs)."']");
 
             $accessRuleCodes = [];
             foreach ($accessEntries as $accessEntry) {
