@@ -27,7 +27,7 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
 class welcome
 {
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
-    
+
     public $view;
 
     /**
@@ -38,7 +38,7 @@ class welcome
     {
         $this->view = $view;
     }
-    
+
     /**
      * get a welcome page
      *
@@ -48,10 +48,10 @@ class welcome
     {
         //$this->view->addHeaders();
         //$this->view->useLayout();
-        $this->view->addContentFile("dashboard/welcomePage.html");
+        $this->view->addContentFile("dashboard/mainScreen/main.html");
 
         $this->view->translate();
-        
+
         $accountToken = \laabs::getToken('AUTH');
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
