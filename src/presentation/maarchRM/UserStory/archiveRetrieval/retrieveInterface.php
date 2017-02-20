@@ -107,18 +107,18 @@ interface retrieveInterface
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/readDigitalResource_docId__resId_
+     * @uses  recordsManagement/archive/readDigitalResource_resId_
      */
-    public function readRecordsmanagementDigitalresource_docId__resId_();
+    public function readRecordsmanagementDigitalresource_resId_();
 
     /**
      * Retrieve an archive content document (CDO)
      *
      * @return recordsManagement/archive/getContents
      *
-     * @uses  recordsManagement/archive/readContents_archiveId__documentId__resId_
+     * @uses  recordsManagement/archive/readContents_archiveId__resId_
      */
-    public function readRecordsmanagementContents_archiveId__documentId__resId_();
+    public function readRecordsmanagementContents_archiveId__resId_();
 
     /**
      * Retrieve an archive content document (CDO)
@@ -130,29 +130,6 @@ interface retrieveInterface
      * @uses  recordsManagement/archive/readContentsbyoriginatorarchiveid_originatorArchiveId__originatorOrgRegNumber_
      */
     public function readRecordsmanagementContentsbyoriginatorarchiveid($originatorArchiveId, $originatorOrgRegNumber);
-
-    /**
-     * Retrieve the archive contents by its index class/identifier
-     * @var qname  descriptionClass The description class
-     * @var string descriptionId    The description identifier
-     *
-     * @return recordsManagement/archive/getContents
-     *
-     * @uses recordsManagement/archive/readContentsbydescription_descriptionClass__descriptionId_
-     */
-    public function readRecordsmanagementArchivecontents_descriptionClass__descriptionId_();
-
-    /**
-     * Retrieve the archive description by its index class/identifier
-     * @var qname  descriptionClass The description class
-     * @var string descriptionId    The description identifier
-     *
-     * @return recordsManagement/archive/getDescription
-     *
-     * @uses recordsManagement/archiveDescription/read_descriptionClass__descriptionId_
-     */
-    public function readRecordsmanagementArchivedescription_descriptionClass__descriptionId_();
-
 
     /**
      * Check if archive exists

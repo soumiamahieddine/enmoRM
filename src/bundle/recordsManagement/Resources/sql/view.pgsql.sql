@@ -1,7 +1,7 @@
 
-DROP VIEW IF EXISTS "recordsManagement"."archiveDocumentDigitalResource";
+DROP VIEW IF EXISTS "recordsManagement"."archiveDigitalResource";
 
-CREATE VIEW "recordsManagement"."archiveDocumentDigitalResource" AS
+CREATE VIEW "recordsManagement"."archiveDigitalResource" AS
 SELECT 
 "archive"."archiveId",
 "archive"."originatorArchiveId",
@@ -17,16 +17,7 @@ SELECT
 "archive"."finalDisposition",
 "archive"."disposalDate",
 "archive"."descriptionClass",
-"archive"."descriptionId",
 "archive"."parentArchiveId",
-
-"document"."docId",
-"document"."type",
-"document"."control",
-"document"."copy",
-"document"."status" as "documentStatus",
-"document"."depositorDocId",
-"document"."originatorDocId",
 
 "digitalResource"."resId",
 "digitalResource"."clusterId",
@@ -45,5 +36,4 @@ SELECT
 "digitalResource"."relationshipType"
 
 FROM "recordsManagement"."archive"
-   JOIN "documentManagement"."document" ON "document"."archiveId"="archive"."archiveId"
-   JOIN "digitalResource"."digitalResource" ON "document"."docId"="digitalResource"."docId";
+   JOIN "digitalResource"."digitalResource" ON "digitalResource"."archiveId"="archive"."archiveId";

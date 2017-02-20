@@ -30,7 +30,7 @@
                 </thead>
                 <tbody  id="documentList_table">
                     <?merge documents ?>
-                        <tr id="[?merge .archiveId ?]/[?merge .docId ?]/[?merge .resId ?]">
+                        <tr id="[?merge .archiveId ?]/[?merge .resId ?]">
                             <td>
                                 <input type="checkbox" value="[?merge .docId ?]"/>
                             </td>
@@ -40,7 +40,7 @@
                             <td>
                                 <div class="btn-group pull-right">
                                     <button type="button" class="btn btn-primary viewDocument" title="View"><span class="fa fa-eye">&nbsp;</span></button>
-                                    <button type="button" class="btn btn-warning" data-conversion="[?merge .docId ?]/[?merge .resId ?]" title="Convert document"><span class="fa fa-copy">&nbsp;</span></button>
+                                    <button type="button" class="btn btn-warning" data-conversion="[?merge .resId ?]" title="Convert document"><span class="fa fa-copy">&nbsp;</span></button>
                                 </div>
                             </td>
                         </tr>
@@ -118,7 +118,7 @@
         $(this).prop("disabled", "disabled");
         ajax($(this), {
             type        : 'PUT',
-            url         : '/RecordsManagement/Convert/'+$(this).attr("data-conversion"),
+            url         : '/RecordsManagement/InteractiveConversion/'+$(this).attr("data-conversion"),
             dataType    : 'json',
             contenttype : 'application/json',
             async       : true,
@@ -134,11 +134,11 @@
     });
 
     archiveDocumentViewer = {
-        load: function(archiveId, action) {
+        load: function(archiveIdResId, action) {
                     
-            var url = "/recordsManagement/contents/" + archiveId;
+            var url = "/recordsManagement/contents/" + archiveIdResId;
             if (action) {
-                url = action + archiveId;
+                url = action + archiveIdResId;
             }
             
             window.open(url, 'document');

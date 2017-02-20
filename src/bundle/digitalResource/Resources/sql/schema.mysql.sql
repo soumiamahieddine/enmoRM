@@ -21,7 +21,7 @@ CREATE TABLE `digitalResource.cluster`
 CREATE TABLE `digitalResource.digitalResource`
 (
   `resId` varchar(255) NOT NULL,
-  `docId` varchar(255),
+  `archiveId` varchar(255),
   `clusterId` varchar(255) NOT NULL,
   `size` integer NOT NULL,
   `puid` text,

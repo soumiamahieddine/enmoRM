@@ -28,8 +28,9 @@ interface migrationInterface
     /**
      * Flag archives for disposal
      *
-     * @uses recordsManagement/archives/updateDocumentsconvert_documentId__resId_
+     * @uses recordsManagement/archive/updateInteractiveconversion_resId_
+     *
      * @return recordsManagement/archive/convert
      */
-    public function updateRecordsmanagementConvert_documentId__resId_();
+    public function updateRecordsmanagementInteractiveconversion_resId_();
 }

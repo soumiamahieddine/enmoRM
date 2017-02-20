@@ -112,8 +112,8 @@ CREATE TABLE "recordsManagement"."archiveDescription"
 (
   "archivalProfileId" text NOT NULL,
   "fieldName" text NOT NULL,
-  "origin" text,
   "required" boolean,
+  "position" integer,
   PRIMARY KEY ("archivalProfileId", "fieldName"),
   FOREIGN KEY ("archivalProfileId")
     REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
@@ -122,50 +122,6 @@ CREATE TABLE "recordsManagement"."archiveDescription"
 WITH (
   OIDS=FALSE
 );
-
-  
--- Table: "recordsManagement"."documentProfile"
-
--- DROP TABLE "recordsManagement"."documentProfile";
-
-CREATE TABLE "recordsManagement"."documentProfile"
-(
-  "archivalProfileId" text NOT NULL,
-  "documentProfileId" text NOT NULL,
-  "reference" text NOT NULL,
-  "name" text NOT NULL,
-  "required" boolean default true,
-  "acceptUserIndex" boolean default false,
-  PRIMARY KEY ("documentProfileId"),
-  UNIQUE ("reference"),
-  FOREIGN KEY ("archivalProfileId")
-    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-
--- Table: "recordsManagement"."documentDescription"
-
--- DROP TABLE "recordsManagement"."documentDescription";
-
-CREATE TABLE "recordsManagement"."documentDescription"
-(
-  "documentProfileId" text NOT NULL,
-  "fieldName" text NOT NULL,
-  "origin" text,
-  "required" boolean,
-  "position" integer,
-  PRIMARY KEY ("documentProfileId", "fieldName"),
-  FOREIGN KEY ("documentProfileId")
-    REFERENCES "recordsManagement"."documentProfile" ("documentProfileId") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-
 
 -- Table: "recordsManagement"."serviceLevel"
 
@@ -229,10 +185,8 @@ CREATE TABLE "recordsManagement"."archive"
   "parentArchiveId" text,
   
   "descriptionClass" text,
-  "descriptionId" text,
 
   PRIMARY KEY ("archiveId"),
-  UNIQUE ("descriptionClass", "descriptionId"),
   FOREIGN KEY ("parentArchiveId")
     REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,

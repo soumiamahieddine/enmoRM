@@ -122,20 +122,6 @@ class archivalProfile
     }
 
     /**
-     * get a document profile by reference
-     * @param string $documentProfileReference The document profile reference
-     *
-     * @return recordsManagement/document The document profile object
-     */
-    public function getDocumentProfileByReference($documentProfileReference)
-    {
-        $documentProfile = $this->sdoFactory->read('recordsManagement/documentProfile', array('reference' => $documentProfileReference));
-        $documentProfile->documentDescription = $this->sdoFactory->readChildren("recordsManagement/documentDescription", $documentProfile);
-
-        return $documentProfile;
-    }
-
-    /**
      * get array of archival profile by description class
      * @param string $archivalProfileDescriptionClass The archival profile reference
      *
@@ -158,33 +144,41 @@ class archivalProfile
      */
     public function readDetail($archivalProfile)
     {
-        // Read profile description
-        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        // Read retention rule
         if ($archivalProfile->retentionRuleCode) {
             $archivalProfile->retentionRule = $this->sdoFactory->read('recordsManagement/retentionRule', $archivalProfile->retentionRuleCode);
         }
 
+        // Read access rule
         if (!empty($archivalProfile->accessRuleCode)) {
             $archivalProfile->accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $archivalProfile->accessRuleCode);
         }
 
-        $documentDescriptionFields = $this->getDocumentDescriptionFields();
+        // Read profile description
+        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        if ($archivalProfile->descriptionClass == '') {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
+            }
+        } else {
+            $reflectionClass = \laabs::getClass($archivalProfile->descriptionClass);
 
-        $archivalProfile->documentProfile = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
-        foreach ($archivalProfile->documentProfile as $documentProfile) {
-            $documentProfile->documentDescription = $this->sdoFactory->readChildren('recordsManagement/documentDescription', $documentProfile, false, "position");
-            foreach ($documentProfile->documentDescription as $documentDescription) {
-                switch ($documentDescription->origin) {
-                    case 'documentManagement/document':
-                        $documentDescription->descriptionField = $documentDescriptionFields[$documentDescription->fieldName];
-                        break;
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if ($reflectionClass->hasProperty($archiveDescription->fieldName)) {
+                    $reflectionProperty = $reflectionClass->getProperty($archiveDescription->fieldName);
 
-                    case 'user':
-                    default:
-                        $documentDescription->descriptionField = $this->descriptionFields[$documentDescription->fieldName];
-                        break;
+                    $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+                    $descriptionField->name = $reflectionProperty->name;
+                    $descriptionField->label = $reflectionProperty->name;
+                    $descriptionField->type = $reflectionProperty->getType();
+
+                    $descriptionField->enumeration = $reflectionProperty->getEnumeration();
+                    if ($descriptionField->enumeration) {
+                        $descriptionField->type = 'name';
+                    }
+
+                    $archiveDescription->descriptionField = $descriptionField;
                 }
-
             }
         }
     }
@@ -341,13 +335,17 @@ class archivalProfile
     protected function createDetail($archivalProfile)
     {
         if (!empty($archivalProfile->archiveDescription)) {
+            $position = 0;
             foreach ($archivalProfile->archiveDescription as $description) {
                 $description->archivalProfileId = $archivalProfile->archivalProfileId;
+                $description->position = $position;
+                $position++;
+
                 $this->sdoFactory->create($description, 'recordsManagement/archiveDescription');
             }
         }
 
-        if (!empty($archivalProfile->documentProfile)) {
+        /*if (!empty($archivalProfile->documentProfile)) {
             foreach ($archivalProfile->documentProfile as $documentProfile) {
                 if (empty($documentProfile->name)) {
                     $documentProfile->name = $archivalProfile->name;
@@ -369,18 +367,18 @@ class archivalProfile
 
                 }
             }
-        }
+        }*/
     }
 
     protected function deleteDetail($archivalProfile)
     {
         $this->sdoFactory->deleteChildren('recordsManagement/archiveDescription', $archivalProfile);
 
-        $documentProfiles = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
+        /*$documentProfiles = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
         foreach ($documentProfiles as $documentProfile) {
             $this->sdoFactory->deleteChildren('recordsManagement/documentDescription', $documentProfile);
         }
 
-        $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);
+        $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);*/
     }
 }

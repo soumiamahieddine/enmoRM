@@ -212,15 +212,8 @@ class journal
 
         if (!isset($this->journals[(string) $journal->archiveId])) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalDocuments = $archiveController->getDocuments($journal->archiveId);
-            $this->journals[(string) $journal->archiveId] = null;
-
-            foreach ($journalDocuments as $document) {
-                if ($document->type == "CDO") {
-                    $this->journals[(string) $journal->archiveId] = $document->digitalResource->getContents();
-                    break;
-                }
-            }
+            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            $this->journals[(string) $journal->archiveId] = $journalResource->getContents();
         }
 
         $journalFile = $this->journals[(string) $journal->archiveId];
@@ -382,7 +375,7 @@ class journal
             unset($services[$i]);
         }
 
-         foreach ($events as $i => $event) {
+        foreach ($events as $i => $event) {
             if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
                 $event->accountName = $users[(string) $event->accountId]->accountName;
             } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
@@ -411,16 +404,10 @@ class journal
 
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalDocuments = $archiveController->getDocuments($journalReference->archiveId);
-            $journalFile = null;
-
-            foreach ($journalDocuments as $document) {
-                if ($document->type == "CDO") {
-                    $journalFile = $document->digitalResource->getContents();
-                    $this->journalCursor = 0;
-                    break;
-                }
-            }
+            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            
+            $journalFile = $journalResource->getContents();
+            $this->journalCursor = 0;
 
             if ($journalFile == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
@@ -506,7 +493,7 @@ class journal
             }
 
             // Search on the next journal
-            if ($chain && $nextEvent == null) {                
+            if ($chain && $nextEvent == null) {
                 if ($this->openNextJournal()) {
                     $nextEvent = $this->getNextEvent($eventType);
                 }
@@ -793,7 +780,7 @@ class journal
             return true;
         }
 
-        $journalDocument = $archiveController->getDocuments($journal->archiveId)[0];
+        $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
 
         $nextJournal = $logController->getNextJournal($journal);
 
@@ -811,8 +798,8 @@ class journal
             return true;
         }
 
-        $nextJournalDocument = $archiveController->getArchiveDocument($nextJournal->archiveId);
-        $nextJournalContents = $nextJournalDocument->digitalResource->getContents();
+        $nextJournalResource = $archiveController->getDigitalResources($nextJournal->archiveId)[0];
+        $nextJournalContents = $nextJournalResource->getContents();
 
         $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
 
@@ -830,7 +817,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[4];
             $chainedJournalHash = $chainEvent[5];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalDocument->digitalResource->getContents());
+            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
                 throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
@@ -849,7 +836,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[9];
             $chainedJournalHash = $chainEvent[10];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalDocument->digitalResource->getContents());
+            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
                 throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
@@ -869,6 +856,7 @@ class journal
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
+        $archiveController = \laabs::newController('recordsManagement/archive');
 
         $newJournal = \laabs::newInstance('recordsManagement/log');
         $newJournal->archiveId = \laabs::newId();
@@ -923,11 +911,10 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $documentController = \laabs::newController('documentManagement/document');
-            $journalDocument = $documentController->getArchiveDocuments($previousJournal->archiveId);
+            $journalResource = $archiveController->getDigitalResources($previousJournal->archiveId)[0];
 
-            $eventLine[9] = (string) $journalDocument->digitalResource->hashAlgorithm;
-            $eventLine[10] = (string) $journalDocument->digitalResource->hash;
+            $eventLine[9] = (string) $journalResource->hashAlgorithm;
+            $eventLine[10] = (string) $journalResource->hash;
         }
 
         fputcsv($journalFile, $eventLine);
@@ -966,6 +953,35 @@ class journal
         }
 
         return $logController->archiveJournal($journalFilename, $newJournal, $timestampFileName);
+    }
+
+    /**
+     * Decode events format object from an event
+     * @param lifeCycle/event $event The event to decode
+     */
+    protected function decodeEventFormat($event)
+    {
+        if (isset($event->eventInfo)) {
+            if (!isset($this->eventFormats[$event->eventType])) {
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
+            }
+
+            $eventFormat = $this->eventFormats[$event->eventType]->format;
+            $i = 0;
+
+            $event->eventInfo = json_decode($event->eventInfo);
+            foreach ($eventFormat as $item) {
+                if (isset($event->eventInfo[$i])) {
+                    $event->{$item} = $event->eventInfo[$i];
+                } else {
+                    $event->{$item} = null;
+                }
+                $i++;
+            }
+        }
+        unset($event->eventInfo);
+
+        return $event;
     }
 
     /**
@@ -1010,34 +1026,6 @@ class journal
             }
         } catch (\Exception $e) {
         }
-
-        return $event;
-    }
-
-    /**
-     * Decode events format object from an event
-     * @param lifeCycle/event $event The event to decode
-     */
-    protected function decodeEventFormat($event) {
-        if (isset($event->eventInfo)) {
-            if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type.");
-            }
-
-            $eventFormat = $this->eventFormats[$event->eventType]->format;
-            $i = 0;
-
-            $event->eventInfo = json_decode($event->eventInfo);
-            foreach ($eventFormat as $item) {
-                if (isset($event->eventInfo[$i])) {
-                    $event->{$item} = $event->eventInfo[$i];
-                } else {
-                    $event->{$item} = null;
-                }
-                $i++;
-            }
-        }
-        unset($event->eventInfo);
 
         return $event;
     }

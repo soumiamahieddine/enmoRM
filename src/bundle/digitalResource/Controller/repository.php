@@ -217,7 +217,7 @@ class repository
             $repositoryService = $repository->getService();
             $contents = $repositoryService->read($address->path);
         } catch (\Exception $e) {
-            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address ". $repository->repositoryUri . DIRECTORY_SEPARATOR . $address->path);
+            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address ".$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
         }
 
         return $contents;
@@ -242,6 +242,7 @@ class repository
 
         if (count($repository) == 0) {
             throw \laabs::newException("digitalResource/repositoryException", "No repository found with reference ".$repositoryReference);
+
             return -1;
         }
 
@@ -264,7 +265,7 @@ class repository
         $res['checkedAddresses'] = 0;
         $res['failed'] = 0;
 
-        if ($res['addressesToCheck']==0) {
+        if ($res['addressesToCheck'] == 0) {
             return $res;
         }
 
@@ -274,7 +275,7 @@ class repository
         foreach ($addresses as $address) {
 
             $res['checkedAddresses']++;
-            
+
             if (!$this->validateAddressIntegrity($address)) {
                 $res['failed']++;
             }
@@ -302,9 +303,9 @@ class repository
     }
 
     /**
-     *  Validate an address integrity
+     * Validate an address integrity
      * @param digitalResource/address    $address    The address to check
-     * @param digitalResource/repository $repository The repository of the address 
+     * @param digitalResource/repository $repository The repository of the address
      *
      * @return boolean The result of the validation
      */
@@ -322,7 +323,7 @@ class repository
             $hash = hash($digitalResource->hashAlgorithm, $contents);
 
             $address->integrityCheckResult = true;
-        
+
             if ($hash != strtolower($digitalResource->hash)) {
                 throw \laabs::newException("digitalResource/repositoryException", "");
             }
@@ -346,7 +347,6 @@ class repository
     {
         $addressList = $this->sdoFactory->find('digitalResource/address', 'integrityCheckResult = false');
 
-        $documentController = \laabs::newController('documentManagement/document');
         $repositories = [];
 
         foreach ($addressList as $address) {

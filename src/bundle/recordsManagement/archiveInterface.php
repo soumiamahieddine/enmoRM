@@ -53,7 +53,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/getDigitalResource
      */
-    public function readDigitalresource_docId__resId_();
+    public function readDigitalresource_resId_();
 
     /**
      * Retrieve an archive by its id
@@ -64,26 +64,10 @@ interface archiveInterface
 
     /**
      * Retrieve an archive content document (CDO)
-     * @param string $originatorArchiveId    The archive identifier of the originator
-     * @param string $originatorOrgRegNumber The originatoriOrgRegNumber
-     *
-     * @action recordsManagement/archive/getContentByOriginatorArchiveId
-     */
-    public function readContentsbyoriginatorarchiveid($originatorArchiveId, $originatorOrgRegNumber);
-
-    /**
-     * Retrieve an archive content document (CDO)
      *
      * @action recordsManagement/archive/getContents
      */
-    public function readContents_archiveId__documentId__resId_();
-
-    /**
-     * Retrieve the archive contents by its index class/identifier
-     *
-     * @action recordsManagement/archive/getContentsByDescription
-     */
-    public function readContentsbydescription_descriptionClass__descriptionId_();
+    public function readContents_archiveId__resId_();
 
     /**
      * Check if archive exists
@@ -115,4 +99,11 @@ interface archiveInterface
      * @action recordsManagement/fulltext/updateArchiveIndex
      */
     public function updateIndex($index);
+
+     /**
+     * Convert and store a resource
+     *
+     * @action recordsManagement/archive/convertAndStore
+     */
+    public function updateInteractiveconversion_resId_();
 }

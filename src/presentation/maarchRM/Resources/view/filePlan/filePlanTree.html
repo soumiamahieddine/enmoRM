@@ -1,0 +1,158 @@
+<!--#
+    This file is part of the maarchRM package.
+    (c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div lang="en" data-translate-catalog="filePlan/messages">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-folder-open"></i>
+                File plan
+            </h1>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div>
+        </div>
+        <div id="filePlanTree" class="tree">
+            <br/>
+            <?merge filePlan ?>
+            <ul>
+                <?hinclude /filePlan/organizationNode.html ?>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <--!?hinclude /filePlan/subjectForm.html ?-->
+    </div>
+    <?hinclude /filePlan/moveFolderModal.html ?>
+</div>
+
+<style>
+    .folder {
+        padding: 0px !important; 
+        min-width:150px !important;
+    }
+    .folder > b {
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .folder > i {
+        font-size: 24px;
+    }
+    #trash {
+        color: #444;
+        visibility: hidden;
+    }
+</style>
+
+<script type="text/javascript" src="/public/dependency/html/js/jQueryUI_1.10.4/jqueryUI.js"></script>
+<script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
+<script>
+
+FolderNode = {
+    select: function(e) {
+        e.find('i')
+         .css("font-size", "34px")
+         .siblings()
+         .css("font-size", "24px");
+    },
+
+    unselect: function(e) {
+        e.find('i')
+         .css("font-size", "24px")
+         .siblings()
+         .css("font-size", "14px");
+    }
+}
+
+OrganizationNode = {
+    select: function(e) {
+        e.removeClass('node-default')
+         .addClass('node-warning');
+    },
+
+    unselect: function(e) {
+        e.removeClass('node-warning')
+         .addClass('node-default');
+    }
+}
+
+FolderDroppableOption = {
+    over: function(event, ui) {
+       FolderNode.select($(this));
+    },
+    out: function(event, ui) {
+       FolderNode.unselect($(this));
+    },
+    drop: function(event, ui) {
+        FolderNode.unselect($(this));
+        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+    }
+}
+
+OrganizationDroppableOption = {
+    over: function(event, ui) {
+       OrganizationNode.select($(this));
+    },
+    out: function(event, ui) {
+       OrganizationNode.unselect($(this));
+       
+    },
+    drop: function(event, ui) {
+        OrganizationNode.unselect($(this));
+        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+    }
+}
+
+$('#app_maarchRM_main').ready(function() {
+    var options = {
+       closedIcon : 'fa-folder',
+       openedIcon: 'fa-folder-open' 
+    }
+    BootstrapTree.init($('#filePlanTree'), options);
+})
+
+// Folder selection
+$('#filePlanTree').on('mouseenter', '.folder > b', function() { 
+    if ($(this).css('font-size') != '24px') {
+        $(this).addClass('label label-default');
+    }
+});
+$('#filePlanTree').on('mouseleave', '.folder > b', function() { 
+    $(this).removeClass('label label-default');
+})
+
+// Drag'n drop handling 
+$('.folder').draggable({
+    revert : true,
+    drag : function() {
+        $('#trash').css('visibility', 'visible');
+    },
+    stop: function() {
+        $('#trash').css('visibility', 'hidden');
+    }
+})
+
+$('.folder').droppable(FolderDroppableOption);
+$('.orgNode').droppable(OrganizationDroppableOption);
+$('#trash').droppable({
+    over: function(event, ui) {
+       $(this).removeClass('disabled');
+              //.addClass('btn-warning')
+              //.removeClass('btn-default');
+    },
+    out: function(event, ui) {
+       $(this).addClass('disabled');
+              //.removeClass('btn-warning')
+              //.addClass('btn-default');
+    },
+    drop: function(event, ui) {
+       $(this).addClass('disabled');
+    }
+})
+
+</script>

@@ -48,13 +48,6 @@ class archive
     public $descriptionClass;
 
     /**
-     * The name of description identifier
-     *
-     * @var id
-     */
-    public $descriptionId;
-
-    /**
      * The name of archival profile
      *
      * @var string
@@ -160,11 +153,12 @@ class archive
     public $lifeCycleEvent;
 
     /**
-     * Documents
+     * Digital resources of archive
+     * Digital resources of archive
      *
-     * @var documentManagement/document[]
+     * @var digitalResource/digitalResource[]
      */
-    public $document;
+    public $digitalResources;
 
     /**
      * The archival agreement reference

@@ -6,39 +6,37 @@
     file that was distributed with this source code.
 #-->
 
-<div class=" col-md-11">
-    <div class="panel-group" id="fieldList" role="tablist" >
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" data-translate-catalog="documentManagement/document">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#fieldList" href="#collapseFields">
-                        Fields
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseFields" class="panel-collapse collapse in" role="tabpanel" data-translate-catalog="documentManagement/document">
-                <div class="panel-body">
-                    <form class="form-horizontal">
-                        <div id="allFields">
-                            <div id="archivalProfileFields"></div>
-                            <div id="customFields"></div>
+<div class="panel-group" id="fieldList" role="tablist" >
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" data-translate-catalog="documentManagement/document">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#fieldList" href="#collapseFields">
+                    Fields
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFields" class="panel-collapse collapse in" role="tabpanel" data-translate-catalog="documentManagement/document">
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div id="allFields">
+                        <div id="archivalProfileFields"></div>
+                        <div id="customFields"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="dropup col-xs-12" id="customFieldAddBtn">
+                            <button type="button" class="btn btn-sm btn-info pull-right" title="Add field" data-toggle="dropdown">
+                                &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+                            </button>
+                            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                                <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                                <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
+                                <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+                                <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
+                                <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <div class="dropup col-xs-12" id="customFieldAddBtn">
-                                <button type="button" class="btn btn-sm btn-info pull-right" title="Add field" data-toggle="dropdown">
-                                    &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
-                                </button>
-                                <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
-                                    <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
-                                    <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
-                                    <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
-                                    <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
-                                    <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -171,22 +169,23 @@
     });
 
     var Metadata = {
-        addDocumentDescription : function(documentDescription) {
-            //console.log(documentDescription);
+        addArchiveDescription : function(archiveDescription) {
+            //console.log(archiveDescription);
             var target = $("#archivalProfileFields");
             var template = $('#inputFieldTemplate').clone();
-            var type = documentDescription.descriptionField.type;
-            var defaultVal = documentDescription.descriptionField.default;
-            var enumeration= documentDescription.descriptionField.enumeration;
-            var label = documentDescription.descriptionField.label;
-            var name = documentDescription.descriptionField.name;
-            var required = documentDescription.required;
-            var origin = documentDescription.origin;
+            var type = archiveDescription.descriptionField.type;
+            var defaultVal = archiveDescription.descriptionField.default;
+            var enumeration= archiveDescription.descriptionField.enumeration;
+            var label = archiveDescription.descriptionField.label;
+            var name = archiveDescription.descriptionField.name;
+            var required = archiveDescription.required;
+            var origin = archiveDescription.origin;
 
             var field = null;
 
             switch (type) {
                 case 'text':
+                case 'string':
                     template = $('#textareaFieldTemplate').clone();
                     field = template.find('textarea');
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
@@ -194,6 +193,7 @@
                     }
                     break;
                 case 'name':
+                case 'id':
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
@@ -220,6 +220,7 @@
                     }
                     break;
                 case 'date':
+                case 'timestamp':
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
                     field.datepicker({
@@ -307,17 +308,25 @@
         },
 
         serialize : function(target) {
+            var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
             var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
-            var inputsCustom = target.find("#customFields").children();
-            var metadatas = {};
-            metadatas.descriptionObject = [];
-            
+            var inputsCustom = target.find("#customFields").children();           
             var flagEmptyRequiredField = false;
             var flagEmptyCustomField = false;
-            
+
+            if (selectedProfile != undefined && selectedProfile.descriptionClass != null && selectedProfile.descriptionClass != '') {
+                var descriptionObject = {};
+                var fulltext = false;
+            } else {
+                var descriptionObject = [];
+                var fulltext = true;
+            }
+
             $.each(inputsArchivalProfile, function() {
                 var value = $.trim($(this).val());
                 var type = $(this).attr("data-type");
+                var name = $(this).attr('name');
+                var required = $(this).attr('data-required');
                 
                 if (type == "boolean") {
                     if (!$(this).parent().hasClass("active")) {
@@ -325,10 +334,7 @@
                     }
 
                     value = $(this).val();
-                }
-                
-                var name = $(this).attr('name');
-                var required = $(this).attr('data-required');
+                }                
 
                 if (required == "true" && (value === "" || value === null || value === undefined)) {
                     flagEmptyRequiredField = true;
@@ -340,33 +346,29 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if ($(this).attr("data-origin") != "user") {
-                    metadatas[name] = value;
-                }
+                if (fulltext) {
+                    var metadata = {
+                        type : type,
+                        name : name,
+                        value: value
+                    }
 
-                var metadata = {
-                    type : type,
-                    name : name,
-                    value: value
+                    descriptionObject.push(metadata);
+                } else {
+                    descriptionObject[name] = value;
                 }
-
-                metadatas.descriptionObject.push(metadata);
             });
             
             $.each(inputsCustom, function() {
-                var valueInput = $(this).find('.value');
-                var labelInput = $(this).find('.name');
-                var metadata = {
-                    type : valueInput.data('type'),
-                    name : labelInput.val(),
-                    value: $.trim(valueInput.val())
-                }
+                var value = $.trim($(this).val());
+                var type = $(this).attr("data-type");
+                var name = $(this).find('.name').val();
                 
-                if (metadata.type == "boolean") {
-                    metadata.value = valueInput.prop("checked");
+                if (type == "boolean") {
+                    value = $(this).prop("checked");
                 }
 
-                if (metadata.value === '' || metadata.value == undefined || metadata.value == null || metadata.name == ''|| metadata.name == undefined || metadata.name == null) {
+                if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {
                     $(this).closest(".form-group").addClass('has-error');
                     flagEmptyCustomField = true;
                     return;
@@ -375,10 +377,20 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                metadatas.descriptionObject.push(metadata);
+                if (fulltext) {
+                    var metadata = {
+                        type : type,
+                        name : name,
+                        value: value
+                    }
+
+                    descriptionObject.push(metadata);
+                } else {
+                    descriptionObject[name] = value;
+                }
             });
             
-            var result = metadatas;
+            var result = descriptionObject;
             
             if (flagEmptyRequiredField) {
                 result = true;

@@ -1,0 +1,76 @@
+<div class="modal fade" id="deleteFilePlanConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete the file plan</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure to delete this file plan ? This action will also delete the positions above !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmFilePlanDelete">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletePositionConfirmation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete the position</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Are you sure to delete this position ? This action will also delete the positions above !
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmPositionDelete">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#confirmFilePlanDelete').on('click', function(){
+        $.ajax({
+            url: '/filePlan/deleteFilePlan/'+$(this).attr('data-filePlanCode'),
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function(response) {
+                requestResult(response.message, response.status);
+                reloadTree();
+            },
+            error: function(response) {
+                requestResult(response.responseText, false);
+            }
+        });
+        $('#deleteFilePlanConfirmation').modal('hide');
+    });
+
+    $('#confirmPositionDelete').on('click', function(){
+        $.ajax({
+            url: '/filePlan/deleteFilePlanPosition/'+$(this).attr('data-positionCode'),
+            type: 'DELETE',
+            contentType: 'application/json',
+            success: function(response) {
+                response = JSON.parse(response);
+                requestResult(response.message, response.status);
+                reloadTree();
+            },
+            error: function(response) {
+                requestResult(response.responseText, false);
+            }
+        });
+        $('#deletePositionConfirmation').modal('hide');
+    });
+</script>

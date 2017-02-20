@@ -311,7 +311,7 @@ class PresentationKernel
         $exceptionName = \laabs\basename($exceptionClass);
 
         if ($this->response->mode == 'http') {
-            $this->response->setHeader("X-Laabs-Exception", $exceptionClass."; ".str_replace("\n", " ", $exception->getMessage()));
+            $this->response->setHeader("X-Laabs-Exception", $exceptionClass."; ".str_replace("\n", " ", $exception->getMessage())." in ".$exception->getFile().":".$exception->getLine());
         }
 
         $this->serviceReturns = array($exception);

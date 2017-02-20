@@ -176,13 +176,13 @@ class fulltext
 
     /**
      * Check required fields
-     * @param string $documentProfileReference The document profile
+     * @param string $archivalProfileReference The archival profile
      * @param array  $fulltext                 The fulltext array
      */
-    public function checkRequiredFields($documentProfileReference, $fulltext)
+    public function checkRequiredFields($archivalProfileReference, $fulltext)
     {
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $documentProfile = $archivalProfileController->getDocumentProfileByReference($documentProfileReference);
+        $archivalProfile = $archivalProfileController->getByReference($archivalProfileReference);
 
         $indexedFulltext = [];
         foreach ($fulltext as $field) {
@@ -190,7 +190,7 @@ class fulltext
         }
 
         $errors = [];
-        foreach ($documentProfile->documentDescription as $description) {
+        foreach ($archivalProfile->archiveDescription as $description) {
             if (!$description->required) {
                 continue;
             }

@@ -99,10 +99,10 @@ class journal
             $eventLine[3] = (string) $previousJournal->archiveId;
 
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalDocument = $archiveController->getDocuments($previousJournal->archiveId)[0];
+            $journalResource = $archiveController->getDigitalResources($previousJournal->archiveId)[0];
 
-            $eventLine[4] = (string) $journalDocument->digitalResource->hashAlgorithm;
-            $eventLine[5] = (string) $journalDocument->digitalResource->hash;
+            $eventLine[4] = (string) $journalResource->hashAlgorithm;
+            $eventLine[5] = (string) $journalResource->hash;
         }
 
         fputcsv($journalFile, $eventLine);

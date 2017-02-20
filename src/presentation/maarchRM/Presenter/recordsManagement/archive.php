@@ -91,52 +91,6 @@ class archive
     }
 
     /**
-     * Get the list of owner originators oranizations
-     * @param object $curentService The user's current service
-     *
-     * @return The list of owner originators orgs
-     */
-    protected function getOwnerOriginatorsOrgs($currentService) {
-        $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
-
-        $userPositionController = \laabs::newController('organization/userPosition');
-        $orgController = \laabs::newController('organization/organization');
-
-        $owner = false;
-        $userServices = [];
-        $ownerOriginatorOrgs = [];
-
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
-        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
-            $userServices[] = $userService;
-            if (isset($userService->orgRoleCodes)) {
-                foreach ($userService->orgRoleCodes as $orgRoleCode) {
-                    if ($orgRoleCode == 'owner') {
-                        $owner = true;
-                    }
-                }
-            }
-        }
-        foreach ($userServices as $userService) {
-            foreach ($originators as $originator) {
-                if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
-                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
-
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
-                    }
-                    $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators[] = $originator;
-                }
-            }
-        }
-
-        return $ownerOriginatorOrgs;
-    }
-
-    /**
      * Get fulltext search form
      *
      * @return string The HTML result
@@ -146,24 +100,17 @@ class archive
         $archivalProfiles = $this->archivalProfileController->index(true);
         $allSearchFields = [];
 
-        $documentDescriptionFields = $this->archivalProfileController->getDocumentDescriptionFields();
-        foreach ($documentDescriptionFields as $documentDescriptionField) {
-            $documentDescriptionField->label = $this->view->translator->getText($documentDescriptionField->label, false, 'documentManagement/document');
-        }
-
         foreach ($archivalProfiles as $archivalProfile) {
             $this->archivalProfileController->readDetail($archivalProfile);
             $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->documentProfile as $documentProfile) {
-                foreach ($documentProfile->documentDescription as $documentDescription) {
-                    switch ($documentDescription->descriptionField->type) {
-                        case 'name':
-                        case 'date':
-                        case 'number':
-                        case 'boolean':
-                            $archivalProfile->searchFields[] = $documentDescription->descriptionField;
-                            $searchFields[] = $documentDescription->descriptionField;
-                    }
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                        $searchFields[] = $archiveDescription->descriptionField;
                 }
             }
         }
@@ -173,7 +120,6 @@ class archive
         $this->view->translate();
 
         $this->view->setSource("archivalProfiles", $archivalProfiles);
-        $this->view->setSource("documentDescriptionFields", $documentDescriptionFields);
         $this->view->merge();
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
@@ -251,12 +197,6 @@ class archive
 
                 if (isset($descriptionFields[$field->name])) {
                     $field->label = $descriptionFields[$field->name]->label;
-                } else {
-                    $label = $this->view->translator->getText($field->name, false, 'documentManagement/document');
-                    if ($label == $field->name) {
-                        $label = $this->view->translator->getText($field->name, false, 'recordsManagement/archive');
-                    }
-                    $field->label = $label;
                 }
             }
         }
@@ -278,7 +218,8 @@ class archive
      *
      * @return string The html result string
      */
-    public function fulltextModificationResult(){
+    public function fulltextModificationResult()
+    {
 
         $this->json->message = 'The indexes of the archive have been modified';
         $this->json->message = $this->translator->getText($this->json->message);
@@ -310,18 +251,12 @@ class archive
         $index->fields = $fields;
 
         $archivalProfileFields = [];
-        foreach ($archivalProfile->documentProfile as $documentProfile) {
-            if ($documentProfile->reference != $index->fields["category"]->value) {
-                continue;
+        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            if (isset($fields[$archiveDescription->descriptionField->name])) {
+                unset($fields[$archiveDescription->descriptionField->name]);
             }
 
-            foreach ($documentProfile->documentDescription as $documentDescription) {
-                if (isset($fields[$documentDescription->descriptionField->name])) {
-                    unset($fields[$documentDescription->descriptionField->name]);
-                }
-            }
-
-            $archivalProfileFields = $documentProfile->documentDescription;
+            $archivalProfileFields = $archiveDescription;
             break;
         }
 
@@ -400,40 +335,29 @@ class archive
     }
 
     /**
-     * Read users privileges on archives
-     */
-    protected function readPrivilegesOnArchives() {
-        $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
-        $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
-        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
-
-        $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
-        $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
-        $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
-    }
-
-    /**
-     * get a form to search resource
-     * @param documentManagement/document $document The resource object
+     * Get resource contents
+     * @param digitalResource/digitalResource $digitalResource The resource object
      *
      * @return string
      */
-    public function getContents($document = null)
+    public function getContents($digitalResource = null)
     {
-        if ($document) {
-            $contents = $document->digitalResource->getContents();
-            $mimetype = $document->digitalResource->mimetype;
-
-            \laabs::setResponseType($mimetype);
-            $response = \laabs::kernel()->response;
-            $response->setHeader("Content-Disposition", "inline; filename=".$document->digitalResource->fileName."");
-
-            return $contents;
-        } else {
+        if (!$digitalResource) {
             // @TODO : throw exception
             $contents = "<h4>This archive does not have any document.</h4>";
-            $mimetype = 'text/html';
+            \laabs::setResponseType('text/html');
+
+            return $contents;
         }
+
+        $contents = $digitalResource->getContents();
+        $mimetype = $digitalResource->mimetype;
+
+        \laabs::setResponseType($mimetype);
+        $response = \laabs::kernel()->response;
+        $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->fileName."");
+
+        return $contents;
     }
 
     /**
@@ -472,7 +396,7 @@ class archive
             $archive->accessRuleDurationUnit = substr($archive->accessRuleDuration, -1);
             $archive->accessRuleDuration = substr($archive->accessRuleDuration, 1, -1);
         }
-        $archive->visible = \laabs::newController("recordsManagement/accessRule")->isVisible($archive);
+        $archive->visible = \laabs::newController("recordsManagement/archive")->accessVerification($archive->archiveId);
 
         $archive->relationships = (
             !empty($archive->parentRelationships)
@@ -487,23 +411,18 @@ class archive
         );
         //var_dump($archive->childrenRelationships);
         //var_dump($archive->parentRelationships);
-
-        foreach ($archive->document as $document) {
-            $document->pathBasename = basename($document->digitalResource->address[0]->path);
-
-            if (!isset($document->digitalResource->relatedResource)) {
-                $document->digitalResource->relatedResource = [];
-                continue;
-            }
-
-            foreach ($document->digitalResource->relatedResource as $relatedResource) {
-                $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
-            }
-        }
-
         if ($archive->status == "disposed") {
-            $archive->document = null;
-            $archive->relationships = null;
+            $archive->digitalResources = null;
+        } else {
+            foreach ($archive->digitalResources as $digitalResource) {
+                if (!isset($digitalResource->relatedResource)) {
+                    $digitalResource->relatedResource = [];
+                    continue;
+                }
+                foreach ($digitalResource->relatedResource as $relatedResource) {
+                    $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
+                }
+            }
         }
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
@@ -1011,5 +930,66 @@ class archive
         }
 
         return $this->json->save();
+    }
+
+    /**
+     * Read users privileges on archives
+     */
+    protected function readPrivilegesOnArchives()
+    {
+        $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+        $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
+        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
+
+        $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
+        $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
+        $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
+    }
+
+    /**
+     * Get the list of owner originators oranizations
+     * @param object $currentService The user's current service
+     *
+     * @return The list of owner originators orgs
+     */
+    protected function getOwnerOriginatorsOrgs($currentService)
+    {
+        $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
+
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $orgController = \laabs::newController('organization/organization');
+
+        $owner = false;
+        $userServices = [];
+        $ownerOriginatorOrgs = [];
+
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
+        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
+            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
+            $userServices[] = $userService;
+            if (isset($userService->orgRoleCodes)) {
+                foreach ($userService->orgRoleCodes as $orgRoleCode) {
+                    if ($orgRoleCode == 'owner') {
+                        $owner = true;
+                    }
+                }
+            }
+        }
+        foreach ($userServices as $userService) {
+            foreach ($originators as $originator) {
+                if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
+                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
+                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
+
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
+                    }
+                    $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators[] = $originator;
+                }
+            }
+        }
+
+        return $ownerOriginatorOrgs;
     }
 }

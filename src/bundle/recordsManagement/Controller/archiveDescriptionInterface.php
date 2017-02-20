@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Controller;
+
 /**
  * Interface for archive description class control
  *
@@ -26,12 +28,12 @@ namespace bundle\recordsManagement\Controller;
  */
 interface archiveDescriptionInterface
 {
-    
     /**
      * Create the description object
      * @param object $description
+     * @param id     $archiveId
      */
-    public function create($description);
+    public function create($description, $archiveId);
 
     /**
      * Retrieve the description object
@@ -42,14 +44,14 @@ interface archiveDescriptionInterface
     /**
      * Update the description object
      * @param object $description
+     * @param id     $archiveId
      */
-    public function update($description);
+    public function update($description, $archiveId);
 
     /**
      * Delete the description object
      * @param id   $archiveId
      * @param bool $deleteDescription
      */
-    public function delete($archiveId, $deleteDescription=true);
-    
-} // END class 
+    public function delete($archiveId, $deleteDescription = true);
+} // END class

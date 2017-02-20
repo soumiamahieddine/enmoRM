@@ -9,7 +9,17 @@ var BootstrapTree = {
             .find('i:first')
             .on('click', BootstrapTree.toggleNode);
 
-        $('.parent_li').find('span:first').find('.fa:first').addClass('fa-plus-square');
+        $('.parent_li').find('span:first')
+                       .find('.fa:first')
+                       .not('[data-closed-icon]')
+                       .addClass('fa-plus-square');
+
+        $('.parent_li').find('span:first')
+                       .find('.fa[data-closed-icon]:first')
+                       .each(function() {
+                            $(this).addClass($(this).data('closed-icon'));
+                       })
+
         $('.parent_li').find(' > ul > li').hide();
     },
 
@@ -34,13 +44,14 @@ var BootstrapTree = {
             ul = $('<ul/>').appendTo(parent);
 
             parent.addClass('parent_li')
-              .find('span:first')
-              .find('.fa:first')
-              .addClass('fa-minus-square')
-              .on('click', BootstrapTree.toggleNode);
+                  .find('span:first')
+                  .find('.fa:first')
+                  .addClass(this.openedIcon)
+                  .on('click', BootstrapTree.toggleNode);
         }
         //this.openNode(ul);
         element.appendTo(ul);
+        console.log('ok');
     },
 
     removeNode: function(element) {
@@ -53,7 +64,7 @@ var BootstrapTree = {
 
         if (ul.find('>li').length <= 1) {
             ul.remove();
-            li.find('i.fa').removeClass('fa-minus-square fa-plus-square');
+            li.find('i.fa').removeClass(this.openedIcon + ' ' + this.closedIcon);
         } else {
             element.remove();
         }
@@ -62,25 +73,60 @@ var BootstrapTree = {
     },
 
     openNode: function(element) {
-        element.parents('li').find('i.fa-plus-square:first').click();
+        element.parents('li').find('i.' + this.closedIcon + ':first').click();
     },
 
     toggleNode: function(event) {
         var children = $(this).closest('li.parent_li').find(' > ul > li');
-        if (children.is(':visible')) {
+        var i = $(this).parent().find(' > i');
+
+        var closedIcon = i.data('closed-icon');
+        var openedIcon = i.data('opened-icon');
+
+        if (!closedIcon) {
+            closedIcon = 'fa-plus-square';
+            openedIcon = 'fa-minus-square';
+        }
+
+        if (i.hasClass(openedIcon)) {
             children.hide('fast');
-            $(this).parent().find(' > i').addClass('fa-plus-square').removeClass('fa-minus-square');
+            i.addClass(closedIcon).removeClass(openedIcon);
         }
         else {
             children.show('fast');
-            $(this).parent().find(' > i').addClass('fa-minus-square').removeClass('fa-plus-square');
+            i.addClass(openedIcon).removeClass(closedIcon);
         }
         event.stopPropagation();
         $('.tree').find('.hideTreeElement').css('display', 'none');
     },
 
     findNode: function(tree, text) {
-        //tree.find('i.fa-minus-square').click();
         this.openNode(tree.find("li:contains('"+text+"')"));
+    },
+
+    move: function(element, target) {
+        if (!element || !target) {
+            return;
+        }
+
+        var ul = target.find('> ul');
+        if (ul.length == 0) {
+            ul = $('<ul/>').appendTo(target);
+
+            target.addClass('parent_li')
+                  .find('span:first')
+                  .find('.fa:first')
+                  .addClass(this.openedIcon)
+                  .on('click', BootstrapTree.toggleNode);
+        }
+        ul.append(element);
+
+        var targetUl = target.find('ul');
+        if (targetUl.length == 0) {
+            targetUl.remove();
+        }
+
+        return newElement;
     }
+
 }

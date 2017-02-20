@@ -1,0 +1,47 @@
+-- Schema: organization
+
+DROP SCHEMA IF EXISTS "filePlan" CASCADE;
+
+CREATE SCHEMA "filePlan"
+  AUTHORIZATION postgres;
+
+-- Table: filePlan."subject"
+
+-- DROP TABLE filePlan."subject";
+
+CREATE TABLE "filePlan"."folder"
+(
+  "folderId" text NOT NULL,
+  "name" text NOT NULL UNIQUE,
+  "parentFolderId" text ,
+  "description" text ,
+  "ownerOrgId" text ,
+  "disabled" boolean ,
+
+  CONSTRAINT "folder_pkey" PRIMARY KEY ("folderId"),
+  CONSTRAINT "filePlan_name_parentFolderId_key" UNIQUE ("name", "parentFolderId"),
+  CONSTRAINT "folderId_filePlan_fkey" FOREIGN KEY ("parentFolderId")
+      REFERENCES "filePlan"."folder" ("folderId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+-- Table: filePlan."position"
+
+-- DROP TABLE filePlan."position";
+
+CREATE TABLE "filePlan"."position"
+(
+  "folderId" text NOT NULL,
+  "archiveId" text NOT NULL,
+  
+  CONSTRAINT "position_filePlan_fkey" FOREIGN KEY ("folderId")
+      REFERENCES "filePlan"."folder" ("folderId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);

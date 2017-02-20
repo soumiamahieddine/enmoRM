@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (C) G015 Maarch
  *
@@ -97,9 +96,8 @@ trait archiveDepositTrait
         // Use current profile
         if (isset($this->currentArchivalProfile)) {
             $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
-            if (!empty($this->currentArchivalProfile->descriptionClass)) {
+            if (empty($archive->descriptionClass) && !empty($this->currentArchivalProfile->descriptionClass)) {
                 $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
-                $archive->descriptionId = \laabs::objectId($archive->descriptionObject, $archive->descriptionClass);
             }
 
             if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
@@ -116,11 +114,9 @@ trait archiveDepositTrait
         }
 
         // Set archive name when mono document
-        if (empty($archive->archiveName) && count($archive->document) == 1) {
-            if (!empty($document->title)) {
-                $archive->archiveName = $archive->document[0]->title;
-            } elseif (isset($archive->document[0]->digitalResource->fileName)) {
-                $archive->archiveName = $archive->document[0]->digitalResource->fileName;
+        if (empty($archive->archiveName) && count($archive->digitalResources) == 1) {
+            if (isset($archive->digitalResources[0]->fileName)) {
+                $archive->archiveName = $archive->digitalResources[0]->fileName;
             }
         }
 
@@ -133,48 +129,43 @@ trait archiveDepositTrait
 
         if (!isset($archive->descriptionClass) && \laabs::hasDependency('fulltext')) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
+
+            $fulltextController->checkRequiredFields($archive->archivalProfileReference, $archive->descriptionObject);
+            $fulltextController->validateDescriptionFields($archive->descriptionObject);
         }
-        if (isset($archive->descriptionClass) && isset($archive->descriptionObject)) {
+
+        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
             $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $archive->descriptionClass);
+
+            $this->validateArchiveDescriptionObject($archive);
         }
-        // Documents
-        if ($archive->document) {
+        // Resources
+        if ($archive->digitalResources) {
             //$formatController = \laabs::newController("digitalResource/format");
             $droid = \laabs::newService('dependency/fileSystem/plugins/fid');
             //$tika = \laabs::newService('dependency/fileSystem/plugins/Tika');
 
-            foreach ($archive->document as $document) {
-                if (\laabs::hasDependency('fulltext') && count($document->descriptionObject) > 0) {
-                    $fulltextController->checkRequiredFields($document->category, $document->descriptionObject);
-                    $fulltextController->validateDescriptionFields($document->descriptionObject);
+            foreach ($archive->digitalResources as $digitalResource) {
+                if (empty($digitalResource->archiveId)) {
+                    $digitalResource->archiveId = $archive->archiveId;
                 }
+                if (empty($digitalResource->resId)) {
+                    $digitalResource->resId = \laabs::newId();
+                }
+                $contents = base64_decode($digitalResource->getContents());
 
-                if (empty($document->docId)) {
-                    $document->docId = \laabs::newId();
-                    $document->digitalResource->docId = $document->docId;                }
-                if (empty($document->archiveId)) {
-                    $document->archiveId = $archive->archiveId;
-                }
-                if (empty($document->digitalResource->resId)) {
-                    $document->digitalResource->resId = \laabs::newId();
-                }
-                if (empty($document->type)) {
-                    $document->type = 'CDO';
-                }
-                $contents = base64_decode($document->digitalResource->getContents());
-
-                $document->digitalResource->setContents($contents);
+                $digitalResource->setContents($contents);
 
                 $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
                 file_put_contents($filename, $contents);
                 if ($format = $droid->match($filename)) {
-                    $document->digitalResource->puid = $format->puid;
+                    $digitalResource->puid = $format->puid;
                 }
 
                 //var_dump($tika->getInfo($filename));
 
-                if (empty($document->digitalResource->hash) || empty($document->digitalResource->hashAlgorithm)) {
-                    $this->documentController->digitalResourceController->getHash($document->digitalResource, $this->hashAlgorithm);
+                if (empty($digitalResource->hash) || empty($digitalResource->hashAlgorithm)) {
+                    $this->digitalResourceController->getHash($digitalResource, $this->hashAlgorithm);
                 }
             }
         }
@@ -207,17 +198,17 @@ trait archiveDepositTrait
             $archive->retentionStartDate = $archive->depositDate;
         }
 
-        if (is_string($archive->retentionStartDate)) {
+        /*if (is_string($archive->retentionStartDate)) {
             $qname = \laabs\explode("/", $archive->retentionStartDate);
             if ($qname[0] == "description") {
                 $i = 0;
-                while ($archive->document[0]->descriptionObject[$i]->name != $qname[1]) {
+                while ($archive->descriptionObject[$i]->name != $qname[1]) {
                     $i++;
                 }
-                $archive->retentionStartDate = \laabs::newDate($archive->document[0]->descriptionObject[$i]->value);
+                $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
             } else {
             }
-        }
+        }*/
 
         if (isset($archive->retentionStartDate) && isset($archive->retentionDuration)) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
@@ -303,144 +294,6 @@ trait archiveDepositTrait
                     break;
             }
         }
-    }
-
-    /**
-     * Add a document to the archive
-     * @param object $archive
-     *
-     * @return object
-     */
-    public function addDocument($archive)
-    {
-        // Load agreement, profile and service level
-        $this->useReferences($archive, 'deposit');
-
-        $document = $this->documentController->newDocument();
-
-        $archive->document[] = $document;
-
-        return $document;
-    }
-
-    /**
-     * Validate an archive VS agreement, profile and service level
-     * @param mixed $archive Archive object or archive identifer
-     *
-     * @return boolean
-     */
-    public function validate($archive)
-    {
-        // Read archive
-        if (is_string($archive)) {
-            $archive = $this->readPendingArchive($archive);
-        }
-
-        // Load agreement, profile and service level
-        $this->useReferences($archive, 'deposit');
-
-        // Generate archive id
-        if (!isset($archive->archiveId)) {
-            $archive->archiveId = \laabs::newId();
-        }
-
-        try {
-            // Validations
-            $archive = $this->validateArchiveManagementInformation($archive);
-            $archive = $this->validateArchiveDocument($archive);
-            $archive = $this->validateArchiveDescriptionObject($archive);
-
-            // Life cycle jounral
-            // Certificate of validation
-            $eventItems = array('hashAlgorithm' => null, 'hash' => null);
-
-            if ($archive->document) {
-                foreach ($archive->document as $document) {
-                    if ($document->type == "CDO" && $document->type != true) {
-                        $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                        $eventItems['hash'] = $document->digitalResource->hash;
-                        break;
-                    }
-                }
-            }
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/validation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
-
-
-        } catch (\Exception $exception) {
-            // Life cycle journal
-            // Certificate of validation
-            $eventItems = array('hashAlgorithm' => null, 'hash' => null);
-
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->type != true) {
-                    $eventItems['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventItems['hash'] = $document->digitalResource->hash;
-                    break;
-                }
-            }
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/validation', 'recordsManagement/archive', $archive->archiveId, $eventItems, false);
-
-            $archive->status = "invalid";
-            $this->sdoFactory->update($archive);
-            throw $exception;
-        }
-
-        return true;
-    }
-
-    private function validateArchiveManagementInformation($archive)
-    {
-        // Validate retention rule
-        if (!$archive->retentionRuleCode && (!$archive->retentionDuration && !$archive->finalDisposition)) {
-            throw new \bundle\recordsManagement\Exception\invalidArchiveException("The archive is invalid: no retention rule defined.");
-        }
-
-        if (empty($archive->accessRuleCode)) {
-            throw new \bundle\recordsManagement\Exception\invalidArchiveException("The archive is invalid: no access rule defined.");
-        }
-
-        return $archive;
-    }
-
-    private function validateArchiveDocument($archive)
-    {
-        if (!$archive->document) {
-            return $archive;
-        }
-
-        foreach ($archive->document as $document) {
-            // processs content data objects
-            if ($document->type == "CDO") {
-                // Use service level
-                if (isset($this->currentServiceLevel)) {
-                    if ($this->currentServiceLevel->formatDetection) {
-                        $format = $this->documentController->getResourceFormat($document);
-                    }
-
-                    if ($this->currentServiceLevel->mediaInfo) {
-                        $this->documentController->getResourceMediaInfo($document);
-                    }
-
-                    if ($this->currentServiceLevel->formatValidation) {
-                        $this->documentController->validateResourceFormat($document);
-                    }
-                }
-            }
-
-            if (empty($document->digitalResource->hash) || empty($document->digitalResource->hashAlgorithm)) {
-                throw new \bundle\recordsManagement\Exception\invalidArchiveException("The archive is invalid: no hash on document.");
-            } else {
-                $myHash = strtolower(hash($document->digitalResource->hashAlgorithm, $document->digitalResource->getContents()));
-
-                if (strtolower($document->digitalResource->hash) != $myHash) {
-                    throw new \bundle\recordsManagement\Exception\invalidArchiveException("The archive is invalid: invalid hash.");
-                }
-            }
-        }
-
-        return $archive;
     }
 
     private function validateArchiveDescriptionObject($archive)
@@ -532,10 +385,7 @@ trait archiveDepositTrait
             if (!empty($archive->descriptionClass)) {
                 if (isset($archive->descriptionObject)) {
                     $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-                    $descriptionController->create($archive->descriptionObject);
-                    if (!isset($archive->descriptionId)) {
-                        $archive->descriptionId = \laabs::objectId($archive->descriptionObject);
-                    }
+                    $descriptionController->create($archive->descriptionObject, $archive->archiveId);
                 }
             } elseif (\laabs::hasDependency('fulltext')) {
                 $fulltextController = \laabs::newController("recordsManagement/fulltext");
@@ -555,7 +405,7 @@ trait archiveDepositTrait
                 }
             }
 
-            // Store document and resources
+            // Store resources
             if (!$this->currentServiceLevel) {
                 if (isset($archive->serviceLevelReference)) {
                     $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -576,18 +426,11 @@ trait archiveDepositTrait
 
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
 
-            if (isset($archive->document) && count($archive->document) > 0) {
-                foreach ($archive->document as $document) {
-                    $document->archiveId = $archive->archiveId;
+            if (isset($archive->digitalResources) && count($archive->digitalResources) > 0) {
+                foreach ($archive->digitalResources as $digitalResource) {
+                    $digitalResource->archiveId = $archive->archiveId;
 
-                    $this->documentController->store($document, $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
-
-                    if (isset($document->descriptionObject) && \laabs::hasDependency('fulltext')) {
-                        // Use archive index as a base for each document
-                        $documentIndex = $fulltextController->getDocumentIndex($document, $baseIndex);
-
-                        $fulltextController->addDocument($index, $documentIndex);
-                    }
+                    $this->digitalResourceController->store($digitalResource, $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
                 }
             }
 
@@ -604,9 +447,9 @@ trait archiveDepositTrait
                     $this->fulltextController->delete($index, $baseIndex);
                 }
 
-                if ($archive->document) {
-                    foreach ($archive->document as $document) {
-                        $this->documentController->rollbackStorage($document);
+                if ($archive->digitalResources) {
+                    foreach ($archive->digitalResources as $digitalResource) {
+                        $this->digitalResourceController->rollbackStorage($digitalResource);
                     }
                 }
             } catch (\Exception $exception) {
@@ -633,21 +476,19 @@ trait archiveDepositTrait
         );
 
         $logged = false;
-        if (isset($archive->document) && count($archive->document)) {
-            foreach ($archive->document as $document) {
-                if ($document->type == "CDO" && $document->copy != true) {
-                    $address = $document->digitalResource->address[0];
+        if (isset($archive->digitalResources) && count($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $address = $digitalResource->address[0];
 
-                    $eventInfo['resId'] = (string) $document->digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $document->digitalResource->hash;
-                    $eventInfo['address'] = $address->path;
+                $eventInfo['resId'] = (string) $digitalResource->resId;
+                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventInfo['hash'] = $digitalResource->hash;
+                $eventInfo['address'] = $address->path;
 
-                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-                    $archive->lifeCycleEvent[] = $event;
+                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+                $archive->lifeCycleEvent[] = $event;
 
-                    $logged = true;
-                }
+                $logged = true;
             }
         }
 
@@ -660,7 +501,7 @@ trait archiveDepositTrait
 
         try {
 
-            $this->checkForConvertion($archive, $filePlanPosition);
+            $this->checkForConvertion($archive);
 
         } catch (\Exception $e) {
             if ($this->conversionError) {
@@ -702,12 +543,11 @@ trait archiveDepositTrait
 
     /**
      * Check information to convert if possible
-     * @param recordsManagement/archive $archive          The deposit archive
-     * @param string                    $filePlanPosition The storage path
+     * @param recordsManagement/archive $archive The deposit archive
      *
-     * @return boolean Return true if the CDO document was be converted
+     * @return boolean Return true resource was be converted
      */
-    private function checkForConvertion($archive, $filePlanPosition)
+    private function checkForConvertion($archive)
     {
         if (strrpos($this->currentServiceLevel->control, "convertOnDeposit") == false) {
             return false;
@@ -719,55 +559,9 @@ trait archiveDepositTrait
             return false;
         }
 
-        $cdoDocuments = [];
-
-        if (count($archive->document) > 0) {
-            foreach ($archive->document as $document) {
-                if (isset($document->digitalResource) && $document->type == 'CDO' && $document->copy != true) {
-                    $cdoDocuments[] = $document;
-                }
-            }
-        }
-
-        foreach ($cdoDocuments as $document) {
-            $eventInfo = [];
-            $address = $document->digitalResource->address[0];
-            $eventInfo['docId'] = $document->docId;
-            $eventInfo['resId'] = $document->digitalResource->resId;
-            $eventInfo['hashAlgorithm'] = $document->digitalResource->hashAlgorithm;
-            $eventInfo['hash'] = $document->digitalResource->hash;
-            $eventInfo['address'] = $address->path;
-
-            foreach ($conversionRules as $conversionRule) {
-                if ($conversionRule->puid == $document->digitalResource->puid) {
-                    try {
-                        $convertedResource = $this->documentController->convertDocument($document->digitalResource, $filePlanPosition.'/copies');
-                    } catch (\Exception $e) {
-                        \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
-
-                        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo, false);
-                        $archive->lifeCycleEvent[] = $event;
-
-                        throw $e;
-                    }
-
-                    if (!$convertedResource) {
-                        \laabs::notify(LAABS_BUSINESS_EXCEPTION, new \Exception("Error during conversion"));
-
-                        throw \laabs::newException('recordsManagement/conversionException', "Error during conversion");
-                    }
-
-                    $eventInfo['convertedResId'] = $convertedResource->resId;
-                    $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
-                    $eventInfo['convertedHash'] = $convertedResource->hash;
-                    $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
-                    $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-
-                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-                    $archive->lifeCycleEvent[] = $event;
-
-                    break;
-                }
+        if (count($archive->digitalResources) > 0) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $converted = $this->convertResource($archive, $digitalResource);
             }
         }
 

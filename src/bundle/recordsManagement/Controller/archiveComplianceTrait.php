@@ -103,16 +103,11 @@ trait archiveComplianceTrait
 
 
         try {
-            // Retrieve archive documents
-            $archive->document = $this->documentController->getArchiveDocuments($archive->archiveId);
+            $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
 
-            if (count($archive->document)) {
-                foreach ($archive->document as $document) {
-                    if ($document->type != "CDO") {
-                        continue;
-                    }
-
-                    if (!$this->checkResourceIntegrity($archive, $document->digitalResource, $currentOrganization)) {
+            if (count($archive->digitalResources)) {
+                foreach ($archive->digitalResources as $digitalResource) {
+                    if (!$this->checkResourceIntegrity($archive, $digitalResource, $currentOrganization)) {
                         $valid = false;
                     }
                 }
@@ -156,7 +151,7 @@ trait archiveComplianceTrait
     {
         $valid = false;
 
-        // Retrieve document resource creation event
+        // Retrieve resource creation event
         $creationEvents = $this->lifeCycleJournalController->matchEvent((string) $resource->created, $resource->resId);
         if (count($creationEvents)) {
             foreach ($creationEvents as $creationEvent) {
@@ -174,14 +169,14 @@ trait archiveComplianceTrait
                     break;
                 }
 
-                if (!$this->documentController->digitalResourceController->verifyResource($resource)) {
+                if (!$this->digitalResourceController->verifyResource($resource)) {
                     break;
                 }
 
                 $valid = true;
             }
         } else {
-            $valid = $this->documentController->digitalResourceController->verifyResource($resource);
+            $valid = $this->digitalResourceController->verifyResource($resource);
         }
 
         $eventInfo = [];

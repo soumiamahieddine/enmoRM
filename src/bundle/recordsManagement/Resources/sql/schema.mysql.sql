@@ -84,42 +84,12 @@ CREATE TABLE `recordsManagement.archiveDescription`
   `fieldName` varchar(255) NOT NULL,
   `origin` varchar(255),
   `required` boolean,
+  `position` smallint,
   PRIMARY KEY (`archivalProfileId`, `fieldName`),
   FOREIGN KEY (`archivalProfileId`)
     REFERENCES `recordsManagement.archivalProfile` (`archivalProfileId`) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-
-
-CREATE TABLE `recordsManagement.documentProfile`
-(
-  `archivalProfileId` varchar(255) NOT NULL,
-  `documentProfileId` varchar(255) NOT NULL,
-  `reference` varchar(255) NOT NULL,
-  `name` text NOT NULL,
-  `required` boolean default true,
-  `acceptUserIndex` boolean default false,
-  PRIMARY KEY (`documentProfileId`),
-  UNIQUE (`reference`),
-  FOREIGN KEY (`archivalProfileId`)
-    REFERENCES `recordsManagement.archivalProfile` (`archivalProfileId`) MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-
-CREATE TABLE `recordsManagement.documentDescription`
-(
-  `documentProfileId` varchar(255) NOT NULL,
-  `fieldName` varchar(255) NOT NULL,
-  `origin` varchar(255),
-  `required` boolean,
-  `position` smallint,
-  PRIMARY KEY (`documentProfileId`, `fieldName`),
-  FOREIGN KEY (`documentProfileId`)
-    REFERENCES `recordsManagement.documentProfile` (`documentProfileId`) MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
 
 CREATE TABLE `recordsManagement.serviceLevel`
 (
@@ -172,10 +142,8 @@ CREATE TABLE `recordsManagement.archive`
   `parentArchiveId` varchar(255),
   
   `descriptionClass` varchar(255),
-  `descriptionId` varchar(255),
 
   PRIMARY KEY (`archiveId`),
-  UNIQUE (`descriptionClass`, `descriptionId`),
   FOREIGN KEY (`parentArchiveId`)
     REFERENCES `recordsManagement.archive` (`archiveId`) MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,

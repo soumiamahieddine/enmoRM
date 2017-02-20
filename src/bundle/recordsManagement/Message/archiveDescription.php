@@ -26,7 +26,25 @@ namespace bundle\recordsManagement\Message;
  *
  */
 class archiveDescription
-    extends objectDescription
 {
+    /**
+     * The name of the property
+     *
+     * @var string
+     */
+    public $fieldName;
 
+    /**
+     * The status of the property (required or not)
+     *
+     * @var boolean
+     */
+    public $required;
+
+    /**
+     * The position of field
+     *
+     * @var integer
+     */
+    public $position;
 }

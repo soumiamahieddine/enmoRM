@@ -7790,25 +7790,26 @@ th.visible-print, td.visible-print {
     min-height:20px;
     margin-bottom:20px;
 }
-.tree > ul {
-    padding-left:2px; 
+
+.tree ul {
+    padding-left:20px; 
 }
 
 .tree li {
     list-style-type:none;
     margin:0;
-    padding:10px 5px 0 5px;
+    padding:5px 5px 0 5px;
     position:relative
 }
 .tree li::before, .tree li::after {
     content:'';
-    left:-20px;
+    left:-10px;
     position:absolute;
     right:auto
 }
 .tree li::before {
     border-left:1px solid #999;
-    bottom:50px;
+    bottom:10px;
     height:100%;
     top:0;
     width:1px
@@ -7816,8 +7817,8 @@ th.visible-print, td.visible-print {
 .tree li::after {
     border-top:1px solid #999;
     height:20px;
-    top:25px;
-    width:25px
+    top:20px;
+    width:15px
 }
 .tree .dropdown-menu li::before {
     border-left:none;
@@ -7832,7 +7833,6 @@ th.visible-print, td.visible-print {
 .tree li span {
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
-    border:1px solid #999;
     border-radius:5px;
     display:inline-block;
     padding:3px 8px;
@@ -7854,14 +7854,40 @@ th.visible-print, td.visible-print {
     color:#000
 }*/
 
-.tree .root{
+.node-default {
+    border:1px solid #999;
+    color: #333;
+    background-color: #fff
+}
+
+.tree .root, .node-success {
+    border:1px solid #999;
     color: white;
     background-color: #45a469
 }
 
-.tree .node{
+.tree .node, .node-primary {
+    border:1px solid #999;
     color: white;
     background-color: #3d80ab
+}
+
+.node-info {
+    border:1px solid #999;
+    color: white;
+    background-color: #31b0d5
+}
+
+.node-warning {
+    border:1px solid #999;
+    color: white;
+    background-color: #ec971f
+}
+
+.node-danger {
+    border:1px solid #999;
+    color: white;
+    background-color: #c9302c
 }
 
 @font-face {

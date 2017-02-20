@@ -45,14 +45,6 @@ class format
         $this->droidContainerSignatureFile = \laabs::configuration('dependency.fileSystem')['containerSignatureFile'];
     }
 
-    protected function getReference()
-    {
-        $this->domDocument = new \DOMDocument();
-        $this->domDocument->load($this->droidSignatureFile);
-        $this->domXPath = \laabs::newService("dependency/xml/XPath", $this->domDocument);
-        $this->domXPath->registerNamespace('psf', 'http://www.nationalarchives.gov.uk/pronom/SignatureFile');
-    }
-
     /**
      * Get all the formats
      * @return digitalResource/format[]
@@ -71,41 +63,6 @@ class format
         }
 
         return $formats;
-    }
-
-    /**
-     * Parse a format element from Xml into a digitalResource/format object
-     * @param \DOMElement $formatElement
-     *
-     * @return digitalResource/format
-     */
-    protected function parseFormatElement($formatElement)
-    {
-        $format = \laabs::newInstance("digitalResource/format");
-        $format->puid = $formatElement->getAttribute('PUID');
-        $format->name = $formatElement->getAttribute('Name');
-
-        if ($formatElement->hasAttribute('Version')) {
-            $format->version = $formatElement->getAttribute('Version');
-        }
-
-        if ($formatElement->hasAttribute('MIMEType')) {
-            $format->mimetypes = \laabs\explode(', ', $formatElement->getAttribute('MIMEType'));
-        }
-
-        $mediatypes = array('application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image');
-        foreach ((array) $format->mimetypes as $mimetype) {
-            if (strpos($mimetype, "/") && (in_array($mediatype = strtok($mimetype, "/"), $mediatypes))) {
-                $format->mediatype = $mediatype;
-                break;
-            }
-        }
-
-        foreach ($formatElement->getElementsByTagName('Extension') as $extensionElement) {
-            $format->extensions[] = $extensionElement->nodeValue;
-        }
-
-        return $format;
     }
 
     /**
@@ -237,21 +194,16 @@ class format
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format.');
         file_put_contents($filename, $contents);
 
-        if (!isset($this->droid)) {
-            $this->droid = \laabs::newService('dependency/fileSystem/plugins/fid', $this->droidSignatureFile, $this->droidContainerSignatureFile);
-        }
-        $format = $this->droid->match($filename);
+        $format = $this->identifyFormat($filename);
+
         if (!$format) {
             throw \laabs::newException("digitalResource/formatIdentificationException", "The format identification failed.");
         }
-        
+
         $finfo = new \finfo();
         $mimetype = $finfo->buffer($contents, \FILEINFO_MIME_TYPE);
 
-        if (!isset($this->jhove)) {
-            $this->jhove = \laabs::newService('dependency/fileSystem/plugins/jhove');
-        }
-        $valid = $this->jhove->validate($filename);
+        $valid = $this->validateFormat($filename);
 
         $fileInformation = \laabs::newMessage("digitalResource/fileInformation");
 
@@ -268,13 +220,13 @@ class format
     /**
      * Get format from file
      * @param string $filename
-     * 
+     *
      * @return format
      */
     public function identifyFormat($filename)
     {
         if (!isset($this->droid)) {
-            $this->droid = \laabs::newService('dependency/fileSystem/plugins/fid', $this->droidSignatureFile, $this->droidContainerSignatureFile);        
+            $this->droid = \laabs::newService('dependency/fileSystem/plugins/fid', $this->droidSignatureFile, $this->droidContainerSignatureFile);
         }
         $format = $this->droid->match($filename);
 
@@ -284,7 +236,7 @@ class format
     /**
      * Get format from file
      * @param string $filename
-     * 
+     *
      * @return format
      */
     public function validateFormat($filename)
@@ -299,5 +251,48 @@ class format
         } else {
             return $this->jhove->getErrors();
         }
+    }
+
+    /**
+     * Parse a format element from Xml into a digitalResource/format object
+     * @param \DOMElement $formatElement
+     *
+     * @return digitalResource/format
+     */
+    protected function parseFormatElement($formatElement)
+    {
+        $format = \laabs::newInstance("digitalResource/format");
+        $format->puid = $formatElement->getAttribute('PUID');
+        $format->name = $formatElement->getAttribute('Name');
+
+        if ($formatElement->hasAttribute('Version')) {
+            $format->version = $formatElement->getAttribute('Version');
+        }
+
+        if ($formatElement->hasAttribute('MIMEType')) {
+            $format->mimetypes = \laabs\explode(', ', $formatElement->getAttribute('MIMEType'));
+        }
+
+        $mediatypes = array('application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image');
+        foreach ((array) $format->mimetypes as $mimetype) {
+            if (strpos($mimetype, "/") && (in_array($mediatype = strtok($mimetype, "/"), $mediatypes))) {
+                $format->mediatype = $mediatype;
+                break;
+            }
+        }
+
+        foreach ($formatElement->getElementsByTagName('Extension') as $extensionElement) {
+            $format->extensions[] = $extensionElement->nodeValue;
+        }
+
+        return $format;
+    }
+
+    protected function getReference()
+    {
+        $this->domDocument = new \DOMDocument();
+        $this->domDocument->load($this->droidSignatureFile);
+        $this->domXPath = \laabs::newService("dependency/xml/XPath", $this->domDocument);
+        $this->domXPath->registerNamespace('psf', 'http://www.nationalarchives.gov.uk/pronom/SignatureFile');
     }
 }

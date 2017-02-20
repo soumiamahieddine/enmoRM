@@ -1,0 +1,173 @@
+<!--#
+    This file is part of the filePlan package.
+    (c) Maarch Prosper De Laure <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain">
+    <div class="container-fluid" lang="en" data-translate-catalog="organization/messages">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-sitemap"></i>
+                File Plan
+                <small>Describe the file plans</small>
+            </h1>
+        </div>
+    </div>
+
+
+    <div class="container-fluid" lang="en" data-translate-catalog="organization/messages">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 col-lg-6" >
+                <div class="panel panel-primary">
+                    <div class="panel-heading clearfix">
+                        <div class="pull-left">
+                            <h4 >File plan tree</h4>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-info" type="button" id="newFilePlan">Add a new file plan</button>
+                        </div>
+                    </div>
+                    <div class="panel-body" >
+                        <div class="dataTree panel-group tree">
+                            <!-- File plan tree goes here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-lg-6" id="formContainer">
+            </div>
+        </div>
+        <!-- modals for delete confirmation -->
+        <?hinclude filePlan/view/modals.html ?>
+    </div>
+</div>
+
+
+<script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
+
+<script>
+    $(document).ready(function () {
+        initTree();
+    });
+
+    $('#contain').on('click', '#newFilePlan', function () {
+        $.ajax({
+            url: "/filePlan/newFilePlan",
+            type: "GET",
+            success: function (response) {
+                $('#formContainer').html(response);
+            },
+            error: function (response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    })
+
+    //edit a file plan
+    $('#contain').on('click', '[name="modifyFilePlan"]', function () {
+        filePlanCode = $(this).attr("data-code");
+        $.ajax({
+            url: "/filePlan/editFilePlan/" + filePlanCode,
+            type: "GET",
+            success: function (response) {
+                $('#formContainer').html(response);
+            },
+            error: function (response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    });
+
+    //delete a file plan
+    $("#contain").on('click', "[name='deleteFilePlan']", function () {
+        var filePlanCode = $(this).closest('span').attr("data-filePlanCode");
+        $('#confirmFilePlanDelete').attr('data-filePlanCode', filePlanCode);
+        $('#deleteFilePlanConfirmation').modal('show');
+    });
+
+    //display the file plan position form
+    $('#contain').on('click', "[name='addPosition']", function () {
+        var positionInformation = $(this).closest('span');
+        var ownerFilePlanCode = positionInformation.attr("data-filePlanCode");
+        var parentCode = positionInformation.attr("data-positionCode");
+        var subtitle = $(this).attr("data-subTitle");
+        console.log(ownerFilePlanCode);
+        $.ajax({
+            url: "/filePlan/newFilePlanPosition",
+            type: "GET",
+            success: function (response) {
+                $('#formContainer').html(response);
+                $('[name="ownerFilePlanCode"]').val(ownerFilePlanCode);
+                $('[name="parentCode"]').val(parentCode);
+                //loadForm(response, 'filePlanPositionForm', subtitle);
+            }
+        })
+    });
+    
+    $('#contain').on('click', "[name='modifyPosition']", function(){
+        var positionCode = $(this).closest('span').attr("data-positionCode");
+        $.ajax({
+            url: "/filePlan/editFilePlanPosition/"+positionCode,
+            type: "GET",
+            contentType: 'application/json',
+            success: function(response) {
+                $('#formContainer').html(response);
+            },
+            error: function(response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    });
+        //show the form to move a position
+    $('#contain').on('click', "[name='movePosition']", function(){
+        var positionCode = $(this).attr("data-positionCode");
+        $.ajax({
+            url: "/filePlan/getElementsForMove/"+positionCode,
+            type: "GET",
+            contentType: 'application/json',
+            success: function(response) {
+                $('#formContainer').html(response);
+                $('#formContainer').find('[name="positionCode"]').val(positionCode);
+            },
+            error: function(response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    });
+    
+    function reloadTree() {
+        $.ajax({
+            url: "/filePlan/getTree",
+            type: "GET",
+            dataType: 'html',
+            success: function (response) {
+                $('.dataTree').html(response);
+                initTree();
+            },
+            error: function (response) {
+                requestResult(response.responseText, false);
+            }
+        })
+    }
+
+    function requestResult(message, status) {
+        var class_name = "gritter-danger";
+        if (status) {
+            class_name = "gritter-primary";
+        }
+        
+        $.gritter.add({
+            text: message,
+            class_name: class_name
+        });
+        $('.btn').removeProp('disabled');
+    }
+
+    function clearForm() {
+        $('#formContainer').off();
+        $('#formContainer').html('');
+    }
+    
+</script>

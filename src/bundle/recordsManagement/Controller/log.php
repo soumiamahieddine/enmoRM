@@ -28,6 +28,7 @@ namespace bundle\recordsManagement\Controller;
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
 class log
+    implements archiveDescriptionInterface
 {
     /* Properties */
 
@@ -123,11 +124,12 @@ class log
 
     /**
      * Create the requested log
-     * @param object $log log object
+     * @param object $log       The log object
+     * @param object $archiveId The archive Id
      *
      * @return boolean status of the query
      */
-    public function create($log)
+    public function create($log, $archiveId)
     {
         if (!\laabs::validate($log)) {
             $e = new \core\Exception('Invalid log data');
@@ -135,6 +137,7 @@ class log
             $e->errors = \laabs::getValidationErrors();
             throw $e;
         }
+        
         $this->sdoFactory->create($log);
 
         return $log;
@@ -149,6 +152,26 @@ class log
     public function read($archiveId)
     {
         return $this->sdoFactory->read("recordsManagement/log", $archiveId);
+    }
+
+    /**
+     * Update the description object
+     * @param object $description
+     * @param id     $archiveId
+     */
+    public function update($description, $archiveId)
+    {
+        // Not implemented yet...
+    }
+
+    /**
+     * Delete the description object
+     * @param id   $archiveId
+     * @param bool $deleteDescription
+     */
+    public function delete($archiveId, $deleteDescription=true)
+    {
+        // Not possible
     }
 
     /**
@@ -251,7 +274,6 @@ class log
 
         $archiveController = \laabs::newController('recordsManagement/archive');
         $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
-        $orgController = \laabs::newController('organization/organization');
 
         // Create archive
         $archive = $archiveController->newArchive();
@@ -265,29 +287,24 @@ class log
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
         $journalResource->puid = "x-fmt/18";
         $journalResource->mimetype = "text/csv";
+        $journalResource->archiveId = $archive->archiveId;
         $digitalResourceController->getHash($journalResource, "SHA256");
-
-        // Add document
-        $document = \laabs::newInstance('documentManagement/document');
-        $document->archiveId = $archive->archiveId;
-        $document->type = "CDO";
-        $document->digitalResource = $journalResource;
 
         if ($timestampFileName) {
             // Create timestamp resource
             $timestampResource = $digitalResourceController->createFromFile($timestampFileName);
             $digitalResourceController->getHash($timestampResource, "SHA256");
 
-            $relationship = new \stdClass();
-            $relationship->resource = $timestampResource;
-            $relationship->typeCode = "isTimestampOf";
-            $document->digitalResource->relationship = array($relationship);
+            $timestampResource->archiveId = $journalResource->archiveId;
+            $timestampResource->relatedResId = $journalResource->resId;
+            $timestampResource->relationshipType = "isTimestampOf";
+
+            $archive->digitalResources[] = $timestampResource;
         }
 
-        $archive->document[] = $document;
+        $archive->digitalResources[] = $journalResource;
 
         $archive->descriptionObject = $log;
-        $archive->descriptionId = $log->archiveId;
         $archive->descriptionClass = 'recordsManagement/log';
 
         $archive->originatorOrgRegNumber = $archive->archiverOrgRegNumber = $archive->depositorOrgRegNumber = (string) $currentOrganization->registrationNumber;

@@ -162,6 +162,7 @@ class user
 
         $roles = $this->sdoFactory->find('auth/role');
 
+        $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
 

@@ -75,7 +75,7 @@ class accessRule
         $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
 
         $accessRule->accessEntry = $this->sdoFactory->readChildren('recordsManagement/accessEntry', $accessRule);
-        
+
         return $accessRule;
     }
 
@@ -158,46 +158,10 @@ class accessRule
             $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
 
             $this->sdoFactory->deleteChildren('recordsManagement/accessEntry', $code, 'recordsManagement/accessRule');
-            
         } catch (\Exception $e) {
             throw new \Exception("Access Code not deleted.");
         }
 
         return $this->sdoFactory->delete($accessRule);
-    }
-
-    /**
-     * Check if archive is comminucable to the current user/service account regarding its org
-     * @param recordsManagement/archive $archive the archive object
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    public function isVisible($archive)
-    {
-        $date = new \core\Type\DateTime(\laabs::newDate());
-        if (!isset($archive->accessRuleComDate)) {
-            return true;
-        } else {
-            $comDate = new \core\Type\DateTime($archive->accessRuleComDate);
-            if (!$date->diff($comDate)) {
-                return true;
-            }
-        }
-
-        if ($currentOrganization = \laabs::getToken("ORGANIZATION")) {
-            $orgRole = (array) $currentOrganization->orgRoleCodes;
-            if (in_array("archiver", $orgRole) || in_array("controlAuthority", $orgRole)) {
-                return true;
-            }
-            if (in_array("originator", $orgRole)) {
-                if ($archive->originatorOrgRegNumber == $currentOrganization->registrationNumber) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

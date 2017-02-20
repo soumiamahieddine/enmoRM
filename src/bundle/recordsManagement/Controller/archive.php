@@ -27,7 +27,8 @@ namespace bundle\recordsManagement\Controller;
 class archive
 {
 
-    use archiveDepositTrait,
+    use archiveEntryTrait,
+        archiveAccessTrait,
         archiveCommunicationTrait,
         archiveModificationTrait,
         archiveRestitutionTrait,
@@ -42,10 +43,10 @@ class archive
     protected $sdoFactory;
 
     /**
-     * Controller for archive documents
-     * @var documentManagement/Controller/document
+     * Controller for digital resource
+     * @var digitalResource/Controller/digitalResource
      */
-    protected $documentController;
+    protected $digitalResourceController;
 
     /**
      * Controller for access rules
@@ -172,7 +173,7 @@ class archive
 
         $this->sdoFactory = $sdoFactory;
 
-        $this->documentController = \laabs::newController("documentManagement/document");
+        $this->digitalResourceController = \laabs::newController("digitalResource/digitalResource");
 
         $this->archiveRelationshipController = \laabs::newController("recordsManagement/archiveRelationship");
 
@@ -215,7 +216,7 @@ class archive
             $this->useServiceLevel($operation);
         }
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $this->useDescriptionController($archive->descriptionClass);
         } elseif (!empty($archive->descriptionSchema)) {
             $documentRootNamespaceUri = $archive->descriptionXml->documentElement->namespaceURI;
@@ -283,7 +284,7 @@ class archive
                 break;
         }
 
-        $digitalResourceCluster = $this->documentController->useDigitalResourceCluster($this->currentServiceLevel->digitalResourceClusterId, $mode, $limit);
+        $digitalResourceCluster = $this->digitalResourceController->useCluster($this->currentServiceLevel->digitalResourceClusterId, $mode, $limit);
 
         $control = explode(" ", $this->currentServiceLevel->control);
 
@@ -344,22 +345,6 @@ class archive
     }
 
     /**
-     * Get the archive by description class and id
-     * @param string $descriptionClass
-     * @param string $descriptionId
-     *
-     * @return object
-     */
-    public function getByDescription($descriptionClass, $descriptionId)
-    {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', array('descriptionClass ' => $descriptionClass, 'descriptionId' => $descriptionId));
-
-        $this->getArchiveComponents($archive, false);
-
-        return $archive;
-    }
-
-    /**
      * Get the archives by originator
      * @param string $originatorOrgRegNumber
      *
@@ -412,10 +397,12 @@ class archive
 
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->descriptionId);
+
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         }
+
 
         if ($archive->descriptionObject == null) {
             //throw \laabs::newException("recordsManagement/invalidArchiveDescriptionException", "Invalid description for this archive with archive identifier : '$archiveId'");
@@ -423,7 +410,11 @@ class archive
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
-        $archive->document = $this->documentController->getArchiveDocuments($archive->archiveId, $withContents = false);
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        foreach ($archive->digitalResources as $i => $digitalResource) {
+            $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
+        }
+
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
         if (isset($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
@@ -438,11 +429,7 @@ class archive
         $archive->childrenRelationships = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
         $archive->parentRelationships = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
 
-        if (!$this->checkCommunicability($archive)) {
-            $archive->communicability = false;
-        } else {
-            $archive->communicability = true;
-        }
+        $archive->communicability = $this->accessVerification($archive);
 
         return $archive;
     }
@@ -485,12 +472,15 @@ class archive
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
-        if (!empty($archive->descriptionClass) && !empty($archive->descriptionId)) {
+        if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->descriptionId);
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         }
 
-        $archive->document = $this->documentController->getArchiveDocuments($archive->archiveId, $withContents);
+        $archiveDigitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+        foreach ($archiveDigitalResources as $digitalResource) {
+            $archive->digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
+        }
 
         $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
         foreach ($archive->contents as $content) {
@@ -632,86 +622,6 @@ class archive
     }
 
     /**
-     * Check the current user access to an archive for the given operation (deposit, retrieve, modify, destruct)
-     * @param recordsManagement/archive $archive
-     *
-     * @return boolean
-     *
-     * @throws recordsManagement/accessDeniedException If access if denied
-     */
-    public function checkCommunicability($archive)
-    {
-        if (!$archive->accessRuleComDate) {
-            $communicationDelay = false;
-        } else {
-            // Calc diff between communicability date and curent date
-            $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
-        }
-
-        $currentService = \laabs::getToken("ORGANIZATION");
-        if (!$currentService) {
-            return false;
-        }
-
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
-
-        $userServices = array();
-        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
-            $userServices[] = $userService;
-
-            // User orgUnit is owner
-            if (isset($userService->orgRoleCodes) && (strpos((string) $userService->orgRoleCodes, 'owner') !== false)) {
-                return true;
-            }
-
-            // Archiver
-            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber) {
-                return true;
-            }
-
-            // Originator
-            if ($userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
-                return true;
-            }
-
-            // If date is in the past, public communication is allowed
-            if ($userService->ownerOrgId == $archive->originatorOwnerOrgId && (!$communicationDelay || $communicationDelay->invert == 0)) {
-                return true;
-            }
-        }
-
-        // Check user / service orgs with descendants
-        /*$accountToken = \laabs::getToken('AUTH');
-        
-        switch ($account->accountType) {
-            case 'user':
-                $userPositionController = \laabs::newController('organization/userPosition');
-                $accountOrgs = $userPositionController->listMyServices();
-                $positions = $userPositionController->getMyPositions();
-                break;        
-            case 'service':
-                $servicePositionController = \laabs::newController('organization/servicePosition');
-                $accountOrgs = $servicePositionController->listMyServices();
-                $positions = $servicePositionController->getMyPositions();
-                break;
-            default :
-                throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        if (in_array((string) $archive->originatorOrgRegNumber, $accountOrgs)) {
-            return true;
-        }
-
-        if (in_array($archive->archiverOrgRegNumber, $accountOrgs)) {
-            return true;
-        }*/
-
-        return false;
-        //throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-    }
-
-    /**
      * Check if archive exists
      * @param string $archiveId The archive identifier
      *
@@ -731,60 +641,81 @@ class archive
 
     /**
      * Find archives
-     * @param string $q     The query string
-     * @param string $index The index
-     * @param int    $limit The result limit
+     * @param string $q       The query string
+     * @param string $profile The index
+     * @param int    $limit   The result limit
      *
      * @return array The fulltext result
      */
-    public function find($q = null, $index = false, $limit = null)
+    public function find($q = null, $profile = false, $limit = null)
     {
-        $qTrim = trim($q);
-        if ($qTrim == null || empty($qTrim)) {
+        $q = trim($q);
+        if ($q == null || empty($q)) {
             throw new \bundle\recordsManagement\Exception\invalidParameterException("The query string is empty");
         }
-        $q = $qTrim;
 
         if ($limit < 1) {
             $limit = null;
         }
 
-        $profiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
+        $archivalProfiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
 
-        $indexList = [];
-
-        foreach ($profiles as $profile) {
-            $indexList[] = $profile->reference;
+        $indexList = $descriptionClassList = [];
+        foreach ($archivalProfiles as $archivalProfile) {
+            if ($archivalProfile->descriptionClass == '') {
+                $indexList[] = $archivalProfile->reference;
+            } else {
+                $descriptionClassList[] = $archivalProfile->descriptionClass;
+            }
         }
 
-        if (!$index) {
+        if ($profile) {
+            if (in_array($profile, $indexList)) {
+                $index = [$profile];
+            } elseif (in_array($profile, $descriptionClassList)) {
+                $descriptionClass = [$profile];
+            } else {
+                return [];
+            }
+        } else {
             $index = $indexList;
-        } elseif (!in_array($index, $indexList)) {
-            return array();
+            $descriptionClass = $descriptionClassList;
         }
 
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
-        if ($currentOrg) {
+        if (!$currentOrg) {
             return array();
         }
-
-        $queryString = [];
-        $queryString[] = $q;
 
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
         }
 
-        if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
-            $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
+        if (count($index)) {
+            $fulltextQueryString = [];
+            $fulltextQueryString[] = $q;
 
-            $queryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
+                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
+
+                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            }
+
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
         }
 
-        $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
-        $results = $ft->find(\laabs\implode(" ", $queryString), $index, $limit);
+        if (count($descriptionClassList)) {
+            $descriptionClassArgs = preg_split("# and #", $q);
 
-        return $results;
+            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
+                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
+
+                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
+            }
+        }
+
+        return $ftresults;
     }
 }

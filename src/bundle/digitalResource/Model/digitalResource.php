@@ -36,15 +36,16 @@ class digitalResource
      * The universal identifier
      *
      * @var id
+     * @xpath @oid
      */
     public $resId;
 
     /**
-     * The document identifier
+     * The archive identifier
      *
      * @var id
      */
-    public $docId;
+    public $archiveId;
 
     /**
      * The storing profile identifier

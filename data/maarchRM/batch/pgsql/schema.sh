@@ -68,10 +68,8 @@ $BUNDLE_PATH/auth/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/batchProcessing/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/contact/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/digitalResource/Resources/sql/schema.pgsql.sql \
-$BUNDLE_PATH/documentManagement/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/lifeCycle/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/organization/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/recordsManagement/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/recordsManagement/Resources/sql/view.pgsql.sql \
-$BUNDLE_PATH/documentManagement/Resources/sql/view.pgsql.sql \
 | psql --host=$input_pgsql_host --port=$input_pgsql_port --username="$input_pgsql_user" --dbname="$input_pgsql_database" -f -

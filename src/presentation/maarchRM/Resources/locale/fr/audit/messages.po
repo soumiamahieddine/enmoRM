@@ -191,17 +191,11 @@ msgstr "Vérification périodique de l'intégrité des archives"
 msgid "recordsManagement/archiveDescription/read_archiveId_"
 msgstr "Lecture d'une description d'archive"
 
-msgid "recordsManagement/archiveDescription/read_descriptionClass__descriptionId_"
-msgstr "Lecture d'une description d'archive en fonction de sa classe"
-
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'information d'un document d'archive"
 
 msgid "recordsManagement/archive/readContents_archiveId_"
 msgstr "Lecture d'un document d'archive"
-
-msgid "recordsManagement/archive/readContentsbydescription_descriptionClass__descriptionId_"
-msgstr "Lecture d'un document d'archive en fonction de sa description"
 
 msgid "recordsManagement/archive/read_archiveId_Exists"
 msgstr "Vérification de l'existence d'une archive"

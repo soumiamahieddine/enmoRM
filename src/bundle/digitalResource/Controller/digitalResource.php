@@ -91,7 +91,7 @@ class digitalResource
 
         // Basic path information
         $pathinfo = pathinfo($filename);
-        $resource->fileName = $pathinfo['basename'].(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s").".".$pathinfo['extension'];
         if (isset($pathinfo['extension'])) {
             $resource->fileExtension = $pathinfo['extension'];
         }
@@ -278,7 +278,7 @@ class digitalResource
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
-
+            var_dump($exception);
             throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created", null, $exception);
         }
 
@@ -289,36 +289,29 @@ class digitalResource
     }
 
     /**
-     * Get the original resource of document
-     * @param string $docId The document identifier
+     * Get resources of archive
+     * @param id $archiveId The archive identifier
      *
-     * @return digitalResource/digitalResource
+     * @return array Array of digitalResource object
      */
-    public function getOriginalResource($docId)
+    public function getResourcesByArchiveId($archiveId)
     {
-        $resource = $this->sdoFactory->find("digitalResource/digitalResource", "docId='$docId' AND relatedResId=null");
+        $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
-        if (count($resource) != 1) {
-            $resource = null;
-        } else {
-            $resource = $resource[0];
-        }
-
-        return $resource;
+        return $resources;
     }
 
     /**
      * Get related resources
-     * @param string $docId            The document identifier
      * @param string $resId            The identifier of the converted or the original resource
      * @param string $relationshipType The relationship type with the resource identified by the second parameter
      *
      * @return digitalResource/digialResource[]
      */
-    public function getRelatedResources($docId, $resId, $relationshipType = null)
+    public function getRelatedResources($resId, $relationshipType = null)
     {
         // $relationshipType = isConversionOf OR isSignatureOf
-        $whereClause = "docId='$docId' AND relatedResId='$resId'";
+        $whereClause = "relatedResId='$resId'";
 
         if ($relationshipType) {
             $whereClause .= " AND relationshipType='$relationshipType'";
@@ -379,7 +372,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." could not be retrieved.");
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->retrieve($relatedResource->resId);
         }
@@ -494,7 +487,7 @@ class digitalResource
             $resource->address[] = $address;
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->info($relatedResource->resId);
         }
@@ -515,7 +508,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/clusterException", "Resource not found");
         }
 
-        $relatedResources = $this->getRelatedResources($resource->docId, $resource->resId);
+        $relatedResources = $this->getRelatedResources($resource->resId);
         foreach ($relatedResources as $relatedResource) {
             $resource->relatedResource[] = $this->delete($relatedResource->resId);
         }
@@ -596,11 +589,11 @@ class digitalResource
      */
     public function convert($digitalResource)
     {
-        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
-
-        if (!$conversionRule) {
+        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
             return false;
         }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
         $configuration =  \laabs::configuration('dependency.fileSystem');
 
@@ -652,11 +645,20 @@ class digitalResource
         }
 
         $convertedResource = $this->createFromFile($tgtfile);
+        $convertedResource->resId = \laabs::newId();
+        $convertedResource->archiveId = $digitalResource->archiveId;
+        $convertedResource->puid = $conversionRule->targetPuid;
         $convertedResource->softwareName = $convertService["softwareName"];
         $convertedResource->softwareVersion = $convertService["softwareVersion"];
-        $convertedResource->resId = \laabs::newId();
-        $convertedResource->puid = $conversionRule->targetPuid;
         $this->getHash($convertedResource);
+
+        $convertedResource->relationshipType = "isConversionOf";
+
+        // Get previous
+        while ($digitalResource->relatedResId != "" && $digitalResource->relationshipType == "isConversionOf") {
+            $digitalResource = $this->sdoFactory->read("digitalResource/digitalResource", $digitalResource->relatedResId);
+        }
+        $convertedResource->relatedResId = $digitalResource->resId;
 
         return $convertedResource;
     }
