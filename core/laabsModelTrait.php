@@ -1564,7 +1564,7 @@ trait laabsModelTrait
                 }
             }
         } else {
-            return static::buildBranch($objects, $parentId, $refField, $keyField, $childListProperty);
+            return static::buildBranch($objects, null, $refField, $keyField, $childListProperty);
         }
         
     }
