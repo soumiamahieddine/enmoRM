@@ -1528,10 +1528,11 @@ trait laabsModelTrait
      * @param array  &$objects
      * @param string $className
      * @param string $childListProperty
+     * @param string $rootId
      *
-     * @return array
+     * @return array|object
      */
-    public static function buildTree(array &$objects, $className, $childListProperty=null)
+    public static function buildTree(array &$objects, $className, $childListProperty=null, $rootId=false)
     {
         $class = \laabs::getClass($className);
         
@@ -1543,7 +1544,6 @@ trait laabsModelTrait
         $keyField = $selfKey->getFields()[0];
         $refField = $selfKey->getRefFields()[0];
 
-        $parentId = null;
         if (!$childListProperty) {
             $childListProperty = $class->getShortName();
             foreach ($class->getProperties() as $property) {
@@ -1552,8 +1552,20 @@ trait laabsModelTrait
                 }
             }
         }
-        
-        return static::buildBranch($objects, $parentId, $refField, $keyField, $childListProperty);
+
+        if ($rootId) {
+            foreach ($objects as $object) {
+                if ($object->{$refField} == $rootId) {
+                    if ($children = static::buildBranch($objects, $object->{$refField}, $refField, $keyField, $childListProperty)) {
+                        $object->{$childListProperty} = $children;
+                    }
+
+                    return $object;
+                }
+            }
+        } else {
+            return static::buildBranch($objects, $parentId, $refField, $keyField, $childListProperty);
+        }
         
     }
 
@@ -1572,5 +1584,26 @@ trait laabsModelTrait
         }
 
         return $branch;
+    }
+
+    /**
+     * Adds the canonical path of objects in tree
+     * @param array  $objects    The tree roots or branches
+     * @param string $name       The property that contains the name
+     * @param string $path       The property to evaluate with the path
+     * @param string $parentPath The parent folder path
+     */
+    public static function C14NPath($objects, $name, $path, $parentPath=null) 
+    {
+        foreach ($objects as $object) {
+            if ($parentPath) {
+                $object->{$path} = $parentPath.'/'.$object->{$name};
+            } else {
+                $object->{$path} = $object->{$name};
+            }
+            if (is_array($object->subFolders)) {
+                static::C14NPath($object->subFolders, $name, $path, $object->{$path});
+            }
+        }
     }
 }
