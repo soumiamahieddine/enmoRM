@@ -66,7 +66,13 @@ class welcome
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
 
-        $this->view->translate();
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setSorting(array(array(1, 'asc')));
+        $dataTable->setUnsortableColumns(0);
+        $dataTable->setUnsortableColumns(4);
+        $dataTable->setUnsearchableColumns(0);
+        $dataTable->setUnsearchableColumns(4);
 
         $this->view->setSource('archivalProfiles', $archivalProfiles);
         $this->view->setSource('retentionRules', $retentionRules);
