@@ -386,4 +386,37 @@ class archivalProfile
 
         $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);*/
     }
+
+    /**
+     * Get the archival profile descriptions for the given org unit
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     */
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
+    {
+        $orgUnitArchivalProfiles = [];
+
+        $assert = "orgRegNumber = '".(string) $orgRegNumber."'";
+        if ($originatorAccess) {
+            $assert .= "and originatorAccess = true";
+        }
+
+        $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', $assert);
+
+
+        foreach ($accessEntries as $accessEntry) {
+            $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = '".$accessEntry->accessRuleCode."' or accessRuleCode = null");
+            foreach ($archivalProfiles as $archivalProfile) {
+                if (!isset($orgUnitArchivalProfiles[$archivalProfile->reference])) {
+                    $this->readDetail($archivalProfile);
+
+                    $orgUnitArchivalProfiles[$archivalProfile->reference] = $archivalProfile;
+                }
+            }
+        }
+
+        return $orgUnitArchivalProfiles;
+    }
 }

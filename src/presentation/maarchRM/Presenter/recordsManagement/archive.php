@@ -46,7 +46,8 @@ class archive
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
         \dependency\localisation\TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->view = $view;
 
         $this->json = $json;
@@ -262,8 +263,7 @@ class archive
 
         unset($fields["archiveId"]);
         unset($fields["originatorOrgRegNumber"]);
-        unset($fields["docId"]);
-        unset($fields["category"]);
+        unset($fields["originatorArchiveId"]);
         unset($fields["archiveName"]);
         unset($fields["depositDate"]);
 
@@ -371,8 +371,41 @@ class archive
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
         if (isset($archive->descriptionObject)) {
-            $presenter = \laabs::newPresenter($archive->descriptionClass);
-            $descriptionHtml = $presenter->read($archive->descriptionObject);
+            if (!empty($archive->descriptionClass)) {
+                $presenter = \laabs::newPresenter($archive->descriptionClass);
+                $descriptionHtml = $presenter->read($archive->descriptionObject);
+            } else {
+                $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+                if (!empty($archive->archivalProfileReference)) {
+                    $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
+                }
+
+                $descriptionHtml = '<dl class="dl dl-horizontal">';
+                
+                foreach ($archive->descriptionObject->fields as $field) {
+                    if ($field->name == 'archiveId'
+                        || $field->name == 'originatorOrgRegNumber') {
+                        continue;
+                    }
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $field->name) {
+                            $field->label = $archiveDescription->descriptionField->label;
+                        }
+                    }
+
+                    if (!isset($field->label)) {
+                        $field->label = $this->view->translator->getText($field->name, false, "recordsManagement/archive");
+                    }
+
+                    $descriptionHtml .= '<dt name="'.$field->name.'">'.$field->label.'</dt>';
+                    $descriptionHtml .= '<dd>'.$field->value.'</dd>';
+                }
+                
+                foreach ($archive->descriptionObject->fields as $field) {
+                    
+                }
+                $descriptionHtml .='</dl>';
+            }
 
             if ($descriptionHtml) {
                 $node = $this->view->getElementById("descriptionTab");

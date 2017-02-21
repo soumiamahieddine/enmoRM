@@ -375,7 +375,7 @@ msgid "medona/rejection"
 msgstr "Rejet d'un message"
 
 msgid "recordsManagement/archive"
-msgstr "Côte de l'archive"
+msgstr "Cote de l'archive"
 
 msgid "recordsManagement/ArchivalProfileModification"
 msgstr "Modification de profil"

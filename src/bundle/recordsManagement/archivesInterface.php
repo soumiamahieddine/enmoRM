@@ -197,4 +197,16 @@ interface archivesInterface
      *
      */
     public function readIntegritycheck($archiveIds);
+
+    /* 
+        FILE PLAN
+    */
+    /**
+     * Get archives by file plan position
+     * @param string $folderId
+     *
+     * @action recordsManagement/archiveFilePlanPosition/getFolderContents
+     *
+     */
+    public function readFolder($folderId=false);
 }
