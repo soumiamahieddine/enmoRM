@@ -231,30 +231,6 @@
     </div>
 </div>
 
-<div class="panel-body" id="importPanel" style="display:none">
-    <div class="col-md-12">
-        <div class="form-horizontal">
-            <div class="form-group col-md-3">
-                <button type="button" class="btn btn-link btn-primary" id="showSearchPanel"><span class="fa fa-search">&nbsp;</span>Search</button>
-            </div>
-        </div>
-    </div>
-    <br/>
-    <br/>
-    <div class="panel">
-        <div class="panel-body">
-            <div class="col-md-6">
-                <?hinclude recordsManagement/archiveImport/archiveForm.html ?>
-                <hr/>
-                <?hinclude recordsManagement/archiveImport/descriptionForm.html ?>
-            </div>
-            <div class="col-md-6">
-                <?hinclude recordsManagement/archiveImport/documentForm.html ?>    
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     $("#searchForm_searchBtn").on("click", function () {
         var request = SearchForm.serialize();
