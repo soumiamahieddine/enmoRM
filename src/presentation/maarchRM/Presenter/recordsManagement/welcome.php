@@ -99,13 +99,13 @@ class welcome
      */
     public function folderContents($archives)
     {
-        $this->view->addContentFile("dashboard/mainScreen/search.html");
+        $this->view->addContentFile("dashboard/mainScreen/folderContents.html");
 
         $this->view->setSource('archives', $archives);
+        $this->view->merge();
 
         return $this->view->saveHtml();
     }
-
 
     /**
      * Show the events search form

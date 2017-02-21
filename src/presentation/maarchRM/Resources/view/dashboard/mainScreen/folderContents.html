@@ -1,0 +1,26 @@
+<?merge archives ?>
+<tr id="[?merge .archiveId ?]">
+    <td>
+        <input type="checkbox" name="folderContents_archiveCheckbox"/>
+    </td>
+    <td><?merge .archiveName ?></td>
+    <td><?merge .archiveId ?></td>
+    <td><?merge .archivalProfile ?></td>
+    <td><?merge .depositDate ?></td>
+    <td>
+        <div class="btn-group pull-right dropdown">
+            <button type="button" class="btn btn-success btn-sm" name="folderContents_archiveInformation"><span class="fa fa-info-circle "></span></button>
+            <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-edit">&nbsp;</span>&nbsp;
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Menu 1</a></li>
+                <li><a href="#">Menu 2</a></li>
+                <li><a href="#">Menu 3</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Menu 4</a></li>
+            </ul>
+        </div>
+    </td>
+</tr>
