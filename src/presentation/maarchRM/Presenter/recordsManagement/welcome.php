@@ -55,16 +55,30 @@ class welcome
         $accountToken = \laabs::getToken('AUTH');
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
+        // File plan tree
+        $filePlan = \laabs::callService('filePlan/filePlan/readTree');
+
+        if ($filePlan) {
+            $this->view->setSource("filePlan", [$filePlan]);
+        } 
+
+        // Profiles
+
         $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex', true);
         for ($i = 0, $count = count($archivalProfiles); $i < $count; $i++) {
             $archivalProfiles[$i] = \laabs::callService('recordsManagement/archivalProfile/read_archivalProfileId_', $archivalProfiles[$i]->archivalProfileId);
             $archivalProfiles[$i]->json = json_encode($archivalProfiles[$i]);
         }
+        $this->view->setSource('archivalProfiles', $archivalProfiles);
 
+        // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
+        
+
+
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
@@ -74,13 +88,32 @@ class welcome
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setUnsearchableColumns(4);
 
-        $this->view->setSource('archivalProfiles', $archivalProfiles);
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
 
         return $this->view->saveHtml();
     }
+
+
+        /**
+     * Show the events search form
+     * @param tree 
+     *
+     * @return string
+     */
+    public function showTree($filePlan)
+    {
+        $this->view->addContentFile('filePlan/filePlanTree.html');
+        $this->markTreeLeaf([$filePlan]);
+
+        $this->view->translate();
+        $this->view->setSource("filePlan", [$filePlan]);
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
 
     /**
      * Display error

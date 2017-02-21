@@ -63,10 +63,10 @@ class filePlan
     public function showTree($filePlan)
     {
         $this->view->addContentFile('filePlan/filePlanTree.html');
-        $this->markTreeLeaf($filePlan);
+        $this->markTreeLeaf([$filePlan]);
 
         $this->view->translate();
-        $this->view->setSource("filePlan", $filePlan);
+        $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
 
         return $this->view->saveHtml();

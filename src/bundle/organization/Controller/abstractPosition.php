@@ -73,6 +73,25 @@ abstract class abstractPosition
         return $positions;
     }
 
+    
+    /**
+     * Get my current organization tree
+     *
+     * @return organization/organization The organization tree
+     */
+    public function getCurrentOrgTree()
+    {
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+
+        if (!$currentOrg) {
+            return;
+        }
+
+        $organizations = $this->sdoFactory->find("organization/organization", "ownerOrgId='$currentOrg->ownerOrgId'");
+
+        return \laabs::buildTree($organizations, 'organization/organization', null, $currentOrg->orgId);
+    }
+
     /**
      * Set my working positions
      * @param organization/organization $orgId The organization identifier 
