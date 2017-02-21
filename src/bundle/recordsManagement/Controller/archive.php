@@ -401,11 +401,18 @@ class archive
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
             $archive->descriptionObject = $descriptionController->read($archive->archiveId);
-        }
+        } else {
+            $index = 'archives';
+            if (!empty($archive->archivalProfileReference)) {
+                $index = $archive->archivalProfileReference;
+            }
 
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find('archiveId:"'.$archiveId.'"', $index, $limit = 1);
 
-        if ($archive->descriptionObject == null) {
-            //throw \laabs::newException("recordsManagement/invalidArchiveDescriptionException", "Invalid description for this archive with archive identifier : '$archiveId'");
+            if (count($ftresults)) {
+                $archive->descriptionObject = $ftresults[0];
+            }
         }
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');

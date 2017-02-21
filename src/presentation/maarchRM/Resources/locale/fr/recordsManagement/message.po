@@ -53,7 +53,7 @@ msgid "Reset"
 msgstr "Réinitialiser"
 
 msgid "Identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Reference"
 msgstr "Référence"

@@ -10,6 +10,7 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationRuleStartDat
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationEndDate" date;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationLevel" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationOwner" text;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "filePlanPosition" text;
 
 CREATE INDEX "archive_filePlanPosition_idx"
   ON "recordsManagement"."archive"

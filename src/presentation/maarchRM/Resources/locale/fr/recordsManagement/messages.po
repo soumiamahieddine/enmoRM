@@ -173,7 +173,7 @@ msgid "Life cycle events"
 msgstr "Evénements du cycle de vie"
 
 msgid "Archive identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Originator archive identifier"
 msgstr "Identifiant du producteur"
@@ -618,7 +618,7 @@ msgid "bits"
 msgstr "octets"
 
 msgid "Identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Document type"
 msgstr "Type de document"
@@ -793,7 +793,7 @@ msgid "Indexing modification"
 msgstr "Modification de l'index"
 
 msgid "Reference"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Select an access rule code"
 msgstr "Selectionnez une règle"

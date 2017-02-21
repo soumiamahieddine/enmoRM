@@ -40,14 +40,25 @@ trait archiveAccessTrait
         if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
+        
+        if (!empty($archive->descriptionClass)) {
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+        } else {
+            $index = 'archives';
+            if (!empty($archive->archivalProfileReference)) {
+                $index = $archive->archivalProfileReference;
+            }
+
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find('archiveId:"'.$archiveId.'"', $index, $limit = 1);
+
+            if (count($ftresults)) {
+                $archive->descriptionObject = $ftresults[0];
+            }
+        }
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
-
-        $nbResource = count($archive->digitalResources);
-
-        for ($i = 0; $i < $nbResource; $i++) {
-            $archive->digitalResources[$i] = $this->digitalResourceController->info($archive->digitalResources[$i]->resId);
-        }
 
         $this->logging($archive);
 
