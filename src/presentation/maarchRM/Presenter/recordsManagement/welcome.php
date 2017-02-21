@@ -76,9 +76,6 @@ class welcome
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-        
-
-
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
@@ -95,10 +92,24 @@ class welcome
         return $this->view->saveHtml();
     }
 
+    /**
+     * @param array $archives
+     * 
+     * @return string
+     */
+    public function folderContents($archives)
+    {
+        $this->view->addContentFile("dashboard/mainScreen/search.html");
 
-        /**
+        $this->view->setSource('archives', $archives);
+
+        return $this->view->saveHtml();
+    }
+
+
+    /**
      * Show the events search form
-     * @param tree 
+     * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders 
      *
      * @return string
      */
