@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -40,7 +40,7 @@ class welcome
     }
 
     /**
-     * get a welcome page
+     * Get a welcome page
      *
      * @return string
      */
@@ -55,6 +55,21 @@ class welcome
         $accountToken = \laabs::getToken('AUTH');
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
+        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex', true);
+        for ($i = 0, $count = count($archivalProfiles); $i < $count; $i++) {
+            $archivalProfiles[$i] = \laabs::callService('recordsManagement/archivalProfile/read_archivalProfileId_', $archivalProfiles[$i]->archivalProfileId);
+            $archivalProfiles[$i]->json = json_encode($archivalProfiles[$i]);
+        }
+
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
+        for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
+            $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
+        }
+
+        $this->view->translate();
+
+        $this->view->setSource('archivalProfiles', $archivalProfiles);
+        $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
 
@@ -63,6 +78,7 @@ class welcome
 
     /**
      * Display error
+     * @param object $error
      *
      * @return string
      */
