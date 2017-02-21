@@ -34,30 +34,61 @@
     }
 </style>
 <script>
+FilePlan = {
+    tree: $('#filePlanTree'),
+    selectedNode : null,
+    select: function(e) {
+        this.unselect();
+        e.find('b:first').removeClass('label-default').addClass('label-warning');
+        e.find('i:first').removeClass('text-primary').addClass('text-warning');
+        this.selectedNode = e;
+    },
+
+    unselect: function() {
+        if (!this.selectedNode) {
+            return;
+        }
+        this.selectedNode.find('b:first').removeClass('label label-default label-warning');
+        this.selectedNode.find('i:first').removeClass('text-warning').addClass('text-primary');
+        this.selectedNode = null;
+    }
+}
 
 FolderNode = {
-    select: function(e) {
+    moveIn: function(e) {
         e.find('i')
          .css("font-size", "34px")
          .siblings()
          .css("font-size", "24px");
     },
 
-    unselect: function(e) {
+    moveOut: function(e) {
         e.find('i')
          .css("font-size", "24px")
          .siblings()
          .css("font-size", "14px");
+    },
+
+    mouseenter: function(e) {
+        if (e.css('font-size') != '24px') {
+            e.addClass('label label-default');
+        }
+    },
+
+    mouseleave: function(e) {
+        if (!e.hasClass('label-warning')) {
+            e.removeClass('label label-default');
+        }
     }
 }
 
 OrganizationNode = {
-    select: function(e) {
+    moveIn: function(e) {
         e.removeClass('node-default')
          .addClass('node-warning');
     },
 
-    unselect: function(e) {
+    moveOut: function(e) {
         e.removeClass('node-warning')
          .addClass('node-default');
     }
@@ -65,27 +96,27 @@ OrganizationNode = {
 
 FolderDroppableOption = {
     over: function(event, ui) {
-       FolderNode.select($(this));
+       FolderNode.moveIn($(this));
     },
     out: function(event, ui) {
-       FolderNode.unselect($(this));
+       FolderNode.moveOut($(this));
     },
     drop: function(event, ui) {
-        FolderNode.unselect($(this));
+        FolderNode.moveOut($(this));
         MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
     }
 }
 
 OrganizationDroppableOption = {
     over: function(event, ui) {
-       OrganizationNode.select($(this));
+       OrganizationNode.moveIn($(this));
     },
     out: function(event, ui) {
-       OrganizationNode.unselect($(this));
+       OrganizationNode.moveOut($(this));
        
     },
     drop: function(event, ui) {
-        OrganizationNode.unselect($(this));
+        OrganizationNode.moveOut($(this));
         MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
     }
 }
@@ -100,12 +131,10 @@ $('#app_maarchRM_main').ready(function() {
 
 // Folder selection
 $('#filePlanTree').on('mouseenter', '.folder > b', function() { 
-    if ($(this).css('font-size') != '24px') {
-        $(this).addClass('label label-default');
-    }
+    FolderNode.mouseenter($(this));
 });
 $('#filePlanTree').on('mouseleave', '.folder > b', function() { 
-    $(this).removeClass('label label-default');
+    FolderNode.mouseleave($(this));
 })
 
 // Drag'n drop handling 

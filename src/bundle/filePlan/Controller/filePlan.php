@@ -57,6 +57,7 @@ class filePlan
         $folders = $this->sdoFactory->find('filePlan/folder', "ownerOrgRegNumber=['".\laabs\implode("', '", $orgRegNumbers)."']");
 
         $folderTree = \laabs::buildTree($folders, 'filePlan/folder');
+        \laabs::C14NPath($folderTree, 'name', 'path');
         $folderTreeByOwner = [];
 
         foreach ($folderTree as $folder) {

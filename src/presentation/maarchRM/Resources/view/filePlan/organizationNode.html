@@ -1,11 +1,11 @@
-<li id="[?merge .orgId ?]" lang="en" data-translate-catalog="filePlan/messages">
+<li id="[?merge .orgId ?]" data-orgregnumber="[?merge .registrationNumber ?]">
     <span class="orgNode node-default">
         <i class="fa"/>
         <b style="font-size: 14px"><?merge .orgName ?></b>
     </span>
 
-    <?merge .isLeaf.not() ?>
     <ul>
+        <?merge .organization /filePlan/organizationNode.html ?>
         <?merge .folder /filePlan/folderNode.html ?>
     </ul>
 </li>
