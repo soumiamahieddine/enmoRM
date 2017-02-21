@@ -3,9 +3,45 @@
     	<?hinclude /filePlan/tree.html ?>    
     </div>
     <div class="col-md-7">
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-link btn-primary" id="showSearchPanel"><span class="fa fa-search">&nbsp;</span>Search</button>
+            </div>
+            
+            <div class="col-md-4">
+                <button type="button" class="btn btn-link btn-primary" id="showImportPanel"><span class="fa fa-plus">&nbsp;</span>Create</button>
+            </div>
+            
+            <div class="col-md-4">
+                <button type="button" class="btn btn-link btn-primary" id="showFolderPanel"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</button>
+            </div>
+        </div>
         <?hinclude dashboard/mainScreen/search.html ?>
+        <?hinclude dashboard/mainScreen/import.html ?>
+        <?hinclude dashboard/mainScreen/folder.html ?>
     </div>
     <div class="col-md-2">
         <?hinclude dashboard/mainScreen/information.html ?>
     </div>
 </div>
+
+<script>
+    $("#showImportPanel").on("click", function () {
+        ArchiveForm.clear();
+        $('#searchPanel').hide();
+        $('#folderPanel').hide();
+        $('#importPanel').show();
+    });
+
+    $("#showSearchPanel").on("click", function () {
+        $('#importPanel').hide();
+        $('#folderPanel').hide();
+        $('#searchPanel').show();
+    });
+
+    $("#showFolderPanel").on("click", function () {
+        $('#importPanel').hide();
+        $('#searchPanel').hide();
+        $('#folderPanel').show();
+    });
+</script>
