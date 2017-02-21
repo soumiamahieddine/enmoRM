@@ -187,7 +187,7 @@ class filePlan
 
         if (isset($tree->organization)) {
             foreach ($tree->organization as $organization) {
-                $orgIds = array_merge($orgIds, $this->getOrgIdsFromTree($organization));
+                $orgRegNumbers = array_merge($orgRegNumbers, $this->getOrgIdsFromTree($organization));
             }
         }
 
