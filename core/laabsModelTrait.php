@@ -1573,4 +1573,25 @@ trait laabsModelTrait
 
         return $branch;
     }
+
+    /**
+     * Adds the canonical path of objects in tree
+     * @param array  $objects    The tree roots or branches
+     * @param string $name       The property that contains the name
+     * @param string $path       The property to evaluate with the path
+     * @param string $parentPath The parent folder path
+     */
+    public static function C14NPath($objects, $name, $path, $parentPath=null) 
+    {
+        foreach ($objects as $object) {
+            if ($parentPath) {
+                $object->{$path} = $parentPath.'/'.$object->{$name};
+            } else {
+                $object->{$path} = $object->{$name};
+            }
+            if (is_array($object->subFolders)) {
+                static::C14NPath($object->subFolders, $name, $path, $object->{$path});
+            }
+        }
+    }
 }
