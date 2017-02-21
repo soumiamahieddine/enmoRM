@@ -246,7 +246,14 @@
     <br/>
     <div class="panel">
         <div class="panel-body">
-            <?hinclude recordsManagement/archiveImport/import.html ?>
+            <div class="col-md-6">
+                <?hinclude recordsManagement/archiveImport/archiveForm.html ?>
+                <hr/>
+                <?hinclude recordsManagement/archiveImport/descriptionForm.html ?>
+            </div>
+            <div class="col-md-6">
+                <?hinclude recordsManagement/archiveImport/documentForm.html ?>    
+            </div>
         </div>
     </div>
 </div>
