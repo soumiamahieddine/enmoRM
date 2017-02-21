@@ -43,20 +43,17 @@ class archiveFilePlanPosition
 
     /**
      * Get the archives on the given folder
+     * @param string $orgRegNumber
      * @param string $folderId
      * 
      * @return array
      */
-    public function getFolderContents($folderId=null)
+    public function getFolderContents($orgRegNumber, $folderId=null)
     {
-        $currentOrg = \laabs::getToken('ORGANIZATION');
-
-        $originatorOrgRegNumber = $currentOrg->registrationNumber;
-
         if (empty($folderId)) {
-            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :originatorOrgRegNumber and filePlanPosition = null', ['originatorOrgRegNumber'=>$originatorOrgRegNumber]);
+            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null', ['orgRegNumber'=>$orgRegNumber]);
         } else {
-            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :originatorOrgRegNumber and filePlanPosition = :folderId', ['originatorOrgRegNumber'=>$originatorOrgRegNumber, 'folderId'=>$folderId]);
+            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId', ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId]);
         }
 
         return $archives;

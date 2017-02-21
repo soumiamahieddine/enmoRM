@@ -19,4 +19,14 @@ interface appInterface
      * @return auth/authentication/noPrivilege
      */
     public function readNoprivilege();
+
+    /**
+     * Folder contents
+     * @param string $orgRegNumber
+     * @param string $folderId
+     * 
+     * @uses recordsManagement/archives/readFolder
+     * @return recordsManagement/welcome/folderContents
+     */
+    public function readFolder($orgRegNumber, $folderId=false);
 }

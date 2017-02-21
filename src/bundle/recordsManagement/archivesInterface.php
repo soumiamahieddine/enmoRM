@@ -203,10 +203,11 @@ interface archivesInterface
     */
     /**
      * Get archives by file plan position
+     * @param string $orgRegNumber
      * @param string $folderId
      *
      * @action recordsManagement/archiveFilePlanPosition/getFolderContents
      *
      */
-    public function readFolder($folderId=false);
+    public function readFolder($orgRegNumber, $folderId=false);
 }
