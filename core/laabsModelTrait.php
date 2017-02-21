@@ -1522,4 +1522,55 @@ trait laabsModelTrait
 
         return assert($phpAssert);
     }
+
+    /**
+     * Build a tree structure from a flat array
+     * @param array  &$objects
+     * @param string $className
+     * @param string $childListProperty
+     *
+     * @return array
+     */
+    public static function buildTree(array &$objects, $className, $childListProperty=null)
+    {
+        $class = \laabs::getClass($className);
+        
+        $selfKeys = $class->getForeignKeys($className);
+        if (count($selfKeys) == 0) {
+            return array();
+        }
+        $selfKey = reset($selfKeys);
+        $keyField = $selfKey->getFields()[0];
+        $refField = $selfKey->getRefFields()[0];
+
+        $parentId = null;
+        if (!$childListProperty) {
+            $childListProperty = $class->getShortName();
+            foreach ($class->getProperties() as $property) {
+                if ($property->getType() == $className.'[]') {
+                    $childListProperty = $property->getName();
+                }
+            }
+        }
+        
+        return static::buildBranch($objects, $parentId, $refField, $keyField, $childListProperty);
+        
+    }
+
+    protected static function buildBranch(array &$objects, $parentId, $idProperty, $parentIdProperty, $childListProperty)
+    {
+        $branch = array();
+
+        foreach ($objects as $object) {
+            if ($object->{$parentIdProperty} == $parentId) {
+                if ($children = static::buildBranch($objects, $object->{$idProperty}, $idProperty, $parentIdProperty, $childListProperty)) {
+                    $object->{$childListProperty} = $children;
+                }
+                $branch[] = $object;
+                unset($object);
+            }
+        }
+
+        return $branch;
+    }
 }
