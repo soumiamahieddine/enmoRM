@@ -11,6 +11,26 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationEndDate" dat
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationLevel" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationOwner" text;
 
+CREATE INDEX "archive_filePlanPosition_idx"
+  ON "recordsManagement"."archive"
+  ("filePlanPosition");
+
+CREATE INDEX "archive_archivalProfileReference_idx"
+  ON "recordsManagement"."archive"
+  ("archivalProfileReference");
+
+CREATE INDEX "archive_status_idx"
+  ON "recordsManagement"."archive"
+  ("status");
+
+CREATE INDEX "archive_originatorArchiveId_idx"
+  ON "recordsManagement"."archive"
+  ("originatorOrgRegNumber", "originatorArchiveId");
+  
+CREATE INDEX "archive_disposalDate_idx"
+  ON "recordsManagement"."archive"
+  ("disposalDate");
+
 ALTER TABLE "recordsManagement"."accessEntry" RENAME COLUMN "orgUnitId" TO "orgRegNumber";
 
 CREATE TABLE "digitalResource"."archiveDigitalResourceRel"

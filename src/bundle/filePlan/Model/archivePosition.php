@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\recordsManagement\Model;
+namespace bundle\filePlan\Model;
 
 /**
  * The basic information about an archive unit in file plan
@@ -25,10 +25,9 @@ namespace bundle\recordsManagement\Model;
  * @package RecordsManagement
  * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
  *
- * @pkey [archiveId]
- * @substitution recordsManagement/archive
+ * @pkey [archiveId, folderId]
  */
-class archiveFilePlanPosition
+class archivePosition
 {
 
     /**
@@ -71,12 +70,12 @@ class archiveFilePlanPosition
      *
      * @var string
      */
-    public $originatorOrgRegNumber;
+    public $ownerOrgRegNumber;
 
     /**
      * The folder identifier
      *
      * @var string
      */
-    public $filePlanPosition;
+    public $folderId;
 }

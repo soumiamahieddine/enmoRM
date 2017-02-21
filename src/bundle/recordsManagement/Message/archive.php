@@ -41,6 +41,13 @@ class archive
     public $archiveName;
 
     /**
+     * The archive folder id
+     *
+     * @var string
+     */
+    public $filePlanPosition;
+
+    /**
      * The name of description class
      *
      * @var string

@@ -202,6 +202,26 @@ CREATE TABLE "recordsManagement"."archive"
 WITH (
   OIDS=FALSE
 );
+  
+CREATE INDEX "archive_filePlanPosition_idx"
+  ON "recordsManagement"."archive"
+  ("filePlanPosition");
+
+CREATE INDEX "archive_archivalProfileReference_idx"
+  ON "recordsManagement"."archive"
+  ("archivalProfileReference");
+
+CREATE INDEX "archive_status_idx"
+  ON "recordsManagement"."archive"
+  ("status");
+
+CREATE INDEX "archive_originatorArchiveId_idx"
+  ON "recordsManagement"."archive"
+  ("originatorOrgRegNumber", "originatorArchiveId");
+  
+CREATE INDEX "archive_disposalDate_idx"
+  ON "recordsManagement"."archive"
+  ("disposalDate");
 
 -- Table: "recordsManagement"."archiveRelationship"
 

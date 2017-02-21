@@ -81,6 +81,15 @@ class archive
      */
     public $archiveName;
 
+    /**
+     * The archive folder id
+     *
+     * @var string
+     * @xpath rm:filePlanPosition
+     */
+    public $filePlanPosition;
+
+
     /* ************************************************************************
      * Management Refs
      *********************************************************************** */
