@@ -4,21 +4,30 @@
     </div>
     <div class="col-md-7">
         <div class="col-md-12">
-            <div class="col-md-4">
-                <button type="button" class="btn btn-link btn-primary" id="showSearchPanel"><span class="fa fa-search">&nbsp;</span>Search</button>
-            </div>
-            
+                <button type="button" class="btn btn-link btn-primary" id="showImportPanel"><span class="fa fa-plus">&nbsp;</span>Create</button>
             <div class="col-md-4">
                 <button type="button" class="btn btn-link btn-primary" id="showImportPanel"><span class="fa fa-plus">&nbsp;</span>Create</button>
             </div>
             
             <div class="col-md-4">
                 <button type="button" class="btn btn-link btn-primary" id="showFolderPanel"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</button>
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#folderPanel" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+                </li>
+                <li>
+                    <a href="#importPanel" data-toggle="tab"><span class="fa fa-plus">&nbsp;</span>Create</a>
+                </li>
+                <li>
+                    <a  href="#searchPanel" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
+                </li>
+            </ul>
         </div>
-        <?hinclude dashboard/mainScreen/search.html ?>
-        <?hinclude dashboard/mainScreen/import.html ?>
-        <?hinclude dashboard/mainScreen/folder.html ?>
+        <div class="tab-content">
+            <?hinclude dashboard/mainScreen/search.html ?>
+            <?hinclude dashboard/mainScreen/import.html ?>
+            <?hinclude dashboard/mainScreen/folder.html ?>
+        </div>
     </div>
     <div class="col-md-2">
         <?hinclude dashboard/mainScreen/information.html ?>
