@@ -15,7 +15,7 @@
                     <a  href="#searchPanel" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
                 </li>
                 <li>
-                    <button type="button" class="btn btn-link"><span class="fa fa-plus"></button>
+                    <a  href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
                 </li>
             </ul>
         </div>
@@ -31,5 +31,7 @@
 </div>
 
 <script>
-
+    $('#newSearchTabBtn').on("click", function() {
+        alert("Creation of new search tab in progress...");
+    });
 </script>
