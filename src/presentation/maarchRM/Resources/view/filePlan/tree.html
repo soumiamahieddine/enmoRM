@@ -6,167 +6,214 @@
     file that was distributed with this source code.
 #-->
 <div lang="en" data-translate-catalog="filePlan/messages">
+    <div class="row" >
+        <div id="filePlanMenu" class="btn-toolbar pull-right" role="toolbar">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-default" id="addFolder" title="Add a new folder"><i class="fa fa-plus"/></button>
+                <button type="button" class="btn btn-sm btn-default" id="editFolder" title="Edit folder"><i class="fa fa-edit"/></button>
+                <button type="button" class="btn btn-sm btn-default" id="deleteFolder" title="Delete folder"><i class="fa fa-trash"/></button>
+            </div>
+        </div>
+    </div>
     <div id="filePlanTree" class="tree">
-        <br/>
         <?merge filePlan ?>
         <ul>
             <?hinclude /filePlan/organizationNode.html ?>
         </ul>
     </div>
+
+    <?hinclude /filePlan/folderForm.html ?>
     <?hinclude /filePlan/moveFolderModal.html ?>
 </div>
 
 <style>
-    .orgNode > b{
-        cursor: pointer;
+    .folderNode, .orgNode {
+        z-index: 10;
     }
-    .folder {
+    .folderNode {
         padding: 0px !important; 
         min-width:150px !important;
     }
-    .folder > b {
+    .folderNode > b, .orgNode > b {
         font-size: 14px;
         cursor: pointer;
     }
-    .folder > i {
+    .folderNode > i {
         font-size: 24px;
     }
-    #trash {
-        color: #444;
-        visibility: hidden;
+    #filePlanMenu {
+        visibility: hidden
     }
 </style>
+
 <script>
-FilePlan = {
-    tree: $('#filePlanTree'),
-    selectedNode : null,
-    select: function(e) {
-        this.unselect();
-        e.find('b:first').removeClass('label-default').addClass('label-warning');
-        e.find('i:first').removeClass('text-primary').addClass('text-warning');
-        this.selectedNode = e;
-    },
+    FilePlan = {
+        tree: $('#filePlanTree'),
+        selectedNode : null,
+        select: function(e) {
+            this.unselect();
+            var span = e.children('span');
+            if (span.hasClass('folderNode')) {
+                FolderNode.select(span);
+            } else {
+                OrganizationNode.select(span);
+            }
 
-    unselect: function() {
-        if (!this.selectedNode) {
-            return;
+            $('#filePlanMenu').css('visibility', 'visible');
+            this.selectedNode = e;
+        },
+
+        unselect: function() {
+            if (!this.selectedNode) {
+                return;
+            }
+            var span = this.selectedNode.children('span');
+            if (span.hasClass('folderNode')) {
+                FolderNode.unselect(span);
+            } else {
+                OrganizationNode.unselect(span);
+            }
+            $('#filePlanMenu').css('visibility', 'hidden');
+            this.selectedNode = null;
+        },
+
+        addFolder: function() {
+
+        },
+
+        editFolder: function() {
+
+        },
+
+        moveFolder: function() {
+
+        },
+
+        deleteFolder: function() {
+
         }
-        this.selectedNode.find('b:first').removeClass('label label-default label-warning');
-        this.selectedNode.find('i:first').removeClass('text-warning').addClass('text-primary');
-        this.selectedNode = null;
     }
-}
 
-FolderNode = {
-    moveIn: function(e) {
-        e.find('i')
-         .css("font-size", "34px")
-         .siblings()
-         .css("font-size", "24px");
-    },
+    FolderNode = {
+        moveIn: function(e) {
+            e.find('i')
+             .css("font-size", "34px")
+             .siblings()
+             .css("font-size", "24px");
+        },
 
-    moveOut: function(e) {
-        e.find('i')
-         .css("font-size", "24px")
-         .siblings()
-         .css("font-size", "14px");
-    },
+        moveOut: function(e) {
+            e.find('i')
+             .css("font-size", "24px")
+             .siblings()
+             .css("font-size", "14px");
+        },
 
-    mouseenter: function(e) {
-        if (e.css('font-size') != '24px') {
-            e.addClass('label label-default');
+        mouseenter: function(e) {
+            if (e.css('font-size') != '24px') {
+                e.addClass('label label-default');
+            }
+        },
+
+        mouseleave: function(e) {
+            if (!e.hasClass('label-warning')) {
+                e.removeClass('label label-default');
+            }
+        },
+
+        select: function(e) {
+            e.find('b:first').removeClass('label-default').addClass('label-warning')
+             .siblings('i').removeClass('text-primary').addClass('text-warning');
+
+        },
+
+        unselect: function(e) {
+            e.find('b:first').removeClass('label label-default label-warning')
+             .siblings('i').removeClass('text-warning').addClass('text-primary');
         }
-    },
+    }
 
-    mouseleave: function(e) {
-        if (!e.hasClass('label-warning')) {
-            e.removeClass('label label-default');
+    OrganizationNode = {
+        moveIn: function(e) {
+            e.children('b').css('font-size', '20px');
+        },
+
+        moveOut: function(e) {
+            e.children('b').css('font-size', '14px');
+        },
+
+        select: function(e) {
+            e.removeClass('node-default').addClass('node-warning');
+            $('#editFolder, #deleteFolder').prop('disabled', true);
+        },
+
+        unselect: function(e) {
+            e.removeClass('node-warning').addClass('node-default');
+            $('#editFolder, #deleteFolder').prop('disabled', false);
         }
     }
-}
 
-OrganizationNode = {
-    moveIn: function(e) {
-        e.removeClass('node-default')
-         .addClass('node-warning');
-    },
-
-    moveOut: function(e) {
-        e.removeClass('node-warning')
-         .addClass('node-default');
+    FolderDroppableOption = {
+        over: function(event, ui) {
+           FolderNode.moveIn($(this));
+        },
+        out: function(event, ui) {
+           FolderNode.moveOut($(this));
+        },
+        drop: function(event, ui) {
+            FolderNode.moveOut($(this));
+            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+        }
     }
-}
 
-FolderDroppableOption = {
-    over: function(event, ui) {
-       FolderNode.moveIn($(this));
-    },
-    out: function(event, ui) {
-       FolderNode.moveOut($(this));
-    },
-    drop: function(event, ui) {
-        FolderNode.moveOut($(this));
-        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+    OrganizationDroppableOption = {
+        over: function(event, ui) {
+           OrganizationNode.moveIn($(this));
+        },
+        out: function(event, ui) {
+           OrganizationNode.moveOut($(this));
+           
+        },
+        drop: function(event, ui) {
+            OrganizationNode.moveOut($(this));
+            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+        }
     }
-}
 
-OrganizationDroppableOption = {
-    over: function(event, ui) {
-       OrganizationNode.moveIn($(this));
-    },
-    out: function(event, ui) {
-       OrganizationNode.moveOut($(this));
-       
-    },
-    drop: function(event, ui) {
+    $('#app_maarchRM_main').ready(function() {
+        BootstrapTree.init($('#filePlanTree'));
+    })
+
+    // Folder selection
+    $('#filePlanTree').on('mouseenter', '.folderNode > b', function() { 
+        FolderNode.mouseenter($(this));
+    });
+    $('#filePlanTree').on('mouseleave', '.folderNode > b', function() { 
+        FolderNode.mouseleave($(this));
+    })
+
+    $('#filePlanTree').on('mouseenter', '.orgNode > b', function() { 
+        OrganizationNode.moveIn($(this));
+    });
+    $('#filePlanTree').on('mouseleave', '.orgNode > b', function() { 
         OrganizationNode.moveOut($(this));
-        MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
-    }
-}
+    })
 
-$('#app_maarchRM_main').ready(function() {
-    var options = {
-       closedIcon : 'fa-folder',
-       openedIcon: 'fa-folder-open' 
-    }
-    BootstrapTree.init($('#filePlanTree'), options);
-})
+    // Drag'n drop handling 
+    $('.folderNode').draggable({revert : true})
+    $('.folderNode').droppable(FolderDroppableOption);
+    $('.orgNode').droppable(OrganizationDroppableOption);
 
-// Folder selection
-$('#filePlanTree').on('mouseenter', '.folder > b', function() { 
-    FolderNode.mouseenter($(this));
-});
-$('#filePlanTree').on('mouseleave', '.folder > b', function() { 
-    FolderNode.mouseleave($(this));
-})
+    // File plan menu
+    $('#addFolder').on('click', function(){
+        FolderForm.load();
+    })
 
-// Drag'n drop handling 
-$('.folder').draggable({
-    revert : true,
-    drag : function() {
-        $('#trash').css('visibility', 'visible');
-    },
-    stop: function() {
-        $('#trash').css('visibility', 'hidden');
-    }
-})
+    $('#editFolder').on('click', function(){
 
-$('.folder').droppable(FolderDroppableOption);
-$('.orgNode').droppable(OrganizationDroppableOption);
-$('#trash').droppable({
-    over: function(event, ui) {
-       $(this).removeClass('disabled');
-              //.addClass('btn-warning')
-              //.removeClass('btn-default');
-    },
-    out: function(event, ui) {
-       $(this).addClass('disabled');
-              //.removeClass('btn-warning')
-              //.addClass('btn-default');
-    },
-    drop: function(event, ui) {
-       $(this).addClass('disabled');
-    }
-})
+    })
 
+    $('#deleteFolder').on('click', function(){
+
+    })
 </script>
