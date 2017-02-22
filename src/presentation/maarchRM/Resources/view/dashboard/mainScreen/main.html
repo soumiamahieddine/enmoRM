@@ -1,21 +1,25 @@
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-12">
+        <a href="#" id="hideFileplanBtn"><span class="fa fa-eye-slash">&nbsp;</span>Hide the file plan</a>
+        <a href="#" id="showFileplanBtn" style="display: none"><span class="fa fa-eye-slash">&nbsp;</span>Show the file plan</a>
+    </div>
+    <div class="col-md-3" id="leftColumn">
     	<?hinclude /filePlan/tree.html ?>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-7" id="middleColumn">
         <div class="col-md-12">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a href="#folderPanel" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+                    <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
                 </li>
                 <li>
-                    <a href="#importPanel" data-toggle="tab"><span class="fa fa-plus">&nbsp;</span>Create</a>
+                    <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
                 </li>
                 <li>
-                    <a  href="#searchPanel" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
+                    <a href="#searchPanel" id="searchTab" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
                 </li>
                 <li>
-                    <a  href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
+                    <a href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
                 </li>
             </ul>
         </div>
@@ -25,14 +29,14 @@
             <?hinclude dashboard/mainScreen/folder.html ?>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-2" id="rightColumn">
         <?hinclude dashboard/mainScreen/information.html ?>
     </div>
 </div>
 
 <script>
-$('#newSearchTabBtn').on("click", function() {
-    alert("Creation of new search tab in progress...");
-});
+    $('#newSearchTabBtn').on("click", function() {
+        alert("Creation of new search tab in progress...");
+    });
 
 </script>

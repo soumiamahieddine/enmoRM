@@ -13,6 +13,8 @@
 
 <script type="text/javascript">
 ArchiveList = {
+    lastFilePlanElement : null,
+
     getContents: function(orgRegNumber, folderId, path, description) {
         $.ajax({
             url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
@@ -26,17 +28,40 @@ ArchiveList = {
                 gritter.show(response.responseText, false);
             }
         })
+    },
+    
+    getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
+        ArchiveForm.changeArchivalProfilesList(archivalProfiles);
+
+        if (archivalProfiles.length < 1) {
+            $('#importTab').hide();
+            $('#folderTab').click();
+            return;
+        }
+
+        $('#importTab').show();
+        $('#archiveForm [name="filePlanPosition"]').val(folderId);
+        $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+    },
+
+    refresh: function() {
+        ArchiveList.lastFilePlanElement.click();
     }
 }
 
 $('#filePlanTree').on('click', '.folder > b', function() {
+    ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
     FilePlan.select(li);
     ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'), li.data('description'));
+    ArchiveList.getImportForm(li.data('orgregnumber'), li.attr('id'), li.closest("[data-archivalprofiles]").data('archivalprofiles'));
 })
 
 $('#filePlanTree').on('click', '.orgNode > b', function() {
+    ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
-    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text());
+    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "");
+    ArchiveList.getImportForm(li.data('orgregnumber'), null, li.data('archivalprofiles'));
 })
+
 </script>
