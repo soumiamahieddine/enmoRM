@@ -31,24 +31,5 @@
 </div>
 
 <script>
-ArchiveList = {
-    getContents: function(orgRegNumber, folderId) {
-        $.ajax({
-            url: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-            type: "GET",
-            success: function (response) {
-                $('#folderContentsLines').html(response);
-            },
-            error: function (response) {
-                gritter.show(response.responseText, false);
-            }
-        })
-    }
-}
 
-$('#filePlanTree').on('click', '.folder > b', function() {
-    var li = $(this).closest('li');
-    FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'));
-})
 </script>
