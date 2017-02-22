@@ -14,6 +14,9 @@
                 <li>
                     <a  href="#searchPanel" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
                 </li>
+                <li>
+                    <button type="button" class="btn btn-link"><span class="fa fa-plus"></button>
+                </li>
             </ul>
         </div>
         <div class="tab-content">
@@ -48,23 +51,4 @@ $('#filePlanTree').on('click', '.folder > b', function() {
     FilePlan.select(li);
     ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'));
 })
-
-$("#showImportPanel").on("click", function () {
-    ArchiveForm.clear();
-    $('#searchPanel').hide();
-    $('#folderPanel').hide();
-    $('#importPanel').show();
-});
-
-$("#showSearchPanel").on("click", function () {
-    $('#importPanel').hide();
-    $('#folderPanel').hide();
-    $('#searchPanel').show();
-});
-
-$("#showFolderPanel").on("click", function () {
-    $('#importPanel').hide();
-    $('#searchPanel').hide();
-    $('#folderPanel').show();
-});
 </script>
