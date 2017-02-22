@@ -14,6 +14,9 @@
                 <li>
                     <a  href="#searchPanel" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
                 </li>
+                <li>
+                    <a  href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
+                </li>
             </ul>
         </div>
         <div class="tab-content">
@@ -31,13 +34,13 @@
 ArchiveList = {
 	getContents: function(orgRegNumber, folderId, path) {
 	    $.ajax({
-	        url: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-	        type: "GET",
-	        success: function (response) {
+	        url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
+	        type 	: "GET",
+	        success : function (response) {
 	            $('#folderContentsLines').html(response);
 	            $('#folderPath').text(path);
 	        },
-	        error: function (response) {
+	        error 	: function (response) {
 	            gritter.show(response.responseText, false);
 	        }
 	    })
@@ -73,4 +76,9 @@ $("#showFolderPanel").on("click", function () {
     $('#searchPanel').hide();
     $('#folderPanel').show();
 });
+
+$('#newSearchTabBtn').on("click", function() {
+    alert("Creation of new search tab in progress...");
+});
+
 </script>
