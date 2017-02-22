@@ -409,11 +409,8 @@ class archivalProfile
         foreach ($accessEntries as $accessEntry) {
             $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = '".$accessEntry->accessRuleCode."' or accessRuleCode = null");
             foreach ($archivalProfiles as $archivalProfile) {
-                if (!isset($orgUnitArchivalProfiles[$archivalProfile->reference])) {
-                    $this->readDetail($archivalProfile);
-
-                    $orgUnitArchivalProfiles[$archivalProfile->reference] = $archivalProfile;
-                }
+                $this->readDetail($archivalProfile);
+                $orgUnitArchivalProfiles[] = $archivalProfile;
             }
         }
 

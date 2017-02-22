@@ -60,36 +60,40 @@ class welcome
 
         if ($filePlan) {
             $this->view->setSource("filePlan", [$filePlan]);
-        } 
 
-        // Profiles
-
-        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex', true);
-        for ($i = 0, $count = count($archivalProfiles); $i < $count; $i++) {
-            $archivalProfiles[$i] = \laabs::callService('recordsManagement/archivalProfile/read_archivalProfileId_', $archivalProfiles[$i]->archivalProfileId);
-            $archivalProfiles[$i]->json = json_encode($archivalProfiles[$i]);
+            $this->getOrgUnitArchivalProfiles($filePlan);
         }
-        $this->view->setSource('archivalProfiles', $archivalProfiles);
-
+        
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
 
-        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable = $this->view->getElementById("folderContents")->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
         $dataTable->setSorting(array(array(1, 'asc')));
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsortableColumns(4);
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setUnsearchableColumns(4);
-
+        
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    protected function getOrgUnitArchivalProfiles($orgUnit)
+    {
+        $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
+        
+        if (!empty($orgUnit->organization)) {
+            foreach ($orgUnit->organization as $subOrgUnit) {
+                $this->getOrgUnitArchivalProfiles($subOrgUnit);
+            }
+        }
     }
 
     /**

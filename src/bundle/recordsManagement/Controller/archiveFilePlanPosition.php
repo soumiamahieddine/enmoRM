@@ -51,9 +51,9 @@ class archiveFilePlanPosition
     public function getFolderContents($orgRegNumber, $folderId=null)
     {
         if (empty($folderId)) {
-            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null', ['orgRegNumber'=>$orgRegNumber]);
+            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and parentArchiveId = null and filePlanPosition = null', ['orgRegNumber'=>$orgRegNumber]);
         } else {
-            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId', ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId]);
+            $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', 'originatorOrgRegNumber = :orgRegNumber and parentArchiveId = null and filePlanPosition = :folderId', ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId]);
         }
 
         return $archives;

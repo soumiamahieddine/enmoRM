@@ -67,6 +67,13 @@ class archiveFilePlanPosition
     public $depositDate;
 
     /**
+     * The parent archive id
+     *
+     * @var string
+     */
+    public $parentArchiveId;
+
+    /**
      * Originator organisation identifier
      *
      * @var string

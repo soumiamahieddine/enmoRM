@@ -1,7 +1,9 @@
 <div class="panel-body tab-pane fade in active" id="folderPanel">
+    <hr/>
     <div class="panel">
         <div class="panel-header">
             <h4 id="folderPath"></h4>
+            <i id="folderDescription"></i>
         </div>
         <div class="panel-body">
             <table class="table table-condensed dataTable" id="folderContents">
@@ -27,13 +29,14 @@
 
 <script type="text/javascript">
 ArchiveList = {
-    getContents: function(orgRegNumber, folderId, path) {
+    getContents: function(orgRegNumber, folderId, path, description) {
         $.ajax({
             url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
             type 	: "GET",
             success : function (response) {
                 $('#folderContentsLines').html(response);
                 $('#folderPath').text(path);
+                $('#folderDescription').text(description);
             },
             error 	: function (response) {
                 gritter.show(response.responseText, false);
@@ -45,7 +48,7 @@ ArchiveList = {
 $('#filePlanTree').on('click', '.folder > b', function() {
     var li = $(this).closest('li');
     FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'));
+    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'), li.data('description'));
 })
 
 $('#filePlanTree').on('click', '.orgNode > b', function() {
