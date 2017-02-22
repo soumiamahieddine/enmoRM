@@ -27,14 +27,15 @@
 
 <script type="text/javascript">
 ArchiveList = {
-    getContents: function(orgRegNumber, folderId) {
+    getContents: function(orgRegNumber, folderId, path) {
         $.ajax({
-            url: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-            type: "GET",
-            success: function (response) {
+            url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
+            type 	: "GET",
+            success : function (response) {
                 $('#folderContentsLines').html(response);
+                $('#folderPath').text(path);
             },
-            error: function (response) {
+            error 	: function (response) {
                 gritter.show(response.responseText, false);
             }
         })
@@ -44,6 +45,11 @@ ArchiveList = {
 $('#filePlanTree').on('click', '.folder > b', function() {
     var li = $(this).closest('li');
     FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'));
+    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'));
+})
+
+$('#filePlanTree').on('click', '.orgNode > b', function() {
+    var li = $(this).closest('li');
+    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text());
 })
 </script>
