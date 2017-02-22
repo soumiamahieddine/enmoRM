@@ -36,7 +36,7 @@
     </div>
 
     <div class="col-xs-12">
-        <button class="btn btn-success pull-right" id="import"><i class="fa fa-paper-plane-o"></i>&nbsp;Import</button>
+        <button type="button" class="btn btn-success pull-right" id="import"><i class="fa fa-paper-plane-o"></i>&nbsp;Import</button>
     </div>
     <hr/>
     <h4>
@@ -66,6 +66,10 @@
     </div>
 </form>
 <script type="text/javascript">
+    $('#import').on('click', function(e) {
+        ArchiveForm.send(e, $(this));
+    });
+
     $('#app_maarchRM_main').ready(function () {
         $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
     });
