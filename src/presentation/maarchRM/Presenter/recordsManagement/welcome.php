@@ -37,6 +37,7 @@ class welcome
     public function __construct(\dependency\html\Document $view)
     {
         $this->view = $view;
+        $this->view->translator->setCatalog('recordsManagement/messages');
     }
 
     /**
@@ -70,13 +71,6 @@ class welcome
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
 
-        $dataTable = $this->view->getElementById("folderContents")->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setSorting(array(array(1, 'asc')));
-        $dataTable->setUnsortableColumns(0);
-        $dataTable->setUnsortableColumns(4);
-        $dataTable->setUnsearchableColumns(0);
-        $dataTable->setUnsearchableColumns(4);
         
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
@@ -104,6 +98,15 @@ class welcome
     public function folderContents($archives)
     {
         $this->view->addContentFile("dashboard/mainScreen/folderContents.html");
+        $this->view->translate();
+
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setSorting(array(array(1, 'asc')));
+        $dataTable->setUnsortableColumns(0);
+        $dataTable->setUnsortableColumns(5);
+        $dataTable->setUnsearchableColumns(0);
+        $dataTable->setUnsearchableColumns(5);
 
         $this->view->setSource('archives', $archives);
         $this->view->merge();

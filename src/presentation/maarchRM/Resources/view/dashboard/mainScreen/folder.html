@@ -5,24 +5,8 @@
             <h4 id="folderPath"></h4>
             <i id="folderDescription"></i>
         </div>
-        <div class="panel-body">
-            <table class="table table-condensed dataTable" id="folderContents">
-                <thead>
-                    <tr>
-                        <th style="width: 1%">
-                            <input type="checkbox" name='tableResultSearch_checkboxAll' id="tableResultSearch_checkboxAll"/>
-                        </th>
-                        <th>Archive name</th>
-                        <th>Identifier</th>
-                        <th>Profile</th>
-                        <th>Deposit date</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id='folderContentsLines'>
-                    
-                </tbody>
-            </table>
+        <div class="panel-body" id="folderContents">
+            
         </div>
     </div>
 </div>
@@ -34,7 +18,7 @@ ArchiveList = {
             url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
             type 	: "GET",
             success : function (response) {
-                $('#folderContentsLines').html(response);
+                $('#folderContents').html(response);
                 $('#folderPath').text(path);
                 $('#folderDescription').text(description);
             },
