@@ -59,6 +59,7 @@ $('#filePlanTree').on('click', '.folderNode > b', function() {
 $('#filePlanTree').on('click', '.orgNode > b', function() {
     ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
+    FilePlan.select(li);
     ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "");
     ArchiveList.getImportForm(li.data('orgregnumber'), null, li.data('archivalprofiles'));
 })

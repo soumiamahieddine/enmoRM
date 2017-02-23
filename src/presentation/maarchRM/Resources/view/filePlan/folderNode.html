@@ -1,9 +1,10 @@
-<li id="[?merge .folderId ?]" class="folder" data-path="[?merge .path ?]" data-orgregnumber="[?merge .ownerOrgRegNumber ?]" data-parentid="[?merge .parentFolderId ?]" data-description="[?merge .description ?]">
-    <span class="folderNode" >
-        <i class="fa text-primary" data-opened-icon="fa-folder-open" data-closed-icon="fa-folder"></i>
+<li id="[?merge .folderId ?]" class="folder" data-path="[?merge .path ?]" data-orgregnumber="[?merge .ownerOrgRegNumber ?]" data-parentid="[?merge .parentFolderId ?]" data-description="[?merge .description ?]" data-disabled="[?merge .disabled.bool().then('true', 'false') ?]">
+    <span class="folderNode">
+        <i class="fa text-primary" data-opened-icon="fa-folder-open" data-closed-icon="fa-folder" data-default-icon="fa-folder-open"></i>
         <b><?merge .name ?></b>
     </span>
 
+    <?merge .subFolders.bool() ?>
     <ul>
         <?merge .subFolders /filePlan/folderNode.html ?>
     </ul>

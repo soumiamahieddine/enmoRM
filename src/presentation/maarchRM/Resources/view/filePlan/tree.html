@@ -21,6 +21,9 @@
             <?hinclude /filePlan/organizationNode.html ?>
         </ul>
     </div>
+    <div id="folderNodeTemplate" class="hide">
+        <?hinclude /filePlan/folderNode.html ?>
+    </div>
 
     <?hinclude /filePlan/folderForm.html ?>
     <?hinclude /filePlan/moveFolderModal.html ?>
@@ -28,7 +31,7 @@
 
 <style>
     .folderNode, .orgNode {
-        z-index: 10;
+        position: relative;
     }
     .folderNode {
         padding: 0px !important; 
@@ -78,11 +81,25 @@
         },
 
         addFolder: function() {
-
+            var folder = {
+                parentFolderId    : this.selectedNode.not('.organization').attr('id'),
+                ownerOrgRegNumber : this.selectedNode.data('orgregnumber')
+            }
+            FolderForm.load(folder);
+            $('#filePlanMenu').css('visibility', 'hidden');
         },
 
         editFolder: function() {
-
+            var folder = {
+                folderId          : this.selectedNode.attr('id'),
+                name              : this.selectedNode.find('b:first').html(),
+                description       : this.selectedNode.data('description'),
+                parentFolderId    : this.selectedNode.data('parentid'),
+                ownerOrgRegNumber : this.selectedNode.data('orgregnumber'),
+                disabled          : this.selectedNode.data('disabled')
+            }
+            FolderForm.load(folder);
+            $('#filePlanMenu').css('visibility', 'visible');
         },
 
         moveFolder: function() {
@@ -91,6 +108,37 @@
 
         deleteFolder: function() {
 
+        },
+
+        addFolderNode: function(folder) {
+            var template = $('#folderNodeTemplate').children('li').clone();
+            template = this.fullUpFolderNode(folder, template);
+            BootstrapTree.addNode(this.selectedNode, template);
+
+            this.initDragNDrop();
+            $('#filePlanMenu').css('visibility', 'visible');
+        },
+
+        editFolderNode: function(folder) {
+            this.fullUpFolderNode(folder, $('#'+folder.folderId));
+            $('#filePlanMenu').css('visibility', 'visible');
+        },
+
+        fullUpFolderNode: function(folder, node) {
+            node.attr('id', folder.folderId)
+                .data('path', this.selectedNode.data('path')+'/'+folder.name)
+                .data('orgregnumber', folder.ownerOrgRegNumber)
+                .data('parentid', folder.parentId)
+                .data('description', folder.description)
+                .data('disabled', folder.disabled)
+                .children('span')
+                .children('b').html(folder.name);
+        },
+
+        initDragNDrop: function() {
+            $('#filePlanTree').find('.folderNode').draggable(DroppableOption)
+            $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
+            $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
         }
     }
 
@@ -135,7 +183,7 @@
 
     OrganizationNode = {
         moveIn: function(e) {
-            e.children('b').css('font-size', '20px');
+            e.children('b').css('font-size', '18px');
         },
 
         moveOut: function(e) {
@@ -153,6 +201,11 @@
         }
     }
 
+    DroppableOption = {
+        revert : true,
+        zIndex: 100
+    }
+
     FolderDroppableOption = {
         over: function(event, ui) {
            FolderNode.moveIn($(this));
@@ -167,6 +220,7 @@
     }
 
     OrganizationDroppableOption = {
+        greedy : true,
         over: function(event, ui) {
            OrganizationNode.moveIn($(this));
         },
@@ -182,6 +236,7 @@
 
     $('#app_maarchRM_main').ready(function() {
         BootstrapTree.init($('#filePlanTree'));
+        FilePlan.initDragNDrop();
     })
 
     // Folder selection
@@ -199,21 +254,8 @@
         OrganizationNode.moveOut($(this));
     })
 
-    // Drag'n drop handling 
-    $('.folderNode').draggable({revert : true})
-    $('.folderNode').droppable(FolderDroppableOption);
-    $('.orgNode').droppable(OrganizationDroppableOption);
-
     // File plan menu
-    $('#addFolder').on('click', function(){
-        FolderForm.load();
-    })
-
-    $('#editFolder').on('click', function(){
-
-    })
-
-    $('#deleteFolder').on('click', function(){
-
-    })
+    $('#addFolder').on('click', function(){ FilePlan.addFolder() })
+    $('#editFolder').on('click', function(){ FilePlan.editFolder() })
+    $('#deleteFolder').on('click', function(){ FilePlan.deleteFolder() })
 </script>

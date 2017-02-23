@@ -82,4 +82,32 @@ class filePlan
             }
         }
     }
+
+    /**
+     * Create folder response
+     * @param string $folderId The new folder identifier 
+     *
+     * @return string
+     */
+    public function create($folderId)
+    {
+        $this->json->message = "New folder created.";
+        $this->json->folderId = $folderId;
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Update folder response
+     *
+     * @return string
+     */
+    public function update()
+    {
+        $this->json->message = "Folder updated.";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
 }

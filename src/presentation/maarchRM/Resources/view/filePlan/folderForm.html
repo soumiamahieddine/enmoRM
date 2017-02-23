@@ -1,13 +1,25 @@
 <div id="folderForm" class="col-xs-12 hide">
     <form>
-        <h4><i class="fa fa-folder">&nbsp;</i>New folder</h4>
+        <input type="hidden" name="folderId"/>
+        <input type="hidden" name="parentFolderId"/>
+        <input type="hidden" name="ownerOrgRegNumber"/>
         <div class="form-group">
             <label class="control-label">Name<span style="color:red">*</span></label>
-            <input class="form-control" name="name" placeholder="Name"/>
+            <input type="text" class="form-control" name="name" placeholder="Name"/>
         </div>
         <div class="form-group">
             <label class="control-label">Description</label>
             <textarea class="form-control" name="description" placeholder="Description"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input type="radio" name="disabled"  value="false" checked/><i class="fa fa-unlock">&nbsp;</i>Enabled
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio"  name="disabled" value="true" /><i class="fa fa-lock">&nbsp;</i>Disabled
+                </label>
+            </div>
         </div>
         <div class="pull-right">
             <button type="button" class="btn btn-success" id="saveFolder"><i class="fa fa-save">&nbsp;</i>Save</button>
@@ -25,36 +37,64 @@
         form : $('#folderForm'),
         load: function(folder) {
             $('#filePlanTree').addClass('hide');
+
+            $.each(folder, function(key, value) {
+                FolderForm.form.find('[name="'+key+'"]').not('[type="radio"]').val(value);
+            })
+            if (folder.disabled) {
+                this.form.find('input[name="disabled"][value="true"]').click();
+            }
             this.form.removeClass('hide');
         },
         save: function() {
-            var folder = {
-                name       : this.form.find('input[name="name"]').val(),
-                description: this.form.find('textarea[name="description"]').val()
-            }
+            var folder = {};
 
-            if (!fodler.name) {
+            this.form.find('input[type="hidden"], input[type="text"], textarea, input[type="radio"]:checked').each(function(){
+                var input = $(this);
+                if (value = input.val()) {
+                    folder[input.attr('name')]= value;
+                }
+            });
+
+            if (!folder.name) {
                 return;
             }
 
+            var type = "POST";
+            if (folder.folderId) {
+                type = "PUT";
+            }
+
             $.ajax({
-                url     : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-                type    : "POST",
-                success : function (response) {
-                    $('#folderContentsLines').html(response);
-                    $('#folderPath').text(path);
+                url         : '/filePlan/folder',
+                type        : type,
+                data        : JSON.stringify({folder:folder}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        if (type == 'POST') {
+                            folder.folderId = response.folderId;
+                            FilePlan.addFolderNode(folder);
+                        } else {
+                            FilePlan.editFolderNode(folder);
+                        }
+                        FolderForm.close();
+                    }
                 },
-                error   : function (response) {
+                error       : function (response) {
                     gritter.show(response.responseText, false);
                 }
             })
-            
         },
         close: function() {
-            this.form.find('input, textarea').val('');
             this.form.addClass('hide');
             $('#filePlanTree').removeClass('hide');
+            $('#filePlanMenu').css('visibility', 'hidden');
 
+            this.form.find('input, textarea').not('[type="radio"]').val('');
+            this.form.find('input[name="disabled"][value="false"]').click();
         }
     }
 

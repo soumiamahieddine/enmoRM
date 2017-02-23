@@ -74,32 +74,22 @@ class filePlan
 
     /**
      * Create a folder
-     * @param string  $name
-     * @param string  $ownerOrgRegNumber
-     * @param string  $parentFolderId
-     * @param string  $description
-     * @param boolean $disabled
+     * @param filePlan/folder $folder The new folder
      * 
-     * @return boolean
+     * @return string the new folder identifier
      */
-    public function add($name, $ownerOrgRegNumber, $parentFolderId=null, $description=null, $disabled=false)
+    public function create($folder)
     {
         // Validate :
         // OwnerOrgRegNumber exists
         // ParentFolderId exists if sent
         // Couple parentFolderId + name is unique
 
-        $folder = \laabs::newInstance('filePlan/folder');
         $folder->folderId = \laabs::newId();
-        $folder->name = $name;
-        $folder->ownerOrgRegNumber = $ownerOrgRegNumber;
-        $folder->parentFolderId = $parentFolderId;
-        $folder->description = $description;
-        $folder->disabled = $disabled;
 
-        $this->sdoFactory->create($folder);
+        $this->sdoFactory->create($folder, "filePlan/folder");
 
-        return true;
+        return $folder->folderId;
     }
 
     /**
@@ -130,25 +120,16 @@ class filePlan
 
     /**
      * Update a folder
-     * @param string  $folderId
-     * @param string  $name
-     * @param string  $description
-     * @param boolean $disabled
+     * @param filePlan/folder $folder The new folder
      * 
      * @return boolean
      */
-    public function update($folderId, $name, $description=null, $disabled=false)
+    public function update($folder)
     {
-        $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
-
         // Validate :
         // Couple parentFolderId + new name is unique
 
-        $folder->name = $name;
-        $folder->description = $description;
-        $folder->disabled = $disabled;
-
-        $this->sdoFactory->update($folder);
+        $this->sdoFactory->update($folder, 'filePlan/folder');
 
         return true;
     }
