@@ -1,9 +1,10 @@
-<li id="[?merge .orgId ?]" data-orgregnumber="[?merge .registrationNumber ?]" data-archivalprofiles="[?merge .archivalProfiles.json() ?]">
+<li id="[?merge .orgId ?]" class="organization" data-path="[?merge .displayName ?]" data-orgregnumber="[?merge .registrationNumber ?]" data-archivalprofiles="[?merge .archivalProfiles.json() ?]">
     <span class="orgNode node-default">
         <i class="fa"/>
-        <b style="font-size: 14px"><?merge .orgName ?></b>
+        <b><?merge .displayName ?></b>
     </span>
 
+    <?merge .isLeaf.bool().not() ?>
     <ul>
         <?merge .organization /filePlan/organizationNode.html ?>
         <?merge .folder /filePlan/folderNode.html ?>

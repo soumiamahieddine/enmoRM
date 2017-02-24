@@ -17,14 +17,13 @@ ArchiveList = {
 
     getContents: function(orgRegNumber, folderId, path, description) {
         $.ajax({
-            url 	: "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-            type 	: "GET",
+            url     : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
+            type    : "GET",
             success : function (response) {
                 $('#folderContents').html(response);
                 $('#folderPath').text(path);
-                $('#folderDescription').text(description);
             },
-            error 	: function (response) {
+            error   : function (response) {
                 gritter.show(response.responseText, false);
             }
         })
@@ -49,7 +48,7 @@ ArchiveList = {
     }
 }
 
-$('#filePlanTree').on('click', '.folder > b', function() {
+$('#filePlanTree').on('click', '.folderNode > b', function() {
     ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
     FilePlan.select(li);
@@ -60,6 +59,7 @@ $('#filePlanTree').on('click', '.folder > b', function() {
 $('#filePlanTree').on('click', '.orgNode > b', function() {
     ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
+    FilePlan.select(li);
     ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "");
     ArchiveList.getImportForm(li.data('orgregnumber'), null, li.data('archivalprofiles'));
 })

@@ -58,6 +58,7 @@ class welcome
 
         // File plan tree
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
+        $this->markTreeLeaf([$filePlan]);
 
         if ($filePlan) {
             $this->view->setSource("filePlan", [$filePlan]);
@@ -70,7 +71,6 @@ class welcome
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-
         
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
@@ -151,5 +151,40 @@ class welcome
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    /**
+     * Mark leaf for html merging
+     * @param object $tree The tree
+     *
+     */
+    protected function markTreeLeaf($tree) {
+        foreach ($tree as $node) {
+            if (!isset($node->organization) && !isset($node->folder)) {
+                $node->isLeaf = true;
+            } else {
+                if (isset($node->organization)) {
+                    $this->markTreeLeaf($node->organization);
+                }
+                if (isset($node->folder)) {
+                    $this->updateFolderPath($node->folder, $node->displayName);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add owner organization name in folder path
+     * @param object $tree      The tree
+     * @param string $ownerName The owner organizaiton name
+     *
+     */
+    protected function updateFolderPath($tree, $ownerName) {
+        foreach ($tree as $node) {
+            $node->path = $ownerName.'/'.$node->path;
+            if ($node->subFolders) {
+                $this->updateFolderPath($node->subFolders, $ownerName);
+            }
+        }
     }
 }
