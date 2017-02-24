@@ -1,32 +1,90 @@
-<div class="panel-body tab-pane fade in active" id="folderPanel">
-    <hr/>
-    <div class="panel">
-        <div class="panel-header">
-            <h4 id="folderPath"></h4>
-            <i id="folderDescription"></i>
+<div class="tab-pane fade in active" id="folderPanel">
+    <h4>
+        <span id="folderPath"/>
+        <br/>
+        <small id="folderDescription"/>
+    </h4>
+    <div id="folderContents" class="col-xs-12"/>
+</div>
+
+<div id="listTemplate" class="hide">
+    <div class="archive row">
+        <div class="col-xs-1">
+            <h4 class="pull-left"><i class="archiveSelection fa fa-square-o"/></h4>
         </div>
-        <div class="panel-body" id="folderContents">
-            
+        <div class="col-xs-11">
+            <h5>
+                <i class="archiveContent fa fa-caret-right">&nbsp;</i>
+                <a href="#" class="archiveName"></a>
+                &nbsp;<small><i></i></small>
+                <br/>
+                <small></small>&nbsp;
+                <small></small>
+            </h5>
         </div>
     </div>
 </div>
 
+<style>
+    .archive h5 {
+        margin: 6px 0px 6px 0px;
+    }
+    .archive small {
+        font-size: 10px;
+    }
+    .archive .archiveSelection, .archive .archiveContent {
+        cursor: pointer;
+    }
+</style>
+
 <script type="text/javascript">
 ArchiveList = {
-    lastFilePlanElement : null,
-
+    archivesOrder: [],
+    archivesList: [],
     getContents: function(orgRegNumber, folderId, path, description) {
         $.ajax({
-            url     : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
-            type    : "GET",
-            success : function (response) {
-                $('#folderContents').html(response);
+            url         : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
+            type        : "GET",
+            dataType    : 'json',
+            success     : function (response) {
+                ArchiveList.buildResultList(response.archives);
                 $('#folderPath').text(path);
+                $('#folderDescription').html(description);
             },
-            error   : function (response) {
+            error       : function (response) {
                 gritter.show(response.responseText, false);
             }
         })
+    },
+
+    buildResultList: function(archives) {
+        var template = $('#listTemplate').children('.archive');
+        var folderContents = $('#folderContents');
+        this.archivesOrder = [];
+
+        folderContents.html('');
+
+        for(i=0; i<archives.length; i++) {
+            var archiveDiv = template.clone();
+            var siblings = archiveDiv.attr('id', archives[i].archiveId)
+                                     .find('.archiveName').text(archives[i].archiveName)
+                                     .siblings('small');
+
+            if (archives[0].originatorArchiveId) {
+                $(siblings[0]).children('i').text(archives[0].originatorArchiveId);
+            }
+            if (archives[0].depositDate) {
+                $(siblings[1]).text(archives[0].depositDate);
+            }
+            if (archives[0].archivalProfileReference) {
+                $(siblings[2]).text(archives[0].archivalProfileReference);
+            }
+
+            folderContents.append(archiveDiv);
+            this.archivesOrder.push(archiveDiv);
+            this.archivesList.push(archives[i]);
+
+        }
     },
     
     getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
@@ -44,23 +102,41 @@ ArchiveList = {
     },
 
     refresh: function() {
-        ArchiveList.lastFilePlanElement.click();
+        FilePlan.selectedNode.find('b:first').click();
     }
 }
 
+$('#folderContents').on('click', '.archiveSelection', function() {
+    var checkbox = $(this);
+    if (checkbox.hasClass('fa-square-o')) {
+        checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
+                .closest('.archive').addClass('bg-info');
+    } else {
+        checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
+                .closest('.archive').removeClass('bg-info');
+    }
+})
+
+$('#folderContents').on('click', '.archiveContent', function() {
+    var caret = $(this);
+    if (caret.hasClass('fa-caret-right')) {
+        caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+    } else {
+        caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+    }
+})
+
 $('#filePlanTree').on('click', '.folderNode > b', function() {
-    ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
     FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'), li.data('description'));
+    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'), li.data('description'))
     ArchiveList.getImportForm(li.data('orgregnumber'), li.attr('id'), li.closest("[data-archivalprofiles]").data('archivalprofiles'));
 })
 
 $('#filePlanTree').on('click', '.orgNode > b', function() {
-    ArchiveList.lastFilePlanElement = $(this);
     var li = $(this).closest('li');
     FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "");
+    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "")
     ArchiveList.getImportForm(li.data('orgregnumber'), null, li.data('archivalprofiles'));
 })
 

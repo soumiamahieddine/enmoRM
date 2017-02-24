@@ -7,8 +7,6 @@ TRUNCATE TABLE "recordsManagement"."serviceLevel" CASCADE;
 TRUNCATE TABLE "recordsManagement"."accessRule" CASCADE;
 TRUNCATE TABLE "recordsManagement"."retentionRule" CASCADE;
 
-TRUNCATE TABLE "recordsManagement"."documentDescription" CASCADE;
-TRUNCATE TABLE "recordsManagement"."documentProfile" CASCADE;
 TRUNCATE TABLE "recordsManagement"."descriptionField" CASCADE;
 
 INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "digitalResourceClusterId", "control", "default") VALUES

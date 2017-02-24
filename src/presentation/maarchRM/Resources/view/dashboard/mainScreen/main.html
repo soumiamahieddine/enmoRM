@@ -8,23 +8,21 @@
     <div class="col-md-3" id="leftColumn">
     	<?hinclude /filePlan/tree.html ?>
     </div>
-    <div class="col-md-7" id="middleColumn">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
-                </li>
-                <li>
-                    <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
-                </li>
-                <li>
-                    <a href="#searchPanel" id="searchTab" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
-                </li>
-                <li>
-                    <a href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
-                </li>
-            </ul>
-        </div>
+    <div class="col-md-6" id="middleColumn">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+            </li>
+            <li>
+                <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
+            </li>
+            <li>
+                <a href="#searchPanel" id="searchTab" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
+            </li>
+            <li>
+                <a href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
+            </li>
+        </ul>
         <div class="tab-content">
             <?hinclude dashboard/mainScreen/search.html ?>
             <?hinclude dashboard/mainScreen/import.html ?>
