@@ -1,9 +1,9 @@
 <div class="modal fade" id="moveFolderModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-header">
-            Move folder
-        </div>
         <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Move folder</h4>
+            </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-2">
@@ -23,31 +23,56 @@
 </div>
 
 <script>
-MoveModal = {
+MovingConfirmationModal = {
     target: null,
     element: null,
 
     show: function(element, target) {
         this.target = target;
         this.element = element;
+
+        var targetId = target.attr('id');
+        var parentId = element.data('parentid');
+
+        if ((targetId == parentId) || (!parentId && target.hasClass('organization'))) {
+            return;
+        }
+
         $('#moveElementName').html(element.find('b').html());
         $('#targetElementName').html(target.find('b').html());
         $('#moveFolderModal').modal();
     },
 
     move: function() {
-        console.log(this.target);
-        console.log(this.element);
         if (this.element && this.target) {
-            var newElement = BootstrapTree.move(this.element, this.target);
-            newElement.draggable({revert : true});
-            newElement.droppable(FolderDroppableOption);
+            var parentFolderId = null;
+            if (!this.target.hasClass('organization')) {
+                parentFolderId = this.target.attr('id');
+            }
+
+            $.ajax({
+                url         : '/filePlan/move/'+this.element.attr('id'),
+                type        : 'PUT',
+                data        : JSON.stringify({parentFolderId:parentFolderId}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        BootstrapTree.move(MovingConfirmationModal.element, MovingConfirmationModal.target);
+                        MovingConfirmationModal.element.data('parentid', parentFolderId);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
         }
     }
 }
 
 $('#move').click(function() {
-    MoveModal.move();
+    MovingConfirmationModal.move();
 })
 
 </script>

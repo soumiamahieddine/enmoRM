@@ -26,7 +26,7 @@
     </div>
 
     <?hinclude /filePlan/folderForm.html ?>
-    <?hinclude /filePlan/moveFolderModal.html ?>
+    <?hinclude /filePlan/movingComfirmationModal.html ?>
 </div>
 
 <style>
@@ -215,7 +215,7 @@
         },
         drop: function(event, ui) {
             FolderNode.moveOut($(this));
-            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
         }
     }
 
@@ -230,7 +230,7 @@
         },
         drop: function(event, ui) {
             OrganizationNode.moveOut($(this));
-            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
         }
     }
 

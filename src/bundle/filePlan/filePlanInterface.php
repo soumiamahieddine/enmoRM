@@ -30,4 +30,12 @@ interface filePlanInterface
      * @action filePlan/filePlan/update
      */
     public function update($folder);
+
+    /**
+     * Move a folder on a new position
+     * @param string $parentFolderId
+     * 
+     * @action filePlan/filePlan/move
+     */
+    public function updateMove_folderId_($parentFolderId=null);
 }

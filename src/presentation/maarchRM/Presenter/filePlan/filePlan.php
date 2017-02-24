@@ -110,4 +110,17 @@ class filePlan
 
         return $this->json->save();
     }
+
+    /**
+     * Move folder response
+     *
+     * @return string
+     */
+    public function move()
+    {
+        $this->json->message = "Folder moved.";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
 }
