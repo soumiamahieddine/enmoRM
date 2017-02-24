@@ -58,12 +58,13 @@ class welcome
 
         // File plan tree
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
-        $this->markTreeLeaf([$filePlan]);
-
         if ($filePlan) {
-            $this->view->setSource("filePlan", [$filePlan]);
-
             $this->getOrgUnitArchivalProfiles($filePlan);
+            
+            $filePlan = [$filePlan];
+            $this->markTreeLeaf($filePlan);
+
+            $this->view->setSource("filePlan", $filePlan);
         }
         
         // Retention
