@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-12">
-        <a href="#" id="hideFileplanBtn"><span class="fa fa-eye-slash">&nbsp;</span>Hide the file plan</a>
-        <a href="#" id="showFileplanBtn" style="display: none"><span class="fa fa-eye-slash">&nbsp;</span>Show the file plan</a>
+        <div class="container-fluid">
+            <button type="button" class="btn btn-default btn-sm" id="hideFileplanBtn"><span class="fa fa-eye-slash">&nbsp;</span></button>
+            <button type="button" class="btn btn-default btn-sm" id="showFileplanBtn"  style="display: none"><span class="fa fa-eye">&nbsp;</span></button>
+        </div>
     </div>
     <div class="col-md-3" id="leftColumn">
     	<?hinclude /filePlan/tree.html ?>
@@ -37,6 +39,26 @@
 <script>
     $('#newSearchTabBtn').on("click", function() {
         alert("Creation of new search tab in progress...");
+    });
+    $('#hideFileplanBtn').on("click", function() {
+        $('#showFileplanBtn').show();
+        $('#hideFileplanBtn').hide();
+
+        $("#leftColumn").hide("slide", { direction: "left" }, 200, function() {
+            $("#leftColumn").removeClass("col-md-3");
+
+            $("#middleColumn").removeClass("col-md-7");
+            $("#middleColumn").addClass("col-md-10");
+        });
+    });
+    $('#showFileplanBtn').on("click", function() {
+        $('#showFileplanBtn').hide();
+        $('#hideFileplanBtn').show();
+
+        $("#middleColumn").removeClass("col-md-10");
+        $("#middleColumn").addClass("col-md-7");
+        $("#leftColumn").addClass("col-md-3");
+        $("#leftColumn").show("slide", { direction: "left" }, 200);
     });
 
 </script>
