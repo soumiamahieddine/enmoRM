@@ -307,7 +307,7 @@
                 var descriptionObject = {};
                 var fulltext = false;
             } else {
-                var descriptionObject = [];
+                var descriptionObject = {};
                 var fulltext = true;
             }
 
@@ -335,7 +335,7 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if (fulltext) {
+                /*if (fulltext) {
                     var metadata = {
                         type : type,
                         name : name,
@@ -343,9 +343,9 @@
                     }
 
                     descriptionObject.push(metadata);
-                } else {
+                } else {*/
                     descriptionObject[name] = value;
-                }
+                //}
             });
             
             $.each(inputsCustom, function() {
@@ -366,7 +366,7 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if (fulltext) {
+                /*if (fulltext) {
                     var metadata = {
                         type : type,
                         name : name,
@@ -374,9 +374,9 @@
                     }
 
                     descriptionObject.push(metadata);
-                } else {
+                } else {*/
                     descriptionObject[name] = value;
-                }
+                //}
             });
             
             var result = descriptionObject;

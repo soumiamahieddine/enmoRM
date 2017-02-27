@@ -35,12 +35,14 @@
     <div class="form-group">
         <label class="col-md-3">Originator organization registration number</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" disabled name="originatorOrgRegNumber" placeholder="Originator organization registration number"/>
+            <input type="text" class="form-control archiveInput" disabled name="originatorOrgRegNumber"/>
         </div>
     </div>
-
-    <div class="col-xs-12">
-        <button type="button" class="btn btn-success pull-right" id="import"><i class="fa fa-paper-plane-o"></i>&nbsp;Import</button>
+    <div class="form-group">
+        <label class="col-md-3">Parent archive id</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control archiveInput" disabled name="parentArchiveId"/>
+        </div>
     </div>
     <hr/>
     <h4>
@@ -70,10 +72,6 @@
     </div>
 </form>
 <script type="text/javascript">
-    $('#import').on('click', function(e) {
-        ArchiveForm.send(e, $(this));
-    });
-
     $('#app_maarchRM_main').ready(function () {
         $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
     });
@@ -247,7 +245,7 @@
         },
 
         clear : function() {
-            var inputs = $('#archiveForm').find('.archiveInput').val('').trigger('change');
+            $('#archiveForm').find('.archiveInput :not(:disabled)').val('').trigger('change');
 
             $('#archivalProfile').prop('selectedIndex', 0).change();
             DocumentList.clear();

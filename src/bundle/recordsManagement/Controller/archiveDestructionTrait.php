@@ -120,10 +120,10 @@ trait archiveDestructionTrait
 
         $archives = array('success' => [], 'error' => []);
 
-        if (\laabs::hasDependency("fulltext")) {
+        /*if (\laabs::hasDependency("fulltext")) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
             $document = \laabs::newService('dependency/fulltext/Document');
-        }
+        }*/
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
@@ -136,11 +136,11 @@ trait archiveDestructionTrait
             try {
                 $this->destructArchive($archive);
 
-                if (\laabs::hasDependency("fulltext")) {
+                /*if (\laabs::hasDependency("fulltext")) {
                     $documentToRemove = clone($document);
                     $documentToRemove->addField("archiveId", $archiveId, "name");
                     $fulltextController->delete($archive->archivalProfileReference, $documentToRemove);
-                }
+                }*/
 
                 $destructionResult = true;
             } catch (\Exception $e) {

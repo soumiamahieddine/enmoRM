@@ -313,9 +313,9 @@ trait archiveEntryTrait
                 $this->deposit($archive->contents[$i], $filePlanPosition."/".(string) $archive->contents[$i]->archiveId);
             }
         } catch (\Exception $exception) {
-            if (\laabs::hasDependency('fulltext') && isset($this->fulltextController)) {
+            /*if (\laabs::hasDependency('fulltext') && isset($this->fulltextController)) {
                 $this->fulltextController->delete($index, $baseIndex);
-            }
+            }*/
 
             $nbResources = count($archive->digitalResources);
             for ($i = 0; $i < $nbResources; $i++) {
@@ -361,7 +361,7 @@ trait archiveEntryTrait
     }
 
     /**
-     * Check if an object correspond to an archival profile
+     * Check if an object matches an archival profile definition
      *
      * @param mixed                             $object          The metadata object to check
      * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
@@ -514,9 +514,13 @@ trait archiveEntryTrait
     protected function storeDescriptiveMetadata($archive)
     {
         if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $descriptionController->create($archive->descriptionObject, $archive->archiveId);
-        } elseif (\laabs::hasDependency('fulltext')) {
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);            
+        } else {
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
+        }
+        $descriptionController->create($archive->descriptionObject, $archive->archiveId);
+
+        /*} elseif (\laabs::hasDependency('fulltext')) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
 
             $index = isset($archive->archivalProfileReference) ? $archive->archivalProfileReference : 'archives';
@@ -528,7 +532,7 @@ trait archiveEntryTrait
                 $fulltextController->mergeIndex($archive->descriptionObject, $archiveIndex);
                 $fulltextController->addDocument($index, $archiveIndex);
             }
-        }
+        }*/
     }
 
     /**

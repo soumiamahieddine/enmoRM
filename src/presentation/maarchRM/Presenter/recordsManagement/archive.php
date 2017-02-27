@@ -343,28 +343,21 @@ class archive
 
                 $descriptionHtml = '<dl class="dl dl-horizontal">';
                 
-                foreach ($archive->descriptionObject->fields as $field) {
-                    if ($field->name == 'archiveId'
-                        || $field->name == 'originatorOrgRegNumber') {
-                        continue;
-                    }
+                foreach ($archive->descriptionObject as $name => $value) {
                     foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                        if ($archiveDescription->fieldName == $field->name) {
-                            $field->label = $archiveDescription->descriptionField->label;
+                        if ($archiveDescription->fieldName == $name) {
+                            $label = $archiveDescription->descriptionField->label;
                         }
                     }
 
-                    if (!isset($field->label)) {
-                        $field->label = $this->view->translator->getText($field->name, false, "recordsManagement/archive");
+                    if (!isset($label)) {
+                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
 
-                    $descriptionHtml .= '<dt name="'.$field->name.'">'.$field->label.'</dt>';
-                    $descriptionHtml .= '<dd>'.$field->value.'</dd>';
+                    $descriptionHtml .= '<dt name="'.$name.'">'.$label.'</dt>';
+                    $descriptionHtml .= '<dd>'.$value.'</dd>';
                 }
                 
-                foreach ($archive->descriptionObject->fields as $field) {
-                    
-                }
                 $descriptionHtml .='</dl>';
             }
 
