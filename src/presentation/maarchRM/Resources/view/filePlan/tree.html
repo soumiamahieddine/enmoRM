@@ -39,11 +39,11 @@
         min-width:150px !important;
     }
     .folderNode > b, .orgNode > b {
-        font-size: 14px;
+        font-size: 12px;
         cursor: pointer;
     }
     .folderNode > i {
-        font-size: 24px;
+        font-size: 20px;
     }
     #filePlanMenu {
         visibility: hidden
@@ -151,18 +151,18 @@
             e.find('i')
              .css("font-size", "34px")
              .siblings()
-             .css("font-size", "24px");
+             .css("font-size", "20px");
         },
 
         moveOut: function(e) {
             e.find('i')
-             .css("font-size", "24px")
+             .css("font-size", "20px")
              .siblings()
-             .css("font-size", "14px");
+             .css("font-size", "12px");
         },
 
         mouseenter: function(e) {
-            if (e.css('font-size') != '24px') {
+            if (e.css('font-size') != '20px') {
                 e.addClass('label label-default');
             }
         },
@@ -191,7 +191,7 @@
         },
 
         moveOut: function(e) {
-            e.children('b').css('font-size', '14px');
+            e.children('b').css('font-size', '12px');
         },
 
         select: function(e) {
