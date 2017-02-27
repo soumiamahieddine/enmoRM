@@ -205,11 +205,10 @@ trait archiveEntryTrait
             if (is_string($archive->retentionStartDate)) {
                 $qname = \laabs\explode("/", $archive->retentionStartDate);
                 if ($qname[0] == "description") {
-                    $i = 0;
-                    while ($archive->descriptionObject[$i]->name != $qname[1]) {
-                        $i++;
+                    if (isset($archive->descriptionObject->{$qname[1]})) {
+                        $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
                     }
-                    $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
+                    
                 } else {
                     // todo
                 }
