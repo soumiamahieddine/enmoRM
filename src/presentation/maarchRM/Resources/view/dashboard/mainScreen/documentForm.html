@@ -7,18 +7,16 @@
 #-->
 <div id="documentForm">
     <br/>
-    <form>
+    <form class="row">
         <input type="file" id="document_filesBrowser" class="hide" multiple=""/>
-        <div class="row">
-            <div id="document_XMLDropZone" class="col-md-12">
-                <i class="fa fa-file-text fileIcon">&nbsp;</i>
-                <h4>Click or drop a document</h4>
-            </div>
+        <div id="document_XMLDropZone">
+            <i class="fa fa-file-text fileIcon">&nbsp;</i>
+            <h4>Click or drop a document</h4>
         </div>
     </form>
     <br/>
-    <div class="col-md-12">
-        <table id="documentList" class="table table-responsive" style="display: none">
+    <div class="row table-responsive">
+        <table id="documentList" class="table table-condensed" style="display: none">
             <tbody>
             </tbody>
         </table>

@@ -7,41 +7,41 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-md-3">Archive name</label>
+        <label class="col-md-3 control-label small">Archive name</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" name="archiveName" placeholder="Archive name"/>
+            <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3">Identifier</label>
+        <label class="col-md-3 control-label small">Identifier</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
+            <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3">Archival profile</label>
+        <label class="col-md-3 control-label small">Archival profile</label>
         <div class="col-md-9">
-            <select class="form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
+            <select class="input-sm form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
                 <option value=""></option>
             </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3">File plan position</label>
+        <label class="col-md-3 control-label small">File plan position</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" disabled name="filePlanPosition" placeholder="File plan position"/>
+            <input type="text" class="input-sm form-control archiveInput" disabled name="filePlanPosition" placeholder="File plan position"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3">Originator organization registration number</label>
+        <label class="col-md-3 control-label small">Originator organization registration number</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" disabled name="originatorOrgRegNumber"/>
+            <input type="text" class="input-sm form-control archiveInput" disabled name="originatorOrgRegNumber"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3">Parent archive id</label>
+        <label class="col-md-3 control-label small">Parent archive id</label>
         <div class="col-md-9">
-            <input type="text" class="form-control archiveInput" disabled name="parentArchiveId"/>
+            <input type="text" class="input-sm form-control archiveInput" disabled name="parentArchiveId"/>
         </div>
     </div>
     <hr/>
@@ -50,9 +50,9 @@
     </h4>
     <div id="management" class="panel-collapse in">
         <div class="form-group">
-            <label class="col-md-3">Retention rule<span style="color: red">&nbsp;*</span></label>
+            <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
             <div class="col-md-6">
-                <select class="form-control archiveInput" name="retentionRuleCode" id="retentionRule">
+                <select class="input-sm form-control archiveInput" name="retentionRuleCode" id="retentionRule">
                     <option value=""></option>
                     <?merge retentionRules ?>
                     <option value="[?merge .code ?]" data-duration="[?merge .durationText ?]" data-final-disposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
@@ -63,9 +63,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3">Retention start date</label>
+            <label class="col-md-3 control-label small">Retention start date</label>
             <div class="col-md-6">
-                <input class="form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
+                <input class="input-sm form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
             </div>
             
         </div>
