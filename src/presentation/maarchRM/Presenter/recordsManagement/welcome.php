@@ -40,7 +40,7 @@ class welcome
     {
         $this->view = $view;
         $this->view->translator->setCatalog('recordsManagement/messages');
-        
+
         $this->json = $json;
         $this->json->status = true;
     }
@@ -80,7 +80,7 @@ class welcome
 
         // archival profiles for search form
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $archivalProfiles = $archivalProfileController->index(false);
+        $archivalProfiles = $archivalProfileController->index(true);
 
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfileController->readDetail($archivalProfile);
