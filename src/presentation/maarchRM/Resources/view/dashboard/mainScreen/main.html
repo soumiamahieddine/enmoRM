@@ -1,13 +1,11 @@
-<div class="col-xs-12">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
-            <div class="container-fluid">
-                <span class="fa fa-eye-slash" id="hideFileplanBtn" style="cursor: pointer">&nbsp;</span>
-                <span class="fa fa-eye" id="showFileplanBtn" style="display: none;cursor: pointer">&nbsp;</span>
-            </div>
-        </div>
+        <span class="fa fa-eye-slash" id="hideFileplanBtn" style="cursor: pointer">&nbsp;</span>
+        <span class="fa fa-eye" id="showFileplanBtn" style="display: none;cursor: pointer">&nbsp;</span>
+    </div>
+    <div class="row">
         <div class="col-md-3" id="leftColumn">
-            <?hinclude /filePlan/tree.html ?>
+        <?hinclude /filePlan/tree.html ?>
         </div>
         <div class="col-md-6" id="middleColumn">
             <ul class="nav nav-tabs">
@@ -120,14 +118,14 @@
             $("#leftColumn").removeClass("col-md-3");
 
             $("#middleColumn").removeClass("col-md-6");
-            $("#middleColumn").addClass("col-md-10");
+            $("#middleColumn").addClass("col-md-9");
         });
     });
     $('#showFileplanBtn').on("click", function() {
         $('#showFileplanBtn').hide();
         $('#hideFileplanBtn').show();
 
-        $("#middleColumn").removeClass("col-md-10");
+        $("#middleColumn").removeClass("col-md-9");
         $("#middleColumn").addClass("col-md-6");
         $("#leftColumn").addClass("col-md-3");
         $("#leftColumn").show("slide", { direction: "left" }, 200);
