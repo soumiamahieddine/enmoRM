@@ -1,43 +1,43 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="container-fluid">
-            <button type="button" class="btn btn-default btn-sm" id="hideFileplanBtn"><span class="fa fa-eye-slash">&nbsp;</span></button>
-            <button type="button" class="btn btn-default btn-sm" id="showFileplanBtn"  style="display: none"><span class="fa fa-eye">&nbsp;</span></button>
+<div class="col-xs-12">
+    <div class="row">
+            <div class="col-md-12">
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-default btn-sm" id="hideFileplanBtn"><span class="fa fa-eye-slash">&nbsp;</span></button>
+                    <button type="button" class="btn btn-default btn-sm" id="showFileplanBtn"  style="display: none"><span class="fa fa-eye">&nbsp;</span></button>
+                </div>
+            </div>
+            <div class="col-md-3" id="leftColumn">
+            	<?hinclude /filePlan/tree.html ?>
+            </div>
+            <div class="col-md-6" id="middleColumn">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+                    </li>
+                    <li>
+                        <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
+                    </li>
+                    <li style="display: none">
+                        <a href="#searchPanel" id="searchTab" data-toggle="tab">
+                            Search
+                            <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
+                        </a>
+                        
+                    </li>
+                    <li>
+                        <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="tab-content">
+                    <?hinclude dashboard/mainScreen/search.html ?>
+                    <?hinclude dashboard/mainScreen/import.html ?>
+                    <?hinclude dashboard/mainScreen/folder.html ?>
+                </div>
+            </div>
+            <div class="col-md-2" id="rightColumn">
+                <?hinclude dashboard/mainScreen/information.html ?>
+            </div>
         </div>
-    </div>
-    <div class="col-md-3" id="leftColumn">
-    	<?hinclude /filePlan/tree.html ?>
-    </div>
-    <div class="col-md-7" id="middleColumn">
-        <div class="col-md-12">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
-                </li>
-                <li>
-                    <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
-                </li>
-                <li style="display: none">
-                    <a href="#searchPanel" id="searchTab" data-toggle="tab">
-                        Search
-                        <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
-                    </a>
-                    
-                </li>
-                <li>
-                    <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
-                </li>
-            </ul>
-        </div>
-        <div class="tab-content" id="tab-content">
-            <?hinclude dashboard/mainScreen/search.html ?>
-            <?hinclude dashboard/mainScreen/import.html ?>
-            <?hinclude dashboard/mainScreen/folder.html ?>
-        </div>
-    </div>
-    <div class="col-md-2" id="rightColumn">
-        <?hinclude dashboard/mainScreen/information.html ?>
-    </div>
 </div>
 
 <script>
