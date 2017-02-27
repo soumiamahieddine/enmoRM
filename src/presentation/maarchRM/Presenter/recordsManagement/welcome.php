@@ -29,15 +29,20 @@ class welcome
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
+    public $json;
 
     /**
      * Constuctor of welcomePage html serializer
-     * @param \dependency\html\Document $view The view
+     * @param \dependency\html\Document   $view The view
+     * @param \dependency\json\JsonObject $json
      */
-    public function __construct(\dependency\html\Document $view)
+    public function __construct(\dependency\html\Document $view,\dependency\json\JsonObject $json)
     {
         $this->view = $view;
         $this->view->translator->setCatalog('recordsManagement/messages');
+
+        $this->json = $json;
+        $this->json->status = true;
     }
 
     /**
@@ -58,20 +63,47 @@ class welcome
 
         // File plan tree
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
-        $this->markTreeLeaf([$filePlan]);
-
         if ($filePlan) {
-            $this->view->setSource("filePlan", [$filePlan]);
-
             $this->getOrgUnitArchivalProfiles($filePlan);
+
+            $filePlan = [$filePlan];
+            $this->markTreeLeaf($filePlan);
+
+            $this->view->setSource("filePlan", $filePlan);
         }
-        
+
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-        
+
+        // archival profiles for search form
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        $archivalProfiles = $archivalProfileController->index(true);
+
+        foreach ($archivalProfiles as $archivalProfile) {
+            $archivalProfileController->readDetail($archivalProfile);
+            $archivalProfile->searchFields = [];
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                }
+            }
+        }
+
+        $this->view->translate();
+
+        $this->view->setSource("userArchivalProfiles", $archivalProfiles);
+
+        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
+            $this->view->translate($dateRangePickerInput);
+        }
+
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
@@ -82,7 +114,7 @@ class welcome
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
         $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
-        
+
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);
@@ -92,14 +124,17 @@ class welcome
 
     /**
      * @param array $archives
-     * 
+     *
      * @return string
      */
     public function folderContents($archives)
     {
-        $this->view->addContentFile("dashboard/mainScreen/folderContents.html");
-        $this->view->translate();
+        $this->json->archives = $archives;
 
+        return $this->json->save();
+
+        /*$this->view->addContentFile("dashboard/mainScreen/folderContents.html");
+        $this->view->translate();
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
         $dataTable->setSorting(array(array(1, 'asc')));
@@ -107,16 +142,16 @@ class welcome
         $dataTable->setUnsortableColumns(5);
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setUnsearchableColumns(5);
-
         $this->view->setSource('archives', $archives);
         $this->view->merge();
 
         return $this->view->saveHtml();
+*/
     }
 
     /**
      * Show the events search form
-     * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders 
+     * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders
      *
      * @return string
      */
@@ -158,7 +193,8 @@ class welcome
      * @param object $tree The tree
      *
      */
-    protected function markTreeLeaf($tree) {
+    protected function markTreeLeaf($tree)
+    {
         foreach ($tree as $node) {
             if (!isset($node->organization) && !isset($node->folder)) {
                 $node->isLeaf = true;
@@ -179,7 +215,8 @@ class welcome
      * @param string $ownerName The owner organizaiton name
      *
      */
-    protected function updateFolderPath($tree, $ownerName) {
+    protected function updateFolderPath($tree, $ownerName)
+    {
         foreach ($tree as $node) {
             $node->path = $ownerName.'/'.$node->path;
             if ($node->subFolders) {

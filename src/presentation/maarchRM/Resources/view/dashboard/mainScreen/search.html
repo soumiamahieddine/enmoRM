@@ -1,301 +1,57 @@
-<div class="panel-body tab-pane fade" id="searchPanel">
+<div class="panel-body tab-pane fade" id="searchPanel" data-search-panel>
     <br/>
     <br/>
-    <div class="col-md-12">
-        <div class="form-horizontal">
-            <div class="col-lg-1 hidden-md"></div>
-            <div class="form-group col-lg-7 col-md-10" id="searchForm">
-                <div class="input-group">
-                    <input type="search" class="form-control" placeholder="Search" id="searchForm_searchInputBlur">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" type="button" id="searchForm_searchBtn" ><span class="fa fa-search"></span></button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group col-md-1">
-                <button type="button" class="btn btn-link btn-primary" id="searchForm_advancedSearch" data-toggle="collapse" data-target="#advancedSearchForm">Advanced</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="form collapse" id="advancedSearchForm">
-            <!-- Form de test -->
-            <form>
-                <div class="col-md-6">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label">Field 1</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label">Field 2</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label">Field 3</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2 control-label">Field 4</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-        </div>
-    </div>
-    <br/>
-    <br/>
-    <div class="panel">
-        <div class="panel-body">
-            <table class="table table-condensed dataTable" id="tableResultSearch">
-                <thead>
-                    <tr>
-                        <th style="width: 1%">
-                            <input type="checkbox" name='tableResultSearch_checkboxAll' id="tableResultSearch_checkboxAll"/>
-                        </th>
-                        <th>Archive name</th>
-                        <th>Identifier</th>
-                        <th>Profile</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id='tableResultSearch_body'>
-                    <?merge archives ?>
-                    <tr id="[?merge .archiveId ?]">
-                        <td>
-                            <input type="checkbox" name="tableResultSearch_archiveCheckbox"/>
-                        </td>
-                        <td><?merge .fieldName ?></td>
-                        <td><?merge .archiveId ?></td>
-                        <td><?merge .archivalProfile ?></td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="fa fa-edit">&nbsp;</span>&nbsp;
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Procedure</td>
-                        <td>maarchRM_001-dataTest</td>
-                        <td>PROCEDURE</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Facture Maarch 01/2017</td>
-                        <td>maarchRM_002-dataTest</td>
-                        <td>FACTURE_INTERNE</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Facure EDF 12/2016</td>
-                        <td>maarchRM_003-dataTest</td>
-                        <td>FACTURE_INTERNE</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Fiche de paie 2016</td>
-                        <td>maarchRM_004-dataTest</td>
-                        <td>FICHE_DE_PAIE</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Facture-F8703</td>
-                        <td>maarchRM_005-dataTest</td>
-                        <td>FACTURE_CLIENT</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Facture-F04334</td>
-                        <td>maarchRM_006-dataTest</td>
-                        <td>FACTURE_CLIENT</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="tableResultSearch_archiveCheckbox"/></td>
-                        <td>Facture-F3970</td>
-                        <td>maarchRM_007-dataTest</td>
-                        <td>FACTURE_CLIENT</td>
-                        <td>
-                            <div class="btn-group pull-right dropdown">
-                                <button type="button" class="btn btn-success btn-sm" name="tableResultSearch_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-edit">&nbsp;</span>&nbsp;<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Menu 1</a></li>
-                                    <li><a href="#">Menu 2</a></li>
-                                    <li><a href="#">Menu 3</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Menu 4</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
 </div>
 
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
-    $("#searchForm_searchBtn").on("click", function () {
-        var request = SearchForm.serialize();
+    $('#app_maarchRM_main').ready(function() {
+        $('.amount').keydown(function (e) {
+            var n = 1.1;
+            n = n.toLocaleString().substring(1, 2);
 
-        if (request.q == "" && request.advanced.length == 0) {
-            return;
-        }
-
-        SearchForm.send(request);
-    });
-
-    $("#tableResultSearch_body [name='tableResultSearch_archiveInformation']").on("click", function () {
-        alert("TODO : Faire ajax pour remplir la partie information");
-
-        /*$.ajax({
-                type        : 'GET',
-                url         : "",
-                data        : JSON.stringify({archive : archive}),
-                contentType : 'application/json',
-                dataType    : 'json',
-                success     : function (response) {
-                    // todo
-                },
-                error       : function (response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                }
-            });*/
-    });
-    
-    var SearchForm = {
-        serialize : function() {
-            var request = {
-                q       : null,
-                advanced: []
+            // Allow: backspace, delete, tab, escape, enter and .
+            if (
+                // Numbers
+                (e.shiftKey === true && e.keyCode >= 48 && e.keyCode <= 57) ||
+                // numeric pad
+                (e.keyCode >= 96 && e.keyCode <= 105) ||
+                // Separator
+                (e.key === n) ||
+                // Allow backspace
+                (e.keyCode == 8) ||
+                // Allow tab
+                (e.keyCode == 9) ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                 // Allow: Ctrl+C
+                (e.keyCode == 67 && e.ctrlKey === true) ||
+                 // Allow: Ctrl+X
+                (e.keyCode == 88 && e.ctrlKey === true) ||
+                // Allow: Ctrl+V
+                (e.keyCode == 86 && e.ctrlKey === true) ||
+                 // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)
+            ) {
+                     // let it happen, don't do anything
+                     return;
             }
 
-            request.q = $("#searchForm_searchInputBlur").text();
+            e.preventDefault();
+        });
+    });
 
-            // serialize advanced search form
+    function pad(input, length, char, mode) {
+        input = input.toString();
+        switch (mode) {
+            case 1:
+                return input.length < length ? pad(char + input, length, char, mode) : input;
 
-            return request;
-        },
-        send : function(request) {
-            alert("TODO : Faire ajax dans SearchForm.send()");
-            /*$.ajax({
-                type        : 'GET',
-                url         : "",
-                data        : JSON.stringify({archive : archive}),
-                contentType : 'application/json',
-                dataType    : 'json',
-                success     : function (response) {
-                    // todo
-                },
-                error       : function (response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                }
-            });*/
-        },
-        clear : function() {
-            $("#searchForm_searchInputBlur").text("");
-            
-            // clear advanced search form
+            case 0:
+            default:
+                return input.length < length ? pad(input+char, length, char, mode) : input;
         }
-    };
+    }
+    
 </script>

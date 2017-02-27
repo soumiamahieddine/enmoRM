@@ -135,8 +135,6 @@ var BootstrapTree = {
         if (targetUl.length == 0) {
             targetUl.remove();
         }
-
-        return newElement;
     }
 
 }

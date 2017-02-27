@@ -697,6 +697,8 @@ class archive
             return array();
         }
 
+        $ftresults = [];
+
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
         }

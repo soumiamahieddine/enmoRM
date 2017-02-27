@@ -15,6 +15,7 @@
             </div>
         </div>
     </div>
+    <?merge filePlan.bool() ?>
     <div id="filePlanTree" class="tree">
         <?merge filePlan ?>
         <ul>
@@ -26,7 +27,7 @@
     </div>
 
     <?hinclude /filePlan/folderForm.html ?>
-    <?hinclude /filePlan/moveFolderModal.html ?>
+    <?hinclude /filePlan/movingComfirmationModal.html ?>
 </div>
 
 <style>
@@ -54,6 +55,10 @@
         tree: $('#filePlanTree'),
         selectedNode : null,
         select: function(e) {
+            if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
+                return;
+            }
+
             this.unselect();
             var span = e.children('span');
             if (span.hasClass('folderNode')) {
@@ -102,17 +107,14 @@
             $('#filePlanMenu').css('visibility', 'visible');
         },
 
-        moveFolder: function() {
-
-        },
-
         deleteFolder: function() {
-
+            alert('Not yet implemented...');
         },
 
         addFolderNode: function(folder) {
             var template = $('#folderNodeTemplate').children('li').clone();
             template = this.fullUpFolderNode(folder, template);
+            console.log(template);
             BootstrapTree.addNode(this.selectedNode, template);
 
             this.initDragNDrop();
@@ -133,6 +135,8 @@
                 .data('disabled', folder.disabled)
                 .children('span')
                 .children('b').html(folder.name);
+
+            return node;
         },
 
         initDragNDrop: function() {
@@ -215,7 +219,7 @@
         },
         drop: function(event, ui) {
             FolderNode.moveOut($(this));
-            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
         }
     }
 
@@ -230,7 +234,7 @@
         },
         drop: function(event, ui) {
             OrganizationNode.moveOut($(this));
-            MoveModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
         }
     }
 

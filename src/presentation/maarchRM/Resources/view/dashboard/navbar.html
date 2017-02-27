@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" onclick="load('/', 'HTML_NO_LAYOUT')">
+            <a class="navbar-brand" style="cursor: pointer;" onclick="load('/', 'HTML_NO_LAYOUT')">
                 <img class="img-responsive pull-left" style="max-width:32px; max-height:32px;" src="[?merge .logo ?]"/>
                 &nbsp; 
                 <span style='font-family:electrolize;'>
@@ -18,45 +18,10 @@
                     <span><span style='font-size:44px;'>m</span><span style='font-size:32px; font-weight:bold;'>aarch R</span><span style='font-size:44px;'>m</span></span>
                 </span>
             </a>
-
         </div>
         
         <div class="collapse navbar-collapse" id='leMenu'>
             <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
-                <?merge .positions.count().ifgt(0) ?>
-                <li class="dropdown" >
-                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
-                        <i class="fa fa-sitemap fa-fw" ></i>&nbsp;<span name="currentOrganization" ><?merge .currentOrganization.displayName ?></span>&nbsp;&nbsp;<?merge .positions.count().ifgt(1) ?><i class="fa fa-caret-down"></i>
-                    </a>
-                    <?merge .positions.count().ifgt(1) ?>
-                    <ul class="dropdown-menu dropdown-user">
-                        <?merge .positions ?>
-                        <li>
-                            <a onclick="load('#')" name="selectOrg" data-orgid="[?merge .orgId?]">
-                                <span name="selectedOrgUnit"><?merge .organization.orgName ?></span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown" id="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')" id="dropUsers">
-                        <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
-                        <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li>
-                            <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
-                                <i class="fa fa-user fa-fw"></i> Profile
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a onclick="load('/user/logout')" translate="yes">
-                                <i class="fa fa-sign-out fa-fw"></i> Logout 
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             
                 <?merge .menu ?>
                 <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]">
@@ -98,7 +63,41 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </li>			            
+                        </li>                       
+                    </ul>
+                </li>
+                <?merge .positions.count().ifgt(0) ?>
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
+                        <i class="fa fa-sitemap fa-fw" ></i>&nbsp;<span name="currentOrganization" ><?merge .currentOrganization.displayName ?></span>&nbsp;&nbsp;<?merge .positions.count().ifgt(1) ?><i class="fa fa-caret-down"></i>
+                    </a>
+                    <?merge .positions.count().ifgt(1) ?>
+                    <ul class="dropdown-menu dropdown-user">
+                        <?merge .positions ?>
+                        <li>
+                            <a onclick="load('#')" name="selectOrg" data-orgid="[?merge .orgId?]">
+                                <span name="selectedOrgUnit"><?merge .organization.orgName ?></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown" id="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')" id="dropUsers">
+                        <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                        <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
+                                <i class="fa fa-user fa-fw"></i> Profile
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a onclick="load('/user/logout')" translate="yes">
+                                <i class="fa fa-sign-out fa-fw"></i> Logout 
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

@@ -1,42 +1,34 @@
-<table class="table table-condensed dataTable" >
-    <thead>
-        <tr>
-            <th style="width: 1%">
-                <input type="checkbox" name='tableResultSearch_checkboxAll' id="tableResultSearch_checkboxAll"/>
-            </th>
-            <th>Archive name</th>
-            <th>Identifier</th>
-            <th>Profile</th>
-            <th>Deposit date</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?merge archives ?>
-        <tr id="[?merge .archiveId ?]">
-            <td>
-                <input type="checkbox" name="folderContents_archiveCheckbox"/>
-            </td>
-            <td><?merge .archiveName ?></td>
-            <td><?merge .originatorArchiveId ?></td>
-            <td><?merge .archivalProfileReference ?></td>
-            <td><?merge .depositDate ?></td>
-            <td>
-                <div class="btn-group pull-right dropdown">
-                    <button type="button" class="btn btn-success btn-sm" name="folderContents_archiveInformation"><span class="fa fa-info-circle "></span></button>
-                    <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="fa fa-edit">&nbsp;</span>&nbsp;
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Menu 1</a></li>
-                        <li><a href="#">Menu 2</a></li>
-                        <li><a href="#">Menu 3</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Menu 4</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div id="archiveList" class="col-xs-12">
+    <div class="archive">
+        <div class="col-xs-1">
+            <h4 class="pull-left"><i class="archiveSelection fa fa-square-o"/></h4>
+        </div>
+        <div class="col-xs-11">
+            <h5>
+                <i class="archiveContent fa fa-caret-right">&nbsp;</i>
+                <a href="#">Archive name</a>
+                &nbsp;<small><i>originator id</i></small>
+                <br/>
+                <small>depositDate</small>&nbsp;
+                <small>profile</small>
+            </h5>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .archiveSelection {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $('#archiveList').on('click', '.archiveSelection', function() {
+        var checkbox = $(this);
+        if (checkbox.hasClass('fa-square-o')) {
+            checkbox.removeClass('fa-square-o').addClass('fa-check-square-o');
+        } else {
+            checkbox.removeClass('fa-check-square-o').addClass('fa-square-o');
+        }
+    })
+</script>
