@@ -11,26 +11,34 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationEndDate" dat
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationLevel" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationOwner" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "filePlanPosition" text;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "description" jsonb;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "text" text;
 
-CREATE INDEX "archive_filePlanPosition_idx"
+
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("filePlanPosition");
 
-CREATE INDEX "archive_archivalProfileReference_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("archivalProfileReference");
 
-CREATE INDEX "archive_status_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("status");
 
-CREATE INDEX "archive_originatorArchiveId_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("originatorOrgRegNumber", "originatorArchiveId");
   
-CREATE INDEX "archive_disposalDate_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("disposalDate");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  USING gin
+  (to_tsvector('french'::regconfig, "text"));
 
 ALTER TABLE "recordsManagement"."accessEntry" RENAME COLUMN "orgUnitId" TO "orgRegNumber";
 
