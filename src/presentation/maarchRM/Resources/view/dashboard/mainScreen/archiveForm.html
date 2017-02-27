@@ -106,6 +106,7 @@
                     if (response.status) {
                         ArchiveForm.clear();
                         ArchiveList.refresh();
+                        $('#folderTab').click();
                     }
                 },
                 error       : function (response) {
