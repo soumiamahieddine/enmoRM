@@ -65,13 +65,39 @@ class welcome
 
             $this->getOrgUnitArchivalProfiles($filePlan);
         }
-        
+
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-        
+
+        // archival profiles for search form
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        $archivalProfiles = $archivalProfileController->index(false);
+
+        foreach ($archivalProfiles as $archivalProfile) {
+            $archivalProfileController->readDetail($archivalProfile);
+            $archivalProfile->searchFields = [];
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                }
+            }
+        }
+
+        $this->view->translate();
+
+        $this->view->setSource("userArchivalProfiles", $archivalProfiles);
+
+        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
+            $this->view->translate($dateRangePickerInput);
+        }
+
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
@@ -82,7 +108,7 @@ class welcome
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
         $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
-        
+
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);
@@ -92,7 +118,7 @@ class welcome
 
     /**
      * @param array $archives
-     * 
+     *
      * @return string
      */
     public function folderContents($archives)
@@ -116,7 +142,7 @@ class welcome
 
     /**
      * Show the events search form
-     * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders 
+     * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders
      *
      * @return string
      */
@@ -158,7 +184,8 @@ class welcome
      * @param object $tree The tree
      *
      */
-    protected function markTreeLeaf($tree) {
+    protected function markTreeLeaf($tree)
+    {
         foreach ($tree as $node) {
             if (!isset($node->organization) && !isset($node->folder)) {
                 $node->isLeaf = true;
@@ -179,7 +206,8 @@ class welcome
      * @param string $ownerName The owner organizaiton name
      *
      */
-    protected function updateFolderPath($tree, $ownerName) {
+    protected function updateFolderPath($tree, $ownerName)
+    {
         foreach ($tree as $node) {
             $node->path = $ownerName.'/'.$node->path;
             if ($node->subFolders) {

@@ -23,8 +23,6 @@
         <div class="col-md-9">
             <select class="form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
                 <option value=""></option>
-                <?merge archivalProfiles ?>
-                <option value="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name ?></option>
             </select>
         </div>
     </div>
@@ -129,6 +127,7 @@
                 option.attr("data-json", JSON.stringify(archivalProfiles[i]));
                 select.append(option);
             }
+            select.change();
         },
         loadProfile : function() {
             var value = $('#archivalProfile').val();
@@ -149,6 +148,7 @@
         },
         displayArchiveDescription : function() {
             var value = $('#archivalProfile').val();
+
             $('#archivalProfileFields').empty();
             
             if (value == "") {
@@ -166,6 +166,7 @@
         },
         displayRetentionRulesInfo : function() {
             var value = $('#retentionRule').val();
+
             var selected = $('#retentionRule').find('option:selected');
 
             if (value == '') {

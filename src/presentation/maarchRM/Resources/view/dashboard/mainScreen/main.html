@@ -17,15 +17,19 @@
                 <li>
                     <a href="#importPanel" id="importTab" data-toggle="tab" style="display: none"><span class="fa fa-plus">&nbsp;</span>Create</a>
                 </li>
-                <li>
-                    <a href="#searchPanel" id="searchTab" data-toggle="tab"><span class="fa fa-search">&nbsp;</span>Search</a>
+                <li style="display: none">
+                    <a href="#searchPanel" id="searchTab" data-toggle="tab">
+                        Search
+                        <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
+                    </a>
+                    
                 </li>
                 <li>
-                    <a href="#" id="newSearchTabBtn"><span class="fa fa-plus"></span></a>
+                    <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
                 </li>
             </ul>
         </div>
-        <div class="tab-content">
+        <div class="tab-content" id="tab-content">
             <?hinclude dashboard/mainScreen/search.html ?>
             <?hinclude dashboard/mainScreen/import.html ?>
             <?hinclude dashboard/mainScreen/folder.html ?>
@@ -37,9 +41,77 @@
 </div>
 
 <script>
+    var searchTab = {
+        run : function () {
+            var uniqId = new Date().getUTCMilliseconds();
+
+            this.tabCreation(uniqId);
+            this.panelCreation(uniqId);
+            this.replaceIds(uniqId);
+            this.replaceDatepicker(uniqId);
+
+            $("#" + uniqId + "Tab").click();
+        },
+
+        tabCreation : function(uniqId) {
+            var tab = $("#searchTab").clone(true).attr("href", "#" + uniqId + "Panel").attr("id", uniqId + "Tab")
+            
+            var li = $("<li/>").append(tab);
+            
+            var ul = $("#middleColumn ul:first");
+            ul.append(li);
+            $("#newSearchTabBtn").parent().appendTo(ul);
+        },
+
+        panelCreation : function(uniqId) {
+            var newPanel = $("#searchPanel").clone(true, true);
+            newPanel.appendTo($("#middleColumn #tab-content:first")).attr("id", uniqId + "Panel");
+        },
+
+        replaceIds : function(uniqId) {
+            $("#" + uniqId + "Panel").find("[data-search-tab] a").each(function() {
+                var oldHref = $(this).attr('href').substring(1);
+                var href = '#' + uniqId + oldHref;
+                $(this).attr("href", href);
+            });
+
+            $("#" + uniqId + "Panel").find("[data-search-tabContent] [id]").each(function() {
+                var id = uniqId + $(this).attr('id');
+                $(this).attr("id", id);
+            });
+        },
+
+        replaceDatepicker : function(uniqId) {
+            $("#searchPanel").find("[data-search-tabContent] .datePicker").each(function() {
+                var baseDatepicker = $(this);
+                $("#" + uniqId + "Panel").find("[data-search-tabContent] .datePicker").each(function() {
+                    var cloneDatepicker = $(this);
+                    if (baseDatepicker.attr('data-datepicker-id') == cloneDatepicker.attr('data-datepicker-id')) {
+                        cloneDatepicker.replaceWith(baseDatepicker.clone(false).datepicker({language:$('#wrapper').attr('lang'), autoclose: true}).appendTo(cloneDatepicker.parent()));
+                    }
+                });
+            });
+        },
+
+        close : function(liElement) {
+            var id = $(liElement).find("a:first").attr("href").substring(1);
+            $("#tab-content").find("#"+id).remove();
+            $(liElement).remove();
+            $("#middleColumn").find("li > a:first").click();
+        }
+    }
+
     $('#newSearchTabBtn').on("click", function() {
-        alert("Creation of new search tab in progress...");
+        searchTab.run();
     });
+    $('[data-remove-tab]').on("click", function() {
+        searchTab.close($(this).closest("li"));
+    });
+    
+    $('[data-close-tab]').on("click", function() {
+        alert("alert aux gogoles");
+    });
+
     $('#hideFileplanBtn').on("click", function() {
         $('#showFileplanBtn').show();
         $('#hideFileplanBtn').hide();
