@@ -42,31 +42,35 @@ class description
 
     /**
      * Create the description
-     * @param mixed  $object    The description object
-     * @param string $archiveId The archive identifier
+     * @param mixed  $description The description object
+     * @param string $archiveId   The archive identifier
      * 
      * @return bool
      */
-    public function create($object, $archiveId)
+    public function create($description, $archiveId)
     {
-        $description = \laabs::newInstance('recordsManagement/description');
-        $description->archiveId = $archiveId;
-        $description->object = json_encode($object);
-        $description->text = implode(' ', $this->getText($object));
+        $descriptionObject = \laabs::newInstance('recordsManagement/description');
+        $descriptionObject->archiveId = $archiveId;
+        $descriptionObject->text = implode(' ', $this->getText($description));
+        $descriptionObject->description = json_encode($description);
         
-        $this->sdoFactory->create($description);
+        $this->sdoFactory->update($descriptionObject);
     }
 
-    protected function getText($object)
+    protected function getText($description)
     {
         $text = [];
 
-        foreach ($object as $name => $value) {
-            if (is_string($value) || is_numeric($value)) {
-                $text[] = $value;
-            } elseif (is_object($value)) {
-                $text = array_merge($text, $this->getText($value));
+        if (is_object($description) || is_array($description)) {
+            foreach ($description as $name => $value) {
+                if (is_string($value) || is_numeric($value)) {
+                    $text[] = $value;
+                } elseif (is_object($value)) {
+                    $text = array_merge($text, $this->getText($value));
+                }
             }
+        } elseif (is_scalar($description)) {
+            $text = $description;
         }
 
         return $text;
@@ -81,10 +85,10 @@ class description
     public function read($archiveId)
     {
         try {
-            $description = $this->sdoFactory->read('recordsManagement/description', $archiveId);
+            $descriptionObject = $this->sdoFactory->read('recordsManagement/description', $archiveId);
 
-            return json_decode($description->object);
-        } catch(\Exception $e) {
+            return json_decode($descriptionObject->description);
+        } catch (\Exception $e) {
             
         }
     }
@@ -106,46 +110,35 @@ class description
                 }
                 $asserts[] = "text @@ to_tsquery('$arg')";
             } else {
-                $asserts[] = "object->>'".$arg['name']."' ".$arg['op']." '".$arg['value']."'";
+                $asserts[] = "description->>'".$arg['name']."' ".$arg['op']." '".$arg['value']."'";
             }
         }
 
-        $descriptions = $this->sdoFactory->find('recordsManagement/description', implode(' and ', $asserts));
+        $descriptionObjects = $this->sdoFactory->find('recordsManagement/description', implode(' and ', $asserts));
 
-        foreach ($descriptions as $description) {
-            $description->object = json_decode($description);
+        foreach ($descriptionObjects as $descriptionObject) {
+            $descriptionObject->description = json_decode($descriptionObject->description);
         }
 
-        return $descriptions;
+        return $descriptionObjects;
     }
 
     /**
      * Update the description
-     * @param mixed  $object    The description object
-     * @param string $archiveId The archive identifier
+     * @param mixed  $description The description object
+     * @param string $archiveId   The archive identifier
      * 
      * @return bool
      */
-    public function update($object, $archiveId)
+    public function update($description, $archiveId)
     {
-        $description = $this->read($archiveId);
-        foreach ($object as $name => $value) {
-            $description->object->{$name} = $value;
+        $descriptionObject = $this->read($archiveId);
+        foreach ($descriptionObject as $name => $value) {
+            $descriptionObject->description->{$name} = $value;
         }
 
-        $description->text = implode(' ', $this->getText($object));
+        $descriptionObject->text = implode(' ', $this->getText($descriptionObject->description));
         
-        $this->sdoFactory->update($description);
-    }
-
-    /**
-     * Delete the description
-     * @param string $archiveId The archive identifier
-     * 
-     * @return bool
-     */
-    public function delete($archiveId)
-    {
-        $this->sdoFactory->delete('recordsManagement/description', $archiveId);
+        $this->sdoFactory->update($descriptionObject);
     }
 }

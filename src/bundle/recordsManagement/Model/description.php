@@ -25,7 +25,8 @@ namespace bundle\recordsManagement\Model;
  * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
  *
  * @pkey [archiveId]
- * @fkey [archiveId] recordsManagement/archive [archiveId]
+ * 
+ * @substitution recordsManagement/archive
  */
 class description
 {
@@ -41,7 +42,7 @@ class description
      *
      * @var mixed
      */
-    public $object;
+    public $description;
 
     /**
      * The fulltext index

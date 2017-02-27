@@ -156,6 +156,10 @@ CREATE TABLE "recordsManagement"."archive"
   "archiveName" text,
   "storagePath" text,
   "filePlanPosition" text,
+  
+  "descriptionClass" text,
+  "description" jsonb,
+  "text" text,
 
   "originatorOrgRegNumber" text NOT NULL,
   "originatorOwnerOrgId" text,
@@ -192,8 +196,6 @@ CREATE TABLE "recordsManagement"."archive"
   "status" text NOT NULL,
 
   "parentArchiveId" text,
-  
-  "descriptionClass" text,
 
   PRIMARY KEY ("archiveId"),
   FOREIGN KEY ("parentArchiveId")
@@ -210,25 +212,31 @@ WITH (
   OIDS=FALSE
 );
   
-CREATE INDEX "archive_filePlanPosition_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("filePlanPosition");
 
-CREATE INDEX "archive_archivalProfileReference_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("archivalProfileReference");
 
-CREATE INDEX "archive_status_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("status");
 
-CREATE INDEX "archive_originatorArchiveId_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("originatorOrgRegNumber", "originatorArchiveId");
   
-CREATE INDEX "archive_disposalDate_idx"
+CREATE INDEX
   ON "recordsManagement"."archive"
   ("disposalDate");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  USING gin
+  (to_tsvector('french'::regconfig, "text"));
+
 
 -- Table: "recordsManagement"."archiveRelationship"
 
