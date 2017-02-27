@@ -1,7 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <span class="fa fa-eye-slash" id="hideFileplanBtn" style="cursor: pointer">&nbsp;</span>
-        <span class="fa fa-eye" id="showFileplanBtn" style="display: none;cursor: pointer">&nbsp;</span>
+        &nbsp;<span class="fa fa-angle-double-left" id="toogleLeftColumn" style="cursor: pointer"/>
     </div>
     <div class="row">
         <div class="col-md-3" id="leftColumn">
@@ -110,25 +109,24 @@
         alert("alert aux gogoles");
     });
 
-    $('#hideFileplanBtn').on("click", function() {
-        $('#showFileplanBtn').show();
-        $('#hideFileplanBtn').hide();
+    $('#toogleLeftColumn').on('click', function() {
+        var leftColumn = $('#leftColumn');
 
-        $("#leftColumn").hide("slide", { direction: "left" }, 200, function() {
-            $("#leftColumn").removeClass("col-md-3");
+        if (leftColumn.hasClass('col-md-3')) {
+            leftColumn.hide("slide", { direction: "left" }, 200, function() {
+                leftColumn.removeClass("col-md-3");
+                $("#middleColumn").removeClass("col-md-6")
+                                  .addClass("col-md-9");
+            });
+            $(this).removeClass('fa-angle-double-left').addClass('fa-angle-double-right');
 
-            $("#middleColumn").removeClass("col-md-6");
-            $("#middleColumn").addClass("col-md-9");
-        });
-    });
-    $('#showFileplanBtn').on("click", function() {
-        $('#showFileplanBtn').hide();
-        $('#hideFileplanBtn').show();
-
-        $("#middleColumn").removeClass("col-md-9");
-        $("#middleColumn").addClass("col-md-6");
-        $("#leftColumn").addClass("col-md-3");
-        $("#leftColumn").show("slide", { direction: "left" }, 200);
+        } else {
+            $("#middleColumn").removeClass("col-md-9")
+                              .addClass("col-md-6");
+            leftColumn.addClass("col-md-3")
+                      .show("slide", { direction: "left" }, 200);
+            $(this).removeClass('fa-angle-double-right').addClass('fa-angle-double-left');
+        }
     });
 
 </script>

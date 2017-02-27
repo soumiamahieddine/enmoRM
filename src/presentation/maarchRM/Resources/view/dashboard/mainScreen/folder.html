@@ -47,7 +47,7 @@ ArchiveList = {
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
     },
 
-    getContents: function(orgRegNumber, folderId, path, description) {
+    getContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
         $.ajax({
             url         : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
             type        : "GET",
@@ -61,6 +61,8 @@ ArchiveList = {
                 gritter.show(response.responseText, false);
             }
         })
+
+        this.getImportForm(orgregnumber, folderId, archivalProfiles);
     },
 
     buildResultList: function(archives) {
@@ -95,13 +97,6 @@ ArchiveList = {
     
     getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
         ArchiveForm.changeArchivalProfilesList(archivalProfiles);
-
-        if (archivalProfiles.length < 1) {
-            $('#importTab').hide();
-            $('#folderTab').click();
-            return;
-        }
-
         $('#importTab').show();
         $('#archiveForm [name="filePlanPosition"]').val(folderId);
         $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
@@ -112,6 +107,7 @@ ArchiveList = {
     }
 }
 
+// List icon toggle
 $('#folderContents').on('click', '.archiveSelection', function() {
     var checkbox = $(this);
     if (checkbox.hasClass('fa-square-o')) {
@@ -130,20 +126,6 @@ $('#folderContents').on('click', '.archiveContent', function() {
     } else {
         caret.removeClass('fa-caret-down').addClass('fa-caret-right');
     }
-})
-
-$('#filePlanTree').on('click', '.folderNode > b', function() {
-    var li = $(this).closest('li');
-    FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), li.attr('id'), li.data('path'), li.data('description'))
-    ArchiveList.getImportForm(li.data('orgregnumber'), li.attr('id'), li.closest("[data-archivalprofiles]").data('archivalprofiles'));
-})
-
-$('#filePlanTree').on('click', '.orgNode > b', function() {
-    var li = $(this).closest('li');
-    FilePlan.select(li);
-    ArchiveList.getContents(li.data('orgregnumber'), null, li.find('b:first').text(), "")
-    ArchiveList.getImportForm(li.data('orgregnumber'), null, li.data('archivalprofiles'));
 })
 
 </script>

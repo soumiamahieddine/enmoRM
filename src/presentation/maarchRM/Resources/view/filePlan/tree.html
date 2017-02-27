@@ -85,6 +85,28 @@
             this.selectedNode = null;
         },
 
+        load: function(e) {
+            this.select(e);
+
+            var orgRegNumber = e.data('orgregnumber');
+            var folderId = null;
+            var path = '';
+            var description = ''
+            var profile = null;
+
+            if (e.hasClass('organization')) {
+                path = e.find('b:first');
+                profile = e.data('archivalprofiles');
+            } else {
+                folderId = e.attr('id');
+                path = e.data('path')
+                description = e.data('description')
+                profile = e.closest('.organization').data('archivalprofiles');
+            }
+
+            ArchiveList.getContents(orgRegNumber, folderId, path, description, profile);
+        },
+
         addFolder: function() {
             var folder = {
                 parentFolderId    : this.selectedNode.not('.organization').attr('id'),
@@ -246,17 +268,21 @@
     // Folder selection
     $('#filePlanTree').on('mouseenter', '.folderNode > b', function() { 
         FolderNode.mouseenter($(this));
-    });
+    })
     $('#filePlanTree').on('mouseleave', '.folderNode > b', function() { 
         FolderNode.mouseleave($(this));
     })
 
     $('#filePlanTree').on('mouseenter', '.orgNode > b', function() { 
         OrganizationNode.moveIn($(this));
-    });
+    })
     $('#filePlanTree').on('mouseleave', '.orgNode > b', function() { 
         OrganizationNode.moveOut($(this));
     })
+    $('#filePlanTree').on('click', '.folderNode > b, .orgNode > b', function() {
+        FilePlan.load($(this).closest('li'));
+    })
+
 
     // File plan menu
     $('#addFolder').on('click', function(){ FilePlan.addFolder() })
