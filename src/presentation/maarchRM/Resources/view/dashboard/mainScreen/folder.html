@@ -41,6 +41,12 @@
 ArchiveList = {
     archivesOrder: [],
     archivesList: [],
+    initDragNDrop: function() {
+            $('#filePlanTree').find('.folderNode').draggable(DroppableOption)
+            $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
+            $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
+    },
+
     getContents: function(orgRegNumber, folderId, path, description) {
         $.ajax({
             url         : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
@@ -70,14 +76,14 @@ ArchiveList = {
                                      .find('.archiveName').text(archives[i].archiveName)
                                      .siblings('small');
 
-            if (archives[0].originatorArchiveId) {
-                $(siblings[0]).children('i').text(archives[0].originatorArchiveId);
+            if (archives[i].originatorArchiveId) {
+                $(siblings[0]).children('i').text(archives[i].originatorArchiveId);
             }
-            if (archives[0].depositDate) {
-                $(siblings[1]).text(archives[0].depositDate);
+            if (archives[i].depositDate) {
+                $(siblings[1]).text(archives[i].depositDate.substring(0, 19));
             }
-            if (archives[0].archivalProfileReference) {
-                $(siblings[2]).text(archives[0].archivalProfileReference);
+            if (archives[i].archivalProfileReference) {
+                $(siblings[2]).text(archives[i].archivalProfileReference);
             }
 
             folderContents.append(archiveDiv);

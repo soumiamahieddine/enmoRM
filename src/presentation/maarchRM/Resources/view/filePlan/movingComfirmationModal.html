@@ -33,8 +33,16 @@ MovingConfirmationModal = {
 
         var targetId = target.attr('id');
         var parentId = element.data('parentid');
+        console.log((targetId == parentId));
+        console.log(!parentId && target.hasClass('organization'));
+        console.log(element.data('orgregnumber') != target.data('orgregnumber'));
+        console.log($('#'+targetId).find('#'+element.attr('id')).length);
 
-        if ((targetId == parentId) || (!parentId && target.hasClass('organization'))) {
+        if ((targetId == parentId) || 
+            (!parentId && target.hasClass('organization')) ||
+            (element.data('orgregnumber') != target.data('orgregnumber')) ||
+            ($('#'+element.attr('id')).find('#'+targetId).length > 0)) {
+
             return;
         }
 
@@ -59,8 +67,9 @@ MovingConfirmationModal = {
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
+                        MovingConfirmationModal.element.data('parentid', parentFolderId)
+                                                       .data('path', MovingConfirmationModal.target.data('path')+'/'+MovingConfirmationModal.element.find('b').text());
                         BootstrapTree.move(MovingConfirmationModal.element, MovingConfirmationModal.target);
-                        MovingConfirmationModal.element.data('parentid', parentFolderId);
                     }
                 },
                 error       : function (response) {
