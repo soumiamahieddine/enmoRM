@@ -79,14 +79,14 @@
             
             var tr = $('<tr/>').attr('data-binary', fileObject.binary).appendTo(this.list);
 
-            $('<td>').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
+            $('<td class="small">').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
             $('<td class="hide">').attr('name', 'size').text(fileObject.size).appendTo(tr);
             $('<td class="hide">').attr('name', 'type').text(fileObject.type).appendTo(tr);
 
             var button = $('<button>')
                     .attr('type', 'button')
                     .addClass('deleteDocument')
-                    .addClass("btn btn-link pull-right");
+                    .addClass("btn btn-sm btn-link pull-right");
             var i = $('<i/>').addClass('fa fa-times text-danger').appendTo(button);
             $('<td>').append(button).appendTo(tr);
 
