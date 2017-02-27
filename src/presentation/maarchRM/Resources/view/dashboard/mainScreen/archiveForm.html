@@ -210,8 +210,12 @@
             }
 
             inputs.each(function() {
-                if ($(this).val()) {
-                    archive[$(this).attr('name')] = $(this).val();
+                var value = $(this).val();
+                if (value) {
+                    if ($(this).hasClass('datePicker')) {
+                        value = $(this).data('datepicker').getFormattedDate('yyyymmdd');
+                    }
+                    archive[$(this).attr('name')] = value;
                 }
             })
 
