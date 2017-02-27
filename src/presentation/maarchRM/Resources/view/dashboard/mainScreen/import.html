@@ -4,17 +4,29 @@
     <div class="panel">
         <div class="panel-body">
             <div class="col-md-6">
-                <?hinclude recordsManagement/archiveImport/archiveForm.html ?>
+                <?hinclude dashboard/mainScreen/archiveForm.html ?>
                 <hr/>
-                <?hinclude recordsManagement/archiveImport/descriptionForm.html ?>
+                <?hinclude dashboard/mainScreen/descriptionForm.html ?>
             </div>
             <div class="col-md-6">
-                <?hinclude recordsManagement/archiveImport/documentForm.html ?>    
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</button>
+                    <button type="button" class="btn btn-danger" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                </div>
+                <br/>
+                <br/>
+                <?hinclude dashboard/mainScreen/documentForm.html ?>    
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    
+    $('#import').on('click', function(e) {
+        ArchiveForm.send(e, $(this));
+    });
+
+    $('#cancel').on('click', function(e) {
+        ArchiveForm.clear();
+    });
 </script>

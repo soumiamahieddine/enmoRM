@@ -218,9 +218,8 @@ class archive
 
         if (!empty($archive->descriptionClass)) {
             $this->useDescriptionController($archive->descriptionClass);
-        } elseif (!empty($archive->descriptionSchema)) {
-            $documentRootNamespaceUri = $archive->descriptionXml->documentElement->namespaceURI;
-            $this->useDescriptionController($documentRootNamespaceUri);
+        } else {
+            $this->useDescriptionController('recordsManagement/description');
         }
     }
 
@@ -399,10 +398,13 @@ class archive
 
         if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-
-            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
         } else {
-            $index = 'archives';
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
+        }
+
+        $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+        
+        /*    $index = 'archives';
             if (!empty($archive->archivalProfileReference)) {
                 $index = $archive->archivalProfileReference;
             }
@@ -413,7 +415,7 @@ class archive
             if (count($ftresults)) {
                 $archive->descriptionObject = $ftresults[0];
             }
-        }
+        }*/
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 

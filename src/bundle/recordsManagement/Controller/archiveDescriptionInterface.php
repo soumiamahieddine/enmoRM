@@ -29,6 +29,14 @@ namespace bundle\recordsManagement\Controller;
 interface archiveDescriptionInterface
 {
     /**
+     * Validate the description object
+     * @param object $description
+     * 
+     * @return bool
+     */
+    //public function validate($description);
+
+    /**
      * Create the description object
      * @param object $description
      * @param id     $archiveId
@@ -40,6 +48,12 @@ interface archiveDescriptionInterface
      * @param id $archiveId
      */
     public function read($archiveId);
+
+    /**
+     * Search the description objects
+     * @param array $args The search args
+     */
+    //public function search($args);
 
     /**
      * Update the description object
