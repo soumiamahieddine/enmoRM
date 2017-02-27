@@ -92,45 +92,6 @@ class archive
     }
 
     /**
-     * Get fulltext search form
-     *
-     * @return string The HTML result
-     */
-    public function fulltextSearchForm()
-    {
-        $archivalProfiles = $this->archivalProfileController->index(true);
-        $allSearchFields = [];
-
-        foreach ($archivalProfiles as $archivalProfile) {
-            $this->archivalProfileController->readDetail($archivalProfile);
-            $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                switch ($archiveDescription->descriptionField->type) {
-                    case 'name':
-                    case 'date':
-                    case 'number':
-                    case 'boolean':
-                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
-                        $searchFields[] = $archiveDescription->descriptionField;
-                }
-            }
-        }
-
-        $this->view->addContentFile("recordsManagement/archive/fulltextSearchForm.html");
-
-        $this->view->translate();
-
-        $this->view->setSource("archivalProfiles", $archivalProfiles);
-        $this->view->merge();
-
-        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
-            $this->view->translate($dateRangePickerInput);
-        }
-
-        return $this->view->saveHtml();
-    }
-
-    /**
      * Get fulltext search result
      * @param array $results Results search
      *

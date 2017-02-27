@@ -41,13 +41,6 @@ interface retrieveInterface
     /**
      * Search form
      *
-     * @return recordsManagement/archive/fulltextSearchForm
-     */
-    public function readRecordsmanagementArchivesIndexsearchform();
-
-    /**
-     * Search form
-     *
      * @uses recordsManagement/archives/readFind
      *
      * @return recordsManagement/archive/fulltextSearchResult
