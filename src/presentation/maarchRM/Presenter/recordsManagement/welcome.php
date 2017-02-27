@@ -29,15 +29,20 @@ class welcome
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
+    public $json;
 
     /**
      * Constuctor of welcomePage html serializer
-     * @param \dependency\html\Document $view The view
+     * @param \dependency\html\Document   $view The view
+     * @param \dependency\json\JsonObject $json
      */
-    public function __construct(\dependency\html\Document $view)
+    public function __construct(\dependency\html\Document $view,\dependency\json\JsonObject $json)
     {
         $this->view = $view;
         $this->view->translator->setCatalog('recordsManagement/messages');
+        
+        $this->json = $json;
+        $this->json->status = true;
     }
 
     /**
@@ -58,12 +63,13 @@ class welcome
 
         // File plan tree
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
-        $this->markTreeLeaf([$filePlan]);
-
         if ($filePlan) {
-            $this->view->setSource("filePlan", [$filePlan]);
-
             $this->getOrgUnitArchivalProfiles($filePlan);
+
+            $filePlan = [$filePlan];
+            $this->markTreeLeaf($filePlan);
+
+            $this->view->setSource("filePlan", $filePlan);
         }
 
         // Retention
@@ -123,9 +129,12 @@ class welcome
      */
     public function folderContents($archives)
     {
-        $this->view->addContentFile("dashboard/mainScreen/folderContents.html");
-        $this->view->translate();
+        $this->json->archives = $archives;
 
+        return $this->json->save();
+
+        /*$this->view->addContentFile("dashboard/mainScreen/folderContents.html");
+        $this->view->translate();
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
         $dataTable->setSorting(array(array(1, 'asc')));
@@ -133,11 +142,11 @@ class welcome
         $dataTable->setUnsortableColumns(5);
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setUnsearchableColumns(5);
-
         $this->view->setSource('archives', $archives);
         $this->view->merge();
 
         return $this->view->saveHtml();
+*/
     }
 
     /**
