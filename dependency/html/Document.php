@@ -244,6 +244,7 @@ class Document extends \dependency\xml\Document
         // Add js scripts
         $this->addScript("/public/dependency/html/js/jQuery_1.11.0/jQuery.js");
         $this->addScript("/public/dependency/html/js/jQueryUI_1.12.1/jquery-ui.min.js");
+        $this->addScript("/public/dependency/html/js/jQueryUI_touch-punch_0.2.3/jquery.ui.touch-punch.js");
         //less compiler
         $this->addScript("/public/dependency/html/js/less_1.7.0/less.js");
         //bootstrap.affix
