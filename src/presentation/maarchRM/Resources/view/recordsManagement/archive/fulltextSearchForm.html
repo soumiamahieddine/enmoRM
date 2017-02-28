@@ -30,6 +30,7 @@
     <?merge userArchivalProfiles ?>
     <div role="tabpanel" class="tab-pane fade" id="[?merge .reference ?]">
         <form class="form-horizontal">
+            <br/>
             <?merge .searchFields ?>
             <div>
                 <?merge .type.ifeq('name') ?>
@@ -119,23 +120,16 @@
     });
     
     // Reload search when changing profile
-    /*$('#index').on('shown.bs.tab', function () {
+    $('[data-search-tab]').on('shown.bs.tab', function () {
+        $(this).closest("[data-search-panel]").find("[data-search-searchForm] [name='searchForm_inputSearchBtn']:first").click();
         $('#fulltext_inputSearchBtn').click();
 
-        var descriptionclass = $('#index > .active > a').data('descriptionclass');
-        console.log(descriptionclass);
+        var descriptionclass = $(this).find('.active > a').data('descriptionclass');
+
         if (descriptionclass != undefined) {
             $("#fulltext_inputSearch").attr('disabled', '');
         }
-    });*/
-
-    /*$('#advancedSearchToggle').on('change', function() {
-        if ($(this).prop('checked')) {
-            $('#advancedSearchFields').fadeIn();
-        } else {
-            $('#advancedSearchFields').fadeOut();
-        }
-    });*/
+    });
 
 
     $('[data-search-searchForm]').find('[name="searchForm_inputSearchBtn"]').on('click', function () {
