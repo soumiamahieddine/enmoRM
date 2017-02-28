@@ -105,8 +105,6 @@
 
 <script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
-    //var limit = 10;
-    //var lastRequest = "";
 
     $('input[type=checkbox][data-toggle=toggle]').bootstrapToggle();
 
@@ -140,32 +138,28 @@
     });*/
 
 
-    /*$('#app_maarchRM_main').scroll(function() {
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
-            limit = limit + 10;
-            $('#fulltext_inputSearchBtn').click();
-        }
-     });*/
-    
     $('[data-search-searchForm]').find('[name="searchForm_inputSearchBtn"]').on('click', function () {
         // The query asserts
-        var a = {};
+        var query = {
+            text            : "",
+            description     : [],
+            archivalProfile : ""
+        };
         var searchPanel = $(this).closest("[data-search-panel]");
+        
         // The main query string
+        var searchText = searchPanel.find('[name="searchForm_inputSearch"]').val().trim();
 
-        var s = searchPanel.find('[name="searchForm_inputSearch"]').val().trim();
-
-        if (s.length > 0) {
-            a['q'] = s;
+        if (searchText.length > 0) {
+            query.text =  searchText;
         }
 
         // Get the query args
-        var index = null;
         var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
+        query.archivalProfile = selectedProfile;
         
         var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
 
-        var searchArgs = [];
         searchFields.each(function() {
             var value = $(this).val();
             var name = $(this).attr('name');
@@ -179,7 +173,7 @@
                 case 'select':
                     // keyword enum
                     if (value !== '') {
-                        a[name] = name+':"'+value+'"';
+                        query.description[name] = name+'="'+value+'"';
                     }
 
                     break;
@@ -190,33 +184,34 @@
                         break;
                     }
 
-                    a[name] = name+':'+$(this).val();
+                    query.description[name] = name+'="'+$(this).val()+'"';
                     break;
 
                 case 'text':
                     // format dates
                     if ($(this).hasClass('datePicker')) {
                         if (value !== '') {
-                            value = $(this).data('datepicker').getFormattedDate('yyyymmdd');
+                            value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
                         } else {
                             value = '*';
                         }
 
                         // Fill start and end values
-                        if (a[name] == undefined) {
-                            a[name] = name+':['+value+' to ';
+                        if (query.description[name] == undefined) {
+                            query.description[name] = name+'="'+value+'"';
                         } else {
-                            a[name] = a[name]+value+']';
+                            query.description[name] = query.description[name] +'.."'+value+'"';
                         }
-                        if (a[name] == name+':[* to *]') {
-                            delete a[name];
+                        if (query.description[name] == name+'="*".."*"') {
+                            delete query.description[name];
                         }
                         break;
                     }
 
                     // Standard text (name, keywords...)
-                    if (value !== '')
-                        a[name] = name+':"'+value+'"';
+                    if (value !== '') {
+                        query.description[name] = name+'="'+value+'"';
+                    }
                     break;
 
                 case 'number':
@@ -234,39 +229,35 @@
                     }
                     
                     // Fill start and end values
-                    if (a[name] == undefined) {
-                        a[name] = name+':['+value+' to ';
+                    if (query.description == undefined) {
+                        query.description = name+'="'+value+'"';
                     } else {
-                        a[name] = a[name]+value+']';
+                        query.description = query.description+value+'.."'+value+'"';
                     }
-                    if (a[name] == name+':[* to *]') {
-                        delete a[name];
+                    if (query.description == name+'="*".."*"') {
+                        delete query.description;
                     }
                     break;
             }
         });
 
         var arr = [];
-        for (name in a) {
-            arr.push(a[name]);
+        for (name in query.description) {
+            arr.push(query.description[name]);
         }
 
-        var q = arr.join(' and ');
-        if (q == '') {
-            searchPanel.find("[data-search-result]").empty();
+        query.description = arr.join(' && ');
 
+        if (query.text == '' && query.description.length == '') {
+            searchPanel.find("[data-search-result]").empty();
             return; 
         }
 
         $(this).prop('disabled', true);
         $.ajax({
             type        : 'GET',
-            url         : '/recordsManagement/archives/indexResult',
-            data        : {
-                q       : q,
-                profile : selectedProfile,
-                limit   : 20
-            },
+            url         : '/recordsManagement/archives',
+            data        : query,
             dataType    : 'html',
             success     : function (response) {
                 searchPanel.find("[data-search-result]").empty().html(response);
