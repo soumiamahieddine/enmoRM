@@ -20,13 +20,17 @@
         <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
         <div class="col-xs-11">
             <h5>
-                <i class="archiveContent fa fa-caret-right">&nbsp;</i>
+                <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
                 &nbsp;<small><i/></small>
                 <br/>
                 <small/>&nbsp;
                 <small/>
             </h5>
+        </div>
+        <div class="archiveContent col-xs-12 hide">
+            <ul class="tree-l">
+            </ul>
         </div>
     </div>
 </div>
@@ -38,6 +42,13 @@
     .archive small {
         font-size: 10px;
     }
+    .archive .tree-l {
+        font-size: 12px;
+        margin: 0px;
+    }
+    .archive .tree-l li {
+        padding: 0px;
+    }
     #folderContentList .archiveSelection, #folderContentList .archiveContent {
         cursor: pointer;
     }
@@ -47,6 +58,19 @@
     ArchiveList = {
         archivesOrder: [],
         archivesList: [],
+        folderContents: $('#folderContents'),
+
+        select: function(e) {
+            console.log(e);
+            this.unselect()
+            e.addClass('bg-success');
+        },
+
+        unselect: function() {
+            $('#rightColumn').html('');
+            this.folderContents.find('.bg-success').removeClass('bg-success');
+        },
+
         initDragNDrop: function() {
                 $('#filePlanTree').find('.folderNode').draggable(DroppableOption)
                 $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
@@ -73,10 +97,9 @@
 
         buildResultList: function(archives) {
             var template = $('#listTemplate').children('.archive');
-            var folderContents = $('#folderContents');
             this.archivesOrder = [];
 
-            folderContents.html('');
+            this.folderContents.html('');
 
             if (archives.length) {
                 $('#emptyFolderMessage').addClass('hide');
@@ -102,7 +125,7 @@
                     $(siblings[2]).text(archives[i].archivalProfileReference);
                 }
 
-                folderContents.append(archiveDiv);
+                this.folderContents.append(archiveDiv);
                 this.archivesOrder.push(archiveDiv);
                 this.archivesList.push(archives[i]);
 
@@ -134,8 +157,17 @@
                 }
             })
         },
-        getContent: function() {
-
+        getContent: function(archive) {
+            $.ajax({
+                url         : "/archive/"+archive.attr('id'),
+                type        : "GET",
+                success     : function (response) {
+                    archive.find('.archiveContent').removeClass('hide');
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
         }
     }
 
@@ -151,12 +183,15 @@
         }
     })
 
-    $('#folderContentList').on('click', '.archiveContent', function() {
+    $('#folderContentList').on('click', '.archiveContentButton', function() {
         var caret = $(this);
         if (caret.hasClass('fa-caret-right')) {
+            $('#folderContentList').find('.fa-caret-down').click();
             caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+            Archive.getContent($(this).closest('.archive'));
         } else {
-            caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+            caret.removeClass('fa-caret-down').addClass('fa-caret-right')
+                 .closest('div').siblings('.archiveContent').addClass('hide');
         }
     })
 
@@ -171,7 +206,9 @@
 
     // Actions on archives
     $('#folderContents').on('click', '.archiveName', function() {
-        var archiveId = $(this).closest('.archive').attr('id');
+        var archive = $(this).closest('.archive')
+        var archiveId = archive.attr('id');
+        ArchiveList.select(archive);
         Archive.getInfo(archiveId);
     })
 

@@ -151,6 +151,8 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
+
+        $this->getDescription($archive);
         $this->view->setSource("archive", $archive);
         $this->view->merge();
         //var_dump($archive);
@@ -190,6 +192,52 @@ class welcome
         return $this->json->save();
     }
 
+    /**
+     * Get archive description
+     * @param archive $archive
+     *
+     * @return string
+     */
+    protected function getDescription($archive)
+    {
+        if (isset($archive->descriptionObject)) {
+            if (!empty($archive->descriptionClass)) {
+                $presenter = \laabs::newPresenter($archive->descriptionClass);
+                $descriptionHtml = $presenter->read($archive->descriptionObject);
+            } else {
+                $archivalProfile = [];
+                if (!empty($archive->archivalProfileReference)) {
+                    $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                }
+
+                $descriptionHtml = '<table">';
+                
+                foreach ($archive->descriptionObject as $name => $value) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $name) {
+                            $label = $archiveDescription->descriptionField->label;
+                        }
+                    }
+
+                    if (!isset($label)) {
+                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+                    }
+
+                    $descriptionHtml .= '<th name="'.$name.'">'.$label.'</th>';
+                    $descriptionHtml .= '<td>'.$value.'</td>';
+                }
+                
+                $descriptionHtml .='</table>';
+            }
+
+            if ($descriptionHtml) {
+                $node = $this->view->getElementById("metadata");
+                $this->view->addContent($descriptionHtml, $node);
+            } else {
+                unset($archive->descriptionObject);
+            }
+        }
+    }
 
     /**
      * Mark leaf for html merging

@@ -7785,16 +7785,16 @@ th.visible-print, td.visible-print {
     vertical-align: middle !important;
 }
 
-.tree {
+.tree, .tree-l {
     min-height:20px;
     margin-bottom:20px;
 }
 
-.tree ul {
+.tree ul, .tree-l ul {
     padding-left:20px; 
 }
 
-.tree li {
+.tree li, .tree-l li {
     list-style-type:none;
     margin:0;
     padding:5px 5px 0 5px;
@@ -7819,17 +7819,17 @@ th.visible-print, td.visible-print {
     top:20px;
     width:15px
 }
-.tree .dropdown-menu li::before {
+.tree .dropdown-menu li::before, .tree-l .dropdown-menu li::before {
     border-left:none;
 }
-.tree .dropdown-menu li::after {
+.tree .dropdown-menu li::after, .tree-l .dropdown-menu li::after {
     border-top:none;
 }
-.tree button, .tree button::hover{
+.tree button, .tree button::hover, .tree-l button, .tree-l button::hover{
     background-color: none;
     border: none;
 }
-.tree li span {
+.tree li span, .tree-l li span {
     -moz-border-radius:5px;
     -webkit-border-radius:5px;
     border-radius:5px;
@@ -7838,13 +7838,13 @@ th.visible-print, td.visible-print {
     text-decoration:none;
     max-width : 440px;
 }
-.tree li.parent_li i {
+.tree li.parent_li i, .tree-l li.parent_li i {
     cursor:pointer
 }
-.tree>ul>li::before, .tree>ul>li::after {
+.tree>ul>li::before, .tree>ul>li::after, .tree-l>ul>li::before, .tree-l>ul>li::after {
     border:0
 }
-.tree li:last-child::before {
+.tree li:last-child::before, .tree-l li:last-child::before {
     height:30px
 }
 /*.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
