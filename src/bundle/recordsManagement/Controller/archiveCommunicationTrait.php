@@ -55,7 +55,7 @@ trait archiveCommunicationTrait
         $text = false)
     {
         $archives = [];
-
+        
         if (!empty($description) || !empty($text)) {
             $archiveCriteria = [
                 'archiveId' => $archiveId, 
@@ -86,7 +86,7 @@ trait archiveCommunicationTrait
             }
 
             foreach ($searchClasses as $descriptionClass => $descriptionController) {
-               $archives = array_merge($results, $descriptionController->find($description, $text, $archiveCriteria));
+               $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveCriteria));
             }
         } else {
 

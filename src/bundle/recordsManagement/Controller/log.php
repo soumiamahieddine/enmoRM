@@ -112,7 +112,7 @@ class log
      */
     public function search($description=null, $text=null, array $args=[])
     {
-        
+        return [];
     }
 
     /**
@@ -168,10 +168,9 @@ class log
 
     /**
      * Update the description object
-     * @param object $description
-     * @param id     $archiveId
+     * @param object $archive
      */
-    public function update($description, $archiveId)
+    public function update($archive)
     {
         // Not implemented yet...
     }
