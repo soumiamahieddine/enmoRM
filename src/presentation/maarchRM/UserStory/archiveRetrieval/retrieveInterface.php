@@ -144,4 +144,15 @@ interface retrieveInterface
      * @uses recordsManagement/archive/read_archiveId_Exists
      */
     public function readRecordsmanagementArchive_archiveId_Exists($archiveId);
+
+
+    /* V2 */
+
+    /**
+     * Retrieve archive infod
+     *
+     * @return recordsManagement/welcome/archiveInfo
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readArchive_archiveId_();
 }

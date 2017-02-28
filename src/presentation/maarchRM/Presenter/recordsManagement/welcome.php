@@ -123,33 +123,6 @@ class welcome
     }
 
     /**
-     * @param array $archives
-     *
-     * @return string
-     */
-    public function folderContents($archives)
-    {
-        $this->json->archives = $archives;
-
-        return $this->json->save();
-
-        /*$this->view->addContentFile("dashboard/mainScreen/folderContents.html");
-        $this->view->translate();
-        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setSorting(array(array(1, 'asc')));
-        $dataTable->setUnsortableColumns(0);
-        $dataTable->setUnsortableColumns(5);
-        $dataTable->setUnsearchableColumns(0);
-        $dataTable->setUnsearchableColumns(5);
-        $this->view->setSource('archives', $archives);
-        $this->view->merge();
-
-        return $this->view->saveHtml();
-*/
-    }
-
-    /**
      * Show the events search form
      * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders
      *
@@ -164,6 +137,23 @@ class welcome
         $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
 
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * @param array $archives
+     *
+     * @return string
+     */
+    public function archiveInfo($archive)
+    {
+        $this->view->addContentFile('dashboard/mainScreen/information.html');
+
+        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+        $this->view->translate();
+        $this->view->setSource("archive", $archive);
+        $this->view->merge();
+        //var_dump($archive);
         return $this->view->saveHtml();
     }
 
@@ -187,6 +177,19 @@ class welcome
 
         return $this->view->saveHtml();
     }
+
+    /**
+     * @param array $archives
+     *
+     * @return string
+     */
+    public function folderContents($archives)
+    {
+        $this->json->archives = $archives;
+
+        return $this->json->save();
+    }
+
 
     /**
      * Mark leaf for html merging
