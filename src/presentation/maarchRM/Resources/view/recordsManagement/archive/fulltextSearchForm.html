@@ -137,7 +137,7 @@
         var query = {
             text            : "",
             description     : [],
-            archivalProfile : ""
+            profileReference : ""
         };
         var searchPanel = $(this).closest("[data-search-panel]");
         
@@ -150,7 +150,7 @@
 
         // Get the query args
         var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
-        query.archivalProfile = selectedProfile;
+        query.profileReference = selectedProfile;
         
         var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
 
