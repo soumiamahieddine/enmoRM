@@ -107,33 +107,33 @@ class description
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
-        if (isset($args['archiveName']) {
+        if (isset($args['archiveName'])) {
             $queryParts[] = "archiveName='".$args['archiveName']."'";
         }
-        if (isset($args['profileReference']) {
+        if (isset($args['profileReference'])) {
             $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
         }
-        if (isset($args['agreementReference']) {
+        if (isset($args['agreementReference'])) {
             $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
         }
-        if (isset($args['archiveId']) {
+        if (isset($args['archiveId'])) {
             $queryParts[] = "archiveId='".$args['archiveId']."'";
         }
-        if (isset($args['status']) {
+        if (isset($args['status'])) {
             $queryParts[] = "status='".$args['status']."'";
         } else {
             $queryParts[] = "status!='disposed'";
         }
-        if (isset($args['archiveExpired == "true"']) {
+        if (isset($args['archiveExpired == "true"'])) {
             $queryParts[] = "disposalDate<='".$currentDateString."'";
         }
-        if (isset($args['archiveExpired == "false"']) {
+        if (isset($args['archiveExpired == "false"'])) {
             $queryParts[] = "disposalDate>='".$currentDateString."'";
         }
-        if (isset($args['finalDisposition']) {
+        if (isset($args['finalDisposition'])) {
             $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
         }
-        if (isset($args['originatorOrgRegNumber']) {
+        if (isset($args['originatorOrgRegNumber'])) {
             $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
         }
 
