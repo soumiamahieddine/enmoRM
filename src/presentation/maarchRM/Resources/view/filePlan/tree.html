@@ -95,7 +95,7 @@
             var profile = null;
 
             if (e.hasClass('organization')) {
-                path = e.find('b:first');
+                path = e.find('b:first').html();
                 profile = e.data('archivalprofiles');
             } else {
                 folderId = e.attr('id');

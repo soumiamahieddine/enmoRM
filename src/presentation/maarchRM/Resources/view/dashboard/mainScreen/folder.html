@@ -9,17 +9,15 @@
 
 <div id="listTemplate" class="hide">
     <div class="archive row">
-        <div class="col-xs-1">
-            <h4 class="pull-left"><i class="archiveSelection fa fa-square-o"/></h4>
-        </div>
+        <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
         <div class="col-xs-11">
             <h5>
                 <i class="archiveContent fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
-                &nbsp;<small><i></i></small>
+                &nbsp;<small><i/></small>
                 <br/>
-                <small></small>&nbsp;
-                <small></small>
+                <small/>&nbsp;
+                <small/>
             </h5>
         </div>
     </div>
@@ -62,7 +60,7 @@ ArchiveList = {
             }
         })
 
-        this.getImportForm(orgregnumber, folderId, archivalProfiles);
+        this.getImportForm(orgRegNumber, folderId, archivalProfiles);
     },
 
     buildResultList: function(archives) {
