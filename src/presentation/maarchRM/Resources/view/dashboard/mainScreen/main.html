@@ -1,5 +1,28 @@
 <div class="container-fluid">
     <div class="row">
+        <video id="player" controls autoplay></video>
+        <button id="capture">Capture</button>
+        <canvas id="snapshot" width=320 height=240></canvas>
+        <script>
+            var player = document.getElementById('player'); 
+            var snapshotCanvas = document.getElementById('snapshot');
+            var captureButton = document.getElementById('capture');
+
+            var handleSuccess = function(stream) {
+                // Attach the video stream to the video element and autoplay.
+                player.srcObject = stream;
+            };
+
+            captureButton.addEventListener('click', function() {
+                var context = snapshot.getContext('2d');
+                // Draw the video frame to the canvas.
+                context.drawImage(player, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+            });
+
+            navigator.mediaDevices.getUserMedia({video: true}).then(handleSuccess);
+        </script>
+    </div>
+    <div class="row">
         &nbsp;<span class="fa fa-angle-double-left" id="toogleLeftColumn" style="cursor: pointer"/>
     </div>
     <div class="row">
@@ -103,10 +126,6 @@
     });
     $('[data-remove-tab]').on("click", function() {
         searchTab.close($(this).closest("li"));
-    });
-    
-    $('[data-close-tab]').on("click", function() {
-        alert("alert aux gogoles");
     });
 
     $('#toogleLeftColumn').on('click', function() {
