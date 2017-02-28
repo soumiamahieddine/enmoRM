@@ -14,38 +14,26 @@
         </div>
         <div id="[?merge .resId ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingResource">
             <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>Identifier</dt>
-                    <dd><?merge .docId ?></dd>
-                    <dt>Description</dt>
-                    <dd><?merge .descriptionObject.description ?></dd>
-                </dl>
-                <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <span class="col-xs-1">
-                            <?merge archive.communicability.bool() ?>
-                            <h1>
-                                <a type="button" class="showDigitalResource [?merge archive.pending.then('hide', '') ?]" data-res-id='[?merge .resId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
-                            </h1>
-                            <!--button type="button" class="showDocument btn btn-info btn-warning pull-left [?merge archive.pending.then('hide', '') ?]" data-doc-id='[?merge .docId ?]' title="View"><i class="fa fa-eye ">&nbsp;</i>View</button-->
-                        </span>
-                        <small class="col-xs-11">
-                        <dl class="dl-horizontal">
-                            <dt>Format</dt>
-                            <dd>
-                                <?merge .format.name ?>
-                                <?merge .format.version.bool() ?>
-                                <span>&nbsp; <i>Version</i>: <?merge .format.version ?></span>
-                                &nbsp;[<?merge .puid ?>] 
-                            </dd>
-                            <dt>Size</dt>
-                            <dd><?merge .size ?>&nbsp;<span>bits</span></dd>
-                            <dt>Hash</dt>
-                            <dd class="breakAll"><?merge .hash ?> [<?merge .hashAlgorithm ?>]</dd>
-                        </dl>
-                        </small>
-                    </div>
-                </div>
+                <span class="col-xs-1">
+                    <?merge archive.communicability.bool() ?>
+                    <h1>
+                        <a type="button" class="showDigitalResource [?merge archive.pending.then('hide', '') ?]" data-res-id='[?merge .resId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
+                    </h1>
+                    <!--button type="button" class="showDocument btn btn-info btn-warning pull-left [?merge archive.pending.then('hide', '') ?]" data-doc-id='[?merge .docId ?]' title="View"><i class="fa fa-eye ">&nbsp;</i>View</button-->
+                </span>
+                <small class="col-xs-11">
+                    <dl class="dl-horizontal">
+                        <dt>Format</dt>
+                        <dd>
+                            <?merge .format.bool().not() ?><span><?merge .mimetype ?></span>
+                            <?merge .format.bool() ?><span><?merge .format.name ?>&nbsp;<?merge .format.version ?>&nbsp;[<?merge .puid ?>]</span>
+                        </dd>
+                        <dt>Size</dt>
+                        <dd><?merge .size ?>&nbsp;<span>bits</span></dd>
+                        <dt>Hash</dt>
+                        <dd class="breakAll"><?merge .hash ?> [<?merge .hashAlgorithm ?>]</dd>
+                    </dl>
+                </small>
                 <?merge .relatedResource ?>
                 <div class="panel panel-warning">
                     <div class="panel-body">

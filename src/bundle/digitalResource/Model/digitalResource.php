@@ -27,11 +27,19 @@ namespace bundle\digitalResource\Model;
  *
  * @pkey [resId]
  * @fkey [clusterId]  digitalResource/cluster[clusterId]
+ * @fkey [archiveId]  recordsManagement/archive[archiveId]
  * @fkey [relatedResId]  digitalResource/digitalResource[resId]
  *
  */
 class digitalResource
 {
+    /**
+     * The archive identifier
+     *
+     * @var id
+     */
+    public $archiveId;
+
     /**
      * The universal identifier
      *

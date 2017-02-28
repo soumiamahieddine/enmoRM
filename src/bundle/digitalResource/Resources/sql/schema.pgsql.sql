@@ -26,6 +26,7 @@ WITH (
 
 CREATE TABLE "digitalResource"."digitalResource"
 (
+  "archiveId" text NOT NULL,
   "resId" text NOT NULL,
   "clusterId" text NOT NULL,
   "size" integer NOT NULL,
@@ -41,23 +42,15 @@ CREATE TABLE "digitalResource"."digitalResource"
   "relatedResId" text,
   "relationshipType" text,
   PRIMARY KEY ("resId"),
+  FOREIGN KEY ("archiveId")
+      REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
   FOREIGN KEY ("clusterId")
       REFERENCES "digitalResource"."cluster" ("clusterId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
- FOREIGN KEY ("relatedResId")
+  FOREIGN KEY ("relatedResId")
       REFERENCES "digitalResource"."digitalResource" ("resId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-
--- DROP TABLE "digitalResource"."archiveDigitalResourceRel";
-
-CREATE TABLE "digitalResource"."archiveDigitalResourceRel"
-(
-  "archiveId" text,
-  "resId" text
 )
 WITH (
   OIDS=FALSE

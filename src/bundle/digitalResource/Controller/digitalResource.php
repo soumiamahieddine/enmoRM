@@ -263,16 +263,12 @@ class digitalResource
 
             $this->sdoFactory->create($resource, 'digitalResource/digitalResource');
 
-            $archiveDigitalResourceRel = \laabs::newInstance('digitalResource/archiveDigitalResourceRel');
-            $archiveDigitalResourceRel->resId = $resource->resId;
-            $archiveDigitalResourceRel->archiveId = $resource->archiveId;
-            $this->sdoFactory->create($archiveDigitalResourceRel);
-
             $this->clusterController->storeResource($this->currentCluster, $resource, $collection.'/'.$resource->resId);
 
             if ($resource->relatedResource) {
                 foreach ($resource->relatedResource as $relatedResource) {
                     $relatedResource->relatedResId = $resource->resId;
+                    $relatedResource->archiveId = $resource->archiveId;
                     $this->storeDigitalResource($relatedResource, $collection);
                 }
             }
@@ -283,7 +279,7 @@ class digitalResource
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
-            var_dump($exception);
+
             throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created", null, $exception);
         }
 
@@ -301,7 +297,7 @@ class digitalResource
      */
     public function getResourcesByArchiveId($archiveId)
     {
-        $resources = $this->sdoFactory->find("digitalResource/archiveDigitalResource", "archiveId='$archiveId' AND relatedResId=null");
+        $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
         return $resources;
     }
