@@ -32,20 +32,31 @@ interface archivesInterface
     */
     /**
      * Search archives by profile / dates / agreement
+     * @param string $archiveId
      * @param string $profileReference
      * @param string $status
      * @param string $archiveName
      * @param string $agreementReference
-     * @param string $archiveId
      * @param string $archiveExpired
      * @param string $finalDisposition
-     * @param string $origniatorOrgRegNumber
-     * @param string $archiveIdOriginator
+     * @param string $originatorOrgRegNumber
+     * @param string $description
+     * @param string $text
      *
      * @action recordsManagement/archive/search
      *
      */
-    public function read($profileReference = null, $status = null, $archiveName = null, $agreementReference = null, $archiveId = null, $archiveExpired = null, $finalDisposition = null, $origniatorOrgRegNumber = null, $archiveIdOriginator = null);
+    public function read(
+        $archiveId = null, 
+        $profileReference = null, 
+        $status = null, 
+        $archiveName = null, 
+        $agreementReference = null, 
+        $archiveExpired = null, 
+        $finalDisposition = null, 
+        $originatorOrgRegNumber = null,
+        $description = null,
+        $text = null);
 
     /*
         MODIFY ARCHIVES
@@ -92,14 +103,15 @@ interface archivesInterface
 
     /**
      * Find archives
-     * @param string $q       The query string
-     * @param string $profile The profile name
-     * @param int    $limit   The result limit
+     * @param string $description The query string with arguments
+     * @param string $text        The query string for text search
+     * @param string $profile     The profile name
+     * @param int    $limit       The result limit
      *
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($q, $profile = '', $limit = null);
+    public function readFind($description='', $text='', $profile = '', $limit = null);
 
     /**
      * Read the access rule of multiple archives

@@ -15,7 +15,7 @@ class Lexer
             'DOUBLE QUOTED STRING' => '\"(?:\\\\"|.)*?\"',
             'SINGLE QUOTED STRING' => "'(?:\\\\'|.)*?'",
             'VARIABLE' => '\:[a-zA-Z_][a-zA-Z0-9_]*',
-            'OPERATORS' => '[\=\-\+\~\!\>\<\|\.]{1,2}',
+            'OPERATORS' => '[\=\-\+\~\!\>\<\|\.|&|\|]{1,2}',
             //'OPERATORS' => '(\!)?(=|~)',
             //'OPERATORS' => '(=|\!=|\~|\!~|\>|\>\=|\<|\<\=|\|\||\.\.|\:)',
             //'OPERATORS' => '([\!\<\>\.])?([\=\~\.\:\>\<])',
@@ -72,11 +72,12 @@ class Lexer
 
     /**
      * tokenize a query string
-     * @param string $string The query string
+     * @param string $string    The query string
+     * @param bool   $withtypes Set token types or simply split
      *
      * @return array
      */
-    public function tokenize($string)
+    public function tokenize($string, $withtypes=true)
     {      
         $tokens = new Tokens();
 

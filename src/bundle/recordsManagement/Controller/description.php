@@ -42,17 +42,16 @@ class description
 
     /**
      * Create the description
-     * @param mixed  $description The description object
-     * @param string $archiveId   The archive identifier
+     * @param obejct $archive The described archive
      * 
      * @return bool
      */
-    public function create($description, $archiveId)
+    public function create($archive)
     {
         $descriptionObject = \laabs::newInstance('recordsManagement/description');
-        $descriptionObject->archiveId = $archiveId;
-        $descriptionObject->text = implode(' ', $this->getText($description));
-        $descriptionObject->description = json_encode($description);
+        $descriptionObject->archiveId = $archive->archiveId;
+        $descriptionObject->text = implode(' ', $this->getText($archive->descriptionObject));
+        $descriptionObject->description = json_encode($archive->descriptionObject);
         
         $this->sdoFactory->update($descriptionObject);
     }
@@ -94,33 +93,84 @@ class description
     }
 
     /**
-     * Find the descriptions
-     * @param array $query The query parts
+     * Search the description objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
      * 
      * @return array
      */
-    public function find($query)
+    public function search($description=null, $text=null, array $args=[])
     {
-        $asserts = [];
+        $queryParts = ['description!=null and text!=null'];
+        // Args on archive
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
 
-        foreach ($query as $name => $arg) {
-            if (is_string($arg)) {
-                if (substr($arg, -1) == '*') {
-                    $arg = $arg.":*";
+        if (isset($args['archiveName']) {
+            $queryParts[] = "archiveName='".$args['archiveName']."'";
+        }
+        if (isset($args['profileReference']) {
+            $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
+        }
+        if (isset($args['agreementReference']) {
+            $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
+        }
+        if (isset($args['archiveId']) {
+            $queryParts[] = "archiveId='".$args['archiveId']."'";
+        }
+        if (isset($args['status']) {
+            $queryParts[] = "status='".$args['status']."'";
+        } else {
+            $queryParts[] = "status!='disposed'";
+        }
+        if (isset($args['archiveExpired == "true"']) {
+            $queryParts[] = "disposalDate<='".$currentDateString."'";
+        }
+        if (isset($args['archiveExpired == "false"']) {
+            $queryParts[] = "disposalDate>='".$currentDateString."'";
+        }
+        if (isset($args['finalDisposition']) {
+            $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
+        }
+        if (isset($args['originatorOrgRegNumber']) {
+            $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
+        }
+
+        // Json
+        if (!empty($description)) {
+            $parser = new \core\Language\parser();
+            $assert = $parser->parseAssert($description);
+
+            $queryParts[] = '<?SQL '.$this->getAssertExpression($assert).' ?>';
+        }
+
+        // Fulltext
+        if (!empty($text)) {
+            $lexer = new \core\Language\lexer();
+            $tokens = $lexer->tokenize($text, false);
+
+            foreach ($tokens as $token) {
+                if (($token[0] == '"' && $token[strlen($token)-1] == '"')
+                    || ($token[0] == "'" && $token[strlen($token)-1] == "'")) {
+                    $token = substr($token, 1, -1);
                 }
-                $asserts[] = "text @@ to_tsquery('$arg')";
-            } else {
-                $asserts[] = "description->>'".$arg['name']."' ".$arg['op']." '".$arg['value']."'";
+                
+                $textAsserts[] = "text @@ to_tsquery('$token')";
             }
+
+            $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';
         }
 
-        $descriptionObjects = $this->sdoFactory->find('recordsManagement/description', implode(' and ', $asserts));
+        $queryString = implode(' and ', $queryParts);
 
-        foreach ($descriptionObjects as $descriptionObject) {
-            $descriptionObject->description = json_decode($descriptionObject->description);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
+
+        foreach ($archiveUnits as $archiveUnit) {
+            $archiveUnit->descriptionObject = json_decode($archiveUnit->description);
         }
 
-        return $descriptionObjects;
+        return $archiveUnits;
     }
 
     /**
@@ -140,5 +190,273 @@ class description
         $descriptionObject->text = implode(' ', $this->getText($descriptionObject->description));
         
         $this->sdoFactory->update($descriptionObject);
+    }
+
+    /**
+     * Get where assert expressions
+     * @param object $assert The assert
+     * 
+     * @return string
+     */
+    protected function getAssertExpression($assert)
+    {
+        switch(true) {
+            case $assert instanceof \core\Language\ComparisonOperation:
+                return $this->getComparisonExpression($assert);
+
+            case $assert instanceof \core\Language\LogicalOperation:
+                return $this->getLogicalExpression($assert);
+
+            case $assert instanceof \core\Language\Assert:
+                return "( " . $this->getAssertExpression($assert->operand) . " )";
+
+            default:
+                throw new \core\Exception("Unknown query assert type " . get_class($assert));
+        }
+    }
+
+    protected function getComparisonExpression($comparison)
+    {
+        $left = "description->>'".$comparison->left."'";
+        
+        $right = $this->getOperandExpression($comparison->right);
+
+        switch($comparison->code) 
+        {
+            case LAABS_T_EQUAL:
+                $operator = "=";
+                break;
+
+            case LAABS_T_NOT_EQUAL:
+                $operator = "!=";
+                break;
+            case LAABS_T_GREATER:
+                $operator = ">";
+                break;
+            case LAABS_T_GREATER_OR_EQUAL:
+                $operator = ">=";
+                break;
+            case LAABS_T_SMALLER:
+                $operator = "<";
+                break;
+            case LAABS_T_SMALLER_OR_EQUAL:
+                $operator = "<=";
+                break;
+            
+            case LAABS_T_CONTAINS:
+                $left = "LOWER(" . $left . ")";
+                $operator = " LIKE ";
+                $right = str_replace("*", "%", "LOWER(" . $right . ")");
+                break;
+
+            case LAABS_T_NOT_CONTAINS:
+                $left = "LOWER(" . $left . ")";
+                $operator = " NOT LIKE ";
+                $right = str_replace("*", "%", "LOWER(" . $right . ")");
+                break;
+
+            case LAABS_T_BETWEEN:
+                $operator = ' BETWEEN ';
+                break;
+
+            case LAABS_T_NOT_BETWEEN:
+                $operator = ' NOT BETWEEN ';
+                break;
+
+            case LAABS_T_IN:
+                if ($right) {
+                    $operator = " IN ";
+                } else {
+                    return "false";
+                }
+                break;
+
+            case LAABS_T_NOT_IN:
+                if ($right) {
+                    $operator = " NOT IN ";
+                } else {
+                    return "false";
+                }
+                break;
+            
+            default:
+                throw new \core\Exception("Unknown comparison operator code " . $comparison->code);
+        }
+
+        return $left . $operator . $right;
+    }
+    
+    protected function getLogicalExpression($logical)
+    {
+        $left = $this->getOperandExpression($logical->left);
+        $right = $this->getOperandExpression($logical->right);
+        
+        switch($logical->code) {
+            case LAABS_T_AND:
+                $operator = " AND ";
+                break;
+            case LAABS_T_OR:
+                $operator = " OR ";
+                break;
+            default:
+                throw new \core\Exception("Unknown logical operator code " . $logical->code);
+        }
+        
+        return $left . $operator . $right;
+    }
+
+    protected function getOperandExpression($operand)
+    {
+        switch(true) {
+            case is_scalar($operand):
+                return $this->getString($operand);
+
+            case $operand instanceof \core\Language\StringOperand:
+                return $this->getString($operand->value);
+                
+            case $operand instanceof \core\Language\NumberOperand:
+                return $this->getNumberExpression($operand->value);
+
+            case $operand instanceof \core\Language\BooleanOperand:
+                return $this->getBoolExpression($operand->value);
+
+            case $operand instanceof \core\Language\ListOperand:
+                return $this->getListExpression($operand->value);
+
+            /*case $operand instanceof \core\Language\DateOperand:
+                return $this->getDateExpression($operand->value);
+
+            case $operand instanceof \core\Language\TimestampOperand:
+                return $this->getTimestampExpression($operand->value);*/
+
+            case $operand instanceof \core\Language\RangeOperand:
+                $fromExpression = $this->getOperandExpression($operand->from, $cast);
+                $toExpression = $this->getOperandExpression($operand->to, $cast);
+
+                return $fromExpression . ' AND ' . $toExpression;
+
+            case $operand instanceof \core\Language\NullOperand:
+                return 'NULL';
+            
+            case $operand instanceof \core\Language\Func:
+                return $this->getFuncExpression($operand);
+
+            case $operand instanceof \core\Language\ComparisonOperation:
+                return $this->getComparisonExpression($operand);
+
+            case $operand instanceof \core\Language\LogicalOperation:
+                return $this->getLogicalExpression($operand);
+
+            case $operand instanceof \core\Language\Assert:
+                return $this->getAssertExpression($operand);
+
+            default:
+                throw new \core\Exception("Unknown operand type " . get_class($operand));
+        }
+    }
+
+    protected function getBoolExpression($bool)
+    {
+        if ($bool) {
+            return '1';
+        } else {
+            return '0';
+        }
+    }
+
+    protected function getDateExpression($date)
+    {
+        return "TO_DATE(" . $date . ", '". $this->dateFormat . "') ";
+    }
+
+    protected function getTimestampExpression($timestamp)
+    {
+        return "TO_TIMESTAMP(" . $timestamp . ", '". $this->datetimeFormat . "') ";
+    }
+
+    
+    protected function stripAccents($string)
+    {
+        $string = strtr(utf8_decode($string), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+        $string = str_replace(' ', '', $string);
+        
+        return $string;
+    }
+    
+    protected function getListExpression($array) 
+    {
+        $list = array();
+        foreach ($array as $value) {
+            $compiledValue = $this->getOperandExpression($value);
+            if (is_array($compiledValue)) {
+                $list[] = \laabs\implode(", ", $compiledValue);
+            } else {
+                $list[] = $compiledValue;
+            }
+        }
+
+        if (!empty($list)) {
+            return "(" . \laabs\implode(", ", $list) . ")";
+        }
+    }
+
+    protected function getNumberExpression($number) 
+    {
+        return $number;
+    }
+
+    protected function getFuncContains($parameters) 
+    {
+        $rOpd = $this->getOperandExpression($parameters[1]);
+        if (strpos($rOpd, "'")===0) {
+            $rOpd = mb_substr($rOpd, 1, -1);
+        }
+
+        return
+            $this->getOperandExpression($parameters[0])
+            . " LIKE " . $this->getString("%" . $rOpd . "%");
+    }
+    
+    protected function getFuncStartsWith($parameters) 
+    {
+        $rOpd = $this->getOperandExpression($parameters[1]);
+        if (strpos($rOpd, "'")===0) {
+            $rOpd = mb_substr($rOpd, 1, -1);
+        }
+
+        return
+            $this->getOperandExpression($parameters[0])
+            . " LIKE " . $this->getString($rOpd . "%");
+    }
+    
+    protected function getFuncIn($parameters) 
+    {
+        $lOpd = $this->getOperandExpression($parameters[0]);
+        array_shift($parameters);
+
+        return $lOpd . " IN (" . $this->getListExpression($parameters) . ")";
+    }
+
+    protected function getString($string)
+    {
+        return "'" . $string . "'";
+    }
+    
+    protected function getNumeric($numeric) 
+    {
+        return $numeric;
+    }
+
+
+    protected function getSelectQueryOptions($query) 
+    {
+        $selectQueryOptions = false;
+
+        return $selectQueryOptions;
+    }
+    
+    protected function getConcat() 
+    {
+        return "CONCAT(" . \laabs\implode(", ", func_get_args()) . ")";
     }
 }

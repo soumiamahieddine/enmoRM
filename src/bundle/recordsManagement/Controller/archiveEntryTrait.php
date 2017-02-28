@@ -517,7 +517,8 @@ trait archiveEntryTrait
         } else {
             $descriptionController = $this->useDescriptionController('recordsManagement/description');
         }
-        $descriptionController->create($archive->descriptionObject, $archive->archiveId);
+        
+        $descriptionController->create($archive);
 
         /*} elseif (\laabs::hasDependency('fulltext')) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");

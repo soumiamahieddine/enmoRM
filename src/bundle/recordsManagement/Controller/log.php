@@ -105,6 +105,17 @@ class log
     }
 
     /**
+     * Search the description objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
+     */
+    public function search($description=null, $text=null, array $args=[])
+    {
+        
+    }
+
+    /**
      * Retrieve a journal by evenement date
      * @param string $type The journal type
      * @param string $date The date of the event
@@ -124,23 +135,24 @@ class log
 
     /**
      * Create the requested log
-     * @param object $log       The log object
-     * @param object $archiveId The archive Id
+     * @param object $archive The archived log object
      *
      * @return boolean status of the query
      */
-    public function create($log, $archiveId)
+    public function create($archive)
     {
-        if (!\laabs::validate($log)) {
+        if (!\laabs::validate($archive->descriptionObject)) {
             $e = new \core\Exception('Invalid log data');
 
             $e->errors = \laabs::getValidationErrors();
             throw $e;
         }
         
-        $this->sdoFactory->create($log);
+        $archive->descriptionObject->archiveId = $archive->archiveId;
+        
+        $this->sdoFactory->create($archive->descriptionObject, 'recordsManagement/log');
 
-        return $log;
+        return true;
     }
 
     /**

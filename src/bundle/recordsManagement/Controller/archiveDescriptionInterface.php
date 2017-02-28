@@ -38,10 +38,9 @@ interface archiveDescriptionInterface
 
     /**
      * Create the description object
-     * @param object $description
-     * @param id     $archiveId
+     * @param object $archive
      */
-    public function create($description, $archiveId);
+    public function create($archive);
 
     /**
      * Retrieve the description object
@@ -51,16 +50,17 @@ interface archiveDescriptionInterface
 
     /**
      * Search the description objects
-     * @param array $args The search args
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
      */
-    //public function search($args);
+    public function search($description=null, $text=null, array $args=[]);
 
     /**
      * Update the description object
-     * @param object $description
-     * @param id     $archiveId
+     * @param object $archive
      */
-    public function update($description, $archiveId);
+    public function update($archive);
 
     /**
      * Delete the description object

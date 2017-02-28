@@ -385,7 +385,7 @@ trait archiveDepositTrait
             if (!empty($archive->descriptionClass)) {
                 if (isset($archive->descriptionObject)) {
                     $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-                    $descriptionController->create($archive->descriptionObject, $archive->archiveId);
+                    $descriptionController->create($archive);
                 }
             } elseif (\laabs::hasDependency('fulltext')) {
                 $fulltextController = \laabs::newController("recordsManagement/fulltext");

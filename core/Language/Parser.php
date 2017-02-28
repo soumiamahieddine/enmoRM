@@ -1145,10 +1145,12 @@ class Parser
     protected function parseProperty()
     {
         $this->expect($this->tokenTypes['name']);
-        $propertyName = $this->value();       
-        $property = $this->query->getClass()->getProperty($propertyName);
-
-        return $property;
+        $propertyName = $this->value();
+        if (isset($this->query)) {
+            return $this->query->getClass()->getProperty($propertyName);
+        } else {
+            return $propertyName;
+        }
     }
     
 
