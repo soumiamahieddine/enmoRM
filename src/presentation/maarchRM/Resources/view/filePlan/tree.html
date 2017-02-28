@@ -46,7 +46,7 @@
         font-size: 20px;
     }
     #filePlanMenu {
-        visibility: hidden
+        visibility: hidden;
     }
 </style>
 
@@ -104,7 +104,7 @@
                 profile = e.closest('.organization').data('archivalprofiles');
             }
 
-            ArchiveList.getContents(orgRegNumber, folderId, path, description, profile);
+            ArchiveList.getfolderContents(orgRegNumber, folderId, path, description, profile);
         },
 
         addFolder: function() {

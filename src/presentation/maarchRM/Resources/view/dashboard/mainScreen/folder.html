@@ -47,7 +47,7 @@ ArchiveList = {
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
     },
 
-    getContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
+    getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
         $.ajax({
             url         : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
             type        : "GET",
@@ -107,25 +107,30 @@ ArchiveList = {
     }
 }
 
-// List icon toggle
-$('#folderContents').on('click', '.archiveSelection', function() {
-    var checkbox = $(this);
-    if (checkbox.hasClass('fa-square-o')) {
-        checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
-                .closest('.archive').addClass('bg-info');
-    } else {
-        checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
-                .closest('.archive').removeClass('bg-info');
-    }
-})
+    // List icon toggle
+    $('#folderContents').on('click', '.archiveSelection', function() {
+        var checkbox = $(this);
+        if (checkbox.hasClass('fa-square-o')) {
+            checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
+                    .closest('.archive').addClass('bg-info');
+        } else {
+            checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
+                    .closest('.archive').removeClass('bg-info');
+        }
+    })
 
-$('#folderContents').on('click', '.archiveContent', function() {
-    var caret = $(this);
-    if (caret.hasClass('fa-caret-right')) {
-        caret.removeClass('fa-caret-right').addClass('fa-caret-down');
-    } else {
-        caret.removeClass('fa-caret-down').addClass('fa-caret-right');
-    }
-})
+    $('#folderContents').on('click', '.archiveContent', function() {
+        var caret = $(this);
+        if (caret.hasClass('fa-caret-right')) {
+            caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+        } else {
+            caret.removeClass('fa-caret-down').addClass('fa-caret-right');
+        }
+    })
+
+    // Actions on archives
+    $('#folderContents').on('.archiveName', function() {
+        var archiveId = $(this).closest('.archive').attr('id');
+    })
 
 </script>
