@@ -802,3 +802,14 @@ msgstr "Selectionnez une règle"
 msgid "Acces rule duration"
 msgstr "Durée de la règle"
 
+msgid "Size (bytes)"
+msgstr "Taille (octets)"
+
+msgid "Creation date"
+msgstr "Date de création"
+
+msgid "Management information"
+msgstr "Information de gestion"
+
+msgid "Metadata"
+msgstr "Métadonnées"
