@@ -1,0 +1,117 @@
+<div id="archiveInformation" class="row">
+	<div class="col-xs-12 text-center">
+		<i class="infoIcon fa fa-archive"/>
+	</div>
+	<div class="col-xs-12">
+		<table>
+			<tr>
+				<th>Name</th>
+				<td><?merge archive.archiveName ?></td>
+			</tr>
+			<tr>
+				<th>Deposit date</th>
+				<td><?merge archive.depositDate ?></td>
+			</tr>
+			<tr>
+				<th>Status</th>
+				<td><?merge archive.status ?></td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-xs-12">
+		<div class="panel-group" id="archiveDetails" role="tablist" aria-multiselectable="true">
+	        <div class="panel">
+	            <div class="panel-heading" role="tab">
+	            	<strong>
+	                    <a role="button" data-toggle="collapse" data-parent="#archiveDetails" href="#managementInfo" >
+	                    	<span class="text-info">Management information</span>
+	                    </a>
+	            	</strong>
+	            </div>
+	            <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
+	            	<table>
+	            		<?merge archive.archivalProfileReference.bool() ?>
+						<tr>
+							<th>Archival profile</th>
+							<td><?merge archive.archivalProfileReference ?></td>
+						</tr>
+	            	</table>
+
+					<?merge archive.retentionRuleCode.bool() ?>
+	            	<table>
+						<tr>
+							<th>Disposal date</th>
+							<td><?merge archive.disposalDate ?></td>
+						</tr>
+						<tr>
+							<th>Final disposition</th>
+							<td><?merge archive.finalDisposition ?></td>
+						</tr>
+					</table>
+
+	            	<table>
+						<?merge archive.accessRuleComDate.bool() ?>
+						<tr>
+							<th>Communication date</th>
+							<td><?merge archive.accessRuleComDate ?></td>
+						</tr>
+						<?merge archive.lastCheckDate.bool() ?>
+						<tr>
+							<th>Last check date</th>
+							<td><?merge archive.lastCheckDate ?></td>
+						</tr>
+						<?merge archive.lastDeliveryDate.bool() ?>
+						<tr>
+							<th>Last delivery date</th>
+							<td><?merge archive.lastDeliveryDate ?></td>
+						</tr>
+						<?merge archive.lastModificationDate.bool() ?>
+						<tr>
+							<th>Last modification date</th>
+							<td><?merge archive.lastModificationDate ?></td>
+						</tr>
+					</table>
+	            </div>
+	        </div>
+			<?merge archive.descriptionObject.bool() ?>
+	        <div class="panel">
+	            <div class="panel-heading" role="tab">
+	            	<strong>
+	                    <a role="button" data-toggle="collapse" data-parent="#archiveDetails" href="#metadata" >
+	                    	<span class="text-info">Metadata</span>
+	                    </a>
+	            	</strong>
+	            </div>
+	            <div id="metadata" class="panel-collapse collapse" role="tabpanel">
+	            </div>
+	        </div>
+		</div>
+	</div>
+</div>
+
+<style>
+	#archiveInformation {
+		font-size: 12px;
+		border-left: solid 1px #DDD;
+		margin-top: 50px;
+	}
+	#archiveInformation table {
+		table-layout:fixed;
+		width:100%;
+	}
+	#archiveInformation table th {
+		width: 40%;
+		text-align: right;
+	}
+	#archiveInformation table td, #archiveInformation table th {
+		padding: 0 5px 0 5px ;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+
+	}
+	#archiveInformation .infoIcon {
+		font-size: 80px; 
+		margin-bottom: 10px;
+	}
+</style>

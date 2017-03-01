@@ -169,5 +169,5 @@ interface retrieveInterface
      *
      * @return recordsManagement/welcome/documentInfo
      */
-    public function readDocumentInfo();
+    public function readDocumentinfo();
 }
