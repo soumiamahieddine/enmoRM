@@ -96,47 +96,16 @@ class description
      * Search the description objects
      * @param string $description The search args on description object
      * @param string $text        The search args on text
-     * @param array  $args        The search args on archive std properties
+     * @param array  $archiveArgs The search args on archive std properties
      * 
      * @return array
      */
-    public function search($description=null, $text=null, array $args=[])
+    public function search($description=null, $text=null, array $archiveArgs=[])
     {
         $queryParts = ['description!=null and text!=null'];
-        // Args on archive
-        $currentDate = \laabs::newDate();
-        $currentDateString = $currentDate->format('Y-m-d');
 
-        if (isset($args['archiveName'])) {
-            $queryParts[] = "archiveName='".$args['archiveName']."'";
-        }
-        if (isset($args['profileReference'])) {
-            $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
-        }
-        if (isset($args['agreementReference'])) {
-            $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
-        }
-        if (isset($args['archiveId'])) {
-            $queryParts[] = "archiveId='".$args['archiveId']."'";
-        }
-        if (isset($args['status'])) {
-            $queryParts[] = "status='".$args['status']."'";
-        } else {
-            $queryParts[] = "status!='disposed'";
-        }
-        if (isset($args['archiveExpired == "true"'])) {
-            $queryParts[] = "disposalDate<='".$currentDateString."'";
-        }
-        if (isset($args['archiveExpired == "false"'])) {
-            $queryParts[] = "disposalDate>='".$currentDateString."'";
-        }
-        if (isset($args['finalDisposition'])) {
-            $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
-        }
-        if (isset($args['originatorOrgRegNumber'])) {
-            $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
-        }
-
+        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs);
+        
         // Json
         if (!empty($description)) {
             $parser = new \core\Language\parser();
@@ -147,7 +116,7 @@ class description
 
         // Fulltext
         if (!empty($text)) {
-            $lexer = new \core\Language\lexer();
+            /*$lexer = new \core\Language\lexer();
             $tokens = $lexer->tokenize($text, false);
 
             foreach ($tokens as $token) {
@@ -159,7 +128,12 @@ class description
                 $textAsserts[] = "text @@ to_tsquery('$token')";
             }
 
-            $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';
+            $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';*/
+            $tokens = \laabs\explode(' ', $text);
+            foreach ($tokens as $i => $token) {
+                $tokens[$i] = $token.':*';
+            }
+            $queryParts[] = "<?SQL text @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
         }
 
         $queryString = implode(' and ', $queryParts);

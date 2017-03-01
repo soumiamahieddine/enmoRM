@@ -10,7 +10,7 @@ class Lexer
 {
     
     protected $lexemes = array(
-            'SWITCH' => '\<\?[A-Z]{3,}\s+.*\?\>',
+            'SWITCH' => '\<\?[A-Z]{3,}\s+.*?(?=\s+\?\>)\s+\?\>',
             'NUMBER' => '\-?\d+(?:\.\d+(e\d+)?)?',
             'DOUBLE QUOTED STRING' => '\"(?:\\\\"|.)*?\"',
             'SINGLE QUOTED STRING' => "'(?:\\\\'|.)*?'",
@@ -83,11 +83,17 @@ class Lexer
 
         $matches = preg_split("#(". implode('|', $this->lexemes) .")#", $string, -1, 7);
 
-        foreach ($matches as $match) {
-            $lexem = $match[0];
-            $offset = $match[1];
-            if ($token = $this->getToken($lexem, $offset)) {
-                $tokens->push($token);
+        if ($withtypes) {
+            foreach ($matches as $match) {
+                $lexem = $match[0];
+                $offset = $match[1];
+                if ($token = $this->getToken($lexem, $offset)) {
+                    $tokens->push($token);
+                }
+            }
+        } else {
+            foreach ($matches as $match) {
+                $tokens->push($match[0]);
             }
         }
 

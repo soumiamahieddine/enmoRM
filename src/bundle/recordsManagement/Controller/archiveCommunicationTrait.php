@@ -37,43 +37,51 @@ trait archiveCommunicationTrait
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $folderId
+     * @param bool   $hasParent
      * @param string $description
      * @param string $text
      *
      * @return recordsManagement/archive[]
      */
     public function search(
-        $archiveId = false,
-        $profileReference = false,
-        $status = false,
-        $archiveName = false,
-        $agreementReference = false,
-        $archiveExpired = null,
-        $finalDisposition = false,
-        $originatorOrgRegNumber = false,
-        $description = false,
-        $text = false
-    ) {
+        $archiveId = null, 
+        $profileReference = null, 
+        $status = null, 
+        $archiveName = null, 
+        $agreementReference = null, 
+        $archiveExpired = null, 
+        $finalDisposition = null, 
+        $originatorOrgRegNumber = null,
+        $folderId = null,
+        $hasParent = null,
+        $description = null,
+        $text = null)
+    {
         $archives = [];
 
-        if (!empty($description) || !empty($text)) {
-            $archiveCriteria = [
-                'archiveId' => $archiveId,
-                'profileReference' => $profileReference,
-                'status' => $status,
-                'archiveName' => $archiveName,
-                'agreementReference' => $agreementReference,
-                'archiveExpired' => $archiveExpired,
-                'finalDisposition' => $finalDisposition,
-                'originatorOrgRegNumber' => $originatorOrgRegNumber,
-            ];
+        $archiveArgs = [
+            'archiveId' => $archiveId, 
+            'profileReference' => $profileReference, 
+            'status' => $status, 
+            'archiveName' => $archiveName, 
+            'agreementReference' => $agreementReference, 
+            'archiveExpired' => $archiveExpired, 
+            'finalDisposition' => $finalDisposition, 
+            'originatorOrgRegNumber' => $originatorOrgRegNumber,
+            'folderId' => $folderId,
+            'hasParent' => $hasParent,
+        ];
 
+        if (!empty($description) || !empty($text)) {            
             $searchClasses = [];
             if (!$profileReference) {
                 $archivalProfiles = $this->archivalProfileController->index(true);
                 foreach ($archivalProfiles as $archivalProfile) {
                     if ($archivalProfile->descriptionClass != '' && !isset($searchClasses[$archivalProfile->descriptionClass])) {
                         $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
+                    } elseif (!isset($searchClasses['recordsManagement/description'])) {
+                        $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
                     }
                 }
             } else {
@@ -86,51 +94,17 @@ trait archiveCommunicationTrait
             }
 
             foreach ($searchClasses as $descriptionClass => $descriptionController) {
-                $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveCriteria));
+                $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
             }
         } else {
-
-            $currentDate = \laabs::newDate();
-            $currentDateString = $currentDate->format('Y-m-d');
-
-            $queryParts = array();
-
-            if ($archiveName) {
-                $queryParts[] = "archiveName='$archiveName'";
-            }
-            if ($profileReference) {
-                $queryParts[] = "archivalProfileReference='$profileReference'";
-            }
-            if ($agreementReference) {
-                $queryParts[] = "archivalAgreementReference='$agreementReference'";
-            }
-            if ($archiveId) {
-                $queryParts[] = "archiveId='$archiveId'";
-            }
-            if ($status) {
-                $queryParts[] = "status='$status'";
-            } else {
-                $queryParts[] = "status=['preserved', 'disposable', 'restituable', 'restitution', 'restitued', 'frozen', 'error']";
-            }
-            if ($archiveExpired == "true") {
-                $queryParts[] = "disposalDate<='$currentDateString'";
-            }
-            if ($archiveExpired == "false") {
-                $queryParts[] = "disposalDate>='$currentDateString'";
-            }
-            if ($finalDisposition) {
-                $queryParts[] = "finalDisposition='$finalDisposition'";
-            }
-            if ($originatorOrgRegNumber) {
-                $queryParts[] = "originatorOrgRegNumber='$originatorOrgRegNumber'";
-            }
-
+            $queryString = $this->getArchiveAssert($archiveArgs);
+            
             $originators = array();
             foreach ((array) $this->organizationController->getOrgsByRole('originator') as $originator) {
                 $originators[$originator->registrationNumber] = $originator;
             }
 
-            $archives = $this->sdoFactory->find('recordsManagement/archive', implode(' and ', $queryParts), null, false, false, 100);
+            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, null, false, false, 100);
             foreach ($archives as $archive) {
                 if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                     $archive->disposable = true;

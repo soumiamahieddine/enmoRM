@@ -213,4 +213,95 @@ trait archiveAccessTrait
 
         return $access;
     }
+
+    /**
+     * Get archive assert
+     * @param array $args
+     * 
+     * @return string
+     */
+    public function getArchiveAssert($args)
+    {
+        // Args on archive
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
+
+        if (!empty($args['archiveName'])) {
+            $queryParts[] = "archiveName='*".$args['archiveName']."*'";
+        }
+        if (!empty($args['profileReference'])) {
+            $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
+        }
+        if (!empty($args['agreementReference'])) {
+            $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
+        }
+        if (!empty($args['archiveId'])) {
+            $queryParts[] = "archiveId='".$args['archiveId']."'";
+        }
+        if (!empty($args['status'])) {
+            $queryParts[] = "status='".$args['status']."'";
+        } else {
+            $queryParts[] = "status!='disposed'";
+        }
+        if (!empty($args['archiveExpired == "true"'])) {
+            $queryParts[] = "disposalDate<='".$currentDateString."'";
+        }
+        if (!empty($args['archiveExpired == "false"'])) {
+            $queryParts[] = "disposalDate>='".$currentDateString."'";
+        }
+        if (!empty($args['finalDisposition'])) {
+            $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
+        }
+        if (!empty($args['originatorOrgRegNumber'])) {
+            $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
+        }
+        if (!empty($args['depositorOrgRegNumber'])) {
+            $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
+        }
+        if (!empty($args['folderId'])) {
+            $queryParts[] = "folderId='".$args['folderId']."'";
+        }
+        if ($args['hasParent'] == true) {
+            $queryParts[] = "parentArchiveId!=null";
+        }
+        if ($args['hasParent']  === false) {
+            $queryParts[] = "parentArchiveId=null";
+        }
+
+        $queryParts[] = $this->getAccessRuleAssert($currentDateString);
+
+        return implode(' and ', $queryParts);
+    }
+
+    /**
+     * Get the query assert for access rule
+     * @param string $currentDateString the date
+     * 
+     * @return string
+     */
+    public function getAccessRuleAssert($currentDateString)
+    {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            return "true=false";
+        }
+
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
+
+        $owner = false;
+        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
+            $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
+            if (isset($userService->orgRoleCodes) && $userService->orgRoleCodes->contains('owner')) {
+                return;
+            }
+        }
+
+        $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
+
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString' OR accessRuleComDate = NULL))";
+
+        return "(".implode(" OR ", $queryParts).")";
+    }
 }

@@ -109,10 +109,29 @@ class log
      * @param string $description The search args on description object
      * @param string $text        The search args on text
      * @param array  $args        The search args on archive std properties
+     * 
+     * @return array
      */
     public function search($description=null, $text=null, array $args=[])
     {
-        return [];
+        $archiveController = \laabs::newController('recordsManagement/archive');
+        $archives = [];
+
+        $sortBy = ">fromDate";
+        $numberOfResult = 300;
+
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, null, $sortBy, 0, $numberOfResult);
+        foreach ($logs as $log) {
+            try {
+                $archive = $archiveController->read($log->archiveId);
+                $archive->descriptionObject = $log;
+                $archives[] = $archive;
+            } catch (\Exception $e) {
+                
+            } 
+        }
+
+        return $archives;
     }
 
     /**

@@ -40,6 +40,8 @@ interface archivesInterface
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $folderId
+     * @param bool   $hasParent
      * @param string $description
      * @param string $text
      *
@@ -55,6 +57,8 @@ interface archivesInterface
         $archiveExpired = null, 
         $finalDisposition = null, 
         $originatorOrgRegNumber = null,
+        $folderId = null,
+        $hasParent = null,
         $description = null,
         $text = null);
 
