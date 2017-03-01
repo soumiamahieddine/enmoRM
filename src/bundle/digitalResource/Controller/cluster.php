@@ -62,7 +62,7 @@ class cluster
             foreach ($digitalResources as $digitalResource) {
                 $cluster->size->bSize += $digitalResource->size;
 
-                if ($cluster->size->bSize >= 1073741824 ) {
+                if ($cluster->size->bSize >= 1073741824) {
                     $cluster->size->gbSize ++;
                     $cluster->size->bSize -= 1073741824;
                 }
@@ -301,13 +301,13 @@ class cluster
                     $contents = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
 
                     if (isset($resource->hash) && !$this->checkHash($address, $resource, $contents)) {
-                        throw \laabs::newException("digitalResource/clusterException", "Invalid hash for resource ".$resource->resId." at address ". $address->repository->repositoryUri . DIRECTORY_SEPARATOR . $address->path);
-                    } 
+                        throw \laabs::newException("digitalResource/clusterException", "Invalid hash for resource ".$resource->resId." at address ".$address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
+                    }
 
                     $resource->setContents($contents);
 
                     return $contents;
-                    
+
                 } catch (\Exception $e) {
                     // No content retrieved : send error as audit event
                     \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
@@ -316,8 +316,6 @@ class cluster
                 \laabs::notify(LAABS_BUSINESS_EXCEPTION, \laabs::newException("digitalResource/clusterException", "No address found for ressource ".$resource->resId));
             }
         }
-
-        var_dump($resource);
 
         // TODO : throw exception if resource not available on repo, based on options ?
         return null;
