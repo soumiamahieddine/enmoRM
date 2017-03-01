@@ -106,7 +106,7 @@ trait archiveCommunicationTrait
 
             $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, null, false, false, 100);
             foreach ($archives as $archive) {
-                if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
+                if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
                     $archive->disposable = true;
                 }
 
