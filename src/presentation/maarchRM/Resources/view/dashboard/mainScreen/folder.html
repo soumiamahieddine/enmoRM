@@ -1,4 +1,4 @@
-<div class="tab-pane fade in active" id="folderPanel">
+<div class="tab-pane fade in active col-xs-12" id="folderPanel">
     <h4>
         <span id="folderPath"/>
         <br/>
@@ -6,12 +6,10 @@
     </h4>
     <i id="emptyFolderMessage" class="hide text-muted"><br/><span class="fa fa-times">&nbsp;</span>Empty folder</i>
     <div id="folderContentList" class="hide">
-        <div class="col-xs-12">
-            <div class="row">
-                <h4 class="pull-left" style="width:15px"><i class="selectAll archiveSelection fa fa-square-o"/></h4>
-            </div>
+        <div class="row">
+            <h4 class="pull-left" style="width:15px"><i class="selectAll archiveSelection fa fa-square-o"/></h4>
         </div>
-        <div id="folderContents" class="col-xs-12"/>
+        <div id="folderContents"/>
     </div>
 </div>
 
@@ -100,6 +98,7 @@
             this.archivesOrder = [];
 
             this.folderContents.html('');
+            $('#rightColumn').html('');
 
             if (archives.length) {
                 $('#emptyFolderMessage').addClass('hide');
@@ -159,16 +158,21 @@
         },
         getContent: function(archive) {
             $.ajax({
-                url         : "/archive/"+archive.attr('id'),
+                url         : "/archiveContents/"+archive.attr('id'),
                 type        : "GET",
                 success     : function (response) {
-                    archive.find('.archiveContent').removeClass('hide');
+
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
                 }
             })
+        },
+        
+        showArchiveContent: function(digitalResources, childrenArchives) {
+
         }
+
     }
 
     // List icon toggle

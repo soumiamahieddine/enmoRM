@@ -141,6 +141,7 @@ class welcome
     }
 
     /**
+     * Show an archive information
      * @param array $archives
      *
      * @return string
@@ -168,8 +169,6 @@ class welcome
      */
     public function error($error)
     {
-        //$this->view->addHeaders();
-        //$this->view->useLayout();
         $this->view->addContentFile("dashboard/error.html");
 
         $this->view->translate();
@@ -181,6 +180,7 @@ class welcome
     }
 
     /**
+     * Show a folder content
      * @param array $archives
      *
      * @return string
@@ -188,6 +188,20 @@ class welcome
     public function folderContents($archives)
     {
         $this->json->archives = $archives;
+
+        return $this->json->save();
+    }
+
+    /**
+     * Show an archive content
+     * @param object $archive
+     *
+     * @return string
+     */
+    public function archiveContent($archive)
+    {
+        $this->json->documents = $archive->digitalResources;
+        $this->json->childrenArchives = $archive->childrenArchives;
 
         return $this->json->save();
     }

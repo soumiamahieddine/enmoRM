@@ -155,4 +155,12 @@ interface retrieveInterface
      * @uses  recordsManagement/archiveDescription/read_archiveId_
      */
     public function readArchive_archiveId_();
+
+    /**
+     * Retrieve archive infod
+     *
+     * @return recordsManagement/welcome/archiveContent
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readArchivecontents_archiveId_();
 }
