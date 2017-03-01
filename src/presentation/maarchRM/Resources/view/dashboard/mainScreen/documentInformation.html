@@ -2,6 +2,9 @@
     <div class="col-xs-12 text-center">
         <i class="infoIcon fa fa-file-o"/>
     </div>
+    <div class="col-xs-12 text-center">
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="">View</button>
+    </div>
     <div class="col-xs-12">
         <table>
             <tr>
@@ -28,7 +31,7 @@
                 <td name="format">
             </tr>
             <tr>
-                <th title="Mime type">Mime type</th>
+                <th title="Mimetype">Mimetype</th>
                 <td name="mimetype"/>
             </tr>
             <tr>
@@ -78,6 +81,7 @@
         form: $('#resourceInformation'),
         load: function (resource) {
             resource.created = resource.created.substring(0, 19);
+            DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
             $.each(resource, function (key, value) {
                 if (value) {
                     DocumentInformation.form.find('[name="' + key + '"]').text(value);
@@ -87,4 +91,8 @@
             })
         }
     }
+
+    $("#viewResource").on("click", function() {
+        window.open("/recordsManagement/digitalResource/"+$(this).data("resid"));
+    });
 </script>
