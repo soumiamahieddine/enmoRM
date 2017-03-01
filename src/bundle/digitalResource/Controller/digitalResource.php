@@ -343,7 +343,6 @@ class digitalResource
 
         $cluster = $this->useCluster($resource->clusterId, 'read', false);
         $resource->cluster = $cluster;
-
         $contents = $this->clusterController->retrieveResource($cluster, $resource);
 
         if (!$contents) {

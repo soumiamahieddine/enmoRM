@@ -317,6 +317,8 @@ class cluster
             }
         }
 
+        var_dump($resource);
+
         // TODO : throw exception if resource not available on repo, based on options ?
         return null;
     }

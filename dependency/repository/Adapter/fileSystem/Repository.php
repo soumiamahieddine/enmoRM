@@ -74,9 +74,9 @@ class Repository
     {
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
-        $this->addFile($path, $data);
+        $realpath = $this->addFile($path, $data);
 
-        return $path;
+        return $realpath;
     }
 
     /**
@@ -159,7 +159,7 @@ class Repository
     /* 
      * Non public methods
      */
-/**
+    /**
      * Get the directory to store
      * @param string $pattern The name or pattern for the collection
      * 
@@ -289,6 +289,8 @@ class Repository
             }
             throw new \Exception("Error writing at path $path.");
         }
+        
+        return $dir . DIRECTORY_SEPARATOR . $name;
     }
 
     protected function checkFile($path)
