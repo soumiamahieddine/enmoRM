@@ -36,7 +36,7 @@ class welcome
      * @param \dependency\html\Document   $view The view
      * @param \dependency\json\JsonObject $json
      */
-    public function __construct(\dependency\html\Document $view,\dependency\json\JsonObject $json)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json)
     {
         $this->view = $view;
         $this->view->translator->setCatalog('recordsManagement/messages');
@@ -111,17 +111,6 @@ class welcome
         return $this->view->saveHtml();
     }
 
-    protected function getOrgUnitArchivalProfiles($orgUnit)
-    {
-        $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
-
-        if (!empty($orgUnit->organization)) {
-            foreach ($orgUnit->organization as $subOrgUnit) {
-                $this->getOrgUnitArchivalProfiles($subOrgUnit);
-            }
-        }
-    }
-
     /**
      * Show the events search form
      * @param object $filePlan The root orgUnit of user with sub-orgUnits and folders
@@ -142,7 +131,7 @@ class welcome
 
     /**
      * Show an archive information
-     * @param array $archives
+     * @param recordsManagement/archive $archive The archive
      *
      * @return string
      */
@@ -225,42 +214,46 @@ class welcome
      */
     protected function getDescription($archive)
     {
-        if (isset($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = $presenter->read($archive->descriptionObject);
-            } else {
-                $archivalProfile = [];
-                if (!empty($archive->archivalProfileReference)) {
-                    $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-                }
+        if (!isset($archive->descriptionObject)) {
+            return;
+        }
 
-                $descriptionHtml = '<table">';
-                
-                foreach ($archive->descriptionObject as $name => $value) {
-                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                        if ($archiveDescription->fieldName == $name) {
-                            $label = $archiveDescription->descriptionField->label;
-                        }
-                    }
-
-                    if (!isset($label)) {
-                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                    }
-
-                    $descriptionHtml .= '<th name="'.$name.'">'.$label.'</th>';
-                    $descriptionHtml .= '<td>'.$value.'</td>';
-                }
-                
-                $descriptionHtml .='</table>';
+        if (!empty($archive->descriptionClass)) {
+            $presenter = \laabs::newPresenter($archive->descriptionClass);
+            $descriptionHtml = $presenter->read($archive->descriptionObject);
+        } else {
+            $archivalProfile = [];
+            if (!empty($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
             }
 
-            if ($descriptionHtml) {
-                $node = $this->view->getElementById("metadata");
-                $this->view->addContent($descriptionHtml, $node);
-            } else {
-                unset($archive->descriptionObject);
+            $descriptionHtml = '<table">';
+
+            foreach ($archive->descriptionObject as $name => $value) {
+                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                    if ($archiveDescription->fieldName == $name) {
+                        $label = $archiveDescription->descriptionField->label;
+                    }
+                }
+
+                if (!isset($label)) {
+                    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+                }
+
+                $descriptionHtml .= '<tr>';
+                $descriptionHtml .= '<th name="'.$name.'">'.$label.'</th>';
+                $descriptionHtml .= '<td>'.$value.'</td>';
+                $descriptionHtml .= '</tr>';
             }
+
+            $descriptionHtml .= '</table>';
+        }
+
+        if ($descriptionHtml) {
+            $node = $this->view->getElementById("metadata");
+            $this->view->addContent($descriptionHtml, $node);
+        } else {
+            unset($archive->descriptionObject);
         }
     }
 
@@ -297,6 +290,17 @@ class welcome
             $node->path = $ownerName.'/'.$node->path;
             if ($node->subFolders) {
                 $this->updateFolderPath($node->subFolders, $ownerName);
+            }
+        }
+    }
+
+    protected function getOrgUnitArchivalProfiles($orgUnit)
+    {
+        $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
+
+        if (!empty($orgUnit->organization)) {
+            foreach ($orgUnit->organization as $subOrgUnit) {
+                $this->getOrgUnitArchivalProfiles($subOrgUnit);
             }
         }
     }

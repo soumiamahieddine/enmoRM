@@ -1,91 +1,90 @@
 <div id="resourceInformation" class="row">
-	<div class="col-xs-12 text-center">
-		<i class="infoIcon fa fa-file-o"/>
-	</div>
-	<div class="col-xs-12">
-		<table>
-			<tr>
-				<th>Name</th>
-				<td name="fileName"/>
-			</tr>
-			<tr>
-				<th>Extension</th>
-				<td name="fileExtension"></td>
-			</tr>
-			<tr>
-				<th>Creation date</th>
-				<td name="created"/>
-			</tr>
-			<tr>
-				<th>Size</th>
-				<td><span name="size"/> <span>bytes</span></td>
-			</tr>
-		</table>
-		<br/>
-		<table>
-			<tr>
-				<th>Format</th>
-				<td name="format"/>
-			</tr>
-			<tr>
-				<th>Mime type</th>
-				<td name="mimetype"/>
-			</tr>
-			<tr>
-				<th>PUID</th>
-				<td name="puid"/>
-			</tr>
-			<tr>
-				<th>Hash algorithm</th>
-				<td name="hashAlgorithm"/>
-			</tr>
-			<tr>
-				<th>Hash</th>
-				<td name="hash"/>
-			</tr>
-		</table>
-	</div>
+    <div class="col-xs-12 text-center">
+        <i class="infoIcon fa fa-file-o"/>
+    </div>
+    <div class="col-xs-12">
+        <table>
+            <tr>
+                <th title="Name">Name</th>
+                <td name="fileName"/>
+            </tr>
+            <tr>
+                <th title="Extension">Extension</th>
+                <td name="fileExtension"></td>
+            </tr>
+            <tr>
+                <th title="Creation date">Creation date</th>
+                <td name="created"/>
+            </tr>
+            <tr>
+                <th title="Size">Size</th>
+                <td><span name="size"/> <span>bytes</span></td>
+            </tr>
+        </table>
+        <br/>
+        <table>
+            <tr>
+                <th title="Format">Format</th>
+                <td name="format">
+            </tr>
+            <tr>
+                <th title="Mime type">Mime type</th>
+                <td name="mimetype"/>
+            </tr>
+            <tr>
+                <th title="PUID">PUID</th>
+                <td name="puid"/>
+            </tr>
+            <tr>
+                <th title="Hash algorithm">Hash algorithm</th>
+                <td name="hashAlgorithm"/>
+            </tr>
+            <tr>
+                <th title="Hash">Hash</th>
+                <td name="hash"/>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<style>
-	#resourceInformation {
-		font-size: 12px;
-		border-left: solid 1px #DDD;
-		margin-top: 50px;
-	}
-	#resourceInformation table {
-		table-layout:fixed;
-		width:100%;
-	}
-	#resourceInformation table th {
-		width: 40%;
-		text-align: right;
-	}
-	#resourceInformation table td, #resourceInformation table th {
-		padding: 0 5px 0 5px ;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-
-	}
-	#resourceInformation .infoIcon {
-		font-size: 80px; 
-		margin-bottom: 10px;
-	}
+<style type="text/css">
+    #resourceInformation {
+        font-size: 12px;
+        border-left: solid 1px #DDD;
+        margin-top: 50px;
+    }
+    #resourceInformation table {
+        table-layout:fixed;
+        width:100%;
+    }
+    #resourceInformation table th {
+        width: 40%;
+        text-align: right;
+    }
+    #resourceInformation table td, #resourceInformation table th {
+        padding: 0 5px 0 5px ;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    #resourceInformation .infoIcon {
+        font-size: 80px; 
+        margin-bottom: 10px;
+    }
 </style>
 
 <script>
-	DocumentInformation = {
-		form: $('#resourceInformation'),
-		load: function(resource) {
-			resource.created = resource.created.substring(0, 19);
-			$.each(resource, function(key, value) {
-				if (value) {
-					DocumentInformation.form.find('[name="'+key+'"]').text(value);
-				} else {
-					DocumentInformation.form.find('[name="'+key+'"]').closest('tr').remove();
-				}
-			})
-		}
-	}
+    DocumentInformation = {
+        form: $('#resourceInformation'),
+        load: function (resource) {
+            resource.created = resource.created.substring(0, 19);
+            $.each(resource, function (key, value) {
+                if (value) {
+                    DocumentInformation.form.find('[name="' + key + '"]').text(value);
+                } else {
+                    DocumentInformation.form.find('[name="' + key + '"]').closest('tr').remove();
+                }
+            })
+        }
+    }
 </script>
