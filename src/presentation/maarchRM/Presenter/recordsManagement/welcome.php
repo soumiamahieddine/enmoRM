@@ -167,7 +167,8 @@ class welcome
      */
     public function documentInfo()
     {
-        $this->view->addContentFile('dashboard/mainScreen/docuementInformation.html');
+        $this->view->addContentFile('dashboard/mainScreen/documentInformation.html');
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
