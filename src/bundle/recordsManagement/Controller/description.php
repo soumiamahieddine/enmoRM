@@ -50,29 +50,48 @@ class description
     {
         $descriptionObject = \laabs::newInstance('recordsManagement/description');
         $descriptionObject->archiveId = $archive->archiveId;
-        $descriptionObject->text = implode(' ', $this->getText($archive->descriptionObject));
+
+        if (!empty($archive->archiveName)) {
+            $descriptionObject->text = $archive->archiveName.' ';
+        }
+        if (!empty($archive->originatorArchiveId)) {
+            $descriptionObject->text .= $archive->originatorArchiveId.' ';
+        }
+
+        $descriptionObject->text .= $this->getText($archive->descriptionObject);
         $descriptionObject->description = json_encode($archive->descriptionObject);
         
         $this->sdoFactory->update($descriptionObject);
     }
 
-    protected function getText($description)
+    protected function getText($data)
     {
-        $text = [];
+        switch (\gettype($data)) {
+            case 'string' :
+            case 'integer' :
+            case 'double' :
+                return (string) $data;
+                
+            case 'object':
+                if (method_exists($data, '__toString')) {
+                    return (string) $data;
+                } else {
+                    $texts = [];
+                    foreach ($data as $name => $value) {
+                        $texts[] = $this->getText($value);
+                    }
 
-        if (is_object($description) || is_array($description)) {
-            foreach ($description as $name => $value) {
-                if (is_string($value) || is_numeric($value)) {
-                    $text[] = $value;
-                } elseif (is_object($value)) {
-                    $text = array_merge($text, $this->getText($value));
+                    return implode(' ', $texts);
                 }
-            }
-        } elseif (is_scalar($description)) {
-            $text = $description;
-        }
 
-        return $text;
+            case 'array':
+                $texts = [];
+                foreach ($data as $name => $value) {
+                    $texts[] = $this->getText($value);
+                }
+
+                return implode(' ', $texts);
+        }
     }
 
     /**
