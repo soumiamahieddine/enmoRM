@@ -26,13 +26,20 @@
                 <small/>
             </h5>
         </div>
-        <div class="archiveContent col-xs-12 hide">
+        <div class="archiveContent hide">
             <ul class="tree-l">
             </ul>
         </div>
     </div>
 </div>
-
+<div id="digitalResourceTemplate" class="hide">
+    <li>
+        <span>
+            <i class='fa fa-file-o'/>
+            <span></span>
+        </span>
+    </li>
+</div>
 <style>
     .archive h5 {
         margin: 6px 0px 6px 0px;
@@ -59,7 +66,6 @@
         folderContents: $('#folderContents'),
 
         select: function(e) {
-            console.log(e);
             this.unselect()
             e.addClass('bg-success');
         },
@@ -144,6 +150,8 @@
     }
 
     Archive = {
+        digitalResourceTemplate: $('#digitalResourceTemplate').children('li'),
+
         getInfo: function(archiveId) {
             $.ajax({
                 url         : "/archive/"+archiveId,
@@ -160,16 +168,31 @@
             $.ajax({
                 url         : "/archiveContents/"+archive.attr('id'),
                 type        : "GET",
+                dataType    : 'json',
                 success     : function (response) {
-
+                    Archive.showArchiveContent(archive, response.digitalResources, response.childrenArchives);
+                    archive.find('.archiveContent').removeClass('hide');
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
                 }
             })
         },
-        
-        showArchiveContent: function(digitalResources, childrenArchives) {
+
+        showArchiveContent: function(archive, digitalResources, childrenArchives) {
+            var tree = archive.find('.archiveContent');
+            for(i=0; i < digitalResources.length; i++) {
+                template = this.digitalResourceTemplate.clone();
+
+                template.children('span').attr('id', digitalResources[i].resId)
+                        .children('span').html(digitalResources[i].fileName);
+
+                BootstrapTree.addNode(tree, template);
+
+            }
+        },
+
+        buildChildrenTree (parent, childrenArchives) {
 
         }
 

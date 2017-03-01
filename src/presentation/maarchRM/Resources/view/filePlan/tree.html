@@ -136,7 +136,7 @@
         addFolderNode: function(folder) {
             var template = $('#folderNodeTemplate').children('li').clone();
             template = this.fullUpFolderNode(folder, template);
-            console.log(template);
+
             BootstrapTree.addNode(this.selectedNode, template);
 
             this.initDragNDrop();

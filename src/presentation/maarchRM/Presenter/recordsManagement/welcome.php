@@ -148,7 +148,7 @@ class welcome
      */
     public function archiveInfo($archive)
     {
-        $this->view->addContentFile('dashboard/mainScreen/information.html');
+        $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
@@ -200,7 +200,7 @@ class welcome
      */
     public function archiveContent($archive)
     {
-        $this->json->documents = $archive->digitalResources;
+        $this->json->digitalResources = $archive->digitalResources;
         $this->json->childrenArchives = $archive->childrenArchives;
 
         return $this->json->save();
