@@ -185,12 +185,13 @@
             })
         },
 
-        getDocumentInfo: function(document) {
+        getResourceInfo: function(resource) {
             $.ajax({
                 url         : "/documentInfo",
                 type        : "GET",
                 success     : function (response) {
                     $('#rightColumn').html(response);
+                    DocumentInformation.load(resource.data('json'));
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -284,7 +285,7 @@
         var parentArchive = $(this).closest('.archive');
         var resId = $(this).attr('id');
         ArchiveList.select(parentArchive);
-        Archive.getDocumentInfo(resId);
+        Archive.getResourceInfo($(this));
     })
 
 </script>

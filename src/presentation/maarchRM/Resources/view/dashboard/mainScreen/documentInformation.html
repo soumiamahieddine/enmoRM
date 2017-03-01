@@ -1,117 +1,91 @@
-<div id="archiveInformation" class="row">
+<div id="resourceInformation" class="row">
 	<div class="col-xs-12 text-center">
-		<i class="infoIcon fa fa-archive"/>
+		<i class="infoIcon fa fa-file-o"/>
 	</div>
 	<div class="col-xs-12">
 		<table>
 			<tr>
 				<th>Name</th>
-				<td><?merge archive.archiveName ?></td>
+				<td name="fileName"/>
 			</tr>
 			<tr>
-				<th>Deposit date</th>
-				<td><?merge archive.depositDate ?></td>
+				<th>Extension</th>
+				<td name="fileExtension"></td>
 			</tr>
 			<tr>
-				<th>Status</th>
-				<td><?merge archive.status ?></td>
+				<th>Creation date</th>
+				<td name="created"/>
+			</tr>
+			<tr>
+				<th>Size</th>
+				<td><span name="size"/> <span>bytes</span></td>
 			</tr>
 		</table>
-	</div>
-	<div class="col-xs-12">
-		<div class="panel-group" id="archiveDetails" role="tablist" aria-multiselectable="true">
-	        <div class="panel">
-	            <div class="panel-heading" role="tab">
-	            	<strong>
-	                    <a role="button" data-toggle="collapse" data-parent="#archiveDetails" href="#managementInfo" >
-	                    	<span class="text-info">Management information</span>
-	                    </a>
-	            	</strong>
-	            </div>
-	            <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
-	            	<table>
-	            		<?merge archive.archivalProfileReference.bool() ?>
-						<tr>
-							<th>Archival profile</th>
-							<td><?merge archive.archivalProfileReference ?></td>
-						</tr>
-	            	</table>
-
-					<?merge archive.retentionRuleCode.bool() ?>
-	            	<table>
-						<tr>
-							<th>Disposal date</th>
-							<td><?merge archive.disposalDate ?></td>
-						</tr>
-						<tr>
-							<th>Final disposition</th>
-							<td><?merge archive.finalDisposition ?></td>
-						</tr>
-					</table>
-
-	            	<table>
-						<?merge archive.accessRuleComDate.bool() ?>
-						<tr>
-							<th>Communication date</th>
-							<td><?merge archive.accessRuleComDate ?></td>
-						</tr>
-						<?merge archive.lastCheckDate.bool() ?>
-						<tr>
-							<th>Last check date</th>
-							<td><?merge archive.lastCheckDate ?></td>
-						</tr>
-						<?merge archive.lastDeliveryDate.bool() ?>
-						<tr>
-							<th>Last delivery date</th>
-							<td><?merge archive.lastDeliveryDate ?></td>
-						</tr>
-						<?merge archive.lastModificationDate.bool() ?>
-						<tr>
-							<th>Last modification date</th>
-							<td><?merge archive.lastModificationDate ?></td>
-						</tr>
-					</table>
-	            </div>
-	        </div>
-			<?merge archive.descriptionObject.bool() ?>
-	        <div class="panel">
-	            <div class="panel-heading" role="tab">
-	            	<strong>
-	                    <a role="button" data-toggle="collapse" data-parent="#archiveDetails" href="#metadata" >
-	                    	<span class="text-info">Metadata</span>
-	                    </a>
-	            	</strong>
-	            </div>
-	            <div id="metadata" class="panel-collapse collapse" role="tabpanel">
-	            </div>
-	        </div>
-		</div>
+		<br/>
+		<table>
+			<tr>
+				<th>Format</th>
+				<td name="format"/>
+			</tr>
+			<tr>
+				<th>Mime type</th>
+				<td name="mimetype"/>
+			</tr>
+			<tr>
+				<th>PUID</th>
+				<td name="puid"/>
+			</tr>
+			<tr>
+				<th>Hash algorithm</th>
+				<td name="hashAlgorithm"/>
+			</tr>
+			<tr>
+				<th>Hash</th>
+				<td name="hash"/>
+			</tr>
+		</table>
 	</div>
 </div>
 
 <style>
-	#archiveInformation {
+	#resourceInformation {
 		font-size: 12px;
 		border-left: solid 1px #DDD;
 		margin-top: 50px;
 	}
-	#archiveInformation table {
+	#resourceInformation table {
 		table-layout:fixed;
 		width:100%;
 	}
-	#archiveInformation table th {
+	#resourceInformation table th {
 		width: 40%;
 		text-align: right;
 	}
-	#archiveInformation table td, #archiveInformation table th {
+	#resourceInformation table td, #resourceInformation table th {
 		padding: 0 5px 0 5px ;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 
 	}
-	#archiveInformation .infoIcon {
+	#resourceInformation .infoIcon {
 		font-size: 80px; 
 		margin-bottom: 10px;
 	}
 </style>
+
+<script>
+	DocumentInformation = {
+		form: $('#resourceInformation'),
+		load: function(resource) {
+			resource.created = resource.created.substring(0, 19);
+			$.each(resource, function(key, value) {
+				if (value) {
+					DocumentInformation.form.find('[name="'+key+'"]').text(value);
+				} else {
+					DocumentInformation.form.find('[name="'+key+'"]').closest('tr').remove();
+				}
+			})
+		}
+	}
+</script>
