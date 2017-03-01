@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -43,31 +43,31 @@ trait archiveCommunicationTrait
      * @return recordsManagement/archive[]
      */
     public function search(
-        $archiveId = false, 
-        $profileReference = false, 
-        $status = false, 
-        $archiveName = false, 
-        $agreementReference = false, 
-        $archiveExpired = null, 
-        $finalDisposition = false, 
+        $archiveId = false,
+        $profileReference = false,
+        $status = false,
+        $archiveName = false,
+        $agreementReference = false,
+        $archiveExpired = null,
+        $finalDisposition = false,
         $originatorOrgRegNumber = false,
         $description = false,
-        $text = false)
-    {
+        $text = false
+    ) {
         $archives = [];
-        
+
         if (!empty($description) || !empty($text)) {
             $archiveCriteria = [
-                'archiveId' => $archiveId, 
-                'profileReference' => $profileReference, 
-                'status' => $status, 
-                'archiveName' => $archiveName, 
-                'agreementReference' => $agreementReference, 
-                'archiveExpired' => $archiveExpired, 
-                'finalDisposition' => $finalDisposition, 
+                'archiveId' => $archiveId,
+                'profileReference' => $profileReference,
+                'status' => $status,
+                'archiveName' => $archiveName,
+                'agreementReference' => $agreementReference,
+                'archiveExpired' => $archiveExpired,
+                'finalDisposition' => $finalDisposition,
                 'originatorOrgRegNumber' => $originatorOrgRegNumber,
             ];
-            
+
             $searchClasses = [];
             if (!$profileReference) {
                 $archivalProfiles = $this->archivalProfileController->index(true);
@@ -86,7 +86,7 @@ trait archiveCommunicationTrait
             }
 
             foreach ($searchClasses as $descriptionClass => $descriptionController) {
-               $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveCriteria));
+                $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveCriteria));
             }
         } else {
 
