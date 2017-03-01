@@ -18,7 +18,7 @@
 			</tr>
 			<tr>
 				<th>Size</th>
-				<td><span name="size"/> bytes</td>
+				<td><span name="size"/> <span>bytes</span></td>
 			</tr>
 		</table>
 		<br/>
@@ -78,7 +78,7 @@
 	DocumentInformation = {
 		form: $('#resourceInformation'),
 		load: function(resource) {
-				console.log(resource);
+			resource.created = resource.created.substring(0, 19);
 			$.each(resource, function(key, value) {
 				if (value) {
 					DocumentInformation.form.find('[name="'+key+'"]').text(value);
