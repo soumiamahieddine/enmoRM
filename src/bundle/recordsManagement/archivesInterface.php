@@ -225,5 +225,5 @@ interface archivesInterface
      * @action recordsManagement/archiveFilePlanPosition/getFolderContents
      *
      */
-    public function readFolder($orgRegNumber, $folderId=false);
+    public function readFolder($orgRegNumber, $folderId=null);
 }

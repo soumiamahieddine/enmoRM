@@ -149,7 +149,7 @@ interface retrieveInterface
     /* V2 */
 
     /**
-     * Retrieve archive infod
+     * Retrieve archive info
      *
      * @return recordsManagement/welcome/archiveInfo
      * @uses  recordsManagement/archiveDescription/read_archiveId_
@@ -157,10 +157,17 @@ interface retrieveInterface
     public function readArchive_archiveId_();
 
     /**
-     * Retrieve archive infod
+     * Retrieve archive info
      *
      * @return recordsManagement/welcome/archiveContent
      * @uses  recordsManagement/archiveDescription/read_archiveId_
      */
     public function readArchivecontents_archiveId_();
+
+    /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/documentInfo
+     */
+    public function readDocumentInfo();
 }

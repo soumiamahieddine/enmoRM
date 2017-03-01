@@ -26,16 +26,16 @@
                 <small/>
             </h5>
         </div>
-        <div class="archiveContent hide">
+        <div class="archiveContent col-xs-12 hide">
             <ul class="tree-l">
             </ul>
         </div>
     </div>
 </div>
-<div id="digitalResourceTemplate" class="hide">
+<div id="archiveContentTemplate" class="hide">
     <li>
         <span>
-            <i class='fa fa-file-o'/>
+            <i class='fa'/>
             <span></span>
         </span>
     </li>
@@ -51,12 +51,13 @@
         font-size: 12px;
         margin: 0px;
     }
-    .archive .tree-l li {
+    .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
     }
-    #folderContentList .archiveSelection, #folderContentList .archiveContent {
+    #folderContentList .archiveSelection, #folderContentList .archiveContentButton, .archive .tree-l li>span>span {
         cursor: pointer;
     }
+
 </style>
 
 <script type="text/javascript">
@@ -82,8 +83,13 @@
         },
 
         getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
+            var url = "/folder?orgRegNumber="+orgRegNumber;
+            if (folderId) {
+                url = url + "&folderId="+folderId;
+            }
+
             $.ajax({
-                url         : "/folder?orgRegNumber="+orgRegNumber+"&folderId="+folderId,
+                url         : url,
                 type        : "GET",
                 dataType    : 'json',
                 success     : function (response) {
@@ -150,7 +156,7 @@
     }
 
     Archive = {
-        digitalResourceTemplate: $('#digitalResourceTemplate').children('li'),
+        archiveContentTemplate: $('#archiveContentTemplate').children('li'),
 
         getInfo: function(archiveId) {
             $.ajax({
@@ -170,8 +176,8 @@
                 type        : "GET",
                 dataType    : 'json',
                 success     : function (response) {
-                    Archive.showArchiveContent(archive, response.digitalResources, response.childrenArchives);
-                    archive.find('.archiveContent').removeClass('hide');
+                    archive.find('.archiveContent').removeClass('hide').find('ul').html('');
+                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.childrenArchives);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -179,23 +185,51 @@
             })
         },
 
-        showArchiveContent: function(archive, digitalResources, childrenArchives) {
-            var tree = archive.find('.archiveContent');
-            for(i=0; i < digitalResources.length; i++) {
-                template = this.digitalResourceTemplate.clone();
-
-                template.children('span').attr('id', digitalResources[i].resId)
-                        .children('span').html(digitalResources[i].fileName);
-
-                BootstrapTree.addNode(tree, template);
-
-            }
+        getDocumentInfo: function(document) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    $('#rightColumn').html(response);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
         },
 
-        buildChildrenTree (parent, childrenArchives) {
+        showArchiveContent: function(parent, digitalResources, childrenArchives) {
+            for(i=0; i < childrenArchives.length; i++) {
+                template = this.archiveContentTemplate.clone();
 
+                template.children('span')
+                        .children('i')
+                        .addClass('fa fa-archive')
+                        .siblings('span')
+                        .addClass('childrenArchive')
+                        .attr('id', childrenArchives[i].archiveId)
+                        .html(childrenArchives[i].archiveName);
+
+                BootstrapTree.addNode(parent, template);
+
+                showArchiveContent(template, childrenArchives[i].digitalResources, childrenArchives[i].childrenArchives);
+            }
+
+            for(i=0; i < digitalResources.length; i++) {
+                template = this.archiveContentTemplate.clone();
+
+                template.children('span')
+                        .children('i')
+                        .addClass('fa fa-file-o')
+                        .siblings('span')
+                        .addClass('document')
+                        .data('json', digitalResources[i])
+                        .attr('id', digitalResources[i].resId)
+                        .html(digitalResources[i].fileName);
+
+                BootstrapTree.addNode(parent, template);
+            }
         }
-
     }
 
     // List icon toggle
@@ -237,6 +271,20 @@
         var archiveId = archive.attr('id');
         ArchiveList.select(archive);
         Archive.getInfo(archiveId);
+    })
+
+    $('#folderContents').on('click', '.childrenArchive', function() {
+        var parentArchive = $(this).closest('.archive');
+        var archiveId = $(this).attr('id');
+        ArchiveList.select(parentArchive);
+        Archive.getInfo(archiveId);
+    })
+
+    $('#folderContents').on('click', '.document', function() {
+        var parentArchive = $(this).closest('.archive');
+        var resId = $(this).attr('id');
+        ArchiveList.select(parentArchive);
+        Archive.getDocumentInfo(resId);
     })
 
 </script>

@@ -156,11 +156,21 @@ class welcome
         $this->getDescription($archive);
         $this->view->setSource("archive", $archive);
         $this->view->merge();
-        //var_dump($archive);
+
         return $this->view->saveHtml();
     }
 
+    /**
+     * Show a document information
+     *
+     * @return string
+     */
+    public function documentInfo()
+    {
+        $this->view->addContentFile('dashboard/mainScreen/docuementInformation.html');
 
+        return $this->view->saveHtml();
+    }
     /**
      * Display error
      * @param object $error
