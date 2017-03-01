@@ -91,16 +91,20 @@ class Translator implements \dependency\localisation\TranslatorInterface
      */
     public function loadCatalog($name)
     {
-        if (!isset($this->catalogs[$name])) {
-            $key = "dependency/Localisation/catalogs.".$name;
-            $catalog = \laabs::getCache($key);
-            if (!$catalog) {
-                $catalog = new catalog($name, $this->lang);
-
-                \laabs::setCache($key, $catalog);
-            }
-            $this->catalogs[$name] = $catalog;
+        if (isset($this->catalogs[$name])) {
+            return;
         }
+
+        $key = "dependency/Localisation/catalogs.".$name;
+        $catalog = \laabs::getCache($key);
+
+        if (!$catalog) {
+            $catalog = new catalog($name, $this->lang);
+
+            \laabs::setCache($key, $catalog);
+        }
+
+        $this->catalogs[$name] = $catalog;
     }
 
     /**
