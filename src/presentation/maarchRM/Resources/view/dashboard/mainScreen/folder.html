@@ -1,9 +1,12 @@
 <div class="tab-pane fade in active col-xs-12" id="folderPanel">
-    <h4>
-        <span id="folderPath"/>
-        <br/>
-        <small id="folderDescription"/>
-    </h4>
+    <div class="row">
+        <h4 class="pull-left">
+            <span id="folderPath"/>
+            <br/>
+            <small id="folderDescription"/>
+        </h4>
+        <a class="pull-right" id="importTabLink" data-toggle="tab" data-parentarchiveid="" style="display: none;cursor: pointer"><span class="fa fa-plus">&nbsp;</span>Create</a>
+    </div>
     <i id="emptyFolderMessage" class="hide text-muted"><br/><span class="fa fa-times">&nbsp;</span>Empty folder</i>
     <div id="folderContentList" class="hide">
         <div class="row">
@@ -145,7 +148,14 @@
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             ArchiveForm.changeArchivalProfilesList(archivalProfiles);
-            $('#importTab').show();
+
+            if (archivalProfiles.length < 1) {
+                $('#importTabLink').hide();
+                $('#folderTab').click();
+                return;
+            }
+
+            $('#importTabLink').show();
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
@@ -268,7 +278,7 @@
 
     // Actions on archives
     $('#folderContents').on('click', '.archiveName', function() {
-        var archive = $(this).closest('.archive')
+        var archive = $(this).closest('.archive');
         var archiveId = archive.attr('id');
         ArchiveList.select(archive);
         Archive.getInfo(archiveId);
@@ -288,4 +298,9 @@
         Archive.getResourceInfo($(this));
     })
 
+    $('#importTabLink').on("click", function() {
+        //var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
+        //$("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+        $('#importTab').click();
+    })
 </script>
