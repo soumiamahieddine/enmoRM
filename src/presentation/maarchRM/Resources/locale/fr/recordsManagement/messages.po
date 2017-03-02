@@ -811,5 +811,26 @@ msgstr "Date de création"
 msgid "Management information"
 msgstr "Information de gestion"
 
+msgid "Management metadata"
+msgstr "Métadonnées de gestion"
+
+msgid "Descriptive metadata"
+msgstr "Métadonnées descriptives"
+
 msgid "Metadata"
 msgstr "Métadonnées"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
+
+msgid "Folder"
+msgstr "Dossier"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "File plan position"
+msgstr "Position"
