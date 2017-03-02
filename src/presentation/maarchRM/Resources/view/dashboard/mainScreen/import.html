@@ -1,17 +1,15 @@
 <div class="tab-pane fade" id="importPanel" data-translate-catalog="recordsManagement/archive">
     <br/>
     <div class="col-lg-4 col-lg-push-8 col-md-12">
-        <div class="btn-group pull-right">
-            <button type="button" class="btn btn-sm btn-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</button>
-            <button type="button" class="btn btn-sm  btn-danger" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
-        </div>
-        <br/>
         <?hinclude dashboard/mainScreen/documentForm.html ?>    
     </div>
     <div class="col-lg-8 col-lg-pull-4 col-md-12">
         <?hinclude dashboard/mainScreen/archiveForm.html ?>
-        <hr/>
         <?hinclude dashboard/mainScreen/descriptionForm.html ?>
+    </div>
+    <div class="pull-right">
+        <button type="button" class="btn btn-sm  btn-warning" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+        <button type="button" class="btn btn-sm btn-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</button>
     </div>
 </div>
 

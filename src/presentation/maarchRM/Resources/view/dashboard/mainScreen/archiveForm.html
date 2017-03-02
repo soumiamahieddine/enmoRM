@@ -7,26 +7,30 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-md-3 control-label small">Archive name</label>
-        <div class="col-md-9">
+        <label class="col-sm-3  control-label small">Archive name</label>
+        <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 control-label small">Identifier</label>
-        <div class="col-md-9">
+        <label class="col-sm-3 control-label small">Identifier</label>
+        <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 control-label small">Archival profile</label>
-        <div class="col-md-9">
+        <label class="col-sm-3 control-label small">Archival profile</label>
+        <div class="col-sm-9">
             <select class="input-sm form-control archiveInput" name="archivalProfileReference" id="archivalProfile">
                 <option value=""></option>
             </select>
         </div>
     </div>
-    <div class="form-group">
+    <input type="hidden" name="filePlanPosition"/>
+    <input type="hidden" name="originatorOrgRegNumber"/>
+    <input type="hidden" name="parentArchiveId"/>
+</form>
+    <!--div class="form-group">
         <label class="col-md-3 control-label small">File plan position</label>
         <div class="col-md-9">
             <input type="text" class="input-sm form-control archiveInput" disabled name="filePlanPosition" placeholder="File plan position"/>
@@ -44,11 +48,14 @@
             <input type="text" class="input-sm form-control archiveInput" disabled name="parentArchiveId"/>
         </div>
     </div>
-    <hr/>
-    <h4>
+    <hr/-->
+<div class="panel-heading" role="tab">
+    <strong>
         <a data-toggle="collapse" href="#management">Management metadata</a>
-    </h4>
-    <div id="management" class="panel-collapse in">
+    </strong>
+</div>
+<div id="management" class="panel-collapse collapse">
+    <form id="managementMetadataForm" class="form-horizontal">
         <div class="form-group">
             <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
             <div class="col-md-6">
@@ -67,13 +74,13 @@
             <div class="col-md-6">
                 <input class="input-sm form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
             </div>
-            
         </div>
-    </div>
-</form>
+    </form>
+</div>
+
 <script type="text/javascript">
     $('#app_maarchRM_main').ready(function () {
-        $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+        $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
     });
 
     // ARCHIVE
@@ -139,10 +146,12 @@
             }
 
             if (value == '' || selectedProfile.retentionStartDate == '' || selectedProfile.retentionStartDate == "definedLater" || selectedProfile.retentionStartDate == null) {
-                $("#archiveForm").find("[name=retentionStartDate]").closest(".form-group").removeClass("hide");
-                $("#archiveForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
+                retentionStartDate.data("datepicker").setDate(new Date())
+                retentionStartDate.closest(".form-group").removeClass("hide");
+                
             } else {
-                 $("#archiveForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
+                 $("#managementMetadataForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
             }
         },
         displayArchiveDescription : function() {
@@ -203,7 +212,7 @@
             $('#retentionRuleText').html(retentionRuleText);
         },
         serialize : function() {
-            var form = $('#archiveForm');
+            var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
@@ -250,7 +259,7 @@
         },
 
         clear : function() {
-            $('#archiveForm').find('.archiveInput :not(:disabled)').val('').trigger('change');
+            $('#archiveForm, #managementMetadataForm').find('.archiveInput :not(:disabled)').val('').trigger('change');
 
             $('#archivalProfile').prop('selectedIndex', 0).change();
             DocumentList.clear();
