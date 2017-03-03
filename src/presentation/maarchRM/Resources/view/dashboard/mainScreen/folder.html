@@ -299,8 +299,8 @@
     })
 
     $('#importTabLink').on("click", function() {
-        //var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
-        //$("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+        var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
+        $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $('#importTab').click();
     })
 </script>
