@@ -220,21 +220,25 @@ class welcome
             return;
         }
 
+        $archivalProfile = null;
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+        
+            $archive->archivalProfileName = $archivalProfile->name;
+        }
+
         if (!empty($archive->descriptionClass)) {
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
         } else {
-            $archivalProfile = [];
-            if (!empty($archive->archivalProfileReference)) {
-                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-            }
-
             $descriptionHtml = '<table">';
 
             foreach ($archive->descriptionObject as $name => $value) {
-                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                    if ($archiveDescription->fieldName == $name) {
-                        $label = $archiveDescription->descriptionField->label;
+                if ($archivalProfile) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $name) {
+                            $label = $archiveDescription->descriptionField->label;
+                        }
                     }
                 }
 

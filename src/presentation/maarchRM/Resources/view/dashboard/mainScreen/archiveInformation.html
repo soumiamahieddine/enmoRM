@@ -6,15 +6,19 @@
         <table>
             <tr>
                 <th title="Name">Name</th>
-                <td><?merge archive.archiveName ?></td>
+                <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
+            </tr>
+            <tr>
+                <th title="Profile">Profile</th>
+                <td title='[?merge archive.archivalProfileName ?]'><?merge archive.archivalProfileName ?></td>
             </tr>
             <tr>
                 <th title="Deposit date">Deposit date</th>
-                <td><?merge archive.depositDate ?></td>
+                <td title='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
             </tr>
             <tr>
                 <th title="Status">Status</th>
-                <td><?merge archive.status ?></td>
+                <td title='[?merge archive.status ?]'><?merge archive.status ?></td>
             </tr>
         </table>
     </div>
@@ -29,14 +33,6 @@
                     </strong>
                 </div>
                 <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
-                    <table>
-                        <?merge archive.archivalProfileReference.bool() ?>
-                        <tr>
-                            <th title="Archival profile">Archival profile</th>
-                            <td><?merge archive.archivalProfileReference ?></td>
-                        </tr>
-                    </table>
-
                     <?merge archive.retentionRuleCode.bool() ?>
                     <table>
                         <tr>

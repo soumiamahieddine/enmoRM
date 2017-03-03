@@ -331,16 +331,18 @@ class archive
     {
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
+        $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
+            
+            $archive->archivalProfileName = $archivalProfile->name;
+        }
+        
         if (isset($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
             } else {
-                $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
-                if (!empty($archive->archivalProfileReference)) {
-                    $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
-                }
-
                 $descriptionHtml = '<dl class="dl dl-horizontal">';
                 
                 foreach ($archive->descriptionObject as $name => $value) {
@@ -367,11 +369,6 @@ class archive
             } else {
                 unset($archive->descriptionObject);
             }
-        }
-
-        if (isset($archive->archivalProfileReference)) {
-            $profil = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-            $archive->archivalProfileName = $profil->name;
         }
 
         if (isset($archive->retentionDuration)) {

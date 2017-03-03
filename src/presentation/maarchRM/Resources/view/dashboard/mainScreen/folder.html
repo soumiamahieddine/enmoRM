@@ -135,8 +135,8 @@
                 if (archives[i].depositDate) {
                     $(siblings[1]).text(archives[i].depositDate.substring(0, 19));
                 }
-                if (archives[i].archivalProfileReference) {
-                    $(siblings[2]).text(archives[i].archivalProfileReference);
+                if (archives[i].archivalProfileName) {
+                    $(siblings[2]).text(archives[i].archivalProfileName);
                 }
 
                 this.folderContents.append(archiveDiv);
