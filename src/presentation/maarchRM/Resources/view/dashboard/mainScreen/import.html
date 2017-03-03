@@ -1,15 +1,18 @@
-<div class="tab-pane fade" id="importPanel" data-translate-catalog="recordsManagement/archive">
+<div class="tab-pane fade" id="importPanel">
     <br/>
     <div class="col-lg-4 col-lg-push-8 col-md-12">
+        <div class="pull-right">
+            <button type="button" class="btn btn-sm btn-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</button>
+            <i>&nbsp;</i>
+            <a href="#" class="text-danger" id="cancel">Cancel</a>
+        </div>
+        <br/>
+        <br/>
         <?hinclude dashboard/mainScreen/documentForm.html ?>    
     </div>
     <div class="col-lg-8 col-lg-pull-4 col-md-12">
         <?hinclude dashboard/mainScreen/archiveForm.html ?>
         <?hinclude dashboard/mainScreen/descriptionForm.html ?>
-    </div>
-    <div class="pull-right">
-        <button type="button" class="btn btn-sm  btn-warning" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
-        <button type="button" class="btn btn-sm btn-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</button>
     </div>
 </div>
 
@@ -20,5 +23,6 @@
 
     $('#cancel').on('click', function(e) {
         ArchiveForm.clear();
+        $('#folderTab').click();
     });
 </script>
