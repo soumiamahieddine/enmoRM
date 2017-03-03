@@ -435,7 +435,7 @@ trait archiveEntryTrait
             return;
         }
 
-        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") == false ? false : true;
+        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         $droid = \laabs::newService('dependency/fileSystem/plugins/fid');
 
         foreach ($archive->digitalResources as $digitalResource) {
