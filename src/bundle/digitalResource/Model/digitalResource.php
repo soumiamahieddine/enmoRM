@@ -210,10 +210,7 @@ class digitalResource
     {
         $this->handler = \laabs::createMemoryStream($contents);
 
-        $this->size = strlen($contents);
-
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $this->mimetype = $finfo->buffer($contents);
+        $this->setInformation($contents);
     }
 
     /**
@@ -255,4 +252,26 @@ class digitalResource
     {
         return $this->metadata;
     }
-} // END class digitalResource
+
+    /**
+     * Set file information
+     * @param string $contents The file contents
+     */
+    private function setInformation($contents)
+    {
+        $this->size = strlen($contents);
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $this->mimetype = $finfo->buffer($contents);
+
+        if (isset($this->fileExtension) || !isset($this->fileName)) {
+            return;
+        }
+
+        $pathinfo = pathinfo($this->fileName);
+
+        if (isset($pathinfo['extension'])) {
+            $this->fileExtension = $pathinfo['extension'];
+        }
+    }
+}

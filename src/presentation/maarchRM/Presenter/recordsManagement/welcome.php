@@ -142,6 +142,8 @@ class welcome
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
 
+        $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+
         $this->getDescription($archive);
         $this->view->setSource("archive", $archive);
         $this->view->merge();

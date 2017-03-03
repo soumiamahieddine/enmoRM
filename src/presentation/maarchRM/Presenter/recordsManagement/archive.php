@@ -402,6 +402,20 @@ class archive
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {
+                /*if (isset($digitalResource->format)) {
+                    foreach ((array) $format->mimetypes as $mimetype) {
+
+                        if (!strpos($mimetype, "/")) {
+                            continue;
+                        } 
+                        $mediatype = strtok($mimetype, "/");
+
+                        if (in_array($mediatype, ['application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image'])) {
+                            $format->mediatype = $mediatype;
+                            break;
+                        }
+                    }
+                }*/
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                     continue;
