@@ -834,3 +834,6 @@ msgstr "Créer"
 
 msgid "File plan position"
 msgstr "Position"
+
+msgid "Empty folder"
+msgstr "Le dossier est vide"
