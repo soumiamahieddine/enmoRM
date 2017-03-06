@@ -10,7 +10,7 @@ file that was distributed with this source code.
         <h2>
             <i class="fa fa-qrcode"></i>
             <span id="newAccessRuleTitle">New access code</span>
-            <span id="editAccessRuleTitle" class="hide">Edit an access code </span><small id="accessRuleTitle"></small>
+            <span id="editAccessRuleTitle" style="display: none">Edit an access code </span><small id="accessRuleTitle"></small>
         </h2>
     </div>
     <div class="modal-body container-fluid">
@@ -121,8 +121,8 @@ file that was distributed with this source code.
         load : function (accessRule) {
             if(accessRule) {
 
-                $('#newAccessRuleTitle').addClass('hide');
-                $('#editAccessRuleTitle').removeClass('hide');
+                $('#newAccessRuleTitle').hide();
+                $('#editAccessRuleTitle').show();
                 $('#accessRuleTitle').html(accessRule.code);
 
 
@@ -193,7 +193,10 @@ file that was distributed with this source code.
             }
 
             $('#orgRegNumber').val('');
-            if (accessEntry.originatorAccess) $('#originatorAccess').click();
+
+            if (accessEntry.originatorAccess) {
+                $('#originatorAccess').click();
+            }
 
             this.loadAccessEntrie(accessEntry);
         },
@@ -224,7 +227,7 @@ file that was distributed with this source code.
                      .appendTo(span);
             
             li.appendTo($("#accessEntries"));
-            slectedOption.addClass('hide');
+            slectedOption.hide();
         },
 
         serialize : function() {
