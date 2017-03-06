@@ -29,7 +29,9 @@ CREATE TABLE "recordsManagement"."accessEntry"
 (
   "accessRuleCode" text NOT NULL,
   "orgRegNumber" text NOT NULL,
-  "originatorAccess" boolean default true
+  "originatorAccess" boolean default true,
+
+  UNIQUE ("accessRuleCode", "orgRegNumber")
 )
 WITH (
   OIDS=FALSE

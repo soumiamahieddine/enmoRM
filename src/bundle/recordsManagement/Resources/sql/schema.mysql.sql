@@ -24,7 +24,9 @@ CREATE TABLE `recordsManagement.accessEntry`
 (
   `accessRuleCode` varchar(255) NOT NULL,
   `orgRegNumber` varchar(255) NOT NULL,
-  `originatorAccess` boolean DEFAULT true
+  `originatorAccess` boolean DEFAULT true,
+
+  UNIQUE (`accessRuleCode`, `orgRegNumber`)
 );
 
 
