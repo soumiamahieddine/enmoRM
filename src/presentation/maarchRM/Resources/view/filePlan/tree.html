@@ -48,6 +48,9 @@
     #filePlanMenu {
         visibility: hidden;
     }
+    .ui-draggable-drsagging{
+        position: absolute !important;
+    }
 </style>
 
 <script>
@@ -162,7 +165,7 @@
         },
 
         initDragNDrop: function() {
-            $('#filePlanTree').find('.folderNode').draggable(DroppableOption)
+            $('#filePlanTree').find('.folderNode').parent().draggable(DroppableOption)
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
         }
@@ -229,12 +232,17 @@
 
     DroppableOption = {
         revert : true,
-        zIndex: 100
+        zIndex: 100,
+        helper: "clone"
     }
 
     FolderDroppableOption = {
         over: function(event, ui) {
-           FolderNode.moveIn($(this));
+            parent = $(this);
+            FolderNode.moveIn(parent);
+            setTimeout(function () {
+                BootstrapTree.openNode(parent.closest('li'));
+            }, 800);
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));

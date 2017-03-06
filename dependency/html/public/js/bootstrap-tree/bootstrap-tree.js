@@ -40,7 +40,7 @@ var BootstrapTree = {
         ul.appendTo(tree);
     },
 
-    addNode: function(parent, element) {
+    addNode: function(parent, element, openNode) {
         if (!element || !parent) {
             return;
         }
@@ -55,7 +55,7 @@ var BootstrapTree = {
                       .removeClass(parentIcon.data('default-icon'))
                       .on('click', BootstrapTree.toggleNode);
         }
-            
+        
         elementIcon = element.find('.fa:first');
         elementIcon.addClass(elementIcon.data('default-icon'));
 
@@ -65,7 +65,10 @@ var BootstrapTree = {
         }
 
         element.appendTo(ul);
-        this.openNode(parent);
+
+        if (openNode || openNode == undefined) {
+            this.openNode(parent);
+        }
     },
 
     removeNode: function(element) {
@@ -93,12 +96,9 @@ var BootstrapTree = {
         var openedIcon = i.data('opened-icon');
         var closedIcon = i.data('closed-icon');
 
-        if (!i.hasClass(openedIcon)) {
+        if (!i.hasClass(openedIcon) && children.length) {
             children.show('fast');
-            console.log(i);
             i.addClass(openedIcon).removeClass(closedIcon);
-        } else {
-            alert("Error");
         }
     },
 
@@ -130,6 +130,7 @@ var BootstrapTree = {
             return;
         }
 
+        var elementUl = element.closest('ul');
         var ul = target.find('> ul');
         if (ul.length == 0) {
             ul = $('<ul/>').appendTo(target);
@@ -138,14 +139,20 @@ var BootstrapTree = {
             target.addClass('parent_li');
 
             targetIcon.addClass(targetIcon.data('opened-icon'))
+                      .removeClass(targetIcon.data('default-icon'))
                       .on('click', BootstrapTree.toggleNode);
         }
         ul.append(element);
 
-        var targetUl = target.find('ul');
-        if (targetUl.length == 0) {
-            targetUl.remove();
+        if (elementUl.find('li').length == 0) {
+            var icon = elementUl.closest('li').find('.fa:first');
+            console.log(elementUl);
+            elementUl.remove();
+
+            icon.removeClass(icon.data('opened-icon') + ' ' + icon.data('closed-icon'))
+                .addClass(icon.data('default-icon'));
         }
+
 
         this.openNode(target);
     }
