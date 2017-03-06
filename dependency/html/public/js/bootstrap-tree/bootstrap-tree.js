@@ -52,6 +52,7 @@ var BootstrapTree = {
             parent.addClass('parent_li');
             parentIcon = parent.find('.fa:first');
             parentIcon.addClass(parentIcon.data('closed-icon'))
+                      .removeClass(parentIcon.data('default-icon'))
                       .on('click', BootstrapTree.toggleNode);
         }
             
@@ -64,7 +65,7 @@ var BootstrapTree = {
         }
 
         element.appendTo(ul);
-        //this.openNode(parent);
+        this.openNode(parent);
     },
 
     removeNode: function(element) {
@@ -86,8 +87,18 @@ var BootstrapTree = {
     },
 
     openNode: function(element) {
-        if (element.children('ul').children('li:hidden').length > 0) {
-            element.find('i:first').click();
+        var children = element.find(' > ul > li');
+        var i = element.find('.fa:first');
+
+        var openedIcon = i.data('opened-icon');
+        var closedIcon = i.data('closed-icon');
+
+        if (!i.hasClass(openedIcon)) {
+            children.show('fast');
+            console.log(i);
+            i.addClass(openedIcon).removeClass(closedIcon);
+        } else {
+            alert("Error");
         }
     },
 
@@ -135,6 +146,8 @@ var BootstrapTree = {
         if (targetUl.length == 0) {
             targetUl.remove();
         }
+
+        this.openNode(target);
     }
 
 }
