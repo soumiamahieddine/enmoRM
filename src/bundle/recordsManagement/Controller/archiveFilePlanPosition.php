@@ -63,4 +63,31 @@ class archiveFilePlanPosition
         return $archives;
     }
 
+    /**
+     * Add an archive in a folder
+     * @param string $archiveId the archive identifier
+     * @param string $folderId The folder identifier
+     * 
+     * @return boolean The result of the operation
+     */
+    public function addArchiveToFolder($archiveId, $folderId=null) {
+        $archive = $this->sdoFactory->read('recordsManagement/archiveFilePlanPosition', $archiveId);
+
+        // Validation
+        if (!$archive) {
+            throw new \core\Exception\ForbiddenException("The archive identifier '$archiveId' does not exist.");
+        }
+
+        $filePlanController = \laabs::newController("filePlan/filePlan");
+        $folder = $filePlanController->read($folderId);
+
+        if ($folder->ownerOrgRegNumber != $archive->originatorOrgRegNumber) {
+            throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from '$folder->ownerOrgRegNumber'");
+        }
+
+        // Update
+        $archive->filePlanPosition = $folderId;
+
+        return $this->sdoFactory->update($archive, "recordsManagement/archiveFilePlanPosition");
+    }
 }

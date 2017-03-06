@@ -391,7 +391,7 @@ class archive
     public function getDescription($archiveId)
     {
         if (!$this->sdoFactory->exists('recordsManagement/archive', $archiveId)) {
-            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier '$archiveId' not exist");
+            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier '$archiveId' does not exist.");
         }
 
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);

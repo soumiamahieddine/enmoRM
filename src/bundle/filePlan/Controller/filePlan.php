@@ -93,6 +93,24 @@ class filePlan
     }
 
     /**
+     * Read a folder
+     * @param string $folderId The folder identifier
+     * 
+     * @return filePlan/folder The folder
+     */
+    public function read($folderId)
+    {
+        try {
+            $folder = $this->sdoFactory->read("filePlan/folder", $folderId);
+        
+        } catch(\Exception $e) {
+            throw new \core\Exception\NotFoundException("The folder identified by '$folderId' can't be found.");
+        }
+
+        return $folder;
+    }
+
+    /**
      * Move a folder on a new position
      * @param string $folderId
      * @param string $parentFolderId
