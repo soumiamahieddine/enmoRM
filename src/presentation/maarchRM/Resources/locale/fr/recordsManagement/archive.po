@@ -29,9 +29,6 @@ msgstr "Règle de conservation"
 msgid "Retention start date"
 msgstr "Date de référence"
 
-msgid "%s1 after %s2"
-msgstr "%s1 après %s2"
-
 msgid "File plan position"
 msgstr "Dossier de classement"
 

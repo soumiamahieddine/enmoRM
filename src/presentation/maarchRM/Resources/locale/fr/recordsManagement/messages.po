@@ -837,3 +837,9 @@ msgstr "Position"
 
 msgid "Empty folder"
 msgstr "Le dossier est vide"
+
+msgid "%s1 after %s2"
+msgstr "%s1 après %s2"
+
+msgid "bytes"
+msgstr "octets"
