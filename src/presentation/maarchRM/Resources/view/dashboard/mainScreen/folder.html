@@ -57,7 +57,11 @@
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
     }
-    #folderContentList .archiveSelection, #folderContentList .archiveContentButton, .archive .tree-l li>span>span {
+    #folderContentList .archiveSelection,
+    #folderContentList .archiveContentButton,
+    #folderContentList a,
+    #folderContentList .bg-success,
+    #folderContentList .archive .tree-l li>span>span {
         cursor: pointer;
     }
 
@@ -187,7 +191,7 @@
                 dataType    : 'json',
                 success     : function (response) {
                     archive.find('.archiveContent').removeClass('hide').find('ul').html('');
-                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.childrenArchives);
+                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.childrenArchives, false);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -209,36 +213,42 @@
             })
         },
 
-        showArchiveContent: function(parent, digitalResources, childrenArchives) {
-            for(i=0; i < childrenArchives.length; i++) {
-                template = this.archiveContentTemplate.clone();
+        showArchiveContent: function(parent, digitalResources, childrenArchives, hidden) {
+            if (digitalResources) {
+                for(i=0; i < digitalResources.length; i++) {
+                    template = this.archiveContentTemplate.clone();
 
-                template.children('span')
-                        .children('i')
-                        .addClass('fa fa-archive')
-                        .siblings('span')
-                        .addClass('childrenArchive')
-                        .attr('id', childrenArchives[i].archiveId)
-                        .html(childrenArchives[i].archiveName);
+                    template.children('span')
+                            .children('i')
+                            .addClass('fa fa-file-o')
+                            .siblings('span')
+                            .addClass('document')
+                            .data('json', digitalResources[i])
+                            .attr('id', digitalResources[i].resId)
+                            .html(digitalResources[i].fileName);
 
-                BootstrapTree.addNode(parent, template);
-
-                this.showArchiveContent(template, childrenArchives[i].digitalResources, childrenArchives[i].childrenArchives);
+                    BootstrapTree.addNode(parent, template, hidden);
+                }
             }
 
-            for(i=0; i < digitalResources.length; i++) {
-                template = this.archiveContentTemplate.clone();
+            if (childrenArchives) {
+                for(i=0; i < childrenArchives.length; i++) {
+                    template = this.archiveContentTemplate.clone();
 
-                template.children('span')
-                        .children('i')
-                        .addClass('fa fa-file-o')
-                        .siblings('span')
-                        .addClass('document')
-                        .data('json', digitalResources[i])
-                        .attr('id', digitalResources[i].resId)
-                        .html(digitalResources[i].fileName);
+                    template.children('span')
+                            .children('i')
+                            .addClass('fa')
+                            .data('closed-icon', 'fa-caret-right')
+                            .data('opened-icon', 'fa-caret-down')
+                            .siblings('span')
+                            .addClass('childrenArchive')
+                            .attr('id', childrenArchives[i].archiveId)
+                            .html(childrenArchives[i].archiveName);
 
-                BootstrapTree.addNode(parent, template);
+                    BootstrapTree.addNode(parent, template, hidden);
+
+                    this.showArchiveContent(template, childrenArchives[i].digitalResources, childrenArchives[i].childrenArchives, false);
+                }
             }
         }
     }
@@ -283,6 +293,13 @@
         ArchiveList.select(archive);
         Archive.getInfo(archiveId);
     })
+
+    $('#folderPanel').on('click', function(e) {
+        if ($(e.target).css('cursor') != "pointer") {
+            ArchiveList.unselect();
+        }
+    })
+
 
     $('#folderContents').on('click', '.childrenArchive', function() {
         var parentArchive = $(this).closest('.archive');

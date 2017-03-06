@@ -90,4 +90,32 @@ class archiveFilePlanPosition
 
         return $this->sdoFactory->update($archive, "recordsManagement/archiveFilePlanPosition");
     }
+
+    /**
+     * List an archive resources and children archives
+     * @param mixed $archive the archive identifier or the archive
+     * 
+     * @return object The archiveContent
+     */
+    public function listArchiveContents($archive) {
+
+        if (is_string($archive)) {
+            $archiveId = $archive;
+
+            $archive = new \stdClass();
+            $archive->archiveId = $archiveId;
+        }
+
+        // Resources
+        $digitalResourceController = \laabs::newController("digitalResource/digitalResource");
+        $archive->digitalResources = $digitalResourceController->getResourcesByArchiveId($archive->archiveId);
+
+        // ChildrenArchives
+        $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'");
+        foreach ($childrenArchives as $childArchive) {
+            $archive->childrenArchives[] = $this->listArchiveContents($childArchive);
+        }
+
+        return $archive;
+    }
 }

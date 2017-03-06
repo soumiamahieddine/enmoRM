@@ -66,8 +66,13 @@ var BootstrapTree = {
 
         element.appendTo(ul);
 
-        if (openNode || openNode == undefined) {
-            this.openNode(parent);
+        if (parent.is("li")) {
+            console.log(openNode);
+            if (openNode || openNode == undefined) {
+                this.openNode(parent);
+            } else {
+                element.hide();
+            }
         }
     },
 
@@ -146,7 +151,6 @@ var BootstrapTree = {
 
         if (elementUl.find('li').length == 0) {
             var icon = elementUl.closest('li').find('.fa:first');
-            console.log(elementUl);
             elementUl.remove();
 
             icon.removeClass(icon.data('opened-icon') + ' ' + icon.data('closed-icon'))

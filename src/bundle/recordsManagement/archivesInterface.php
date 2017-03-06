@@ -226,4 +226,11 @@ interface archivesInterface
      *
      */
     public function readFolder($orgRegNumber, $folderId=null);
+
+    /**
+     * List an archive resources and children archives
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/listArchiveContents
+     */
+    public function readArchivecontents_archive_();
 }

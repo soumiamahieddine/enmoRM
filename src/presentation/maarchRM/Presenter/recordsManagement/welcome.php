@@ -202,8 +202,13 @@ class welcome
      */
     public function archiveContent($archive)
     {
-        $this->json->digitalResources = $archive->digitalResources;
-        $this->json->childrenArchives = $archive->childrenArchives;
+        if (isset($archive->digitalResources)) {
+            $this->json->digitalResources = $archive->digitalResources;
+        }
+
+        if (isset($archive->childrenArchives)) {
+            $this->json->childrenArchives = $archive->childrenArchives;
+        }
 
         return $this->json->save();
     }
