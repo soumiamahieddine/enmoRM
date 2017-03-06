@@ -111,9 +111,9 @@ file that was distributed with this source code.
                                             <div class="col-md-10" id="retentionStartDate">
                                                 <input type="hidden" name="retentionStartDate" />
                                                 <select id="startDate" class="form-control">
-                                                    <option value="" >Select a retention start date</option>
-                                                    <option value= "definedLater">To be defined later </option>
-                                                    <option value= "depositDate" >Deposit date </option>
+                                                    <!--option value="" >Select a retention start date</option-->
+                                                    <option value="definedLater">To be defined later </option>
+                                                    <option value="depositDate" >Deposit date </option>
                                                     <!--option value= "createdDate"> Created date </option>
                                                     <option value= "publicatedDate"> Date of publication </option>
                                                     <option value= "receptionDate"> Date of reception </option>
@@ -334,7 +334,7 @@ file that was distributed with this source code.
             type= 'POST';
             url='/archivalProfile';
         }
-        if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "") {
+        if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
             gritter.show($("#empty_text").text(), false);
             return;
         }
