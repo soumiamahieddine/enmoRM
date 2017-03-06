@@ -33,10 +33,6 @@ MovingConfirmationModal = {
 
         var targetId = target.attr('id');
         var parentId = element.data('parentid');
-        console.log((targetId == parentId));
-        console.log(!parentId && target.hasClass('organization'));
-        console.log(element.data('orgregnumber') != target.data('orgregnumber'));
-        console.log($('#'+targetId).find('#'+element.attr('id')).length);
 
         if ((targetId == parentId) || 
             (!parentId && target.hasClass('organization')) ||

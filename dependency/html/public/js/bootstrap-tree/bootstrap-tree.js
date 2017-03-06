@@ -67,7 +67,6 @@ var BootstrapTree = {
         element.appendTo(ul);
 
         if (parent.is("li")) {
-            console.log(openNode);
             if (openNode || openNode == undefined) {
                 this.openNode(parent);
             } else {

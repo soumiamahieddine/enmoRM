@@ -57,6 +57,7 @@
     FilePlan = {
         tree: $('#filePlanTree'),
         selectedNode : null,
+        hoverTimeout : null,
         select: function(e) {
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
@@ -165,7 +166,7 @@
         },
 
         initDragNDrop: function() {
-            $('#filePlanTree').find('.folderNode').parent().draggable(DroppableOption)
+            $('#filePlanTree').find('.folder').draggable(DroppableOption)
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
         }
@@ -240,16 +241,21 @@
         over: function(event, ui) {
             parent = $(this);
             FolderNode.moveIn(parent);
-            setTimeout(function () {
+            FilePlan.hoverTimeout = setTimeout(function () {
                 BootstrapTree.openNode(parent.closest('li'));
             }, 800);
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));
+           clearTimeout(FilePlan.hoverTimeout);
         },
         drop: function(event, ui) {
             FolderNode.moveOut($(this));
-            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            if ($(ui.draggable).hasClass('folder')) {
+                MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            } else if ($(ui.draggable).hasClass('archiveName')) {
+                alert('ok');
+            }
         }
     }
 
@@ -264,7 +270,11 @@
         },
         drop: function(event, ui) {
             OrganizationNode.moveOut($(this));
-            MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            if ($(ui.draggable).hasClass('folderNode')) {
+                MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
+            } else if ($(ui.draggable).hasClass('archiveName')) {
+                alert('ok');
+            }
         }
     }
 

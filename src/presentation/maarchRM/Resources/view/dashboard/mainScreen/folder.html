@@ -146,8 +146,9 @@
                 this.folderContents.append(archiveDiv);
                 this.archivesOrder.push(archiveDiv);
                 this.archivesList.push(archives[i]);
-
             }
+
+            this.initDragNDrop();
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
@@ -166,6 +167,14 @@
 
         refresh: function() {
             FilePlan.selectedNode.find('b:first').click();
+        },
+
+        initDragNDrop: function() {
+            $('#folderContentList').find('.archiveName').draggable({
+                revert : true,
+                zIndex: 100,
+                helper: "clone"
+            })
         }
     }
 
