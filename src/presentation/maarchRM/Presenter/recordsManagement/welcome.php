@@ -214,6 +214,19 @@ class welcome
     }
 
     /**
+     * Show the result of moving an archive into a folder
+     * @param bool $result
+     *
+     * @return string
+     */
+    public function moveArchiveintoFolder($result)
+    {
+        $this->json->message = "The archive was moved.";
+
+        return $this->json->save();
+    }
+
+    /**
      * Get archive description
      * @param archive $archive
      *

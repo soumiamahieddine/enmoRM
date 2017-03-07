@@ -1,0 +1,72 @@
+<div class="modal fade" id="ArchiveAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span>Move archive into </span><i class="folderName"></i></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
+                    </div>
+                    <div class="col-xs-10">
+                        <h4><span>Do you want to move the archive</span> <i class="archiveName text-primary"></i> <span>into the folder</span> <i class="folderName text-primary"></i> ?</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" id="moveArchive" class="btn btn-success" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    ArchiveAssignmentModal = {
+        folder: null,
+        archive: null,
+        modal: $('#ArchiveAssignmentModal'),
+
+        show: function(archive, folder) {
+            this.archive = archive;
+            this.folder = folder;
+
+            var archiveName = archive.find('.archiveName').text();
+            var folderName = folder.find('b:first').text();
+
+            if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
+            if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
+
+            this.modal.find('.folderName').html(folderName);
+            this.modal.find('.archiveName').html(archiveName);
+            this.modal.modal();
+        },
+
+        move: function() {
+            var archiveId = this.archive.attr('id');
+            var folderId = this.folder.parent().attr('id');
+            $.ajax({
+                url         : '/Archive/Moveintofolder',
+                type        : 'PUT',
+                contentType : 'application/json',
+                dataType    : 'json',
+                data        : JSON.stringify({archiveId: archiveId , folderId: folderId}),
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        ArchiveAssignmentModal.archive.remove()
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        }
+    }
+
+    $('#moveArchive').click(function() {
+        ArchiveAssignmentModal.move();
+    })
+
+</script>

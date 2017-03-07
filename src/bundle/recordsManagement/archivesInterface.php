@@ -233,4 +233,14 @@ interface archivesInterface
      * @action recordsManagement/archiveFilePlanPosition/listArchiveContents
      */
     public function readArchivecontents_archive_();
+
+
+    /**
+     * Move an archive into a folder
+     * @param string $archiveId the archive identifier
+     * @param string $folderId The folder identifier
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/moveArchiveIntoFolder
+     */
+    public function udpateMovearchiveintofolder($archiveId, $folderId=null);
 }

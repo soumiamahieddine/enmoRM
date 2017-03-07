@@ -28,6 +28,7 @@
 
     <?hinclude /filePlan/folderForm.html ?>
     <?hinclude /filePlan/movingComfirmationModal.html ?>
+    <?hinclude /filePlan/archiveAssignmentModal.html ?>
 </div>
 
 <style>
@@ -48,16 +49,14 @@
     #filePlanMenu {
         visibility: hidden;
     }
-    .ui-draggable-drsagging{
-        position: absolute !important;
-    }
+
 </style>
 
 <script>
     FilePlan = {
         tree: $('#filePlanTree'),
         selectedNode : null,
-        hoverTimeout : null,
+        // hoverTimeout : null,
         select: function(e) {
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
@@ -95,7 +94,7 @@
             var orgRegNumber = e.data('orgregnumber');
             var folderId = null;
             var path = '';
-            var description = ''
+            var description = '';
             var profile = null;
 
             if (e.hasClass('organization')) {
@@ -234,27 +233,34 @@
     DroppableOption = {
         revert : true,
         zIndex: 100,
-        helper: "clone"
+        helper: "clone",
+        delay: 100
     }
 
     FolderDroppableOption = {
         over: function(event, ui) {
             parent = $(this);
             FolderNode.moveIn(parent);
+            /*
             FilePlan.hoverTimeout = setTimeout(function () {
                 BootstrapTree.openNode(parent.closest('li'));
+                })
             }, 800);
+            */
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));
-           clearTimeout(FilePlan.hoverTimeout);
+           // clearTimeout(FilePlan.hoverTimeout);
         },
         drop: function(event, ui) {
             FolderNode.moveOut($(this));
+
             if ($(ui.draggable).hasClass('folder')) {
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
-            } else if ($(ui.draggable).hasClass('archiveName')) {
-                alert('ok');
+                
+            } else if ($(ui.draggable).hasClass('archive')) {
+                if ($(this).closest('li').attr('id') != FilePlan.selectedNode.attr('id'))
+                ArchiveAssignmentModal.show($(ui.draggable), $(this));
             }
         }
     }
@@ -266,14 +272,11 @@
         },
         out: function(event, ui) {
            OrganizationNode.moveOut($(this));
-           
         },
         drop: function(event, ui) {
             OrganizationNode.moveOut($(this));
             if ($(ui.draggable).hasClass('folderNode')) {
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
-            } else if ($(ui.draggable).hasClass('archiveName')) {
-                alert('ok');
             }
         }
     }

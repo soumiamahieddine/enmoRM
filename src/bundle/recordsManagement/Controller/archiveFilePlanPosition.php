@@ -64,13 +64,13 @@ class archiveFilePlanPosition
     }
 
     /**
-     * Add an archive in a folder
+     * Move an archive into a folder
      * @param string $archiveId the archive identifier
      * @param string $folderId The folder identifier
      * 
      * @return boolean The result of the operation
      */
-    public function addArchiveToFolder($archiveId, $folderId=null) {
+    public function moveArchiveIntoFolder($archiveId, $folderId=null) {
         $archive = $this->sdoFactory->read('recordsManagement/archiveFilePlanPosition', $archiveId);
 
         // Validation

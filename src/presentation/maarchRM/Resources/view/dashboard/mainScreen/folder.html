@@ -91,12 +91,6 @@
             this.folderContents.find('.bg-success').removeClass('bg-success');
         },
 
-        initDragNDrop: function() {
-                $('#filePlanTree').find('.folderNode').draggable(DroppableOption)
-                $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
-                $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
-        },
-
         getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
             var url = "/folder?orgRegNumber="+orgRegNumber;
             if (folderId) {
@@ -158,6 +152,30 @@
 
             this.initDragNDrop();
         },
+
+        initDragNDrop: function() {
+            $('#folderContentList').find('.archive').draggable({
+                revert : true,
+                zIndex: 100,
+                delay: 100,
+                helper: function(event, ui) {
+                    var title = $(this).find('.archiveName').text();
+
+                    if (title.length > 30) {
+                        title = title.substring(0,27)+'...';
+                    }
+
+                    return  $('<div/>').append($('<i/>').addClass("fa fa-archive")
+                                                        .css('text-align', 'center')
+                                                        .css('font-size', '40px'))
+                                       .append('<br/>')
+                                       .append(title)
+                                       .css('opacity', '0.8')
+                                       .css('color', 'grey')
+                                       .css('text-align', 'center');
+                }
+            })
+        },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             if (archivalProfiles.length < 1) {
@@ -183,14 +201,6 @@
 
         refresh: function() {
             FilePlan.selectedNode.find('b:first').click();
-        },
-
-        initDragNDrop: function() {
-            $('#folderContentList').find('.archiveName').draggable({
-                revert : true,
-                zIndex: 100,
-                helper: "clone"
-            })
         }
     }
 
