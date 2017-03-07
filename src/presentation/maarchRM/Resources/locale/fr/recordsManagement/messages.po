@@ -843,3 +843,6 @@ msgstr "%s1 après %s2"
 
 msgid "bytes"
 msgstr "octets"
+
+msgid "Without profile"
+msgstr "Sans profil"
