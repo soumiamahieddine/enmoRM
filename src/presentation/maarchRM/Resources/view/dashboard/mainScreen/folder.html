@@ -5,7 +5,15 @@
             <br/>
             <small id="folderDescription"/>
         </h4>
-        <a class="pull-right" id="importTabLink" data-toggle="tab" data-parentarchiveid="" style="display: none;cursor: pointer"><span class="fa fa-plus">&nbsp;</span>Create</a>
+        <div id="importDropdownBtn" class="dropdown pull-right" style="display: none;">
+            <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Create
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a data-reference="">Without profile</a></li>
+            </ul>
+        </div>
     </div>
     <i id="emptyFolderMessage" class="hide text-muted"><br/><span class="fa fa-times">&nbsp;</span>Empty folder</i>
     <div id="folderContentList" class="hide">
@@ -152,15 +160,23 @@
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
-            ArchiveForm.changeArchivalProfilesList(archivalProfiles);
-
             if (archivalProfiles.length < 1) {
-                $('#importTabLink').hide();
+                $('#importDropdownBtn').hide();
                 $('#folderTab').click();
                 return;
             }
 
-            $('#importTabLink').show();
+            var dropdown = $("#importDropdownBtn .dropdown-menu");
+            dropdown.children().not(":first").remove();
+            for (var i = 0; i < archivalProfiles.length; i++) {
+                var a = $("<a/>");
+                var li = $("<li/>");
+                a.data("reference", archivalProfiles[i].reference);
+                a.data("json", JSON.stringify(archivalProfiles[i]));
+                a.text(archivalProfiles[i].name);
+                li.append(a).appendTo(dropdown);
+            }
+            $('#importDropdownBtn').show();
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
@@ -324,9 +340,10 @@
         Archive.getResourceInfo($(this));
     })
 
-    $('#importTabLink').on("click", function() {
+    $("#importDropdownBtn").on('click', '.dropdown-menu li a', function() {
         var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+        $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
         $('#importTab').click();
-    })
+    });
 </script>
