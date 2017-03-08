@@ -219,9 +219,15 @@ class welcome
      *
      * @return string
      */
-    public function moveArchiveintoFolder($result)
+    public function moveArchivesToFolder($result)
     {
-        $this->json->message = "The archive was moved.";
+        if ($result == 1) {
+            $this->json->message = "The archive was moved.";
+        
+        } else {
+            $this->json->message = "$result archives was moved.";
+
+        }
 
         return $this->json->save();
     }

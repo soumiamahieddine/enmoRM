@@ -65,30 +65,75 @@ class archiveFilePlanPosition
 
     /**
      * Move an archive into a folder
-     * @param string $archiveId the archive identifier
-     * @param string $folderId The folder identifier
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
      * 
-     * @return boolean The result of the operation
+     * @return int The number of moved archives
      */
-    public function moveArchiveIntoFolder($archiveId, $folderId=null) {
-        $archive = $this->sdoFactory->read('recordsManagement/archiveFilePlanPosition', $archiveId);
-
-        // Validation
-        if (!$archive) {
-            throw new \core\Exception\ForbiddenException("The archive identifier '$archiveId' does not exist.");
-        }
-
+    public function moveArchivesToFolder($archiveIds, $fromFolderId=null, $toFolderId=null)
+    {
         $filePlanController = \laabs::newController("filePlan/filePlan");
-        $folder = $filePlanController->read($folderId);
+        $fromFolder = null;
+        $toFolder = null;
+        $count = 0;
 
-        if ($folder->ownerOrgRegNumber != $archive->originatorOrgRegNumber) {
-            throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from '$folder->ownerOrgRegNumber'");
+        if ($fromFolderId) {
+            $fromFolder = $filePlanController->read($fromFolderId);
         }
 
-        // Update
-        $archive->filePlanPosition = $folderId;
+        if ($toFolderId) {
+            $toFolder = $filePlanController->read($toFolderId);
+        }
+        
+        if ($fromFolder && $toFolder && $fromFolder->ownerOrgRegNumber != $toFolder->ownerOrgRegNumber) {
+            throw new \core\Exception\ForbiddenException("The archive can not be moved in a different organization unit");
+        }
 
-        return $this->sdoFactory->update($archive, "recordsManagement/archiveFilePlanPosition");
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        // move archives
+        try {
+            foreach ($archiveIds as $archiveId) {
+                $archive = $this->sdoFactory->read('recordsManagement/archiveFilePlanPosition', $archiveId);
+
+                // Validation
+                if (!$archive) {
+                    throw new \core\Exception\NotFoundException("The archive identifier '$archiveId' does not exist.");
+                }
+
+                if ($fromFolderId != $archive->filePlanPosition) {
+                    throw new \core\Exception\ForbiddenException("The archive '$archiveId' is not from the folder '$fromFolderId'.");
+                }
+
+                if ($toFolder && $toFolder->ownerOrgRegNumber != $archive->originatorOrgRegNumber) {
+                    throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from '$folder->ownerOrgRegNumber'.");
+                }
+
+                // Update
+                $archive->filePlanPosition = $toFolderId;
+                $this->sdoFactory->update($archive, "recordsManagement/archiveFilePlanPosition");
+
+                $count ++;
+            }
+
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return $count;
     }
 
     /**

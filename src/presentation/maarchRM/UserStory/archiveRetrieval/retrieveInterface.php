@@ -185,11 +185,12 @@ interface retrieveInterface
 
     /**
      * Move an archive into a folder
-     * @param string $archiveId the archive identifier
-     * @param string $folderId The folder identifier
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
      * 
-     * @return recordsManagement/welcome/moveArchiveintoFolder
-     * @uses recordsManagement/archives/udpateMovearchiveintofolder
+     * @return recordsManagement/welcome/moveArchivesToFolder
+     * @uses recordsManagement/archives/udpateMovearchivestofolder
      */
-    public function updateArchiveMoveintofolder($archiveId, $folderId=null);
+    public function updateArchivesMovetofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 }

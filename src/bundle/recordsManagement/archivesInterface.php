@@ -241,7 +241,17 @@ interface archivesInterface
      * @param string $archiveId the archive identifier
      * @param string $folderId The folder identifier
      * 
-     * @action recordsManagement/archiveFilePlanPosition/moveArchiveIntoFolder
+     * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
-    public function udpateMovearchiveintofolder($archiveId, $folderId=null);
+    public function udpateMovearchivetofolder($archiveId, $folderId=null);
+
+    /**
+     * Move an archive into a folder
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
+     */
+    public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 }

@@ -52,6 +52,10 @@
         </span>
     </li>
 </div>
+
+<div class="hide">
+    <span id="archives_text">archives</span>
+</div>
 <style>
     .archive h5 {
         margin: 6px 0px 6px 0px;
@@ -157,6 +161,8 @@
                 this.archivesList.push(archives[i]);
             }
 
+            this.folderContents.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
+
             this.initDragNDrop();
         },
 
@@ -165,21 +171,33 @@
                 revert : true,
                 zIndex: 100,
                 delay: 100,
-                helper: function(event, ui) {
-                    var title = $(this).find('.archiveName').text();
+                helper: function() {
+                    var archive = $(this);
+                    var archiveIds = [];
+                    var helper = $('<div/>');
+                    var title = ""
 
-                    if (title.length > 30) {
-                        title = title.substring(0,27)+'...';
+                    if (archive.hasClass('bg-info')) {
+                        $('#folderContentList').find('.bg-info').each(function() {
+                            archiveIds.push($(this).attr('id'));
+                            title = archiveIds.length + ' ' + $('#archives_text').text();
+                        })
+                    } else {
+                            archiveIds.push(archive.attr('id'));
+                            title = archive.find('.archiveName').html();
                     }
 
-                    return  $('<div/>').append($('<i/>').addClass("fa fa-archive")
-                                                        .css('text-align', 'center')
-                                                        .css('font-size', '40px'))
-                                       .append('<br/>')
-                                       .append(title)
-                                       .css('opacity', '0.8')
-                                       .css('color', 'grey')
-                                       .css('text-align', 'center');
+                    helper.addClass('archiveHelper')
+                        .data('archives', archiveIds)
+                        .append($('<i/>').addClass("fa fa-archive")
+                                         .css('text-align', 'center')
+                                         .css('font-size', '40px'))
+                        .append('<br/>')
+                        .append(title)
+                        .css('opacity', '0.8')
+                        .css('color', 'grey')
+                        .css('text-align', 'center');
+                    return helper
                 }
             })
         },
