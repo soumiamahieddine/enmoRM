@@ -40,7 +40,7 @@ interface archivesInterface
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
-     * @param string $folderId
+     * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
      * @param string $text
@@ -49,18 +49,19 @@ interface archivesInterface
      *
      */
     public function read(
-        $archiveId = null, 
-        $profileReference = null, 
-        $status = null, 
-        $archiveName = null, 
-        $agreementReference = null, 
-        $archiveExpired = null, 
-        $finalDisposition = null, 
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
         $originatorOrgRegNumber = null,
-        $folderId = null,
+        $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null);
+        $text = null
+    );
 
     /*
         MODIFY ARCHIVES

@@ -37,7 +37,7 @@ trait archiveCommunicationTrait
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
-     * @param string $folderId
+     * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
      * @param string $text
@@ -45,35 +45,35 @@ trait archiveCommunicationTrait
      * @return recordsManagement/archive[]
      */
     public function search(
-        $archiveId = null, 
-        $profileReference = null, 
-        $status = null, 
-        $archiveName = null, 
-        $agreementReference = null, 
-        $archiveExpired = null, 
-        $finalDisposition = null, 
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
         $originatorOrgRegNumber = null,
-        $folderId = null,
+        $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null)
-    {
+        $text = null
+    ) {
         $archives = [];
 
         $archiveArgs = [
-            'archiveId' => $archiveId, 
-            'profileReference' => $profileReference, 
-            'status' => $status, 
-            'archiveName' => $archiveName, 
-            'agreementReference' => $agreementReference, 
-            'archiveExpired' => $archiveExpired, 
-            'finalDisposition' => $finalDisposition, 
+            'archiveId' => $archiveId,
+            'profileReference' => $profileReference,
+            'status' => $status,
+            'archiveName' => $archiveName,
+            'agreementReference' => $agreementReference,
+            'archiveExpired' => $archiveExpired,
+            'finalDisposition' => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
-            'folderId' => $folderId,
+            'filePlanPosition' => $filePlanPosition,
             'hasParent' => $hasParent,
         ];
 
-        if (!empty($description) || !empty($text)) {            
+        if (!empty($description) || !empty($text)) {
             $searchClasses = [];
             if (!$profileReference) {
                 $archivalProfiles = $this->archivalProfileController->index(true);
@@ -98,7 +98,7 @@ trait archiveCommunicationTrait
             }
         } else {
             $queryString = $this->getArchiveAssert($archiveArgs);
-            
+
             $originators = array();
             foreach ((array) $this->organizationController->getOrgsByRole('originator') as $originator) {
                 $originators[$originator->registrationNumber] = $originator;

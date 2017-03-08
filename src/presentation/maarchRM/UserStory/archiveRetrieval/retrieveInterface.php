@@ -41,11 +41,22 @@ interface retrieveInterface
     /**
      * Search form
      *
-     * @uses recordsManagement/archives/readFind
+     * @uses recordsManagement/archives/read
      *
-     * @return recordsManagement/archive/fulltextSearchResult
+     * @return recordsManagement/welcome/folderContents
      */
-    public function readRecordsmanagementArchivesIndexresult();
+    public function readRecordsmanagementArchivesSearch(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $description = null,
+        $text = null
+    );
 
     /**
      * get form to update index
@@ -79,17 +90,18 @@ interface retrieveInterface
      * @return recordsManagement/archive/search
      * @uses recordsManagement/archives/read
      */
-    public function readRecordsmanagementArchives( 
+    public function readRecordsmanagementArchives(
         $archiveId = null,
-        $profileReference = null, 
-        $status = null, 
-        $archiveName = null, 
-        $agreementReference = null, 
-        $archiveExpired = null, 
-        $finalDisposition = null, 
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
         $originatorOrgRegNumber = null,
         $description = null,
-        $text = null);
+        $text = null
+    );
 
     /**
      * View the archive

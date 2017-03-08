@@ -6,6 +6,11 @@
     file that was distributed with this source code.
 #-->
 <!-- Search field -->
+<h4 class="pull-left">
+    <span data-context-path/>
+    <br/>
+    <small data-context-description/>
+</h4>
 <div class="form-horizontal col-md-12" data-search-searchForm>
     <div class="form-group col-md-10">
         <div class="input-group">
@@ -103,7 +108,25 @@
 <!-- Search results -->
 <div class="container-fluid col-md-12" id="fulltext_searchResult" data-search-result>
 </div>
-
+<div id="resultTemplate" class="hide">
+    <div class="archive row">
+        <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
+        <div class="col-xs-11">
+            <h5>
+                <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
+                <a href="#" class="archiveName"></a>
+                &nbsp;<small><i/></small>
+                <br/>
+                <small/>&nbsp;
+                <small/>
+            </h5>
+        </div>
+        <div class="archiveContent col-xs-12 hide">
+            <ul class="tree-l">
+            </ul>
+        </div>
+    </div>
+</div>
 <script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
 
@@ -132,12 +155,52 @@
     });
 
 
+    SearchList = {
+        searchContents: null,
+
+        select: function(e) {
+            this.unselect();
+            e.addClass('bg-success');
+        },
+
+        unselect: function() {
+            $('#rightColumn').html('');
+            this.searchContents.find('.bg-success').removeClass('bg-success');
+        },
+
+        buildResultList: function(archives) {
+            console.log(archives[0]);
+            var template = $('#resultTemplate').children('.archive');
+
+            for(var i = 0; i < archives.length; i++) {
+                var archiveDiv = template.clone();
+                var siblings = archiveDiv.attr('id', archives[i].archiveId)
+                                         .find('.archiveName').text(archives[i].archiveName)
+                                         .siblings('small');
+
+                if (archives[i].originatorArchiveId) {
+                    $(siblings[0]).children('i').text(archives[i].originatorArchiveId);
+                }
+                if (archives[i].depositDate) {
+                    $(siblings[1]).text(archives[i].depositDate.substring(0, 19));
+                }
+                if (archives[i].archivalProfileName) {
+                    $(siblings[2]).text(archives[i].archivalProfileName);
+                }
+
+                this.searchContents.append(archiveDiv);
+            }
+        }
+    }
+
     $('[data-search-searchForm]').find('[name="searchForm_inputSearchBtn"]').on('click', function () {
         // The query asserts
         var query = {
-            text            : "",
-            description     : [],
-            profileReference : ""
+            text             : "",
+            description      : [],
+            profileReference : "",
+            filePlanPosition : "",
+            orgRegNumber     : "",
         };
         var searchPanel = $(this).closest("[data-search-panel]");
         
@@ -247,16 +310,88 @@
             return; 
         }
 
+        query.filePlanPosition = searchPanel.data("context-folderid");
+        query.orgRegNumber = searchPanel.data("context-orgregnumber");
+
         $(this).prop('disabled', true);
         $.ajax({
             type        : 'GET',
-            url         : '/recordsManagement/archives',
+            url         : '/recordsManagement/archives/search',
             data        : query,
-            dataType    : 'html',
+            dataType    : 'json',
             success     : function (response) {
-                searchPanel.find("[data-search-result]").empty().html(response);
+                if (response.status) {
+                    SearchList.searchContents = searchPanel.find("[data-search-result]:first");
+                    SearchList.searchContents.empty();
+                    SearchList.buildResultList(response.archives);
+                }
             }
         });
         $(this).prop('disabled', false);
     });
+
+    // List icon toggle
+    $('[data-search-result]').on('click', '.archiveSelection', function() {
+        var checkbox = $(this);
+        if (checkbox.hasClass('fa-square-o')) {
+            checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
+                    .closest('.archive').addClass('bg-info');
+        } else {
+            checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
+                    .closest('.archive').removeClass('bg-info');
+        }
+    })
+
+    $('[data-search-result]').on('click', '.archiveContentButton', function() {
+        var caret = $(this);
+        if (caret.hasClass('fa-caret-right')) {
+            $('#folderContentList').find('.fa-caret-down').click();
+            caret.removeClass('fa-caret-right').addClass('fa-caret-down');
+            Archive.getContent($(this).closest('.archive'));
+        } else {
+            caret.removeClass('fa-caret-down').addClass('fa-caret-right')
+                 .closest('div').siblings('.archiveContent').addClass('hide');
+        }
+    })
+
+    $('[data-search-result]').on('click', '.selectAll', function() {
+        var checkbox = $(this);
+        if (checkbox.hasClass('fa-square-o')) {
+            $('#folderContentList').find('.fa-check-square-o').click();
+        } else {
+            $('#folderContentList').find('.fa-square-o').click();
+        }
+    })
+
+    // Actions on archives
+    $('[data-search-result]').on('click', '.archiveName', function() {
+        var archive = $(this).closest('.archive');
+        var archiveId = archive.attr('id');
+        SearchList.searchContents = $(this).closest("[data-search-result]");
+        SearchList.select($(archive));
+        Archive.getInfo(archiveId);
+    })
+
+    $('[data-search-result]').on('click', function(e) {
+        if ($(e.target).css('cursor') != "pointer") {
+            SearchList.searchContents = $(e).closest("[data-search-result]");
+            SearchList.unselect();
+        }
+    })
+
+
+    $('[data-search-result]').on('click', '.childrenArchive', function() {
+        var parentArchive = $(this).closest('.archive');
+        var archiveId = $(this).attr('id');
+        SearchList.searchContents = $(this).closest("[data-search-result]");
+        SearchList.select($(parentArchive));
+        Archive.getInfo(archiveId);
+    })
+
+    $('[data-search-result]').on('click', '.document', function() {
+        var parentArchive = $(this).closest('.archive');
+        SearchList.searchContents = $(this).closest("[data-search-result]");
+        SearchList.select($(parentArchive));
+        Archive.getResourceInfo($(this));
+    })
 </script>

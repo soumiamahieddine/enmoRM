@@ -37,13 +37,17 @@
 
 <script>
     var searchTab = {
-        run : function () {
+        run : function (orgRegNumber = null, folderId = null) {
             var uniqId = new Date().getUTCMilliseconds();
 
             this.tabCreation(uniqId);
             this.panelCreation(uniqId);
             this.replaceIds(uniqId);
             this.replaceDatepicker(uniqId);
+
+            if (orgRegNumber !== null) {
+                this.searchContext(uniqId, orgRegNumber, folderId);
+            }
 
             $("#" + uniqId + "Tab").click();
         },
@@ -86,6 +90,16 @@
                     }
                 });
             });
+        },
+
+        searchContext : function(uniqId, orgRegNumber, folderId) {
+            var path = $('#folderPath').text();
+            var description = $('#folderDescription').text();
+
+            $("#" + uniqId + "Panel").find("[data-context-path]:first").text(path);
+            $("#" + uniqId + "Panel").find("[data-context-description]:first").text(description);
+            $("#" + uniqId + "Panel").data("context-folderid", folderId);
+            $("#" + uniqId + "Panel").data("context-orgregnumber", orgRegNumber);
         },
 
         close : function(liElement) {
