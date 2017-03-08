@@ -5,11 +5,12 @@
             <br/>
             <small id="folderDescription"/>
         </h4>
-        <div id="importDropdownBtn" class="dropdown pull-right" style="display: none;">
-            <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Create
-                <span class="caret"></span>
+        <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
+            <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled>
+                <span class="fa fa-plus"></span>
             </button>
+            
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a class="small" data-reference="">Without profile</a></li>
             </ul>
@@ -31,11 +32,10 @@
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
+                &nbsp;<small><i/></small>
                 <br/>
-                &nbsp;&nbsp;
                 <small/>&nbsp;
-                <small/>&nbsp;
-                <small><i/></small>
+                <small/>
             </h5>
         </div>
         <div class="archiveContent col-xs-12 hide">
@@ -123,6 +123,7 @@
             })
 
             this.getImportForm(orgRegNumber, folderId, archivalProfiles);
+            $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
         buildResultList: function(archives) {
@@ -133,9 +134,11 @@
             $('#rightColumn').html('');
 
             if (archives.length) {
+                $('#folderToolbarSearch').removeAttr("disabled");
                 $('#emptyFolderMessage').addClass('hide');
                 $('#folderContentList').removeClass('hide');
             } else {
+                $('#folderToolbarSearch').attr("disabled", "disabled");
                 $('#emptyFolderMessage').removeClass('hide');
                 $('#folderContentList').addClass('hide');
             }
@@ -204,7 +207,7 @@
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             if (archivalProfiles.length < 1) {
-                $('#importDropdownBtn').hide();
+                $('#folderToolbarImport').attr("disabled", "disabled");
                 $('#folderTab').click();
                 return;
             }
@@ -415,7 +418,6 @@
 
     $('#folderContents').on('click', '.document', function() {
         var parentArchive = $(this).closest('.archive');
-        var resId = $(this).attr('id');
         ArchiveList.select(parentArchive, $(this));
         Archive.getResourceInfo($(this));
     })
@@ -438,5 +440,9 @@
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
         $('#importTab').click();
+    });
+
+    $("#folderToolbarSearch").on('click', function() {
+        searchTab.run($(this).data("orgregnumber"), $(this).data("folderid"));
     });
 </script>
