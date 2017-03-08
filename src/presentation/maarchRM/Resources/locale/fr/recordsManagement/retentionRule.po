@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Retention rules"
-msgstr "Tableau de gestion"
+msgstr "Règles de conservation"
 
 msgid "Retention rule"
 msgstr "Règle de conservation"

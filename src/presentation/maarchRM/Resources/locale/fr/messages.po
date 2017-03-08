@@ -191,7 +191,7 @@ msgstr "Règles d'accès"
 msgctxt "layout"
 
 msgid "Retention rules"
-msgstr "Tableau de gestion"
+msgstr "Règles de conservation"
 msgctxt "layout"
 
 msgid "Archival agreements"
@@ -215,7 +215,7 @@ msgstr "Dépôt"
 msgctxt "layout"
 
 msgid "Description fields"
-msgstr "Champs de description"
+msgstr "Données descriptives"
 msgctxt "layout"
 
 msgid "Batch processing"

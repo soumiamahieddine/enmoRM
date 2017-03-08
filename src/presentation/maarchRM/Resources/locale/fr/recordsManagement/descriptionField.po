@@ -18,10 +18,10 @@ msgid "Description field"
 msgstr "Champ de description"
 
 msgid "Description fields"
-msgstr "Champs de description"
+msgstr "Données descriptives"
 
 msgid "description field(s)"
-msgstr "Champ(s) de description"
+msgstr "Donnée(s) descriptive(s)"
 
 msgid "Default value"
 msgstr "Valeur par défaut"
