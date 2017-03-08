@@ -345,8 +345,8 @@
             });
             
             $.each(inputsCustom, function() {
-                var value = $.trim($(this).val());
-                var type = $(this).attr("data-type");
+                var value = $.trim($(this).find('.value').val());
+                var type = $(this).find('[data-type]').attr("data-type");
                 var name = $(this).find('.name').val();
                 
                 if (type == "boolean") {
@@ -354,6 +354,7 @@
                 }
 
                 if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {
+                    console.log(name + " " + value);
                     $(this).closest(".form-group").addClass('has-error');
                     flagEmptyCustomField = true;
                     return;
@@ -363,7 +364,7 @@
                 }
 
                 if (type == "date") {
-                    value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                    value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
                 }
                 descriptionObject[name] = value;
             });

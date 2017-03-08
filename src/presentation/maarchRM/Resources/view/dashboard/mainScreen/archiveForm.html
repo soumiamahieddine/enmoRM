@@ -18,12 +18,7 @@
             <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
-    <div class="form-group">
-        <label class="col-sm-3 control-label small">Archival profile</label>
-        <div class="col-sm-9">
-            <input type="text" class="input-sm form-control archiveInput" name="archivalProfileReference" id="archivalProfile" placeholder="Identifier"/>
-        </div>
-    </div>
+    <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
@@ -204,8 +199,10 @@
                 }
             })
 
-            var selectedProfile = JSON.parse($('#archivalProfile').data('json'));
-            if (selectedProfile != undefined) {
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                selectedProfile = JSON.parse(selectedProfile);
                 archive.descriptionClass = selectedProfile.descriptionClass;
             }
 
