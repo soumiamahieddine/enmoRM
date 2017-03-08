@@ -165,6 +165,13 @@ interface retrieveInterface
     public function readArchivecontents_archive_();
 
     /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/documentInfo
+     */
+    public function readDocumentinfo();
+
+    /**
      * Move an archive into a folder
      * @param string $archiveId the archive identifier
      * @param string $folderId The folder identifier
