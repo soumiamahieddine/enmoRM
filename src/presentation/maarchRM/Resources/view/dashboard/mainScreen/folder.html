@@ -5,12 +5,11 @@
             <br/>
             <small id="folderDescription"/>
         </h4>
-        <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
-            <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled>
-                <span class="fa fa-plus"></span>
+        <div id="importDropdownBtn" class="dropdown pull-right" style="display: none;">
+            <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Create
+                <span class="caret"></span>
             </button>
-            
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a data-reference="">Without profile</a></li>
             </ul>
@@ -32,10 +31,11 @@
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
-                &nbsp;<small><i/></small>
                 <br/>
+                &nbsp;&nbsp;
                 <small/>&nbsp;
-                <small/>
+                <small/>&nbsp;
+                <small><i/></small>
             </h5>
         </div>
         <div class="archiveContent col-xs-12 hide">
@@ -73,6 +73,9 @@
     #folderContentList .archive .tree-l li>span>span {
         cursor: pointer;
     }
+    #folderContentList .selectedChild {
+        font-weight: bold;
+    }
 
 </style>
 
@@ -82,14 +85,17 @@
         archivesList: [],
         folderContents: $('#folderContents'),
 
-        select: function(e) {
-            this.unselect();
+        select: function(e, c) {
+            this.unselect()
             e.addClass('bg-success');
-        },
+
+            if (c) { c.addClass('selectedChild') }
+         },
 
         unselect: function() {
             $('#rightColumn').html('');
-            this.folderContents.find('.bg-success').removeClass('bg-success');
+            this.folderContents.find('.bg-success').removeClass('bg-success')
+                               .find('.selectedChild').removeClass('selectedChild');
         },
 
         getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
@@ -113,7 +119,6 @@
             })
 
             this.getImportForm(orgRegNumber, folderId, archivalProfiles);
-            $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
         buildResultList: function(archives) {
@@ -124,11 +129,9 @@
             $('#rightColumn').html('');
 
             if (archives.length) {
-                $('#folderToolbarSearch').removeAttr("disabled");
                 $('#emptyFolderMessage').addClass('hide');
                 $('#folderContentList').removeClass('hide');
             } else {
-                $('#folderToolbarSearch').attr("disabled", "disabled");
                 $('#emptyFolderMessage').removeClass('hide');
                 $('#folderContentList').addClass('hide');
             }
@@ -139,14 +142,14 @@
                                          .find('.archiveName').text(archives[i].archiveName)
                                          .siblings('small');
 
-                if (archives[i].originatorArchiveId) {
-                    $(siblings[0]).children('i').text(archives[i].originatorArchiveId);
-                }
                 if (archives[i].depositDate) {
-                    $(siblings[1]).text(archives[i].depositDate.substring(0, 19));
+                    $(siblings[0]).text(archives[i].depositDate.substring(0, 19));
                 }
-                if (archives[i].archivalProfileName) {
-                    $(siblings[2]).text(archives[i].archivalProfileName);
+                if (archives[i].archivalProfileReference) {
+                    $(siblings[1]).text(archives[i].archivalProfileReference);
+                }
+                if (archives[i].originatorArchiveId) {
+                    $(siblings[2]).children('i').text(archives[i].originatorArchiveId);
                 }
 
                 this.folderContents.append(archiveDiv);
@@ -183,12 +186,12 @@
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             if (archivalProfiles.length < 1) {
-                $('#folderToolbarImport').attr("disabled", "disabled");
+                $('#importDropdownBtn').hide();
                 $('#folderTab').click();
                 return;
             }
 
-            var dropdown = $("#folderToolbarBtn .dropdown-menu");
+            var dropdown = $("#importDropdownBtn .dropdown-menu");
             dropdown.children().not(":first").remove();
             for (var i = 0; i < archivalProfiles.length; i++) {
                 var a = $("<a/>");
@@ -198,8 +201,7 @@
                 a.text(archivalProfiles[i].name);
                 li.append(a).appendTo(dropdown);
             }
-
-            $('#folderToolbarImport').removeAttr("disabled");
+            $('#importDropdownBtn').show();
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
@@ -344,25 +346,21 @@
     $('#folderContents').on('click', '.childrenArchive', function() {
         var parentArchive = $(this).closest('.archive');
         var archiveId = $(this).attr('id');
-        ArchiveList.select(parentArchive);
+        ArchiveList.select(parentArchive, $(this));
         Archive.getInfo(archiveId);
     })
 
     $('#folderContents').on('click', '.document', function() {
         var parentArchive = $(this).closest('.archive');
         var resId = $(this).attr('id');
-        ArchiveList.select(parentArchive);
+        ArchiveList.select(parentArchive, $(this));
         Archive.getResourceInfo($(this));
     })
 
-    $("#folderToolbarBtn").on('click', '.dropdown-menu li a', function() {
+    $("#importDropdownBtn").on('click', '.dropdown-menu li a', function() {
         var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
         $('#importTab').click();
-    });
-
-    $("#folderToolbarSearch").on('click', function() {
-        searchTab.run($(this).data("orgregnumber"), $(this).data("folderid"));
     });
 </script>
