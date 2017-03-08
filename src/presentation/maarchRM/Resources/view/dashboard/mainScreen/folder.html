@@ -11,7 +11,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a data-reference="">Without profile</a></li>
+                <li><a class="small" data-reference="">Without profile</a></li>
             </ul>
         </div>
     </div>
@@ -208,18 +208,10 @@
                 $('#folderTab').click();
                 return;
             }
+            
+            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", JSON.stringify(archivalProfiles));
 
-            var dropdown = $("#importDropdownBtn .dropdown-menu");
-            dropdown.children().not(":first").remove();
-            for (var i = 0; i < archivalProfiles.length; i++) {
-                var a = $("<a/>");
-                var li = $("<li/>");
-                a.data("reference", archivalProfiles[i].reference);
-                a.data("json", JSON.stringify(archivalProfiles[i]));
-                a.text(archivalProfiles[i].name);
-                li.append(a).appendTo(dropdown);
-            }
-            $('#importDropdownBtn').show();
+            $('#folderToolbarImport').removeAttr("disabled");
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
@@ -313,6 +305,59 @@
         }
     }
 
+    function buildDropdownMenu() {
+        var archivalProfiles = JSON.parse($("#folderToolbarBtn .dropdown-menu").data("archivalprofiles"));
+        
+        var dropdown = $("#folderToolbarBtn .dropdown-menu");
+        dropdown.children().not(":first").remove();
+
+        for (var i = 0; i < archivalProfiles.length; i++) {
+            var a = $("<a/>")
+                    .addClass("userProfile small")
+                    .data("reference", archivalProfiles[i].reference)
+                    .data("json", JSON.stringify(archivalProfiles[i]))
+                    .text(archivalProfiles[i].name);
+            $("<li/>").append(a).appendTo(dropdown);
+        }
+        
+        if ($("#folderContentList").find(".bg-success").length < 1) {
+            return;
+        }
+
+        var childrenOrg = [];
+
+        FilePlan.getChildrenOrg().each(function() {
+            childrenOrg.push({
+                    name             : $(this).find("b:first").text(),
+                    orgRegNumber     : $(this).data('orgregnumber'),
+                    archivalProfiles : $(this).data('archivalprofiles')
+                }
+            );
+        })
+
+        var divider = $("<li/>").addClass("divider");
+        var separator = $("<li/>").addClass("small dropdown-header");
+
+        for (var i = 0; i < childrenOrg.length; i++) {
+            if (childrenOrg[i].archivalProfiles.length < 1) {
+                continue;
+            }
+
+            divider.clone().appendTo(dropdown);
+            separator.clone().text(childrenOrg[i].name).appendTo(dropdown);
+            
+            for (var j = 0; j < childrenOrg[i].archivalProfiles.length; j++) {
+                var a = $("<a/>")
+                        .addClass('childrenProfile small')
+                        .data("orgregnumber", childrenOrg[i].orgRegNumber)
+                        .data("reference", childrenOrg[i].archivalProfiles[j].reference)
+                        .data("json", JSON.stringify(childrenOrg[i].archivalProfiles[j]))
+                        .text(childrenOrg[i].archivalProfiles[j].name);
+                $("<li/>").append(a).appendTo(dropdown);
+            }
+        }
+    }
+
     // List icon toggle
     $('#folderContentList').on('click', '.archiveSelection', function() {
         var checkbox = $(this);
@@ -376,6 +421,19 @@
     })
 
     $("#importDropdownBtn").on('click', '.dropdown-menu li a', function() {
+        ArchiveList.select(parentArchive);
+        Archive.getResourceInfo($(this));
+    })
+
+    $(".dropdown").on("show.bs.dropdown", function(event){
+        buildDropdownMenu();
+    });
+
+    $("#folderToolbarBtn").on('click', '.dropdown-menu li a', function() {
+        if ($(this).hasClass("childrenProfile")) {
+            $("#archiveForm [name='filePlanPosition']").val("");
+            $("#archiveForm [name='originatorOrgRegNumber']").val($(this).data("orgregnumber"));
+        }
         var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();

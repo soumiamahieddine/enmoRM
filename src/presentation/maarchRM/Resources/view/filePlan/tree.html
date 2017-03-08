@@ -168,6 +168,15 @@
             $('#filePlanTree').find('.folder').draggable(DroppableOption)
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
+        },
+        
+        getChildrenOrg : function() {
+            var orgNode = FilePlan.selectedNode;
+            if (!$(FilePlan.selectedNode).hasClass("organization")) {
+                orgNode = $(FilePlan.selectedNode).closest(".organization");
+            }
+
+            return $(orgNode).find(".organization");
         }
     }
 
