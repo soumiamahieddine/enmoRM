@@ -92,7 +92,7 @@
             
             if (this.table.is(":hidden")) {
                 if ($('#archiveForm [name=archiveName]').val() == "") {
-                    $('#archiveForm [name=archiveName]').val(fileObject.fileName);
+                    $('#archiveForm [name=archiveName]').val(fileObject.fileName.replace(/\.[^/.]+$/, ""));
                 }
 
                 this.table.show();
