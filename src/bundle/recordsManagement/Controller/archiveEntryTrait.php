@@ -72,11 +72,6 @@ trait archiveEntryTrait
      */
     public function receive($archive)
     {
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-        if (!$currentOrg) {
-            throw \laabs::newException('recordsManagement/noOrgUnitException', "Permission denied: You have to choose a working organization unit to proceed this action.");
-        }
-
         $archive = \laabs::cast($archive, 'recordsManagement/archive');
 
         if (!isset($archive->archiveId)) {
@@ -84,11 +79,26 @@ trait archiveEntryTrait
         }
         $archive->status = "received";
 
+        // Load archival profile, service level if specified
+        // Instantiate description contrller 
+        $this->useReferences($archive, 'deposit');
+        
+        // Complete management metadata from profile and service level
+        $this->completeMetadata($archive);
+
+        // Validate metadata
         $this->validateCompliance($archive);
-        $this->completingMetadata($archive);
+        
+        // Check format conversion
         $this->convertArchive($archive);
+
+        // Generate PDI + package
         $this->generateAIP($archive);
+
+        // Deposit
         $this->deposit($archive);
+
+        // Send certificate
         $this->sendResponse($archive);
     }
 
@@ -99,7 +109,6 @@ trait archiveEntryTrait
      */
     public function validateCompliance($archive)
     {
-        $this->useReferences($archive, 'deposit');
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
@@ -110,21 +119,41 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingMetadata($archive)
+    public function completeMetadata($archive)
     {
-        $this->completingArchivalProfileCodes($archive);
+        // Set archive name when mono document
+        if (empty($archive->archiveName) && count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
+            $archive->archiveName = pathinfo($archive->digitalResource[0]->fileName, \PATHINFO_FILENAME);
+        }
+
+        $this->completeManagementMetadata($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
+        }        
+    }
+
+    /**
+     * Complete management metadata
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function completeManagementMetadata($archive)
+    {
+        if (!empty($this->currentArchivalProfile)) {
+            $this->completeArchivalProfileCodes($archive);
         }
 
-        $this->completingRetentionRule($archive);
-        $this->completingAccessRule($archive);
-        $this->completingServiceLevel($archive);
+        $this->completeRetentionRule($archive);
+        $this->completeAccessRule($archive);
+        $this->completeServiceLevel($archive);
 
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
-            $archive->originatorOrgRegNumber = \laabs::getToken("ORGANIZATION")->registrationNumber;
+            $currentOrg = \laabs::getToken("ORGANIZATION");
+            if ($currentOrg) {
+               $archive->originatorOrgRegNumber = $currentOrg->registrationNumber;
+            }
         }
 
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
@@ -135,13 +164,6 @@ trait archiveEntryTrait
         }
 
         $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
-
-        // Set archive name when mono document
-        if (empty($archive->archiveName) && count($archive->digitalResources) == 1) {
-            if (isset($archive->digitalResources[0]->fileName)) {
-                $archive->archiveName = $archive->digitalResource[0]->fileName;
-            }
-        }
     }
 
     /**
@@ -149,12 +171,8 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingArchivalProfileCodes($archive)
+    public function completeArchivalProfileCodes($archive)
     {
-        if (empty($this->currentArchivalProfile)) {
-            $this->useReferences($archive, 'deposit');
-        }
-
         $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
 
         if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
@@ -173,7 +191,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingAccessRule($archive)
+    public function completeAccessRule($archive)
     {
         if (!empty($archive->accessRuleCode)) {
             $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
@@ -190,7 +208,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingRetentionRule($archive)
+    public function completeRetentionRule($archive)
     {
         if (!empty($archive->retentionRuleCode)) {
             $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
@@ -225,7 +243,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingServiceLevel($archive)
+    public function completeServiceLevel($archive)
     {
         if (empty($this->currentServiceLevel)) {
             $this->useServiceLevel('deposit', $archive->serviceLevelReference);

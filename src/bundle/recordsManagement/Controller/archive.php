@@ -205,7 +205,6 @@ class archive
      */
     public function useReferences($archive, $operation)
     {
-
         if (!empty($archive->archivalProfileReference)) {
             $this->useArchivalProfile($archive->archivalProfileReference);
         }
