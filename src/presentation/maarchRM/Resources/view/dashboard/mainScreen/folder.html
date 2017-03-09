@@ -174,7 +174,7 @@
             $('#folderContentList').find('.archive').draggable({
                 revert : true,
                 zIndex: 100,
-                delay: 100,
+                delay: 200,
                 helper: function() {
                     var archive = $(this);
                     var archiveIds = [];
@@ -202,7 +202,8 @@
                         .css('color', 'grey')
                         .css('text-align', 'center');
                     return helper
-                }
+                },
+            cancel: ".fa"
             })
         },
 
