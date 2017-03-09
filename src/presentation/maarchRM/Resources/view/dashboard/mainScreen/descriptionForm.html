@@ -5,33 +5,27 @@
     For the full copyright and license information, please view the LICENSE
     file that was distributed with this source code.
 #-->
-<div class="panel-heading" role="tab">
-    <strong>
-        <a data-toggle="collapse" href="#fieldList">Descriptive metadata</a>
-    </strong>
-</div>
-<div class="panel-collapse collapse in" id="fieldList" role="tablist" data-translate-catalog="documentManagement/document">
-    <form class="form-horizontal">
-        <div id="allFields">
-            <div id="archivalProfileFields"></div>
-            <div id="customFields"></div>
+
+<form class="form-horizontal" data-translate-catalog="documentManagement/document">
+    <div id="allFields">
+        <div id="archivalProfileFields"></div>
+        <div id="customFields"></div>
+    </div>
+    <div class="form-group">
+        <div class="dropup col-xs-12" id="customFieldAddBtn">
+            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+                &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+            </button>
+            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
+                <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+                <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
+                <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
+            </ul>
         </div>
-        <div class="form-group">
-            <div class="dropup col-xs-12" id="customFieldAddBtn">
-                <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
-                    &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
-                </button>
-                <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
-                    <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
-                    <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
-                    <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
-                    <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
-                    <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
-                </ul>
-            </div>
-        </div>
-    </form>
-</div>
+    </div>
+</form>
 <div class="hide">
     <!-- TEXT VARIABLE -->
     <div data-translate-catalog="documentManagement/documentMetadata">
@@ -68,7 +62,7 @@
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
-            <div class="input-group col-md-8">
+            <div class="input-group col-md-9">
                 <input type="text" class="form-control input-sm value" placeholder="Text"/>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
@@ -79,7 +73,7 @@
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
-            <div class="input-group col-md-8">
+            <div class="input-group col-md-9">
                 <textarea class="form-control input-sm value" rows="2" placeholder="Text"></textarea>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
@@ -90,7 +84,7 @@
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
-            <div class="input-group col-md-8">
+            <div class="input-group col-md-9">
                 <input type="checkbox" class="value"/>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
@@ -99,7 +93,7 @@
         <!-- TEXT FIELD TEMPLATE -->
         <div class="form-group" id="inputFieldTemplate">
             <label class="col-md-3 small control-label"></label>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <input type="text" class="form-control input-sm"/>
                 <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
             </div>
@@ -108,7 +102,7 @@
         <!-- TEXTAREA FIELD TEMPLATE -->
         <div class="form-group" id="textareaFieldTemplate">
             <label class="col-md-3 small control-label"></label>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <textarea class="form-control input-sm" rows="2"></textarea>
                 <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
             </div>
@@ -117,7 +111,7 @@
         <!-- SELECT FIELD TEMPLATE -->
         <div class="form-group" id="selectFieldTemplate">
             <label class="col-md-3 small control-label"></label>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <select class="form-control input-sm">
                     <option></option>
                 </select>
@@ -127,7 +121,7 @@
         <!-- BOOLEAN FIELD TEMPLATE -->
         <div class="form-group" id="booleanFieldTemplate">
             <label class="col-md-3 small control-label"></label>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-default">
                         <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
@@ -350,7 +344,7 @@
                 var name = $(this).find('.name').val();
                 
                 if (type == "boolean") {
-                    value = $(this).prop("checked");
+                    value = $.trim($(this).find('.value').prop("checked"));
                 }
 
                 if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {

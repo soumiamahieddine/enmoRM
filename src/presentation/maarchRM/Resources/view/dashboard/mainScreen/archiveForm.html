@@ -23,12 +23,15 @@
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
 </form>
+
+<?hinclude dashboard/mainScreen/descriptionForm.html ?>
+
 <div class="panel-heading" role="tab">
     <strong>
         <a data-toggle="collapse" href="#management">Management metadata</a>
     </strong>
 </div>
-<div id="management" class="panel-collapse collapse">
+<div id="management" class="panel-collapse collapse in">
     <form id="managementMetadataForm" class="form-horizontal">
         <div class="form-group">
             <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
