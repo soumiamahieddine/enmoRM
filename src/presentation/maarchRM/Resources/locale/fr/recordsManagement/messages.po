@@ -176,10 +176,10 @@ msgid "Archive identifier"
 msgstr "Cote"
 
 msgid "Originator archive identifier"
-msgstr "Identifiant du producteur"
+msgstr "Identifiant"
 
 msgid "Archive name"
-msgstr "Intitulé"
+msgstr "Nom"
 
 msgid "Archive address"
 msgstr "Adresse de stockage"

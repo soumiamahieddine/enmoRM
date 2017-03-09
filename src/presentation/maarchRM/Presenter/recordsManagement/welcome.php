@@ -267,7 +267,7 @@ class welcome
             $descriptionHtml = '<table">';
 
             foreach ($archive->descriptionObject as $name => $value) {
-                $descriptionFields = \laabs::callService("/recordsManagement/descriptionField/read_name_",$name);
+                $label = $type = null;
                 if ($archivalProfile) {
                     foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                         if ($archiveDescription->fieldName == $name) {
@@ -276,12 +276,32 @@ class welcome
                     }
                 }
 
-                if (!isset($label)) {
+                if (empty($label)) {
                     $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+                }
+                if (empty($type)) {
+                    $type = 'text';
+                    switch (gettype($value)) {
+                        case 'boolean':
+                            $type = 'boolean';
+                            break;
+
+                        case 'integer':
+                        case 'double':
+                            $type = 'number';
+                            break;
+
+                        case 'string':
+                            if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                $type = 'date';
+                            }
+                            break;
+                    }
+                    
                 }
 
                 $descriptionHtml .= '<tr>';
-                $descriptionHtml .= '<th name="'.$name.'" data-type="'.$descriptionFields->type.'">'.$label.'</th>';
+                $descriptionHtml .= '<th name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
                 $descriptionHtml .= '<td>'.$value.'</td>';
                 $descriptionHtml .= '</tr>';
             }
