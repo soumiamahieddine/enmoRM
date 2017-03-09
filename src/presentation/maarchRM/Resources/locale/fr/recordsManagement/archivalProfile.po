@@ -21,7 +21,7 @@ msgid "Archival profile"
 msgstr "Profil d'archivage"
 
 msgid "Description class"
-msgstr "Description de l'archive"
+msgstr "Modèle de description"
 
 msgid "Profile rules"
 msgstr "Données de gestion"
@@ -210,7 +210,7 @@ msgid "reference"
 msgstr "Identifiant"
 
 msgid "Custom description fields"
-msgstr "Champs de description personnalisés"
+msgstr "Champs du dictionnaire de données"
 
 msgid "Field"
 msgstr "Champ"
