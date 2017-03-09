@@ -339,27 +339,35 @@
             });
             
             $.each(inputsCustom, function() {
-                var value = $.trim($(this).find('.value').val());
+                var value = "";
                 var type = $(this).find('[data-type]').attr("data-type");
                 var name = $(this).find('.name').val();
                 
-                if (type == "boolean") {
-                    value = $.trim($(this).find('.value').prop("checked"));
+                switch(type) {
+                    case "boolean":
+                        value = Boolean($.trim($(this).find('.value').prop("checked")));
+                        break;
+                    
+                    case "date":
+                        value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        break;
+                    
+                    case 'number':
+                        value = Number($.trim($(this).find('.value').val()));
+                        break;
+
+                    default :
+                        value = $.trim($(this).find('.value').val());
                 }
 
                 if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {
-                    console.log(name + " " + value);
                     $(this).closest(".form-group").addClass('has-error');
                     flagEmptyCustomField = true;
                     return;
-
                 } else {
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if (type == "date") {
-                    value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
-                }
                 descriptionObject[name] = value;
             });
             
