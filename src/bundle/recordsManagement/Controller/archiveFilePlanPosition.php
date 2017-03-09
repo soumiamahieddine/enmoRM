@@ -181,4 +181,25 @@ class archiveFilePlanPosition
         return $archive;
     }
 
+    /**
+     * Remove all archive of a folder 
+     * @param string $filePlanPosition The file plan position to remove
+     * 
+     * @return int The number of archive updated
+     */
+    public function removeFilePlanPosition($filePlanPosition)
+    {
+        $count = 0;
+        $archives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "filePlanPosition = '$filePlanPosition'");
+
+        foreach ($archives as $archive) {
+            $archive->filePlanPosition = null;
+
+            $this->sdoFactory->update($archive, "recordsManagement/archiveFilePlanPosition");
+            $count++;
+        }
+
+        return $count;
+    }
+
 }

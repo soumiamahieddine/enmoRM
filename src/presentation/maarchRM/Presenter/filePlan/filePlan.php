@@ -91,7 +91,7 @@ class filePlan
      */
     public function create($folderId)
     {
-        $this->json->message = "New folder created.";
+        $this->json->message = "New folder created";
         $this->json->folderId = $folderId;
         $this->json->message = $this->translator->getText($this->json->message);
 
@@ -105,7 +105,7 @@ class filePlan
      */
     public function update()
     {
-        $this->json->message = "Folder updated.";
+        $this->json->message = "Folder updated";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
@@ -118,7 +118,20 @@ class filePlan
      */
     public function move()
     {
-        $this->json->message = "Folder moved.";
+        $this->json->message = "Folder moved";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Delete folder response
+     *
+     * @return string
+     */
+    public function delete()
+    {
+        $this->json->message = "Folder deleted";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

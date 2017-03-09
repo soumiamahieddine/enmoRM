@@ -54,4 +54,11 @@ interface filePlanInterface
      */
     public function updateFileplanMove_folderId_($parentFolderId=null);
 
+    /**
+     * Delete a folder
+     * 
+     * @uses filePlan/filePlan/delete_folder_
+     * @return filePlan/filePlan/delete
+     */
+    public function deleteFileplanFolder_folder_();
 }

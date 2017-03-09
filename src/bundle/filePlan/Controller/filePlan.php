@@ -154,22 +154,35 @@ class filePlan
 
     /**
      * Delete a folder
-     * @param string $folderId
+     * @param mixed $folder The folder identifier or the folder itself 
      * 
      * @return boolean
      */
-    public function delete($folderId)
+    public function delete($folder)
     {
-        $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
+        if (is_string($folder)) {
+            $folder = $this->sdoFactory->read('filePlan/folder', $folder);
+        }
 
+        $archiveFilePlanPositionController = \laabs::newController("recordsManagement/archiveFilePlanPosition");
+        $archiveFilePlanPositionController->removeFilePlanPosition($folder->folderId);
+
+        $children = $this->sdoFactory->find('filePlan/folder', "parentFolderId = '$folder->folderId'");
+
+        foreach ($children as $child) {
+            $this->delete($child);
+        }
+
+        /*
         $positionController = \laabs::newController('filePlan/position');
         $archivesCount = $positionController->count($folder->ownerOrgRegNumber, $folderId);
 
         if ($archivesCount > 0) {
             return false;
         }
+        */
 
-        $this->sdoFactory->delete('filePlan/folder', $folderId);
+        $this->sdoFactory->delete($folder, 'filePlan/folder');
 
         return true;
     }
