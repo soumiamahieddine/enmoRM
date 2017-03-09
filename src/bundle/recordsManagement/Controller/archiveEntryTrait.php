@@ -226,14 +226,14 @@ trait archiveEntryTrait
                     if (isset($archive->descriptionObject->{$qname[1]})) {
                         $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
                     }
-                    
                 } else {
                     // todo
                 }
             }
         }
 
-        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration)) {
+        $archive->disposalDate = null;
+        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }

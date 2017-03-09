@@ -28,6 +28,7 @@
 
     <?hinclude /filePlan/folderForm.html ?>
     <?hinclude /filePlan/movingComfirmationModal.html ?>
+    <?hinclude /filePlan/supressionComfirmationModal.html ?>
     <?hinclude /filePlan/archiveAssignmentModal.html ?>
 </div>
 
@@ -133,7 +134,7 @@
         },
 
         deleteFolder: function() {
-            alert('Not yet implemented...');
+            DeleteConfirmationModal.show();
         },
 
         addFolderNode: function(folder) {

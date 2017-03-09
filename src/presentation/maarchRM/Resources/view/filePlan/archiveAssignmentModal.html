@@ -109,9 +109,7 @@
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        $.each(ArchiveAssignmentModal.archives, function() {
-                            $('#' +this).remove();
-                        });
+                        ArchiveList.removeArchives(ArchiveAssignmentModal.archives);
                         ArchiveAssignmentModal.close();
                     }
                 },
