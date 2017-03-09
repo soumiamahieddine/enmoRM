@@ -657,7 +657,27 @@ class archive
 
         return $this->json->save();
     }
+    
+    /**
+     * Serializer JSON for metadata method
+     * @param array $result
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function metadata($result)
+    {
+        if ($result) {
+             $this->json->message = 'Archive updated';
+             
+        } else {
+             $this->json->message = 'Archive not updated';
+        }
 
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+    
     /**
      * Return new digital resource for an archive
      * @param digitalResource/digitalResource $digitalResource

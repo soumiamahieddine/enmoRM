@@ -138,13 +138,22 @@ class welcome
     public function archiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
-
+        // Retention
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
+        for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
+            $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
+        }
+        
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
 
-        $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+        $this->view->setSource("status", $archive->status);
 
+        $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+        $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
+        
         $this->getDescription($archive);
+        $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
         $this->view->merge();
 
@@ -258,6 +267,7 @@ class welcome
             $descriptionHtml = '<table">';
 
             foreach ($archive->descriptionObject as $name => $value) {
+                $descriptionFields = \laabs::callService("/recordsManagement/descriptionField/read_name_",$name);
                 if ($archivalProfile) {
                     foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                         if ($archiveDescription->fieldName == $name) {
@@ -271,7 +281,7 @@ class welcome
                 }
 
                 $descriptionHtml .= '<tr>';
-                $descriptionHtml .= '<th name="'.$name.'">'.$label.'</th>';
+                $descriptionHtml .= '<th name="'.$name.'" data-type="'.$descriptionFields->type.'">'.$label.'</th>';
                 $descriptionHtml .= '<td>'.$value.'</td>';
                 $descriptionHtml .= '</tr>';
             }

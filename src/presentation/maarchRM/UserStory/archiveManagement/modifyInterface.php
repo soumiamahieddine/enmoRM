@@ -115,4 +115,21 @@ interface modifyInterface
      * @uses recordsManagement/archives/updateUnfreeze
      */
     public function updateRecordsmanagementArchiveUnfreeze($archiveIds, $comment, $identifiant);
+    
+    // --------------------------------------------------------------------------
+    // Metadata
+    // --------------------------------------------------------------------------
+    /**
+     * Change the information of archive
+     * @param string    $archiveId
+     * @param string    $originatorArchiveId
+     * @param string    $archiveName     
+     * @param string    $description 
+     * 
+     * 
+     * @return recordsManagement/archive/metadata
+     * 
+     * @uses recordsManagement/archives/updateMetadata
+     */
+    public function updateRecordsmanagementArchiveMetadata($archiveId,$originatorArchiveId,$archiveName,$description);
 }

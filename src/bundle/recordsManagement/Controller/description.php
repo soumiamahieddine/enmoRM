@@ -175,14 +175,12 @@ class description
      */
     public function update($description, $archiveId)
     {
-        $descriptionObject = $this->read($archiveId);
-        foreach ($descriptionObject as $name => $value) {
-            $descriptionObject->description->{$name} = $value;
-        }
-
-        $descriptionObject->text = implode(' ', $this->getText($descriptionObject->description));
+        $archiveController = \laabs::newController('recordsManagement/archive');
+        $archive = $archiveController->read($archiveId);
         
-        $this->sdoFactory->update($descriptionObject);
+        $archive->descriptionObject = $description;
+        
+        $this->create($archive);
     }
 
     /**

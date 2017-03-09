@@ -227,6 +227,20 @@ interface archivesInterface
      *
      */
     public function readFolder($orgRegNumber, $folderId=null);
+    
+    /*
+     *  METADATA
+     */
+    /**
+     * Update metadata of archive
+     * @param string    $archiveId
+     * @param string    $originatorArchiveId
+     * @param string    $archiveName
+     * @param string    $description     
+     * 
+     * @action recordsManagement/archive/modifyMetadata
+     */
+    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$description = null);
 
     /**
      * List an archive resources and children archives
