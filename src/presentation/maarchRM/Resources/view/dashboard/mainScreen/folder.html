@@ -32,8 +32,9 @@
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
-                &nbsp;<small><i/></small>
                 <br/>
+                &nbsp;&nbsp;
+                <small><i/></small>&nbsp;
                 <small/>&nbsp;
                 <small/>
             </h5>
@@ -164,7 +165,7 @@
                 this.archivesList.push(archives[i]);
             }
 
-            this.folderContents.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
+            $('#folderContentList').find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
 
             this.initDragNDrop();
         },
@@ -203,6 +204,19 @@
                     return helper
                 }
             })
+        },
+
+        removeArchives: function(archivesIds) {
+            $.each(archivesIds, function() {
+                $('#' +this).remove();
+            });
+
+            if (!this.folderContents.find('.archive').length) {
+                this.buildResultList([]);
+                
+            } else if (!this.folderContents.find('bg-info').length) {
+                $('#folderContentList').find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
+            }
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
