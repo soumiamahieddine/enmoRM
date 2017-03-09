@@ -18,6 +18,11 @@
                 <th title="Name">Name</th>
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
+            <?merge archive.originatorArchiveId.bool() ?>
+            <tr class="originatorArchiveId">
+                <th title="Name">Originator archive identifier</th>
+                <td title='[?merge archive.archiveName ?]'><?merge archive.originatorArchiveId ?></td>
+            </tr>
         </table>
         <div id="metadata">     
         </div>
@@ -338,6 +343,7 @@
         $('#updateMetadata').prop('disabled',true);
         $('#validMetadata').show();
         $('#cancelMetadata').show();
+        $('#archiveInformation').find('.originatorArchiveId').hide();
         $('#archiveInformation').find('.archiveName').hide();
         
         var metadata = $('#metadata').clone();
