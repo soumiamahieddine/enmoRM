@@ -74,6 +74,13 @@ class archiveFilePlanPosition
     public $parentArchiveId;
 
     /**
+     * The parent archive originator
+     *
+     * @var string
+     */
+    public $parentOriginatorOrgRegNumber;
+
+    /**
      * Originator organisation identifier
      *
      * @var string

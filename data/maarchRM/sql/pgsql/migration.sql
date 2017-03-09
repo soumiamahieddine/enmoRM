@@ -4,6 +4,7 @@ DROP TABLE "recordsManagement"."documentDescription";
 DROP TABLE "recordsManagement"."documentProfile";
 
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "archiverArchiveId" text;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "parentOriginatorOrgRegNumber" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationRuleCode" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationRuleDuration" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "classificationRuleStartDate" date;

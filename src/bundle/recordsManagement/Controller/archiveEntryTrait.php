@@ -156,6 +156,15 @@ trait archiveEntryTrait
             }
         }
 
+        // Parent 
+        if (!empty($archive->parentArchiveId)) {
+            $parentArchive = $this->read($archive->parentArchiveId);
+
+            if ($archive->originatorOrgRegNumber != $parentArchive->originatorOrgRegNumber) {
+                $archive->parentOriginatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
+            }
+        }
+
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
             $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
             $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originatorOrg;
@@ -327,6 +336,10 @@ trait archiveEntryTrait
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
+                if ($archive->contents[$i]->originatorOrgRegNumber != $archive->originatorOrgRegNumber) {
+                    $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->$originatorOrgRegNumber;
+                }
+
                 $this->deposit($archive->contents[$i], $filePlanPosition."/".(string) $archive->contents[$i]->archiveId);
             }
         } catch (\Exception $exception) {
@@ -473,7 +486,9 @@ trait archiveEntryTrait
             file_put_contents($filename, $contents);
 
             if ($formatDetection) {
-                $digitalResource->puid = $droid->match($filename)->puid;
+                if ($format = $droid->match($filename)) {
+                    $digitalResource->puid = $format->puid;
+                }
             }
 
             if (empty($digitalResource->puid)) {
