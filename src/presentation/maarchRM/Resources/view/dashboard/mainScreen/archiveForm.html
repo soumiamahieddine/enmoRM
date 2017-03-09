@@ -7,7 +7,7 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-sm-3  control-label small">Archive name</label>
+        <label class="col-sm-3  control-label small">Archive name<span style="color: red">&nbsp;*</span></label>
         <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
@@ -218,7 +218,12 @@
                 gritter.show($('#retentionRuleCodeMissing_error').text(), false);
                 return -2;
             }
-                
+
+            if (archive.archiveName == null || archive.archiveName == "") {
+                gritter.show($('#fieldLabel_error').text(), false);
+                return -2;
+            }
+
             archive.digitalResources = DocumentList.serialize();
             if (archive.digitalResources == null) {
                 gritter.show($('#documentMissing_error').text(), false);
