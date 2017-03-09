@@ -7,10 +7,9 @@
         </h4>
         <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
             <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled>
-                <span class="fa fa-plus"></span>
-            </button>
-            
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled><span class="fa fa-plus"></span></button>
+            <button type="button" class="btn btn-sm btn-default unfreeze" id="folderToolbarUnfreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-unlock"></span></button>
+            <button type="button" class="btn btn-sm btn-default freeze" id="folderToolbarFreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-lock"></span></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a class="small" data-reference="">Without profile</a></li>
             </ul>
@@ -135,10 +134,14 @@
             $('#rightColumn').html('');
 
             if (archives.length) {
+                $('#folderToolbarFreeze').removeAttr("disabled");
+                $('#folderToolbarUnfreeze').removeAttr("disabled");
                 $('#folderToolbarSearch').removeAttr("disabled");
                 $('#emptyFolderMessage').addClass('hide');
                 $('#folderContentList').removeClass('hide');
             } else {
+                $('#folderToolbarFreeze').attr("disabled", "disabled");
+                $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
                 $('#emptyFolderMessage').removeClass('hide');
                 $('#folderContentList').addClass('hide');
@@ -460,5 +463,60 @@
 
     $("#folderToolbarSearch").on('click', function() {
         searchTab.run($(this).data("orgregnumber"), $(this).data("folderid"));
+    });
+    
+    $("#folderToolbarBtn").on('click','.freeze', function() {
+        var archivesIds = [];
+        $('#folderContentList').find('.fa-check-square-o').closest('div').each(function(i,ele){
+            if (ele.attributes[1]) {
+                archivesIds.push(ele.attributes[1].value);
+            }
+        });
+        
+        var parameters = {
+            archiveIds : archivesIds
+        };
+        
+        $.ajax({
+            type        : 'PUT',
+            url         : "/recordsManagement/archive/freeze",
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error       : function (response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+    
+    $("#folderToolbarBtn").on('click','.unfreeze', function() {
+       var archivesIds = [];
+        $('#folderContentList').find('.fa-check-square-o').closest('div').each(function(i,ele){
+            if (ele.attributes[1]) {
+                archivesIds.push(ele.attributes[1].value);
+            }
+        });
+        
+        var parameters = {
+            archiveIds : archivesIds
+        };
+        
+        $.ajax({
+            type        : 'PUT',
+            url         : "/recordsManagement/archive/unfreeze",
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+
+            },
+            error       : function (response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
     });
 </script>
