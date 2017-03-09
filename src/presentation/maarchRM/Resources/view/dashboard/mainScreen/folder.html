@@ -437,10 +437,6 @@
         Archive.getResourceInfo($(this));
     })
 
-    $("#importDropdownBtn").on('click', '.dropdown-menu li a', function() {
-        ArchiveList.select(parentArchive);
-        Archive.getResourceInfo($(this));
-    })
 
     $("#folderToolbarBtn").on("show.bs.dropdown", function() {
         buildDropdownMenu();
@@ -454,6 +450,11 @@
         var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
+
+        $("#importPanel").find("[data-context-path]:first").text($("#folderPath").text());
+        $("#importPanel").find("[data-context-description]:first").text($("#folderDescription").text());
+        $("#importPanel").find("[data-context-profil]:first").text($(this).text());
+
         $('#importTab').click();
     });
 
