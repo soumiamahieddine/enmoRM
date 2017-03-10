@@ -8,8 +8,8 @@
         <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
             <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled><span class="fa fa-plus"></span></button>
-            <button type="button" class="btn btn-sm btn-default unfreeze" id="folderToolbarUnfreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-unlock"></span></button>
-            <button type="button" class="btn btn-sm btn-default freeze" id="folderToolbarFreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-lock"></span></button>
+            <!--<button type="button" class="btn btn-sm btn-default unfreeze" id="folderToolbarUnfreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-unlock"></span></button>
+            <button type="button" class="btn btn-sm btn-default freeze" id="folderToolbarFreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-lock"></span></button>-->
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a class="small" data-reference="">Without profile</a></li>
             </ul>
@@ -223,7 +223,7 @@
             }
         },
         
-        getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
+        getImportForm: function(orgRegNumber, folderIdfolderToolbarImport, archivalProfiles) {
             if (archivalProfiles.length < 1) {
                 $('#folderToolbarImport').attr("disabled", "disabled");
                 $('#folderTab').click();
@@ -328,7 +328,9 @@
 
     function buildDropdownMenu() {
         var archivalProfiles = JSON.parse($("#folderToolbarBtn .dropdown-menu").data("archivalprofiles"));
+        var dropdownAction = $("#folderToolbarBtn .dropdown-menuAction");
         
+        dropdownAction.append()
         var dropdown = $("#folderToolbarBtn .dropdown-menu");
         dropdown.children().not(":first").remove();
 
