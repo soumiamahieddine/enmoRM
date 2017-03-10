@@ -143,7 +143,7 @@ class welcome
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-        
+
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
 
@@ -151,7 +151,7 @@ class welcome
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
         $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
-        
+
         $this->getDescription($archive);
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
@@ -198,6 +198,17 @@ class welcome
      */
     public function folderContents($archives)
     {
+        $organizations = \laabs::callService('organization/organization/readIndex');
+        $orgsName = [];
+
+        foreach ($organizations as $organization) {
+            $orgsName[$organization->registrationNumber] = $organization->displayName;
+        }
+
+        foreach ($archives as $archive) {
+            $archive->originatorOrgName = $orgsName[$archive->originatorOrgRegNumber];
+        }
+
         $this->json->archives = $archives;
 
         return $this->json->save();
@@ -232,7 +243,6 @@ class welcome
     {
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
-        
         } else {
             $this->json->message = "$result archives was moved.";
 
@@ -256,7 +266,7 @@ class welcome
         $archivalProfile = null;
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-        
+
             $archive->archivalProfileName = $archivalProfile->name;
         }
 
@@ -297,7 +307,6 @@ class welcome
                             }
                             break;
                     }
-                    
                 }
 
                 $descriptionHtml .= '<tr>';

@@ -115,9 +115,19 @@
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
-                &nbsp;<small><i/></small>
+                <!-- originatorOrgName -->
+                <small/>
                 <br/>
+                &nbsp;&nbsp;
+                <!-- originatorArchiveId -->
+                <small>
+                    <i/>
+                </small>&nbsp;
+                <!-- depositDate -->
                 <small/>&nbsp;
+                <!-- archivalProfileReference -->
+                <small/>&nbsp;
+                <!-- description -->
                 <small/>
             </h5>
         </div>
@@ -169,23 +179,28 @@
         },
 
         buildResultList: function(archives) {
-            console.log(archives[0]);
             var template = $('#resultTemplate').children('.archive');
 
-            for(var i = 0; i < archives.length; i++) {
+            for(i=0; i<archives.length; i++) {
                 var archiveDiv = template.clone();
                 var siblings = archiveDiv.attr('id', archives[i].archiveId)
                                          .find('.archiveName').text(archives[i].archiveName)
                                          .siblings('small');
 
+                if (archives[i].originatorOrgName) {
+                    $(siblings[0]).text(archives[i].originatorOrgName);
+                }
                 if (archives[i].originatorArchiveId) {
-                    $(siblings[0]).children('i').text(archives[i].originatorArchiveId);
+                    $(siblings[1]).children('i').text(archives[i].originatorArchiveId);
                 }
                 if (archives[i].depositDate) {
-                    $(siblings[1]).text(archives[i].depositDate.substring(0, 19));
+                    $(siblings[2]).text(archives[i].depositDate.substring(0, 19));
                 }
-                if (archives[i].archivalProfileName) {
-                    $(siblings[2]).text(archives[i].archivalProfileName);
+                if (archives[i].archivalProfileReference) {
+                    $(siblings[3]).text(archives[i].archivalProfileReference);
+                }
+                if (archives[i].text) {
+                    $(siblings[4]).text(archives[i].text.substring(0, 30));
                 }
 
                 this.searchContents.append(archiveDiv);
