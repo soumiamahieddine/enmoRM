@@ -1,0 +1,16 @@
+# messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "New folder created"
+msgstr "Nouveau dossier ajouté"
+
+msgid "Folder updated"
+msgstr "Dossier modifié"
+
+msgid "Folder moved"
+msgstr "Dossier déplaçé"
+
+msgid "Folder deleted"
+msgstr "Dossier supprimé"
+
