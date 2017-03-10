@@ -345,7 +345,7 @@
             return;
         }
 
-        var childrenOrg = [];
+        /*var childrenOrg = [];
 
         FilePlan.getChildrenOrg().each(function() {
             childrenOrg.push({
@@ -376,7 +376,7 @@
                         .text(childrenOrg[i].archivalProfiles[j].name);
                 $("<li/>").append(a).appendTo(dropdown);
             }
-        }
+        }*/
     }
 
     // List icon toggle
@@ -446,10 +446,10 @@
     });
 
     $("#folderToolbarBtn").on('click', '.dropdown-menu li a', function() {
-        if ($(this).hasClass("childrenProfile")) {
+        /*if ($(this).hasClass("childrenProfile")) {
             $("#archiveForm [name='filePlanPosition']").val("");
             $("#archiveForm [name='originatorOrgRegNumber']").val($(this).data("orgregnumber"));
-        }
+        }*/
         var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
         $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
