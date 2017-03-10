@@ -241,11 +241,13 @@ class welcome
      */
     public function moveArchivesToFolder($result)
     {
+        $this->translator->setCatalog('filePlan/messages');
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
         } else {
-            $this->json->message = "$result archives was moved.";
-
+            $this->json->message = '%1$s archives were moved.';
+            $this->json->message = $this->translator->getText($this->json->message);
+            $this->json->message = sprintf($this->json->message, count($result));
         }
 
         return $this->json->save();

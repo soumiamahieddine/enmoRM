@@ -14,3 +14,18 @@ msgstr "Dossier déplaçé"
 msgid "Folder deleted"
 msgstr "Dossier supprimé"
 
+msgid "Move archive"
+msgstr "Deplacer une archive"
+
+msgid "Move folder"
+msgstr "Deplacer un dossier"
+
+msgid "The archive was moved."
+msgstr "L'archive a été déplacée"
+
+msgid "%1$s archives were moved."
+msgstr "%1$s archives ont été déplacées"
+
+msgid "The supression of the folder will also delete children folders and unlink all archives from those folders."
+msgstr "La suppression du dossier entrainera la suppression des sous dossiers et le lien à toutes leurs archives"
+
