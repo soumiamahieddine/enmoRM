@@ -24,7 +24,7 @@
                 <td title='[?merge archive.archiveName ?]'><?merge archive.originatorArchiveId ?></td>
             </tr>
         </table>
-        <div id="metadata">     
+        <div id="metadata">
         </div>
         <!--<div id="metadata" class="panel-collapse collapse" role="tabpanel"></div>-->
     </div>
@@ -138,6 +138,18 @@
         <b>Originator archive identifier</b>
         <input id="inputOriginatorArchiveId" type="text" class="form-control input-sm"/>
     </div>
+    <div class="dropup col-xs-12 customFieldAddBtn" id="customFieldAddBtn">
+        <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+            &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+        </button>
+        <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+            <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+            <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+            <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
+            <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
+        </ul>
+    </div>
+    <div id="customFiedsDescription" class="customFiedsDescription"></div>
 </div>
 
 <style type="text/css">
@@ -356,6 +368,7 @@
         var originatorArchiveIdDiv = $('#originatorArchiveId').clone();
         originatorArchiveIdDiv.find('#inputOriginatorArchiveId').val($('#archiveInformation').find('.originatorArchiveId').val());
         $('#metadata').append(originatorArchiveIdDiv);
+        
         metadata.find('tbody tr').each(function(i, ele) {
             var tab = ele.children;
             
@@ -367,6 +380,19 @@
             $('#metadata').append("<b>"+tab[0].textContent+"</b>");
             $('#metadata').append(customField);
         });
+        
+        var customFieldAddBtn = $('#customFieldAddBtn').clone();
+        $('#metadata').append(customFieldAddBtn);
+    });
+    
+    $('#metadata').on('click','.addCustomField',function(){
+       var customField = data.addField($(this).data('type'));
+       var customFiedsDescription = $('.customFiedsDescription').clone();
+       customFiedsDescription.removeClass('customFiedsDescription');
+
+       customFiedsDescription.append('<br/><input type="text" class="form-control input-sm name" placeholder="Label"/><br/>');
+       customFiedsDescription.append(customField);
+       $('#metadata').append(customFiedsDescription);
     });
     
     $('#archiveInformation').on('click','.cancelMetadata', function(){
@@ -378,9 +404,15 @@
         var archiveId= $('#archiveInformation').find('.archiveInformationId').val();
         var descriptionFields = {};
         $('#metadata').find('div').each(function(i, ele) {
-            descriptionFields[ele.attributes[1].textContent] = ele.childNodes[0].value;
+            if (ele.id == "customFiedsDescription") {
+                descriptionFields[ele.childNodes[1].value] = ele.childNodes[3].value;
+            } else {
+                if (ele.childNodes[0].value) {
+                    descriptionFields[ele.attributes[1].textContent] = ele.childNodes[0].value;
+                }
+            }
+            
         });
-        
         var parameters = {
             archiveId   : archiveId,
             originatorArchiveId : $('#archiveInformation').find('#inputOriginatorArchiveId').val(),
