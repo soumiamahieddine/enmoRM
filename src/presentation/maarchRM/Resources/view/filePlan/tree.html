@@ -9,9 +9,9 @@
     <div class="row" >
         <div id="filePlanMenu" class="btn-toolbar pull-right" role="toolbar">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-sm btn-default" id="addFolder" title="Add a new folder"><i class="fa fa-plus"/></button>
-                <button type="button" class="btn btn-sm btn-default" id="editFolder" title="Edit folder"><i class="fa fa-edit"/></button>
-                <button type="button" class="btn btn-sm btn-default" id="deleteFolder" title="Delete folder"><i class="fa fa-trash"/></button>
+                <button type="button" disabled class="btn btn-sm btn-default" id="addFolder" title="Add a new folder"><i class="fa fa-plus"/></button>
+                <button type="button" disabled class="btn btn-sm btn-default" id="editFolder" title="Edit folder"><i class="fa fa-edit"/></button>
+                <button type="button" disabled class="btn btn-sm btn-default" id="deleteFolder" title="Delete folder"><i class="fa fa-trash"/></button>
             </div>
         </div>
     </div>
@@ -47,9 +47,6 @@
     .folderNode > i {
         font-size: 20px;
     }
-    #filePlanMenu {
-        visibility: hidden;
-    }
 
 </style>
 
@@ -71,7 +68,6 @@
                 OrganizationNode.select(span);
             }
 
-            $('#filePlanMenu').css('visibility', 'visible');
             this.selectedNode = e;
         },
 
@@ -85,7 +81,6 @@
             } else {
                 OrganizationNode.unselect(span);
             }
-            $('#filePlanMenu').css('visibility', 'hidden');
             this.selectedNode = null;
         },
 
@@ -117,7 +112,6 @@
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber')
             }
             FolderForm.load(folder);
-            $('#filePlanMenu').css('visibility', 'hidden');
         },
 
         editFolder: function() {
@@ -130,7 +124,6 @@
                 disabled          : this.selectedNode.data('disabled')
             }
             FolderForm.load(folder);
-            $('#filePlanMenu').css('visibility', 'visible');
         },
 
         deleteFolder: function() {
@@ -144,12 +137,10 @@
             BootstrapTree.addNode(this.selectedNode, template);
 
             this.initDragNDrop();
-            $('#filePlanMenu').css('visibility', 'visible');
         },
 
         editFolderNode: function(folder) {
             this.fullUpFolderNode(folder, $('#'+folder.folderId));
-            $('#filePlanMenu').css('visibility', 'visible');
         },
 
         fullUpFolderNode: function(folder, node) {
@@ -211,6 +202,7 @@
         select: function(e) {
             e.find('b:first').removeClass('label-default').addClass('label-warning')
              .siblings('i').removeClass('text-primary').addClass('text-warning');
+            $('#editFolder, #deleteFolder, #addFolder').prop('disabled', false);
 
         },
 
@@ -236,7 +228,6 @@
 
         unselect: function(e) {
             e.removeClass('node-warning').addClass('node-default');
-            $('#editFolder, #deleteFolder').prop('disabled', false);
         }
     }
 
