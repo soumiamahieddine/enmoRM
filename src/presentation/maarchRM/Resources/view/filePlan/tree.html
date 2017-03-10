@@ -178,13 +178,20 @@
              .css("font-size", "34px")
              .siblings()
              .css("font-size", "20px");
+
+            if (e.closest('.folder').data('disabled')) {
+                e.find('i').removeClass('text-primary').addClass('text-danger');   
+            }
         },
 
         moveOut: function(e) {
             e.find('i')
              .css("font-size", "20px")
+             .addClass('text-primary')
+             .removeClass('text-danger') 
              .siblings()
              .css("font-size", "12px");
+            
         },
 
         mouseenter: function(e) {
@@ -260,8 +267,7 @@
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
                 
             } else if ($(ui.helper).hasClass('archiveHelper')) {
-                if ($(this).closest('li').attr('id') != FilePlan.selectedNode.attr('id'))
-                    ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
+                ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
             }
         }
     }

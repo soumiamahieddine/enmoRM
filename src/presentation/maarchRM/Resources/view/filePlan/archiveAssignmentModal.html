@@ -36,6 +36,14 @@
             this.archives = archives;
             this.toFolder = toFolder;
 
+            var folder = toFolder.closest('li');
+
+            if (folder.attr('id') == FilePlan.selectedNode.attr('id') ||
+                folder.data('disabled')) {
+
+                return;
+            }
+
             if (FilePlan.selectedNode.hasClass('folder')) {
                 this.fromFolder = FilePlan.selectedNode;
             }

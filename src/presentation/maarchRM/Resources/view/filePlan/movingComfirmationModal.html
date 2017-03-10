@@ -34,10 +34,12 @@ MovingConfirmationModal = {
         var targetId = target.attr('id');
         var parentId = element.data('parentid');
 
+
         if ((targetId == parentId) || 
             (!parentId && target.hasClass('organization')) ||
             (element.data('orgregnumber') != target.data('orgregnumber')) ||
-            ($('#'+element.attr('id')).find('#'+targetId).length > 0)) {
+            ($('#'+element.attr('id')).find('#'+targetId).length > 0) ||
+            (target.data('disabled'))) {
 
             return;
         }

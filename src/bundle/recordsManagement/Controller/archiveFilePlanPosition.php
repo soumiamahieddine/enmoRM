@@ -101,9 +101,13 @@ class archiveFilePlanPosition
         if ($toFolderId) {
             $toFolder = $filePlanController->read($toFolderId);
         }
+
+        if ($toFolder && $toFolder->disabled) {
+            throw new \core\Exception\ForbiddenException("The folder is disabled.");
+        }
         
         if ($fromFolder && $toFolder && $fromFolder->ownerOrgRegNumber != $toFolder->ownerOrgRegNumber) {
-            throw new \core\Exception\ForbiddenException("The archive can not be moved in a different organization unit");
+            throw new \core\Exception\ForbiddenException("The archive can not be moved in a different organization unit.");
         }
 
         $transactionControl = !$this->sdoFactory->inTransaction();
