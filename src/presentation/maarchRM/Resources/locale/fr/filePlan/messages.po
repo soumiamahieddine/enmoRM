@@ -9,16 +9,16 @@ msgid "Folder updated"
 msgstr "Dossier modifié"
 
 msgid "Folder moved"
-msgstr "Dossier déplaçé"
+msgstr "Dossier déplacé"
 
 msgid "Folder deleted"
 msgstr "Dossier supprimé"
 
 msgid "Move archive"
-msgstr "Deplacer une archive"
+msgstr "Déplacer une archive"
 
 msgid "Move folder"
-msgstr "Deplacer un dossier"
+msgstr "Déplacer un dossier"
 
 msgid "The archive was moved."
 msgstr "L'archive a été déplacée"
@@ -27,5 +27,19 @@ msgid "%1$s archives were moved."
 msgstr "%1$s archives ont été déplacées"
 
 msgid "The supression of the folder will also delete children folders and unlink all archives from those folders."
-msgstr "La suppression du dossier entrainera la suppression des sous dossiers et le lien à toutes leurs archives"
+msgstr "La suppression du dossier entraînera également la suppression des sous dossiers et déplacera toutes les archives des dossiers concernés à la racine."
 
+msgid "Add a new folder"
+msgstr "Ajouter un dossier"
+
+msgid "Edit folder"
+msgstr "Modifier le dossier"
+
+msgid "Delete folder"
+msgstr "Supprimer le dossier"
+
+msgid "Do you want to move %1$s into %2$s ?"
+msgstr "Voulez-vous déplacer %1$s dans %2$s ?"
+
+msgid "Do you want to delete the folder %1$s ?"
+msgstr "Voulez-vous supprimer le dossier %1$s ?"

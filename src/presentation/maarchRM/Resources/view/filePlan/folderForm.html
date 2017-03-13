@@ -42,15 +42,16 @@
             $.each(folder, function(key, value) {
                 FolderForm.form.find('[name="'+key+'"]').not('[type="radio"]').val(value);
             })
-            if (folder.disabled) {
-                this.form.find('input[name="disabled"][value="true"]').click();
+            if (folder.disabled == true) {
+                this.form.find('input[name="disabled"][value="true"]').parent().click();
             }
+
             this.form.removeClass('hide');
         },
         save: function() {
             var folder = {};
 
-            this.form.find('input[type="hidden"], input[type="text"], textarea, input[type="radio"]:checked').each(function(){
+            this.form.find('input[type="hidden"], input[type="text"], textarea').each(function(){
                 var input = $(this);
                 if (value = input.val()) {
                     folder[input.attr('name')]= value;
@@ -61,6 +62,8 @@
                 return;
             }
 
+            folder.disabled = $('label.active > input').val()=='true' ? true : false;
+            
             var type = "POST";
             if (folder.folderId) {
                 type = "PUT";

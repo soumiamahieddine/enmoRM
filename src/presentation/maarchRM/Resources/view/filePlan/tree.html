@@ -134,18 +134,26 @@
             var template = $('#folderNodeTemplate').children('li').clone();
             template = this.fullUpFolderNode(folder, template);
 
+            template.data('path', this.selectedNode.data('path')+'/'+folder.name)
             BootstrapTree.addNode(this.selectedNode, template);
 
             this.initDragNDrop();
         },
 
         editFolderNode: function(folder) {
-            this.fullUpFolderNode(folder, $('#'+folder.folderId));
+            var folderNode = $('#'+folder.folderId);
+            this.fullUpFolderNode(folder, folderNode);
+
+            var path = folderNode.data('path');
+            path = path.split('/');
+            path[path.length-1] = folder.name;
+            folderNode.data('path', path.join('/'));
+
+            folderNode.find('b').click();
         },
 
         fullUpFolderNode: function(folder, node) {
             node.attr('id', folder.folderId)
-                .data('path', this.selectedNode.data('path')+'/'+folder.name)
                 .data('orgregnumber', folder.ownerOrgRegNumber)
                 .data('parentid', folder.parentId)
                 .data('description', folder.description)
