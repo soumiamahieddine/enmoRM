@@ -235,19 +235,19 @@ class welcome
 
     /**
      * Show the result of moving an archive into a folder
-     * @param bool $result
+     * @param int $result
      *
      * @return string
      */
     public function moveArchivesToFolder($result)
     {
-        $this->translator->setCatalog('filePlan/messages');
+        $this->view->translator->setCatalog('filePlan/messages');
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
         } else {
             $this->json->message = '%1$s archives were moved.';
-            $this->json->message = $this->translator->getText($this->json->message);
-            $this->json->message = sprintf($this->json->message, count($result));
+            $this->json->message = $this->view->translator->getText($this->json->message);
+            $this->json->message = sprintf($this->json->message, $result);
         }
 
         return $this->json->save();

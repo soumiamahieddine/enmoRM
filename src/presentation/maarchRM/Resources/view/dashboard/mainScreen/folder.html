@@ -270,16 +270,17 @@
         },
 
         removeArchives: function(archivesIds) {
-            $.each(archivesIds, function() {
-                $('#' +this).remove();
-            });
-
-            if (!this.folderContents.find('.archive').length) {
-                this.buildResultList([]);
-                
-            } else if (!this.folderContents.find('bg-info').length) {
-                $('#folderContentList').find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
+            var newArchivesList = [];
+            
+            for(var i=0; i<this.archivesList.length; i++) {
+                if ($.inArray(this.archivesList[i].archiveId, archivesIds) == -1) {
+                    newArchivesList.push(this.archivesList[i]);
+                }
             }
+
+            this.archivesList = newArchivesList;
+            this.buildPaginationButtons();
+            this.buildResultList(this.currentRange);
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
