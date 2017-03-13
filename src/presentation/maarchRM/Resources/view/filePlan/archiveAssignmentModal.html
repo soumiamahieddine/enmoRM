@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span>Move archive</h4>
+                <h4 class="modal-title"><span>Move archives</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -10,10 +10,10 @@
                         <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
                     </div>
                     <div class="col-xs-10">
-                        <h4 id="archiveToMove" class="hide"><span>Do you want to move the archive</span> <i class="text-primary"></i> <span>to the folder</span> <i class="text-primary"/> ?</h4>
-                        <h4 id="archivesToMove" class="hide"><span>Do you want to move</span> <i class="text-primary"/> <span>archives to the folder</span> <i class="text-primary"/> ?</h4>
-                        <h4 id="removesArchiveFromFolder" class="hide"><span>Do you want to remove the archive</span> <i class="text-primary"/> <span>from the folder</span> <i class="text-primary"/> ?</h4>
-                        <h4 id="removesArchivesFromFolder" class="hide"><span>Do you want to remove</span> <i class="text-primary"/> <span>archives from the folder</span> <i class="text-primary"/> ?</h4>
+                        <h4 id="archiveToMove" class="hide">Do you want to move the archive %1$s to the folder %2$s ?</h4>
+                        <h4 id="archivesToMove" class="hide">Do you want to move %1$s archives to the folder %2$s ?</h4>
+                        <h4 id="removesArchiveFromFolder" class="hide">Do you want to remove the archive %1$s from the folder %2$s ?</h4>
+                        <h4 id="removesArchivesFromFolder" class="hide">Do you want to remove %1$s archives from the folder %2$s ?</h4>
                     </div>
                 </div>
             </div>
@@ -52,19 +52,25 @@
             if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
 
             if (archives.length == 1) {
-                var message = this.modal.find('#archiveToMove').removeClass('hide');
-                var i = message.find('i');
+                var messageDiv = $('#archiveToMove');
+                var message = messageDiv.html();
+                messageDiv.removeClass('hide');
+
                 var archiveName = $('#'+archives[0]).find('.archiveName').text();
                 if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
 
-                $(i[0]).html(archiveName);
-                $(i[1]).html(folderName);
+                message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+                messageDiv.html(message);
 
             } else {
-                var message = this.modal.find('#archivesToMove').removeClass('hide');
-                var i = message.find('i');
-                $(i[0]).html(archives.length);
-                $(i[1]).html(folderName);
+                var messageDiv = $('#archiveToMove');
+                var message = messageDiv.html();
+                messageDiv.removeClass('hide');
+
+                message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+                messageDiv.html(message);
             }
 
             this.modal.modal();
@@ -82,20 +88,27 @@
             if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
 
             if (archives.length == 1) {
-                var message = this.modal.find('#removesArchiveFromFolder').removeClass('hide');
-                var i = message.find('i');
+
+                var messageDiv = $('#removesArchiveFromFolder');
+                var message = messageDiv.html();
+                messageDiv.removeClass('hide');
+
+
                 var archiveName = $('#'+archives[0]).find('.archiveName').text();
                 if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
 
-                $(i[0]).html(archiveName);
-                $(i[1]).html(folderName);
+                message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+                messageDiv.html(message);
 
             } else {
-                var message = this.modal.find('#removesArchivesFromFolder').removeClass('hide');
-                var i = message.find('i');
+                var messageDiv = $('#removesArchivesFromFolder');
+                var message = messageDiv.html();
+                messageDiv.removeClass('hide');
 
-                $(i[0]).html(archives.length);
-                $(i[1]).html(folderName);
+                message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+                messageDiv.html(message);
             }
 
             this.modal.modal();

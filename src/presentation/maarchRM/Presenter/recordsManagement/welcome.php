@@ -244,6 +244,8 @@ class welcome
         $this->view->translator->setCatalog('filePlan/messages');
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
+            $this->json->message = $this->view->translator->getText($this->json->message);
+            
         } else {
             $this->json->message = '%1$s archives were moved.';
             $this->json->message = $this->view->translator->getText($this->json->message);

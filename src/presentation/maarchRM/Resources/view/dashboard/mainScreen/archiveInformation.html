@@ -65,7 +65,7 @@
                         <input id="inputRetentionRuleCode" class="hide" value="[?merge archive.retentionRuleCode ?]"/>
                             <th title="retentionRule">Retention rule</th>
                             <td>
-                                <select id="retentionRuleCode" name="retentionRuleCode" class="form-control">
+                                <select id="retentionRuleCode" name="retentionRuleCode" class="input-sm form-control">
                                     <option value=''>Select a retention rule</option>
                                     <?merge retentionRules ?>
                                     <option value='[?merge .code ?]' data-duration="[?merge .durationText ?]" data-finaldisposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
@@ -75,7 +75,7 @@
                         <tr id="startDate" style="border:0px solid transparent; display: none">
                             <th>Start date</th>
                             <td>
-                                <input type="text" class="form-control datePicker startDate" name="startDate" placeholder="Start date" value="[?merge archive.retentionStartDate ?]"/>
+                                <input type="text" class="form-control input-sm datePicker startDate" name="startDate" placeholder="Start date" value="[?merge archive.retentionStartDate ?]"/>
                             </td>
                         </tr>
                     </table>
@@ -126,8 +126,8 @@
 <div class="hide">
     <div class="form-group" id="inputFinalDisposition">
         <br>
-        <input type="radio" name="finalDisposition" value="destruction">&nbsp;Destruction
-        <input type="radio" name="finalDisposition" value="preservation">&nbsp;Preservation
+        <input type="radio" name="finalDisposition" class="input-sm" value="destruction">&nbsp;Destruction
+        <input type="radio" name="finalDisposition" class="input-sm" value="preservation">&nbsp;Preservation
     </div>
     <div id="customField"></div>
     <div id="archiveName" data->
