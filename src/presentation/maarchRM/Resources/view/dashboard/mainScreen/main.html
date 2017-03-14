@@ -54,6 +54,7 @@
 
         tabCreation : function(uniqId) {
             var tab = $("#searchTab").clone(true).attr("href", "#" + uniqId + "Panel").attr("id", uniqId + "Tab")
+            tab.find('#resultTemplate, #fulltextTraductions').remove();
             
             var li = $("<li/>").append(tab);
             

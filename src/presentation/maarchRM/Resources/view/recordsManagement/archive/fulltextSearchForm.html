@@ -106,8 +106,8 @@
     <br/>
 </div>
 <!-- Search results -->
-<div class="container-fluid col-md-12" id="fulltext_searchResult" data-search-result>
-</div>
+<div class="container-fluid col-md-12" data-search-result/>
+
 <div id="resultTemplate" class="hide">
     <div class="archive row">
         <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
@@ -115,20 +115,20 @@
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
-                <!-- originatorOrgName -->
-                <small/>
                 <br/>
-                &nbsp;&nbsp;
+                <!-- originatorOrgName -->
+                <small title="Originator"/>
+                &nbsp;
                 <!-- originatorArchiveId -->
-                <small>
+                <small title="Originator archive id">
                     <i/>
                 </small>&nbsp;
                 <!-- depositDate -->
-                <small/>&nbsp;
+                <small title="Deposit date"/>&nbsp;
                 <!-- archivalProfileReference -->
-                <small/>&nbsp;
+                <small title="Archival profile"/>&nbsp;
                 <!-- description -->
-                <small/>
+                <small title="Description"/>
             </h5>
         </div>
         <div class="archiveContent col-xs-12 hide">
@@ -137,6 +137,12 @@
         </div>
     </div>
 </div>
+<div id="fulltextTraductions" class='hide'>
+    <span id="emptyResult_text">No result</span>
+    <span id="originatorOrgName_text">Originator</span>
+
+</div>
+
 <script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
 
@@ -167,6 +173,7 @@
 
     SearchList = {
         searchContents: null,
+        archiveRowTemplate : $('#resultTemplate').children('.archive'),
 
         select: function(e) {
             this.unselect();
@@ -178,34 +185,31 @@
             this.searchContents.find('.bg-success').removeClass('bg-success');
         },
 
-        buildResultList: function(archives) {
-            var template = $('#resultTemplate').children('.archive');
+        mergeResultRow: function(archive) {
+            var archiveDiv= SearchList.archiveRowTemplate.clone();
 
-            for(i=0; i<archives.length; i++) {
-                var archiveDiv = template.clone();
-                var siblings = archiveDiv.attr('id', archives[i].archiveId)
-                                         .find('.archiveName').text(archives[i].archiveName)
-                                         .siblings('small');
+            var siblings = archiveDiv.attr('id', archive.archiveId)
+                                     .find('.archiveName').text(archive.archiveName)
+                                     .siblings('small');
 
-                if (archives[i].originatorOrgName) {
-                    $(siblings[0]).text(archives[i].originatorOrgName);
-                }
-                if (archives[i].originatorArchiveId) {
-                    $(siblings[1]).children('i').text(archives[i].originatorArchiveId);
-                }
-                if (archives[i].depositDate) {
-                    $(siblings[2]).text(archives[i].depositDate.substring(0, 19));
-                }
-                if (archives[i].archivalProfileReference) {
-                    $(siblings[3]).text(archives[i].archivalProfileReference);
-                }
-                if (archives[i].text) {
-                    $(siblings[4]).text(archives[i].text.substring(0, 30));
-                }
-
-                this.searchContents.append(archiveDiv);
+            if (archive.originatorOrgName) {
+                $(siblings[0]).text(archive.originatorOrgName);
             }
-        }
+            if (archive.originatorArchiveId) {
+                $(siblings[1]).children('i').text(archive.originatorArchiveId);
+            }
+            if (archive.depositDate) {
+                $(siblings[2]).text(archive.depositDate.substring(0, 19));
+            }
+            if (archive.archivalProfileReference) {
+                $(siblings[3]).text(archive.archivalProfileReference);
+            }
+            if (archive.text) {
+                $(siblings[4]).text(archive.text.substring(0, 30));
+            }
+
+            return archiveDiv;
+        },
     }
 
     $('[data-search-searchForm]').find('[name="searchForm_inputSearchBtn"]').on('click', function () {
@@ -338,7 +342,26 @@
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
                     SearchList.searchContents.empty();
-                    SearchList.buildResultList(response.archives);
+                    SearchList.searchContents.dataList({
+                        datas        : response.archives,
+                        rowMerge     : SearchList.mergeResultRow,
+                        rowMaxNumber : 10,
+                        emptyMessage : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
+                        sorting: [
+                            {
+                                fieldName : 'archiveName',
+                                label     : $('#archiveName_text').text()
+                            },
+                            {
+                                fieldName : 'depositDate',
+                                label     : $('#depositDate_text').text()
+                            },
+                            {
+                                fieldName : 'originatorOrgName',
+                                label     : $('#originatorOrgName_text').text()
+                            }
+                        ]
+                    })
                 }
             }
         });
