@@ -239,6 +239,7 @@
         select: function(e) {
             e.removeClass('node-default').addClass('node-warning');
             $('#editFolder, #deleteFolder').prop('disabled', true);
+            $('#addFolder').prop('disabled', false);
         },
 
         unselect: function(e) {
