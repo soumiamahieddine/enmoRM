@@ -289,6 +289,7 @@ class Document extends \dependency\xml\Document
         $this->addScript("/public/dependency/html/js/konami-code/jquery.raptorize.1.0.js");
 
         $this->addScript("/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js");
+        $this->addScript("/public/dependency/html/js/dataList_0.0.1/dataList.js");
 
         //$this->addScript("/public/dependency/html/js/webodf.js-0.5.8/webodf.js");
 

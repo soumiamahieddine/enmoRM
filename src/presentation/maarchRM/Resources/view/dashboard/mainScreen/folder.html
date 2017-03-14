@@ -5,38 +5,17 @@
             <br/>
             <small id="folderDescription"/>
         </h4>
-        <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
-            <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled><span class="fa fa-plus"></span></button>
-            <!--<button type="button" class="btn btn-sm btn-default unfreeze" id="folderToolbarUnfreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-unlock"></span></button>
-            <button type="button" class="btn btn-sm btn-default freeze" id="folderToolbarFreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-lock"></span></button>-->
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a class="small" style="cursor: pointer;" data-reference="">New archive</a></li>
-            </ul>
-        </div>
     </div>
-    <i id="emptyFolderMessage" class="hide text-muted"><br/><span class="fa fa-times">&nbsp;</span>Empty folder</i>
-    <div id="folderContentList" class="hide">
-        <div class="row">
-            <h4 class="pull-left" style="width:15px"><i class="selectAll archiveSelection fa fa-square-o"/></h4>
-                <div id="folderPagination" class="pull-right hide">
-                    <nav>
-                        <ul class="pagination pagination-sm" style="margin:0">
-                            <li>
-                            <a href="#" class="previousPage" title="Previous">
-                                <span class="fa fa-angle-double-left"></span>
-                            </a>
-                            </li>
-                            <li>
-                            <a href="#" class="nextPage" title="Next">
-                                <span class="fa fa-angle-double-right"></span>
-                            </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+    <div id="folderContentList">
+        <div class="row hide">
+            <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
+                <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled><span class="fa fa-plus"></span></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a class="small" style="cursor: pointer;" data-reference="">New archive</a></li>
+                </ul>
+            </div>
         </div>
-        <div id="folderContents"/>
     </div>
 </div>
 
@@ -71,6 +50,9 @@
 
 <div class="hide">
     <span id="archives_text">archives</span>
+    <span id="emptyFolder_text">Empty folder</span>
+    <span id="archiveName_text">Name</span>
+    <span id="depositDate_text">Deposit date</span>
 </div>
 <style>
     .archive h5 {
@@ -101,11 +83,8 @@
 
 <script type="text/javascript">
     ArchiveList = {
-        archivesList: [],
-        rowLimit: 10,
-        currentRange: 0,
-        maxRange: 0,
-        folderContents: $('#folderContents'),
+        rowTemplate: $('#listTemplate > .archive'),
+        folderContents: $('#folderContentList'),
 
         select: function(e, c) {
             this.unselect()
@@ -131,9 +110,7 @@
                 type        : "GET",
                 dataType    : 'json',
                 success     : function (response) {
-                    ArchiveList.archivesList = response.archives;
-                    ArchiveList.buildPaginationButtons();
-                    ArchiveList.buildResultList();
+                    ArchiveList.buildResultList(response.archives);
                     $('#folderPath').text(path);
                     $('#folderDescription').html(description);
                 },
@@ -146,90 +123,56 @@
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(range) {
-            var template = $('#listTemplate').children('.archive');
-            var archives = this.archivesList;
-
-            this.folderContents.html('');
+        buildResultList: function(archives) {
             $('#rightColumn').html('');
 
             if (archives.length) {
                 $('#folderToolbarFreeze').removeAttr("disabled");
                 $('#folderToolbarUnfreeze').removeAttr("disabled");
                 $('#folderToolbarSearch').removeAttr("disabled");
-                $('#emptyFolderMessage').addClass('hide');
-                $('#folderContentList').removeClass('hide');
             } else {
                 $('#folderToolbarFreeze').attr("disabled", "disabled");
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
-                $('#emptyFolderMessage').removeClass('hide');
-                $('#folderContentList').addClass('hide');
             }
 
-            if (!range) {
-                range = 0;
-            }
-
-            var rowStart = range * this.rowLimit;
-            var rowEnd = rowStart + this.rowLimit;
-
-            this.currentRange = range;
-
-            for(var i=rowStart; i<rowEnd && i<archives.length; i++) {
-                if (!archives[i].html) {
-                    var archiveDiv = template.clone();
-                    var siblings = archiveDiv.attr('id', archives[i].archiveId)
-                                             .find('.archiveName').text(archives[i].archiveName)
-                                             .siblings('small');
-
-                    if (archives[i].depositDate) {
-                        $(siblings[0]).text(archives[i].depositDate.substring(0, 19));
+            $('#folderContentList').dataList({
+                datas        : archives,
+                rowMerge     : ArchiveList.mergeRow,
+                rowMaxNumber : 10,
+                emptyMessage : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
+                sorting: [
+                    {
+                        fieldName : 'archiveName',
+                        label     : $('#archiveName_text').text()
+                    },
+                    {
+                        fieldName : 'depositDate',
+                        label     : $('#depositDate_text').text()
                     }
-                    if (archives[i].archivalProfileReference) {
-                        $(siblings[1]).text(archives[i].archivalProfileReference);
-                    }
-                    if (archives[i].originatorArchiveId) {
-                        $(siblings[2]).children('i').text(archives[i].originatorArchiveId);
-                    }
-
-                    archives[i].html = archiveDiv;
-                }
-
-                this.folderContents.append(archives[i].html);
-            }
-
-            $('#folderContentList').find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
+                ]
+            })
 
             this.initDragNDrop();
         },
 
-        buildPaginationButtons: function() {
-            var pagination = $('#folderPagination');
+        mergeRow: function(archive) {
+            var archiveDiv = ArchiveList.rowTemplate.clone();
+            var siblings = archiveDiv.attr('id', archive.archiveId)
+                                     .find('.archiveName').text(archive.archiveName)
+                                     .siblings('small');
 
-            if (this.archivesList.length > this.rowLimit) {
-                var lastLi = pagination.find('ul > li:last-child');
-                var pageLi = []
-                pagination.find('ul > li').not(':first').not(':last').html('');
-
-                var pageNumber = this.archivesList.length / this.rowLimit;
-                this.maxRange = pageNumber;
-
-                if (this.archivesList.length / this.rowLimit != 0) { pageNumber++ }
-
-                for (var i=1; i<= pageNumber; i++) {
-                    var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
-                    lastLi.before(li);
-                    pageLi.push(li);
-                }
-
-                pageLi[0].addClass('active');
-
-                pagination.removeClass('hide');
-
-            } else {
-                pagination.addClass('hide');
+            if (archive.depositDate) {
+                $(siblings[0]).text(archive.depositDate.substring(0, 19));
             }
+            if (archive.archivalProfileReference) {
+                $(siblings[1]).text(archive.archivalProfileReference);
+            }
+            if (archive.originatorArchiveId) {
+                $(siblings[2]).children('i').text(archive.originatorArchiveId);
+            }
+
+            return archiveDiv;
         },
 
         initDragNDrop: function() {
@@ -270,17 +213,7 @@
         },
 
         removeArchives: function(archivesIds) {
-            var newArchivesList = [];
-            
-            for(var i=0; i<this.archivesList.length; i++) {
-                if ($.inArray(this.archivesList[i].archiveId, archivesIds) == -1) {
-                    newArchivesList.push(this.archivesList[i]);
-                }
-            }
-
-            this.archivesList = newArchivesList;
-            this.buildPaginationButtons();
-            this.buildResultList(this.currentRange);
+            $('#'+archivesIds.join(', #')).removeFromDataList();
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
@@ -451,17 +384,6 @@
     }
 
     // List icon toggle
-    $('#folderContentList').on('click', '.archiveSelection', function() {
-        var checkbox = $(this);
-        if (checkbox.hasClass('fa-square-o')) {
-            checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
-                    .closest('.archive').addClass('bg-info');
-        } else {
-            checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
-                    .closest('.archive').removeClass('bg-info');
-        }
-    })
-
     $('#folderContentList').on('click', '.archiveContentButton', function() {
         var caret = $(this);
         if (caret.hasClass('fa-caret-right')) {
@@ -474,17 +396,8 @@
         }
     })
 
-    $('#folderContentList').on('click', '.selectAll', function() {
-        var checkbox = $(this);
-        if (checkbox.hasClass('fa-square-o')) {
-            $('#folderContentList').find('.fa-check-square-o').click();
-        } else {
-            $('#folderContentList').find('.fa-square-o').click();
-        }
-    })
-
     // Actions on archives
-    $('#folderContents').on('click', '.archiveName', function() {
+    $('#folderContentList').on('click', '.archiveName', function() {
         var archive = $(this).closest('.archive');
         var archiveId = archive.attr('id');
         ArchiveList.select(archive);
@@ -498,14 +411,14 @@
     })
 
 
-    $('#folderContents').on('click', '.childrenArchive', function() {
+    $('#folderContentList').on('click', '.childrenArchive', function() {
         var parentArchive = $(this).closest('.archive');
         var archiveId = $(this).attr('id');
         ArchiveList.select(parentArchive, $(this));
         Archive.getInfo(archiveId);
     })
 
-    $('#folderContents').on('click', '.document', function() {
+    $('#folderContentList').on('click', '.document', function() {
         var parentArchive = $(this).closest('.archive');
         ArchiveList.select(parentArchive, $(this));
         Archive.getResourceInfo($(this));
@@ -589,28 +502,4 @@
             }
         });
     });
-
-    // Pagination
-    $('#folderPagination').on('click', 'a', function() {
-        var a = $(this);
-
-        if (a.hasClass('previousPage')) {
-            var range = ArchiveList.currentRange - 1;
-            if (range >= 0) {
-                ArchiveList.buildResultList(range);
-                $('#folderPagination').find('.active').removeClass('active').prev().addClass('active');
-            }
-        } else if (a.hasClass('nextPage')) {
-            var range = ArchiveList.currentRange + 1;
-            if (range <= ArchiveList.maxRange) {
-                ArchiveList.buildResultList(range);
-                $('#folderPagination').find('.active').removeClass('active').next().addClass('active');
-
-            }
-        } else {
-            ArchiveList.buildResultList(parseInt(a.text())-1);
-            $('#folderPagination').find('.active').removeClass('active');
-            a.parent().addClass('active');
-        }
-    })
 </script>
