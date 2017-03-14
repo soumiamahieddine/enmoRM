@@ -11,7 +11,7 @@
             <!--<button type="button" class="btn btn-sm btn-default unfreeze" id="folderToolbarUnfreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-unlock"></span></button>
             <button type="button" class="btn btn-sm btn-default freeze" id="folderToolbarFreeze" data-type="unfreeze" title="Unfreeze" disabled><span class="fa fa-lock"></span></button>-->
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a class="small" data-reference="">Without profile</a></li>
+                <li><a class="small" style="cursor: pointer;" data-reference="">New archive</a></li>
             </ul>
         </div>
     </div>
@@ -407,6 +407,7 @@
                     .addClass("userProfile small")
                     .data("reference", archivalProfiles[i].reference)
                     .data("json", JSON.stringify(archivalProfiles[i]))
+                    .attr('style', "cursor: pointer;")
                     .text(archivalProfiles[i].name);
             $("<li/>").append(a).appendTo(dropdown);
         }
@@ -509,7 +510,6 @@
         ArchiveList.select(parentArchive, $(this));
         Archive.getResourceInfo($(this));
     })
-
 
     $("#folderToolbarBtn").on("show.bs.dropdown", function() {
         buildDropdownMenu();
