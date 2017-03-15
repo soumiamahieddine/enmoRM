@@ -130,7 +130,7 @@
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        ArchiveList.removeArchives(ArchiveAssignmentModal.archives);
+                        Archive.remove(ArchiveAssignmentModal.archives);
                         ArchiveAssignmentModal.close();
                     }
                 },

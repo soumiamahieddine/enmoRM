@@ -174,16 +174,6 @@
         searchContents: null,
         archiveRowTemplate : $('#resultTemplate').children('.archive'),
 
-        select: function(e) {
-            this.unselect();
-            e.addClass('bg-success');
-        },
-
-        unselect: function() {
-            $('#rightColumn').html('');
-            this.searchContents.find('.bg-success').removeClass('bg-success');
-        },
-
         mergeResultRow: function(archive) {
             var archiveDiv= SearchList.archiveRowTemplate.clone();
 
@@ -340,7 +330,6 @@
             success     : function (response) {
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
-                    SearchList.searchContents.empty();
                     SearchList.searchContents.dataList({
                         datas        : response.archives,
                         rowMerge     : SearchList.mergeResultRow,
@@ -367,48 +356,4 @@
         $(this).prop('disabled', false);
     });
 
-    // List icon toggle
-    $('[data-search-result]').on('click', '.archiveContentButton', function() {
-        var caret = $(this);
-        if (caret.hasClass('fa-caret-right')) {
-            $('#folderContentList').find('.fa-caret-down').click();
-            caret.removeClass('fa-caret-right').addClass('fa-caret-down');
-            Archive.getContent($(this).closest('.archive'));
-        } else {
-            caret.removeClass('fa-caret-down').addClass('fa-caret-right')
-                 .closest('div').siblings('.archiveContent').addClass('hide');
-        }
-    })
-
-    // Actions on archives
-    $('[data-search-result]').on('click', '.archiveName', function() {
-        var archive = $(this).closest('.archive');
-        var archiveId = archive.attr('id');
-        SearchList.searchContents = $(this).closest("[data-search-result]");
-        SearchList.select($(archive));
-        Archive.getInfo(archiveId);
-    })
-
-    $('[data-search-result]').on('click', function(e) {
-        if ($(e.target).css('cursor') != "pointer") {
-            SearchList.searchContents = $(e).closest("[data-search-result]");
-            SearchList.unselect();
-        }
-    })
-
-
-    $('[data-search-result]').on('click', '.childrenArchive', function() {
-        var parentArchive = $(this).closest('.archive');
-        var archiveId = $(this).attr('id');
-        SearchList.searchContents = $(this).closest("[data-search-result]");
-        SearchList.select($(parentArchive));
-        Archive.getInfo(archiveId);
-    })
-
-    $('[data-search-result]').on('click', '.document', function() {
-        var parentArchive = $(this).closest('.archive');
-        SearchList.searchContents = $(this).closest("[data-search-result]");
-        SearchList.select($(parentArchive));
-        Archive.getResourceInfo($(this));
-    })
 </script>

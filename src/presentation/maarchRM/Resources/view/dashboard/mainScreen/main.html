@@ -28,6 +28,7 @@
                 <?hinclude dashboard/mainScreen/search.html ?>
                 <?hinclude dashboard/mainScreen/import.html ?>
                 <?hinclude dashboard/mainScreen/folder.html ?>
+                <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
             </div>
         </div>
         <div class="col-md-3 col-xs-12" id="rightColumn">
@@ -36,7 +37,7 @@
 </div>
 
 <script>
-    var searchTab = {
+    var SearchTab = {
         run : function (orgRegNumber = null, folderId = null) {
             var uniqId = new Date().getUTCMilliseconds();
 
@@ -112,10 +113,10 @@
     }
 
     $('#newSearchTabBtn').on("click", function() {
-        searchTab.run();
+        SearchTab.run();
     });
     $('[data-remove-tab]').on("click", function() {
-        searchTab.close($(this).closest("li"));
+        SearchTab.close($(this).closest("li"));
     });
 
     $('#toogleLeftColumn').on('click', function() {

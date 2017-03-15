@@ -1,0 +1,192 @@
+<div id="archiveContentTemplate" class="hide">
+    <li>
+        <span>
+            <i class='fa'/>
+            <span></span>
+        </span>
+    </li>
+</div>
+
+<style>
+    .archive h5 {
+        margin: 6px 0px 6px 0px;
+    }
+    .archive small {
+        font-size: 10px;
+    }
+    .archive .tree-l {
+        font-size: 12px;
+        margin: 0px;
+    }
+    .archive .tree-l li, .archive .tree-l li>span>span {
+        padding: 0px;
+    }
+
+    .dataList .archiveContentButton
+    .dataList a,
+    .dataList .bg-success,
+    .dataList .archive .tree-l li>span>span {
+        cursor: pointer;
+    }
+    .dataList .selectedChild {
+        font-weight: bold;
+    }
+
+</style>
+
+<script type="text/javascript">
+	var Archive = {
+        archiveContentTemplate: $('#archiveContentTemplate').children('li'),
+
+        select: function(e, c) {
+            this.unselect(e.closest('.dataList'));
+            e.addClass('bg-success');
+
+            if (c) { c.addClass('selectedChild') }
+         },
+
+        unselect: function(dataList) {
+            $('#rightColumn').html('');
+            dataList.find('.bg-success').removeClass('bg-success')
+                    .find('.selectedChild').removeClass('selectedChild');
+        },
+
+        remove: function(archivesIds) {
+            $('#'+archivesIds.join(', #')).removeFromDataList();
+        },
+
+        getInfo: function(archiveId) {
+            $.ajax({
+                url         : "/archive/"+archiveId,
+                type        : "GET",
+                success     : function (response) {
+                    $('#rightColumn').html(response);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        getContent: function(archive) {
+            $.ajax({
+                url         : "/archiveContents/"+archive.attr('id'),
+                type        : "GET",
+                dataType    : 'json',
+                success     : function (response) {
+                    archive.find('.archiveContent').removeClass('hide').find('ul').html('');
+                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.childrenArchives, false);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        getResourceInfo: function(resource) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    $('#rightColumn').html(response);
+                    DocumentInformation.load(resource.data('json'));
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        showArchiveContent: function(parent, digitalResources, childrenArchives, hidden) {
+            var count=100
+            if (childrenArchives) {
+                for(var j=0; j < childrenArchives.length && count>0; j++) {
+                    count--;
+                    template = this.archiveContentTemplate.clone();
+
+                    template.children('span')
+                            .children('i')
+                            .addClass('fa')
+                            .data('closed-icon', 'fa-caret-right')
+                            .data('opened-icon', 'fa-caret-down')
+                            .siblings('span')
+                            .addClass('childrenArchive')
+                            .attr('id', childrenArchives[j].archiveId)
+                            .html(childrenArchives[j].archiveName);
+
+                    BootstrapTree.addNode(parent, template, hidden);
+
+                    var children = null;
+                    if (childrenArchives[j].childrenArchives) {
+                        children = childrenArchives[j].childrenArchives;
+                    }
+
+                    Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].childrenArchives, false);
+                }
+            }
+
+            if (digitalResources) {
+                for(var i=0; i < digitalResources.length; i++) {
+                    template = this.archiveContentTemplate.clone();
+
+                    template.children('span')
+                            .children('i')
+                            .addClass('fa fa-file-o')
+                            .siblings('span')
+                            .addClass('document')
+                            .data('json', digitalResources[i])
+                            .attr('id', digitalResources[i].resId)
+                            .html(digitalResources[i].fileName);
+
+                    BootstrapTree.addNode(parent, template, hidden);
+                }
+            }
+        }
+    }
+
+        // List icon toggle
+    $('#middleColumn').on('click', '.archiveContentButton', function() {
+        var caret = $(this);
+        if (caret.hasClass('fa-caret-right')) {
+            caret.removeClass('fa-caret-right')
+            	 .addClass('fa-caret-down')
+            	 .closest('.dataList')
+            	 .find('.fa-caret-down')
+            	 .click();
+            Archive.getContent(caret.closest('.archive'));
+        } else {
+            caret.removeClass('fa-caret-down').addClass('fa-caret-right')
+                 .closest('div').siblings('.archiveContent').addClass('hide');
+        }
+    })
+
+    // Actions on archives
+    $('#middleColumn').on('click', '.archiveName', function() {
+        var archive = $(this).closest('.archive');
+        var archiveId = archive.attr('id');
+        Archive.select(archive);
+        Archive.getInfo(archiveId);
+    })
+
+    $('#middleColumn').on('click', '.dataList', function(e) {
+        if ($(e.target).css('cursor') != "pointer") {
+            Archive.unselect($(this).find('.dataList'));
+        }
+    })
+
+    $('#middleColumn').on('click', '.childrenArchive', function() {
+    	var child = $(this);
+        var parentArchive = child.closest('.archive');
+        var archiveId = child.attr('id');
+        Archive.select(parentArchive, child);
+        Archive.getInfo(archiveId);
+    })
+
+    $('#middleColumn').on('click', '.document', function() {
+    	var doc = $(this);
+        var parentArchive = doc.closest('.archive');
+        Archive.select(parentArchive, doc);
+        Archive.getResourceInfo(doc);
+    })
+
+</script>
