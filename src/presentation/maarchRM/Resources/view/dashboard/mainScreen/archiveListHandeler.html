@@ -22,7 +22,7 @@
         padding: 0px;
     }
 
-    .dataList .archiveContentButton
+    .dataList .archiveContentButton,
     .dataList a,
     .dataList .bg-success,
     .dataList .archive .tree-l li>span>span {
@@ -152,6 +152,7 @@
             	 .addClass('fa-caret-down')
             	 .closest('.dataList')
             	 .find('.fa-caret-down')
+                 .not(caret)
             	 .click();
             Archive.getContent(caret.closest('.archive'));
         } else {

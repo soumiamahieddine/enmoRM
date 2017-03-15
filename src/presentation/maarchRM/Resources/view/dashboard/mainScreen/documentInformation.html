@@ -16,6 +16,10 @@
                 <td name="created"/>
             </tr>
             <tr>
+                <th title="Identifier">Identifier</th>
+                <td name="resId"/>
+            </tr>
+            <tr>
                 <th title="Size">Size</th>
                 <td><span name="size"/> <span>bytes</span></td>
             </tr>
@@ -62,6 +66,7 @@
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
+            DocumentInformation.form.find('[name="resId"]').text(resource.resId).attr('title', resource.resId);
 
             if (resource.format) {
                 var formatname = resource.format.name+' '+resource.format.version;
