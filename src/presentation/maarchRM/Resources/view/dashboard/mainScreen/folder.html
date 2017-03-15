@@ -21,7 +21,6 @@
 
 <div id="listTemplate" class="hide">
     <div class="archive row">
-        <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
         <div class="col-xs-11">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
@@ -68,14 +67,14 @@
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
     }
-    #folderContentList .archiveSelection,
-    #folderContentList .archiveContentButton,
-    #folderContentList a,
-    #folderContentList .bg-success,
-    #folderContentList .archive .tree-l li>span>span {
+
+    .dataList .archiveContentButton
+    .dataList a,
+    .dataList .bg-success,
+    .dataList .archive .tree-l li>span>span {
         cursor: pointer;
     }
-    #folderContentList .selectedChild {
+    .dataList .selectedChild {
         font-weight: bold;
     }
 
@@ -87,7 +86,7 @@
         folderContents: $('#folderContentList'),
 
         select: function(e, c) {
-            this.unselect()
+            this.unselect();
             e.addClass('bg-success');
 
             if (c) { c.addClass('selectedChild') }
@@ -402,6 +401,8 @@
         var archiveId = archive.attr('id');
         ArchiveList.select(archive);
         Archive.getInfo(archiveId);
+        archive.addClass('bg-success');
+        console.log(archive);
     })
 
     $('#folderPanel').on('click', function(e) {

@@ -110,7 +110,6 @@
 
 <div id="resultTemplate" class="hide">
     <div class="archive row">
-        <h4 class="pull-left" style="width:15px"><i class="archiveSelection fa fa-square-o"/></h4>
         <div class="col-xs-11">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
@@ -369,17 +368,6 @@
     });
 
     // List icon toggle
-    $('[data-search-result]').on('click', '.archiveSelection', function() {
-        var checkbox = $(this);
-        if (checkbox.hasClass('fa-square-o')) {
-            checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
-                    .closest('.archive').addClass('bg-info');
-        } else {
-            checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
-                    .closest('.archive').removeClass('bg-info');
-        }
-    })
-
     $('[data-search-result]').on('click', '.archiveContentButton', function() {
         var caret = $(this);
         if (caret.hasClass('fa-caret-right')) {
@@ -389,15 +377,6 @@
         } else {
             caret.removeClass('fa-caret-down').addClass('fa-caret-right')
                  .closest('div').siblings('.archiveContent').addClass('hide');
-        }
-    })
-
-    $('[data-search-result]').on('click', '.selectAll', function() {
-        var checkbox = $(this);
-        if (checkbox.hasClass('fa-square-o')) {
-            $('#folderContentList').find('.fa-check-square-o').click();
-        } else {
-            $('#folderContentList').find('.fa-square-o').click();
         }
     })
 
