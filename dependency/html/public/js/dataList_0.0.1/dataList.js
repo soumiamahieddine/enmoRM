@@ -8,8 +8,8 @@ var DataList = {
                     		'<\/ul>'+
                 		'<\/nav>'+
             		'<\/div>',
-	headerHTML :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-    checkboxHTML :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+	selectAllHTML :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    selectorHTML :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
         
 
 	init: function(options, element) {
@@ -35,11 +35,11 @@ var DataList = {
         }
 		
         // Build header row
-        row.prepend(this.headerHTML)
+        row.prepend(this.selectAllHTML)
            .prepend(sortingInput)
            .prepend(this.paginationHTML)
            .removeClass('hide')
-           .find('.selectAll').on('click', DataList.bind_selectAll);
+           .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);;
 
         this.dataList[id] = {
             element      : element,
@@ -137,7 +137,7 @@ var DataList = {
 	    for(var i=rowStart; i<rowEnd && i<this.dataList[id].datas.length; i++) {
 	        if (!this.dataList[id].datas[i].html) {
 	            var row = this.dataList[id].rowMerge(this.dataList[id].datas[i]);
-                row.addClass('dataListElement').prepend(this.checkboxHTML);
+                row.addClass('dataListElement').prepend(this.selectorHTML);
 	            this.dataList[id].datas[i].html = row;
 	        }
 
@@ -145,7 +145,7 @@ var DataList = {
 	    }
 
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
-        this.dataList[id].element.find('.multipleSelection').on('click', DataList.bind_selection);
+        this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
 	},
 
     remove: function(id, index) {
