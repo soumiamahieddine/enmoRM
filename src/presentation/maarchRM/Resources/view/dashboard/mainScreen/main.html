@@ -1,34 +1,36 @@
-<div class="container-fluid">
-    <div class="row">
-        &nbsp;<span class="fa fa-angle-double-left" id="toogleLeftColumn" style="cursor: pointer"/>
-    </div>
+<div class="container-fluid" style="padding-top: 10px">
     <div class="row">
         <div class="col-md-3 col-xs-12" id="leftColumn">
         <?hinclude /filePlan/tree.html ?>
         </div>
         <div class="col-md-6 col-xs-12" id="middleColumn">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
-                </li>
-                <li style="display: none">
-                    <a href="#importPanel" id="importTab" data-toggle="tab" ><span class="fa fa-plus">&nbsp;</span>Create</a>
-                </li>
-                <li style="display: none">
-                    <a href="#searchPanel" id="searchTab" data-toggle="tab">
-                        Search
-                        <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
-                </li>
-            </ul>
-            <div class="tab-content" id="tab-content">
-                <?hinclude dashboard/mainScreen/search.html ?>
-                <?hinclude dashboard/mainScreen/import.html ?>
-                <?hinclude dashboard/mainScreen/folder.html ?>
-                <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
+            <div class="row">
+                <div class="pull-left" style="padding: 0px 10px; width: 40px"><button id="toggleLeftColumn" class="btn btn-sm btn-default"><i class="fa fa-arrow-left"/></button></div>
+                <div class="pull-left col-xs-1" style="width: calc(100% - 40px)">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+                        </li>
+                        <li style="display: none">
+                            <a href="#importPanel" id="importTab" data-toggle="tab" ><span class="fa fa-plus">&nbsp;</span>Create</a>
+                        </li>
+                        <li style="display: none">
+                            <a href="#searchPanel" id="searchTab" data-toggle="tab">
+                                Search
+                                <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="tab-content">
+                        <?hinclude dashboard/mainScreen/search.html ?>
+                        <?hinclude dashboard/mainScreen/import.html ?>
+                        <?hinclude dashboard/mainScreen/folder.html ?>
+                        <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-md-3 col-xs-12" id="rightColumn">
@@ -119,7 +121,7 @@
         SearchTab.close($(this).closest("li"));
     });
 
-    $('#toogleLeftColumn').on('click', function() {
+    $('#toggleLeftColumn').on('click', function() {
         var leftColumn = $('#leftColumn');
 
         if (leftColumn.hasClass('col-md-3')) {
@@ -128,14 +130,14 @@
                 $("#middleColumn").removeClass("col-md-6")
                                   .addClass("col-md-9");
             });
-            $(this).removeClass('fa-angle-double-left').addClass('fa-angle-double-right');
+            $(this).children('i').addClass('fa-rotate-180');
 
         } else {
             $("#middleColumn").removeClass("col-md-9")
                               .addClass("col-md-6");
             leftColumn.addClass("col-md-3")
                       .show("slide", { direction: "left" }, 200);
-            $(this).removeClass('fa-angle-double-right').addClass('fa-angle-double-left');
+            $(this).children('i').removeClass('fa-rotate-180');
         }
     });
 
