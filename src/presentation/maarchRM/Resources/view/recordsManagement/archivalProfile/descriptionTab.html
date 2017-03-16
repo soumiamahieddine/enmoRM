@@ -10,51 +10,48 @@
     </div>
 </div-->
 <div class="form-group col-md-12">
-    <div class="col-lg-6 col-md-9 col-sm-12">
-        <label class="col-md-offset-1 col-lg-2 col-md-4 control-label">Description class</label>
-        <div class="col-lg-8 col-md-10">
-            <select id="descriptionClass" name="descriptionClass" class="form-control">
-                <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
-                <?merge descriptionClassList ?>
-                <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
-            </select>
-        </div>
+    <br/>
+    <label class="col-md-4 control-label">Description class</label>
+    <div class="col-md-7">
+        <select id="descriptionClass" name="descriptionClass" class="form-control">
+            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
+            <?merge descriptionClassList ?>
+            <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
+        </select>
     </div>
 </div>
 
 
 <div class="col-md-12">
-    <div class="col-lg-6 col-md-9 col-sm-12 table-responsive">
-        <table class="table col-md-offset-1" id="archiveDescriptionTable">
-            <thead>
-                <tr>
-                    <th>Property</th>
-                    <th style="width: 5%">Required</th>
-                    <th style="width: 5%"></th>
-                </tr>
-                <tr id="archiveDescriptionForm">
-                    <th>
-                        <select class="form-control" id="descriptionFields" name="type">
-                            <option value=""/>
-                            <?merge descriptionFields ?>
-                            <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
-                        </select>
-                        <select class="form-control hide" id="descriptionClassProperties" name="type">
-                        </select>
-                    </th>
-                    <th>
-                        <input type="checkbox" class="pull-left" name="required" id="requiredField"/>
-                    </th>
-                    <th>
-                        <button type="button" class="btn btn-success pull-right" id="addProperty"><span class="fa fa-plus"></span></button>
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="archiveDescription">
-                
-            </tbody>
-        </table>
-    </div>
+    <table class="table table-condensed" id="archiveDescriptionTable">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th style="width: 5%">Required</th>
+                <th style="width: 5%"></th>
+            </tr>
+            <tr id="archiveDescriptionForm">
+                <th>
+                    <select class="form-control input-sm" id="descriptionFields" name="type">
+                        <option value=""/>
+                        <?merge descriptionFields ?>
+                        <option data-type="[?merge .type ?]" value="[?merge .name ?]"><?merge .label ?></option>
+                    </select>
+                    <select class="form-control hide" id="descriptionClassProperties" name="type">
+                    </select>
+                </th>
+                <th>
+                    <input type="checkbox" class="pull-left" name="required" id="requiredField"/>
+                </th>
+                <th>
+                    <button type="button" class="btn btn-sm btn-success pull-right" id="addProperty"><span class="fa fa-plus"></span></button>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="archiveDescription">
+            
+        </tbody>
+    </table>
 </div>
 
 <div class="hide" data-translate-catalog="recordsManagement/archivalProfile">
@@ -73,12 +70,12 @@
     <table>
         <!-- CUSTOM PROPERTY TEMPLATE -->
         <tr id="descriptionPropertyTemplate" data-json="" style="cursor: pointer;">
-            <td class="propertyLabel"><span class="fa fa-arrows-v">&nbsp;&nbsp;</span></td>
+            <td class="propertyLabel"></td>
             <td class="requiredProperty">
                  <i class="fa fa-check-square-o"></i>
             </td>
             <td class="text-right">
-                <button type="button" class="deleteProperty btn btn-danger" title="delete"><i class="fa fa-minus"></i></button>
+                <button type="button" class="deleteProperty btn btn-sm btn-danger" title="delete"><i class="fa fa-minus"></i></button>
             </td>
         </tr>
     </table>

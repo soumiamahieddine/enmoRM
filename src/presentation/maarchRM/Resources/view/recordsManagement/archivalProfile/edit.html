@@ -23,150 +23,139 @@ file that was distributed with this source code.
             <?merge archivalProfile ?>
             <form class="form-horizontal" id="archivalProfile_form">
                 <div class="row">
-                    <input type="hidden" id="archivalProfileId" name="archivalProfileId">
-                    <div class="col-md-7">
+                    <div class="col-md-6">
+                        <br/>
+                        <input type="hidden" id="archivalProfileId" name="archivalProfileId">
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Reference <span style="color: red">*</span></label>
-                            <div class="col-md-10">
+                            <label class="col-md-3 control-label">Reference <span style="color: red">*</span></label>
+                            <div class="col-md-9">
                                 <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-7">
                         <div class="form-group">
-                            <label class="col-md-2 control-label">Name <span style="color: red">*</span></label>
-                            <div class="col-md-10">
+                            <label class="col-md-3 control-label">Name <span style="color: red">*</span></label>
+                            <div class="col-md-9">
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Name">
                             </div>
                         </div>
-                    </div>
-                    <?merge archivalProfile.type.ifeq('1').not() ?>
-                    <div class="col-md-5">
                         <div class="form-group">
-                            <label class="col-md-5 control-label">Allow user indexes</label>
-                            <div class="col-md-7">
-                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
-                            </div>
-                        </div>
-                    </div>  
-                    <div class="col-md-7">
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">Description</label>
-                            <div class="col-md-10">
+                            <label class="col-md-3 control-label">Description</label>
+                            <div class="col-md-9">
                                 <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
-                    <?merge archivalProfile.type.ifeq('1').not() ?>
-                    <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
-                    <?merge archivalProfile.type.ifeq('1').not() ?>
-                    <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
-                </ul>
-                <!-- Tab panes -->
-                <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
-                    <div class="panel-body">
-                        <div class="tab-content" id="archivalProfileNavTabs">
-                            <div role="tabpanel" class="tab-pane fade in" id="descriptionTab">
-                                <?hinclude recordsManagement/archivalProfile/descriptionTab.html ?>
+                        <?merge archivalProfile.type.ifeq('1').not() ?>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Allow user indexes</label>
+                            <div class="col-md-9">
+                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
                             </div>
-                            <?merge .type.ifeq('1').not() ?>
-                            <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
-                                <div class="col-md-12 well">
-                                    <div class="col-md-7">
-                                        <h4>Retention rule</h4>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="form-group">
-                                            <label class="col-md-2 control-label">Retention rule code</label>
-                                            <div class="col-md-10">
-                                                <select id="code" name="retentionRuleCode" class="form-control">
-                                                    <option value="">Select a retention rule code</option>
-                                                    <?merge retentionRules ?>
-                                                    <option value='[?merge .code ?]' 
-                                                            data-duration="[?merge .retentionDuration ?]" 
-                                                            data-duration-unit='[?merge .retentionDurationUnit ?]'
-                                                            data-final-disposition='[?merge .finalDisposition ?]'>
-                                                        <?merge .label ?>
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-10 col-md-offset-2">
-                                            <p>
-                                                <label>Retention duration</label> : 
-                                                <span id="duration"></span>
-                                            </p>
-                                            <p class="finalDisposition dl dl-horizontal">
-                                                <label>Final disposition</label> : 
-                                                <span id="finalDisposition"></span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="form-group">
-                                            <label class="col-md-2 control-label">Retention start date</label>
-                                            <div class="col-md-10" id="retentionStartDate">
-                                                <input type="hidden" name="retentionStartDate" />
-                                                <select id="startDate" class="form-control">
-                                                    <!--option value="" >Select a retention start date</option-->
-                                                    <option value="definedLater">To be defined later </option>
-                                                    <option value="depositDate" >Deposit date </option>
-                                                    <!--option value= "createdDate"> Created date </option>
-                                                    <option value= "publicatedDate"> Date of publication </option>
-                                                    <option value= "receptionDate"> Date of reception </option>
-                                                    <option value= "lastCommunicationDate"> Last communication date </option>
-                                                    <option value= "description"> Description object property </option-->
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 well">
-                                    <div class="col-md-7">
-                                            <h4>Access rule</h4>
-                                        </div>
-                                    <div class="col-md-7">
-                                        <div class="form-group">
-                                            <label class="col-md-2 control-label">Access rule code</label>
-                                            <div class="col-md-10">
-                                                <select id="accessRuleCode" name="accessRuleCode" class="form-control">
-                                                    <option value="">Select a access rule code</option>
-                                                    <?merge accessRules ?>
-                                                    <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .description ?></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7" id='accessRule' >
-                                        <div class="col-md-10 col-md-offset-2">
-                                            <table class="table" style="font-size: 12px">
-                                                <tr>
-                                                    <th class="col-md-4">Access rule duration</th>
-                                                    <td  class="col-md-8" id="accessRuleDuration"></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-10 col-md-offset-2" id="accessEntriesTable">
-                                            <table class="table table-condensed">
-                                                <thead>
-                                                    <th>Service</th>
-                                                    <th>Originator</th>
-                                                </thead>
-                                                <tbody id="accessEntries">
+                        </div>
+                    </div>
 
-                                                </tbody>
-                                            </table>
+                    <div class="col-md-6">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
+                            <?merge archivalProfile.type.ifeq('1').not() ?>
+                            <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
+                            <?merge archivalProfile.type.ifeq('1').not() ?>
+                            <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+                            <div class="panel-body">
+                                <div class="tab-content" id="archivalProfileNavTabs">
+                                    <div role="tabpanel" class="tab-pane fade in" id="descriptionTab">
+                                        <?hinclude recordsManagement/archivalProfile/descriptionTab.html ?>
+                                    </div>
+                                    <?merge .type.ifeq('1').not() ?>
+                                    <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
+                                        <div class="col-xs-12">
+                                            <h5 class="text-info"><strong>Retention rule<strong/></h5>
+                                            <br/>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Retention rule code</label>
+                                                <div class="col-md-9">
+                                                    <select id="code" name="retentionRuleCode" class="form-control">
+                                                        <option value="">Select a retention rule code</option>
+                                                        <?merge retentionRules ?>
+                                                        <option value='[?merge .code ?]' 
+                                                                data-duration="[?merge .retentionDuration ?]" 
+                                                                data-duration-unit='[?merge .retentionDurationUnit ?]'
+                                                                data-final-disposition='[?merge .finalDisposition ?]'>
+                                                            <?merge .label ?>
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-offset-4">
+                                                    <small>
+                                                        <label>Retention duration</label> : 
+                                                        <span id="duration"></span>
+                                                    </small>
+                                                    <br/>
+                                                    <small class="finalDisposition dl dl-horizontal">
+                                                        <label>Final disposition</label> : 
+                                                        <span id="finalDisposition"></span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Retention start date</label>
+                                                <div class="col-md-9" id="retentionStartDate">
+                                                    <input type="hidden" name="retentionStartDate" />
+                                                    <select id="startDate" class="form-control">
+                                                        <!--option value="" >Select a retention start date</option-->
+                                                        <option value="definedLater">To be defined later </option>
+                                                        <option value="depositDate" >Deposit date </option>
+                                                        <!--option value= "createdDate"> Created date </option>
+                                                        <option value= "publicatedDate"> Date of publication </option>
+                                                        <option value= "receptionDate"> Date of reception </option>
+                                                        <option value= "lastCommunicationDate"> Last communication date </option>
+                                                        <option value= "description"> Description object property </option-->
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div> 
+                                        <div class="col-xs-12" style="border-top: 1px solid silver">
+                                            <br/>
+                                            <h5 class="text-info"><strong>Access rule</strong></h5>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Access rule code</label>
+                                                <div class="col-md-9">
+                                                    <select id="accessRuleCode" name="accessRuleCode" class="form-control">
+                                                        <option value="">Select a access rule code</option>
+                                                        <?merge accessRules ?>
+                                                        <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .description ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div id='accessRule' >
+                                                <div class="col-md-offset-4">
+                                                    <small>
+                                                        <label>Access rule duration</label> : 
+                                                        <span id="accessRuleDuration"></span>
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-offset-3 col-md-7" style="font-size:12px" id="accessEntriesTable">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <th>Service</th>
+                                                            <th>Originator</th>
+                                                        </thead>
+                                                        <tbody id="accessEntries">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer clearfix">
+                <div class="clearfix">
                     <div class="pull-right">
                         <button type="button" id="archivalProfileCancelBtn" class="btn btn-warning"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
                         <button type="button" id="save" class="btn btn-success" title="Save">
