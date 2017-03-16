@@ -74,7 +74,7 @@ server. In order to ensure this, you have to edit the Apache2 configuration file
 (*/etc/apache2/envvars*). Change the file with the following value :
 
 ```
-useradd -m -g www-data maarch
+export APACHE_RUN_USER=maarch
 ```
 
 You can test the Apache configuration with one of the following command :
