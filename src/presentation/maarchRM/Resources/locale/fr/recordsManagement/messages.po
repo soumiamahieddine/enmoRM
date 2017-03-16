@@ -846,3 +846,6 @@ msgstr "octets"
 
 msgid "New archive"
 msgstr "Nouvelle archive"
+
+msgid "Archive updated"
+msgstr "Archive modifée"
