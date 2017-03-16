@@ -1,17 +1,16 @@
 Installation procedure
 ======================
 
-This procedure will guide you step by step throw the installation on MaarchRM.
+This procedure will guide you step by step through the installation of MaarchRM.
 
-The software is packaged with a default configuration and data that allow you to
+The software is packaged with default configuration and data that allow you to
 run the archiving system in a “demo” mode. For a custom installation, please
 read the docs at <http://wiki.maarch.org/Maarch_RM>.
 
-This procedure is describe for a Debian GNU Linux8 64bit system with a
+This procedure is made for a Debian GNU Linux8 64bit system with a
 PostgreSQL 9.4 database. Most of the command lines will require administrator
 rights.
 
- 
 
 Prerequisite
 ------------
@@ -20,7 +19,9 @@ Prerequisite
 
 -   Server Apache 2.4 (or higher)
 -   Module Apache rewrite_module
+    ```
     a2enmod rewrite
+    ```
 -   Module Apache env_module
     ```
     a2enmod env
@@ -51,8 +52,13 @@ Prerequisite
     ```
     apt-get install default-jre
     ```
--   We recommend to have a minimum of 1Gb free disk space (it depend on the
-    amount of data the you have to store on the system)
+-   git
+    ```
+    apt-get install git
+    ```
+
+We recommend to have a minimum of 1Gb free disk space (it depends on the 
+amount of data you have to store on the system)
 
 ### System user for the software
 
@@ -63,8 +69,8 @@ directory.
 useradd -m -g www-data maarch
 ```
 
-To give the user the ability to lunch batches, he must lunch the Apache2 server.
-In order to ensure this, you have to edit the Apache2 configuration file
+To give the user the ability to launch batches, the user must launch the Apache2
+server. In order to ensure this, you have to edit the Apache2 configuration file
 (*/etc/apache2/envvars*). Change the file with the following value :
 
 ```
@@ -78,17 +84,13 @@ apache2ctl configtest
 service apache2 configtest 
 ```
 
-### Data base server
+### Database server
 
-Server PostgreSQL 9.3 (or higher)
+Server PostgreSQL 9.4 (or higher)
 
 ```
 apt-get install postgresql-9.4
 ```
-
-### Storage server
-
-The space on the disk taken by the software depends on archives amount.
 
 ### Client
 
@@ -97,22 +99,25 @@ Any HTML5 / CSS3 web browser.
 Installation
 ------------
 
-The software must be cloned in your Apache web directory (*/var/www/* by
+The software must be cloned in your Apache web directory (*/var/www/*  by
 default) in a folder named “laabs”.
-
+```
+    cd /var/www
+    git clone https://labs.maarch.org/maarch/maarchRM.git laabs
+```
 ### Symbolic links
 
 Then you have to create symbolic link of html dependency from the public
 directory (*/var/www/laabs/web/public/dependency*).
 
 ```
+mkdir -p /var/www/laabs/web/public/dependency
 cd /var/www/laabs/web/public/dependency
 ln -s ../../../dependency/html/public/ html
 ```
 
 You also need to create the symbolic link of 7z binaries file in fileSystem
-dependency (*/var/www/laabs/dependency/fileSystem/plugins/zip/bin/*). This step
-is not necessary for windows users.
+dependency (*/var/www/laabs/dependency/fileSystem/plugins/zip/bin/*).
 
 ```
  cd /var/www/laabs/web/public/dependency
@@ -132,9 +137,9 @@ chmod -R 775 laabs/
 PostgreSQL administration
 -------------------------
 
-### User creation (not needed if you already have a user to administrate the data base)
+### User creation (not needed if you already have a user to administrate the database)
 
-Connect to the data base with postgres user and execute the following command
+Connect to the database with postgres user and execute the following command
 lines :
 
 ```
@@ -148,9 +153,9 @@ lines :
  exit
 ```
 
-### Data structure and data
+### Demo structure and data
 
-In the folder */var/www/laabs/data/maarchRM/batch*/psql, you can find script for
+In the folder */var/www/laabs/data/maarchRM/batch*/psql, you can find scripts for
 postgreSQL installation. Execute the following command with root privileges :
 
 ```
@@ -164,7 +169,7 @@ Configuration
 
 ### Publication
 
-The publication of a MaarchRM instance require to add some environment
+The publication of a MaarchRM instance requires to add some environment
 variables.
 
 #### Apache
@@ -224,7 +229,7 @@ MaarchRM :
  cd /var/www/laabs/data/maarchRM/conf
 ```
 
-Edit the *confvars.ini* file that contain variable for database connection :
+Edit the *confvars.ini* file that contains variable for database connection :
 
 ```
 @var.dsn = "pgsql:host=localhost;dbname=maarchRM;port=5432" 
