@@ -158,7 +158,7 @@ In the folder */var/www/laabs/data/maarchRM/batch*/psql, you can find scripts fo
 postgreSQL installation. Execute the following command with root privileges :
 
 ```
-cd /var/www/laabs/data/maarchRM/batch/psql
+cd /var/www/laabs/data/maarchRM/batch/pgsql
 ./schema.sh -u=maarch -h=5432 -d="maarchRM" -h=127.0.0.1
 ./data.sh -u=maarch -h=5432 -d="maarchRM" -h=127.0.0.1
 ```
@@ -238,7 +238,7 @@ Edit the *confvars.ini* file that contains variable for database connection :
 
 #### Connection to software
 
-In order to connect to the right virtual host, you have to add a line in your
+In order to connect to the right virtual host, you have to add a line in the client
 host file (*/etc/hosts*)
 
 ```
