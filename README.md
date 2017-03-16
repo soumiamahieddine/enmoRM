@@ -77,11 +77,10 @@ server. In order to ensure this, you have to edit the Apache2 configuration file
 export APACHE_RUN_USER=maarch
 ```
 
-You can test the Apache configuration with one of the following command :
+You can test the Apache configuration with one of the following commands :
 
 ```
 apache2ctl configtest
-service apache2 configtest 
 ```
 
 ### Database server
@@ -160,8 +159,8 @@ postgreSQL installation. Execute the following command with root privileges :
 
 ```
 cd /var/www/laabs/data/maarchRM/batch/psql
-/bin/bash schema.sh
-/bin/bash data.sh
+./schema.sh -u=maarch -h=5432 -d="maarchRM" -h=127.0.0.1
+./data.sh -u=maarch -h=5432 -d="maarchRM" -h=127.0.0.1
 ```
 
 Configuration
