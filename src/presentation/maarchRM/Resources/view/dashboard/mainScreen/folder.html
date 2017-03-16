@@ -244,13 +244,29 @@
             $("#archiveForm [name='filePlanPosition']").val("");
             $("#archiveForm [name='originatorOrgRegNumber']").val($(this).data("orgregnumber"));
         }*/
-        var parentArchiveId = $("#folderContentList").find(".bg-success").attr("id");
-        $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+        var importPanel = $("#importPanel");
+        var slectedArchive = $("#folderContentList").find(".bg-success")
+        var parentArchiveId = slectedArchive.attr("id");
+        var parentArchiveName = slectedArchive.find('a:first').text();
         $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
 
-        $("#importPanel").find("[data-context-path]:first").text($("#folderPath").text());
-        $("#importPanel").find("[data-context-description]:first").text($("#folderDescription").text());
-        $("#importPanel").find("[data-context-profil]:first").text($(this).text());
+        importPanel.find("[data-context-path]:first").text($("#folderPath").text());
+        importPanel.find("[data-context-path]:first").text($("#folderPath").text());
+        importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
+        importPanel.find("[data-context-profil]:first").text($(this).text());
+        console.log(importPanel.find("[data-context-parentarchive]"));
+        if (slectedArchive.length) {
+            $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+            console.log(slectedArchive.length);
+            console.log(parentArchiveName);
+            importPanel.find("[data-context-parentarchive]")
+                       .removeClass('hide')
+                       .find('[data-context-parentname]').html(parentArchiveName);
+        } else {
+            $("#archiveForm [name='parentArchiveId']").val('');
+            importPanel.find("[data-context-parentarchive]").addClass('hide');
+
+        }
 
         $('#importTab').click();
     });
