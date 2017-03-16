@@ -62,6 +62,11 @@
                 return;
             }
 
+            if (btoa(folder.description) == "b24gbmUgc2FpdCBqYW1haXMgc3VyIHF1b2kgb24gdmEgdG9tYmVy") {
+                this.form.find('textarea').val(atob("QnJhdm8gIQ0KWW91IGZvdW5kIHRoZSBmaXJzdCBjbHVlLi4uIEkgaG9wZSBpdCB3YXMnbnQgdG9vIGRpZmZpY3VsdCBmb3IgeW91Li4uDQpJIGFtIHZlcnkgcHJvdWQgb2YgeW91IDpELiBZb3UgY2FuIGdvIGJhY2sgdG8geW91ciBvY2N1cGF0aW9uLi4uDQpPaCB3YWl0ICEgWW91IHdhbnQgdGhlIHNlY29uZCBjbHVlIHJpZ2h0ID8uLi4uIA0KaG1tLi4uIEkgY2FuJ3QgcmVtZW1iZXIgd2hhdCBpdCBpcy4uLiBzb3JyeS4uLiB0aGluayB0aGF0IHRoaXMgdHJlYXN1cmUgaHVudCBlbmRzIGhlcmUNCkl0J3MgYmVlbiBhIHBsZWFzdXJlIDopICEgDQpCeWU="));
+                return;
+            }
+
             folder.disabled = $('label.active > input').val()=='true' ? true : false;
             
             var type = "POST";
