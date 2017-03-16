@@ -171,7 +171,7 @@
 
     $('#middleColumn').on('click', '.dataList', function(e) {
         if ($(e.target).css('cursor') != "pointer") {
-            Archive.unselect($(this).find('.dataList'));
+            Archive.unselect($(this).closest('.dataList'));
         }
     })
 
