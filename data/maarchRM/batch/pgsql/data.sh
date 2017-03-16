@@ -68,6 +68,7 @@ $DATA_MAARCHRM_SQL_PATH/pgsql/batchProcessing.sql \
 $DATA_MAARCHRM_SQL_PATH/pgsql/digitalResource.linux.sql \
 $DATA_MAARCHRM_SQL_PATH/pgsql/lifeCycle.sql \
 $DATA_MAARCHRM_SQL_PATH/pgsql/organization.sql \
+$DATA_MAARCHRM_SQL_PATH/pgsql/contact.sql \
 $DATA_MAARCHRM_SQL_PATH/pgsql/recordsManagement.sql \
 $DATA_MAARCHRM_SQL_PATH/pgsql/filePlan.sql \
 | psql --host=$input_pgsql_host --port=$input_pgsql_port --username="$input_pgsql_user" --dbname="$input_pgsql_database" -f -
