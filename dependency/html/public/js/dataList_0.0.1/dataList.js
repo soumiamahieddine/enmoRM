@@ -59,6 +59,8 @@ var DataList = {
 
 	destroy: function(id) {
 		delete(this.dataList[id]);
+        buildPaginationButtons(id);
+
 	},
 
     build: function(id, options) {
@@ -150,6 +152,7 @@ var DataList = {
 
     remove: function(id, index) {
         this.dataList[id].datas.splice(index,1);
+        this.buildPaginationButtons(id);
         this.buildList(id, this.dataList[id].currentRange);
     },
 
