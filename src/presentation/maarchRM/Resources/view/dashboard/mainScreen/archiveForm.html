@@ -235,7 +235,7 @@
 
         clear : function() {
             $('#retentionRule').removeAttr("disabled");
-            $('#archiveForm, #managementMetadataForm').find('.archiveInput').val('').change();
+            $('#archiveForm, #managementMetadataForm').find('.archiveInput').not('[name="filePlanPosition"],[name="originatorOrgRegNumber"]').val('').change();
 
             DocumentList.clear();
             Metadata.clear($('#allFields'));
