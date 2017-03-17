@@ -10,10 +10,7 @@
                         <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
                     </div>
                     <div class="col-xs-10">
-                        <h4 id="archiveToMove" class="hide">Do you want to move the archive %1$s to the folder %2$s ?</h4>
-                        <h4 id="archivesToMove" class="hide">Do you want to move %1$s archives to the folder %2$s ?</h4>
-                        <h4 id="removesArchiveFromFolder" class="hide">Do you want to remove the archive %1$s from the folder %2$s ?</h4>
-                        <h4 id="removesArchivesFromFolder" class="hide">Do you want to remove %1$s archives from the folder %2$s ?</h4>
+                        <h4 id="archiveAssignementMessage" class="hide"/>
                     </div>
                 </div>
             </div>
@@ -23,6 +20,12 @@
             </div>
         </div>
     </div>
+    <div class="hide">
+        <span id="archiveToMove_txt">Do you want to move the archive %1$s to the folder %2$s ?</span>
+        <span id="archivesToMove_txt">Do you want to move %1$s archives to the folder %2$s ?</span>
+        <span id="removesArchiveFromFolder_txt">Do you want to remove the archive %1$s from the folder %2$s ?</span>
+        <span id="removesArchivesFromFolder_txt">Do you want to remove %1$s archives from the folder %2$s ?</span>
+    </div>
 </div>
 
 <script>
@@ -31,6 +34,7 @@
         toFolder: null,
         archives: null,
         modal: $('#ArchiveAssignmentModal'),
+        messageDiv : $('#archiveAssignementMessage'),
 
         moveInFolder: function(archives, toFolder) {
             this.archives = archives;
@@ -52,27 +56,23 @@
             if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
 
             if (archives.length == 1) {
-                var messageDiv = $('#archiveToMove');
-                var message = messageDiv.html();
-                messageDiv.removeClass('hide');
+                var message = $('#archiveToMove_txt').html();
 
                 var archiveName = $('#'+archives[0]).find('.archiveName').text();
                 if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
 
                 message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
-                messageDiv.html(message);
 
             } else {
                 var messageDiv = $('#archiveToMove');
-                var message = messageDiv.html();
-                messageDiv.removeClass('hide');
+                var message = $('#archivesToMove_txt').html();
 
                 message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
-                messageDiv.html(message);
             }
 
+            this.messageDiv.html(message).removeClass('hide');
             this.modal.modal();
         },
 
@@ -88,29 +88,22 @@
             if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
 
             if (archives.length == 1) {
-
-                var messageDiv = $('#removesArchiveFromFolder');
-                var message = messageDiv.html();
-                messageDiv.removeClass('hide');
-
+                var message = $('#removesArchiveFromFolder_txt').html();
 
                 var archiveName = $('#'+archives[0]).find('.archiveName').text();
                 if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
 
                 message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
-                messageDiv.html(message);
 
             } else {
-                var messageDiv = $('#removesArchivesFromFolder');
-                var message = messageDiv.html();
-                messageDiv.removeClass('hide');
+                var message = $('#removesArchivesFromFolder_txt').html();
 
                 message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
-                messageDiv.html(message);
             }
 
+            this.messageDiv.html(message).removeClass('hide');
             this.modal.modal();
         },
 

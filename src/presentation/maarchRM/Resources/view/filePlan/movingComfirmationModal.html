@@ -20,6 +20,9 @@
             </div>
         </div>
     </div>
+    <div>
+        <span id="moveFoldermessage_txt">Do you want to move %1$s into %2$s ?</span>
+    </div>
 </div>
 
 <script>
@@ -45,7 +48,7 @@ MovingConfirmationModal = {
         }
 
         var messageDiv = $('#moveFolderModal').find('.modal-body').find('h4');
-        var message = messageDiv.html();
+        var message = $('#moveFoldermessage_txt').text();
 
         message = message.replace("%1$s", '<i class="text-primary">'+ element.find('b').html() +'<\/i>');
         message = message.replace("%2$s", '<i class="text-primary">'+ target.find('b').html() +'<\/i>');

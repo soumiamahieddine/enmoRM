@@ -23,21 +23,24 @@
             </div>
         </div>
     </div>
+    <div class="hide">
+        <span id="deleteFolderMessage_txt">Do you want to delete the folder %1$s ?</span>
+    </div>
 </div>
 
 <script>
 DeleteConfirmationModal = {
     target: null,
+    messageDiv: modal.find('.modal-body').find('h4').find('span'),
 
     show: function() {
         var modal = $('#deleteFolderModal');
         this.target = FilePlan.selectedNode;
 
-        var messageDiv = modal.find('.modal-body').find('h4').find('span');
-        var message = messageDiv.html();
+        var message = $('#deleteFolderMessage_txt').html();
 
         message = message.replace("%1$s", '<i class="text-primary">'+ this.target.find('b:first').text() +'<\/i>');
-        messageDiv.html(message);
+        this.messageDiv.html(message);
         
         modal.modal();
     },
