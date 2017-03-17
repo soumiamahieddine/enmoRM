@@ -127,8 +127,8 @@ class filePlan
             if ($parentFolder->ownerOrgRegNumber != $folder->ownerOrgRegNumber) {
                 throw \Exception("Can't move to another service !");
             }
-            if ($parentFolder->disabled) {
-                throw new \core\Exception\ForbiddenException("The folder is disabled.");
+            if ($parentFolder->closed) {
+                throw new \core\Exception\ForbiddenException("The folder is closed.");
             }
         }
 

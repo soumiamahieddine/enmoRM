@@ -1,9 +1,12 @@
 <div class="tab-pane fade in active col-xs-12" id="folderPanel">
     <div class="row">
-        <h4 class="pull-left">
+        <h4 class="col-xs-11 pull-left">
             <span id="folderPath"/>
             <br/>
             <small id="folderDescription"/>
+        </h4>
+        <h4 class="col-xs-1 pull-left lockedFolder hide">
+            <i class="text-info fa fa-lock" style="font-size: 30px"/>
         </h4>
     </div>
     <div id="folderContentList">
@@ -51,10 +54,16 @@
         rowTemplate: $('#listTemplate > .archive'),
         folderContents: $('#folderContentList'),
 
-        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles) {
+        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles, locked) {
             var url = "/folder?orgRegNumber="+orgRegNumber;
             if (folderId) {
                 url = url + "&folderId="+folderId;
+            }
+
+            if (locked) {
+                $('#folderPanel').find('.lockedFolder').removeClass('hide');
+            } else {
+                $('#folderPanel').find('.lockedFolder').addClass('hide');
             }
 
             $.ajax({
@@ -105,7 +114,9 @@
                 ]
             })
 
-            this.initDragNDrop();
+            if (!(FilePlan.selectedNode.hasClass('folder') && FilePlan.selectedNode.data('closed'))) {
+                this.initDragNDrop();
+            }
         },
 
         mergeRow: function(archive) {

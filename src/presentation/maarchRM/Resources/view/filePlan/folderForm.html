@@ -14,10 +14,10 @@
         <div class="form-group">
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-default active">
-                    <input type="radio" name="disabled"  value="false" checked/><i class="fa fa-unlock">&nbsp;</i>Enabled
+                    <input type="radio" name="closed"  value="false" checked/><i class="fa fa-unlock">&nbsp;</i>Opened
                 </label>
                 <label class="btn btn-default">
-                    <input type="radio"  name="disabled" value="true" /><i class="fa fa-lock">&nbsp;</i>Disabled
+                    <input type="radio"  name="closed" value="true"/><i class="fa fa-lock">&nbsp;</i>Closed
                 </label>
             </div>
         </div>
@@ -42,8 +42,8 @@
             $.each(folder, function(key, value) {
                 FolderForm.form.find('[name="'+key+'"]').not('[type="radio"]').val(value);
             })
-            if (folder.disabled == true) {
-                this.form.find('input[name="disabled"][value="true"]').parent().click();
+            if (folder.closed == true) {
+                this.form.find('input[name="closed"][value="true"]').parent().click();
             }
 
             this.form.removeClass('hide');
@@ -67,7 +67,7 @@
                 return;
             }
 
-            folder.disabled = $('label.active > input').val()=='true' ? true : false;
+            folder.closed = $('label.active > input').val()=='true' ? true : false;
             
             var type = "POST";
             if (folder.folderId) {
@@ -103,7 +103,7 @@
             $('#filePlanMenu').css('visibility', 'visible');
 
             this.form.find('input, textarea').not('[type="radio"]').val('');
-            this.form.find('input[name="disabled"][value="false"]').click();
+            this.form.find('input[name="closed"][value="false"]').click();
         }
     }
 

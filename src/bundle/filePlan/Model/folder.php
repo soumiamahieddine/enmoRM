@@ -69,7 +69,7 @@ class folder
      * @var boolean
      * 
      */
-    public $disabled = false;
+    public $closed = false;
 
     /**
      * The sub folders

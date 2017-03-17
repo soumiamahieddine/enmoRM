@@ -43,7 +43,7 @@
             var folder = toFolder.closest('li');
 
             if (folder.attr('id') == FilePlan.selectedNode.attr('id') ||
-                folder.data('disabled')) {
+                folder.data('closed')) {
 
                 return;
             }

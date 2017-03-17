@@ -102,8 +102,8 @@ class archiveFilePlanPosition
             $toFolder = $filePlanController->read($toFolderId);
         }
 
-        if ($toFolder && $toFolder->disabled) {
-            throw new \core\Exception\ForbiddenException("The folder is disabled.");
+        if (($toFolder && $toFolder->closed) || $fromFolder && $fromFolder->closed) {
+            throw new \core\Exception\ForbiddenException("The folder is closed.");
         }
         
         if ($fromFolder && $toFolder && $fromFolder->ownerOrgRegNumber != $toFolder->ownerOrgRegNumber) {
