@@ -176,6 +176,10 @@
             $('#folderToolbarImport').removeAttr("disabled");
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+        },
+
+        refresh: function() {
+            FilePlan.selectedNode.find('b:first').click();
         }
     }
 
@@ -254,11 +258,8 @@
         importPanel.find("[data-context-path]:first").text($("#folderPath").text());
         importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
         importPanel.find("[data-context-profil]:first").text($(this).text());
-        console.log(importPanel.find("[data-context-parentarchive]"));
         if (slectedArchive.length) {
             $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-            console.log(slectedArchive.length);
-            console.log(parentArchiveName);
             importPanel.find("[data-context-parentarchive]")
                        .removeClass('hide')
                        .find('[data-context-parentname]').html(parentArchiveName);
