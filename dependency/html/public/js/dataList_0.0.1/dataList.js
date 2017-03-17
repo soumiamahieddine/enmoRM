@@ -49,7 +49,7 @@ var DataList = {
         // Set message for empty list
         if (options.emptyMessage) {
             this.dataList[id].emptyMessage = $(options.emptyMessage);
-            element.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
+            list.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
         }
         
 		this.build(id, options);
@@ -120,10 +120,8 @@ var DataList = {
         if (this.dataList[id].emptyMessage) {
             if (this.dataList[id].datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
-                this.dataList[id].element.addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
-                this.dataList[id].element.removeClass('hide');
             }
         }
 
