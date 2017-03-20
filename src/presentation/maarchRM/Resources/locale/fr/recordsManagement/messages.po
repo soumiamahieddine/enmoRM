@@ -849,3 +849,18 @@ msgstr "Nouvelle archive"
 
 msgid "Archive updated"
 msgstr "Archive modifée"
+
+msgid "Add field"
+msgstr "Ajouter un champs"
+
+msgid "A label is missing."
+msgstr "Un libellé n'a pas été renseigné"
+
+msgid "Label"
+msgstr "Libellé"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Select a retention rule"
+msgstr "Selectionner une règle de retention"
