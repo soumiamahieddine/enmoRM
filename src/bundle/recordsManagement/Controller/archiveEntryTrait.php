@@ -80,15 +80,15 @@ trait archiveEntryTrait
         $archive->status = "received";
 
         // Load archival profile, service level if specified
-        // Instantiate description contrller 
+        // Instantiate description controller
         $this->useReferences($archive, 'deposit');
-        
+
         // Complete management metadata from profile and service level
         $this->completeMetadata($archive);
 
         // Validate metadata
         $this->validateCompliance($archive);
-        
+
         // Check format conversion
         $this->convertArchive($archive);
 
@@ -130,7 +130,7 @@ trait archiveEntryTrait
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
-        }        
+        }
     }
 
     /**
@@ -152,11 +152,11 @@ trait archiveEntryTrait
         if (empty($archive->originatorOrgRegNumber)) {
             $currentOrg = \laabs::getToken("ORGANIZATION");
             if ($currentOrg) {
-               $archive->originatorOrgRegNumber = $currentOrg->registrationNumber;
+                $archive->originatorOrgRegNumber = $currentOrg->registrationNumber;
             }
         }
 
-        // Parent 
+        // Parent
         if (!empty($archive->parentArchiveId)) {
             $parentArchive = $this->read($archive->parentArchiveId);
 
@@ -331,7 +331,7 @@ trait archiveEntryTrait
             $archive->depositDate = \laabs::newTimestamp();
 
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
-            
+
             $this->storeDescriptiveMetadata($archive);
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
@@ -516,7 +516,7 @@ trait archiveEntryTrait
                 $filePlanPosition = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber."/".$archive->archiveId;
             } else {
                 $filePlanPosition = $this->storePath;
-            } 
+            }
         }
 
         $filePlanPosition = $this->resolveStoragePath($archive, $filePlanPosition);
@@ -550,7 +550,7 @@ trait archiveEntryTrait
         } else {
             $descriptionController = $this->useDescriptionController('recordsManagement/description');
         }
-        
+
         $descriptionController->create($archive);
 
         /*} elseif (\laabs::hasDependency('fulltext')) {
@@ -576,7 +576,7 @@ trait archiveEntryTrait
      *
      * @return string The storage path
      */
-    public function resolveStoragePath($values, $pattern=null)
+    public function resolveStoragePath($values, $pattern = null)
     {
         if (!$pattern) {
             $pattern = $this->storePath;
