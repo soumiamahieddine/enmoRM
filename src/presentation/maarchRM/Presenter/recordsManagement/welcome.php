@@ -314,8 +314,8 @@ class welcome
                 }
 
                 $descriptionHtml .= '<tr>';
-                $descriptionHtml .= '<th name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                $descriptionHtml .= '<td>'.$value.'</td>';
+                $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
+                $descriptionHtml .= '<td title="'.$value.'">'.$value.'</td>';
                 $descriptionHtml .= '</tr>';
             }
 
