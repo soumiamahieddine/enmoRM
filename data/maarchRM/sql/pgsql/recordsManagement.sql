@@ -39,8 +39,7 @@ INSERT INTO "recordsManagement"."accessEntry" ("accessRuleCode", "orgRegNumber",
 
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode") VALUES
     ('FacturesClients', 'FacturesClients', 'Factures clients', null, null, 'description/DateFacture', 'DocumentComptables', 'Factures de vente clients', 'ComptabiliteVente'),
-	('FacturesFournisseurs', 'FacturesFournisseurs', 'Factures de fournisseurs', null, null, 'description/DateFacture', 'DocumentComptables', 'Factures d''achats fournisseurs', 'ComptabiliteAchats');
-
+	('FacturesFournisseurs', 'FacturesFournisseurs', 'Factures fournisseurs', null, null, 'description/DateFacture', 'DocumentComptables', 'Factures d''achats fournisseurs', 'ComptabiliteAchats');
 
 INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "minLength", "maxLength", "minValue", "maxValue", "enumeration", "pattern") VALUES
     ('NumeroFacture', 'Numéro de facture', 'name', null, null, null, null, null, null, null),
