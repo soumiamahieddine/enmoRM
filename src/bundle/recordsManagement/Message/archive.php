@@ -41,6 +41,13 @@ class archive
     public $archiveName;
 
     /**
+     * Originator organisation Archive identifier
+     *
+     * @var string
+     */
+    public $originatorArchiveId;
+
+    /**
      * The archive folder id
      *
      * @var string
