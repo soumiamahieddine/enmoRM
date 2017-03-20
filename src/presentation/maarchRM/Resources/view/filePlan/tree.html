@@ -260,16 +260,9 @@
         over: function(event, ui) {
             parent = $(this);
             FolderNode.moveIn(parent);
-            /*
-            FilePlan.hoverTimeout = setTimeout(function () {
-                BootstrapTree.openNode(parent.closest('li'));
-                })
-            }, 800);
-            */
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));
-           // clearTimeout(FilePlan.hoverTimeout);
         },
         drop: function(event, ui) {
             FolderNode.moveOut($(this));
@@ -278,7 +271,10 @@
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
                 
             } else if ($(ui.helper).hasClass('archiveHelper')) {
-                ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
+                if (FilePlan.selectedNode.closest('li').data('orgregnumber') == $(this).closest('li').data('orgregnumber')) {
+                    ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
+                }
+
             }
         }
     }
@@ -298,8 +294,12 @@
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
 
             } else if ($(ui.helper).hasClass('archiveHelper')) {
-                if ($(this).closest('li').attr('id') != FilePlan.selectedNode.attr('id'))
+                var droppableLi = $(this).closest('li');
+
+                if (droppableLi.attr('id') != FilePlan.selectedNode.attr('id') &&
+                    droppableLi.data('orgregnumber') == FilePlan.selectedNode.data('orgregnumber')){
                     ArchiveAssignmentModal.removeFromFolder($(ui.helper).data('archives'));
+                }
             }
         }
     }
