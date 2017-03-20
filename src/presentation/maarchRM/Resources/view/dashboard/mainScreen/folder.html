@@ -6,7 +6,7 @@
             <small id="folderDescription"/>
         </h4>
         <h4 class="col-xs-1 pull-left lockedFolder hide">
-            <i class="text-info fa fa-lock" style="font-size: 30px"/>
+            <i class="text-danger fa fa-lock" style="font-size: 30px"/>
         </h4>
     </div>
     <div id="folderContentList">
@@ -59,11 +59,13 @@
             if (folderId) {
                 url = url + "&folderId="+folderId;
             }
-
+            var folderPanel = $('#folderPanel');
             if (locked) {
-                $('#folderPanel').find('.lockedFolder').removeClass('hide');
+                folderPanel.find('.lockedFolder').removeClass('hide');
+                $('#folderToolbarImport').attr('disabled', 'disabled');
             } else {
-                $('#folderPanel').find('.lockedFolder').addClass('hide');
+                folderPanel.find('.lockedFolder').addClass('hide');
+                $('#folderToolbarImport').removeAttr('disabled');
             }
 
             $.ajax({
@@ -184,7 +186,6 @@
             
             $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", JSON.stringify(archivalProfiles));
 
-            $('#folderToolbarImport').removeAttr("disabled");
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
