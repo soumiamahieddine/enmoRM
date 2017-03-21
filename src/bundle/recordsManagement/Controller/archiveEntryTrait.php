@@ -287,7 +287,6 @@ trait archiveEntryTrait
                         $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
                     }
                 } else {
-                    $archive->retentionStartDate = \laabs::newDate($archive->retentionStartDate);
                     // todo
                 }
             }
