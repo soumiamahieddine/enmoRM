@@ -410,6 +410,12 @@ msgstr "En attente d'autorisation"
 msgid "Appraisal rule"
 msgstr "Règle de conservation"
 
+msgid "Keep"
+msgstr "Conserver"
+
+msgid "Destroy"
+msgstr "Détruire"
+
 msgid "Access restrition rule"
 msgstr "Règle de communicabilité"
 

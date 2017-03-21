@@ -283,6 +283,9 @@ msgid "archiveDeposit"
 msgstr "Dépôt unitaire"
 msgctxt "userStoryGroup"
 
+msgid "messageComposer"
+msgstr "Génerer un bordereau"
+msgctxt "userStory"
 
 # ---------------------------------------------------------
 # Admin panel
