@@ -516,6 +516,7 @@ class archive
         $statusList['frozen'] = array('preserved', 'disposable');
         $statusList['disposable'] = array('preserved');
         $statusList['disposed'] = array('disposable');
+        $statusList['restituted'] = array('restituable');
         $statusList['error'] = array('preserved', 'frozen', 'disposable', 'disposed');
 
         if (!is_array($archiveIds)) {
