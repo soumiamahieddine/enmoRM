@@ -145,7 +145,6 @@ trait archiveEntryTrait
                 }
                 
                 $archive->filePlanPosition = $filePlanFoldersByName[$archive->filePlanFolder]->folderId;
-                    var_dump($filePlanFoldersByName);
             }
 
             $this->receive($archive);
