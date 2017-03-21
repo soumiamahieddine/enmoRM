@@ -1,0 +1,453 @@
+[
+{
+"digitalResources":[{
+"fileName":"F_0.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_2"},
+"archiveName":"F_0.pdf",
+"originatorArchiveId":"F_2",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_1.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_3"},
+"archiveName":"F_1.pdf",
+"originatorArchiveId":"F_3",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_10.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_4"},
+"archiveName":"F_10.pdf",
+"originatorArchiveId":"F_4",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_100.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_5"},
+"archiveName":"F_100.pdf",
+"originatorArchiveId":"F_5",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_101.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_6"},
+"archiveName":"F_101.pdf",
+"originatorArchiveId":"F_6",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_102.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_7"},
+"archiveName":"F_102.pdf",
+"originatorArchiveId":"F_7",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_103.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_8"},
+"archiveName":"F_103.pdf",
+"originatorArchiveId":"F_8",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_104.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_9"},
+"archiveName":"F_104.pdf",
+"originatorArchiveId":"F_9",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_105.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_10"},
+"archiveName":"F_105.pdf",
+"originatorArchiveId":"F_10",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_106.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_11"},
+"archiveName":"F_106.pdf",
+"originatorArchiveId":"F_11",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_107.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_12"},
+"archiveName":"F_107.pdf",
+"originatorArchiveId":"F_12",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_108.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_13"},
+"archiveName":"F_108.pdf",
+"originatorArchiveId":"F_13",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_109.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_14"},
+"archiveName":"F_109.pdf",
+"originatorArchiveId":"F_14",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_11.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_15"},
+"archiveName":"F_11.pdf",
+"originatorArchiveId":"F_15",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_110.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_16"},
+"archiveName":"F_110.pdf",
+"originatorArchiveId":"F_16",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_111.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_17"},
+"archiveName":"F_111.pdf",
+"originatorArchiveId":"F_17",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_112.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_18"},
+"archiveName":"F_112.pdf",
+"originatorArchiveId":"F_18",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_113.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_19"},
+"archiveName":"F_113.pdf",
+"originatorArchiveId":"F_19",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_114.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_20"},
+"archiveName":"F_114.pdf",
+"originatorArchiveId":"F_20",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_115.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_21"},
+"archiveName":"F_115.pdf",
+"originatorArchiveId":"F_21",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_116.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_22"},
+"archiveName":"F_116.pdf",
+"originatorArchiveId":"F_22",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_117.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_23"},
+"archiveName":"F_117.pdf",
+"originatorArchiveId":"F_23",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_118.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_24"},
+"archiveName":"F_118.pdf",
+"originatorArchiveId":"F_24",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_119.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_25"},
+"archiveName":"F_119.pdf",
+"originatorArchiveId":"F_25",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_12.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_26"},
+"archiveName":"F_12.pdf",
+"originatorArchiveId":"F_26",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_120.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_27"},
+"archiveName":"F_120.pdf",
+"originatorArchiveId":"F_27",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_121.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_28"},
+"archiveName":"F_121.pdf",
+"originatorArchiveId":"F_28",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_122.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_29"},
+"archiveName":"F_122.pdf",
+"originatorArchiveId":"F_29",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_123.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_30"},
+"archiveName":"F_123.pdf",
+"originatorArchiveId":"F_30",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+},
+{
+"digitalResources":[{
+"fileName":"F_124.pdf"}],
+"descriptionObject":{
+"client":"Facture client",
+"date_facture":"2017-03-09","num_facture":"FAA_31"},
+"archiveName":"F_124.pdf",
+"originatorArchiveId":"F_31",
+"archivalProfileReference":"FACTURES_CLIENTS",
+"filePlanFolder":"Facture client",
+"originatorOrgRegNumber":"regNum_CPTCLI",
+"retentionRuleCode":"compta_1_01",
+"retentionStartDate":"2017-03-21",
+"descriptionClass":""
+}
+
+]

@@ -31,7 +31,7 @@
     .dataList .selectedChild {
         font-weight: bold;
     }
-    .dataList .archiveContentButton {
+    .dataList .fa-caret-right, .dataList .fa-caret-down {
         font-size: 16px;
     }
 
@@ -46,7 +46,7 @@
             e.addClass('bg-success');
 
             if (c) { c.addClass('selectedChild') }
-         },
+        },
 
         unselect: function(dataList) {
             $('#rightColumn').html('');

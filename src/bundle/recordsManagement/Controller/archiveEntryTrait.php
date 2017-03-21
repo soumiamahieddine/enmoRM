@@ -103,6 +103,58 @@ trait archiveEntryTrait
     }
 
     /**
+     * Receive an archive
+     *
+     * @param string $batchDirectory      The path of the folder that contains archives
+     * @param string $descriptionFilePath The path of the description file
+     *
+     * @return bool The result of the operation
+     */
+    public function receiveArchiveBatch($batchDirectory, $descriptionFilePath)
+    {
+        if (!is_dir($batchDirectory)){
+            throw new \core\Exception\NotFoundException("The batch folder does not exist.");
+        }
+
+        $descriptionFile = file_get_contents($descriptionFilePath);
+
+        if (!$descriptionFile) {
+            throw new \core\Exception("The description file can not be read.");
+        }
+
+        $archives = json_decode($descriptionFile);
+        if (!$descriptionFile) {
+            throw new \core\Exception("The description file is malformed.");
+        }
+
+        $filePlanController = \laabs::newController('filePlan/filePlan');
+        $filePlanFoldersByName = [];
+
+        foreach ($archives as $archive) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $filePath = $batchDirectory . DIRECTORY_SEPARATOR . $digitalResource->fileName;
+
+                $fileContent = file_get_contents($filePath);
+                $digitalResource->handler = base64_encode($fileContent);
+                $digitalResource->size = filesize($filePath);
+            }
+
+            if ($archive->filePlanFolder) {
+                if (!isset($filePlanFoldersByName[$archive->filePlanFolder])) {
+                    $filePlanFoldersByName[$archive->filePlanFolder] = $filePlanController->readByName($archive->filePlanFolder);
+                }
+                
+                $archive->filePlanPosition = $filePlanFoldersByName[$archive->filePlanFolder]->folderId;
+                    var_dump($filePlanFoldersByName);
+            }
+
+            $this->receive($archive);
+        }
+
+        return true;
+    }
+
+    /**
      * Validate the archive compliance
      *
      * @param recordsManagement/archive $archive The archive to validate
