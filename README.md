@@ -123,7 +123,16 @@ dependency (*/var/www/laabs/dependency/fileSystem/plugins/zip/bin/*).
  ln -s /usr/bin/7z 7z
 ```
 
-### Rights modification
+### Rights modification and demo repository
+
+Add the demo repository folders 
+
+```
+cd /var/www/laabs/data/maarchRM/
+mkdir repository
+mkdir repository/archives_1
+mkdir repository/archives_2
+```
 
 The rights of the entire */var/www/laabs* folder must be changed.
 

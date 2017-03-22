@@ -268,7 +268,10 @@ trait archiveAccessTrait
             $queryParts[] = "parentArchiveId=null";
         }
 
-        $queryParts[] = $this->getAccessRuleAssert($currentDateString);
+        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+        if ($accessRuleAssert) {
+            $queryParts[] = $accessRuleAssert;
+        }
 
         return implode(' and ', $queryParts);
     }

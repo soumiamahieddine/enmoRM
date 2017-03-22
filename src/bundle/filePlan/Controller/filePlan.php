@@ -111,6 +111,32 @@ class filePlan
     }
 
     /**
+     * Read a folder
+     * @param string $folderName The folder name
+     * 
+     * @return filePlan/folder The folder
+     */
+    public function readByName($folderName)
+    {
+        try {
+            $folders = $this->sdoFactory->find('filePlan/folder', "name='$folderName'");
+            
+            if (!count($folders)) {
+                throw new \Exception("", 1);
+                
+            }
+            $folder = $folders[0];
+
+        } catch(\Exception $e) {
+            throw $e;
+            
+            throw new \core\Exception\NotFoundException("The folder named '$folderName' can't be found.");
+        }
+
+        return $folder;
+    }
+
+    /**
      * Move a folder on a new position
      * @param string $folderId
      * @param string $parentFolderId
