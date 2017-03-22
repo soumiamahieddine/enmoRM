@@ -159,9 +159,11 @@ FulltextSearch = {
         query.description = arr.join(' && ');
 
         if (query.text == '' && query.description.length == '') {
-            searchPanel.find("[data-search-result]").empty();
+            searchPanel.find("[data-search-result]").css('display', 'none');
             return; 
         }
+
+        searchPanel.find("[data-search-result]").css('display', '');
 
         query.filePlanPosition = searchPanel.data("context-folderid");
         query.orgRegNumber = searchPanel.data("context-orgregnumber");
@@ -174,6 +176,7 @@ FulltextSearch = {
             success     : function (response) {
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
+                    console.log(SearchList);
                     SearchList.searchContents.dataList({
                         datas        : response.archives,
                         rowMerge     : SearchList.mergeResultRow,
