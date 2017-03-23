@@ -401,6 +401,9 @@ msgstr "Invalide"
 msgid "validated"
 msgstr "Validé"
 
+msgid "draft"
+msgstr "Brouillon"
+
 msgid "Download"
 msgstr "Télécharger"
 
