@@ -543,3 +543,6 @@ msgstr "Activé"
 
 msgid "Disabled"
 msgstr "Désactivé"
+
+msgid "Without profile"
+msgstr "Sans profil"

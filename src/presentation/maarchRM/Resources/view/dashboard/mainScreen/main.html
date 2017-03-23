@@ -56,7 +56,7 @@
         },
 
         tabCreation : function(uniqId) {
-            var tab = $("#searchTab").clone(true).attr("href", "#" + uniqId + "Panel").attr("id", uniqId + "Tab")
+            var tab = $("#searchTab").clone(true).attr("href", "#" + uniqId + "Panel").attr("id", uniqId + "Tab").addClass('searchTab');
             tab.find('#resultTemplate, #fulltextTraductions').remove();
             
             var li = $("<li/>").append(tab);
@@ -69,6 +69,7 @@
         panelCreation : function(uniqId) {
             var newPanel = $("#searchPanel").clone(true, true);
             newPanel.appendTo($("#middleColumn #tab-content:first")).attr("id", uniqId + "Panel");
+            FulltextSearch.initForm(newPanel);
         },
 
         replaceIds : function(uniqId) {
@@ -99,11 +100,12 @@
         searchContext : function(uniqId, orgRegNumber, folderId) {
             var path = $('#folderPath').text();
             var description = $('#folderDescription').text();
+            var panel = $("#" + uniqId + "Panel");
 
-            $("#" + uniqId + "Panel").find("[data-context-path]:first").text(path);
-            $("#" + uniqId + "Panel").find("[data-context-description]:first").text(description);
-            $("#" + uniqId + "Panel").data("context-folderid", folderId);
-            $("#" + uniqId + "Panel").data("context-orgregnumber", orgRegNumber);
+            panel.find("[data-context-path]:first").text(path);
+            panel.find("[data-context-description]:first").text(description);
+            panel.data("context-folderid", folderId);
+            panel.data("context-orgregnumber", orgRegNumber);
         },
 
         close : function(liElement) {
@@ -111,6 +113,7 @@
             $("#tab-content").find("#"+id).remove();
             $(liElement).remove();
             $("#middleColumn").find("li > a:first").click();
+            FulltextSearch.currentForm = null;
         }
     }
 

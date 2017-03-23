@@ -381,6 +381,9 @@ trait TemplateDataTrait
                 break;
 
             // String functions
+            case "newId":
+                $value = @\laabs::newId();
+                break;
             case 'format':
             case 'fmt':
                 $value = @sprintf($params[0], $source);

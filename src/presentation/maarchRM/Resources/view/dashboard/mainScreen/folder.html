@@ -13,9 +13,9 @@
         <div class="row hide">
             <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
                 <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="Create" disabled><span class="fa fa-plus"></span></button>
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a class="small" style="cursor: pointer;" data-reference="">New archive</a></li>
+                    <li><a class="small" style="cursor: pointer;" data-reference="">Without profile</a></li>
                 </ul>
             </div>
         </div>
@@ -62,9 +62,13 @@
             var folderPanel = $('#folderPanel');
             if (locked) {
                 folderPanel.find('.lockedFolder').removeClass('hide');
-                $('#folderToolbarImport').attr('disabled', 'disabled');
             } else {
                 folderPanel.find('.lockedFolder').addClass('hide');
+            }
+
+            if (orgRegNumber != FilePlan.currentOrgRegNumber || locked) {
+                $('#folderToolbarImport').attr('disabled', 'disabled');
+            } else {
                 $('#folderToolbarImport').removeAttr('disabled');
             }
 
@@ -179,7 +183,6 @@
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             if (archivalProfiles.length < 1) {
-                $('#folderToolbarImport').attr("disabled", "disabled");
                 $('#folderTab').click();
                 return;
             }

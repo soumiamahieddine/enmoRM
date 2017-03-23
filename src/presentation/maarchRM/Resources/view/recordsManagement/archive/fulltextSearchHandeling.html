@@ -1,0 +1,263 @@
+<div id="resultTemplate" class="hide">
+    <div class="archive row">
+        <div class="col-xs-11">
+            <h5>
+                <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
+                <a href="#" class="archiveName"></a>
+                <br/>
+                <!-- originatorOrgName -->
+                <small title="Originator"/>
+                &nbsp;
+                <!-- originatorArchiveId -->
+                <small title="Originator archive id">
+                    <i/>
+                </small>&nbsp;
+                <!-- depositDate -->
+                <small title="Deposit date"/>&nbsp;
+                <!-- archivalProfileReference -->
+                <small title="Archival profile"/>&nbsp;
+                <!-- description -->
+                <small title="Description"/>
+            </h5>
+        </div>
+        <div class="archiveContent col-xs-12 hide">
+            <ul class="tree-l">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="fulltextTraductions" class='hide'>
+    <span id="emptyResult_text">No result</span>
+    <span id="originatorOrgName_text">Originator</span>
+</div>
+
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+
+FulltextSearch = {
+	currentForm: null,
+
+	initForm : function(form) {
+		this.currentForm = form;
+		form.find("[name='searchForm_inputSearchBtn']").on('click', function() {FulltextSearch._bind_searchBtn($(this))});
+    	// Reload search when changing profile
+		form.find("[data-search-tab]").on('shown.bs.tab', function() {FulltextSearch._bind_profileChange($(this))});
+		form.find('input[type=checkbox][data-toggle=toggle]').bootstrapToggle();
+	},
+
+	_bind_searchBtn : function(btn) {
+		// The query asserts
+        var query = {
+            text             : "",
+            description      : [],
+            profileReference : "",
+            filePlanPosition : "",
+            orgRegNumber     : "",
+        };
+        var searchPanel = btn.closest("[data-search-panel]");
+
+        // The main query string
+        var searchText = searchPanel.find('[name="searchForm_inputSearch"]').val().trim();
+
+        if (searchText.length > 0) {
+            query.text =  searchText;
+        }
+
+        // Get the query args
+        var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
+        query.profileReference = selectedProfile;
+        
+        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
+		
+		searchFields.each(function() {
+            var value = $(this).val();
+            var name = $(this).attr('name');
+            var type = $(this).attr('type');
+            
+            if (type == "" || type == null || type == undefined) {
+                type = $(this).attr('data-type');
+            }
+            
+            switch (type) {
+                case 'select':
+                    // keyword enum
+                    if (value !== '') {
+                        query.description[name] = name+'="'+value+'"';
+                    }
+
+                    break;
+
+                case 'radio':
+                    // format boolean
+                    if (!$(this).parent().hasClass("active") || $(this).val() == "") {
+                        break;
+                    }
+
+                    query.description[name] = name+'="'+$(this).val()+'"';
+                    break;
+
+                case 'text':
+                    // format dates
+                    if ($(this).hasClass('datePicker')) {
+                        if (value !== '') {
+                            value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        } else {
+                            value = '*';
+                        }
+
+                        // Fill start and end values
+                        if (query.description[name] == undefined) {
+                            query.description[name] = name+'="'+value+'"';
+                        } else {
+                            query.description[name] = query.description[name] +'.."'+value+'"';
+                        }
+                        if (query.description[name] == name+'="*".."*"') {
+                            delete query.description[name];
+                        }
+                        break;
+                    }
+
+                    // Standard text (name, keywords...)
+                    if (value !== '') {
+                        query.description[name] = name+'="'+value+'"';
+                    }
+                    break;
+
+                case 'number':
+                    if (value !== '') {
+                        // format numbers
+                        var parts = value.split('.'); 
+                        value = pad(parts[0], 16, "0", 1);
+                        if (parts[1] != undefined) {
+                            value = value + pad(parts[1].substr(0, 14), 14, "0");
+                        } else {
+                            value = value + "00000000000000";
+                        }
+                    } else {
+                        value = "*";
+                    }
+                    
+                    // Fill start and end values
+                    if (query.description == undefined) {
+                        query.description = name+'="'+value+'"';
+                    } else {
+                        query.description = query.description+value+'.."'+value+'"';
+                    }
+                    if (query.description == name+'="*".."*"') {
+                        delete query.description;
+                    }
+                    break;
+            }
+        });
+
+         var arr = [];
+        for (name in query.description) {
+            arr.push(query.description[name]);
+        }
+
+        query.description = arr.join(' && ');
+
+        if (query.text == '' && query.description.length == '') {
+            searchPanel.find("[data-search-result]").css('display', 'none');
+            return; 
+        }
+
+        searchPanel.find("[data-search-result]").css('display', '');
+
+        query.filePlanPosition = searchPanel.data("context-folderid");
+        query.orgRegNumber = searchPanel.data("context-orgregnumber");
+
+        ajax(btn,{
+            type        : 'GET',
+            url         : '/recordsManagement/archives/search',
+            data        : query,
+            dataType    : 'json',
+            success     : function (response) {
+                if (response.status) {
+                    SearchList.searchContents = searchPanel.find("[data-search-result]:first");
+                    console.log(SearchList);
+                    SearchList.searchContents.dataList({
+                        datas        : response.archives,
+                        rowMerge     : SearchList.mergeResultRow,
+                        rowMaxNumber : 10,
+                        emptyMessage : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
+                        sorting: [
+                            {
+                                fieldName : 'archiveName',
+                                label     : $('#archiveName_text').text()
+                            },
+                            {
+                                fieldName : 'depositDate',
+                                label     : $('#depositDate_text').text()
+                            },
+                            {
+                                fieldName : 'originatorOrgName',
+                                label     : $('#originatorOrgName_text').text()
+                            }
+                        ]
+                    })
+                }
+            }
+        });
+	},
+
+	_bind_profileChange: function(tabs) {
+		tabs.closest("[data-search-panel]").find("[data-search-searchForm] [name='searchForm_inputSearchBtn']:first").click();
+        $('#fulltext_inputSearchBtn').click();
+
+        var descriptionclass = tabs.find('.active > a').data('descriptionclass');
+
+        if (descriptionclass != undefined) {
+            $("#fulltext_inputSearch").attr('disabled', '');
+        }
+	}
+}
+
+SearchList = {
+    searchContents: null,
+    archiveRowTemplate : $('#resultTemplate').children('.archive'),
+
+    mergeResultRow: function(archive) {
+        var archiveDiv= SearchList.archiveRowTemplate.clone();
+
+        var siblings = archiveDiv.attr('id', archive.archiveId)
+                                 .find('.archiveName').text(archive.archiveName)
+                                 .siblings('small');
+
+        if (archive.originatorOrgName) {
+            $(siblings[0]).text(archive.originatorOrgName);
+        }
+        if (archive.originatorArchiveId) {
+            $(siblings[1]).children('i').text(archive.originatorArchiveId);
+        }
+        if (archive.depositDate) {
+            $(siblings[2]).text(archive.depositDate.substring(0, 19));
+        }
+        if (archive.archivalProfileReference) {
+            $(siblings[3]).text(archive.archivalProfileReference);
+        }
+        if (archive.text) {
+            $(siblings[4]).text(archive.text.substring(0, 30));
+        }
+
+        return archiveDiv;
+    },
+}
+
+$('#middleColumn').on('keydown', function (e) {
+    if (e.which != 13) {
+        return;
+    }
+    e.preventDefault();
+    if (FulltextSearch.currentForm) {
+    	FulltextSearch.currentForm.find("[name='searchForm_inputSearchBtn']").click();
+    }
+});
+
+$('#middleColumn').on('click', '.searchTab', function() {
+    var currentFormId = $(this).attr('href');
+    FulltextSearch.currentForm = $(currentFormId);
+})
+
+</script>
