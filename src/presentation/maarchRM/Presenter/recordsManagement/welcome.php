@@ -52,43 +52,6 @@ class welcome
      */
     public function welcomePage()
     {
-        $dir = 'C:\Users\Prosper\Desktop\eurotunnel';
-        $outputDir = 'C:\Users\Prosper\Desktop\description.txt';
-
-        $description = "[";
-
-        $files = \scandir($dir);
-
-        foreach ($files as $key => $file) {
-            $index = $key+30;
-            $description .=  PHP_EOL . '{' . PHP_EOL
-                .'"digitalResources":[{'. PHP_EOL
-                    .'"fileName":"'.$file.'"'
-                .'}],'. PHP_EOL
-
-
-                .'"descriptionObject":{' . PHP_EOL
-                    .'"client":"Eurosam",'. PHP_EOL
-                    .'"date_facture":"2017-03-09",'
-                    .'"num_facture":"FAA_00000'.$index.'"'
-                .'},'. PHP_EOL
-
-                .'"archiveName":"'.$file.'",' . PHP_EOL
-                .'"originatorArchiveId":"eurosam'.$index.'",' . PHP_EOL
-                .'"archivalProfileReference":"FacturesClients",' . PHP_EOL
-                .'"filePlanFolder":"Eurosam",'. PHP_EOL
-                .'"originatorOrgRegNumber":"regNum_CPTCLI",'. PHP_EOL
-                .'"retentionRuleCode":"compta_1_01",'. PHP_EOL
-                .'"retentionStartDate":"2017-03-21",'. PHP_EOL
-                .'"descriptionClass":""'. PHP_EOL
-                .'},';
-        }
-
-        //$description = substr($description,-1);
-        $description .= PHP_EOL . "]" . PHP_EOL;
-
-        file_put_contents($outputDir, $description);
-
         //$this->view->addHeaders();
         //$this->view->useLayout();
         $this->view->addContentFile("dashboard/mainScreen/main.html");
