@@ -243,10 +243,10 @@ trait archiveAccessTrait
         } else {
             $queryParts[] = "status!='disposed'";
         }
-        if (!empty($args['archiveExpired == "true"'])) {
+        if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
             $queryParts[] = "disposalDate<='".$currentDateString."'";
         }
-        if (!empty($args['archiveExpired == "false"'])) {
+        if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "false") {
             $queryParts[] = "disposalDate>='".$currentDateString."'";
         }
         if (!empty($args['finalDisposition'])) {
