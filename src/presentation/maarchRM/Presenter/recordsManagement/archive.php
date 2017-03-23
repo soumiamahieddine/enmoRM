@@ -344,19 +344,17 @@ class archive
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = '<dl class="dl dl-horizontal">';
-                
                 foreach ($archive->descriptionObject as $name => $value) {
-                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                        if ($archiveDescription->fieldName == $name) {
-                            $label = $archiveDescription->descriptionField->label;
+                    if (!empty($archive->archivalProfileReference)) {
+                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                            if ($archiveDescription->fieldName == $name) {
+                                $name = $archiveDescription->descriptionField->label;
+                                break;
+                            }
                         }
                     }
 
-                    if (!isset($label)) {
-                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                    }
-
-                    $descriptionHtml .= '<dt name="'.$name.'">'.$label.'</dt>';
+                    $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
                     $descriptionHtml .= '<dd>'.$value.'</dd>';
                 }
                 
