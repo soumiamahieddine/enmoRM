@@ -54,7 +54,12 @@
     FilePlan = {
         tree: $('#filePlanTree'),
         selectedNode : null,
+        currentOrgRegnumber : null,
         // hoverTimeout : null,
+        getCurrentOrgRegNumber: function() {
+            this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
+        },
+
         select: function(e) {
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
@@ -307,6 +312,7 @@
     $('#app_maarchRM_main').ready(function() {
         BootstrapTree.init($('#filePlanTree'));
         FilePlan.initDragNDrop();
+        FilePlan.getCurrentOrgRegNumber();
     })
 
     // Folder selection
