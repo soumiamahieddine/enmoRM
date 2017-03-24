@@ -57,6 +57,7 @@ INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
 
 -- servicePrivilege
 INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES
+    ('System', 'recordsManagement/archives/deleteDisposablearchives'),
     ('System', 'recordsManagement/archive/createArchiveBatch'),
     ('System', 'audit/event/createChainjournal'),
     ('System', 'lifeCycle/journal/createChainjournal'),

@@ -91,7 +91,6 @@ trait archiveDestructionTrait
             $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
         }
 
-
         return $result;
     }
 
@@ -104,6 +103,33 @@ trait archiveDestructionTrait
     public function cancelDestruction($archiveIds)
     {
         return $this->setStatus($archiveIds, 'preserved');
+    }
+
+    /**
+     * Delete archive and his related archive
+     * @param id $archiveIds The archive identifier or an identifier list
+     *
+     * @return recordsManagement/archive[] The destroyed archives
+     */
+    public function destructDisposableArchives()
+    {
+        $archiveIds = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "status = 'disposable'");
+        $this->setStatus($archiveIds, 'disposed');
+
+        $destructResult = $this->destruct($archiveIds);
+        $res = [];
+        $res['success'] = [];
+        $res['error'] = [];
+
+        foreach ($destructResult['success'] as $archive) {
+            $res['success'][] = $archive->archiveId;
+        }
+
+        foreach ($destructResult['error'] as $archive) {
+            $res['error'][] = $archive->archiveId;
+        }
+
+        return $res;
     }
 
     /**
@@ -198,7 +224,7 @@ trait archiveDestructionTrait
 
         try {
             // Delete description
-            if (isset($archive->descriptionClass)) {
+            if ($archive->descriptionClass) {
                 $this->currentDescriptionController->delete($archive->archiveId, $this->deleteDescription);
             }
 

@@ -172,6 +172,15 @@ interface archivesInterface
 
     /**
      * Delete disposable archives
+     *
+     * @return boolean
+     *
+     * @action recordsManagement/archive/destructDisposableArchives
+     */
+    public function deleteDisposablearchives();
+
+    /**
+     * Delete disposable archives
      * @param array $archiveIds The archives ids
      *
      * @return boolean
