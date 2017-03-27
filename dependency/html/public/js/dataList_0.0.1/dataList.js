@@ -77,7 +77,7 @@ var DataList = {
         this.buildPaginationButtons(id);
 
         // Order the list if an order option is selected
-        var orderSelect = this.dataList[id].element.find('select.orderBy');
+        var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
         if (orderSelect.length) {
             this.sort(id, orderSelect.val(), orderSelect.find('option:selected').data('order'));
 
