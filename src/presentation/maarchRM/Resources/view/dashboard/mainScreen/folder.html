@@ -345,4 +345,8 @@
             }
         });
     });
+
+    $("#folderContentList").on('click','.pagination li', function() {
+        ArchiveFolderList.initDragNDrop();
+    });
 </script>
