@@ -240,7 +240,7 @@ var DataList = {
             }
         } else if (a.hasClass('nextPage')) {
             var range = DataList.dataList[id].currentRange + 1;
-            if (range <= DataList.dataList[id].pageNumber) {
+            if (range <= DataList.dataList[id].pageNumber - 1) {
                 DataList.buildList(id, range);
                 pagination.find('.active').removeClass('active').next().addClass('active');
             }
