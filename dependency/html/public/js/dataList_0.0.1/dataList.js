@@ -88,6 +88,7 @@ var DataList = {
 
 	buildPaginationButtons: function(id) {
         var pagination = this.dataList[id].element.find('.datalistPagination');
+        pagination.find('li').not('li:first, li:last').remove();
 
         if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
@@ -108,10 +109,46 @@ var DataList = {
             pageLi[0].addClass('active');
 
             pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChanging);
+            this.dataList[id].currentRange = 0;
+            this.condensePaginationDisplay(id);
+
 
         } else {
             pagination.addClass('hide');
         }
+    },
+
+    condensePaginationDisplay: function(id) {
+
+        if (this.dataList[id].pageNumber <7) {
+            return;
+        }
+
+        var list = this.dataList[id].element.find('.datalistPagination');
+        list.find('.dots').remove();
+        var buttons = list.find('li');
+        buttons.removeClass('hide');
+
+        var permanantButtons = list.find('li:first, li:eq(1), li:eq('+ parseInt(this.dataList[id].pageNumber) +'), li:last');
+        var selection  = null;
+
+        var dots = $('<li/>').addClass('dots').append($('<a/>').attr('href', '#').text('...')).addClass('disabled');
+
+        if (this.dataList[id].currentRange < 4) {
+            selection = buttons.slice(0,6);
+            selection.last().after(dots.clone());
+
+        } else if (this.dataList[id].currentRange > this.dataList[id].pageNumber - 5) {
+            selection = buttons.slice(this.dataList[id].pageNumber - 4, this.dataList[id].pageNumber+1);
+            selection.first().before(dots.clone());
+
+        } else {
+            selection = list.find('li:eq('+parseInt(this.dataList[id].currentRange)+'), li:eq('+parseInt(this.dataList[id].currentRange + 1)+'), li:eq('+parseInt(this.dataList[id].currentRange + 2)+')')
+            selection.first().before(dots.clone());
+            selection.last().after(dots.clone());
+        }
+
+        buttons.not(permanantButtons).not(selection).addClass('hide');
     },
 
     buildList: function(id, range) {
@@ -206,13 +243,14 @@ var DataList = {
             if (range <= DataList.dataList[id].pageNumber) {
                 DataList.buildList(id, range);
                 pagination.find('.active').removeClass('active').next().addClass('active');
-
             }
         } else {
             DataList.buildList(id, parseInt(a.text())-1);
             pagination.find('.active').removeClass('active');
             a.parent().addClass('active');
         }
+
+        DataList.condensePaginationDisplay(id);
     },
 
     bind_dataOrdering: function() {
