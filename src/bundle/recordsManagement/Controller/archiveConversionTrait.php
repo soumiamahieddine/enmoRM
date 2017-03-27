@@ -137,9 +137,8 @@ trait archiveConversionTrait
 
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
+                $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
             }
-
-            $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
 
             throw $e;
         }
