@@ -176,7 +176,6 @@ FulltextSearch = {
             success     : function (response) {
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
-                    console.log(SearchList);
                     SearchList.searchContents.dataList({
                         datas        : response.archives,
                         rowMerge     : SearchList.mergeResultRow,

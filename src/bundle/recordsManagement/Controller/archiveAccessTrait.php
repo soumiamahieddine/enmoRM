@@ -258,8 +258,8 @@ trait archiveAccessTrait
         if (!empty($args['depositorOrgRegNumber'])) {
             $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
         }
-        if (!empty($args['folderId'])) {
-            $queryParts[] = "folderId='".$args['folderId']."'";
+        if (!empty($args['filePlanPosition'])) {
+            $queryParts[] = "filePlanPosition='".$args['filePlanPosition']."'";
         }
         if ($args['hasParent'] == true) {
             $queryParts[] = "parentArchiveId!=null";

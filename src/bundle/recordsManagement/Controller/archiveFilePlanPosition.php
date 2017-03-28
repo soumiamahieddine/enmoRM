@@ -58,6 +58,8 @@ class archiveFilePlanPosition
             $queryArgs = ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId];
         }
 
+        $queryString .= "and status != 'disposed'";
+        
         $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', $queryString, $queryArgs);
             
         // CVA 08-03-17 : Si nécessaire, ne sélectionner que mes racines

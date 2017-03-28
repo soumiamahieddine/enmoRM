@@ -93,4 +93,11 @@ class archiveFilePlanPosition
      * @var string
      */
     public $filePlanPosition;
+
+    /**
+     * The folder status
+     *
+     * @var string
+     */
+    public $status;
 }
