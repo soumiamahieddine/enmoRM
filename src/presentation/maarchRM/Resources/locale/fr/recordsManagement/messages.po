@@ -345,7 +345,7 @@ msgid "Flag for destruction"
 msgstr "Demander l'élimination"
 
 msgid "Cancel destruction request"
-msgstr "Annuler la demande de destruction"
+msgstr "Annuler la demande d'élimination"
 
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
