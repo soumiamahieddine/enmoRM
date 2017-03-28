@@ -10,8 +10,8 @@ TRUNCATE TABLE "recordsManagement"."retentionRule" CASCADE;
 TRUNCATE TABLE "recordsManagement"."descriptionField" CASCADE;
 
 INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "digitalResourceClusterId", "control", "default") VALUES
-    ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', true),
-    ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', false);
+    ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false),
+    ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true);
 
 
 INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description", "duration", "finalDisposition") VALUES
