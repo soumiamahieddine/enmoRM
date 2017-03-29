@@ -24,12 +24,15 @@ INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description",
 	-- Fiscalité
 	('ControleImpot', 'Contrôle de l''impôt', 'Livre des Procédures Fiscales, art 102 B et L 169 : Livres, registres, documents ou pièces sur lesquels peuvent s''exercer les droits de communication, d''enquête et de contrôle de l''administration', 'P6Y', 'destruction'),
 	('ImpotSociete', 'Impôt sur les sociétés et liasses fiscales', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 2: Les registres tenus en application du 9 de l''article 298 sexdecies F du code général des impôts et du 5 de l''article 298 sexdecies G du même code', 'P10Y', 'destruction'),
-	('ImpotsAutres', 'Taxe professionnelle', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 3', 'P3Y', 'destruction');
+	('ImpotsAutres', 'Taxe professionnelle', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 3', 'P3Y', 'destruction'),
+	-- Gestion
+	('DocumentsGestion', 'Documents de gestion', 'Documents de gestion', 'P5Y', 'destruction');
 
 INSERT INTO "recordsManagement"."accessRule" ("code", "duration", "description") VALUES
     ('DossierDuPersonnel','P999Y','Dossier du personnel'),
     ('ComptabiliteAchats','P999Y','Comptabilité achats'),
-	('ComptabiliteVente','P999Y','Comptabilité vente');
+	('ComptabiliteVente','P999Y','Comptabilité vente'),
+	('DocumentsGestion','P999Y','Documents de gestion');
 
 INSERT INTO "recordsManagement"."accessEntry" ("accessRuleCode", "orgRegNumber", "originatorAccess") VALUES
     ('ComptabiliteAchats','regNum_CPTFOUR',TRUE),
