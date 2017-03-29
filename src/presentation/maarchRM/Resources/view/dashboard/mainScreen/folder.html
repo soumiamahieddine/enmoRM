@@ -183,11 +183,12 @@
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
             if (archivalProfiles.length < 1) {
+                $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", {});
                 $('#folderTab').click();
                 return;
             }
             
-            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", JSON.stringify(archivalProfiles));
+            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", archivalProfiles);
 
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
@@ -199,10 +200,7 @@
     }
 
     function buildDropdownMenu() {
-        var archivalProfiles = JSON.parse($("#folderToolbarBtn .dropdown-menu").data("archivalprofiles"));
-        var dropdownAction = $("#folderToolbarBtn .dropdown-menuAction");
-        
-        dropdownAction.append()
+        var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
         var dropdown = $("#folderToolbarBtn .dropdown-menu");
         dropdown.children().not(":first").remove();
 
@@ -216,11 +214,12 @@
             $("<li/>").append(a).appendTo(dropdown);
         }
         
+        /*
         if ($("#folderContentList").find(".bg-success").length < 1) {
             return;
         }
 
-        /*var childrenOrg = [];
+        var childrenOrg = [];
 
         FilePlan.getChildrenOrg().each(function() {
             childrenOrg.push({
