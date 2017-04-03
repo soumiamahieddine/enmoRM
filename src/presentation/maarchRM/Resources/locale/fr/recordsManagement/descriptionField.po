@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Keyword"
-msgstr "Mot clé"
+msgstr "Mot-clé"
 
 msgid "Text"
 msgstr "Texte"
