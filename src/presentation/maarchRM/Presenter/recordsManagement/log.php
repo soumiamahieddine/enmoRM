@@ -75,6 +75,8 @@ class log
 
         foreach ($logs as $log) {
             $log->type = $this->view->translator->getText($log->type, false, 'recordsManagement/log');
+
+            $log->resId = \laabs::callService('recordsManagement/archives/readArchivecontents_archive_', (string) $log->archiveId)->digitalResources[0]->resId;
         }
 
         $this->view->setSource("logs", $logs);

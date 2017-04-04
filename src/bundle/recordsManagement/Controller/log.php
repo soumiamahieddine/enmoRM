@@ -27,8 +27,7 @@ namespace bundle\recordsManagement\Controller;
  * @package RecordsManagement
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
-class log
-    implements archiveDescriptionInterface
+class log implements archiveDescriptionInterface
 {
     /* Properties */
 
@@ -109,10 +108,10 @@ class log
      * @param string $description The search args on description object
      * @param string $text        The search args on text
      * @param array  $args        The search args on archive std properties
-     * 
+     *
      * @return array
      */
-    public function search($description=null, $text=null, array $args=[])
+    public function search($description = null, $text = null, array $args = [])
     {
         $archiveController = \laabs::newController('recordsManagement/archive');
         $archives = [];
@@ -127,8 +126,7 @@ class log
                 $archive->descriptionObject = $log;
                 $archives[] = $archive;
             } catch (\Exception $e) {
-                
-            } 
+            }
         }
 
         return $archives;
@@ -166,9 +164,9 @@ class log
             $e->errors = \laabs::getValidationErrors();
             throw $e;
         }
-        
+
         $archive->descriptionObject->archiveId = $archive->archiveId;
-        
+
         $this->sdoFactory->create($archive->descriptionObject, 'recordsManagement/log');
 
         return true;
@@ -199,7 +197,7 @@ class log
      * @param id   $archiveId
      * @param bool $deleteDescription
      */
-    public function delete($archiveId, $deleteDescription=true)
+    public function delete($archiveId, $deleteDescription = true)
     {
         // Not possible
     }
