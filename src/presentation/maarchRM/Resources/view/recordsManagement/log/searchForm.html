@@ -57,11 +57,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="fromDate">Date</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control datePicker" id="fromDate" name="fromDate"/>
-                                </div>
-                            </div>
+	                        <label class="col-sm-4 control-label">Date</label>
+	                        <div class="col-sm-8">
+                                    <div class="input-group input-group-sm input-daterange" data-translate-catalog="recordsManagement/message" data-translate-context="date">
+                                        <input type="text" class="form-control datePicker" id="fromDate" name="fromDate" placeholder="Date from">
+                                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                                        <input type="text" class="form-control datePicker" id="toDate" name="toDate" placeholder="to">
+                                    </div>
+	                        </div>
+	                    </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -105,10 +109,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
         
     $('#search').on('click', function(){
+        var data = {
+            archiveId : $("#searchForm #archiveId").val(),
+            type : $("#searchForm #type").val(),
+            fromDate : $("#searchForm #fromDate").data('datepicker').getFormattedDate('yyyy-mm-dd'),
+            toDate : $("#searchForm #toDate").data('datepicker').getFormattedDate('yyyy-mm-dd'),
+            processId : $("#searchForm #processId").val(),
+            processName : $("#searchForm #processName").val()
+        }
+
         ajax($(this), {
             type        : 'GET',
             url         : '/logs',
-            data        : $("#searchForm").serialize(),
+            data        : data,
             dataType    : 'html',
             async       : true,
             success     : function(response) {

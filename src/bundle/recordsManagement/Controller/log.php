@@ -73,17 +73,16 @@ class log implements archiveDescriptionInterface
         }
 
         if ($fromDate && $toDate) {
-            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T23:59:59';
-            $queryParams['toDate'] = $toDate->format('Y-m-d').'T00:00:00';
-            $queryContentDescription['date'] = "fromDate >= :toDate AND toDate <= :fromDate";
+            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
+            $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
+            $queryParts['date'] = "fromDate <= :toDate AND toDate >= :fromDate";
+        } elseif ($fromDate) {
+            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
+            $queryParts['date'] = "fromDate >= :fromDate";
 
         } elseif ($toDate) {
-            $queryParams['toDate'] = $toDate->format('Y-m-d').'T00:00:00';
-            $queryContentDescription['date'] = "toDate >= :toDate";
-
-        } elseif ($fromDate) {
-            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T23:59:59';
-            $queryContentDescription['date'] = "fromDate <= :fromDate";
+            $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
+            $queryParts['date'] = "toDate <= :toDate";
         }
 
         if ($processName) {
