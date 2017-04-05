@@ -201,8 +201,8 @@ var DataList = {
             }
             return ((aVal < bVal) ? -1 : ((aVal > bVal) ? 1 : 0));
         });
-
         this.buildList(id);
+        this.dataList[id].element.find('.datalistPagination').find('li').removeClass('active').eq(1).addClass('active');
     },
 
     bind_selection: function() {
