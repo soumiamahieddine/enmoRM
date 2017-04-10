@@ -144,13 +144,15 @@ trait archiveDestructionTrait
             $archiveIds = array($archiveIds);
         }
 
-        $archives = array('success' => [], 'error' => []);
+        //$archives = array('success' => [], 'error' => []);
 
         /*if (\laabs::hasDependency("fulltext")) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
             $document = \laabs::newService('dependency/fulltext/Document');
         }*/
 
+        $archives = $this->verifyIntegrity($archiveIds);
+        
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
