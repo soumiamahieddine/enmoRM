@@ -21,7 +21,6 @@
     </div>
 </div>
 
-
 <div class="col-md-12">
     <table class="table table-condensed" id="archiveDescriptionTable">
         <thead>
@@ -149,6 +148,10 @@
                 PropertiesList.update(property);
             } else {
                 PropertiesList.add(property);
+                if (property.required) {
+                    let dateField = $('#startDate [value=description_'+ property.fieldName +']');
+                    dateField.css("display","block");
+                }
             }
             this.clear();
             PropertiesList.unselect();
@@ -265,6 +268,12 @@
             var e = e.closest('tr');
 
             PropertiesForm.showInPropertyList(JSON.parse(e.attr('data-json')).fieldName);
+            let dateField = $('#startDate [value=description_'+ JSON.parse(e.attr('data-json')).fieldName +']');
+
+            if (dateField.prop("selected")) {
+                $('#startDate').val("definedLater");
+            }
+            dateField.css("display","none");
             e.remove();
         },
 

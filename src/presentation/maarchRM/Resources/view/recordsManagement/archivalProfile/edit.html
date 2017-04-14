@@ -104,14 +104,13 @@ file that was distributed with this source code.
                                                 <div class="col-md-9" id="retentionStartDate">
                                                     <input type="hidden" name="retentionStartDate" />
                                                     <select id="startDate" class="form-control">
-                                                        <!--option value="" >Select a retention start date</option-->
                                                         <option value="definedLater">To be defined later </option>
                                                         <option value="depositDate" >Deposit date </option>
-                                                        <!--option value= "createdDate"> Created date </option>
-                                                        <option value= "publicatedDate"> Date of publication </option>
-                                                        <option value= "receptionDate"> Date of reception </option>
-                                                        <option value= "lastCommunicationDate"> Last communication date </option>
-                                                        <option value= "description"> Description object property </option-->
+                                                        <?merge customeDateForRentention ?>
+                                                        <span>
+                                                            <?merge .required.bool().not().then("display: none;") @style ?>
+                                                            <option value= "description_[?merge .name ?]"><?merge .label ?></option>
+                                                        </span>
                                                     </select>
                                                 </div>
                                             </div>
@@ -196,8 +195,7 @@ file that was distributed with this source code.
         loadAccessCode();
 
         //date properties
-        //var datesProperties = $('#descriptionClass').find(':selected').data('dateproperties');
-        var datesProperties = null;
+        let datesProperties = $('#retentionStartDate option');
         var requiredProperty = $('.requiredProperty:checked');
 
         var currentRetentionStartDate = $('#retentionStartDate > input').val();
@@ -209,14 +207,16 @@ file that was distributed with this source code.
                     $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
                 }
             })*/
-            $.each(datesProperties, function (key, name) {
-                var value = 'description/'+name;
-                var option = $('<option/>').val(value).text(name).attr('data-description', '1');
-                if (value == currentRetentionStartDate) {
-                    option.attr('selected', 'selected');
+            for(var i = 0; i < datesProperties.length; i++) {
+                let element = $(datesProperties[i]);
+                var value = element.val();
+                if (value == currentRetentionStartDate && (element.css('display') != 'none')) {
+                    element.attr('selected', 'selected');
+                    return false;
+                } else {
+                    $('#retentionStartDate').val('definedLater');
                 }
-                option.appendTo('#startDate');
-            });
+            }
         }
 
         // Define data source for person typeahead
