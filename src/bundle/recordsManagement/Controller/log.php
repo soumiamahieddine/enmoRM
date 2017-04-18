@@ -340,6 +340,6 @@ class log implements archiveDescriptionInterface
 
         $archive->serviceLevelReference = $archiveController->useServiceLevel("deposit")->reference;
 
-        return $archiveController->deposit($archive);
+        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<Y>/<m>');
     }
 }

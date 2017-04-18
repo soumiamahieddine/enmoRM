@@ -112,7 +112,7 @@ trait archiveEntryTrait
      */
     public function receiveArchiveBatch($batchDirectory, $descriptionFilePath)
     {
-        if (!is_dir($batchDirectory)){
+        if (!is_dir($batchDirectory)) {
             throw new \core\Exception\NotFoundException("The batch folder does not exist.");
         }
 
@@ -353,17 +353,18 @@ trait archiveEntryTrait
      */
     public function generateAIP($archive)
     {
+
     }
 
     /**
      * Deposit a new archive
      *
-     * @param recordsManagement/archive $archive          The archive to deposit
-     * @param string                    $filePlanPosition The file plan position
+     * @param recordsManagement/archive $archive The archive to deposit
+     * @param string                    $path    The file plan position
      *
      * @return recordsManagement/archive The archive
      */
-    public function deposit($archive, $filePlanPosition = null)
+    public function deposit($archive, $path = null)
     {
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -374,12 +375,14 @@ trait archiveEntryTrait
         $nbArchiveObjects = count($archive->contents);
 
         try {
-            if (!empty($archive->digitalResources)) {
-                $this->storeResources($archive, $filePlanPosition);
-            }
-
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
+
+            $this->openContainers($archive, $path);
+
+            if (!empty($archive->digitalResources)) {
+                $this->storeResources($archive);
+            }
 
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
 
@@ -393,13 +396,9 @@ trait archiveEntryTrait
                     $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->$originatorOrgRegNumber;
                 }
 
-                $this->deposit($archive->contents[$i], $filePlanPosition."/".(string) $archive->contents[$i]->archiveId);
+                $this->deposit($archive->contents[$i], $archive->storagePath);
             }
         } catch (\Exception $exception) {
-            /*if (\laabs::hasDependency('fulltext') && isset($this->fulltextController)) {
-                $this->fulltextController->delete($index, $baseIndex);
-            }*/
-
             $nbResources = count($archive->digitalResources);
             for ($i = 0; $i < $nbResources; $i++) {
                 $this->digitalResourceController->rollbackStorage($archive->digitalResources[$i]);
@@ -554,25 +553,28 @@ trait archiveEntryTrait
         }
     }
 
-    /**
-     * Store archive resources
-     *
-     * @param recordsManagement/archive $archive          The archive to deposit
-     * @param string                    $filePlanPosition The file plan position
-     */
-    protected function storeResources($archive, $filePlanPosition = null)
+    protected function openContainers($archive, $path=null)
     {
-        $nbResources = count($archive->digitalResources);
+        if (empty($path)) {
+            if (isset($archive->parentArchiveId)) {
+                $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
 
-        if (empty($filePlanPosition)) {
-            if (!$this->storePath) {
-                $filePlanPosition = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber."/".$archive->archiveId;
+                $path = $parentArchive->storagePath;
             } else {
-                $filePlanPosition = $this->storePath;
+                if (!$this->storePath) {
+                    $path = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber;
+                } else {
+                    $path = $this->storePath;
+                }
+
+                $path = $this->resolveStoragePath($archive, $path);
             }
+
+            // Add archiveId as container name in path
+            $path .= "/".$archive->archiveId;
         }
 
-        $filePlanPosition = $this->resolveStoragePath($archive, $filePlanPosition);
+        $archive->storagePath = $path;
 
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
@@ -582,12 +584,30 @@ trait archiveEntryTrait
             }
         }
 
-        $archive->storagePath = $filePlanPosition;
+        $metadata = get_object_vars($archive);
+        unset($metadata['contents']);
+        foreach ($metadata as $name => $value) {
+            if (is_null($value)) {
+                unset($metadata[$name]);
+            }
+        }
+
+        $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $path, $metadata);
+    }
+
+    /**
+     * Store archive resources
+     * @param recordsManagement/archive $archive The archive to deposit
+     */
+    protected function storeResources($archive)
+    {
+        $nbResources = count($archive->digitalResources);
 
         for ($i = 0; $i < $nbResources; $i++) {
             $digitalResource = $archive->digitalResources[$i];
             $digitalResource->archiveId = $archive->archiveId;
-            $this->digitalResourceController->store($digitalResource, $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
+            
+            $this->digitalResourceController->store($digitalResource);
         }
     }
 

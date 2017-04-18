@@ -63,14 +63,71 @@ class Repository
         }
     }
 
+        // CONTAINER
     /**
-     * Create a resource
+     * Delete a container
+     * @param string $name     The name of container
+     * @param mixed  $metadata The object or array of metadata
+     * 
+     * @return mixed The address/uri/identifier of created container on repository
+     */
+    public function createContainer($name, $metadata=null)
+    {
+        $dir = $this->getDir($name);
+
+        if ($metadata) {
+            $contents = json_encode($metadata, \JSON_PRETTY_PRINT);
+
+            $this->addFile($dir.DIRECTORY_SEPARATOR.'.metadata', $contents);
+        }
+
+        return $dir;
+    }
+
+    /**
+     * Update a container metadata
+     * @param string $name     The name of container
+     * @param mixed  $metadata The object or array of metadata
+     * 
+     * @return bool
+     */
+    public function updateContainer($name, $metadata)
+    {
+        
+    }
+
+    /**
+     * Read a container metadata
+     * @param string $name The name of container
+     * 
+     * @return mixed The object or array of metadata if available
+     */
+    public function readContainer($name)
+    {
+        
+    }
+
+    /**
+     * Delete a container
+     * @param string $name The name of container
+     * 
+     * @return bool
+     */
+    public function deleteContainer($name)
+    {
+        
+    }
+
+    // OBJECTS
+
+    /**
+     * Create an object
      * @param string $data The resource contents
      * @param string $path The path
      *
-     * @return string The URI of the resource
+     * @return string The real path
      */
-    public function create($data, $path)
+    public function createObject($data, $path)
     {
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
@@ -86,7 +143,7 @@ class Repository
      * 
      * @return mixed The contents of resource
      */
-    public function read($path, $mode=1)
+    public function readObject($path, $mode=1)
     {
         switch ($mode) {
             case 0 :
@@ -122,7 +179,7 @@ class Repository
      *
      * @return bool
      */
-    public function update($path, $data=null, $metadata=null)
+    public function updateObject($path, $data=null, $metadata=null)
     {
         if (!is_null($data)) {
             $this->updateFile($path, $data);
@@ -145,7 +202,7 @@ class Repository
      *
      * @return bool
      */
-    public function delete($path)
+    public function deleteObject($path)
     {
         $this->deleteFile($path);
         

@@ -243,25 +243,47 @@ class cluster
     }
 
     /**
-     * Store a resource on cluster (after opening it)
-     * @param digitalResource/cluster         $cluster
-     * @param digitalResource/digitalResource $resource
-     * @param string                          $path
+     * Create a ressource container on the cluster (after opening it)
+     * @param object $cluster
+     * @param string $path
+     * @param mixed  $metadata
+     * 
+     * @return array
      */
-    public function storeResource($cluster, $resource, $path)
+    public function openContainers($cluster, $path, $metadata=null)
     {
-        foreach ($cluster->clusterRepository as $priority => $clusterRepository) {
+        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
             if ($clusterRepository->repository == null) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
 
-            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource, $path);
+            $realPath = $this->repositoryController->openContainer($clusterRepository->repository, $path, $metadata);
+
+            if (!$realPath) {
+                throw \laabs::newException("digitalResource/clusterException", "Container ".$path." counld not be opened.");
+            }
+        }
+    }
+
+    /**
+     * Store a resource on cluster (after opening it)
+     * @param digitalResource/cluster         $cluster
+     * @param digitalResource/digitalResource $resource
+     */
+    public function storeResource($cluster, $resource)
+    {
+        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
+            if ($clusterRepository->repository == null) {
+                throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
+            }
+
+            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource);
 
             if (!$address) {
                 throw \laabs::newException("digitalResource/clusterException", $address." not found");
             }
 
-            $resource->address[$priority] = $address;
+            $resource->address[$index] = $address;
         }
     }
 

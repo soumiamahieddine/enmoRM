@@ -36,39 +36,73 @@ Interface RepositoryInterface
      */
     const READ_METADATA = 2;
 
+    // CONTAINER
+    /**
+     * Delete a container
+     * @param string $name     The name of container
+     * @param mixed  $metadata The object or array of metadata
+     * 
+     * @return mixed The address/uri/identifier of created container on repository
+     */
+    public function createContainer($name, $metadata=null);
 
     /**
-     * Create a new resource
+     * Update a container metadata
+     * @param string $name     The name of container
+     * @param mixed  $metadata The object or array of metadata
+     * 
+     * @return bool
+     */
+    public function updateContainer($name, $metadata);
+
+    /**
+     * Read a container metadata
+     * @param string $name The name of container
+     * 
+     * @return mixed The object or array of metadata if available
+     */
+    public function readContainer($name);
+
+    /**
+     * Delete a container
+     * @param string $name The name of container
+     * 
+     * @return bool
+     */
+    public function deleteContainer($name);
+
+    // OBJECTS
+    /**
+     * Create a new object
      * @param string $data The contents to store
      * @param string $path The path to store
      * 
      * @return mixed The address/uri/identifier of stored resource on repository
      */
-    public function create($data, $path);
+    public function createObject($data, $path);
 
     /**
      * Get a resource in repository
-     * @param mixed   $address The address/uri/identifier of stored resource on repository
-     * @param integer $mode    A bitmask of what to read 0=nothing - only touch | 1=data | 2=metadata | 3 data+metadata
+     * @param mixed $path The address/uri/identifier of stored resource on repository
      * 
      * @return string The contents of resource
      */
-    public function read($address, $mode=1);
+    public function readObject($path);
 
     /**
      * Update a resource in repository
-     * @param mixed  $address The address/uri/identifier of stored resource on repository
-     * @param string $data    The contents to store. If ignored, only metadata will be updated
+     * @param mixed  $path The address/uri/identifier of stored resource on repository
+     * @param string $data The contents to store. If ignored, only metadata will be updated
      * 
      * @return bool
      */
-    public function update($address, $data=null);
+    public function updateObject($path, $data);
 
     /**
      * Delete resource in repository
-     * @param mixed $address The address/uri/identifier of stored resource on repository
+     * @param mixed $path The address/uri/identifier of stored resource on repository
      * 
      * @return bool
      */
-    public function delete($address);
+    public function deleteObject($path);
 }

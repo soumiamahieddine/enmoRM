@@ -193,39 +193,49 @@ class digitalResource
     }
 
     /**
+     * Create a ressource container on the cluster (after opening it)
+     * @param string $clusterId
+     * @param string $path
+     * @param mixed  $metadata
+     * 
+     * @return void
+     */
+    public function openContainers($clusterId, $path, $metadata=null)
+    {
+        $cluster = $this->useCluster($clusterId, 'write', true);
+
+        $this->clusterController->openContainers($cluster, $path, $metadata);
+    }
+
+
+    /**
      * Store a given resource
-     * @param digitalResource/digitalResource $resource   The ressource object
-     * @param string                          $clusterId  The cluster to apply for store procedure
-     * @param string                          $collection The name of a colection/bucket/directory to store resources in
+     * @param digitalResource/digitalResource $resource The ressource object
      *
      * @return digitalResource/digitalResource
      */
-    public function store($resource, $clusterId, $collection = null)
+    public function store($resource)
     {
-        // Get the storage objects
-        $this->useCluster($clusterId, 'write', true);
-
         // Store resource + metadata
-        $this->storeDigitalResource($resource, $collection);
+        $this->storeDigitalResource($resource);
 
         return $resource;
     }
 
     /**
      * Store a collection of resources sharing the same cluster and repositories from a list of resources
-     * @param array  $resources  An array of resources to store
-     * @param string $clusterId  The cluster to apply for store procedure
-     * @param string $collection The name of a colection/bucket/directory to store resources in
+     * @param array  $resources An array of resources to store
+     * @param string $clusterId The cluster to apply for store procedure
      *
      * @return bool
      */
-    public function storeCollection($resources, $clusterId, $collection = null)
+    public function storeCollection($resources, $clusterId)
     {
         // Get the storage objects
         $this->useCluster($clusterId, 'write', true);
 
         foreach ($resources as $resource) {
-            $this->storeDigitalResource($resource, $collection);
+            $this->storeDigitalResource($resource);
             $resources[] = $resource;
         }
 
@@ -234,10 +244,9 @@ class digitalResource
 
     /**
      * Store a new resource in current cluster
-     * @param object $resource   The resource
-     * @param string $collection The name of a colection/bucket/directory to store resources in
+     * @param object $resource The resource
      */
-    public function storeDigitalResource($resource, $collection = null)
+    public function storeDigitalResource($resource)
     {
         $contents = $resource->getContents();
         if (empty($resource->size)) {
@@ -263,13 +272,13 @@ class digitalResource
 
             $this->sdoFactory->create($resource, 'digitalResource/digitalResource');
 
-            $this->clusterController->storeResource($this->currentCluster, $resource, $collection.'/'.$resource->resId);
+            $this->clusterController->storeResource($this->currentCluster, $resource);
 
             if ($resource->relatedResource) {
                 foreach ($resource->relatedResource as $relatedResource) {
                     $relatedResource->relatedResId = $resource->resId;
                     $relatedResource->archiveId = $resource->archiveId;
-                    $this->storeDigitalResource($relatedResource, $collection);
+                    $this->storeDigitalResource($relatedResource);
                 }
             }
 
@@ -280,7 +289,7 @@ class digitalResource
                 $this->sdoFactory->rollback();
             }
 
-            throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created", null, $exception);
+            throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created: ".$exception->getMessage(), null, $exception);
         }
 
         // All repositories returned an uri, save all
@@ -404,7 +413,7 @@ class digitalResource
                 $contents = null;
                 if (!$contents) {
                     try {
-                        $contents = $repositoryService->read($address->address);
+                        $contents = $repositoryService->readObject($address->address);
                         // Check hash
                         $hash = hash($resource->hashAlgorithm, $contents);
                         if ($hash !== $resource->hash) {
@@ -451,7 +460,7 @@ class digitalResource
             $address = $this->sdoFactory->read("digitalResource/address", array('resId' => $resId, 'repositoryId' => $clusterRepository->repositoryId));
 
             if ($address) {
-                if ($contents = $repositoryService->read($address->path, 2)) {
+                if ($contents = $repositoryService->readObject($address->path, 2)) {
                     return $contents;
                 }
             }
@@ -534,7 +543,7 @@ class digitalResource
 
                 $repositoryService = $address->repository->getService();
 
-                $repositoryService->delete($address->path);
+                $repositoryService->deleteObject($address->path);
 
                 $this->sdoFactory->delete($address);
             }
