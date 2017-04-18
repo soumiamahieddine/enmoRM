@@ -90,6 +90,10 @@ msgid "descriptionField"
 msgstr "Gérer les champs de description"
 msgctxt "userStory"
 
+msgid "filePlan"
+msgstr "Gérer le plan de classement"
+msgctxt "userStory"
+
 msgid "serviceLevel"
 msgstr "Gérer les niveau de service"
 msgctxt "userStory"
