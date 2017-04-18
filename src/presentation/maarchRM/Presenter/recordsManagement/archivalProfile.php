@@ -129,10 +129,15 @@ class archivalProfile
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
+            $customeDateForRentention = [];
+
             foreach ($descriptionFields as $descriptionField) {
-                if ($descriptionField->type == 'date') {
-                    $dateFields[] = $descriptionField->name;
+                if ($descriptionField->type != 'date') {
+                    continue;
                 }
+
+                $dateFields[] = $descriptionField->name;
+                $customeDateForRentention[$descriptionField->name] = $descriptionField;
             }
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
@@ -140,6 +145,7 @@ class archivalProfile
                 $this->view->setSource("profileFileName", $archivalProfile->reference.".rng");
                 $this->view->setSource("profileFileFormat", "Relax NG (Regular Language for XML Next Generation)");
             }
+
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".xsd")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".xsd";
                 $this->view->setSource("profileFileName", $archivalProfile->reference.".xsd");
@@ -149,6 +155,16 @@ class archivalProfile
             if (isset($filename)) {
                 $this->view->setSource("profileFileLastModified", \laabs::newDatetime(date("Y-m-d H:i:s", filemtime($filename))));
             }
+
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if (strtolower($archiveDescription->descriptionField->type) == "date" && $archiveDescription->required == true) {
+                    $archiveDescription->descriptionField->required = true;
+                    $customeDateForRentention[$archiveDescription->descriptionField->name] = $archiveDescription->descriptionField;
+                }
+            }
+
+            $this->view->setSource("customeDateForRentention", $customeDateForRentention);
+            $this->view->merge($this->view->getElementById("retentionStartDate"));
 
             $this->view->setSource("dateFields", json_encode($dateFields));
 
