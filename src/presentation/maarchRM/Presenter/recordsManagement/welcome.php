@@ -62,6 +62,8 @@ class welcome
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
         // File plan tree
+        $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "adminArchive/filePlan");
+
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
             $this->getOrgUnitArchivalProfiles($filePlan);
@@ -98,6 +100,7 @@ class welcome
 
         $this->view->translate();
 
+        $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         $this->view->setSource("userArchivalProfiles", $archivalProfiles);
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {

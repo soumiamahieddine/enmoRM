@@ -30,7 +30,6 @@ class filePlan
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
-    private $eventsFormat;
     private $translator;
 
     /**
@@ -62,6 +61,7 @@ class filePlan
      */
     public function showTree($filePlan)
     {
+        
         $this->view->addContentFile('filePlan/filePlanTree.html');
         $this->markTreeLeaf([$filePlan]);
 

@@ -7,7 +7,10 @@
 #-->
 <div lang="en" data-translate-catalog="filePlan/messages">
     <div class="row" >
+        <input type="hidden" id="filePlanPrivileges" value="[?merge filePlanPrivileges ?]"/>
+
         <div id="filePlanMenu" class="btn-toolbar pull-right" role="toolbar">
+            <?merge filePlanPrivileges.bool() ?>
             <div class="btn-group" role="group">
                 <button type="button" disabled class="btn btn-sm btn-default" id="addFolder" title="Add a new folder"><i class="fa fa-plus"/></button>
                 <button type="button" disabled class="btn btn-sm btn-default" id="editFolder" title="Edit folder"><i class="fa fa-edit"/></button>
@@ -172,6 +175,9 @@
         },
 
         initDragNDrop: function() {
+            if (!$('#filePlanPrivileges').val()) {
+                return;
+            }
             $('#filePlanTree').find('.folder').draggable(DroppableOption)
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
