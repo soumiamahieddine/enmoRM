@@ -78,25 +78,27 @@
                 return;
             }
             
-            $.ajax({
-                type        : 'POST',
-                url         : "/archive",
-                data        : JSON.stringify({archive : archive}),
-                contentType : 'application/json',
-                dataType    : 'json',
-                success     : function (response) {
-                    gritter.show(response.message, response.status, response.errors);
+            ajax($('#import'),
+                {
+                    type        : 'POST',
+                    url         : "/archive",
+                    data        : JSON.stringify({archive : archive}),
+                    contentType : 'application/json',
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
 
-                    if (response.status) {
-                        ArchiveForm.clear();
-                        ArchiveFolderList.refresh();
-                        $('#folderTab').click();
+                        if (response.status) {
+                            ArchiveForm.clear();
+                            ArchiveFolderList.refresh();
+                            $('#folderTab').click();
+                        }
+                    },
+                    error       : function (response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                     }
-                },
-                error       : function (response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                 }
-            });
+            );
         },
         loadProfile : function() {
             var value = $('#archivalProfile').val();
