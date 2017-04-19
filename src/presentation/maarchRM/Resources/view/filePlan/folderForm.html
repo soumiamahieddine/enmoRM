@@ -53,7 +53,9 @@
 
             this.form.find('input[type="hidden"], input[type="text"], textarea').each(function(){
                 var input = $(this);
-                if (value = input.val()) {
+                let value = input.val();
+
+                if (trim(value) != "") {
                     folder[input.attr('name')]= value;
                 }
             });
