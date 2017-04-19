@@ -8,8 +8,13 @@ var DataList = {
                     		'<\/ul>'+
                 		'<\/nav>'+
             		'<\/div>',
-	selectAllHTML :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-    selectorHTML :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    sortingBtn     :'<div class="btn-group">'+
+                        '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
+                            '<i class="fa fa-filter"\/>'+
+                        '<\/button>'+
+                    '<\/div>',         
+	selectAllHTML  :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    selectorHTML   :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
         
 
 	init: function(options, element) {
@@ -25,13 +30,28 @@ var DataList = {
 
         // Build sorting input
         if (options.sorting) {
-            var select = $('<select/>').addClass('form-control input-sm').css('color', 'grey').prependTo(sortingInput);
+            var sortingBtn = this.sortingBtn;
+            var ul = $('<ul/>').addClass('dropdown-menu');
+
+            sortingInput.prepend(sortingBtn);
+            $.each(options.sorting, function() {
+                $('<li/>').data('value', this.fieldName).data('order', '<').append(
+                    $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
+                ).appendTo(ul);
+                $('<li/>').data('value', this.fieldName).data('order', '>').append(
+                    $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
+                ).appendTo(ul);
+            });
+            ul.children('li:first').addClass('active');
+            sortingInput.find('.btn-group').append(ul);
+            /*var select = $('<select/>').addClass('form-control input-sm').css('color', 'grey').prependTo(sortingInput);
             $.each(options.sorting, function() {
                 $('<option/>').val(this.fieldName).data('order', '<').text('< '+this.label).appendTo(select);
                 $('<option/>').val(this.fieldName).data('order', '>').text('> '+this.label).appendTo(select);
             });
 
             select.on('change', DataList.bind_dataOrdering);
+            */
         }
 		
         // Build header row
@@ -255,9 +275,13 @@ var DataList = {
 
     bind_dataOrdering: function() {
         var a = $(this);
+        var li = a.parent();
         var id = a.closest('.dataList').data('datalist-id');
 
-        return DataList.sort(id, a.val(), a.find('option:selected').data('order'));
+        a.closest('ul').find('.active').removeClass('active');
+        a.parent().addClass('active');
+
+        return DataList.sort(id, li.data('value'), li.data('order'));
     }
 
 }
