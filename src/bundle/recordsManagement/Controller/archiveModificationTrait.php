@@ -123,6 +123,16 @@ trait archiveModificationTrait
                     'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
                 );
 
+                if (empty($archive->digitalResources)) {
+                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $$eventInfo['address'] = null;
+                    $event = $this->lifeCycleJournalController->logEvent(
+                        'recordsManagement/retentionRuleModification',
+                        'recordsManagement/archive',
+                        $archive->archiveId,
+                        $eventInfo,
+                        $operationResult
+                    );
+                }
                 foreach ($archive->digitalResources as $digitalResource) {
                         $eventInfo['resId'] = $digitalResource->resId;
                         $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
