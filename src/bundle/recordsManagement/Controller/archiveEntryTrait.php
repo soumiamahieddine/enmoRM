@@ -553,7 +553,7 @@ trait archiveEntryTrait
         }
     }
 
-    protected function openContainers($archive, $path=null)
+    protected function openContainers($archive, $path = null)
     {
         if (empty($path)) {
             if (isset($archive->parentArchiveId)) {
@@ -569,10 +569,12 @@ trait archiveEntryTrait
 
                 $path = $this->resolveStoragePath($archive, $path);
             }
-
-            // Add archiveId as container name in path
-            $path .= "/".$archive->archiveId;
+        } else {
+            $path = $this->resolveStoragePath($archive, $path);
         }
+
+        // Add archiveId as container name in path
+        $path .= "/".$archive->archiveId;
 
         $archive->storagePath = $path;
 
