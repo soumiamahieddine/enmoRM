@@ -124,7 +124,7 @@ trait archiveModificationTrait
                 );
 
                 if (empty($archive->digitalResources)) {
-                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $$eventInfo['address'] = null;
+                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
                     $event = $this->lifeCycleJournalController->logEvent(
                         'recordsManagement/retentionRuleModification',
                         'recordsManagement/archive',
@@ -214,6 +214,16 @@ trait archiveModificationTrait
                     'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
                 );
 
+                if (empty($archive->digitalResources)) {
+                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
+                    $event = $this->lifeCycleJournalController->logEvent(
+                        'recordsManagement/accessRuleModification',
+                        'recordsManagement/archive',
+                        $archive->archiveId,
+                        $eventInfo,
+                        $operationResult
+                    );
+                }
 
                 foreach ($archive->digitalResources as $digitalResource) {
                         $eventInfo['resId'] = $digitalResource->resId;
