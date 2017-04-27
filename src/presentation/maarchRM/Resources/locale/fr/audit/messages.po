@@ -246,7 +246,7 @@ msgid "recordsManagement/archive/updateIndex"
 msgstr "Modification de l'index d'une archive"
 
 msgid "recordsManagement/archive/updateInteractiveconversion_resId_"
-msgstr "Conversion d'une ressource"
+msgstr "Conversion interactive d'une ressource"
 
 msgid "recordsManagement/archiveRelationship/newRelationship"
 msgstr "Préparation à la création d'une nouvelle relation"
