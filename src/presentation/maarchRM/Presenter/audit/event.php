@@ -85,7 +85,8 @@ class event
     public function index()
     {
         $events = array();
-
+        $routes = array();
+        
         $bundles = \laabs::bundles();
         foreach ($bundles as $bundle) {
             $apis = $bundle->getApis();
@@ -93,28 +94,33 @@ class event
                 $paths = $api->getPaths();
                 foreach ($paths as $path) {
                     if (!strpos($path, 'audit')) {
-                        $event = new \stdClass();
-                        $event->path = $path->getName();
-
-                        if (strpos($path->getName(), 'read') || strpos($path->getName(), 'get')) {
-                            $event->class = 'read';
-                        } elseif (strpos($path->getName(), 'create') || strpos($path->getName(), 'add') || strpos($path->getName(), 'new')) {
-                            $event->class = 'create';
-                        } elseif (strpos($path->getName(), 'update') || strpos($path->getName(), 'modify')) {
-                            $event->class = 'update';
-                        } elseif (strpos($path->getName(), 'delete')) {
-                            $event->class = 'delete';
-                        } else {
-                            $event->class = 'all';
-                        }
-                        $events[] = $event;
+                        $routes[] = $path->getName();
                     }
                 }
             }
         }
 
-        $this->view->addContentFile("audit/search.html");
+        $routes = array_unique($routes);
 
+        foreach ($routes as $route) {
+            $event = new \stdClass();
+            $event->path = $route;
+
+            if (strpos($route, 'read') || strpos($route, 'get')) {
+                $event->class = 'read';
+            } elseif (strpos($route, 'create') || strpos($route, 'add') || strpos($route, 'new')) {
+                $event->class = 'create';
+            } elseif (strpos($route, 'update') || strpos($route, 'modify')) {
+                $event->class = 'update';
+            } elseif (strpos($route, 'delete')) {
+                $event->class = 'delete';
+            } else {
+                $event->class = 'all';
+            }
+            $events[] = $event;
+        }
+        
+        $this->view->addContentFile("audit/search.html");
         $this->view->setSource("events", $events);
         $this->view->merge();
         $this->view->translate();
