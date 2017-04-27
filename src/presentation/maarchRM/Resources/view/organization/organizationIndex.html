@@ -180,7 +180,6 @@
         },
 
         updateNode: function(org) {
-            console.log(org);
             $('#'+org.orgId).data('orgname', org.orgName)
                             .data('ownerorgid', org.ownerOrgId)
                             .find('.showDetails').html(org.displayName);

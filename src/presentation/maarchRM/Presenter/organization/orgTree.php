@@ -108,6 +108,7 @@ class orgTree
      */
     public function getTree($organizations)
     {
+        $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         /*
         $html = '';
         if (sizeof($organizations) > 0) {
@@ -122,6 +123,7 @@ class orgTree
 
         */
         $this->view->addContentFile("organization/orgTree.html");
+        $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("organizations", $organizations);
         $this->view->merge();
         $this->view->translate();
