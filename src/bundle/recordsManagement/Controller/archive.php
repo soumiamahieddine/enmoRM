@@ -205,7 +205,6 @@ class archive
      */
     public function useReferences($archive, $operation)
     {
-
         if (!empty($archive->archivalProfileReference)) {
             $this->useArchivalProfile($archive->archivalProfileReference);
         }
@@ -218,9 +217,8 @@ class archive
 
         if (!empty($archive->descriptionClass)) {
             $this->useDescriptionController($archive->descriptionClass);
-        } elseif (!empty($archive->descriptionSchema)) {
-            $documentRootNamespaceUri = $archive->descriptionXml->documentElement->namespaceURI;
-            $this->useDescriptionController($documentRootNamespaceUri);
+        } else {
+            $this->useDescriptionController('recordsManagement/description');
         }
     }
 
@@ -392,21 +390,31 @@ class archive
     public function getDescription($archiveId)
     {
         if (!$this->sdoFactory->exists('recordsManagement/archive', $archiveId)) {
-            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier '$archiveId' not exist");
+            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier '$archiveId' does not exist.");
         }
 
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if (!empty($archive->descriptionClass)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-
-            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+        } else {
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
         }
 
+        $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+        
+        /*    $index = 'archives';
+            if (!empty($archive->archivalProfileReference)) {
+                $index = $archive->archivalProfileReference;
+            }
 
-        if ($archive->descriptionObject == null) {
-            //throw \laabs::newException("recordsManagement/invalidArchiveDescriptionException", "Invalid description for this archive with archive identifier : '$archiveId'");
-        }
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find('archiveId:"'.$archiveId.'"', $index, $limit = 1);
+
+            if (count($ftresults)) {
+                $archive->descriptionObject = $ftresults[0];
+            }
+        }*/
 
         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
 
@@ -508,6 +516,7 @@ class archive
         $statusList['frozen'] = array('preserved', 'disposable');
         $statusList['disposable'] = array('preserved');
         $statusList['disposed'] = array('disposable');
+        $statusList['restituted'] = array('restituable');
         $statusList['error'] = array('preserved', 'frozen', 'disposable', 'disposed');
 
         if (!is_array($archiveIds)) {
@@ -687,6 +696,8 @@ class archive
         if (!$currentOrg) {
             return array();
         }
+
+        $ftresults = [];
 
         if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
             $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);

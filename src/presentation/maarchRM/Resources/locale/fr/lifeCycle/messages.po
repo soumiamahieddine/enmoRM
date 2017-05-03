@@ -303,6 +303,18 @@ msgid "docId"
 msgstr "Identifiant de document"
 msgctxt "eventInfo"
 
+msgid "format"
+msgstr "Format"
+msgctxt "eventInfo"
+
+msgid "linkedResId"
+msgstr "Identifiant de la resource liée"
+msgctxt "eventInfo"
+
+msgid "relationshipType"
+msgstr "Type de relation"
+msgctxt "eventInfo"
+
 
 # ---------------------------------------------------------
 # Event types
@@ -375,7 +387,7 @@ msgid "medona/rejection"
 msgstr "Rejet d'un message"
 
 msgid "recordsManagement/archive"
-msgstr "Côte de l'archive"
+msgstr "Cote de l'archive"
 
 msgid "recordsManagement/ArchivalProfileModification"
 msgstr "Modification de profil"

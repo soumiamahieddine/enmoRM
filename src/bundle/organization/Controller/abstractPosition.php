@@ -73,6 +73,25 @@ abstract class abstractPosition
         return $positions;
     }
 
+    
+    /**
+     * Get my current organization tree
+     *
+     * @return organization/organization The organization tree
+     */
+    public function getCurrentOrgTree()
+    {
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+
+        if (!$currentOrg) {
+            return;
+        }
+
+        $organizations = $this->sdoFactory->find("organization/organization", "ownerOrgId='$currentOrg->ownerOrgId'");
+
+        return \laabs::buildTree($organizations, 'organization/organization', null, $currentOrg->orgId);
+    }
+
     /**
      * Set my working positions
      * @param organization/organization $orgId The organization identifier 
@@ -134,7 +153,7 @@ abstract class abstractPosition
             $services[(string) $service->orgId] = (string) $service->registrationNumber;
             $services = array_merge($services, $this->readDescandantService((string) $service->orgId));
 
-            $childrenOrgIds = $this->sdoFactory->index('organization/organization' ,'orgId', "parentOrgId = '$service->ownerOrgId' AND isOrgUnit = false");
+            $childrenOrgIds = $this->sdoFactory->index('organization/organization', 'orgId', "parentOrgId = '$service->ownerOrgId' AND isOrgUnit = false");
 
             foreach ($childrenOrgIds as $orgId) {
                 $services = array_merge($services, $this->readDescandantService((string) $orgId));

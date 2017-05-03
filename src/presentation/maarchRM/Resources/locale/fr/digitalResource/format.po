@@ -17,6 +17,15 @@ msgstr "Nom du fichier"
 msgid "Size"
 msgstr "Taille"
 
+msgid "Size (bytes)"
+msgstr "Taille (octets)"
+
+msgid "bytes"
+msgstr "octets"
+
+msgid "Creation date"
+msgstr "Date de création"
+
 msgid "Check format"
 msgstr "Vérifier le format"
 

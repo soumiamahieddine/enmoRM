@@ -38,6 +38,17 @@ interface archiveInterface
      */
     public function create($archive);
 
+    /**
+     * Receive an archive
+     *
+     * @param string $batchDirectory      The path of the folder that contains archives
+     * @param string $descriptionFilePath The path of the description file
+     *
+     * @action recordsManagement/archive/receiveArchiveBatch
+     */
+    public function createArchivebatch($batchDirectory, $descriptionFilePath);
+
+
     /*
         RETRIEVE ARCHIVE
     */

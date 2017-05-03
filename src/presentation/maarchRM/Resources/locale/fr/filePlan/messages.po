@@ -1,0 +1,63 @@
+# messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "New folder created"
+msgstr "Nouveau dossier ajouté"
+
+msgid "Folder updated"
+msgstr "Dossier modifié"
+
+msgid "Folder moved"
+msgstr "Dossier déplacé"
+
+msgid "Folder deleted"
+msgstr "Dossier supprimé"
+
+msgid "Move archives"
+msgstr "Déplacement d'archives"
+
+msgid "Move folder"
+msgstr "Déplacer un dossier"
+
+msgid "The archive was moved."
+msgstr "L'archive a été déplacée."
+
+msgid "%1$s archives were moved."
+msgstr "%1$s archives ont été déplacées."
+
+msgid "Add a new folder"
+msgstr "Ajouter un dossier"
+
+msgid "Edit folder"
+msgstr "Modifier le dossier"
+
+msgid "Delete folder"
+msgstr "Supprimer le dossier"
+
+msgid "Do you want to move %1$s into %2$s ?"
+msgstr "Voulez-vous déplacer %1$s dans %2$s ?"
+
+msgid "Do you want to delete the folder %1$s ?"
+msgstr "Voulez-vous supprimer le dossier %1$s ?"
+
+msgid "The supression of the folder will also delete children folders and unlink all archives from those folders."
+msgstr "La suppression du dossier entraînera également la suppression des sous-dossiers et déplacera toutes les archives des dossiers concernés à la racine."
+
+msgid "Do you want to move the archive %1$s to the folder %2$s ?"
+msgstr "Voulez-vous déplacer l'archive %1$s dans le dossier %2$s ?"
+
+msgid "Do you want to move %1$s archives to the folder %2$s ?"
+msgstr "Voulez-vous déplacer %1$s archives dans le dossier %2$s ?"
+
+msgid "Do you want to remove the archive %1$s from the folder %2$s ?"
+msgstr "Voulez-vous retirer l'archive %1$s du dossier %2$s ?"
+
+msgid "Do you want to remove %1$s archives from the folder %2$s ?"
+msgstr "Voulez-vous retirer %1$s archives du dossier %2$s ?"
+
+msgid "Opened"
+msgstr "Ouvert"
+
+msgid "Closed"
+msgstr "Fermé"

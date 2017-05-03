@@ -123,6 +123,16 @@ trait archiveModificationTrait
                     'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
                 );
 
+                if (empty($archive->digitalResources)) {
+                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
+                    $event = $this->lifeCycleJournalController->logEvent(
+                        'recordsManagement/retentionRuleModification',
+                        'recordsManagement/archive',
+                        $archive->archiveId,
+                        $eventInfo,
+                        $operationResult
+                    );
+                }
                 foreach ($archive->digitalResources as $digitalResource) {
                         $eventInfo['resId'] = $digitalResource->resId;
                         $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
@@ -204,6 +214,16 @@ trait archiveModificationTrait
                     'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
                 );
 
+                if (empty($archive->digitalResources)) {
+                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
+                    $event = $this->lifeCycleJournalController->logEvent(
+                        'recordsManagement/accessRuleModification',
+                        'recordsManagement/archive',
+                        $archive->archiveId,
+                        $eventInfo,
+                        $operationResult
+                    );
+                }
 
                 foreach ($archive->digitalResources as $digitalResource) {
                         $eventInfo['resId'] = $digitalResource->resId;
@@ -327,7 +347,58 @@ trait archiveModificationTrait
 
         return $res;
     }
+    
+    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null,$description = null)
+    {
+        $archive = $this->getDescription($archiveId);
+        $this->checkRights($archive);
+        
+        if ($archiveName) {
+            $archive->archiveName = $archiveName;
+        }
+        
+        if ($originatorArchiveId) {
+            $archive->originatorArchiveId = $originatorArchiveId;
+        }
+        
+        if ($description) {
+            if (!empty($archive->descriptionClass)) {
+                $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+            } else {
+                $descriptionController = $this->useDescriptionController('recordsManagement/description');
+            }
+            
+            $descriptionController->update(json_decode($description),$archiveId);
+        }
+        
+        $this->sdoFactory->update($archive, 'recordsManagement/archive');
+        
+        $operationResult = true;
+        $res = true;
+        $eventInfo = array(
+                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+            );
 
+            foreach ($archive->digitalResources as $digitalResource) {
+                $eventInfo['resId'] = $digitalResource->resId;
+                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventInfo['hash'] = $digitalResource->hash;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
+
+                $event = $this->lifeCycleJournalController->logEvent(
+                    'recordsManagement/metadata',
+                    'recordsManagement/archive',
+                    $archive->archiveId,
+                    $eventInfo,
+                    $operationResult
+                );
+
+                $archive->lifeCycleEvent = array($event);
+            }
+            
+        return $res;
+    }
     /**
      * Add a relationship to the archive
      * @param recordsManagement/archiveRelationship $archiveRelationship The relationship of the archive

@@ -302,6 +302,17 @@ trait TemplateDataTrait
             case 'bool':
                 $value = @(bool) $source;
                 break;
+            case 'array':
+                if (!is_array($source)) {
+                    if (is_null($source)) {
+                        $value = [];
+                    } else {
+                        $value = [$source];
+                    }
+                } else {
+                    $value = $source;
+                }
+                break;
             case 'attr':
                 if (isset($source->{$params[0]})) {
                     $value = @$source->{$params[0]};
@@ -370,6 +381,9 @@ trait TemplateDataTrait
                 break;
 
             // String functions
+            case "newId":
+                $value = @\laabs::newId();
+                break;
             case 'format':
             case 'fmt':
                 $value = @sprintf($params[0], $source);

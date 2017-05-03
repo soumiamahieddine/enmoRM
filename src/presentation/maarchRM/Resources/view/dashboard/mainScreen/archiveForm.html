@@ -1,0 +1,246 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<form class="form-horizontal" id="archiveForm">
+    <div class="form-group">
+        <label class="col-sm-3  control-label small">Name<span style="color: red">&nbsp;*</span></label>
+        <div class="col-sm-9">
+            <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
+        </div>
+    </div>
+    <div class="form-group" data-translate-catalog="recordsManagement/archive">
+        <label class="col-sm-3 control-label small">Identifier</label>
+        <div class="col-sm-9">
+            <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
+        </div>
+    </div>
+    <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
+    <input type="hidden" class="archiveInput" name="filePlanPosition"/>
+    <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
+    <input type="hidden" class="archiveInput" name="parentArchiveId"/>
+</form>
+
+<?hinclude dashboard/mainScreen/descriptionForm.html ?>
+
+<div class="panel-heading" role="tab">
+    <strong>
+        <a data-toggle="collapse" href="#management">Management metadata</a>
+    </strong>
+</div>
+<div id="management" class="panel-collapse collapse in">
+    <form id="managementMetadataForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
+            <div class="col-md-6">
+                <select class="input-sm form-control archiveInput" name="retentionRuleCode" id="retentionRule">
+                    <option value=""></option>
+                    <?merge retentionRules ?>
+                    <option value="[?merge .code ?]" data-duration="[?merge .durationText ?]" data-final-disposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <p class="help-block small"><i id="retentionRuleText"></i></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label small">Retention start date</label>
+            <div class="col-md-6">
+                <input class="input-sm form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('#app_maarchRM_main').ready(function () {
+        $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+    });
+
+    // ARCHIVE
+    $('#archivalProfile').on('change', function() {
+        ArchiveForm.loadProfile();
+        ArchiveForm.displayArchiveDescription();
+    });
+
+    $('#retentionRule').on('change', function() {
+        ArchiveForm.displayRetentionRulesInfo();
+    });
+    
+    var ArchiveForm = {
+        send : function() {
+            var archive = this.serialize();
+
+            if (archive < 0) {
+                return;
+            }
+            
+            ajax($('#import'),
+                {
+                    type        : 'POST',
+                    url         : "/archive",
+                    data        : JSON.stringify({archive : archive}),
+                    contentType : 'application/json',
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+
+                        if (response.status) {
+                            ArchiveForm.clear();
+                            ArchiveFolderList.refresh();
+                            $('#folderTab').click();
+                        }
+                    },
+                    error       : function (response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                }
+            );
+        },
+        loadProfile : function() {
+            var value = $('#archivalProfile').val();
+            var dataJson = $('#archivalProfile').data('json');
+
+            var selectedProfile = "";
+            if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
+                selectedProfile = JSON.parse(dataJson);
+            }
+
+            if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
+                $('#retentionRule').val('').removeAttr("disabled").change();
+            } else {
+                $('#retentionRule').val(selectedProfile.retentionRuleCode).change().attr("disabled", "disabled");
+            }
+
+            if (value == '' || selectedProfile.retentionStartDate == '' || selectedProfile.retentionStartDate == "definedLater" || selectedProfile.retentionStartDate == null) {
+                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
+                retentionStartDate.data("datepicker").setDate(new Date())
+                retentionStartDate.closest(".form-group").removeClass("hide");
+                
+            } else {
+                 $("#managementMetadataForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
+            }
+        },
+        displayArchiveDescription : function() {
+            var value = $('#archivalProfile').val();
+
+            $('#archivalProfileFields').empty();
+            
+            if (value == "") {
+                Metadata.acceptUserIndex(true);
+                return;
+            }
+            
+            var selectedProfile = JSON.parse($('#archivalProfile').data('json'));
+            
+            Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
+            
+            $.each(selectedProfile.archiveDescription, function(key, value) {
+                Metadata.addArchiveDescription(value);
+            });
+        },
+        displayRetentionRulesInfo : function() {
+            var value = $('#retentionRule').val();
+
+            var selected = $('#retentionRule').find('option:selected');
+
+            if (value == '' ||  value == null) {
+                $('#retentionRuleText').empty();
+                return;
+            }
+
+            var finalDisposition = selected.data('final-disposition');
+            
+            var duration = selected.data('duration');
+
+            if (duration === undefined) {
+                $('#retentionRuleText').text($("#preservation_text").text() + " " + $("#unlimited_text").text());
+                return;
+            }
+            var numeric = duration.slice(1, -1);
+            var unit = duration.substr(duration.length-1);
+            var retentionRuleText = $('#retentionRule_text').text();
+
+            switch (unit) {
+                case 'D' : unit = $("#days_text").text();
+                           break;
+
+                case 'M' : unit = $("#months_text").text();
+                           break;
+
+                case 'Y' : unit = $("#years_text").text();
+                           break;
+            }
+
+            switch (finalDisposition) {
+                case 'destruction'  : finalDisposition = $("#destruction_text").text();
+                           break;
+
+                case 'preservation' : finalDisposition = $("#preservation_text").text();
+                           break;
+            }
+            retentionRuleText = retentionRuleText.replace(/%s1/g, finalDisposition);
+            retentionRuleText = retentionRuleText.replace(/%s2/g, numeric+' '+unit);
+            $('#retentionRuleText').text(retentionRuleText);
+        },
+        serialize : function() {
+            var form = $('#archiveForm, #managementMetadataForm');
+            var inputs = form.find('.archiveInput');
+            var archive = {
+                digitalResources : [],
+                descriptionObject : null
+            }
+
+            inputs.each(function() {
+                var value = $(this).val();
+                if (value) {
+                    if ($(this).hasClass('datePicker')) {
+                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                    }
+                    archive[$(this).attr('name')] = value;
+                }
+            })
+
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                selectedProfile = JSON.parse(selectedProfile);
+                archive.descriptionClass = selectedProfile.descriptionClass;
+            }
+
+            archive.descriptionObject = Metadata.serialize($('#allFields'));
+            if (archive.descriptionObject === true) {
+                return -1;
+            }
+
+            if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
+                gritter.show($('#retentionRuleCodeMissing_error').text(), false);
+                return -2;
+            }
+
+            if (archive.archiveName == null || archive.archiveName == "") {
+                gritter.show($('#fieldLabel_error').text(), false);
+                return -2;
+            }
+
+            archive.digitalResources = DocumentList.serialize();
+            if (archive.digitalResources == null) {
+                gritter.show($('#documentMissing_error').text(), false);
+                return -2;
+            }
+
+            return archive;
+        },
+
+        clear : function() {
+            $('#retentionRule').removeAttr("disabled");
+            $('#archiveForm, #managementMetadataForm').find('.archiveInput').not('[name="filePlanPosition"],[name="originatorOrgRegNumber"]').val('').change();
+
+            DocumentList.clear();
+            Metadata.clear($('#allFields'));
+        }
+    }
+</script>

@@ -63,8 +63,10 @@ class logScheduling
         $logScheduling->status = $status;
 
         if ($info) {
+            $info = is_string($info) ? $info : json_encode($info);
             $logScheduling->info = $info;
         }
+
         $this->sdoFactory->create($logScheduling);
 
         return $logScheduling->logId;
@@ -73,7 +75,7 @@ class logScheduling
     /**
      * Get result of search form
      * @param string        $name           The name of scheduling
-     * @param string        $task           The task 
+     * @param string        $task           The task
      * @param string        $executedBy     The service account
      * @param string        $launchedBy       The userAccount
      * @param boolean       $status          Status

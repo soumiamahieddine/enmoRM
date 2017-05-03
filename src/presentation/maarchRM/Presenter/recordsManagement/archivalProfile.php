@@ -118,43 +118,34 @@ class archivalProfile
 
                     $this->listProperties($class, $properties, $dateProperties);
 
-                    if ($descriptionClass->name == $archivalProfile->descriptionClass) {
-                        foreach ($properties as $property) {
-                            if (!in_array($property, $requiredProperties)) {
-                                $archiveDescription = new \stdClass();
-                                $archiveDescription->fieldName = $property;
-
-                                array_push($archivalProfile->archiveDescription, $archiveDescription);
-                            }
-                        }
-                    }
                     $properties = json_encode($properties);
                     $dateProperties = json_encode($dateProperties);
 
-                    $descriptionClass->dateProperties = $dateProperties;
+                    //$descriptionClass->dateProperties = $dateProperties;
                     $descriptionClass->properties = $properties;
                 }
             }
-            
+
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
-            foreach ($descriptionFields as $descriptionField) {
-                if ($descriptionField->type == 'date') {
-                    $dateFields[] = $descriptionField->name;                
-                }
-            }
+            $customeDateForRentention = [];
 
-            //description class selector
-            //$descriptionClassSlector = $this->view->getElementById("descriptionClass");
-            
-            //$this->view->merge($descriptionClassSlector);
+            foreach ($descriptionFields as $descriptionField) {
+                if ($descriptionField->type != 'date') {
+                    continue;
+                }
+
+                $dateFields[] = $descriptionField->name;
+                $customeDateForRentention[$descriptionField->name] = $descriptionField;
+            }
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng";
                 $this->view->setSource("profileFileName", $archivalProfile->reference.".rng");
                 $this->view->setSource("profileFileFormat", "Relax NG (Regular Language for XML Next Generation)");
             }
+
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".xsd")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".xsd";
                 $this->view->setSource("profileFileName", $archivalProfile->reference.".xsd");
@@ -164,6 +155,16 @@ class archivalProfile
             if (isset($filename)) {
                 $this->view->setSource("profileFileLastModified", \laabs::newDatetime(date("Y-m-d H:i:s", filemtime($filename))));
             }
+
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if (strtolower($archiveDescription->descriptionField->type) == "date" && $archiveDescription->required == true) {
+                    $archiveDescription->descriptionField->required = true;
+                    $customeDateForRentention[$archiveDescription->descriptionField->name] = $archiveDescription->descriptionField;
+                }
+            }
+
+            $this->view->setSource("customeDateForRentention", $customeDateForRentention);
+            $this->view->merge($this->view->getElementById("retentionStartDate"));
 
             $this->view->setSource("dateFields", json_encode($dateFields));
 
@@ -179,9 +180,17 @@ class archivalProfile
 
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
+        $organizationController = \laabs::newController('organization/organization');
         $accessRules = $accessRuleController->index();
         foreach ($accessRules as $accessRule) {
-            $accessRule->json = json_encode($accessRuleController->edit($accessRule->code));
+            $completeAccessRule = $accessRuleController->edit($accessRule->code);
+            $accessRule->description = $completeAccessRule->description;
+
+            foreach ($completeAccessRule->accessEntry as $accessEntry) {
+                $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgRegNumber)->displayName;
+            }
+
+            $accessRule->json = json_encode($completeAccessRule);
             if ($accessRule->duration != null) {
                 $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
                 $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
@@ -314,9 +323,9 @@ class archivalProfile
 
     /**
      * List properties method
-     * @param type $class
-     * @param type $properties
-     * @param type $dateProperties
+     * @param type $class          The class to get properties from
+     * @param type $properties     The existing list, to be completed
+     * @param type $dateProperties 
      * @param type $containerClass
      */
 
@@ -328,18 +337,29 @@ class archivalProfile
             if (in_array($property->name, $fields)) {
                 continue;
             }
+
+            $descriptionProperty = \laabs::newInstance('recordsManagement/descriptionField');
+            $descriptionProperty->name = $property->name;
+
+            if (isset($property->tags['label'])) {
+                $descriptionProperty->label = $property->tags['label'][0];
+            } else {
+                $descriptionProperty->label = $descriptionProperty->name;
+            }
+
             $type = $property->getType();
+            $descriptionProperty->type = $type;
 
             if ($containerClass) {
                 $qualifiedName = $containerClass.LAABS_URI_SEPARATOR.$property->name;
             } else {
                 $qualifiedName = $property->name;
             }
-
+            
             if ($type == "date" || $type == "timestamp") {
-                array_push($dateProperties, $qualifiedName);
+                array_push($dateProperties, $descriptionProperty);
             }
-            array_push($properties, $qualifiedName);
+            array_push($properties, $descriptionProperty);
             if (!$property->isScalar()) {
                 if ($property->isArray()) {
                     $type = substr($type, 0, -2);

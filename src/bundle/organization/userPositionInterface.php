@@ -40,6 +40,12 @@ interface userPositionInterface
      */
     public function read();
 
+    /**
+     * Get my current organization tree
+     *
+     * @action organization/userPosition/getCurrentOrgTree
+     */
+    public function readGetcurrentorgtree();
 
     /**
      * Get the user org ids

@@ -1522,4 +1522,88 @@ trait laabsModelTrait
 
         return assert($phpAssert);
     }
+
+    /**
+     * Build a tree structure from a flat array
+     * @param array  &$objects
+     * @param string $className
+     * @param string $childListProperty
+     * @param string $rootId
+     *
+     * @return array|object
+     */
+    public static function buildTree(array &$objects, $className, $childListProperty=null, $rootId=false)
+    {
+        $class = \laabs::getClass($className);
+        
+        $selfKeys = $class->getForeignKeys($className);
+        if (count($selfKeys) == 0) {
+            return array();
+        }
+        $selfKey = reset($selfKeys);
+        $keyField = $selfKey->getFields()[0];
+        $refField = $selfKey->getRefFields()[0];
+
+        if (!$childListProperty) {
+            $childListProperty = $class->getShortName();
+            foreach ($class->getProperties() as $property) {
+                if ($property->getType() == $className.'[]') {
+                    $childListProperty = $property->getName();
+                }
+            }
+        }
+
+        if ($rootId) {
+            foreach ($objects as $object) {
+                if ($object->{$refField} == $rootId) {
+                    if ($children = static::buildBranch($objects, $object->{$refField}, $refField, $keyField, $childListProperty)) {
+                        $object->{$childListProperty} = $children;
+                    }
+
+                    return $object;
+                }
+            }
+        } else {
+            return static::buildBranch($objects, null, $refField, $keyField, $childListProperty);
+        }
+        
+    }
+
+    protected static function buildBranch(array &$objects, $parentId, $idProperty, $parentIdProperty, $childListProperty)
+    {
+        $branch = array();
+
+        foreach ($objects as $object) {
+            if ($object->{$parentIdProperty} == $parentId) {
+                if ($children = static::buildBranch($objects, $object->{$idProperty}, $idProperty, $parentIdProperty, $childListProperty)) {
+                    $object->{$childListProperty} = $children;
+                }
+                $branch[] = $object;
+                unset($object);
+            }
+        }
+
+        return $branch;
+    }
+
+    /**
+     * Adds the canonical path of objects in tree
+     * @param array  $objects    The tree roots or branches
+     * @param string $name       The property that contains the name
+     * @param string $path       The property to evaluate with the path
+     * @param string $parentPath The parent folder path
+     */
+    public static function C14NPath($objects, $name, $path, $parentPath=null) 
+    {
+        foreach ($objects as $object) {
+            if ($parentPath) {
+                $object->{$path} = $parentPath.'/'.$object->{$name};
+            } else {
+                $object->{$path} = $object->{$name};
+            }
+            if (is_array($object->subFolders)) {
+                static::C14NPath($object->subFolders, $name, $path, $object->{$path});
+            }
+        }
+    }
 }

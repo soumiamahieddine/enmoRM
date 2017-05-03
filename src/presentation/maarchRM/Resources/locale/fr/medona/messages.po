@@ -305,6 +305,9 @@ msgstr "Taille"
 msgid "Reply code"
 msgstr "Code de réponse"
 
+msgid "Acknowledgement"
+msgstr "Accusé de réception"
+
 msgid "ArchiveTransfer"
 msgstr "Transfert d'archive"
 
@@ -398,6 +401,9 @@ msgstr "Invalide"
 msgid "validated"
 msgstr "Validé"
 
+msgid "draft"
+msgstr "Brouillon"
+
 msgid "Download"
 msgstr "Télécharger"
 
@@ -406,6 +412,12 @@ msgstr "En attente d'autorisation"
 
 msgid "Appraisal rule"
 msgstr "Règle de conservation"
+
+msgid "Keep"
+msgstr "Conserver"
+
+msgid "Destroy"
+msgstr "Détruire"
 
 msgid "Access restrition rule"
 msgstr "Règle de communicabilité"

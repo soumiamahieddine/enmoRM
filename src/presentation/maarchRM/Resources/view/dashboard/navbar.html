@@ -1,61 +1,99 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" data-translate-catalog translate="no" data-translate-context="layout">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+        <div class="navbar-header col-sm-4 col-md-4">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#leMenu">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" onclick="load('/', 'HTML_NO_LAYOUT')">
-                <img class="img-responsive pull-left" style="max-width:32px; max-height:32px;" src="[?merge .logo ?]"/>
-                &nbsp; 
-                <span style='font-family:electrolize;'>
-                    <?merge .navbarTitle ?>
-                    <span style='[?merge .["style"] ?]'><?merge .["value"] ?></span>
-                    
-                    <?merge .navbarTitle.not() ?>
-                    <span><span style='font-size:44px;'>m</span><span style='font-size:32px; font-weight:bold;'>aarch R</span><span style='font-size:44px;'>m</span></span>
-                </span>
+            <a class="navbar-brand" style="cursor: pointer; padding: 10px" onclick="load('/', 'HTML_NO_LAYOUT')">
+                <img class="img-responsive pull-left" style="max-height:32px;" src="[?merge .logo ?]"/>
             </a>
-
         </div>
-        <ul class="nav navbar-nav navbar-right hidden-xs">
-            <?merge .positions.count().ifgt(0) ?>
-            <li class="dropdown" >
-                <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
-                    <i class="fa fa-sitemap fa-fw" ></i>&nbsp;<span name="currentOrganization" ><?merge .currentOrganization.displayName ?></span>&nbsp;&nbsp;<?merge .positions.count().ifgt(1) ?><i class="fa fa-caret-down"></i>
-                </a>
-                <?merge .positions.count().ifgt(1) ?>
-                <ul class="dropdown-menu dropdown-user">
-                    <?merge .positions ?>
-                    <li>
-                        <a onclick="load('#')" name="selectOrg" data-orgid="[?merge .orgId?]">
-                            <span name="selectedOrgUnit"><?merge .organization.orgName ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown" id="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')" id="dropUsers">
-                    <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
-                    <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li>
-                        <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
-                            <i class="fa fa-user fa-fw"></i> Profile
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a onclick="load('/user/logout')" translate="yes">
-                            <i class="fa fa-sign-out fa-fw"></i> Logout
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        
+        <div class="collapse navbar-collapse" id='leMenu'>
+            <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
+            
+                <?merge .menu ?>
+                <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]">
+                    <a class="dropdown-toggle" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="[?merge ['class'] ?]"></i>
+                        <?merge ['label'] ?>
+                        <?merge ['submenu'].count().bool() ?>
+                        <span class="caret"></span>
+                    </a>
+                    <?merge ['submenu'].count().bool() ?>
+                    <ul class="dropdown-menu" role="menu">
+                        <?merge ['submenu'] ?>
+                        <li class="dropdown-submenu pull-left" style="width: 100%">
+                            <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                <i class="[?merge ['class'] ?]"></i> 
+                                <?merge ['label'] ?>
+                                <!--<?merge ['submenu'].count().bool() ?>
+                                <i class="pull-right fa fa-chevron-right"></i-->
+                            </a>
+                            <?merge ['submenu'].count().bool() ?>
+                            <ul class="dropdown-menu" style="width: inherit">
+                                <?merge ['submenu'] ?>
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                        <!--i class="[?merge ['class'] ?]"></i--> 
+                                        <?merge ['label'] ?>
+                                        <?merge ['submenu'].count().bool() ?>
+                                        <i class="fa fa-chevron-right"></i>
+                                    </a>
+                                    <?merge ['submenu'].count().bool() ?>
+                                    <ul class="dropdown-menu" style="width: inherit">
+                                        <?merge ['submenu'] ?>
+                                        <li class="dropdown-submenu pull-left">
+                                            <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
+                                                <!--i class="[?merge ['class'] ?]"></i--> 
+                                                <?merge ['label'] ?>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>                       
+                    </ul>
+                </li>
+                <?merge .positions.count().ifgt(0) ?>
+                <li class="dropdown" >
+                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')">
+                        <i class="fa fa-sitemap fa-fw" ></i>&nbsp;<span name="currentOrganization" ><?merge .currentOrganization.displayName ?></span>&nbsp;&nbsp;<?merge .positions.count().ifgt(1) ?><i class="fa fa-caret-down"></i>
+                    </a>
+                    <?merge .positions.count().ifgt(1) ?>
+                    <ul class="dropdown-menu dropdown-user">
+                        <?merge .positions ?>
+                        <li>
+                            <a onclick="load('#')" name="selectOrg" data-orgid="[?merge .orgId?]">
+                                <span name="selectedOrgUnit"><?merge .organization.orgName ?></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown" id="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" onclick="load('#')" id="dropUsers">
+                        <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                        <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
+                                <i class="fa fa-user fa-fw"></i> Profile
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a onclick="load('/user/logout')" translate="yes">
+                                <i class="fa fa-sign-out fa-fw"></i> Logout 
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
@@ -141,6 +179,21 @@
         });
     }
 
+    /************************************************************************************************
+    TREASURE HUNT
+    If you have the courage to read those lines, it's mean that you have been choosen by destiny
+    to accomplish a very important task. Before you ask me what is this task, I will give you the
+    answere : you have to retrieve a treasure that I have hidded somewhere in the code of this application.
+    Be ready for the greatest treasure hunt of your life !
+    You will find your first clue hidden in the main screen by ending the following sentence
+    in an input (I won't tell wich one :p) :
+
+    La vie c’est comme une boîte de chocolats, ...
+
+    Good luck. See you there buddy !
+    **************************************************************************************************/
+
+
     function ajax(button, request, timeout) {
         
         var icon = null;
@@ -151,7 +204,6 @@
         }
 
         if (!timeout) {
-            timeout = 300;
         }
 
         var beforeSend = request.beforeSend;
@@ -174,7 +226,7 @@
                 
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
-            }, timeout);
+            })
         }
 
         return $.ajax(request);
@@ -269,5 +321,16 @@
         if (keys[17] && keys[18] && keys[81]) {
             load('/user/logout');
         }
+    });
+
+    $(window).ready(function() {
+        // For the Second level Dropdown menu, highlight the parent	
+        $( ".dropdown-menu" )
+            .mouseenter(function() {
+                $(this).parent('li').addClass('active');
+            })
+            .mouseleave(function() {
+                $(this).parent('li').removeClass('active');
+            });
     });
 </script>

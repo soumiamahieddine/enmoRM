@@ -4,18 +4,18 @@
  *  Copyright (C) 2017 Maarch
  * 
  *  This file is part of bundle XXXX.
- *  Bundle XXXX is free software: you can redistribute it and/or modify
+ *  Bundle recordsManagement is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  * 
- *  Bundle XXXX is distributed in the hope that it will be useful,
+ *  Bundle recordsManagement is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  * 
  *  You should have received a copy of the GNU General Public License
- *  along with bundle XXXX.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace bundle\recordsManagement\Controller;
@@ -40,14 +40,25 @@ trait archiveAccessTrait
         if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
+        
+        if (!empty($archive->descriptionClass)) {
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+        } else {
+            $index = 'archives';
+            if (!empty($archive->archivalProfileReference)) {
+                $index = $archive->archivalProfileReference;
+            }
+
+            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
+            $ftresults = $ft->find('archiveId:"'.$archiveId.'"', $index, $limit = 1);
+
+            if (count($ftresults)) {
+                $archive->descriptionObject = $ftresults[0];
+            }
+        }
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
-
-        $nbResource = count($archive->digitalResources);
-
-        for ($i = 0; $i < $nbResource; $i++) {
-            $archive->digitalResources[$i] = $this->digitalResourceController->info($archive->digitalResources[$i]->resId);
-        }
 
         $this->logging($archive);
 
@@ -201,5 +212,99 @@ trait archiveAccessTrait
         }
 
         return $access;
+    }
+
+    /**
+     * Get archive assert
+     * @param array $args
+     * 
+     * @return string
+     */
+    public function getArchiveAssert($args)
+    {
+        // Args on archive
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
+
+        if (!empty($args['archiveName'])) {
+            $queryParts[] = "archiveName='*".$args['archiveName']."*'";
+        }
+        if (!empty($args['profileReference'])) {
+            $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
+        }
+        if (!empty($args['agreementReference'])) {
+            $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
+        }
+        if (!empty($args['archiveId'])) {
+            $queryParts[] = "archiveId='".$args['archiveId']."'";
+        }
+        if (!empty($args['status'])) {
+            $queryParts[] = "status='".$args['status']."'";
+        } else {
+            $queryParts[] = "status!='disposed'";
+        }
+        if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
+            $queryParts[] = "disposalDate<='".$currentDateString."'";
+        }
+        if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "false") {
+            $queryParts[] = "disposalDate>='".$currentDateString."'";
+        }
+        if (!empty($args['finalDisposition'])) {
+            $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
+        }
+        if (!empty($args['originatorOrgRegNumber'])) {
+            $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
+        }
+        if (!empty($args['depositorOrgRegNumber'])) {
+            $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
+        }
+        if (!empty($args['filePlanPosition'])) {
+            $queryParts[] = "filePlanPosition='".$args['filePlanPosition']."'";
+        }
+        if ($args['hasParent'] == true) {
+            $queryParts[] = "parentArchiveId!=null";
+        }
+        if ($args['hasParent']  === false) {
+            $queryParts[] = "parentArchiveId=null";
+        }
+
+        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+        if ($accessRuleAssert) {
+            $queryParts[] = $accessRuleAssert;
+        }
+
+        return implode(' and ', $queryParts);
+    }
+
+    /**
+     * Get the query assert for access rule
+     * @param string $currentDateString the date
+     * 
+     * @return string
+     */
+    public function getAccessRuleAssert($currentDateString)
+    {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            return "true=false";
+        }
+
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
+
+        $owner = false;
+        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
+            $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
+            if (isset($userService->orgRoleCodes) && $userService->orgRoleCodes->contains('owner')) {
+                return;
+            }
+        }
+
+        $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
+
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString' OR accessRuleComDate = NULL))";
+
+        return "(".implode(" OR ", $queryParts).")";
     }
 }

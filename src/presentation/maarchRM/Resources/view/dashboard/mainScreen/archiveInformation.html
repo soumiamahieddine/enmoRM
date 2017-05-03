@@ -1,0 +1,414 @@
+<div id="archiveInformation" class="row">
+    <input class="archiveInformationId hide" value="[?merge archive.archiveId ?]">
+    <input class="archiveName hide" value="[?merge archive.archiveName ?]">
+    <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
+
+    <div class="col-xs-12 text-center">
+        <i class="infoIcon fa fa-archive [?merge status.ifne('frozen').then('hide', '') ?]" style="color: #69B5DB"/>
+        <i class="infoIcon fa fa-archive [?merge status.ifeq('frozen').then('hide', '') ?]"/> 
+    </div>
+    <div class="col-xs-12">
+        <h4 class="text-center text-info">
+            <?merge archive.archivalProfileName ?>
+            <button type="button" class="btn btn-default btn-sm" id="editMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
+        </h4>
+        <table>
+            <tr class="archiveName">
+                <th title="Name">Name</th>
+                <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
+            </tr>
+            <tr class="archiveId">
+                <th title="Identifier">Identifier</th>
+                <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
+            </tr>
+            <?merge archive.originatorArchiveId.bool() ?>
+            <tr class="originatorArchiveId">
+                <th title="Name">Originator archive identifier</th>
+                <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
+            </tr>
+        </table>
+        <div id="metadata">
+        </div>
+        <div class="dropup col-xs-12 hide" id="archiveCustomFieldAddBtn">
+            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+                &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+            </button>
+            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+            </ul>
+        </div>
+        <!--<div id="metadata" class="panel-collapse collapse" role="tabpanel"></div>-->
+        <button type="button" class="pull-right btn btn-default btn-sm" id="saveMetadata" title="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
+        <button type="button" class="pull-right btn btn-default btn-sm" id="cancelMetadataEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
+    </div>
+    <div class="col-xs-12">
+        <div class="panel-group" id="archiveDetails" role="tablist" aria-multiselectable="true">
+            <div class="panel-heading text-center" role="tab">
+                <strong>
+                    <a role="button" data-toggle="collapse" href="#managementInfo" >
+                        <span class="text-info">Management information</span>
+                    </a>
+                    <button type="button" class="btn btn-default btn-sm" id="editManagementMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
+                    <!--<a href="#" class="unfreeze [?merge status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze" title="Unfreeze"><i class="fa fa-unlock"></i></a>
+                    <a href="#" class="freeze [?merge status.ifeq('frozen').then('hide', '') ?]" data-type="freeze" title="Freeze"><i class="fa fa-lock"></i></a>-->
+                </strong>
+            </div>
+            <div id="managementInfo" class="panel-collapse collapse in" role="tabpanel">
+                <table>
+                    <tr>
+                        <th title="Deposit date">Deposit date</th>
+                        <td title='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
+                    </tr>
+                    <tr id="disposalDate">
+                        <th title="Disposal date">Disposal date</th>
+                        <td title='[?merge archive.disposalDate ?]'><?merge archive.disposalDate ?></td>
+                    </tr>
+                    <tr id="finalDisposition">
+                        <th title="Final disposition">Final disposition</th>
+                        <td title='[?merge archive.finalDisposition ?]'><?merge archive.finalDisposition ?></td>
+                    </tr>
+                    <tr>
+                        <th title="Status">Status</th>
+                        <td title='[?merge archive.status ?]'><?merge archive.status ?></td>
+                    </tr>
+                    <tr id="retentionRuleSelect" style="border:0px solid transparent; display: none">
+                    <input id="inputRetentionRuleCode" class="hide" value="[?merge archive.retentionRuleCode ?]"/>
+                        <th title="Retention rule">Retention rule</th>
+                        <td>
+                            <select id="retentionRuleCode" name="retentionRuleCode" class="col-xs-12">
+                                <option value=''>Select a retention rule</option>
+                                <?merge retentionRules ?>
+                                <option value='[?merge .code ?]' data-duration="[?merge .durationText ?]" data-finaldisposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="startDate" style="border:0px solid transparent; display: none">
+                        <th title="Start date">Start date</th>
+                        <td>
+                            <input type="text" class="datePicker startDate col-xs-12" name="startDate" placeholder="Start date" value="[?merge archive.retentionStartDate ?]"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <table>
+                    <?merge archive.accessRuleComDate.bool() ?>
+                    <tr>
+                        <th title="Communication date">Communication date</th>
+                        <td id="accessRuleComDate" title="[?merge archive.accessRuleComDate ?]"><?merge archive.accessRuleComDate ?></td>
+                    </tr>
+                    <?merge archive.lastCheckDate.bool() ?>
+                    <tr>
+                        <th title="Last check date">Last check date</th>
+                        <td id="lastCheckDate" title="[?merge archive.lastCheckDate ?]"><?merge archive.lastCheckDate ?></td>
+                    </tr>
+                    <?merge archive.lastDeliveryDate.bool() ?>
+                    <tr>
+                        <th title="Last delivery date">Last delivery date</th>
+                        <td id="lastDeliveryDate" title="[?merge archive.lastDeliveryDate ?]"><?merge archive.lastDeliveryDate ?></td>
+                    </tr>
+                    <?merge archive.lastModificationDate.bool() ?>
+                    <tr>
+                        <th title="Last modification date">Last modification date</th>
+                        <td id="lastModificationDate" title="[?merge archive.lastModificationDate ?]"><?merge archive.lastModificationDate ?></td>
+                    </tr>
+                </table>
+            </div>
+            <button type="button" class="btn btn-default btn-sm pull-right" id="saveManagementMetadata" title="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
+            <button type="button" class="btn btn-default btn-sm pull-right" id="cancelManagementEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
+            <!--<?merge archive.descriptionObject.bool() ?>
+            <div class="panel">
+                <div class="panel-heading text-center" role="tab">
+                    <strong>
+                        <a role="button" data-toggle="collapse" href="#metadata" >
+                            <span class="text-info">Metadata</span>
+                        </a>
+                        <button type="button" class="btn btn-default btn-sm editMetadata" id="editMetadata" title="Update metadata" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn btn-default btn-sm saveMetadata" id="saveMetadata" title="Valid" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
+                        <button type="button" class="btn btn-default btn-sm cancelMetadataEdition" id="cancelMetadataEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
+                    </strong>
+                </div>
+                <div id="metadata" class="panel-collapse collapse" role="tabpanel">
+                </div>
+            </div>-->
+        </div>
+    </div>
+</div>
+
+<div class="hide">
+    <div class="form-group" id="inputFinalDisposition">
+        <br>
+        <input type="radio" name="finalDisposition" class="input-sm" value="destruction">&nbsp;Destruction
+        <input type="radio" name="finalDisposition" class="input-sm" value="preservation">&nbsp;Preservation
+    </div>
+    <!--div id="archiveName" data->
+        <b>Archive name</b>
+        <input id="inputArchiveName" type="text" class="form-control input-sm"/>
+    </div-->
+    <input id="inputArchiveName" name="archiveName" type="text" class="col-xs-12"/>
+    <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
+    <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
+    <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
+    <span id="customFieldError_txt">A label is missing.</span>
+</div>
+
+<style type="text/css">
+    #archiveInformation {
+        font-size: 12px;
+        border-left: solid 1px #DDD;
+        margin-top: 50px;
+    }
+    #archiveInformation table {
+        table-layout:fixed;
+        width:100%;
+    }
+    #archiveInformation table th {
+        width: 40%;
+        text-align: right;
+    }
+    #archiveInformation table td, #archiveInformation table th {
+        padding: 0 5px 0 5px ;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+    }
+    #archiveInformation .infoIcon {
+        font-size: 80px; 
+        margin-bottom: 10px;
+    }
+</style>
+
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script>
+    var ArchiveInformation = {
+        archiveId: $('#archiveInformation').find('.archiveInformationId').val(),
+
+        freeze: function() {
+            var parameters = {
+                archiveIds : ArchiveInformation.archiveId
+            };
+            
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsManagement/archive/freeze",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        Archive.getInfo(ArchiveInformation.archiveId);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        unfreeze: function() {
+            var parameters = {
+                archiveIds : ArchiveInformation.archiveId
+            };
+            
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsManagement/archive/unfreeze",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        Archive.getInfo(ArchiveInformation.archiveId);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        editManagementMetadata: function() {
+            $('#editManagementMetadata').prop('disabled',true);
+            $('#saveManagementMetadata').show();
+            $('#cancelManagementEdition').show();
+            
+            $('#retentionRuleSelect').show();
+            $('#startDate').show();
+            
+            $("#retentionRuleCode").val($('#inputRetentionRuleCode').val());
+            
+            $('#finalDisposition').hide();
+            $('#disposalDate').hide();
+        },
+
+        saveManagementMetadata: function() {
+            var startDate = $('#archiveInformation').find('.startDate').val();
+            
+            var retentionRule = {
+                retentionStartDate : startDate,
+                retentionDuration : $('#retentionRuleCode option:selected').data('duration'),
+                finalDisposition : $('#retentionRuleCode option:selected').data('finaldisposition')
+            };
+            
+            var parameters = {
+                retentionRule : retentionRule,
+                archiveIds: ArchiveInformation.archiveId
+            };
+            
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsmanagement/archive/retentionrule",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        Archive.getInfo(ArchiveInformation.archiveId);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        cancelMetadataEdition: function() {
+            Archive.getInfo(ArchiveInformation.archiveId);
+        },
+
+        editMetadata: function() {
+            var archiveInformation=$('#archiveInformation');
+            $('#editMetadata').prop('disabled',true);
+            $('#saveMetadata').show();
+            $('#cancelMetadataEdition').show();
+            $('#archiveCustomFieldAddBtn').removeClass('hide');
+            //$('#archiveInformation').find('.originatorArchiveId').hide();
+            //$('#archiveInformation').find('.archiveName').hide();
+            
+            archiveInformation.find('.archiveName')
+                              .children('td')
+                              .html('')
+                              .append($('#inputArchiveName').val($('#archiveInformation').find('.archiveName').val()));
+            
+            archiveInformation.find('.originatorArchiveId')
+                              .children('td')
+                              .html('')
+                              .append($('#inputOriginatorArchiveId').val($('#archiveInformation').find('.originatorArchiveId').val()));
+
+            $('#metadata').find('tr').each(function(i, e) {
+                var label = $(e).children('th');
+                var value = $(e).children('td');
+
+                var customLabel = $("#inputCustomLabel").clone();
+                customLabel.val(label.html());
+                label.html('').append(customLabel);
+                
+                var customField = $("#inputCustomField").clone();
+                customField.val(value.html());
+                value.html('').append(customField);
+            });
+        },
+
+        saveMetadata: function() {
+            var descriptionFields = {};
+            $('#metadata').find('tr').each(function(i, e) {
+                var label = $(e).find('th > input').val();
+                var value = $(e).find('td > input').val();
+
+                if (label != '' && value != '') {
+                    descriptionFields[label] = value;
+                } else if (label == '' && value != '') {
+                    gritter.show($('#customFieldError_txt').text(), false);
+                    descriptionFields = -1;
+                    return;
+                }
+            });
+
+            if (descriptionFields == -1) {
+                return;
+            }
+
+            var parameters = {
+                archiveId   : ArchiveInformation.archiveId,
+                originatorArchiveId : $('#archiveInformation').find('#inputOriginatorArchiveId').val(),
+                archiveName : $('#archiveInformation').find('#inputArchiveName').val(),
+                description : JSON.stringify(descriptionFields)
+            };
+            
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsmanagement/archive/metadata",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        Archive.getInfo(ArchiveInformation.archiveId);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        addField : function(type) {
+            var label = $('#inputCustomLabel').clone().val('');
+            var value = $('#inputCustomField').clone().val('');
+
+            if(type == 'date') {
+                value.datepicker({
+                    language:$('#wrapper').attr('lang'),
+                    autoclose:true
+                });
+            }
+
+            var tr = $('<tr/>').append($('<th/>').append(label))
+                               .append($('<td/>').append(value));
+
+            $('#metadata').children('table').append(tr);
+        }
+    }
+    
+    $('#archiveInformation').on('click','.freeze', function(){
+        ArchiveInformation.freeze();
+    });
+    
+    $('#archiveInformation').on('click','.unfreeze', function(){
+        ArchiveInformation.unfreeze();
+    });
+    
+    $('#editManagementMetadata').on('click', function(){
+         ArchiveInformation.editManagementMetadata();
+    });
+    
+    $('#cancelManagementEdition, #cancelMetadataEdition').on('click', function(){
+         ArchiveInformation.cancelMetadataEdition();
+    });
+    
+    $('#saveManagementMetadata').on('click', function(){
+         ArchiveInformation.saveManagementMetadata();
+    });
+    
+    $('#editMetadata').on('click', function(){
+        ArchiveInformation.editMetadata();
+    });
+    
+    $('#archiveInformation').on('click','.addCustomField',function(){
+       ArchiveInformation.addField($(this).data('type'));
+    });
+    
+    $('#saveMetadata').on('click', function(){
+        ArchiveInformation.saveMetadata();
+    });
+        
+</script>

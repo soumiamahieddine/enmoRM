@@ -23,8 +23,10 @@ CREATE TABLE `recordsManagement.accessRule`
 CREATE TABLE `recordsManagement.accessEntry`
 (
   `accessRuleCode` varchar(255) NOT NULL,
-  `orgUnitId` varchar(255) NOT NULL,
-  `originatorAccess` boolean DEFAULT true
+  `orgRegNumber` varchar(255) NOT NULL,
+  `originatorAccess` boolean DEFAULT true,
+
+  UNIQUE (`accessRuleCode`, `orgRegNumber`)
 );
 
 
@@ -51,7 +53,6 @@ CREATE TABLE `recordsManagement.archivalProfile`
   `description` text,
   `accessRuleCode` varchar(255),
   `acceptUserIndex` boolean default false,
-  `acceptMultipleDocuments` boolean default false,
   PRIMARY KEY (`archivalProfileId`),
   UNIQUE (`reference`),
   FOREIGN KEY (`accessRuleCode`)

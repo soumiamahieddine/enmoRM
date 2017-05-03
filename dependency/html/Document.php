@@ -243,6 +243,8 @@ class Document extends \dependency\xml\Document
 
         // Add js scripts
         $this->addScript("/public/dependency/html/js/jQuery_1.11.0/jQuery.js");
+        $this->addScript("/public/dependency/html/js/jQueryUI_1.12.1/jquery-ui.min.js");
+        $this->addScript("/public/dependency/html/js/jQueryUI_touch-punch_0.2.3/jquery.ui.touch-punch.js");
         //less compiler
         $this->addScript("/public/dependency/html/js/less_1.7.0/less.js");
         //bootstrap.affix
@@ -285,6 +287,9 @@ class Document extends \dependency\xml\Document
         //$this->addScript("/public/dependency/html/js/bootstrap-daterangepicker/daterangepicker.js");
 
         $this->addScript("/public/dependency/html/js/konami-code/jquery.raptorize.1.0.js");
+
+        $this->addScript("/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js");
+        $this->addScript("/public/dependency/html/js/dataList_0.0.1/dataList.js");
 
         //$this->addScript("/public/dependency/html/js/webodf.js-0.5.8/webodf.js");
 

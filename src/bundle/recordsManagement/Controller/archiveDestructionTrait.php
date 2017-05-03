@@ -91,7 +91,6 @@ trait archiveDestructionTrait
             $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
         }
 
-
         return $result;
     }
 
@@ -112,19 +111,48 @@ trait archiveDestructionTrait
      *
      * @return recordsManagement/archive[] The destroyed archives
      */
+    public function destructDisposableArchives()
+    {
+        $archiveIds = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "status = 'disposable'");
+        $this->setStatus($archiveIds, 'disposed');
+
+        $destructResult = $this->destruct($archiveIds);
+        $res = [];
+        $res['success'] = [];
+        $res['error'] = [];
+
+        foreach ($destructResult['success'] as $archive) {
+            $res['success'][] = $archive->archiveId;
+        }
+
+        foreach ($destructResult['error'] as $archive) {
+            $res['error'][] = $archive->archiveId;
+        }
+
+        return $res;
+    }
+
+    /**
+     * Delete archive and his related archive
+     * @param id $archiveIds The archive identifier or an identifier list
+     *
+     * @return recordsManagement/archive[] The destroyed archives
+     */
     public function destruct($archiveIds)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
 
-        $archives = array('success' => [], 'error' => []);
+        //$archives = array('success' => [], 'error' => []);
 
-        if (\laabs::hasDependency("fulltext")) {
+        /*if (\laabs::hasDependency("fulltext")) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
             $document = \laabs::newService('dependency/fulltext/Document');
-        }
+        }*/
 
+        $archives = $this->verifyIntegrity($archiveIds);
+        
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
@@ -136,11 +164,11 @@ trait archiveDestructionTrait
             try {
                 $this->destructArchive($archive);
 
-                if (\laabs::hasDependency("fulltext")) {
+                /*if (\laabs::hasDependency("fulltext")) {
                     $documentToRemove = clone($document);
                     $documentToRemove->addField("archiveId", $archiveId, "name");
                     $fulltextController->delete($archive->archivalProfileReference, $documentToRemove);
-                }
+                }*/
 
                 $destructionResult = true;
             } catch (\Exception $e) {
@@ -198,7 +226,7 @@ trait archiveDestructionTrait
 
         try {
             // Delete description
-            if (isset($archive->descriptionClass)) {
+            if ($archive->descriptionClass) {
                 $this->currentDescriptionController->delete($archive->archiveId, $this->deleteDescription);
             }
 

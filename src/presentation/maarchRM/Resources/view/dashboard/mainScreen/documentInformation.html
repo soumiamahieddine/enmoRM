@@ -1,0 +1,116 @@
+<div id="resourceInformation" class="row">
+    <div class="col-xs-12 text-center">
+        <i class="infoIcon fa fa-file-o"/>
+    </div>
+    <div class="col-xs-12 text-center">
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="">View</button>
+    </div>
+    <div class="col-xs-12">
+        <table>
+            <tr>
+                <th title="Name">Name</th>
+                <td name="fileName"/>
+            </tr>
+            <tr>
+                <th title="Creation date">Creation date</th>
+                <td name="created"/>
+            </tr>
+            <tr>
+                <th title="Identifier">Identifier</th>
+                <td name="resId"/>
+            </tr>
+            <tr>
+                <th title="Size">Size</th>
+                <td><span name="size"/> <span>bytes</span></td>
+            </tr>
+            <tr>
+                <th title="Format">Format</th>
+                <td name="format">
+            </tr>
+        </table>
+    </div>
+</div>
+
+<style type="text/css">
+    #resourceInformation {
+        font-size: 12px;
+        border-left: solid 1px #DDD;
+        margin-top: 50px;
+    }
+    #resourceInformation table {
+        table-layout:fixed;
+        width:100%;
+    }
+    #resourceInformation table th {
+        width: 40%;
+        text-align: right;
+    }
+    #resourceInformation table td, #resourceInformation table th {
+        padding: 0 5px 0 5px ;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    #resourceInformation .infoIcon {
+        font-size: 80px; 
+        margin-bottom: 10px;
+    }
+</style>
+
+<script>
+    DocumentInformation = {
+        form: $('#resourceInformation'),
+        load: function (resource) {
+            resource.created = resource.created.substring(0, 19);
+            DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
+            DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
+            DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
+            DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
+            DocumentInformation.form.find('[name="resId"]').text(resource.resId).attr('title', resource.resId);
+
+            if (resource.format) {
+                var formatname = resource.format.name+' '+resource.format.version;
+                DocumentInformation.form.find('[name="format"]').text(formatname).attr('title', formatname);
+
+                var iconI = DocumentInformation.form.find(".infoIcon");
+                switch (resource.format.mediatype) {
+                    case 'application':
+                        icon = 'fa-file-code-o';
+                        break;
+                    case 'message':
+                        icon = 'fa-file-envelope-o';
+                        break;
+                    case 'audio':
+                        icon = 'fa-file-audio-o';
+                        break;
+                    case 'video':
+                        icon = 'fa-file-video-o';
+                        break;
+                    case 'text':
+                        icon = 'fa-file-text-o';
+                        break;
+                    case 'image':
+                        icon = 'fa-file-image-o';
+                        break;
+                    case 'model':
+                        icon = 'fa-file-cube-o';
+                        break;
+                    default:
+                        icon = 'fa-file-o';
+                }
+                iconI.removeAttr('class');
+                iconI.addClass('infoIcon fa ' + icon);
+            } else {
+                DocumentInformation.form.find('[name="format"]').text(resource.mimetype);
+            }
+
+            if (resource.metadata) {
+
+            }
+        }
+    }
+
+    $("#viewResource").on("click", function() {
+        window.open("/recordsManagement/digitalResource/"+$(this).data("resid"));
+    });
+</script>

@@ -11,6 +11,9 @@ msgstr "mois"
 msgid "years"
 msgstr "années"
 
+msgid "unlimited"
+msgstr "illimité"
+
 msgid "years"
 msgstr "ans"
 msgctxt "unit"

@@ -72,6 +72,15 @@ class orgTree
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
 
+        $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
+        $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
+        $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
+
+
+
+        $this->view->setSource("adminOrg", $adminOrg);
+        $this->view->setSource("adminUser", $adminUser);
+        $this->view->setSource("adminContact", $adminContact);
         $this->view->setSource("publicArchives", $this->publicArchives);
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
@@ -99,6 +108,7 @@ class orgTree
      */
     public function getTree($organizations)
     {
+        $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         /*
         $html = '';
         if (sizeof($organizations) > 0) {
@@ -113,6 +123,7 @@ class orgTree
 
         */
         $this->view->addContentFile("organization/orgTree.html");
+        $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("organizations", $organizations);
         $this->view->merge();
         $this->view->translate();

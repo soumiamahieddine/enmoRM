@@ -21,7 +21,7 @@ namespace bundle\filePlan\Model;
 /**
  * Class model that represents a file plan folder
  *
- * @package filePlan
+ * @package FilePlan
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
  *
  * @pkey [folderId]
@@ -31,7 +31,7 @@ class folder
 {
     /**
      * The folder identifier
-     * @var id
+     * @var string
      */
     public $folderId;
 
@@ -62,13 +62,20 @@ class folder
      * @notempty
      * 
      */
-    public $ownerOrgId;
+    public $ownerOrgRegNumber;
 
     /**
      * The folder availability status for modification
      * @var boolean
      * 
      */
-    public $disabled;
+    public $closed = false;
+
+    /**
+     * The sub folders
+     * @var filePlan/folder[]
+     * 
+     */
+    public $subFolders;
     
 }

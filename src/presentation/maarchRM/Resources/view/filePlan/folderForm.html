@@ -1,0 +1,121 @@
+<div id="folderForm" class="col-xs-12 hide">
+    <form>
+        <input type="hidden" name="folderId"/>
+        <input type="hidden" name="parentFolderId"/>
+        <input type="hidden" name="ownerOrgRegNumber"/>
+        <div class="form-group">
+            <label class="control-label">Name<span style="color:red">*</span></label>
+            <input type="text" class="form-control" name="name" placeholder="Name"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Description</label>
+            <textarea class="form-control" name="description" placeholder="Description"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input type="radio" name="closed"  value="false" checked/><i class="fa fa-unlock">&nbsp;</i>Opened
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio"  name="closed" value="true"/><i class="fa fa-lock">&nbsp;</i>Closed
+                </label>
+            </div>
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-success" id="saveFolder"><i class="fa fa-save">&nbsp;</i>Save</button>
+            <button type="button" class="btn btn-warning" id="cancelFolder"><i class="fa fa-save">&nbsp;</i>Cancel</button>
+        </div>
+    </form>
+    <div id ="folderNodeTemplate" class="">
+        <?merge /filePlan/folderNode.html ?>
+    </div>
+</div>
+
+<script>
+
+    FolderForm = {
+        form : $('#folderForm'),
+        load: function(folder) {
+            $('#filePlanTree').addClass('hide');
+            $('#filePlanMenu').css('visibility', 'hidden');
+
+            $.each(folder, function(key, value) {
+                FolderForm.form.find('[name="'+key+'"]').not('[type="radio"]').val(value);
+            })
+            if (folder.closed == true) {
+                this.form.find('input[name="closed"][value="true"]').parent().click();
+            }
+
+            this.form.removeClass('hide');
+        },
+        save: function() {
+            var folder = {};
+
+            this.form.find('input[type="hidden"], input[type="text"], textarea').each(function(){
+                var input = $(this);
+                let value = input.val();
+
+                if ($.trim(value) != "") {
+                    folder[input.attr('name')]= value;
+                }
+            });
+
+            if (!folder.name) {
+                return;
+            }
+
+            if (btoa(folder.description) == "b24gbmUgc2FpdCBqYW1haXMgc3VyIHF1b2kgb24gdmEgdG9tYmVy") {
+                this.form.find('textarea').val(atob("QnJhdm8gIQ0KWW91IGZvdW5kIHRoZSBmaXJzdCBjbHVlLi4uIEkgaG9wZSBpdCB3YXMnbnQgdG9vIGRpZmZpY3VsdCBmb3IgeW91Li4uDQpJIGFtIHZlcnkgcHJvdWQgb2YgeW91IDpELiBZb3UgY2FuIGdvIGJhY2sgdG8geW91ciBvY2N1cGF0aW9uLi4uDQpPaCB3YWl0ICEgWW91IHdhbnQgdGhlIHNlY29uZCBjbHVlIHJpZ2h0ID8uLi4uIA0KaG1tLi4uIEkgY2FuJ3QgcmVtZW1iZXIgd2hhdCBpdCBpcy4uLiBzb3JyeS4uLiB0aGluayB0aGF0IHRoaXMgdHJlYXN1cmUgaHVudCBlbmRzIGhlcmUNCkl0J3MgYmVlbiBhIHBsZWFzdXJlIDopICEgDQpCeWU="));
+                return;
+            }
+
+            folder.closed = $('label.active > input').val()=='true' ? true : false;
+            
+            var type = "POST";
+            if (folder.folderId) {
+                type = "PUT";
+            }
+
+            $.ajax({
+                url         : '/filePlan/folder',
+                type        : type,
+                data        : JSON.stringify({folder:folder}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        if (type == 'POST') {
+                            folder.folderId = response.folderId;
+                            FilePlan.addFolderNode(folder);
+                        } else {
+                            FilePlan.editFolderNode(folder);
+                        }
+                        FolderForm.close();
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+        close: function() {
+            this.form.addClass('hide');
+            $('#filePlanTree').removeClass('hide');
+            $('#filePlanMenu').css('visibility', 'visible');
+
+            this.form.find('input, textarea').not('[type="radio"]').val('');
+            this.form.find('input[name="closed"][value="false"]').click();
+        }
+    }
+
+    $('#saveFolder').on('click', function() {
+        FolderForm.save();
+    })
+
+    $('#cancelFolder').on('click', function() {
+        FolderForm.close();
+
+    })
+
+</script>

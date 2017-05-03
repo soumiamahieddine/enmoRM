@@ -1,8 +1,5 @@
-<div id="wrapper" lang="en" >
+<div id="wrapper" lang="en">
     <?hinclude dashboard/navbar.html ?>
-    <div id="sidebar-wrapper" data-spy="affix" data-offset-top="0" data-offset-bottom="1000">
-        <?hinclude dashboard/sidebar.html ?>
-    </div>
     <div id="page-wrapper" style="padding-bottom: 50px;">
         <div id="loadingModal" style="display: none">
             <span  style="z-index:2; background-color: rgba(200,200,200,0.3); position: fixed; height: 100%; width: 100% "></span>      
@@ -10,12 +7,7 @@
                 <i class="fa fa-spinner fa-spin fa-5x" ></i>
             </div>
         </div>
-        <button type="button" class="btn btn-primary" style="position: absolute; margin-top: 0px; margin-left: -30px; height: 100%; border-style: none" id="showSidebar" data-action="true">
-                <i class="fa fa-angle-double-right fa-lg pull-right"></i>
-        </button>
         <section role="main" id="app_maarchRM_main" style="z-index: 1;">
-            <!-- MAIN CONTENTS GOES HERE -->
         </section>
     </div>
-    <!--?hinclude presentation/view/dashboard/footer.html ?-->
 </div>

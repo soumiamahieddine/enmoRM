@@ -770,17 +770,16 @@ class journal
         // Read journal
         if (is_scalar($archiveId) || get_class($archiveId) == 'core\Type\Id') {
             $journal = $logController->read($archiveId);
-
         } else {
             $journal = $archiveId;
             $archiveId = (string) $journal->archiveId;
         }
-
-        if ($journal->type != 'lifeCycle') {
-            return true;
-        }
-
         $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
+        $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
+
+        if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
+            throw \laabs::newException('recordsManagement/journalException', "Invalid journal: invalid hash integrity.");
+        }
 
         $nextJournal = $logController->getNextJournal($journal);
 

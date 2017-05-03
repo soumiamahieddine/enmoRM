@@ -41,6 +41,20 @@ class archive
     public $archiveName;
 
     /**
+     * Originator organisation Archive identifier
+     *
+     * @var string
+     */
+    public $originatorArchiveId;
+
+    /**
+     * The archive folder id
+     *
+     * @var string
+     */
+    public $filePlanPosition;
+
+    /**
      * The name of description class
      *
      * @var string
@@ -123,6 +137,48 @@ class archive
      * @var date
      */
     public $accessRuleComDate;
+
+    /**
+     * The classification rule code
+     *
+     * @var string
+     */
+    public $classificationRuleCode;
+
+    /**
+     * The classification duration, before archive is unclassified
+     *
+     * @var duration
+     */
+    public $classificationRuleDuration;
+
+    /**
+     * The classification start date
+     *
+     * @var date
+     */
+    public $classificationRuleStartDate;
+
+    /**
+     * The classification end date
+     *
+     * @var date
+     */
+    public $classificationEndDate;
+
+    /**
+     * The classification level
+     *
+     * @var string
+     */
+    public $classificationLevel;
+
+    /**
+     * The classification owner identification
+     *
+     * @var string
+     */
+    public $classificationOwner;
 
     /**
      * The status

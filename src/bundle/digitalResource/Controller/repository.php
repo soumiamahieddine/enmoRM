@@ -153,25 +153,40 @@ class repository
     }
 
     /**
-     * Store a resource on repository (after opening it)
-     * @param digitalResource/repository      $repository
-     * @param digitalResource/digitalResource $resource
-     * @param string                          $collection The name of a colection/bucket/directory to store resources in
-     *
-     * @return digitalResource/address
+     * Create a ressource container on the repository (after opening it)
+     * @param digitalResource/repository $repository
+     * @param string                     $path
+     * @param mixed                      $metadata
+     * 
+     * @return string
      */
-    public function storeResource($repository, $resource, $collection = null)
+    public function openContainer($repository, $path, $metadata=null)
     {
         $repositoryService = $repository->getService();
 
-        $contents = $resource->getContents();
+        $uri = $repositoryService->createContainer($path, $metadata);
+        $repository->currentContainer = $uri;
 
-        if ($metadata = $resource->getMetadata()) {
-            $uri = $repositoryService->create($contents, $metadata, $collection);
-        } else {
-            $uri = $repositoryService->create($contents, null, $collection);
+        if (!$uri) {
+            throw \laabs::newException("digitalResource/repositoryException", "No address return for creation of container in repository ".$repository->repositoryId);
         }
 
+        return $uri;
+    }
+
+    /**
+     * Store a resource on repository (after opening it)
+     * @param digitalResource/repository      $repository The repository id
+     * @param digitalResource/digitalResource $resource   The digital resource to store
+     *
+     * @return digitalResource/address
+     */
+    public function storeResource($repository, $resource)
+    {
+        $repositoryService = $repository->getService();
+
+        $uri = $repositoryService->createObject($resource->getContents(), $repository->currentContainer.'/'.$resource->resId);
+        
         if (!$uri) {
             throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository ".$repository->repositoryId);
         }
@@ -198,7 +213,7 @@ class repository
     {
         $repositoryService = $address->repository->getService();
         try {
-            $repositoryService->delete($address->path);
+            $repositoryService->deleteObject($address->path);
         } catch (\Exception $e) {
 
         }
@@ -215,7 +230,7 @@ class repository
     {
         try {
             $repositoryService = $repository->getService();
-            $contents = $repositoryService->read($address->path);
+            $contents = $repositoryService->readObject($address->path);
         } catch (\Exception $e) {
             throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address ".$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
         }

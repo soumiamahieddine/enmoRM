@@ -13,10 +13,10 @@ CREATE TABLE "filePlan"."folder"
 (
   "folderId" text NOT NULL,
   "name" text NOT NULL UNIQUE,
-  "parentFolderId" text ,
-  "description" text ,
-  "ownerOrgId" text ,
-  "disabled" boolean ,
+  "parentFolderId" text,
+  "description" text,
+  "ownerOrgRegNumber" text,
+  "closed" boolean,
 
   CONSTRAINT "folder_pkey" PRIMARY KEY ("folderId"),
   CONSTRAINT "filePlan_name_parentFolderId_key" UNIQUE ("name", "parentFolderId"),

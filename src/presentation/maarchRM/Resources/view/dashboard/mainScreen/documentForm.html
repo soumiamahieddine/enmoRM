@@ -1,0 +1,187 @@
+<!--#
+    This file is part of the auth package.
+    (c) Maarch Prospre DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="documentForm" class="row">
+    <form>
+        <input type="file" id="document_filesBrowser" class="hide" multiple=""/>
+        <div id="document_XMLDropZone">
+            <i class="fa fa-file-text fileIcon">&nbsp;</i>
+            <h5>Click or drop a document</h5>
+        </div>
+    </form>
+    <br/>
+    <table id="documentList" class="table table-condensed" style="display: none">
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<style type="text/css">
+    #document_XMLDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 20px 10px 20px 10px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+    .fileIcon {
+        font-size: 300%;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var DocumentForm = {
+    	documentFileInput: $('#document_filesBrowser'),
+
+        reset: function() {
+            this.documentFileInput.data('base64', '').val('');
+        },
+
+        upload: function(file) {
+            var oFileReader = new FileReader();
+            oFileReader.readAsDataURL(file);
+
+            oFileReader.onload = function (e) {
+                var fileObject = {
+                    binary  : null,
+                    size    : null,
+                    fileName: null,
+                    type    : null
+                }
+
+                fileObject.binary = oFileReader.result.replace(/^data:.*?;base64,/, "");
+                fileObject.fileName = file.name;
+                fileObject.size = file.size;
+                fileObject.type = file.type;
+                
+                DocumentList.addDocument(fileObject);
+            };
+        }
+    }
+
+    var DocumentList = {
+        table: $('#documentList'),
+        list: $('#documentList').find('tbody'),
+
+        addDocument: function(fileObject) {
+            if ($('#documentList').find('td:contains("'+fileObject.fileName+'")').length) {
+                return;
+            }
+            
+            var tr = $('<tr/>').attr('data-binary', fileObject.binary).appendTo(this.list);
+
+            $('<td class="small">').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
+            $('<td class="hide">').attr('name', 'size').text(fileObject.size).appendTo(tr);
+            $('<td class="hide">').attr('name', 'type').text(fileObject.type).appendTo(tr);
+
+            var button = $('<button>')
+                    .attr('type', 'button')
+                    .addClass('deleteDocument')
+                    .addClass("btn btn-sm btn-link pull-right");
+            var i = $('<i/>').addClass('fa fa-times text-danger').appendTo(button);
+            $('<td>').append(button).appendTo(tr);
+
+            
+            if (this.table.is(":hidden")) {
+                if ($('#archiveForm [name=archiveName]').val() == "") {
+                    $('#archiveForm [name=archiveName]').val(fileObject.fileName.replace(/\.[^/.]+$/, ""));
+                }
+
+                this.table.show();
+            }
+        },
+
+        removeDocument: function(button) {
+            button.closest('tr').remove();
+            
+            if (this.list.find("tr").length == 0) {
+                this.table.hide();
+            }
+        },
+
+        clear: function() {
+            this.list.html("");
+            this.table.hide();
+        },
+
+        serialize: function() {
+            var tr = this.list.find('tr');
+
+            var digitalResources = [];
+
+            $.each(tr, function(){
+                var digitalResource = {
+                    handler     : null,
+                    size        : null,
+                    fileName    : null,
+                    mimetype    : null
+                }
+                digitalResource.handler = $(this).attr('data-binary');
+                digitalResource.fileName = $(this).find("[name=fileName]").text();
+                digitalResource.size = $(this).find("[name=size]").text();
+                digitalResource.mimetype = $(this).find("[name=type]").text();
+                
+                digitalResources.push(digitalResource);
+                
+            });
+
+            if (digitalResources.length == 0) {
+                digitalResources = null;
+            }
+
+            return digitalResources;
+        }
+    }
+
+    $('#documentList').on('click', '.deleteDocument', function() {
+        DocumentList.removeDocument($(this));
+    })
+
+    // Drag & drop
+    $('#document_XMLDropZone').on('dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    })
+
+    $('#document_XMLDropZone').on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#document_XMLDropZone').css('opacity', '1');
+    })
+
+    $("#document_XMLDropZone").on('dragleave', function(e) {
+        $('#document_XMLDropZone').css('opacity', '0.5');
+    })
+
+    $('#document_XMLDropZone').on('drop', function(e) {
+        if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        $('#document_XMLDropZone').css('opacity', '0.5');
+
+        for (var i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
+            DocumentForm.upload(e.originalEvent.dataTransfer.files[i]);
+        }
+    })
+
+    // Files browser
+    $('#document_XMLDropZone').on('click', function() {
+        $('#document_filesBrowser').click();
+    })
+
+    $('#document_filesBrowser').on('change', function() {
+        for (var i = 0; i < $(this).context.files.length; i++) {
+            DocumentForm.upload($(this).context.files[i]);
+        }
+        DocumentForm.reset();
+    })
+</script>

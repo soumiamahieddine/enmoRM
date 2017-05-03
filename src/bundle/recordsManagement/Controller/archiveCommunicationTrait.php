@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -29,68 +29,90 @@ trait archiveCommunicationTrait
 
     /**
      * Search archives by profile / dates / agreement
+     * @param string $archiveId
      * @param string $profileReference
      * @param string $status
      * @param string $archiveName
      * @param string $agreementReference
-     * @param string $archiveId
      * @param string $archiveExpired
      * @param string $finalDisposition
-     * @param string $origniatorOrgRegNumber
-     * @param string $archiveIdOriginator
+     * @param string $originatorOrgRegNumber
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
      *
      * @return recordsManagement/archive[]
      */
-    public function search($profileReference = false, $status = false, $archiveName = false, $agreementReference = false, $archiveId = false, $archiveExpired = null, $finalDisposition = false, $origniatorOrgRegNumber = false, $archiveIdOriginator = false)
-    {
-        $currentDate = \laabs::newDate();
-        $currentDateString = $currentDate->format('Y-m-d');
+    public function search(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null
+    ) {
+        $archives = [];
 
-        $queryParts = array();
+        $archiveArgs = [
+            'archiveId' => $archiveId,
+            'profileReference' => $profileReference,
+            'status' => $status,
+            'archiveName' => $archiveName,
+            'agreementReference' => $agreementReference,
+            'archiveExpired' => $archiveExpired,
+            'finalDisposition' => $finalDisposition,
+            'originatorOrgRegNumber' => $originatorOrgRegNumber,
+            'filePlanPosition' => $filePlanPosition,
+            'hasParent' => $hasParent,
+        ];
 
-        if ($archiveName) {
-            $queryParts[] = "archiveName='$archiveName'";
-        }
-        if ($profileReference) {
-            $queryParts[] = "archivalProfileReference='$profileReference'";
-        }
-        if ($agreementReference) {
-            $queryParts[] = "archivalAgreementReference='$agreementReference'";
-        }
-        if ($archiveId) {
-            $queryParts[] = "archiveId='$archiveId'";
-        }
-        if ($status) {
-            $queryParts[] = "status='$status'";
-        } else {
-            $queryParts[] = "status=['preserved', 'disposable', 'restituable', 'restitution', 'restitued', 'frozen', 'error']";
-        }
-        if ($archiveExpired == "true") {
-            $queryParts[] = "disposalDate<='$currentDateString'";
-        }
-        if ($archiveExpired == "false") {
-            $queryParts[] = "disposalDate>='$currentDateString'";
-        }
-        if ($finalDisposition) {
-            $queryParts[] = "finalDisposition='$finalDisposition'";
-        }
-        if ($origniatorOrgRegNumber) {
-            $queryParts[] = "originatorOrgRegNumber='$origniatorOrgRegNumber'";
-        }
-
-        $originators = array();
-        foreach ((array) $this->organizationController->getOrgsByRole('originator') as $originator) {
-            $originators[$originator->registrationNumber] = $originator;
-        }
-
-        $archives = $this->sdoFactory->find('recordsManagement/archive', implode(' and ', $queryParts), null, false, false, 100);
-        foreach ($archives as $archive) {
-            if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
-                $archive->disposable = true;
+        if (!empty($description) || !empty($text)) {
+            $searchClasses = [];
+            if (!$profileReference) {
+                $archivalProfiles = $this->archivalProfileController->index(true);
+                foreach ($archivalProfiles as $archivalProfile) {
+                    if ($archivalProfile->descriptionClass != '' && !isset($searchClasses[$archivalProfile->descriptionClass])) {
+                        $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
+                    } elseif (!isset($searchClasses['recordsManagement/description'])) {
+                        $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+                    }
+                }
+            } else {
+                $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
+                if ($archivalProfile->descriptionClass != '') {
+                    $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
+                } else {
+                    $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+                }
             }
 
-            if (isset($originators[$archive->originatorOrgRegNumber])) {
-                $archive->originator = $originators[$archive->originatorOrgRegNumber];
+            foreach ($searchClasses as $descriptionClass => $descriptionController) {
+                $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
+            }
+        } else {
+            $queryString = $this->getArchiveAssert($archiveArgs);
+
+            $originators = array();
+            foreach ((array) $this->organizationController->getOrgsByRole('originator') as $originator) {
+                $originators[$originator->registrationNumber] = $originator;
+            }
+
+            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, null, false, false, 100);
+            foreach ($archives as $archive) {
+                if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
+                    $archive->disposable = true;
+                }
+
+                if (isset($originators[$archive->originatorOrgRegNumber])) {
+                    $archive->originator = $originators[$archive->originatorOrgRegNumber];
+                }
             }
         }
 
@@ -121,13 +143,15 @@ trait archiveCommunicationTrait
         $eventItems['address'] = $archive->storagePath;
         $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'recordsManagement/archive', $archive->archiveId, $eventItems);
 
-        foreach ($archive->digitalResources as $digitalResource) {
-            $eventItems['resId'] = $digitalResource->resId;
-            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-            $eventItems['hash'] = $digitalResource->hash;
-            $eventItems['address'] = $archive->storagePath;
+        if (!empty($archive->digitalResources)) {
+            foreach ((array) $archive->digitalResources as $digitalResource) {
+                $eventItems['resId'] = $digitalResource->resId;
+                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventItems['hash'] = $digitalResource->hash;
+                $eventItems['address'] = $archive->storagePath;
 
-            $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
+                $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
+            }
         }
 
         return $archive;
@@ -163,11 +187,11 @@ trait archiveCommunicationTrait
     {
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $archive = $this->getDescription($digitalResource->archiveId);
+        //$archive = $this->getDescription($digitalResource->archiveId);
 
-        if (!$this->accessVerification($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
+        //if (!$this->accessVerification($archive)) {
+        //    throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        //}
 
         return $digitalResource;
     }

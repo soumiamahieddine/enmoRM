@@ -30,7 +30,6 @@ class filePlan
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
-    private $eventsFormat;
     private $translator;
 
     /**
@@ -62,11 +61,12 @@ class filePlan
      */
     public function showTree($filePlan)
     {
+        
         $this->view->addContentFile('filePlan/filePlanTree.html');
-        $this->markTreeLeaf($filePlan);
+        $this->markTreeLeaf([$filePlan]);
 
         $this->view->translate();
-        $this->view->setSource("filePlan", $filePlan);
+        $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -81,5 +81,59 @@ class filePlan
                 $node->isLeaf = true;
             }
         }
+    }
+
+    /**
+     * Create folder response
+     * @param string $folderId The new folder identifier 
+     *
+     * @return string
+     */
+    public function create($folderId)
+    {
+        $this->json->message = "New folder created";
+        $this->json->folderId = $folderId;
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Update folder response
+     *
+     * @return string
+     */
+    public function update()
+    {
+        $this->json->message = "Folder updated";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Move folder response
+     *
+     * @return string
+     */
+    public function move()
+    {
+        $this->json->message = "Folder moved";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Delete folder response
+     *
+     * @return string
+     */
+    public function delete()
+    {
+        $this->json->message = "Folder deleted";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
     }
 }

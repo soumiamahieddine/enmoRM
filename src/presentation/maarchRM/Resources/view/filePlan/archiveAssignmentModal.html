@@ -1,0 +1,149 @@
+<div class="modal fade" id="ArchiveAssignmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span>Move archives</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
+                    </div>
+                    <div class="col-xs-10">
+                        <h4 id="archiveAssignementMessage" class="hide"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" id="moveArchive" class="btn btn-success">Yes</button>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="archiveToMove_txt">Do you want to move the archive %1$s to the folder %2$s ?</span>
+        <span id="archivesToMove_txt">Do you want to move %1$s archives to the folder %2$s ?</span>
+        <span id="removesArchiveFromFolder_txt">Do you want to remove the archive %1$s from the folder %2$s ?</span>
+        <span id="removesArchivesFromFolder_txt">Do you want to remove %1$s archives from the folder %2$s ?</span>
+    </div>
+</div>
+
+<script>
+    ArchiveAssignmentModal = {
+        fromFolder: null,
+        toFolder: null,
+        archives: null,
+        modal: $('#ArchiveAssignmentModal'),
+        messageDiv : $('#archiveAssignementMessage'),
+
+        moveInFolder: function(archives, toFolder) {
+            this.archives = archives;
+            this.toFolder = toFolder;
+
+            var folder = toFolder.closest('li');
+
+            if (folder.attr('id') == FilePlan.selectedNode.attr('id') ||
+                folder.data('closed')) {
+
+                return;
+            }
+
+            if (FilePlan.selectedNode.hasClass('folder')) {
+                this.fromFolder = FilePlan.selectedNode;
+            }
+
+            var folderName = toFolder.find('b:first').text();
+            if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
+
+            if (archives.length == 1) {
+                var message = $('#archiveToMove_txt').html();
+
+                var archiveName = $('#'+archives[0]).find('.archiveName').text();
+                if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
+
+                message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+
+            } else {
+                var messageDiv = $('#archiveToMove');
+                var message = $('#archivesToMove_txt').html();
+
+                message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+            }
+
+            this.messageDiv.html(message).removeClass('hide');
+            this.modal.modal();
+        },
+
+        removeFromFolder: function(archives) {
+            this.archives = archives;
+            this.fromFolder = FilePlan.selectedNode;
+
+            if (!this.fromFolder.hasClass('folder')) {
+                return;
+            }
+
+            var folderName = this.fromFolder.find('b:first').text();
+            if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
+
+            if (archives.length == 1) {
+                var message = $('#removesArchiveFromFolder_txt').html();
+
+                var archiveName = $('#'+archives[0]).find('.archiveName').text();
+                if (archiveName.length > 30) { archiveName = archiveName.substring(0,27)+'...' }
+
+                message = message.replace("%1$s", '<i class="text-primary">'+ archiveName +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+
+            } else {
+                var message = $('#removesArchivesFromFolder_txt').html();
+
+                message = message.replace("%1$s", '<i class="text-primary">'+ archives.length +'<\/i>');
+                message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
+            }
+
+            this.messageDiv.html(message).removeClass('hide');
+            this.modal.modal();
+        },
+
+        move: function() {
+            var fromFolderId = null;
+            var toFolderId = null;
+
+            if (this.fromFolder) { fromFolderId = this.fromFolder.attr('id') }
+            if (this.toFolder) { toFolderId = this.toFolder.parent().attr('id') }
+
+            $.ajax({
+                url         : '/Archives/Movetofolder',
+                type        : 'PUT',
+                contentType : 'application/json',
+                dataType    : 'json',
+                data        : JSON.stringify({archiveIds: this.archives , fromFolderId: fromFolderId, toFolderId: toFolderId}),
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        Archive.remove(ArchiveAssignmentModal.archives);
+                        ArchiveAssignmentModal.close();
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+
+        close: function() {
+            this.modal.modal('hide');
+            $('#ArchiveAssignmentModal').find('.modal-body').find('h4').addClass('hide');
+            this.fromFolder = null;
+            this.toFolder = null;
+            this.archives = null;
+        }
+    }
+
+    $('#moveArchive').click(function() {
+        ArchiveAssignmentModal.move();
+    })
+
+</script>

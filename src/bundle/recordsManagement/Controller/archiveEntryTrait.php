@@ -72,11 +72,6 @@ trait archiveEntryTrait
      */
     public function receive($archive)
     {
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-        if (!$currentOrg) {
-            throw \laabs::newException('recordsManagement/noOrgUnitException', "Permission denied: You have to choose a working organization unit to proceed this action.");
-        }
-
         $archive = \laabs::cast($archive, 'recordsManagement/archive');
 
         if (!isset($archive->archiveId)) {
@@ -84,12 +79,78 @@ trait archiveEntryTrait
         }
         $archive->status = "received";
 
+        // Load archival profile, service level if specified
+        // Instantiate description controller
+        $this->useReferences($archive, 'deposit');
+
+        // Complete management metadata from profile and service level
+        $this->completeMetadata($archive);
+
+        // Validate metadata
         $this->validateCompliance($archive);
-        $this->completingMetadata($archive);
+
+        // Check format conversion
         $this->convertArchive($archive);
+
+        // Generate PDI + package
         $this->generateAIP($archive);
+
+        // Deposit
         $this->deposit($archive);
+
+        // Send certificate
         $this->sendResponse($archive);
+    }
+
+    /**
+     * Receive an archive
+     *
+     * @param string $batchDirectory      The path of the folder that contains archives
+     * @param string $descriptionFilePath The path of the description file
+     *
+     * @return bool The result of the operation
+     */
+    public function receiveArchiveBatch($batchDirectory, $descriptionFilePath)
+    {
+        if (!is_dir($batchDirectory)) {
+            throw new \core\Exception\NotFoundException("The batch folder does not exist.");
+        }
+
+        $descriptionFile = file_get_contents($descriptionFilePath);
+
+        if (!$descriptionFile) {
+            throw new \core\Exception("The description file can not be read.");
+        }
+
+        $archives = json_decode($descriptionFile);
+        if (!$descriptionFile) {
+            throw new \core\Exception("The description file is malformed.");
+        }
+
+        $filePlanController = \laabs::newController('filePlan/filePlan');
+        $filePlanFoldersByName = [];
+
+        foreach ($archives as $archive) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $filePath = $batchDirectory . DIRECTORY_SEPARATOR . $digitalResource->fileName;
+
+                $fileContent = file_get_contents($filePath);
+                $digitalResource->handler = base64_encode($fileContent);
+                $digitalResource->size = filesize($filePath);
+            }
+
+            if ($archive->filePlanFolder) {
+                if (!isset($filePlanFoldersByName[$archive->filePlanFolder])) {
+                    $filePlanFoldersByName[$archive->filePlanFolder] = $filePlanController->readByName($archive->filePlanFolder);
+                }
+                
+                $archive->filePlanPosition = $filePlanFoldersByName[$archive->filePlanFolder]->folderId;
+            }
+
+            $this->receive($archive);
+        }
+
+        return true;
     }
 
     /**
@@ -99,7 +160,6 @@ trait archiveEntryTrait
      */
     public function validateCompliance($archive)
     {
-        $this->useReferences($archive, 'deposit');
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
@@ -110,21 +170,50 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingMetadata($archive)
+    public function completeMetadata($archive)
     {
-        $this->completingArchivalProfileCodes($archive);
+        // Set archive name when mono document
+        if (empty($archive->archiveName) && count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
+            $archive->archiveName = pathinfo($archive->digitalResource[0]->fileName, \PATHINFO_FILENAME);
+        }
+
+        $this->completeManagementMetadata($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
+    }
 
-        $this->completingRetentionRule($archive);
-        $this->completingAccessRule($archive);
-        $this->completingServiceLevel($archive);
+    /**
+     * Complete management metadata
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function completeManagementMetadata($archive)
+    {
+        if (!empty($this->currentArchivalProfile)) {
+            $this->completeArchivalProfileCodes($archive);
+        }
+
+        $this->completeRetentionRule($archive);
+        $this->completeAccessRule($archive);
+        $this->completeServiceLevel($archive);
 
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
-            $archive->originatorOrgRegNumber = \laabs::getToken("ORGANIZATION")->registrationNumber;
+            $currentOrg = \laabs::getToken("ORGANIZATION");
+            if ($currentOrg) {
+                $archive->originatorOrgRegNumber = $currentOrg->registrationNumber;
+            }
+        }
+
+        // Parent
+        if (!empty($archive->parentArchiveId)) {
+            $parentArchive = $this->read($archive->parentArchiveId);
+
+            if ($archive->originatorOrgRegNumber != $parentArchive->originatorOrgRegNumber) {
+                $archive->parentOriginatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
+            }
         }
 
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
@@ -135,13 +224,6 @@ trait archiveEntryTrait
         }
 
         $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
-
-        // Set archive name when mono document
-        if (empty($archive->archiveName) && count($archive->digitalResources) == 1) {
-            if (isset($archive->digitalResources[0]->fileName)) {
-                $archive->archiveName = $archive->digitalResource[0]->fileName;
-            }
-        }
     }
 
     /**
@@ -149,12 +231,8 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingArchivalProfileCodes($archive)
+    public function completeArchivalProfileCodes($archive)
     {
-        if (empty($this->currentArchivalProfile)) {
-            $this->useReferences($archive, 'deposit');
-        }
-
         $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
 
         if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
@@ -173,7 +251,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingAccessRule($archive)
+    public function completeAccessRule($archive)
     {
         if (!empty($archive->accessRuleCode)) {
             $accessRule = $this->accessRuleController->edit($archive->accessRuleCode);
@@ -190,7 +268,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingRetentionRule($archive)
+    public function completeRetentionRule($archive)
     {
         if (!empty($archive->retentionRuleCode)) {
             $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
@@ -205,18 +283,17 @@ trait archiveEntryTrait
             if (is_string($archive->retentionStartDate)) {
                 $qname = \laabs\explode("/", $archive->retentionStartDate);
                 if ($qname[0] == "description") {
-                    $i = 0;
-                    while ($archive->descriptionObject[$i]->name != $qname[1]) {
-                        $i++;
+                    if (isset($archive->descriptionObject->{$qname[1]})) {
+                        $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
                     }
-                    $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject[$i]->value);
                 } else {
                     // todo
                 }
             }
         }
 
-        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration)) {
+        $archive->disposalDate = null;
+        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }
@@ -226,7 +303,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    public function completingServiceLevel($archive)
+    public function completeServiceLevel($archive)
     {
         if (empty($this->currentServiceLevel)) {
             $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -276,17 +353,18 @@ trait archiveEntryTrait
      */
     public function generateAIP($archive)
     {
+
     }
 
     /**
      * Deposit a new archive
      *
-     * @param recordsManagement/archive $archive          The archive to deposit
-     * @param string                    $filePlanPosition The file plan position
+     * @param recordsManagement/archive $archive The archive to deposit
+     * @param string                    $path    The file plan position
      *
      * @return recordsManagement/archive The archive
      */
-    public function deposit($archive, $filePlanPosition = null)
+    public function deposit($archive, $path = null)
     {
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -297,26 +375,30 @@ trait archiveEntryTrait
         $nbArchiveObjects = count($archive->contents);
 
         try {
-            if (!empty($archive->digitalResources)) {
-                $this->storeResources($archive, $filePlanPosition);
-            }
-
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
 
+            $this->openContainers($archive, $path);
+            
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
+
+            if (!empty($archive->digitalResources)) {
+                $this->storeResources($archive);
+            }
 
             $this->storeDescriptiveMetadata($archive);
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
-                $this->deposit($archive->contents[$i], $filePlanPosition."/".(string) $archive->contents[$i]->archiveId);
+                $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
+                $archive->contents[$i]->archivalProfileReference = $archive->archivalProfileReference;
+                if ($archive->contents[$i]->originatorOrgRegNumber != $archive->originatorOrgRegNumber) {
+                    $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->$originatorOrgRegNumber;
+                }
+
+                $this->deposit($archive->contents[$i], $archive->storagePath);
             }
         } catch (\Exception $exception) {
-            if (\laabs::hasDependency('fulltext') && isset($this->fulltextController)) {
-                $this->fulltextController->delete($index, $baseIndex);
-            }
-
             $nbResources = count($archive->digitalResources);
             for ($i = 0; $i < $nbResources; $i++) {
                 $this->digitalResourceController->rollbackStorage($archive->digitalResources[$i]);
@@ -361,7 +443,7 @@ trait archiveEntryTrait
     }
 
     /**
-     * Check if an object correspond to an archival profile
+     * Check if an object matches an archival profile definition
      *
      * @param mixed                             $object          The metadata object to check
      * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
@@ -436,7 +518,7 @@ trait archiveEntryTrait
             return;
         }
 
-        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") == false ? false : true;
+        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         $droid = \laabs::newService('dependency/fileSystem/plugins/fid');
 
         foreach ($archive->digitalResources as $digitalResource) {
@@ -456,7 +538,9 @@ trait archiveEntryTrait
             file_put_contents($filename, $contents);
 
             if ($formatDetection) {
-                $digitalResource->puid = $droid->match($filename)->puid;
+                if ($format = $droid->match($filename)) {
+                    $digitalResource->puid = $format->puid;
+                }
             }
 
             if (empty($digitalResource->puid)) {
@@ -469,23 +553,30 @@ trait archiveEntryTrait
         }
     }
 
-    /**
-     * Store archive resources
-     *
-     * @param recordsManagement/archive $archive          The archive to deposit
-     * @param string                    $filePlanPosition The file plan position
-     */
-    protected function storeResources($archive, $filePlanPosition = null)
+    protected function openContainers($archive, $path = null)
     {
-        $nbResources = count($archive->digitalResources);
+        if (empty($path)) {
+            if (isset($archive->parentArchiveId)) {
+                $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
 
-        if (empty($filePlanPosition)) {
-            if (!$this->storePath) {
-                $filePlanPosition = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber."/<10000>/".$archive->archiveId;
+                $path = $parentArchive->storagePath;
             } else {
-                $filePlanPosition = $this->resolveStoragePath($archive);
+                if (!$this->storePath) {
+                    $path = $archive->originatorOwnerOrgId."/".$archive->originatorOrgRegNumber;
+                } else {
+                    $path = $this->storePath;
+                }
+
+                $path = $this->resolveStoragePath($archive, $path);
             }
+        } else {
+            $path = $this->resolveStoragePath($archive, $path);
         }
+
+        // Add archiveId as container name in path
+        $path .= "/".$archive->archiveId;
+
+        $archive->storagePath = $path;
 
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
@@ -495,11 +586,30 @@ trait archiveEntryTrait
             }
         }
 
-        $archive->storagePath = $filePlanPosition;
+        $metadata = get_object_vars($archive);
+        unset($metadata['contents']);
+        foreach ($metadata as $name => $value) {
+            if (is_null($value)) {
+                unset($metadata[$name]);
+            }
+        }
+
+        $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $path, $metadata);
+    }
+
+    /**
+     * Store archive resources
+     * @param recordsManagement/archive $archive The archive to deposit
+     */
+    protected function storeResources($archive)
+    {
+        $nbResources = count($archive->digitalResources);
 
         for ($i = 0; $i < $nbResources; $i++) {
-            $archive->digitalResources[$i]->archiveId = $archive->archiveId;
-            $this->digitalResourceController->store($archive->digitalResources[$i], $this->currentServiceLevel->digitalResourceClusterId, $filePlanPosition);
+            $digitalResource = $archive->digitalResources[$i];
+            $digitalResource->archiveId = $archive->archiveId;
+            
+            $this->digitalResourceController->store($digitalResource);
         }
     }
 
@@ -512,8 +622,13 @@ trait archiveEntryTrait
     {
         if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $descriptionController->create($archive->descriptionObject, $archive->archiveId);
-        } elseif (\laabs::hasDependency('fulltext')) {
+        } else {
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
+        }
+
+        $descriptionController->create($archive);
+
+        /*} elseif (\laabs::hasDependency('fulltext')) {
             $fulltextController = \laabs::newController("recordsManagement/fulltext");
 
             $index = isset($archive->archivalProfileReference) ? $archive->archivalProfileReference : 'archives';
@@ -525,37 +640,50 @@ trait archiveEntryTrait
                 $fulltextController->mergeIndex($archive->descriptionObject, $archiveIndex);
                 $fulltextController->addDocument($index, $archiveIndex);
             }
-        }
+        }*/
     }
 
     /**
      * Resolve the storage path
      *
-     * @param array $values Array of value to resolve the path
+     * @param array  $values  Array of value to resolve the path
+     * @param string $pattern The pattern to resolve
      *
      * @return string The storage path
      */
-    public function resolveStoragePath($values)
+    public function resolveStoragePath($values, $pattern = null)
     {
-        $filePlanPosition = $this->storePath;
+        if (!$pattern) {
+            $pattern = $this->storePath;
+        }
+
         $values = is_array($values) ? $values : get_object_vars($values);
 
         $matches = array();
-        preg_match_all("/\<(.*?)\>/", $this->storePath, $matches);
+        if (preg_match_all("/\<[^\>]+\>/", $pattern, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case $token == 'app':
+                        $pattern = str_replace($variable, \laabs::getApp(), $pattern);
+                        break;
 
-        foreach ($matches[1] as $key => $match) {
-            if ((intval($match) != 0 && is_int(intval($match))) || $match == "Y" || $match == "m" || $match == "d") {
-                continue;
+                    case $token == 'instance':
+                        if ($instanceName = \laabs::getInstanceName()) {
+                            $pattern = str_replace($variable, \laabs::getInstanceName(), $pattern);
+                        } else {
+                            $pattern = "instance";
+                        }
+                        break;
+
+                    case isset($values[$token]):
+                        $pattern = str_replace($variable, (string) $values[$token], $pattern);
+                        break;
+                }
             }
-
-            if (!isset($values[$match])) {
-                $values[$match] = $match;
-            }
-
-            $filePlanPosition = str_replace($matches[0][$key], (string) $values[$match], $filePlanPosition);
         }
 
-        return $filePlanPosition;
+        return $pattern;
     }
 
     /**

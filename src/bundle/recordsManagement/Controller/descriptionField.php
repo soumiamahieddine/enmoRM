@@ -80,13 +80,17 @@ class descriptionField
      */
     public function read($name)
     {
-        $descriptionField = $this->sdoFactory->read('recordsManagement/descriptionField', $name);
+        try { 
+            $descriptionField = $this->sdoFactory->read('recordsManagement/descriptionField', $name);
 
-        if (!empty($descriptionField->enumeration)) {
-            $descriptionField->enumeration = json_decode($descriptionField->enumeration);
+            if (!empty($descriptionField->enumeration)) {
+                $descriptionField->enumeration = json_decode($descriptionField->enumeration);
+            }
+
+            return $descriptionField;
+        } catch (\Exception $e) {
+            
         }
-
-        return $descriptionField;
     }
 
     /**

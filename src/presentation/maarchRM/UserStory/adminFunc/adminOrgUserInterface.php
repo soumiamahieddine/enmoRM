@@ -25,6 +25,33 @@ namespace presentation\maarchRM\UserStory\adminFunc;
  */
 interface AdminOrgUserInterface
 {
+    /**
+     * Get the organizations' index
+     *
+     * @return organization/orgTree/index
+     * 
+     * @uses organization/organization/readTree
+     * @uses organization/orgType/readList
+     * @uses organization/orgRole/readList
+     */
+    public function readOrganizations();
+
+    /**
+     * Get the organizations' index
+     *
+     * @return organization/orgTree/getTree
+     * 
+     * @uses organization/organization/readTree
+     */
+    public function readOrganizationtree();
+
+    /**
+     * Edit an organization
+     * 
+     * @uses organization/organization/read_orgId_
+     */
+    public function readOrganization_orgId_();
+
      /**
      * Add a user position to an organization
      * 

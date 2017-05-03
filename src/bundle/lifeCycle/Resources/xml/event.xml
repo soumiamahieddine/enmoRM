@@ -6,8 +6,6 @@
         <lc:description><?merge .description ?></lc:description>
         <lc:accountId><?merge .accountId ?></lc:accountId>
         <lc:timestamp><?merge .timestamp ?></lc:timestamp>
-        <lc:objectClass><?merge .objectClass ?></lc:objectClass>
-        <lc:objectId><?merge .objectId ?></lc:objectId>
         <?merge .operationResult.ifeq('1') ?>
         <lc:operationResult>1</lc:operationResult>
         <?merge .operationResult.ifeq('0') ?>

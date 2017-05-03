@@ -10,7 +10,7 @@ file that was distributed with this source code.
         <h2>
             <i class="fa fa-qrcode"></i>
             <span id="newAccessRuleTitle">New access code</span>
-            <span id="editAccessRuleTitle" class="hide">Edit an access code </span><small id="accessRuleTitle"></small>
+            <span id="editAccessRuleTitle" style="display: none">Edit an access code </span><small id="accessRuleTitle"></small>
         </h2>
     </div>
     <div class="modal-body container-fluid">
@@ -53,7 +53,7 @@ file that was distributed with this source code.
                     <div class="form-group">
                         <label class="col-md-3 control-label">Access entries</label>
                         <div class="input-group">
-                            <select class="form-control" id="orgUnitId">
+                            <select class="form-control" id="orgRegNumber">
                                 <option value=""></option>
                                 <?merge orgUnits ?>
                                 <option value="[?merge orgUnits.key() ?]"><?merge .displayName ?></option>
@@ -121,8 +121,8 @@ file that was distributed with this source code.
         load : function (accessRule) {
             if(accessRule) {
 
-                $('#newAccessRuleTitle').addClass('hide');
-                $('#editAccessRuleTitle').removeClass('hide');
+                $('#newAccessRuleTitle').hide();
+                $('#editAccessRuleTitle').show();
                 $('#accessRuleTitle').html(accessRule.code);
 
 
@@ -184,25 +184,28 @@ file that was distributed with this source code.
 
         addAccessEntrie : function() {
             var accessEntry = {
-                orgUnitId : $('#orgUnitId').val(),
+                orgRegNumber : $('#orgRegNumber').val(),
                 originatorAccess : $('#originatorAccess').hasClass('active')
             }
 
-            if (accessEntry.orgUnitId == "") {
+            if (accessEntry.orgRegNumber == "") {
                 return;
             }
 
-            $('#orgUnitId').val('');
-            if (accessEntry.originatorAccess) $('#originatorAccess').click();
+            $('#orgRegNumber').val('');
+
+            if (accessEntry.originatorAccess) {
+                $('#originatorAccess').click();
+            }
 
             this.loadAccessEntrie(accessEntry);
         },
 
         loadAccessEntrie : function(accessEntry) {
-            var slectedOption = $('#orgUnitId').find('option[value="'+accessEntry.orgUnitId+'"]');
+            var slectedOption = $('#orgRegNumber').find('option[value="'+accessEntry.orgRegNumber+'"]');
 
             var li = $('<li/>').addClass('list-group-item clearfix')
-                               .data('org-unit-id', accessEntry.orgUnitId)
+                               .data('org-unit-id', accessEntry.orgRegNumber)
                                .data('originator-access', accessEntry.originatorAccess)
                                .html(slectedOption.html());
 
@@ -224,7 +227,7 @@ file that was distributed with this source code.
                      .appendTo(span);
             
             li.appendTo($("#accessEntries"));
-            slectedOption.addClass('hide');
+            slectedOption.hide();
         },
 
         serialize : function() {
@@ -242,7 +245,7 @@ file that was distributed with this source code.
 
             $('#accessEntries').find('li').each(function () {
                 var accessEntry = {
-                    orgUnitId : $(this).data('org-unit-id'),
+                    orgRegNumber : $(this).data('org-unit-id'),
                     originatorAccess : $(this).data('originator-access') ? 1 : 0
                 };
                 accessEntries.push(accessEntry);
@@ -269,7 +272,7 @@ file that was distributed with this source code.
 
             $("#accessEntries").html('');
             if ($('#originatorAccess').hasClass('active')) $('#originatorAccess').click();
-            $('#orgUnitId').find('option').removeClass('hide');
+            $('#orgRegNumber').find('option').removeClass('hide');
             
             this.modal.find('input, textarea, select').val('');
         }

@@ -1,10 +1,11 @@
-<li id="[?merge .folderId ?]" lang="en" data-translate-catalog="filePlan/messages">
-    <span class="folder" data-parentid="[?merge .parentSubjectId ?]" >
-        <i class="fa text-primary" data-opened-icon="fa-folder-open" data-closed-icon="fa-folder"></i>
+<li id="[?merge .folderId ?]" class="folder" data-path="[?merge .path ?]" data-orgregnumber="[?merge .ownerOrgRegNumber ?]" data-parentid="[?merge .parentFolderId ?]" data-description="[?merge .description ?]" data-closed="[?merge .closed.bool().then('true', 'false') ?]">
+    <span class="folderNode">
+        <i class="fa text-primary" data-opened-icon="fa-folder-open" data-closed-icon="fa-folder" data-default-icon="fa-folder-o"></i>
         <b><?merge .name ?></b>
     </span>
 
+    <?merge .subFolders.bool() ?>
     <ul>
-        <?merge .folder /filePlan/folderNode.html ?>
+        <?merge .subFolders /filePlan/folderNode.html ?>
     </ul>
 </li>

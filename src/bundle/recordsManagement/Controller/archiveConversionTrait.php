@@ -50,7 +50,10 @@ trait archiveConversionTrait
 
             $status = false;
             if ($convertedResource != false) {
-                $this->digitalResourceController->store($convertedResource, $this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
+                $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+
+                $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
+                $this->digitalResourceController->store($convertedResource);
                 $status = true;
             }
 
@@ -137,9 +140,8 @@ trait archiveConversionTrait
 
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
+                $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
             }
-
-            $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
 
             throw $e;
         }

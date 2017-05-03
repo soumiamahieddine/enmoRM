@@ -1,0 +1,94 @@
+<div class="modal fade" id="moveFolderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Move folder</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <i class="fa fa-exclamation-circle text-info pull-right" style="font-size: 36px"/>
+                    </div>
+                    <div class="col-xs-10">
+                        <h4>Do you want to move %1$s into %2$s ?</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" id="moveFolder" class="btn btn-success" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="moveFoldermessage_txt">Do you want to move %1$s into %2$s ?</span>
+    </div>
+</div>
+
+<script>
+MovingConfirmationModal = {
+    target: null,
+    element: null,
+
+    show: function(element, target) {
+        this.target = target;
+        this.element = element;
+
+        var targetId = target.attr('id');
+        var parentId = element.data('parentid');
+
+
+        if ((targetId == parentId) || 
+            (!parentId && target.hasClass('organization')) ||
+            (element.data('orgregnumber') != target.data('orgregnumber')) ||
+            ($('#'+element.attr('id')).find('#'+targetId).length > 0) ||
+            (target.data('disabled'))) {
+
+            return;
+        }
+
+        var messageDiv = $('#moveFolderModal').find('.modal-body').find('h4');
+        var message = $('#moveFoldermessage_txt').text();
+
+        message = message.replace("%1$s", '<i class="text-primary">'+ element.find('b').html() +'<\/i>');
+        message = message.replace("%2$s", '<i class="text-primary">'+ target.find('b').html() +'<\/i>');
+
+        messageDiv.html(message);
+
+        $('#moveFolderModal').modal();
+    },
+
+    move: function() {
+        if (this.element && this.target) {
+            var parentFolderId = null;
+            if (!this.target.hasClass('organization')) {
+                parentFolderId = this.target.attr('id');
+            }
+
+            $.ajax({
+                url         : '/filePlan/move/'+this.element.attr('id'),
+                type        : 'PUT',
+                data        : JSON.stringify({parentFolderId:parentFolderId}),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        MovingConfirmationModal.element.data('parentid', parentFolderId)
+                                                       .data('path', MovingConfirmationModal.target.data('path')+'/'+MovingConfirmationModal.element.find('b').text());
+                        BootstrapTree.move(MovingConfirmationModal.element, MovingConfirmationModal.target);
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        }
+    }
+}
+
+$('#moveFolder').click(function() {
+    MovingConfirmationModal.move();
+})
+
+</script>

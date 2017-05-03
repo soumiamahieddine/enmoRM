@@ -27,11 +27,19 @@ namespace bundle\digitalResource\Model;
  *
  * @pkey [resId]
  * @fkey [clusterId]  digitalResource/cluster[clusterId]
+ * @fkey [archiveId]  recordsManagement/archive[archiveId]
  * @fkey [relatedResId]  digitalResource/digitalResource[resId]
  *
  */
 class digitalResource
 {
+    /**
+     * The archive identifier
+     *
+     * @var id
+     */
+    public $archiveId;
+
     /**
      * The universal identifier
      *
@@ -39,13 +47,6 @@ class digitalResource
      * @xpath @oid
      */
     public $resId;
-
-    /**
-     * The archive identifier
-     *
-     * @var id
-     */
-    public $archiveId;
 
     /**
      * The storing profile identifier
@@ -209,10 +210,7 @@ class digitalResource
     {
         $this->handler = \laabs::createMemoryStream($contents);
 
-        $this->size = strlen($contents);
-
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $this->mimetype = $finfo->buffer($contents);
+        $this->setInformation($contents);
     }
 
     /**
@@ -254,4 +252,26 @@ class digitalResource
     {
         return $this->metadata;
     }
-} // END class digitalResource
+
+    /**
+     * Set file information
+     * @param string $contents The file contents
+     */
+    private function setInformation($contents)
+    {
+        $this->size = strlen($contents);
+
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $this->mimetype = $finfo->buffer($contents);
+
+        if (isset($this->fileExtension) || !isset($this->fileName)) {
+            return;
+        }
+
+        $pathinfo = pathinfo($this->fileName);
+
+        if (isset($pathinfo['extension'])) {
+            $this->fileExtension = $pathinfo['extension'];
+        }
+    }
+}

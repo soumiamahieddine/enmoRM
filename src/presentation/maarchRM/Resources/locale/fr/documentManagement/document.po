@@ -54,7 +54,7 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "Keyword"
-msgstr "Mot clé"
+msgstr "Mot-clé"
 
 msgid "Boolean"
 msgstr "Booléen"

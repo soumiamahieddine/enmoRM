@@ -366,7 +366,7 @@ trait archiveDepositTrait
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
-
+        
         try {
             if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
                 $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
@@ -385,7 +385,7 @@ trait archiveDepositTrait
             if (!empty($archive->descriptionClass)) {
                 if (isset($archive->descriptionObject)) {
                     $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-                    $descriptionController->create($archive->descriptionObject, $archive->archiveId);
+                    $descriptionController->create($archive);
                 }
             } elseif (\laabs::hasDependency('fulltext')) {
                 $fulltextController = \laabs::newController("recordsManagement/fulltext");
@@ -478,6 +478,7 @@ trait archiveDepositTrait
         $logged = false;
         if (isset($archive->digitalResources) && count($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
+                $eventType = 'recordsManagement/deposit';
                 $address = $digitalResource->address[0];
 
                 $eventInfo['resId'] = (string) $digitalResource->resId;
@@ -485,7 +486,20 @@ trait archiveDepositTrait
                 $eventInfo['hash'] = $digitalResource->hash;
                 $eventInfo['address'] = $address->path;
 
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+                if (isset($relationship->resource->puid)) {
+                    $eventInfo['format'] = $digitalResource->puid;
+                } else {
+                    $eventInfo['format'] = $digitalResource->mimetype;
+                }
+
+                if (isset($digitalResource->relatedResId)) {
+                    $eventType = 'recordsManagement/depositOfLinkedResource';
+                    
+                    $eventInfo['linkedResId'] = $digitalResource->relatedResId;
+                    $eventInfo['relationshipType'] = $digitalResource->relationshipType;
+                }
+
+                $event = $this->lifeCycleJournalController->logEvent($eventType, 'recordsManagement/archive', $archive->archiveId, $eventInfo);
                 $archive->lifeCycleEvent[] = $event;
 
                 $logged = true;

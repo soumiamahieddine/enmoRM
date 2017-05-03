@@ -1,0 +1,56 @@
+<div class="tab-pane fade" id="searchPanel" data-search-panel data-context-folderid="" data-context-orgregnumber="">
+    <br>
+    <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
+</div>
+<?hinclude recordsManagement/archive/fulltextSearchHandeling.html ?>
+
+<script type="text/javascript">
+    $('#app_maarchRM_main').ready(function() {
+        $('.amount').keydown(function (e) {
+            var n = 1.1;
+            n = n.toLocaleString().substring(1, 2);
+
+            // Allow: backspace, delete, tab, escape, enter and .
+            if (
+                // Numbers
+                (e.shiftKey === true && e.keyCode >= 48 && e.keyCode <= 57) ||
+                // numeric pad
+                (e.keyCode >= 96 && e.keyCode <= 105) ||
+                // Separator
+                (e.key === n) ||
+                // Allow backspace
+                (e.keyCode == 8) ||
+                // Allow tab
+                (e.keyCode == 9) ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                 // Allow: Ctrl+C
+                (e.keyCode == 67 && e.ctrlKey === true) ||
+                 // Allow: Ctrl+X
+                (e.keyCode == 88 && e.ctrlKey === true) ||
+                // Allow: Ctrl+V
+                (e.keyCode == 86 && e.ctrlKey === true) ||
+                 // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)
+            ) {
+                     // let it happen, don't do anything
+                     return;
+            }
+
+            e.preventDefault();
+        });
+    });
+
+    function pad(input, length, char, mode) {
+        input = input.toString();
+        switch (mode) {
+            case 1:
+                return input.length < length ? pad(char + input, length, char, mode) : input;
+
+            case 0:
+            default:
+                return input.length < length ? pad(input+char, length, char, mode) : input;
+        }
+    }
+    
+</script>

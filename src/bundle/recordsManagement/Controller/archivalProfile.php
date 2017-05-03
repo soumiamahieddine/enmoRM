@@ -66,7 +66,7 @@ class archivalProfile
                 return array();
             }
             
-            $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', "orgUnitId = ['".implode("', '", $currentOrgs)."']");
+            $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', "orgRegNumber = ['".implode("', '", $currentOrgs)."']");
 
             $accessRuleCodes = [];
             foreach ($accessEntries as $accessEntry) {
@@ -169,7 +169,12 @@ class archivalProfile
 
                     $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
                     $descriptionField->name = $reflectionProperty->name;
-                    $descriptionField->label = $reflectionProperty->name;
+                    if (isset($reflectionProperty->tags['label'])) {
+                        $descriptionField->label = $reflectionProperty->tags['label'][0];
+                    } else {
+                        $descriptionField->label = $reflectionProperty->name;
+                    }
+
                     $descriptionField->type = $reflectionProperty->getType();
 
                     $descriptionField->enumeration = $reflectionProperty->getEnumeration();
@@ -380,5 +385,36 @@ class archivalProfile
         }
 
         $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);*/
+    }
+
+    /**
+     * Get the archival profile descriptions for the given org unit
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     */
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
+    {
+        $orgUnitArchivalProfiles = [];
+
+        $orgUnitArchivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = null");
+
+        $assert = "orgRegNumber = '".(string) $orgRegNumber."'";
+        if ($originatorAccess) {
+            $assert .= "and originatorAccess = true";
+        }
+
+        $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', $assert);
+
+        foreach ($accessEntries as $accessEntry) {
+            $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = '".$accessEntry->accessRuleCode."'");
+            foreach ($archivalProfiles as $archivalProfile) {
+                $this->readDetail($archivalProfile);
+                $orgUnitArchivalProfiles[] = $archivalProfile;
+            }
+        }
+
+        return $orgUnitArchivalProfiles;
     }
 }

@@ -6,7 +6,7 @@ msgid "Archival profile"
 msgstr "Profil d'archivage"
 
 msgid "Archive identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Identifier"
 msgstr "Identifiant"
@@ -29,6 +29,20 @@ msgstr "Règle de conservation"
 msgid "Retention start date"
 msgstr "Date de référence"
 
-msgid "%s1 after %s2"
-msgstr "%s1 après %s2"
+msgid "File plan position"
+msgstr "Dossier de classement"
 
+msgid "Management metadata"
+msgstr "Règles de gestion"
+
+msgid "Descriptive metadata"
+msgstr "Description"
+
+msgid "archiveName"
+msgstr "Libellé"
+
+msgid "originatorArchiveId"
+msgstr "Identifiant"
+
+msgid "depositDate"
+msgstr "Date de dépôt"

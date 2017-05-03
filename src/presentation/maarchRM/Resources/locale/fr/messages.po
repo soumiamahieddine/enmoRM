@@ -191,7 +191,7 @@ msgstr "Règles d'accès"
 msgctxt "layout"
 
 msgid "Retention rules"
-msgstr "Tableau de gestion"
+msgstr "Règles de conservation"
 msgctxt "layout"
 
 msgid "Archival agreements"
@@ -215,7 +215,7 @@ msgstr "Dépôt"
 msgctxt "layout"
 
 msgid "Description fields"
-msgstr "Champs de description"
+msgstr "Données descriptives"
 msgctxt "layout"
 
 msgid "Batch processing"
@@ -537,3 +537,12 @@ msgstr "Une erreur est survenue durant le traitement de votre requête. Veuillez
 
 msgid "Invalid id '%1$s': Ids must contain only alphanumeric, underscores and dashes"
 msgstr "Identifiant invalide '%1$s': Les identifiants doivent doivent contenir uniquement des lettres, chiffres, tirets bas et hauts."
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Disabled"
+msgstr "Désactivé"
+
+msgid "Without profile"
+msgstr "Sans profil"

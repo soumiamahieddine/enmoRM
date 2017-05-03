@@ -90,6 +90,10 @@ msgid "descriptionField"
 msgstr "Gérer les champs de description"
 msgctxt "userStory"
 
+msgid "filePlan"
+msgstr "Gérer le plan de classement"
+msgctxt "userStory"
+
 msgid "serviceLevel"
 msgstr "Gérer les niveau de service"
 msgctxt "userStory"
@@ -283,6 +287,9 @@ msgid "archiveDeposit"
 msgstr "Dépôt unitaire"
 msgctxt "userStoryGroup"
 
+msgid "messageComposer"
+msgstr "Génerer un bordereau"
+msgctxt "userStory"
 
 # ---------------------------------------------------------
 # Admin panel

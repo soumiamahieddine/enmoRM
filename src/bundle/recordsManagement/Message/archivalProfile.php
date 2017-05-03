@@ -18,6 +18,7 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Message;
+
 /**
  * Class model that represents an archival profile
  *
@@ -48,7 +49,7 @@ class archivalProfile
     public $name;
 
     /**
-     * The description of the rule 
+     * The description of the rule
      *
      * @var string
      */
@@ -69,14 +70,14 @@ class archivalProfile
     public $descriptionClass;
 
     /**
-     * The starting date of the retention rule calculation 
+     * The starting date of the retention rule calculation
      *
      * @var string
      */
     public $retentionStartDate;
 
     /**
-     * The retention rule code 
+     * The retention rule code
      *
      * @var string
      */
@@ -96,13 +97,6 @@ class archivalProfile
      * @var boolean
      */
     public $acceptUserIndex;
-    
-    /**
-     * The archive accepts multiple documents
-     *
-     * @var boolean
-     */
-    public $acceptMultipleDocuments;
 
     /**
      *  The list of profile description

@@ -62,7 +62,7 @@ class cluster
             foreach ($digitalResources as $digitalResource) {
                 $cluster->size->bSize += $digitalResource->size;
 
-                if ($cluster->size->bSize >= 1073741824 ) {
+                if ($cluster->size->bSize >= 1073741824) {
                     $cluster->size->gbSize ++;
                     $cluster->size->bSize -= 1073741824;
                 }
@@ -243,24 +243,47 @@ class cluster
     }
 
     /**
-     * Store a resource on cluster (after opening it)
-     * @param digitalResource/cluster         $cluster
-     * @param digitalResource/digitalResource $resource
-     * @param string                          $collection The name of a colection/bucket/directory to store resources in
+     * Create a ressource container on the cluster (after opening it)
+     * @param object $cluster
+     * @param string $path
+     * @param mixed  $metadata
+     * 
+     * @return array
      */
-    public function storeResource($cluster, $resource, $collection = null)
+    public function openContainers($cluster, $path, $metadata=null)
     {
-        foreach ($cluster->clusterRepository as $priority => $clusterRepository) {
+        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
             if ($clusterRepository->repository == null) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
-            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource, $collection);
+
+            $realPath = $this->repositoryController->openContainer($clusterRepository->repository, $path, $metadata);
+
+            if (!$realPath) {
+                throw \laabs::newException("digitalResource/clusterException", "Container ".$path." counld not be opened.");
+            }
+        }
+    }
+
+    /**
+     * Store a resource on cluster (after opening it)
+     * @param digitalResource/cluster         $cluster
+     * @param digitalResource/digitalResource $resource
+     */
+    public function storeResource($cluster, $resource)
+    {
+        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
+            if ($clusterRepository->repository == null) {
+                throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
+            }
+
+            $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource);
 
             if (!$address) {
                 throw \laabs::newException("digitalResource/clusterException", $address." not found");
             }
 
-            $resource->address[$priority] = $address;
+            $resource->address[$index] = $address;
         }
     }
 
@@ -300,13 +323,13 @@ class cluster
                     $contents = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
 
                     if (isset($resource->hash) && !$this->checkHash($address, $resource, $contents)) {
-                        throw \laabs::newException("digitalResource/clusterException", "Invalid hash for resource ".$resource->resId." at address ". $address->repository->repositoryUri . DIRECTORY_SEPARATOR . $address->path);
-                    } 
+                        throw \laabs::newException("digitalResource/clusterException", "Invalid hash for resource ".$resource->resId." at address ".$address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
+                    }
 
                     $resource->setContents($contents);
 
                     return $contents;
-                    
+
                 } catch (\Exception $e) {
                     // No content retrieved : send error as audit event
                     \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);

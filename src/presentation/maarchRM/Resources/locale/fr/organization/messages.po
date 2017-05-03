@@ -190,7 +190,7 @@ msgid "Submit"
 msgstr "Valider"
 
 msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
-msgstr "Les premier et dernier caractères doivent être des lettre. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
+msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
 
 msgid "Are you sure to delete this organization ? This action will also delete the organizations and persons above !"
 msgstr "Êtes-vous sûr de vouloir supprimer l'organisation ? Cette action supprime aussi les organisations et les personnes qui y sont associées !"

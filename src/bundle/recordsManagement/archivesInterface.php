@@ -32,20 +32,36 @@ interface archivesInterface
     */
     /**
      * Search archives by profile / dates / agreement
+     * @param string $archiveId
      * @param string $profileReference
      * @param string $status
      * @param string $archiveName
      * @param string $agreementReference
-     * @param string $archiveId
      * @param string $archiveExpired
      * @param string $finalDisposition
-     * @param string $origniatorOrgRegNumber
-     * @param string $archiveIdOriginator
+     * @param string $originatorOrgRegNumber
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
      *
      * @action recordsManagement/archive/search
      *
      */
-    public function read($profileReference = null, $status = null, $archiveName = null, $agreementReference = null, $archiveId = null, $archiveExpired = null, $finalDisposition = null, $origniatorOrgRegNumber = null, $archiveIdOriginator = null);
+    public function read(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null
+    );
 
     /*
         MODIFY ARCHIVES
@@ -92,14 +108,15 @@ interface archivesInterface
 
     /**
      * Find archives
-     * @param string $q       The query string
-     * @param string $profile The profile name
-     * @param int    $limit   The result limit
+     * @param string $description The query string with arguments
+     * @param string $text        The query string for text search
+     * @param string $profile     The profile name
+     * @param int    $limit       The result limit
      *
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($q, $profile = '', $limit = null);
+    public function readFind($description='', $text='', $profile = '', $limit = null);
 
     /**
      * Read the access rule of multiple archives
@@ -155,6 +172,15 @@ interface archivesInterface
 
     /**
      * Delete disposable archives
+     *
+     * @return boolean
+     *
+     * @action recordsManagement/archive/destructDisposableArchives
+     */
+    public function deleteDisposablearchives();
+
+    /**
+     * Delete disposable archives
      * @param array $archiveIds The archives ids
      *
      * @return boolean
@@ -197,4 +223,58 @@ interface archivesInterface
      *
      */
     public function readIntegritycheck($archiveIds);
+
+    /* 
+        FILE PLAN
+    */
+    /**
+     * Get archives by file plan position
+     * @param string $orgRegNumber
+     * @param string $folderId
+     *
+     * @action recordsManagement/archiveFilePlanPosition/getFolderContents
+     *
+     */
+    public function readFolder($orgRegNumber, $folderId=null);
+    
+    /*
+     *  METADATA
+     */
+    /**
+     * Update metadata of archive
+     * @param string    $archiveId
+     * @param string    $originatorArchiveId
+     * @param string    $archiveName
+     * @param string    $description     
+     * 
+     * @action recordsManagement/archive/modifyMetadata
+     */
+    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$description = null);
+
+    /**
+     * List an archive resources and children archives
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/listArchiveContents
+     */
+    public function readArchivecontents_archive_();
+
+
+    /**
+     * Move an archive into a folder
+     * @param string $archiveId the archive identifier
+     * @param string $folderId The folder identifier
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
+     */
+    public function udpateMovearchivetofolder($archiveId, $folderId=null);
+
+    /**
+     * Move an archive into a folder
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
+     * 
+     * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
+     */
+    public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 }

@@ -28,8 +28,10 @@ WITH (
 CREATE TABLE "recordsManagement"."accessEntry"
 (
   "accessRuleCode" text NOT NULL,
-  "orgUnitId" text NOT NULL,
-  "originatorAccess" boolean default true
+  "orgRegNumber" text NOT NULL,
+  "originatorAccess" boolean default true,
+
+  UNIQUE ("accessRuleCode", "orgRegNumber")
 )
 WITH (
   OIDS=FALSE
@@ -151,9 +153,15 @@ CREATE TABLE "recordsManagement"."archive"
   "archiveId" text NOT NULL,
   "originatorArchiveId" text,
   "depositorArchiveId" text,
-  
+  "archiverArchiveId" text,
+    
   "archiveName" text,
   "storagePath" text,
+  "filePlanPosition" text,
+  
+  "descriptionClass" text,
+  "description" jsonb,
+  "text" text,
 
   "originatorOrgRegNumber" text NOT NULL,
   "originatorOwnerOrgId" text,
@@ -174,7 +182,14 @@ CREATE TABLE "recordsManagement"."archive"
   "accessRuleDuration" text,
   "accessRuleStartDate" date,
   "accessRuleComDate" date,
-  
+
+  "classificationRuleCode" text,
+  "classificationRuleDuration" text,
+  "classificationRuleStartDate" date,
+  "classificationEndDate" date,
+  "classificationLevel" text,
+  "classificationOwner" text,
+
   "depositDate" timestamp NOT NULL,
   "lastCheckDate" timestamp,
   "lastDeliveryDate" timestamp,
@@ -183,8 +198,7 @@ CREATE TABLE "recordsManagement"."archive"
   "status" text NOT NULL,
 
   "parentArchiveId" text,
-  
-  "descriptionClass" text,
+  "parentOriginatorOrgRegNumber" text,
 
   PRIMARY KEY ("archiveId"),
   FOREIGN KEY ("parentArchiveId")
@@ -200,6 +214,32 @@ CREATE TABLE "recordsManagement"."archive"
 WITH (
   OIDS=FALSE
 );
+  
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  ("filePlanPosition");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  ("archivalProfileReference");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  ("status");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  ("originatorOrgRegNumber", "originatorArchiveId");
+  
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  ("disposalDate");
+
+CREATE INDEX
+  ON "recordsManagement"."archive"
+  USING gin
+  (to_tsvector('french'::regconfig, "text"));
+
 
 -- Table: "recordsManagement"."archiveRelationship"
 

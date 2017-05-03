@@ -41,18 +41,22 @@ interface retrieveInterface
     /**
      * Search form
      *
-     * @return recordsManagement/archive/fulltextSearchForm
-     */
-    public function readRecordsmanagementArchivesIndexsearchform();
-
-    /**
-     * Search form
+     * @uses recordsManagement/archives/read
      *
-     * @uses recordsManagement/archives/readFind
-     *
-     * @return recordsManagement/archive/fulltextSearchResult
+     * @return recordsManagement/welcome/folderContents
      */
-    public function readRecordsmanagementArchivesIndexresult();
+    public function readRecordsmanagementArchivesSearch(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $description = null,
+        $text = null
+    );
 
     /**
      * get form to update index
@@ -72,20 +76,32 @@ interface retrieveInterface
 
     /**
      * Search archives by profile / dates / agreement
+     * @param string $archiveId
      * @param string $profileReference
      * @param string $status
      * @param string $archiveName
      * @param string $agreementReference
-     * @param string $archiveId
      * @param string $archiveExpired
      * @param string $finalDisposition
-     * @param string $origniatorOrgRegNumber
-     * @param string $archiveIdOriginator
+     * @param string $originatorOrgRegNumber
+     * @param string $description
+     * @param string $text
      *
      * @return recordsManagement/archive/search
      * @uses recordsManagement/archives/read
      */
-    public function readRecordsmanagementArchives($profileReference = null, $status = null, $archiveName = null, $agreementReference = null, $archiveId = null, $archiveExpired = null, $finalDisposition = null, $origniatorOrgRegNumber = null, $archiveIdOriginator = null);
+    public function readRecordsmanagementArchives(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $description = null,
+        $text = null
+    );
 
     /**
      * View the archive
@@ -140,4 +156,41 @@ interface retrieveInterface
      * @uses recordsManagement/archive/read_archiveId_Exists
      */
     public function readRecordsmanagementArchive_archiveId_Exists($archiveId);
+
+
+    /* V2 */
+
+    /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/archiveInfo
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readArchive_archiveId_();
+
+    /**
+     * Retrieve archive contents
+     *
+     * @return recordsManagement/welcome/archiveContent
+     * @uses  recordsManagement/archives/readArchivecontents_archive_
+     */
+    public function readArchivecontents_archive_();
+
+    /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/documentInfo
+     */
+    public function readDocumentinfo();
+
+    /**
+     * Move an archive into a folder
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
+     * 
+     * @return recordsManagement/welcome/moveArchivesToFolder
+     * @uses recordsManagement/archives/udpateMovearchivestofolder
+     */
+    public function updateArchivesMovetofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 }

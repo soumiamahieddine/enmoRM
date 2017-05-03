@@ -11,18 +11,21 @@
             <div class="panel-body">
                 <form class="form-horizontal">
                     <input type="hidden" name="orgId" >
+                    <?merge adminUser ?>
                     <div class="form-group ">
                         <label class='col-md-2 control-label'>User</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control input-sm" placeholder="User" id="organization_userTypeahead"/>
                         </div>
                     </div>
+                    <?merge adminUser ?>
                     <div class="form-group ">
                         <label class='col-md-2 control-label'>Function</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control input-sm" name="function" placeholder="Function"/>
                         </div>
                     </div>
+                    <?merge adminUser ?>
                     <div class="form-group">
                        <button class="btn btn-success btn-sm col-xs-offset-8" type="button" id="organization_addUserPosition" title="Add" disabled><i class="fa fa-plus fa-fw"></i>Add</button>
                     </div>
@@ -195,44 +198,46 @@
                 .addClass('list-group-item clearfix')
                 .appendTo(positionList)
                 .html(displayName);
-                
-            var span = $('<span/>')
-                .addClass('pull-right')
-                .appendTo(li)
-                .on('mouseenter', function() {
-                    $(this).find('.setDefaultBtn').css('visibility', '');
-                })
-                .on('mouseleave', function() {
-                    $(this).find('.setDefaultBtn').css('visibility', 'hidden');
-                });
+            
+            if ($('#organization_userTypeahead').length) {
+                var span = $('<span/>')
+                    .addClass('pull-right')
+                    .appendTo(li)
+                    .on('mouseenter', function() {
+                        $(this).find('.setDefaultBtn').css('visibility', '');
+                    })
+                    .on('mouseleave', function() {
+                        $(this).find('.setDefaultBtn').css('visibility', 'hidden');
+                    });
 
-            var defaultBtn = $('<a/>')
-                .addClass('btn btn-info btn-xs defaultBtn disabled')
-                .html($('#default_text').html())
-                .appendTo(span);
+                var defaultBtn = $('<a/>')
+                    .addClass('btn btn-info btn-xs defaultBtn disabled')
+                    .html($('#default_text').html())
+                    .appendTo(span);
 
-            var setDefaultBtn = $('<a/>')
-                .addClass('btn btn-default btn-xs setDefaultBtn')
-                .css('visibility', 'hidden')
-                .html($('#setDefault_text').html())
-                .appendTo(span);
+                var setDefaultBtn = $('<a/>')
+                    .addClass('btn btn-default btn-xs setDefaultBtn')
+                    .css('visibility', 'hidden')
+                    .html($('#setDefault_text').html())
+                    .appendTo(span);
 
-            var a = $('<a/>')
-                .addClass('text-danger removePosition')
-                .attr('href', '#')
-                .attr('title', $('#remove_text').html())
-                .css('padding-left', '16px')
-                .appendTo(span);
+                var a = $('<a/>')
+                    .addClass('text-danger removePosition')
+                    .attr('href', '#')
+                    .attr('title', $('#remove_text').html())
+                    .css('padding-left', '16px')
+                    .appendTo(span);
 
-            var i = $('<i/>')
-                .addClass('fa fa-times fa-fw')
-                .html("&nbsp;")
-                .appendTo(a);
+                var i = $('<i/>')
+                    .addClass('fa fa-times fa-fw')
+                    .html("&nbsp;")
+                    .appendTo(a);
 
-            if (!setDefault) {
-                defaultBtn.css('display', 'none');
-            } else {
-                setDefaultBtn.css('display', 'none');
+                if (!setDefault) {
+                    defaultBtn.css('display', 'none');
+                } else {
+                    setDefaultBtn.css('display', 'none');
+                }
             }
         },
 

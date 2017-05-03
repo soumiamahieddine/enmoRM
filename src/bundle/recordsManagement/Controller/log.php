@@ -27,8 +27,7 @@ namespace bundle\recordsManagement\Controller;
  * @package RecordsManagement
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
-class log
-    implements archiveDescriptionInterface
+class log implements archiveDescriptionInterface
 {
     /* Properties */
 
@@ -74,17 +73,16 @@ class log
         }
 
         if ($fromDate && $toDate) {
-            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T23:59:59';
-            $queryParams['toDate'] = $toDate->format('Y-m-d').'T00:00:00';
-            $queryContentDescription['date'] = "fromDate >= :toDate AND toDate <= :fromDate";
+            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
+            $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
+            $queryParts['date'] = "fromDate <= :toDate AND toDate >= :fromDate";
+        } elseif ($fromDate) {
+            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
+            $queryParts['date'] = "fromDate >= :fromDate";
 
         } elseif ($toDate) {
-            $queryParams['toDate'] = $toDate->format('Y-m-d').'T00:00:00';
-            $queryContentDescription['date'] = "toDate >= :toDate";
-
-        } elseif ($fromDate) {
-            $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T23:59:59';
-            $queryContentDescription['date'] = "fromDate <= :fromDate";
+            $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
+            $queryParts['date'] = "toDate <= :toDate";
         }
 
         if ($processName) {
@@ -102,6 +100,35 @@ class log
         $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, $queryParams, $sortBy, 0, $numberOfResult);
 
         return $logs;
+    }
+
+    /**
+     * Search the description objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
+     *
+     * @return array
+     */
+    public function search($description = null, $text = null, array $args = [])
+    {
+        $archiveController = \laabs::newController('recordsManagement/archive');
+        $archives = [];
+
+        $sortBy = ">fromDate";
+        $numberOfResult = 300;
+
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, null, $sortBy, 0, $numberOfResult);
+        foreach ($logs as $log) {
+            try {
+                $archive = $archiveController->read($log->archiveId);
+                $archive->descriptionObject = $log;
+                $archives[] = $archive;
+            } catch (\Exception $e) {
+            }
+        }
+
+        return $archives;
     }
 
     /**
@@ -124,23 +151,24 @@ class log
 
     /**
      * Create the requested log
-     * @param object $log       The log object
-     * @param object $archiveId The archive Id
+     * @param object $archive The archived log object
      *
      * @return boolean status of the query
      */
-    public function create($log, $archiveId)
+    public function create($archive)
     {
-        if (!\laabs::validate($log)) {
+        if (!\laabs::validate($archive->descriptionObject)) {
             $e = new \core\Exception('Invalid log data');
 
             $e->errors = \laabs::getValidationErrors();
             throw $e;
         }
-        
-        $this->sdoFactory->create($log);
 
-        return $log;
+        $archive->descriptionObject->archiveId = $archive->archiveId;
+
+        $this->sdoFactory->create($archive->descriptionObject, 'recordsManagement/log');
+
+        return true;
     }
 
     /**
@@ -156,10 +184,9 @@ class log
 
     /**
      * Update the description object
-     * @param object $description
-     * @param id     $archiveId
+     * @param object $archive
      */
-    public function update($description, $archiveId)
+    public function update($archive)
     {
         // Not implemented yet...
     }
@@ -169,7 +196,7 @@ class log
      * @param id   $archiveId
      * @param bool $deleteDescription
      */
-    public function delete($archiveId, $deleteDescription=true)
+    public function delete($archiveId, $deleteDescription = true)
     {
         // Not possible
     }
@@ -312,6 +339,6 @@ class log
 
         $archive->serviceLevelReference = $archiveController->useServiceLevel("deposit")->reference;
 
-        return $archiveController->deposit($archive);
+        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<Y>/<m>');
     }
 }

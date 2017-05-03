@@ -21,7 +21,7 @@ msgid "Archival profile"
 msgstr "Profil d'archivage"
 
 msgid "Description class"
-msgstr "Description de l'archive"
+msgstr "Modèle de description"
 
 msgid "Profile rules"
 msgstr "Données de gestion"
@@ -208,3 +208,15 @@ msgstr "Le fichier de profil doit se terminer par .xsd ou .rng"
 
 msgid "reference"
 msgstr "Identifiant"
+
+msgid "Custom description fields"
+msgstr "Champs du dictionnaire de données"
+
+msgid "Field"
+msgstr "Champ"
+
+msgid "A field must not be empty"
+msgstr "Le champ ne doit pas être vide"
+
+msgid "Originator"
+msgstr "Producteur"

@@ -10,12 +10,12 @@ class Lexer
 {
     
     protected $lexemes = array(
-            'SWITCH' => '\<\?[A-Z]{3,}\s+.*\?\>',
+            'SWITCH' => '\<\?[A-Z]{3,}\s+.*?(?=\s+\?\>)\s+\?\>',
             'NUMBER' => '\-?\d+(?:\.\d+(e\d+)?)?',
             'DOUBLE QUOTED STRING' => '\"(?:\\\\"|.)*?\"',
             'SINGLE QUOTED STRING' => "'(?:\\\\'|.)*?'",
             'VARIABLE' => '\:[a-zA-Z_][a-zA-Z0-9_]*',
-            'OPERATORS' => '[\=\-\+\~\!\>\<\|\.]{1,2}',
+            'OPERATORS' => '[\=\-\+\~\!\>\<\|\.|&|\|]{1,2}',
             //'OPERATORS' => '(\!)?(=|~)',
             //'OPERATORS' => '(=|\!=|\~|\!~|\>|\>\=|\<|\<\=|\|\||\.\.|\:)',
             //'OPERATORS' => '([\!\<\>\.])?([\=\~\.\:\>\<])',
@@ -72,21 +72,28 @@ class Lexer
 
     /**
      * tokenize a query string
-     * @param string $string The query string
+     * @param string $string    The query string
+     * @param bool   $withtypes Set token types or simply split
      *
      * @return array
      */
-    public function tokenize($string)
+    public function tokenize($string, $withtypes=true)
     {      
         $tokens = new Tokens();
 
         $matches = preg_split("#(". implode('|', $this->lexemes) .")#", $string, -1, 7);
 
-        foreach ($matches as $match) {
-            $lexem = $match[0];
-            $offset = $match[1];
-            if ($token = $this->getToken($lexem, $offset)) {
-                $tokens->push($token);
+        if ($withtypes) {
+            foreach ($matches as $match) {
+                $lexem = $match[0];
+                $offset = $match[1];
+                if ($token = $this->getToken($lexem, $offset)) {
+                    $tokens->push($token);
+                }
+            }
+        } else {
+            foreach ($matches as $match) {
+                $tokens->push($match[0]);
             }
         }
 

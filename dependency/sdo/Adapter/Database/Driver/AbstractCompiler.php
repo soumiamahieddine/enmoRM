@@ -1164,8 +1164,11 @@ abstract class AbstractCompiler
 
             case $operand instanceof \core\Language\Query:
                 $compiler = clone($this);   
-
+                
                 return "(" . $compiler->getQueryString($operand) .")";
+
+            case $operand instanceof \core\Language\LanguageExpression:
+                return $operand->value;
 
             default:
                 throw new \core\Exception("Unknown operand type " . get_class($operand));

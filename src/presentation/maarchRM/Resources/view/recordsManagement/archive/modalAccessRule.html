@@ -81,11 +81,13 @@
         var accessRuleStartDate = modal.find('[name="accessRuleStartDate"]').val();
         var accessRuleCode = $('#accessRuleCode').val();
         
+        /*
         if(accessRuleStartDate && accessRuleCode) {
             $('#saveAccessRule').prop('disabled', false);
         } else {
             $('#saveAccessRule').prop('disabled', true);
         }
+        */
 
     })
 
@@ -94,10 +96,11 @@
         var accessRuleStartDate = modal.find('[name="accessRuleStartDate"]').val();
         var accessRuleCode = $('#accessRuleCode').find(":selected").val();
         var comment = $('#comment').val();
-        
+        /*
         if(accessRuleStartDate && accessRuleCode && comment) {
             $('#saveAccessRule').prop('disabled', false);
         }
+        */
     })
     // Save the accessRule
     $("#saveAccessRule").on('click', function () {

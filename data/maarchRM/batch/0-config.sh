@@ -6,7 +6,7 @@ cd $SCRIPT_PATH
 export LAABS_APP="maarchRM"
 export LAABS_INSTANCE_NAME="maarchRM"
 export LAABS_CONFIGURATION="../data/maarchRM/conf/configuration.ini"
-export LAABS_BUNDLES="audit;auth;contact;digitalResource;documentManagement;lifeCycle;organization;recordsManagement;batchProcessing"
+export LAABS_BUNDLES="audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan"
 export LAABS_DEPENDENCIES="datasource;sdo;repository;fileSystem;xml;fulltext"
 export LAABS_BUFFER_MODE=1
 export LAABS_PHP_INI="$SCRIPT_PATH/../conf/php_batch.ini"

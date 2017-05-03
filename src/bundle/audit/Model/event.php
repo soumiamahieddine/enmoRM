@@ -71,6 +71,12 @@ class event
     public $input;
 
     /**
+     * Variables
+     * @var json
+     */
+    public $variables;
+
+    /**
      * The revealant output data
      * @var string
      */

@@ -173,13 +173,13 @@ msgid "Life cycle events"
 msgstr "Evénements du cycle de vie"
 
 msgid "Archive identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Originator archive identifier"
-msgstr "Identifiant du producteur"
+msgstr "Identifiant"
 
 msgid "Archive name"
-msgstr "Intitulé"
+msgstr "Nom"
 
 msgid "Archive address"
 msgstr "Adresse de stockage"
@@ -345,7 +345,7 @@ msgid "Flag for destruction"
 msgstr "Demander l'élimination"
 
 msgid "Cancel destruction request"
-msgstr "Annuler la demande de destruction"
+msgstr "Annuler la demande d'élimination"
 
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
@@ -618,7 +618,7 @@ msgid "bits"
 msgstr "octets"
 
 msgid "Identifier"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Document type"
 msgstr "Type de document"
@@ -793,7 +793,7 @@ msgid "Indexing modification"
 msgstr "Modification de l'index"
 
 msgid "Reference"
-msgstr "Côte"
+msgstr "Cote"
 
 msgid "Select an access rule code"
 msgstr "Selectionnez une règle"
@@ -802,3 +802,71 @@ msgstr "Selectionnez une règle"
 msgid "Acces rule duration"
 msgstr "Durée de la règle"
 
+msgid "Size (bytes)"
+msgstr "Taille (octets)"
+
+msgid "Creation date"
+msgstr "Date de création"
+
+msgid "Management information"
+msgstr "Information de gestion"
+
+msgid "Management metadata"
+msgstr "Métadonnées de gestion"
+
+msgid "Descriptive metadata"
+msgstr "Métadonnées descriptives"
+
+msgid "Metadata"
+msgstr "Métadonnées"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
+
+msgid "Folder"
+msgstr "Dossier"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "File plan position"
+msgstr "Position"
+
+msgid "Empty folder"
+msgstr "Le dossier est vide"
+
+msgid "%s1 after %s2"
+msgstr "%s1 après %s2"
+
+msgid "bytes"
+msgstr "octets"
+
+msgid "New archive"
+msgstr "Nouvelle archive"
+
+msgid "Archive updated"
+msgstr "Archive modifée"
+
+msgid "Add field"
+msgstr "Ajouter un champs"
+
+msgid "A label is missing."
+msgstr "Un libellé n'a pas été renseigné"
+
+msgid "Label"
+msgstr "Libellé"
+
+msgid "Text"
+msgstr "Texte"
+
+msgid "Select a retention rule"
+msgstr "Selectionner une règle de retention"
+
+msgid "No result"
+msgstr "Aucun résultat"
+
+msgid "Sub-archive of"
+msgstr "Sous-archive de"

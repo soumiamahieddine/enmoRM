@@ -46,7 +46,8 @@ class archive
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
         \dependency\localisation\TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->view = $view;
 
         $this->json = $json;
@@ -86,45 +87,6 @@ class archive
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
 
         $this->view->merge();
-
-        return $this->view->saveHtml();
-    }
-
-    /**
-     * Get fulltext search form
-     *
-     * @return string The HTML result
-     */
-    public function fulltextSearchForm()
-    {
-        $archivalProfiles = $this->archivalProfileController->index(true);
-        $allSearchFields = [];
-
-        foreach ($archivalProfiles as $archivalProfile) {
-            $this->archivalProfileController->readDetail($archivalProfile);
-            $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                switch ($archiveDescription->descriptionField->type) {
-                    case 'name':
-                    case 'date':
-                    case 'number':
-                    case 'boolean':
-                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
-                        $searchFields[] = $archiveDescription->descriptionField;
-                }
-            }
-        }
-
-        $this->view->addContentFile("recordsManagement/archive/fulltextSearchForm.html");
-
-        $this->view->translate();
-
-        $this->view->setSource("archivalProfiles", $archivalProfiles);
-        $this->view->merge();
-
-        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
-            $this->view->translate($dateRangePickerInput);
-        }
 
         return $this->view->saveHtml();
     }
@@ -262,8 +224,7 @@ class archive
 
         unset($fields["archiveId"]);
         unset($fields["originatorOrgRegNumber"]);
-        unset($fields["docId"]);
-        unset($fields["category"]);
+        unset($fields["originatorArchiveId"]);
         unset($fields["archiveName"]);
         unset($fields["depositDate"]);
 
@@ -370,9 +331,35 @@ class archive
     {
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
+        $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
+            
+            $archive->archivalProfileName = $archivalProfile->name;
+        }
+        
         if (isset($archive->descriptionObject)) {
-            $presenter = \laabs::newPresenter($archive->descriptionClass);
-            $descriptionHtml = $presenter->read($archive->descriptionObject);
+            if (!empty($archive->descriptionClass)) {
+                $presenter = \laabs::newPresenter($archive->descriptionClass);
+                $descriptionHtml = $presenter->read($archive->descriptionObject);
+            } else {
+                $descriptionHtml = '<dl class="dl dl-horizontal">';
+                foreach ($archive->descriptionObject as $name => $value) {
+                    if (!empty($archive->archivalProfileReference)) {
+                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                            if ($archiveDescription->fieldName == $name) {
+                                $name = $archiveDescription->descriptionField->label;
+                                break;
+                            }
+                        }
+                    }
+
+                    $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
+                    $descriptionHtml .= '<dd>'.$value.'</dd>';
+                }
+                
+                $descriptionHtml .='</dl>';
+            }
 
             if ($descriptionHtml) {
                 $node = $this->view->getElementById("descriptionTab");
@@ -380,11 +367,6 @@ class archive
             } else {
                 unset($archive->descriptionObject);
             }
-        }
-
-        if (isset($archive->archivalProfileReference)) {
-            $profil = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-            $archive->archivalProfileName = $profil->name;
         }
 
         if (isset($archive->retentionDuration)) {
@@ -415,6 +397,20 @@ class archive
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {
+                /*if (isset($digitalResource->format)) {
+                    foreach ((array) $format->mimetypes as $mimetype) {
+
+                        if (!strpos($mimetype, "/")) {
+                            continue;
+                        } 
+                        $mediatype = strtok($mimetype, "/");
+
+                        if (in_array($mediatype, ['application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image'])) {
+                            $format->mediatype = $mediatype;
+                            break;
+                        }
+                    }
+                }*/
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                     continue;
@@ -659,7 +655,27 @@ class archive
 
         return $this->json->save();
     }
+    
+    /**
+     * Serializer JSON for metadata method
+     * @param array $result
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function metadata($result)
+    {
+        if ($result) {
+             $this->json->message = 'Archive updated';
+             
+        } else {
+             $this->json->message = 'Archive not updated';
+        }
 
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+    
     /**
      * Return new digital resource for an archive
      * @param digitalResource/digitalResource $digitalResource
