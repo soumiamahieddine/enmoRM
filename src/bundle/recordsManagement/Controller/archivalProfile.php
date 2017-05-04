@@ -398,8 +398,9 @@ class archivalProfile
     {
         $orgUnitArchivalProfiles = [];
 
-        $orgUnitArchivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = null");
+        $orgUnitArchivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile');
 
+/*
         $assert = "orgRegNumber = '".(string) $orgRegNumber."'";
         if ($originatorAccess) {
             $assert .= "and originatorAccess = true";
@@ -414,7 +415,7 @@ class archivalProfile
                 $orgUnitArchivalProfiles[] = $archivalProfile;
             }
         }
-
+*/
         return $orgUnitArchivalProfiles;
     }
 }
