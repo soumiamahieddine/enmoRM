@@ -208,6 +208,7 @@ class organization
         $organization->users = $this->readUserPositions($orgId);
         $organization->services = $this->readServicePositions($orgId);
         $organization->contacts = $this->getContacts($orgId);
+        $organization->archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='$orgId'");
 
         return \laabs::castMessage($organization, "organization/organization");
     }
@@ -697,5 +698,26 @@ class organization
         }
         
         return $parentsOrg;
+    }
+
+    /**
+     * Read parent orgs recursively
+     * @param string $orgId                 Organisation identifier
+     * @param array  $archivalProfileAccess The archival profile access array
+     *
+     * @return bool The result of the operation
+     */
+    public function updateArchivalProfileAccess($orgId, $archivalProfileAccess)
+    {
+        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
+
+        foreach ($archivalProfileAccess as $access) {
+            $access = (object)$access;
+            $access->orgId = $orgId;
+
+            $this->sdoFactory->create($access, "organization/archivalProfileAccess");
+        }
+
+        return true;
     }
 }

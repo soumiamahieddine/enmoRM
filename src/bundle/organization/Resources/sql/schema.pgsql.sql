@@ -134,17 +134,17 @@ WITH (
   OIDS=FALSE
 );
 
--- Table: "organization"."archivalProfilAccess"
+-- Table: "organization"."archivalProfileAccess"
 
--- DROP TABLE "organization"."archivalProfilAccess";
+-- DROP TABLE "organization"."archivalProfileAccess";
 
-CREATE TABLE "organization"."archivalProfilAccess"
+CREATE TABLE "organization"."archivalProfileAccess"
 (
   "orgId" text NOT NULL,
-  "archivalProfilReference" text NOT NULL,
+  "archivalProfileReference" text NOT NULL,
   "originatorAccess" boolean default true,
 
-  UNIQUE ("orgId", "archivalProfilReference"),
+  UNIQUE ("orgId", "archivalProfileReference"),
   FOREIGN KEY ("orgId")
       REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION

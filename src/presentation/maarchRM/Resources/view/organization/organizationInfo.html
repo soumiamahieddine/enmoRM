@@ -9,6 +9,9 @@
         <li id="organizationInfo_usersTab">
             <a href="#usersTab" data-toggle="tab">Users</a>
         </li>
+        <li id="organizationInfo_profileTab">
+            <a href="#profileTab" data-toggle="tab">Archival profile</a>
+        </li>
     </ul>
     <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
         <div class="tab-pane active" id="informationTab" style="padding:14px">
@@ -63,6 +66,9 @@
         <div class="tab-pane" id="usersTab" style="padding:14px">
             <?hinclude organization/userPositionForm.html ?>
         </div>
+        <div class="tab-pane" id="profileTab" style="padding:14px">
+            <?hinclude organization/archivalProfileAccess.html ?>
+        </div>
     </div>
 
     <div class="hide">
@@ -112,14 +118,17 @@
                 }
             });
 
-            // Users, contact
+            // Users, contact, profile
             UsersForm.load(organization.users, organization.services);
             ContactForm.load(organization.contacts);
+            ArchivalProfileAccessForm.load(organization.archivalProfileAccess);
             $("#organization_organizationInfo").css('display', '');
         },
 
         close: function() {
             $('#organization_organizationInfo').css('display', 'none');
+            ArchivalProfileAccessForm.close();
         }
     }
+
 </script>

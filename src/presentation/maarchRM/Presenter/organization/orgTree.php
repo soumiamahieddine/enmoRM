@@ -71,12 +71,11 @@ class orgTree
     {
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
+        $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
 
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
-
-
 
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("adminUser", $adminUser);
@@ -85,6 +84,7 @@ class orgTree
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
         $this->view->setSource("communicationMeans", $communicationMeans);
+        $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->merge();
         $this->view->translate();
 
@@ -397,6 +397,20 @@ class orgTree
     {
         $this->json->status = false;
         $this->json->message = "Missing display name";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for udapteArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function udapteArchivalProfileAccess()
+    {
+        $this->json->status = false;
+        $this->json->message = "Archival profile access updated.";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

@@ -163,6 +163,13 @@ class organization
      */
     public $contacts = array();
 
+    /**
+     * The archival profile access list
+     *
+     * @var array
+     */
+    public $archivalProfileAccess = array();
+
 
     /**
      * Get string of object
