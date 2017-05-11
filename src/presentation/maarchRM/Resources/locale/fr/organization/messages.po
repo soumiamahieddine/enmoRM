@@ -318,3 +318,5 @@ msgstr "Type d'organisation mis à jour"
 msgid "Archival profile"
 msgstr "Profil d'archive"
 
+msgid "Archival profiles access updated."
+msgstr "Accès aux profils mis à jour"
