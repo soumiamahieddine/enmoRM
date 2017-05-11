@@ -315,3 +315,6 @@ msgstr "Type d'organisation créé"
 msgid "Organization type updated"
 msgstr "Type d'organisation mis à jour"
 
+msgid "Archival profile"
+msgstr "Profil d'archive"
+
