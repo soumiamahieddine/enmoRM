@@ -39,12 +39,12 @@ class orgTree
     /**
      * __construct
      *
-     * @param \dependency\html\Document   $view       A new ready-to-use empty view
-     * @param \dependency\json\JsonObject $jsonObject The json base object
-     * @param \dependency\sdo\Factory     $sdoFactory The Sdo Factory for data access
+     * @param \dependency\html\Document   $view           A new ready-to-use empty view
+     * @param \dependency\json\JsonObject $jsonObject     The json base object
+     * @param \dependency\sdo\Factory     $sdoFactory     The Sdo Factory for data access
+     * @param bool                        $publicArchives
      */
-    public function __construct(
-    \dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory, $publicArchives=false)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory, $publicArchives = false)
     {
         $this->view = $view;
 
@@ -129,7 +129,6 @@ class orgTree
         $this->view->translate();
 
         return $this->view->saveHtml();
-        
     }
 
     /**
@@ -282,6 +281,7 @@ class orgTree
     // JSON
     /**
      * Serializer JSON for create method
+     * @param string $orgId The organization identifier
      *
      * @return object JSON object with a status and message parameters
      */
@@ -334,12 +334,11 @@ class orgTree
         return $this->json->save();
     }
 
-    /*
+    /**
      * Serializer JSON for seting default person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
-
     public function setDefaultPosition()
     {
         $this->json->message = "Position set to default";
@@ -348,12 +347,11 @@ class orgTree
         return $this->json->save();
     }
 
-    /*
+    /**
      * Serializer JSON for set default person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
-
     public function addUserPosition()
     {
         $this->json->message = "User added to the organization";
@@ -364,7 +362,7 @@ class orgTree
 
     /**
      * Serializer JSON for adding person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function deleteUserPosition()
@@ -409,11 +407,10 @@ class orgTree
      */
     public function udapteArchivalProfileAccess()
     {
-        $this->json->status = false;
-        $this->json->message = "Archival profile access updated.";
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access updated.";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
     }
-
 }
