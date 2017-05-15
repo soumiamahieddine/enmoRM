@@ -4,13 +4,13 @@
  * @package core\Kernel
  */
 namespace core\Kernel;
+
 /**
  * Class Laabs Dynamic Kernel
  *
  * @extends core\Kernel\AbstractKernel
  */
-class ServiceKernel
-    extends AbstractKernel
+class ServiceKernel extends AbstractKernel
 {
     /* Constants */
 
@@ -193,31 +193,31 @@ class ServiceKernel
             }
             $parser = $this->inputRouter->parser->newInstance();
             $bodyArguments = $this->inputRouter->input->parse($parser, $this->request->body);
-            
+
         } else {
             switch ($this->request->contentType) {
                 case 'php':
                     $bodyArguments = $this->request->body;
                     break;
-                    
+
                 case 'url':
                     $bodyArguments = \core\Encoding\url::decode($this->request->body);
                     break;
 
                 case 'json':
-                default: 
+                default:
                     $bodyArguments = \core\Encoding\json::decode($this->request->body);
-                    break; 
+                    break;
             }
 
         }
-        
+
         $requestArguments = array_merge($queryArguments, $bodyArguments);
 
         $this->serviceRequest = $this->servicePath->getMessage($requestArguments);
 
         $valid = \laabs::validateMessage($this->serviceRequest, $this->servicePath);
-        
+
         if (!$valid) {
             $e = new \core\Exception\BadRequestException();
             $e->errors = \laabs::getValidationErrors();
@@ -243,7 +243,7 @@ class ServiceKernel
                     break;
 
                 // Value available from message parts: cast to model object
-                case isset($this->serviceRequest[$parameter->name]) :
+                case isset($this->serviceRequest[$parameter->name]):
                     $value = $this->serviceRequest[$parameter->name];
                     break;
 
@@ -261,7 +261,7 @@ class ServiceKernel
                 default:
                     // Throw exception
                     $value = null;
-            }       
+            }
 
             $this->actionArguments[$parameter->name] = $value;
         }
@@ -281,10 +281,10 @@ class ServiceKernel
      * @access protected
      */
     protected function callAction()
-    {      
+    {
         // Notify of service for authorizations and log
         //\core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH, $this->servicePath, $this->actionArguments);
-        
+
         if ($this->response->mode == 'http') {
             $this->response->setHeader("X-Laabs-Controller", $this->actionRouter->uri);
         }
@@ -322,13 +322,15 @@ class ServiceKernel
         if (isset($this->outputRouter)) {
 
             switch (true) {
-                case $this->outputRouter->serializer->hasOutput($exceptionName) :
+                case $this->outputRouter->serializer->hasOutput($exceptionName):
                     $this->outputRouter->setOutput($exceptionName);
+                    $this->serviceReturn = $exception;
 
                     return true;
 
                 case $this->outputRouter->serializer->hasOutput('Exception'):
                     $this->outputRouter->setOutput('Exception');
+                    $this->serviceReturn = $exception;
 
                     return true;
             }
@@ -350,7 +352,7 @@ class ServiceKernel
 
             $serializer = $this->outputRouter->serializer->newInstance();
 
-            $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);            
+            $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
         } else {
             switch ($this->response->contentType) {
                 case 'json':
@@ -359,11 +361,10 @@ class ServiceKernel
                     break;
                 case 'text':
                 default:
-                    $content = \core\Encoding\text::encode($this->serviceReturn); 
+                    $content = \core\Encoding\text::encode($this->serviceReturn);
             }
         }
 
         $this->response->setBody($content);
     }
-
 }
