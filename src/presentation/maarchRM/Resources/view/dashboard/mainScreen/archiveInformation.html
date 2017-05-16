@@ -309,6 +309,10 @@
                 var customLabel = $("#inputCustomLabel").clone();
                 customLabel.val(label.html());
                 label.html('').append(customLabel);
+
+                if ($(e).hasClass('archivalProfileField')) {
+                    customLabel.prop("disabled", true);
+                }
                 
                 var customField = $("#inputCustomField").clone();
                 customField.val(value.html());
