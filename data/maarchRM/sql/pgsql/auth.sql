@@ -90,7 +90,8 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
 
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
-    ('UTILISATEUR', 'archiveManagement/modify');
+    ('UTILISATEUR', 'archiveManagement/modify'),
+    ('UTILISATEUR', 'adminArchive/filePlan');
 
 
     -- publicUserStory
