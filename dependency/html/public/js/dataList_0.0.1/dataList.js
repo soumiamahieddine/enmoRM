@@ -10,7 +10,7 @@ var DataList = {
             		'<\/div>',
     sortingBtn     :'<div class="btn-group">'+
                         '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                            '<i class="fa fa-filter"\/>'+
+                            '<i class="fa fa-sort-amount-asc"\/>'+
                         '<\/button>'+
                     '<\/div>',         
 	selectAllHTML  :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
