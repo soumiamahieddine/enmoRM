@@ -1,17 +1,31 @@
+/* OPTIONS
+    sorting : 
+        [
+            {
+                fieldName : <fieldName>
+                label     : <label>
+
+            }
+        ]
+    paginationType :
+        input -> input type pagination
+        button -> button type pagination
+*/
+
 var DataList = {
 	dataList: {},
-	paginationHTML :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
+	inputPagination  :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
                 		'<nav>'+
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-								'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px" value="1" title="choice" id="inputChoix" class="form-control input-sm"\/></a><\/li>'+
-                        		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
-								'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
-                    		'<\/ul>'+
-                		'<\/nav>'+
-            		'<\/div>',
-    paginationPages :'<div class="datalistPagination pull-right hide">'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px" value="1" title="choice" id="inputChoix" class="form-control input-sm"\/></a><\/li>'+
+                         		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
+					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
+                     		'<\/ul>'+
+                	 	'<\/nav>'+
+            		 '<\/div>',
+    buttonPagination :'<div class="datalistPagination pull-right hide">'+
                 		'<nav>'+
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
@@ -19,10 +33,7 @@ var DataList = {
                     		'<\/ul>'+
                 		'<\/nav>'+
             		'<\/div>',
-    /*labelSelect    :'<div class="form-group pull-right" style="padding-left:10px; padding-top: 5px">'+
-                        '<label style="font-weight:normal; font-size:12px"> Number of lines : </label>'+
-                    '</div>',*/
-	selectNB 	   :'<div class="form-group pull-right" style="margin-left:5px; display:float">'+
+	rowNumber       :'<div class="form-group pull-right" style="margin-left:5px; display:float">'+
 						'<select class="form-control input-sm pull-right" id="selectNB" style="height:29px">'+
 								'<option value="10">10</option>'+
 								'<option value="20">20</option>'+
@@ -30,53 +41,22 @@ var DataList = {
 								'<option value="40">40</option>'+
 						'</select>'+    
 					'</div>',
-    sortingBtn     :'<div class="btn-group">'+
+    sortingBtn      :'<div class="btn-group">'+
                         '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                             '<i class="fa fa-sort-amount-asc"\/>'+
                         '<\/button>'+
                     '<\/div>',         
-	selectAllHTML  :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-    selectorHTML   :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-
-	
-    // CHOISIR LE TYPE DE PAGINATION : --> true = Choice / false = Pages Num
-
+	selectAllHTML   :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    selectorHTML    :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
 
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
         var row = element.children('.row:first');
         var list = $('<div/>').addClass('list').appendTo(element);
-        var sortingInput = $('<div>').addClass('pull-right dataList-sorting').css('padding', '0px 5px');
 
         if (row.length == 0) {
             row = $('<div/>').addClass('row').prependTo(element);
-        }
-
-        // Build sorting input
-        if (options.sorting) {
-            var sortingBtn = this.sortingBtn;
-            var ul = $('<ul/>').addClass('dropdown-menu');
-
-            sortingInput.prepend(sortingBtn);
-            $.each(options.sorting, function() {
-                $('<li/>').data('value', this.fieldName).data('order', '<').append(
-                    $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
-                ).appendTo(ul);
-                $('<li/>').data('value', this.fieldName).data('order', '>').append(
-                    $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
-                ).appendTo(ul);
-            });
-            ul.children('li:first').addClass('active');
-            sortingInput.find('.btn-group').append(ul);
-            /*var select = $('<select/>').addClass('form-control input-sm').css('color', 'grey').prependTo(sortingInput);
-            $.each(options.sorting, function() {
-                $('<option/>').val(this.fieldName).data('order', '<').text('< '+this.label).appendTo(select);
-                $('<option/>').val(this.fieldName).data('order', '>').text('> '+this.label).appendTo(select);
-            });
-
-            select.on('change', DataList.bind_dataOrdering);
-            */
         }
 
         this.dataList[id] = {
@@ -85,19 +65,23 @@ var DataList = {
         };
         		
         // Build header row
-        row.prepend(this.selectAllHTML)
-           .prepend(sortingInput);
+        row.prepend(this.selectAllHTML);
+
+        // Build sorting input
+        if (options.sorting) {
+            row.prepend(this.builSortingInput(options.sorting));
+        }
 
         if(options.typePagination){
-            row.prepend(this.paginationHTML);
+            row.prepend(this.inputPagination);
 
         }
         else {
-            row.prepend(this.paginationPages);
+            row.prepend(this.buttonPagination);
         }
         
         //var label = $(this.labelSelect);
-        var select = $(this.selectNB);
+        var select = $(this.rowNumber);
 
         if(!options.textLabel){
             options.textLabel = "lines";
@@ -157,6 +141,25 @@ var DataList = {
             this.buildList(id);
         }
     },
+
+    builSortingInput : function(fields) {
+        var sortingInput = $('<div>').addClass('pull-right dataList-sorting').css('padding', '0px 5px');
+        var sortingBtn = this.sortingBtn;
+        var ul = $('<ul/>').addClass('dropdown-menu');
+        sortingInput.prepend(sortingBtn);
+
+        $.each(fields, function() {
+            $('<li/>').data('value', this.fieldName).data('order', '<').append(
+                $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
+            ).appendTo(ul);
+            $('<li/>').data('value', this.fieldName).data('order', '>').append(
+                $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
+            ).appendTo(ul);
+        });
+
+        ul.children('li:first').addClass('active');
+        sortingInput.find('.btn-group').append(ul);
+    }
 
 	buildPaginationButtons: function(id) {
         var pagination = this.dataList[id].element.find('.datalistPagination');
@@ -417,9 +420,7 @@ var DataList = {
 		DataList.buildPaginationButtonsBis(id);
 		DataList.buildList(id,0);
 		$('#inputChoix').val(1);
-		
-		
-		
+
 		
 	},
 	
