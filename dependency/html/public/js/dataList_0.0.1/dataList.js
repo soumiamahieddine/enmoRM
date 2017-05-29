@@ -89,42 +89,29 @@ var DataList = {
            .prepend(sortingInput);
 
         if(options.typePagination){
-
-                row.prepend(this.paginationHTML);
+            row.prepend(this.paginationHTML);
 
         }
-        else if(!(options.typePagination)){
-
-                row.prepend(this.paginationPages);
+        else {
+            row.prepend(this.paginationPages);
         }
         
-
         //var label = $(this.labelSelect);
         var select = $(this.selectNB);
 
-        if(!(typeof(options.textLabel) == "undefined")){
+        if(!options.textLabel){
+            options.textLabel = "lines";
+        } 
 
-            select.find('option[value="10"]').text("10 " + options.textLabel);
-            select.find('option[value="20"]').text("20 " + options.textLabel);
-            select.find('option[value="30"]').text("30 " + options.textLabel);
-            select.find('option[value="40"]').text("40 " + options.textLabel);
-            
-        }
+        select.find('option[value="10"]').text("10 " + options.textLabel);
+        select.find('option[value="20"]').text("20 " + options.textLabel);
+        select.find('option[value="30"]').text("30 " + options.textLabel);
+        select.find('option[value="40"]').text("40 " + options.textLabel);
         
-        /*if(!(typeof(options.labelSelect) == "undefined")){
-            
-            label.find('label').text(options.labelSelect);
-            
-            
-        }
-
-        row.prepend(label)*/
 		row.prepend(select)
            .removeClass('hide')
            .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
 		   
-		   console.log(this.paginationHTML);
-        
 
         // Set message for empty list
         if (options.emptyMessage) {
@@ -155,13 +142,10 @@ var DataList = {
         };
 
         if(options.typePagination){
+            this.buildPaginationButtons(id); 
 
-                this.buildPaginationButtons(id); 
-
-        }
-        else if(!(options.typePagination)){
-
-                this.buildPaginationButtonsBis(id);
+        } else {
+            this.buildPaginationButtonsBis(id);
         }
 
         // Order the list if an order option is selected
@@ -182,27 +166,20 @@ var DataList = {
 
         if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
-            var pageLi = []
-            pagination.find('ul > li').not(':first').not(':last').empty();
+            var pageLi = [];
 
             var pageNumber = this.dataList[id].datas.length / this.dataList[id].rowMaxNumber;
             if (this.dataList[id].datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
 
             this.dataList[id].pageNumber = pageNumber;
 
-            for (var i=1; i<= pageNumber; i++) {
-                var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
-                lastLi.before(li);
-                pageLi.push(li);
-            }
-
-            pageLi[0].addClass('active');
 			// Find renvoie le premier élément trouvé (ici le premier input).
 			//pagination.removeClass('hide').find('input').off().on('keypress', DataList.bind_choiceEnter); // Pourquoi aucune détection du clic ... ?
-			pagination.removeClass('hide').find('input').off().on('change', DataList.bind_choicePage); 
-            pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChanging);
+			pagination.removeClass('hide').find('input').off().on('keyup', DataList.bind_choicePage); 
+            pagination.find('a').off().on('click', DataList.bind_pageChanging);
+            selectNB.removeClass('hide').find('select').off().on('change', DataList.bind_selectNB);
             this.dataList[id].currentRange = 0;
-            this.condensePaginationDisplay(id);
+            //this.condensePaginationDisplay(id);
 
 
         } else {
@@ -365,21 +342,23 @@ var DataList = {
             var range = DataList.dataList[id].currentRange - 1;
             if (range >= 0) {
                 DataList.buildList(id, range);
-                pagination.find('.active').removeClass('active').prev().addClass('active');
+                $('#inputChoix').val(range + 1);
             }
         } else if (a.hasClass('nextPage')) {
             var range = DataList.dataList[id].currentRange + 1;
             if (range <= DataList.dataList[id].pageNumber - 1) {
                 DataList.buildList(id, range);
-                pagination.find('.active').removeClass('active').next().addClass('active');
+                $('#inputChoix').val(range + 1);
+    
             }
-        } else {
-            DataList.buildList(id, parseInt(a.text())-1);
-            pagination.find('.active').removeClass('active');
-            a.parent().addClass('active');
+        } else if (a.hasClass('firstPage')) {
+           DataList.buildList(id, 0);
+           $('#inputChoix').val(1);
+           
+        } else if (a.hasClass('lastPage')) {
+            $('#inputChoix').val(DataList.dataList[id].pageNumber-1);
+            DataList.buildList(id, DataList.dataList[id].pageNumber - 1);
         }
-
-        DataList.condensePaginationDisplay(id);
     },
 
     bind_pageChangingBis: function() {
@@ -413,11 +392,9 @@ var DataList = {
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
 		DataList.buildList(id, $('#inputChoix').val() - 1);
-		
-        
     },
 	
-	bind_selectNB: function() {
+	bind_selectNBBis: function() {
 		
 		
 		var a = $(this);
@@ -431,7 +408,7 @@ var DataList = {
 		
 	},
 
-    bind_selectNBBis: function() {
+    bind_selectNB: function() {
 		
 		
 		var a = $(this);
