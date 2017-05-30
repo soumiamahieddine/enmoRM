@@ -356,6 +356,11 @@ var DataList = {
         var a = $(this);
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
+
+        for (var i=1; i<= DataList.dataList[id].pageNumber; i++) {
+                
+                DataList.dataList[id].last = i;
+        }
         if (a.hasClass('previousPage')) {
             var range = DataList.dataList[id].currentRange - 1;
             if (range >= 0) {
@@ -383,9 +388,9 @@ var DataList = {
             }
            
         } else if (a.hasClass('lastPage')) {
-            DataList.buildList(id, DataList.dataList[id].pageNumber - 1);
+            DataList.buildList(id, DataList.dataList[id].last - 1);
             if (DataList.dataList[id].paginationType == "input") {
-                pagination.find('input').val(DataList.dataList[id].pageNumber-1);
+                pagination.find('input').val(DataList.dataList[id].last);
             }
         }
     },
