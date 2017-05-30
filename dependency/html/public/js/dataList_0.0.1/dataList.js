@@ -19,7 +19,7 @@ var DataList = {
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px" value="1" title="choice" id="inputChoix" class="form-control input-sm"\/></a><\/li>'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px; text-align: center" value="1" title="choice" id="inputChoix" class="form-control input-sm"\/></a><\/li>'+
                          		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
 					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
                      		'<\/ul>'+
