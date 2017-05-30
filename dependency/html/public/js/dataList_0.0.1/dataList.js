@@ -173,10 +173,12 @@ var DataList = {
         if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
             var pageLi = [];
-            var pageNumber = this.dataList[id].datas.length / this.dataList[id].rowMaxNumber;
+            var pageNumber = Math.trunc(this.dataList[id].datas.length / this.dataList[id].rowMaxNumber);
 
             if (this.dataList[id].datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
+
+
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
@@ -357,10 +359,6 @@ var DataList = {
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
 
-        for (var i=1; i<= DataList.dataList[id].pageNumber; i++) {
-                
-                DataList.dataList[id].last = i;
-        }
         if (a.hasClass('previousPage')) {
             var range = DataList.dataList[id].currentRange - 1;
             if (range >= 0) {
@@ -388,9 +386,9 @@ var DataList = {
             }
            
         } else if (a.hasClass('lastPage')) {
-            DataList.buildList(id, DataList.dataList[id].last - 1);
+            DataList.buildList(id, DataList.dataList[id].pageNumber - 1);
             if (DataList.dataList[id].paginationType == "input") {
-                pagination.find('input').val(DataList.dataList[id].last);
+                pagination.find('input').val(DataList.dataList[id].pageNumber);
             }
         }
     },
