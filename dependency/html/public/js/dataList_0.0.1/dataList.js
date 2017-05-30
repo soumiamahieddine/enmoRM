@@ -83,11 +83,10 @@ var DataList = {
             options.rowTranslation = "lines";
         }
         
-		row.prepend(this.initRowNumberSelect(options.rowTranslation))
+		row.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
            .removeClass('hide')
            .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
 		   
-
         // Set message for empty list
         if (options.emptyMessage) {
             this.dataList[id].emptyMessage = $(options.emptyMessage);
@@ -126,13 +125,17 @@ var DataList = {
         return sortingInput;
     },
 
-    initRowNumberSelect: function(lineText) {
+    initRowNumberSelect: function(lineText, defaultValue) {
         var select = $(this.rowNumberInput);
 
         select.find('option[value="10"]').text("10 " + lineText);
         select.find('option[value="20"]').text("20 " + lineText);
         select.find('option[value="30"]').text("30 " + lineText);
         select.find('option[value="40"]').text("40 " + lineText);
+
+        if (defaultValue) {
+            select.find('select').val(defaultValue);
+        }
 
         return select;
     },
@@ -149,12 +152,7 @@ var DataList = {
             emptyMessage    : this.dataList[id].emptyMessage,
         };
 
-        if(options.paginationType){
-            this.buildPaginationButtons(id); 
-
-        } else {
-            this.buildPaginationButtonsBis(id);
-        }
+        this.buildPaginationButtons(id);
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
@@ -205,44 +203,7 @@ var DataList = {
         }
     },
 
-    buildPaginationButtonsBis: function(id) {
-        var pagination = this.dataList[id].element.find('.datalistPagination');
-        var selectNB = this.dataList[id].element.find('.form-group');
-        pagination.find('li').not('li:first, li:last').remove();
-
-        if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
-            var lastLi = pagination.find('ul > li:last-child');
-            var pageLi = []
-            pagination.find('ul > li').not(':first').not(':last').empty();
-
-            var pageNumber = this.dataList[id].datas.length / this.dataList[id].rowMaxNumber;
-            if (this.dataList[id].datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }
-
-            this.dataList[id].pageNumber = pageNumber;
-
-            for (var i=1; i<= pageNumber; i++) {
-                var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
-                lastLi.before(li);
-                pageLi.push(li);
-            }
-
-            pageLi[0].addClass('active');
-
-            pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChangingBis);
-
-            selectNB.removeClass('hide').find('select').off().on('change', DataList.bind_selectNBBis);
-            this.dataList[id].currentRange = 0;
-            this.condensePaginationDisplay(id);
-
-
-        } else {
-            pagination.addClass('hide');
-        }
-    },
-
-
     condensePaginationDisplay: function(id) {
-
         if (this.dataList[id].pageNumber <7) {
             return;
         }
