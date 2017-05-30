@@ -144,31 +144,22 @@ trait archiveDestructionTrait
             $archiveIds = array($archiveIds);
         }
 
-        //$archives = array('success' => [], 'error' => []);
-
-        /*if (\laabs::hasDependency("fulltext")) {
-            $fulltextController = \laabs::newController("recordsManagement/fulltext");
-            $document = \laabs::newService('dependency/fulltext/Document');
-        }*/
-
         $archives = $this->verifyIntegrity($archiveIds);
         
-        foreach ($archiveIds as $archiveId) {
+        $destructArchives = [];
+        $destructArchives['error'] = $archives['error'];
+        $destructArchives['success'] = [];
+
+        foreach ($archives['success'] as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
             if ($archive->status != 'disposed') {
-                $archives['error'][] = $archive;
+                $destructArchives['error'][] = $archive;
                 continue;
             }
 
             try {
                 $this->destructArchive($archive);
-
-                /*if (\laabs::hasDependency("fulltext")) {
-                    $documentToRemove = clone($document);
-                    $documentToRemove->addField("archiveId", $archiveId, "name");
-                    $fulltextController->delete($archive->archivalProfileReference, $documentToRemove);
-                }*/
 
                 $destructionResult = true;
             } catch (\Exception $e) {
@@ -199,10 +190,10 @@ trait archiveDestructionTrait
                 $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
             }
 
-            $archives['success'][] = $archive;
+            $destructArchives['success'][] = $archive;
         }
 
-        return $archives;
+        return $destructArchives;
     }
 
     /**
