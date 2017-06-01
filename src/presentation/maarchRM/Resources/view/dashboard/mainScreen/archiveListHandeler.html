@@ -21,7 +21,9 @@
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
     }
-
+    .dataList {
+        min-height: 300px;
+    }
     .dataList .archiveContentButton,
     .dataList a,
     .dataList .bg-success,
@@ -43,9 +45,12 @@
 
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
-            e.addClass('bg-success');
-
-            if (c) { c.addClass('selectedChild') }
+            if (!c) {
+                e.addClass('bg-success');
+            } else { 
+                e.removeClass('bg-success');
+                c.addClass('selectedChild').closest('li').addClass('bg-success'); 
+            }
         },
 
         unselect: function(dataList) {
