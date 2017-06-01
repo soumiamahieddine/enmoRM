@@ -15,7 +15,7 @@
                 <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a class="small" style="cursor: pointer;" data-reference="">Without profile</a></li>
+                    <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
                 </ul>
             </div>
         </div>
@@ -201,91 +201,68 @@
         }
     }
 
-    function buildDropdownMenu() {
-        var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
-        var dropdown = $("#folderToolbarBtn .dropdown-menu");
-        dropdown.children().not(":first").remove();
+    NewArchive = {
+        buildNewArchiveDropdownMenu: function() {
+            var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
+            var dropdown = $("#folderToolbarBtn .dropdown-menu");
+            dropdown.children().not(":first").remove();
 
-        for (var i = 0; i < archivalProfiles.length; i++) {
-            var a = $("<a/>")
-                    .addClass("userProfile small")
-                    .data("reference", archivalProfiles[i].reference)
-                    .data("json", JSON.stringify(archivalProfiles[i]))
-                    .attr('style', "cursor: pointer;")
-                    .text(archivalProfiles[i].name);
-            $("<li/>").append(a).appendTo(dropdown);
-        }
-        
-        /*
-        if ($("#folderContentList").find(".bg-success").length < 1) {
-            return;
-        }
-
-        var childrenOrg = [];
-
-        FilePlan.getChildrenOrg().each(function() {
-            childrenOrg.push({
-                    name             : $(this).find("b:first").text(),
-                    orgRegNumber     : $(this).data('orgregnumber'),
-                    archivalProfiles : $(this).data('archivalprofiles')
-                }
-            );
-        })
-
-        var divider = $("<li/>").addClass("divider");
-        var separator = $("<li/>").addClass("small dropdown-header");
-
-        for (var i = 0; i < childrenOrg.length; i++) {
-            if (childrenOrg[i].archivalProfiles.length < 1) {
-                continue;
-            }
-
-            divider.clone().appendTo(dropdown);
-            separator.clone().text(childrenOrg[i].name).appendTo(dropdown);
-            
-            for (var j = 0; j < childrenOrg[i].archivalProfiles.length; j++) {
+            for (var i = 0; i < archivalProfiles.length; i++) {
                 var a = $("<a/>")
-                        .addClass('childrenProfile small')
-                        .data("orgregnumber", childrenOrg[i].orgRegNumber)
-                        .data("reference", childrenOrg[i].archivalProfiles[j].reference)
-                        .data("json", JSON.stringify(childrenOrg[i].archivalProfiles[j]))
-                        .text(childrenOrg[i].archivalProfiles[j].name);
+                        .addClass("userProfile small newArchive")
+                        .data("reference", archivalProfiles[i].reference)
+                        .data("json", JSON.stringify(archivalProfiles[i]))
+                        .attr('style', "cursor: pointer;")
+                        .text(archivalProfiles[i].name);
                 $("<li/>").append(a).appendTo(dropdown);
             }
-        }*/
+        },
+
+        loadImportForm: function() {
+            var importPanel = $("#importPanel");
+            var selectedRow = $("#folderContentList").find(".bg-success")
+            var parentArchiveId = null;
+            var parentArchiveName = null;
+
+            if (selectedRow.hasClass('archive')) {
+                parentArchiveId = selectedRow.attr("id");
+                parentArchiveName = selectedRow.find('a:first').text();
+            } else {
+                childrenArchive = selectedRow.find(".childrenArchive:first");
+                if (childrenArchive) {
+                    parentArchiveId = childrenArchive.attr("id");
+                    parentArchiveName = childrenArchive.text();
+                }
+            }
+
+            $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
+
+            importPanel.find("[data-context-path]:first").text($("#folderPath").text());
+            importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
+            importPanel.find("[data-context-profil]:first").text($(this).text());
+
+            if (parentArchiveId) {
+                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+                importPanel.find("[data-context-parentarchive]")
+                           .removeClass('hide')
+                           .find('[data-context-parentname]').html(parentArchiveName);
+            } else {
+                $("#archiveForm [name='parentArchiveId']").val('');
+                importPanel.find("[data-context-parentarchive]").addClass('hide');
+
+            }
+
+            $('#importTab').click();
+        }
     }
 
     $("#folderToolbarBtn").on("show.bs.dropdown", function() {
-        buildDropdownMenu();
+        NewArchive.buildNewArchiveDropdownMenu();
     });
 
-    $("#folderToolbarBtn").on('click', '.dropdown-menu li a', function() {
-        /*if ($(this).hasClass("childrenProfile")) {
-            $("#archiveForm [name='filePlanPosition']").val("");
-            $("#archiveForm [name='originatorOrgRegNumber']").val($(this).data("orgregnumber"));
-        }*/
-        var importPanel = $("#importPanel");
-        var slectedArchive = $("#folderContentList").find(".bg-success")
-        var parentArchiveId = slectedArchive.attr("id");
-        var parentArchiveName = slectedArchive.find('a:first').text();
-        $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
-
-        importPanel.find("[data-context-path]:first").text($("#folderPath").text());
-        importPanel.find("[data-context-path]:first").text($("#folderPath").text());
-        importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
-        importPanel.find("[data-context-profil]:first").text($(this).text());
-        if (slectedArchive.length) {
-            $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-            importPanel.find("[data-context-parentarchive]")
-                       .removeClass('hide')
-                       .find('[data-context-parentname]').html(parentArchiveName);
-        } else {
-            $("#archiveForm [name='parentArchiveId']").val('');
-            importPanel.find("[data-context-parentarchive]").addClass('hide');
-
-        }
-
-        $('#importTab').click();
+    $("#folderToolbarBtn").on('click', '.newArchive', function() {
+        NewArchive.loadImportForm();
+        
     });
 
     $("#folderToolbarSearch").on('click', function() {
