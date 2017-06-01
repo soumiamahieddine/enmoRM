@@ -14,6 +14,12 @@
 
 var DataList = {
 	dataList: {},
+    searchArchive    :'<div class="searchArchive pull-right">'+
+                        '<nav>'+
+                            '<a href="#" style="padding:0px"><input type="text" style="width:200px; border:none; height:27px" placeholder=" Recherchez une archive " title="choiceArch" class="form-control input-sm"\/></a>'+
+                            '<button type="button" class="btn btn-default btn-sm"> Submit </button>'+
+                        '<nav>'+
+                      '</div>',
 	inputPagination  :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
                 		'<nav>'+
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
@@ -55,6 +61,7 @@ var DataList = {
         var row = element.children('.row:first');
         var list = $('<div/>').addClass('list').appendTo(element);
 
+
         if (row.length == 0) {
             row = $('<div/>').addClass('row').prependTo(element);
         }
@@ -65,7 +72,8 @@ var DataList = {
         };
         		
         // Build header row
-        row.prepend(this.selectAllHTML);
+        row.prepend(this.selectAllHTML)
+           .prepend(this.searchArchive);
 
         // Build sorting input
         if (options.sorting) {
@@ -110,7 +118,10 @@ var DataList = {
         var ul = $('<ul/>').addClass('dropdown-menu');
         sortingInput.prepend(sortingBtn);
 
+        
+
         $.each(fields, function() {
+            console.log(this);
             $('<li/>').data('value', this.fieldName).data('order', '<').append(
                 $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
             ).appendTo(ul);
@@ -152,6 +163,7 @@ var DataList = {
             emptyMessage    : this.dataList[id].emptyMessage,
         };
 
+        
         this.buildPaginationButtons(id);
 
         // Order the list if an order option is selected
@@ -164,19 +176,28 @@ var DataList = {
         }
     },
 
-	buildPaginationButtons: function(id) {
+	buildPaginationButtons: function(id, filteredDatas) {
         var pagination = this.dataList[id].element.find('.datalistPagination');
-		var rowNumber = this.dataList[id].element.find('.datalistRowNumber');   
+		var rowNumber = this.dataList[id].element.find('.datalistRowNumber');
+        var searchArch = this.dataList[id].element.find('.searchArchive');
 
-        if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
+        var datas = this.dataList[id].datas;
+        if(filteredDatas != undefined){
+
+            datas = filteredDatas;
+        } 
+
+        if (datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
             var pageLi = [];
-            var pageNumber = Math.trunc(this.dataList[id].datas.length / this.dataList[id].rowMaxNumber);
+            var pageNumber = Math.trunc(datas.length / this.dataList[id].rowMaxNumber);
 
-            if (this.dataList[id].datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
+            if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
 
+            
 
+            searchArch.find('button').off().on('click', DataList.bind_searchArchive);
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
@@ -235,11 +256,18 @@ var DataList = {
         buttons.not(permanantButtons).not(selection).addClass('hide');
     },
 
-    buildList: function(id, range) {
+    buildList: function(id, range, filteredDatas) {
+
+        var datas = this.dataList[id].datas;
+        if(filteredDatas != undefined){
+
+            datas = filteredDatas;
+        }
+
         this.dataList[id].list.empty();
 
         if (this.dataList[id].emptyMessage) {
-            if (this.dataList[id].datas.length == 0) {
+            if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
@@ -256,14 +284,14 @@ var DataList = {
 
 	    this.dataList[id].currentRange = range;
 
-	    for(var i=rowStart; i<rowEnd && i<this.dataList[id].datas.length; i++) {
-	        if (!this.dataList[id].datas[i].html) {
-	            var row = this.dataList[id].rowMerge(this.dataList[id].datas[i]);
+	    for(var i=rowStart; i<rowEnd && i<datas.length; i++) {
+	        if (!datas[i].html) {
+	            var row = this.dataList[id].rowMerge(datas[i]);
                 row.addClass('dataListElement').prepend(this.selectorHTML);
-	            this.dataList[id].datas[i].html = row;
+	            datas[i].html = row;
 	        }
 
-	        this.dataList[id].list.append(this.dataList[id].datas[i].html.data('index', i));
+	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
 
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
@@ -379,6 +407,58 @@ var DataList = {
         a.parent().addClass('active');
 
         return DataList.sort(id, li.data('value'), li.data('order'));
+    },
+
+    bind_searchArchive: function(){
+
+        var a = $(this);
+        var id = a.closest('.dataList').data('datalist-id');
+        var searchArch = a.closest('.searchArchive');
+        var champ = searchArch.find('input').val();
+
+        /*
+            En théorie, on crée une variable de liste filtrée, qui recherche dans tous les champs et lance un buildList.
+            Pour l'instant, on recherche seulement dans le nom, en modifiant datas. (FieldName)
+            Voir le console.log(), en regardant chaque objet chaque champ.
+
+        */
+
+        var position = -1;
+
+        var filteredDatas = [];
+
+        if(champ == ""){
+
+            filteredDatas = undefined;
+            
+        }
+        else{
+
+            $.each(DataList.dataList[id].datas, function(key, element) {
+
+                
+                position = element.archiveName.indexOf(champ);
+
+
+                if(position != -1){
+            
+                            filteredDatas.push(element);
+
+                }
+                
+            });
+
+
+        }
+        
+        
+        
+        
+        
+        DataList.buildPaginationButtons(id, filteredDatas);
+        DataList.buildList(id, 0, filteredDatas);      
+
+
     }
 
 }
