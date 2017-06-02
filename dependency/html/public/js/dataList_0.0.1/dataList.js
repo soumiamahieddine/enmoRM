@@ -17,7 +17,6 @@ var DataList = {
     searchArchive    :'<div class="searchArchive pull-right">'+
                         '<nav>'+
                             '<a href="#" style="padding:0px"><input type="text" style="width:200px; border:none; height:27px" placeholder=" Recherchez une archive " title="choiceArch" class="form-control input-sm"\/></a>'+
-                            '<button type="button" class="btn btn-default btn-sm"> Submit </button>'+
                         '<nav>'+
                       '</div>',
 	inputPagination  :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
@@ -25,7 +24,7 @@ var DataList = {
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px; text-align: center" value="1" title="choice" id="inputChoix" class="form-control input-sm"\/></a><\/li>'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px; text-align: center" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
                          		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
 					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
                      		'<\/ul>'+
@@ -158,6 +157,7 @@ var DataList = {
             rowMaxNumber    : options.rowMaxNumber,
             currentRange    : options.currentRange,
             paginationType  : options.paginationType,
+            unsearchable    : options.unsearchable,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             emptyMessage    : this.dataList[id].emptyMessage,
@@ -197,7 +197,7 @@ var DataList = {
 
             
 
-            searchArch.find('button').off().on('click', DataList.bind_searchArchive);
+            searchArch.find('input').off().on('keyup', DataList.bind_searchArchive);
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
@@ -386,7 +386,12 @@ var DataList = {
 		var a = $(this);
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
-		DataList.buildList(id, $('#inputChoix').val() - 1);
+
+        //if((typeof(pagination.find('input').val()) == "string") && (pagination.find('input').val() > 0) && (pagination.find('input').val() < DataList.buildList(id, DataList.dataList[id].pageNumber - 1))){
+
+		        DataList.buildList(id, pagination.find('input').val() - 1);
+
+        //}
     },
 
     bind_rowNumberSelection: function() {
@@ -416,13 +421,6 @@ var DataList = {
         var searchArch = a.closest('.searchArchive');
         var champ = searchArch.find('input').val();
 
-        /*
-            En théorie, on crée une variable de liste filtrée, qui recherche dans tous les champs et lance un buildList.
-            Pour l'instant, on recherche seulement dans le nom, en modifiant datas. (FieldName)
-            Voir le console.log(), en regardant chaque objet chaque champ.
-
-        */
-
         var position = -1;
 
         var filteredDatas = [];
@@ -434,16 +432,34 @@ var DataList = {
         }
         else{
 
+            var test = false;
+
+
             $.each(DataList.dataList[id].datas, function(key, element) {
 
-                
-                position = element.archiveName.indexOf(champ);
+               position = -1;
 
+                $.each(element, function(key, value){
 
-                if(position != -1){
+                    if(!(key == DataList.dataList[id].unsearchable[0] || key == DataList.dataList[id].unsearchable[1])){
+
+                            if(typeof(value) == "string"){
+
+                                position = value.indexOf(champ);
+
+                            }
+                    }
+
+                    if(position != -1){
             
-                            filteredDatas.push(element);
+                            test = true;
+                            return false;
+                    }
+                });
 
+                if(test == true){
+
+                    filteredDatas.push(element);
                 }
                 
             });

@@ -119,7 +119,12 @@
                         fieldName : 'depositDate',
                         label     : $('#depositDate_text').text()
                     }
-                ]
+                ],
+				unsearchable : [
+				
+						"status",
+						"parentOriginatorOrgRegNumber"				
+				]
             })
 
             if (!(FilePlan.selectedNode.hasClass('folder') && FilePlan.selectedNode.data('closed'))) {
