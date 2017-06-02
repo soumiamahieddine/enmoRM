@@ -14,11 +14,12 @@
 
 var DataList = {
 	dataList: {},
-    searchArchive    :'<div class="searchArchive pull-right">'+
-                        '<nav>'+
-                            '<a href="#" style="padding:0px"><input type="text" style="width:200px; border:none; height:27px" placeholder=" Recherchez une archive " title="choiceArch" class="form-control input-sm"\/></a>'+
-                        '<nav>'+
-                      '</div>',
+    filterList    :'<div class="form-group filterList pull-right" style="margin-left:5px; display:float; max-width:200px">'+
+                        '<div class="input-group">'+
+                            '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-filter" \/><\/span>'+
+                            '<input type="text" class="form-control input-sm" \/>'+
+                        '<\/div>'+
+                    '<\/div>',
 	inputPagination  :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
                 		'<nav>'+
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
@@ -72,7 +73,7 @@ var DataList = {
         		
         // Build header row
         row.prepend(this.selectAllHTML)
-           .prepend(this.searchArchive);
+           .prepend(this.filterList);
 
         // Build sorting input
         if (options.sorting) {
@@ -179,7 +180,7 @@ var DataList = {
 	buildPaginationButtons: function(id, filteredDatas) {
         var pagination = this.dataList[id].element.find('.datalistPagination');
 		var rowNumber = this.dataList[id].element.find('.datalistRowNumber');
-        var searchArch = this.dataList[id].element.find('.searchArchive');
+        var filterInput = this.dataList[id].element.find('.filterList');
 
         var datas = this.dataList[id].datas;
         if(filteredDatas != undefined){
@@ -195,9 +196,7 @@ var DataList = {
             if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
 
-            
-
-            searchArch.find('input').off().on('keyup', DataList.bind_searchArchive);
+            filterInput.find('input').off().on('keyup', DataList.bind_filterList);
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
@@ -414,67 +413,47 @@ var DataList = {
         return DataList.sort(id, li.data('value'), li.data('order'));
     },
 
-    bind_searchArchive: function(){
+    bind_filterList: function(){
 
         var a = $(this);
         var id = a.closest('.dataList').data('datalist-id');
-        var searchArch = a.closest('.searchArchive');
-        var champ = searchArch.find('input').val();
-
+        var filterInput = a.closest('.filterList');
+        var filterValue = filterInput.find('input').val();
         var position = -1;
-
         var filteredDatas = [];
 
-        if(champ == ""){
+        if(filterValue == ""){
 
             filteredDatas = undefined;
             
         }
         else{
-
             var test = false;
 
-
             $.each(DataList.dataList[id].datas, function(key, element) {
-
-               position = -1;
-
+                position = -1;
                 $.each(element, function(key, value){
-
                     if(!(key == DataList.dataList[id].unsearchable[0] || key == DataList.dataList[id].unsearchable[1])){
-
-                            if(typeof(value) == "string"){
-
-                                position = value.indexOf(champ);
-
-                            }
+                        if(typeof(value) == "string"){
+                            position = value.indexOf(filterValue);
+                        }
                     }
 
                     if(position != -1){
-            
-                            test = true;
-                            return false;
+                        test = true;
+                        return false;
                     }
                 });
 
                 if(test == true){
-
                     filteredDatas.push(element);
                 }
                 
             });
-
-
         }
-        
-        
-        
-        
         
         DataList.buildPaginationButtons(id, filteredDatas);
         DataList.buildList(id, 0, filteredDatas);      
-
-
     }
 
 }
