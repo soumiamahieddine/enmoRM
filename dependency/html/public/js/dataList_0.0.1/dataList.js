@@ -385,10 +385,23 @@ var DataList = {
 		var a = $(this);
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
+        var input = pagination.find('input');
 
-        if((parseInt(pagination.find('input').val()) > 0) && (parseInt(pagination.find('input').val()) < DataList.buildList(id, DataList.dataList[id].pageNumber))){
+            if((input.val().match('^[0-9]*$')) && (input.val() > 0) && (input.val() < DataList.dataList[id].pageNumber + 1)){
 
-		        DataList.buildList(id, pagination.find('input').val() - 1);
+		        DataList.buildList(id, pagination.find('input').val() - 1); 
+
+        }
+        else{
+
+            function current(){
+               
+                input.val(DataList.dataList[id].currentRange +1);
+            }
+            
+            setTimeout(current, 2000);
+
+            
 
         }
     },
@@ -440,14 +453,16 @@ var DataList = {
 
                             if((typeof(value) == "string") || (typeof(value) == "number")){
 
-                                position = value.indexOf(champ);
+                                position = value.indexOf(filterValue);
 
                             }
                     }
 
                     if(position != -1){
+
                         test = true;
                         return false;
+
                     }
                 });
 
