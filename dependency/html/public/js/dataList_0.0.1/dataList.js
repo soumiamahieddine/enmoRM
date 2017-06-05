@@ -9,7 +9,8 @@
                         buttons : button with page number
     emptyMessage    -> html to show when the list is empty
     sorting         -> array of object that define wich properties of datas can be sorted
-                       object have to two properties : the name and the label of the sortable property 
+                       object have to two properties : the name and the label of the sortable property
+    unsearchable    -> array of unserchable property
 */
 
 var DataList = {
@@ -121,7 +122,6 @@ var DataList = {
         
 
         $.each(fields, function() {
-            console.log(this);
             $('<li/>').data('value', this.fieldName).data('order', '<').append(
                 $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
             ).appendTo(ul);
@@ -164,8 +164,8 @@ var DataList = {
             emptyMessage    : this.dataList[id].emptyMessage,
         };
 
-        
         this.buildPaginationButtons(id);
+        this.dataList[id].unsearchable.push('html');
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
@@ -400,9 +400,6 @@ var DataList = {
             }
             
             setTimeout(current, 2000);
-
-            
-
         }
     },
 
@@ -432,47 +429,41 @@ var DataList = {
         var id = a.closest('.dataList').data('datalist-id');
         var filterInput = a.closest('.filterList');
         var filterValue = filterInput.find('input').val();
-        var position = -1;
-        var clé = -1;
         var filteredDatas = [];
 
         if(filterValue == ""){
-
             filteredDatas = undefined;
-            
-        }
-        else{
-            var test = false;
+        
+        } else if(filterValue.length < 3) {
+            return;
+
+        } else{
 
             $.each(DataList.dataList[id].datas, function(key, element) {
-                position = -1;
+                var position = -1;
+                var unsearchable = false;
+
                 $.each(element, function(key, value){
-                    clé = DataList.dataList[id].unsearchable.indexOf(key);
+                    unsearchable = DataList.dataList[id].unsearchable.indexOf(key) != -1;
 
-                    if(clé == -1){
-
-                            if((typeof(value) == "string") || (typeof(value) == "number")){
-
-                                position = value.indexOf(filterValue);
-
-                            }
+                    if(!unsearchable){
+                        var haystack = value;
+                        if (value && value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+                            haystack = value.substring(0, 10);
+                        }
+                        if((typeof(haystack) == "string") || (typeof(haystack) == "number")){
+                            position = haystack.indexOf(filterValue);
+                        }
                     }
 
                     if(position != -1){
-
-                        test = true;
+                        filteredDatas.push(element);
                         return false;
 
                     }
                 });
-
-                if(test == true){
-                    filteredDatas.push(element);
-                }
-                
             });
         }
-        
         DataList.buildPaginationButtons(id, filteredDatas);
         DataList.buildList(id, 0, filteredDatas);      
     }
