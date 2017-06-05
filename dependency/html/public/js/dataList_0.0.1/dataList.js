@@ -387,11 +387,11 @@ var DataList = {
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
 
-        //if((typeof(pagination.find('input').val()) == "string") && (pagination.find('input').val() > 0) && (pagination.find('input').val() < DataList.buildList(id, DataList.dataList[id].pageNumber - 1))){
+        if((parseInt(pagination.find('input').val()) > 0) && (parseInt(pagination.find('input').val()) < DataList.buildList(id, DataList.dataList[id].pageNumber))){
 
 		        DataList.buildList(id, pagination.find('input').val() - 1);
 
-        //}
+        }
     },
 
     bind_rowNumberSelection: function() {
@@ -423,6 +423,8 @@ var DataList = {
 
         var position = -1;
 
+        var clé = -1;
+
         var filteredDatas = [];
 
         if(champ == ""){
@@ -441,9 +443,11 @@ var DataList = {
 
                 $.each(element, function(key, value){
 
-                    if(!(key == DataList.dataList[id].unsearchable[0] || key == DataList.dataList[id].unsearchable[1])){
+                    clé = DataList.dataList[id].unsearchable.indexOf(key);
 
-                            if(typeof(value) == "string"){
+                    if(clé == -1){
+
+                            if((typeof(value) == "string") || (typeof(value) == "number")){
 
                                 position = value.indexOf(champ);
 
