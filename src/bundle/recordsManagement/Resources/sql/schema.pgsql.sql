@@ -21,22 +21,6 @@ WITH (
 );
 
 
--- Table: "recordsManagement"."accessEntry"
-
--- DROP TABLE "recordsManagement"."accessEntry";
-
-CREATE TABLE "recordsManagement"."accessEntry"
-(
-  "accessRuleCode" text NOT NULL,
-  "orgRegNumber" text NOT NULL,
-  "originatorAccess" boolean default true,
-
-  UNIQUE ("accessRuleCode", "orgRegNumber")
-)
-WITH (
-  OIDS=FALSE
-);
-
 -- Table: "recordsManagement"."retentionRule"
 
 -- DROP TABLE "recordsManagement"."retentionRule";

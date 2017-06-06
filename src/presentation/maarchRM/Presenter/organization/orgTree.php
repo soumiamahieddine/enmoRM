@@ -39,12 +39,12 @@ class orgTree
     /**
      * __construct
      *
-     * @param \dependency\html\Document   $view       A new ready-to-use empty view
-     * @param \dependency\json\JsonObject $jsonObject The json base object
-     * @param \dependency\sdo\Factory     $sdoFactory The Sdo Factory for data access
+     * @param \dependency\html\Document   $view           A new ready-to-use empty view
+     * @param \dependency\json\JsonObject $jsonObject     The json base object
+     * @param \dependency\sdo\Factory     $sdoFactory     The Sdo Factory for data access
+     * @param bool                        $publicArchives
      */
-    public function __construct(
-    \dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory, $publicArchives=false)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory, $publicArchives = false)
     {
         $this->view = $view;
 
@@ -71,12 +71,11 @@ class orgTree
     {
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
+        $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
 
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
-
-
 
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("adminUser", $adminUser);
@@ -85,6 +84,7 @@ class orgTree
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
         $this->view->setSource("communicationMeans", $communicationMeans);
+        $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->merge();
         $this->view->translate();
 
@@ -129,7 +129,6 @@ class orgTree
         $this->view->translate();
 
         return $this->view->saveHtml();
-        
     }
 
     /**
@@ -282,6 +281,7 @@ class orgTree
     // JSON
     /**
      * Serializer JSON for create method
+     * @param string $orgId The organization identifier
      *
      * @return object JSON object with a status and message parameters
      */
@@ -334,12 +334,11 @@ class orgTree
         return $this->json->save();
     }
 
-    /*
+    /**
      * Serializer JSON for seting default person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
-
     public function setDefaultPosition()
     {
         $this->json->message = "Position set to default";
@@ -348,12 +347,11 @@ class orgTree
         return $this->json->save();
     }
 
-    /*
+    /**
      * Serializer JSON for set default person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
-
     public function addUserPosition()
     {
         $this->json->message = "User added to the organization";
@@ -364,7 +362,7 @@ class orgTree
 
     /**
      * Serializer JSON for adding person position method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function deleteUserPosition()
@@ -402,4 +400,17 @@ class orgTree
         return $this->json->save();
     }
 
+    /**
+     * Serializer JSON for udapteArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function udapteArchivalProfileAccess()
+    {
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access updated.";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
 }

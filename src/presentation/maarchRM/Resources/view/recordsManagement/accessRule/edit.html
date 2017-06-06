@@ -48,28 +48,6 @@ file that was distributed with this source code.
                 </div>
                 <span class="hide" id="codeError_txt">Access Code is empty.</span>
             </div>
-            <div class="row">
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Access entries</label>
-                        <div class="input-group">
-                            <select class="form-control" id="orgRegNumber">
-                                <option value=""></option>
-                                <?merge orgUnits ?>
-                                <option value="[?merge orgUnits.key() ?]"><?merge .displayName ?></option>
-                            </select>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" id="originatorAccess" type="button">Originator</button>
-                                <button class="btn btn-success" id="addAccessEntrie" type="button"><i class="fa fa-plus"/></button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-7 col-md-offset-2">
-                    <ul class="list-group" id="accessEntries">
-                    </ul>
-                </div>
-            </div>
         </form>
     </div>
     <div class="panel-footer clearfix">

@@ -133,3 +133,22 @@ CREATE TABLE "organization"."orgContact"
 WITH (
   OIDS=FALSE
 );
+
+-- Table: "organization"."archivalProfileAccess"
+
+-- DROP TABLE "organization"."archivalProfileAccess";
+
+CREATE TABLE "organization"."archivalProfileAccess"
+(
+  "orgId" text NOT NULL,
+  "archivalProfileReference" text NOT NULL,
+  "originatorAccess" boolean default true,
+
+  UNIQUE ("orgId", "archivalProfileReference"),
+  FOREIGN KEY ("orgId")
+      REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);

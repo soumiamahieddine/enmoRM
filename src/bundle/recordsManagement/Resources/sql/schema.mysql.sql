@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS `recordsManagement.documentDescription`;
 DROP TABLE IF EXISTS `recordsManagement.documentProfile`;
 DROP TABLE IF EXISTS `recordsManagement.archivalProfile`;
 DROP TABLE IF EXISTS `recordsManagement.accessRule`;
-DROP TABLE IF EXISTS `recordsManagement.accessEntry`;
 DROP TABLE IF EXISTS `recordsManagement.retentionRule`;
 DROP TABLE IF EXISTS `recordsManagement.serviceLevel`;
 DROP TABLE IF EXISTS `recordsManagement.log`;
@@ -18,15 +17,6 @@ CREATE TABLE `recordsManagement.accessRule`
   `duration` text,
   `description` text NOT NULL,
   PRIMARY KEY (`code`)
-);
-
-CREATE TABLE `recordsManagement.accessEntry`
-(
-  `accessRuleCode` varchar(255) NOT NULL,
-  `orgRegNumber` varchar(255) NOT NULL,
-  `originatorAccess` boolean DEFAULT true,
-
-  UNIQUE (`accessRuleCode`, `orgRegNumber`)
 );
 
 

@@ -266,4 +266,14 @@ interface organizationInterface
      * @action organization/organization/addContact
      */
     public function create_orgId_Contact($contact, $isSelf);
+
+    /**
+     * Add an organization archival profile access
+     * @param array $archivalProfileAccess The archival profile access array
+     * 
+     * @return bool
+     *
+     * @action organization/organization/updateArchivalProfileAccess
+     */
+    public function update_orgId_Archivalprofileaccess($archivalProfileAccess);
 }

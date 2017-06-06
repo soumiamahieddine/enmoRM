@@ -284,11 +284,12 @@ class welcome
             $descriptionHtml = '<table">';
 
             foreach ($archive->descriptionObject as $name => $value) {
-                $label = $type = null;
+                $label = $type = $archivalProfileField = null;
                 if ($archivalProfile) {
                     foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                         if ($archiveDescription->fieldName == $name) {
                             $label = $archiveDescription->descriptionField->label;
+                            $archivalProfileField = true;
                         }
                     }
                 }
@@ -316,7 +317,12 @@ class welcome
                     }
                 }
 
-                $descriptionHtml .= '<tr>';
+                if ($archivalProfileField) {
+                    $descriptionHtml .= '<tr class="archivalProfileField">';
+                } else {
+                    $descriptionHtml .= '<tr>';
+                }
+
                 $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
                 $descriptionHtml .= '<td title="'.$value.'">'.$value.'</td>';
                 $descriptionHtml .= '</tr>';
