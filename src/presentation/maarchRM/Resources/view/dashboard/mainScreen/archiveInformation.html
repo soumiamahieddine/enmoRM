@@ -3,6 +3,15 @@
     <input class="archiveName hide" value="[?merge archive.archiveName ?]">
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
 
+    <div class="col-xs-12">
+        <div id="archiveToolbarBtn" class="dropdown pull-right btn-group">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
+            </ul>
+        </div>
+    </div>
+
     <div class="col-xs-12 text-center">
         <i class="infoIcon fa fa-archive [?merge status.ifne('frozen').then('hide', '') ?]" style="color: #69B5DB"/>
         <i class="infoIcon fa fa-archive [?merge status.ifeq('frozen').then('hide', '') ?]"/> 
@@ -376,6 +385,44 @@
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);
+        },
+
+        buildNewArchiveDropdownMenu: function() {
+            var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
+            var dropdown = $("#archiveToolbarBtn .dropdown-menu");
+            dropdown.children().not(":first").remove();
+
+            for (var i = 0; i < archivalProfiles.length; i++) {
+                var a = $("<a/>")
+                        .addClass("userProfile small newArchive")
+                        .data("reference", archivalProfiles[i].reference)
+                        .data("json", JSON.stringify(archivalProfiles[i]))
+                        .attr('style', "cursor: pointer;")
+                        .text(archivalProfiles[i].name);
+                $("<li/>").append(a).appendTo(dropdown);
+            }
+        },
+
+        loadImportForm: function() {
+            var importPanel = $("#importPanel");
+            var archiveInformation = $('#archiveInformation');
+
+            var parentArchiveId = this.archiveId;
+            var parentArchiveName = $('#archiveInformation').find('.archiveName').val();
+
+            $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
+
+            importPanel.find("[data-context-path]:first").text($("#folderPath").text());
+            importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
+            importPanel.find("[data-context-profil]:first").text($(this).text());
+
+            $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+            importPanel.find("[data-context-parentarchive]")
+                       .removeClass('hide')
+                       .find('[data-context-parentname]').html(parentArchiveName);
+
+            $('#importTab').click();
+            $('#rightColumn').empty();
         }
     }
     
@@ -409,6 +456,11 @@
     
     $('#saveMetadata').on('click', function(){
         ArchiveInformation.saveMetadata();
+    });
+
+    $("#archiveToolbarBtn").on('click', '.newArchive', function() {
+        ArchiveInformation.loadImportForm();
+        
     });
         
 </script>

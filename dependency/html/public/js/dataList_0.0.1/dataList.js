@@ -1,71 +1,101 @@
+/* OPTIONS
+    
+    datas           -> json datas to merge,
+    rowMerge        -> datas merging function,
+    rowMaxNumber    -> default rowNumber,
+    rowTranslation  -> translation for "row"
+    paginationType  -> pagination presentation :
+                        input : input to select page
+                        buttons : button with page number
+    emptyMessage    -> html to show when the list is empty
+    sorting         -> array of object that define wich properties of datas can be sorted
+                       object have to two properties : the name and the label of the sortable property
+    unsearchable    -> array of unserchable property
+*/
+
 var DataList = {
 	dataList: {},
-	paginationHTML :'<div class="datalistPagination pull-right hide">'+
+    filterList    :'<div class="form-group filterList pull-right" style="margin-left:5px; display:float; max-width:200px">'+
+                        '<div class="input-group">'+
+                            '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-filter" \/><\/span>'+
+                            '<input type="text" class="form-control input-sm" \/>'+
+                        '<\/div>'+
+                    '<\/div>',
+	inputPagination  :'<div class="datalistPagination pull-right">'+ // CHOICE PAGE
                 		'<nav>'+
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
-                        		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
-                        		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
+								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
+                        		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px; text-align: center" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
+                         		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
+					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
+                     		'<\/ul>'+
+                	 	'<\/nav>'+
+            		 '<\/div>',
+    buttonPagination :'<div class="datalistPagination pull-right hide">'+
+                		'<nav>'+
+                    		'<ul class="pagination pagination-sm" style="margin:0">'+
+                        		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
+                        		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
                     		'<\/ul>'+
                 		'<\/nav>'+
             		'<\/div>',
-    sortingBtn     :'<div class="btn-group">'+
+	rowNumberInput   :'<div class="form-group pull-right datalistRowNumber" style="margin-left:5px; display:float">'+
+						'<select class="form-control input-sm pull-right" style="height:29px">'+
+								'<option value="10">10</option>'+
+								'<option value="20">20</option>'+
+								'<option value="30">30</option>'+
+								'<option value="40">40</option>'+
+						'</select>'+    
+					'</div>',
+    sortingBtn      :'<div class="btn-group">'+
                         '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
-                            '<i class="fa fa-filter"\/>'+
+                            '<i class="fa fa-sort-amount-asc"\/>'+
                         '<\/button>'+
-                    '<\/div>',         
-	selectAllHTML  :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-    selectorHTML   :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-        
+                     '<\/div>',         
+	selectAllHTML   :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    selectorHTML    :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
 
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
         var row = element.children('.row:first');
         var list = $('<div/>').addClass('list').appendTo(element);
-        var sortingInput = $('<div>').addClass('pull-right dataList-sorting').css('padding', '0px 5px');
+
 
         if (row.length == 0) {
             row = $('<div/>').addClass('row').prependTo(element);
         }
 
-        // Build sorting input
-        if (options.sorting) {
-            var sortingBtn = this.sortingBtn;
-            var ul = $('<ul/>').addClass('dropdown-menu');
-
-            sortingInput.prepend(sortingBtn);
-            $.each(options.sorting, function() {
-                $('<li/>').data('value', this.fieldName).data('order', '<').append(
-                    $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
-                ).appendTo(ul);
-                $('<li/>').data('value', this.fieldName).data('order', '>').append(
-                    $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
-                ).appendTo(ul);
-            });
-            ul.children('li:first').addClass('active');
-            sortingInput.find('.btn-group').append(ul);
-            /*var select = $('<select/>').addClass('form-control input-sm').css('color', 'grey').prependTo(sortingInput);
-            $.each(options.sorting, function() {
-                $('<option/>').val(this.fieldName).data('order', '<').text('< '+this.label).appendTo(select);
-                $('<option/>').val(this.fieldName).data('order', '>').text('> '+this.label).appendTo(select);
-            });
-
-            select.on('change', DataList.bind_dataOrdering);
-            */
-        }
-		
-        // Build header row
-        row.prepend(this.selectAllHTML)
-           .prepend(sortingInput)
-           .prepend(this.paginationHTML)
-           .removeClass('hide')
-           .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);;
-
         this.dataList[id] = {
             element      : element,
-            list         : list
+            list         : list,
         };
+        		
+        // Build header row
+        row.prepend(this.selectAllHTML)
+           .prepend(this.filterList);
 
+        // Build sorting input
+        if (options.sorting) {
+            row.prepend(this.initSortingInput(options.sorting));
+        }
+
+        if(options.paginationType){
+            row.prepend(this.inputPagination);
+
+        } else {
+            row.prepend(this.buttonPagination);
+        }
+        
+        if(!options.rowTranslation) {
+            options.rowTranslation = "lines";
+        }
+        
+		row.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
+           .removeClass('hide')
+           .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
+		   
         // Set message for empty list
         if (options.emptyMessage) {
             this.dataList[id].emptyMessage = $(options.emptyMessage);
@@ -83,18 +113,59 @@ var DataList = {
 
 	},
 
+    initSortingInput: function(fields) {
+        var sortingInput = $('<div>').addClass('pull-right dataList-sorting').css('padding', '0px 5px');
+        var sortingBtn = this.sortingBtn;
+        var ul = $('<ul/>').addClass('dropdown-menu');
+        sortingInput.prepend(sortingBtn);
+
+        
+
+        $.each(fields, function() {
+            $('<li/>').data('value', this.fieldName).data('order', '<').append(
+                $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
+            ).appendTo(ul);
+            $('<li/>').data('value', this.fieldName).data('order', '>').append(
+                $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
+            ).appendTo(ul);
+        });
+
+        ul.children('li:first').addClass('active');
+        sortingInput.find('.btn-group').append(ul);
+
+        return sortingInput;
+    },
+
+    initRowNumberSelect: function(lineText, defaultValue) {
+        var select = $(this.rowNumberInput);
+
+        select.find('option[value="10"]').text("10 " + lineText);
+        select.find('option[value="20"]').text("20 " + lineText);
+        select.find('option[value="30"]').text("30 " + lineText);
+        select.find('option[value="40"]').text("40 " + lineText);
+
+        if (defaultValue) {
+            select.find('select').val(defaultValue);
+        }
+
+        return select;
+    },
+
     build: function(id, options) {
         this.dataList[id] = {
             datas           : options.datas,
             rowMerge        : options.rowMerge,
             rowMaxNumber    : options.rowMaxNumber,
             currentRange    : options.currentRange,
+            paginationType  : options.paginationType,
+            unsearchable    : options.unsearchable,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             emptyMessage    : this.dataList[id].emptyMessage,
         };
 
         this.buildPaginationButtons(id);
+        this.dataList[id].unsearchable.push('html');
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
@@ -106,32 +177,46 @@ var DataList = {
         }
     },
 
-	buildPaginationButtons: function(id) {
+	buildPaginationButtons: function(id, filteredDatas) {
         var pagination = this.dataList[id].element.find('.datalistPagination');
-        pagination.find('li').not('li:first, li:last').remove();
+		var rowNumber = this.dataList[id].element.find('.datalistRowNumber');
+        var filterInput = this.dataList[id].element.find('.filterList');
 
-        if (this.dataList[id].datas.length > this.dataList[id].rowMaxNumber) {
+        var datas = this.dataList[id].datas;
+        if(filteredDatas != undefined){
+
+            datas = filteredDatas;
+        } 
+
+        if (datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
-            var pageLi = []
-            pagination.find('ul > li').not(':first').not(':last').empty();
+            var pageLi = [];
+            var pageNumber = Math.trunc(datas.length / this.dataList[id].rowMaxNumber);
 
-            var pageNumber = this.dataList[id].datas.length / this.dataList[id].rowMaxNumber;
-            if (this.dataList[id].datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }
-
+            if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
 
-            for (var i=1; i<= pageNumber; i++) {
-                var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
-                lastLi.before(li);
-                pageLi.push(li);
+            filterInput.find('input').off().on('keyup', DataList.bind_filterList);
+
+            if (this.dataList[id].paginationType == "input") {
+                pagination.removeClass('hide')
+                          .find('input').off().on('keyup', DataList.bind_pageChoice)
+                          .closest('ul').find('a').off().on('click', DataList.bind_pageChanging);
+
+            } else {
+                for (var i=1; i<= pageNumber; i++) {
+                    var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
+                    lastLi.before(li);
+                    pageLi.push(li);
+                }
+
+                pageLi[0].addClass('active');
+
+                pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChanging);
             }
-
-            pageLi[0].addClass('active');
-
-            pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChanging);
+            
             this.dataList[id].currentRange = 0;
-            this.condensePaginationDisplay(id);
-
+            rowNumber.removeClass('hide').find('select').off().on('change', DataList.bind_rowNumberSelection);
 
         } else {
             pagination.addClass('hide');
@@ -139,7 +224,6 @@ var DataList = {
     },
 
     condensePaginationDisplay: function(id) {
-
         if (this.dataList[id].pageNumber <7) {
             return;
         }
@@ -171,11 +255,18 @@ var DataList = {
         buttons.not(permanantButtons).not(selection).addClass('hide');
     },
 
-    buildList: function(id, range) {
+    buildList: function(id, range, filteredDatas) {
+
+        var datas = this.dataList[id].datas;
+        if(filteredDatas != undefined){
+
+            datas = filteredDatas;
+        }
+
         this.dataList[id].list.empty();
 
         if (this.dataList[id].emptyMessage) {
-            if (this.dataList[id].datas.length == 0) {
+            if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
@@ -187,18 +278,19 @@ var DataList = {
 	    }
 
 	    var rowStart = range * this.dataList[id].rowMaxNumber;
-	    var rowEnd = rowStart + this.dataList[id].rowMaxNumber;
+	    var rowEnd = parseInt(rowStart) + parseInt(this.dataList[id].rowMaxNumber);
+
 
 	    this.dataList[id].currentRange = range;
 
-	    for(var i=rowStart; i<rowEnd && i<this.dataList[id].datas.length; i++) {
-	        if (!this.dataList[id].datas[i].html) {
-	            var row = this.dataList[id].rowMerge(this.dataList[id].datas[i]);
+	    for(var i=rowStart; i<rowEnd && i<datas.length; i++) {
+	        if (!datas[i].html) {
+	            var row = this.dataList[id].rowMerge(datas[i]);
                 row.addClass('dataListElement').prepend(this.selectorHTML);
-	            this.dataList[id].datas[i].html = row;
+	            datas[i].html = row;
 	        }
 
-	        this.dataList[id].list.append(this.dataList[id].datas[i].html.data('index', i));
+	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
 
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
@@ -224,6 +316,8 @@ var DataList = {
         this.buildList(id);
         this.dataList[id].element.find('.datalistPagination').find('li').removeClass('active').eq(1).addClass('active');
     },
+
+    /* EVENT BINDING METHODS */
 
     bind_selection: function() {
         var checkbox = $(this);
@@ -252,26 +346,71 @@ var DataList = {
         var a = $(this);
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
+
         if (a.hasClass('previousPage')) {
             var range = DataList.dataList[id].currentRange - 1;
             if (range >= 0) {
                 DataList.buildList(id, range);
-                pagination.find('.active').removeClass('active').prev().addClass('active');
+                if (DataList.dataList[id].paginationType == "input") {
+                    pagination.find('input').val(range + 1);
+                } else {
+                    pagination.find('.active').removeClass('active').prev().addClass('active');
+                }
             }
         } else if (a.hasClass('nextPage')) {
             var range = DataList.dataList[id].currentRange + 1;
             if (range <= DataList.dataList[id].pageNumber - 1) {
                 DataList.buildList(id, range);
-                pagination.find('.active').removeClass('active').next().addClass('active');
+                if (DataList.dataList[id].paginationType == "input") {
+                    pagination.find('input').val(range + 1);
+                } else {
+                    pagination.find('.active').removeClass('active').prev().addClass('active');
+                }    
             }
-        } else {
-            DataList.buildList(id, parseInt(a.text())-1);
-            pagination.find('.active').removeClass('active');
-            a.parent().addClass('active');
+        } else if (a.hasClass('firstPage')) {
+            DataList.buildList(id, 0);
+            if (DataList.dataList[id].paginationType == "input") {
+                pagination.find('input').val(1);
+            }
+           
+        } else if (a.hasClass('lastPage')) {
+            DataList.buildList(id, DataList.dataList[id].pageNumber - 1);
+            if (DataList.dataList[id].paginationType == "input") {
+                pagination.find('input').val(DataList.dataList[id].pageNumber);
+            }
         }
-
-        DataList.condensePaginationDisplay(id);
     },
+	
+	bind_pageChoice: function() {
+		var a = $(this);
+        var pagination = a.closest('.datalistPagination');
+        var id = a.closest('.dataList').data('datalist-id');
+        var input = pagination.find('input');
+
+            if((input.val().match('^[0-9]*$')) && (input.val() > 0) && (input.val() < DataList.dataList[id].pageNumber + 1)){
+
+		        DataList.buildList(id, pagination.find('input').val() - 1); 
+
+        }
+        else{
+
+            function current(){
+               
+                input.val(DataList.dataList[id].currentRange +1);
+            }
+            
+            setTimeout(current, 2000);
+        }
+    },
+
+    bind_rowNumberSelection: function() {
+		var a = $(this);
+        var id = a.closest('.dataList').data('datalist-id');
+
+		DataList.dataList[id].rowMaxNumber = a.val();
+		DataList.buildPaginationButtons(id);
+		DataList.buildList(id,0);
+	},
 
     bind_dataOrdering: function() {
         var a = $(this);
@@ -282,6 +421,51 @@ var DataList = {
         a.parent().addClass('active');
 
         return DataList.sort(id, li.data('value'), li.data('order'));
+    },
+
+    bind_filterList: function(){
+
+        var a = $(this);
+        var id = a.closest('.dataList').data('datalist-id');
+        var filterInput = a.closest('.filterList');
+        var filterValue = filterInput.find('input').val();
+        var filteredDatas = [];
+
+        if(filterValue == ""){
+            filteredDatas = undefined;
+        
+        } else if(filterValue.length < 3) {
+            return;
+
+        } else{
+
+            $.each(DataList.dataList[id].datas, function(key, element) {
+                var position = -1;
+                var unsearchable = false;
+
+                $.each(element, function(key, value){
+                    unsearchable = DataList.dataList[id].unsearchable.indexOf(key) != -1;
+
+                    if(!unsearchable){
+                        var haystack = value;
+                        if (value && value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+                            haystack = value.substring(0, 10);
+                        }
+                        if((typeof(haystack) == "string") || (typeof(haystack) == "number")){
+                            position = haystack.indexOf(filterValue);
+                        }
+                    }
+
+                    if(position != -1){
+                        filteredDatas.push(element);
+                        return false;
+
+                    }
+                });
+            });
+        }
+        DataList.buildPaginationButtons(id, filteredDatas);
+        DataList.buildList(id, 0, filteredDatas);      
     }
 
 }

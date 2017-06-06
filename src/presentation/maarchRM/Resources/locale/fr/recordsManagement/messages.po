@@ -851,7 +851,7 @@ msgid "Archive updated"
 msgstr "Archive modifée"
 
 msgid "Add field"
-msgstr "Ajouter un champs"
+msgstr "Ajouter un champ"
 
 msgid "A label is missing."
 msgstr "Un libellé n'a pas été renseigné"

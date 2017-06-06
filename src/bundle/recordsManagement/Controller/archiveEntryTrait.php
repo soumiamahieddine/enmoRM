@@ -373,18 +373,22 @@ trait archiveEntryTrait
         }
 
         $nbArchiveObjects = count($archive->contents);
+		
 
         try {
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
-
+			
             $this->openContainers($archive, $path);
+
             
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
+
 
             if (!empty($archive->digitalResources)) {
                 $this->storeResources($archive);
             }
+
 
             $this->storeDescriptiveMetadata($archive);
 

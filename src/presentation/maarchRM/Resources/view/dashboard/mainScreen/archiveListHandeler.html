@@ -21,7 +21,9 @@
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
     }
-
+    .dataList {
+        min-height: 300px;
+    }
     .dataList .archiveContentButton,
     .dataList a,
     .dataList .bg-success,
@@ -43,9 +45,12 @@
 
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
-            e.addClass('bg-success');
-
-            if (c) { c.addClass('selectedChild') }
+            if (!c) {
+                e.addClass('bg-success');
+            } else { 
+                e.removeClass('bg-success');
+                c.addClass('selectedChild').closest('li').addClass('bg-success'); 
+            }
         },
 
         unselect: function(dataList) {
@@ -63,7 +68,8 @@
                 url         : "/archive/"+archiveId,
                 type        : "GET",
                 success     : function (response) {
-                    $('#rightColumn').html(response);
+                    $('#rightColumn').empty().html(response);
+                    ArchiveInformation.buildNewArchiveDropdownMenu();
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -115,7 +121,9 @@
                             .siblings('span')
                             .addClass('childrenArchive')
                             .attr('id', childrenArchives[j].archiveId)
-                            .html(childrenArchives[j].archiveName);
+                            .html(childrenArchives[j].archiveName)
+                            .append($('<a/>').attr('href','#')
+                                             .class);
 
                     BootstrapTree.addNode(parent, template, hidden);
 
