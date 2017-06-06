@@ -225,20 +225,6 @@
 
         loadImportForm: function() {
             var importPanel = $("#importPanel");
-            var selectedRow = $("#folderContentList").find(".bg-success")
-            var parentArchiveId = null;
-            var parentArchiveName = null;
-
-            if (selectedRow.hasClass('archive')) {
-                parentArchiveId = selectedRow.attr("id");
-                parentArchiveName = selectedRow.find('a:first').text();
-            } else {
-                childrenArchive = selectedRow.find(".childrenArchive:first");
-                if (childrenArchive) {
-                    parentArchiveId = childrenArchive.attr("id");
-                    parentArchiveName = childrenArchive.text();
-                }
-            }
 
             $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
 
@@ -246,18 +232,11 @@
             importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
             importPanel.find("[data-context-profil]:first").text($(this).text());
 
-            if (parentArchiveId) {
-                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-                importPanel.find("[data-context-parentarchive]")
-                           .removeClass('hide')
-                           .find('[data-context-parentname]').html(parentArchiveName);
-            } else {
-                $("#archiveForm [name='parentArchiveId']").val('');
-                importPanel.find("[data-context-parentarchive]").addClass('hide');
-
-            }
+            $("#archiveForm [name='parentArchiveId']").val('');
+            importPanel.find("[data-context-parentarchive]").addClass('hide');
 
             $('#importTab').click();
+            $('#rightColumn').empty()
         }
     }
 
@@ -267,7 +246,6 @@
 
     $("#folderToolbarBtn").on('click', '.newArchive', function() {
         NewArchive.loadImportForm();
-        
     });
 
     $("#folderToolbarSearch").on('click', function() {
