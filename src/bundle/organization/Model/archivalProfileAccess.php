@@ -52,4 +52,4 @@ class archivalProfileAccess
      * @var boolean
      */
     public $originatorAccess;
-} // END class accessEntry
+}

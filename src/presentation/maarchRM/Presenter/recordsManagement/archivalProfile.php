@@ -186,19 +186,13 @@ class archivalProfile
             $completeAccessRule = $accessRuleController->edit($accessRule->code);
             $accessRule->description = $completeAccessRule->description;
 
-            foreach ($completeAccessRule->accessEntry as $accessEntry) {
-                $accessEntry->displayName = $organizationController->getOrgByRegNumber($accessEntry->orgRegNumber)->displayName;
-            }
-
             $accessRule->json = json_encode($completeAccessRule);
             if ($accessRule->duration != null) {
                 $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
                 $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
             }
         }
-        //$descriptionClassSlector = $this->view->getElementById("accessRuleCode");
         $this->view->setSource("accessRules", $accessRules);
-        //$this->view->merge($descriptionClassSlector);
 
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();

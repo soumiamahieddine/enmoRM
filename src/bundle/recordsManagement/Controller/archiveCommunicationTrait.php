@@ -76,7 +76,7 @@ trait archiveCommunicationTrait
         if (!empty($description) || !empty($text)) {
             $searchClasses = [];
             if (!$profileReference) {
-                $archivalProfiles = $this->archivalProfileController->index(true);
+                $archivalProfiles = $this->archivalProfileController->index();
                 foreach ($archivalProfiles as $archivalProfile) {
                     if ($archivalProfile->descriptionClass != '' && !isset($searchClasses[$archivalProfile->descriptionClass])) {
                         $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);

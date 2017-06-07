@@ -82,7 +82,7 @@ class welcome
 
         // archival profiles for search form
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $archivalProfiles = $archivalProfileController->index(true);
+        $archivalProfiles = $archivalProfileController->index();
 
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfileController->readDetail($archivalProfile);

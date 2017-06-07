@@ -85,14 +85,6 @@ file that was distributed with this source code.
         $(this).toggleClass('active btn-info btn-default');
     });
 
-    $("#addAccessEntrie").on('click', function () {
-        AccessRuleModal.addAccessEntrie();
-    });
-
-    $("#accessEntries").on('click', '.removeAccessEntry', function () {
-        $(this).closest('li').remove();
-    });
-
     var AccessRuleModal = {
         modal: $('#accessRuleModal'),
 
@@ -111,10 +103,6 @@ file that was distributed with this source code.
                 $('#code').prop('disabled', true);
 
                 $('#save').data('code', accessRule.code);
-
-                $.each(accessRule.accessEntry, function() {
-                    AccessRuleModal.loadAccessEntrie($(this)[0]);
-                });
             }
 
             this.modal.modal();
@@ -160,54 +148,6 @@ file that was distributed with this source code.
 
         },
 
-        addAccessEntrie : function() {
-            var accessEntry = {
-                orgRegNumber : $('#orgRegNumber').val(),
-                originatorAccess : $('#originatorAccess').hasClass('active')
-            }
-
-            if (accessEntry.orgRegNumber == "") {
-                return;
-            }
-
-            $('#orgRegNumber').val('');
-
-            if (accessEntry.originatorAccess) {
-                $('#originatorAccess').click();
-            }
-
-            this.loadAccessEntrie(accessEntry);
-        },
-
-        loadAccessEntrie : function(accessEntry) {
-            var slectedOption = $('#orgRegNumber').find('option[value="'+accessEntry.orgRegNumber+'"]');
-
-            var li = $('<li/>').addClass('list-group-item clearfix')
-                               .data('org-unit-id', accessEntry.orgRegNumber)
-                               .data('originator-access', accessEntry.originatorAccess)
-                               .html(slectedOption.html());
-
-            var span = $('<span/>').addClass('pull-right').appendTo(li);
-
-            if (accessEntry.originatorAccess) {
-                $('<a/>').addClass('btn btn-default btn-xs disabled')
-                         .attr('aria-label', "Originator")
-                         .attr('href','#')
-                         .html($("#originatorAccess").text())
-                         .appendTo(span);
-            }
-
-            $('<a/>').attr('href','#')
-                     .addClass('text-danger removeAccessEntry')
-                     .html(
-                        $('<i/>').addClass("fa fa-times fa-fw")
-                     ) 
-                     .appendTo(span);
-            
-            li.appendTo($("#accessEntries"));
-            slectedOption.hide();
-        },
-
         serialize : function() {
             if ($('#accessRuleDurationUnit').val() == "*") {
                 accessRuleDuration = 'P' + 999999999 + 'Y';
@@ -219,21 +159,10 @@ file that was distributed with this source code.
                 accessRuleDuration = 'P' + $('#accesRuleDuration').val() + $('#accessRuleDurationUnit').val();
             }
 
-            var accessEntries = [];
-
-            $('#accessEntries').find('li').each(function () {
-                var accessEntry = {
-                    orgRegNumber : $(this).data('org-unit-id'),
-                    originatorAccess : $(this).data('originator-access') ? 1 : 0
-                };
-                accessEntries.push(accessEntry);
-            });
-
             serializedObject = {
                 code: $('#code').val(),
                 duration: accessRuleDuration,
-                description: $('#description').val(),
-                accessEntry : accessEntries
+                description: $('#description').val()
             }
 
                 return serializedObject;
@@ -248,7 +177,6 @@ file that was distributed with this source code.
             
             $('#save').data('code', "");
 
-            $("#accessEntries").html('');
             if ($('#originatorAccess').hasClass('active')) $('#originatorAccess').click();
             $('#orgRegNumber').find('option').removeClass('hide');
             
