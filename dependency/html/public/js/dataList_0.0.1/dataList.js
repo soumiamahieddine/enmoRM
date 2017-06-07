@@ -26,7 +26,7 @@ var DataList = {
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:40px; border:none; height:27px; text-align: center" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:30px; border:none; height:27px; text-align: center" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
                          		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
 					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
                      		'<\/ul>'+
@@ -41,7 +41,7 @@ var DataList = {
                 		'<\/nav>'+
             		'<\/div>',
 	rowNumberInput   :'<div class="form-group pull-right datalistRowNumber" style="margin-left:5px; display:float">'+
-						'<select class="form-control input-sm pull-right" style="height:29px">'+
+						'<select class="form-control input-sm pull-right" style="padding:5px 5px">'+
 								'<option value="10">10</option>'+
 								'<option value="20">20</option>'+
 								'<option value="30">30</option>'+
@@ -165,7 +165,10 @@ var DataList = {
         };
 
         this.buildPaginationButtons(id);
-        this.dataList[id].unsearchable.push('html');
+
+        if (this.dataList[id].unsearchable) {
+            this.dataList[id].unsearchable = ['html'];
+        }
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
@@ -197,6 +200,7 @@ var DataList = {
             this.dataList[id].pageNumber = pageNumber;
 
             filterInput.find('input').off().on('keyup', DataList.bind_filterList);
+            this.dataList[id].currentRange = 0;
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
@@ -211,11 +215,10 @@ var DataList = {
                 }
 
                 pageLi[0].addClass('active');
-
                 pagination.removeClass('hide').find('a').off().on('click', DataList.bind_pageChanging);
+                this.condensePaginationDisplay(id);
             }
             
-            this.dataList[id].currentRange = 0;
             rowNumber.removeClass('hide').find('select').off().on('change', DataList.bind_rowNumberSelection);
 
         } else {
@@ -252,6 +255,7 @@ var DataList = {
             selection.last().after(dots.clone());
         }
 
+        selection.removeClass('hide');
         buttons.not(permanantButtons).not(selection).addClass('hide');
     },
 
@@ -355,6 +359,7 @@ var DataList = {
                     pagination.find('input').val(range + 1);
                 } else {
                     pagination.find('.active').removeClass('active').prev().addClass('active');
+                    DataList.condensePaginationDisplay(id);
                 }
             }
         } else if (a.hasClass('nextPage')) {
@@ -364,7 +369,8 @@ var DataList = {
                 if (DataList.dataList[id].paginationType == "input") {
                     pagination.find('input').val(range + 1);
                 } else {
-                    pagination.find('.active').removeClass('active').prev().addClass('active');
+                    pagination.find('.active').removeClass('active').next().addClass('active');
+                    DataList.condensePaginationDisplay(id);
                 }    
             }
         } else if (a.hasClass('firstPage')) {
@@ -378,6 +384,11 @@ var DataList = {
             if (DataList.dataList[id].paginationType == "input") {
                 pagination.find('input').val(DataList.dataList[id].pageNumber);
             }
+        } else {
+            DataList.buildList(id, parseInt(a.text())-1);
+            pagination.find('.active').removeClass('active');
+            a.parent().addClass('active');
+            DataList.condensePaginationDisplay(id);
         }
     },
 	
