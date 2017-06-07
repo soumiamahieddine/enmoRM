@@ -15,9 +15,9 @@
 
 var DataList = {
 	dataList: {},
-    filterList    :'<div class="form-group filterList pull-right" style="margin-left:5px; display:float; max-width:200px">'+
+    filterList    :'<div class="form-group filterList pull-right" style="margin-left:5px; display:float; max-width:150px">'+
                         '<div class="input-group">'+
-                            '<span class="input-group-addon" id="basic-addon1"><i class="fa fa-filter" \/><\/span>'+
+                            '<span class="input-group-addon" style="background-color:#fff; padding:5px 5px;"><i class="fa fa-filter" \/><\/span>'+
                             '<input type="text" class="form-control input-sm" \/>'+
                         '<\/div>'+
                     '<\/div>',
@@ -26,7 +26,7 @@ var DataList = {
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:30px; border:none; height:27px; text-align: center" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
+					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:30px; border:none; height:27px; text-align: center; padding: 5px 2px" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
                          		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
 					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
                      		'<\/ul>'+
@@ -209,7 +209,7 @@ var DataList = {
 
             } else {
                 for (var i=1; i<= pageNumber; i++) {
-                    var li = $('<li/>').append($('<a/>').attr('href', '#').html(i));
+                    var li = $('<li/>').append($('<a/>').attr('href', '#').addClass('pageBtn').html(i));
                     lastLi.before(li);
                     pageLi.push(li);
                 }
@@ -384,7 +384,7 @@ var DataList = {
             if (DataList.dataList[id].paginationType == "input") {
                 pagination.find('input').val(DataList.dataList[id].pageNumber);
             }
-        } else {
+        } else if (a.hasClass('pageBtn')) {
             DataList.buildList(id, parseInt(a.text())-1);
             pagination.find('.active').removeClass('active');
             a.parent().addClass('active');
@@ -445,9 +445,6 @@ var DataList = {
         if(filterValue == ""){
             filteredDatas = undefined;
         
-        } else if(filterValue.length < 3) {
-            return;
-
         } else{
 
             $.each(DataList.dataList[id].datas, function(key, element) {
@@ -469,6 +466,7 @@ var DataList = {
 
                     if(position != -1){
                         filteredDatas.push(element);
+                        console.log(key+' : '+value);
                         return false;
 
                     }
