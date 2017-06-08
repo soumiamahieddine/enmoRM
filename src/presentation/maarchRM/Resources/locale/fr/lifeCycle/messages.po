@@ -29,7 +29,7 @@ msgid "Event Type"
 msgstr "Type d'événement"
 
 msgid "Event Class"
-msgstr "Type d'object"
+msgstr "Type d'objet"
 
 msgid "Select an object type"
 msgstr "Sélectionnez un type d'objet"
