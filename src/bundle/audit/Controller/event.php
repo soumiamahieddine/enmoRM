@@ -203,8 +203,6 @@ class event
      */
     public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
     {
-
-        $events = array();
         $queryParts = array();
         $queryParams = array();
         if ($fromDate) {
