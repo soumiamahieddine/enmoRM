@@ -66,9 +66,6 @@ INSERT INTO `recordsManagement.accessRule` (`code`,`duration`, `description`) VA
     ('COM_INTERNE','P1M','Communication interne'),
     ('FACTURE_CLIENT','P1Y','Facture client');
 
-INSERT INTO `recordsManagement.accessEntry` (`accessRuleCode`, `orgUnitId`, `originatorAccess`) VALUES
-    ('FACTURE_CLIENT','regNum_CPTCLI',TRUE);
-
 INSERT INTO `recordsManagement.archivalProfile` (`archivalProfileId`, `reference`, `name`, `descriptionSchema`, `descriptionClass`, `retentionStartDate`, `retentionRuleCode`, `description`, `accessRuleCode`) VALUES
     ('actes', 'actes', 'actes', null, null, null, null, null, null),
     ('invoice', 'invoice', 'Factures', null, 'businessRecords/adminDescription', null, null, null, null);

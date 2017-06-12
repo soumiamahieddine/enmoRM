@@ -34,12 +34,6 @@ INSERT INTO "recordsManagement"."accessRule" ("code", "duration", "description")
 	('ComptabiliteVente','P999Y','Comptabilité vente'),
 	('DocumentsGestion','P999Y','Documents de gestion');
 
-INSERT INTO "recordsManagement"."accessEntry" ("accessRuleCode", "orgRegNumber", "originatorAccess") VALUES
-    ('ComptabiliteAchats','regNum_CPTFOUR',TRUE),
-	('ComptabiliteVente','regNum_CPTCLI',TRUE),
-	('DossierDuPersonnel','regNum_RH',TRUE),
-	('BulletinsDePaie','regNum_PAIE',TRUE);
-
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode") VALUES
     ('FacturesClients', 'FacturesClients', 'Factures clients', null, null, 'definedLater', 'DocumentComptables', 'Factures de vente clients', 'ComptabiliteVente'),
 	('FacturesFournisseurs', 'FacturesFournisseurs', 'Factures fournisseurs', null, null, 'definedLater', 'DocumentComptables', 'Factures d''achats fournisseurs', 'ComptabiliteAchats');
