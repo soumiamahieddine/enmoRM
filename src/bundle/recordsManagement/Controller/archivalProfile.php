@@ -376,23 +376,17 @@ class archivalProfile
      */
     public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
     {
-        $orgUnitArchivalProfilesRef = [];
+        $archivalProfileAccesses = [];
         $archivalProfilesRef = [];
 
         $organization = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $orgRegNumber);
-        $accessEntries = $this->sdoFactory->find('organization/archivalProfileAccess');
-
-        foreach ($accessEntries as $accessEntry) {
-            if ($accessEntry->orgId == $organization->orgId) {
-                $orgUnitArchivalProfilesRef[] = $accessEntry->archivalProfileReference;
-            }
-
-            $archivalProfilesRef[] = $accessEntry->archivalProfileReference;
-        }
-        $archivalProfilesRef = array_unique($archivalProfilesRef);
         
-        $orgUnitArchivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "reference = ['".implode("', '", $orgUnitArchivalProfilesRef)."'] or reference != ['".implode("', '", $archivalProfilesRef)."']");
-
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='".$organization->orgId."'");
+        
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            $orgUnitArchivalProfiles[] = $this->getByReference($archivalProfileAccess->archivalProfileReference);
+        }
+        
         return $orgUnitArchivalProfiles;
     }
 }
