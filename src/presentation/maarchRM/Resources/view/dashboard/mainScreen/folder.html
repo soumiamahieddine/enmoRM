@@ -223,14 +223,13 @@
             }
         },
 
-        loadImportForm: function() {
+        loadImportForm: function(e) {
             var importPanel = $("#importPanel");
-
-            $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
+            $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
 
             importPanel.find("[data-context-path]:first").text($("#folderPath").text());
             importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
-            importPanel.find("[data-context-profil]:first").text($(this).text());
+            importPanel.find("[data-context-profil]:first").text(e.text());
 
             $("#archiveForm [name='parentArchiveId']").val('');
             importPanel.find("[data-context-parentarchive]").addClass('hide');
@@ -245,7 +244,7 @@
     });
 
     $("#folderToolbarBtn").on('click', '.newArchive', function() {
-        NewArchive.loadImportForm();
+        NewArchive.loadImportForm($(this));
     });
 
     $("#folderToolbarSearch").on('click', function() {

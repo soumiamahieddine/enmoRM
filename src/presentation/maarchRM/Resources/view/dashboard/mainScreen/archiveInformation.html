@@ -407,18 +407,18 @@
             }
         },
 
-        loadImportForm: function() {
+        loadImportForm: function(e) {
             var importPanel = $("#importPanel");
             var archiveInformation = $('#archiveInformation');
 
-            var parentArchiveId = this.archiveId;
+            var parentArchiveId = archiveInformation.find(".archiveInformationId").val();
             var parentArchiveName = $('#archiveInformation').find('.archiveName').val();
 
-            $("#archiveForm [name='archivalProfileReference']").val($(this).data("reference")).data("json", $(this).data("json")).change();
+            $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
 
             importPanel.find("[data-context-path]:first").text($("#folderPath").text());
             importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
-            importPanel.find("[data-context-profil]:first").text($(this).text());
+            importPanel.find("[data-context-profil]:first").text(e.text());
 
             $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
             importPanel.find("[data-context-parentarchive]")
@@ -463,8 +463,7 @@
     });
 
     $("#archiveToolbarBtn").on('click', '.newArchive', function() {
-        ArchiveInformation.loadImportForm();
-        
+        ArchiveInformation.loadImportForm($(this));
     });
         
 </script>
