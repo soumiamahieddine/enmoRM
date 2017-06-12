@@ -377,7 +377,7 @@ class archivalProfile
     public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
     {
         $archivalProfileAccesses = [];
-        $archivalProfilesRef = [];
+        $orgUnitArchivalProfiles = [];
 
         $organization = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $orgRegNumber);
         
