@@ -1042,6 +1042,39 @@ class laabs
     }
 
     /**
+     * Test if a string starts with the specified prefix
+     *
+     * @param string $haystack The string
+     * @param string $needle   The prefix to test
+     *
+     * @return boolean
+     */
+    public static function strStartsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    /**
+     * Test if a string ends with the specified suffix
+     *
+     * @param string $haystack The string
+     * @param string $needle   The suffix to test
+     *
+     * @return boolean
+     */
+    public static function strEndsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
+
+    /**
      * Encode a value
      * @param string $value The value to encode
      * @param string $type  The type of value: alpha, alnum, digit
