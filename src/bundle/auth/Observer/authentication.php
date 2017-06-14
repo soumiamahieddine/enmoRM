@@ -60,7 +60,7 @@ class authentication
             }
         }
 
-        if (\laabs::getPresentation()) {
+        if (!\laabs::isServiceClient()) {
             return true;
         }
 

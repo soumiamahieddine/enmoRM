@@ -48,7 +48,7 @@ class authorization
      */
     public function checkPrivilege(&$servicePath, array &$args=null)
     {
-        if (\laabs::getPresentation()) {
+        if (!\laabs::isServiceClient()) {
             return true;
         }
         $serviceName = strtolower($servicePath->getName());

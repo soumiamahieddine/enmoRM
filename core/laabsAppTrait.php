@@ -34,6 +34,25 @@ trait laabsAppTrait
     }
 
     /**
+     * Check the client is a data client (web service)
+     * @return bool
+     */
+    public static function isServiceClient()
+    {
+        if (
+            (
+            !empty($_SERVER['SERVICE_CLIENT_TOKEN']) 
+            && strpos($_SERVER['HTTP_USER_AGENT'], $_SERVER['SERVICE_CLIENT_TOKEN']) !== false
+            ) 
+            || !static::hasPresentation()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get dependency injection
      * @param string $name   The name of the dependency instance
      * @param string $caller The uri of the caller instance

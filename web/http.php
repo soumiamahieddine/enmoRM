@@ -32,13 +32,14 @@ switch (true) {
         break;
 
     // Instance has a view
-    case \laabs::getPresentation(): 
+    case !\laabs::isServiceClient(): 
         \core\Kernel\PresentationKernel::start();
         \core\Kernel\PresentationKernel::run();
         \core\Kernel\PresentationKernel::end();
         break;
 
     // Instance is a service provider
+    case \laabs::isServiceClient(): 
     default:
         \core\Kernel\ServiceKernel::start();
         \core\Kernel\ServiceKernel::run();
