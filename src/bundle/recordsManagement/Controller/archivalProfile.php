@@ -135,7 +135,7 @@ class archivalProfile
         }
 
         // Read profile description
-        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
         if ($archivalProfile->descriptionClass == '') {
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
