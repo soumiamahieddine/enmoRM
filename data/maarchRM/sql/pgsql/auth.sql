@@ -87,6 +87,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
     ('CORRESPONDANT_ARCHIVES', 'journal/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveAuthorization/*'),
+    ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/*'),
 
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
