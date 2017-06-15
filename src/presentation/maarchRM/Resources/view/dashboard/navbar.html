@@ -239,6 +239,27 @@
         }
     }
 
+$.fn.initSmoothScrolling = function() {
+        element = $(this);
+        originalY = element.offset().top;
+        element.css('position', 'relative');
+
+        // Space between element and top of screen (when scrolling)
+        var topMargin = 60;
+
+        $(window).on('scroll', function(event) {
+
+            var scrollTop = $(window).scrollTop();
+            
+            element.stop(false, false).animate({
+                top: scrollTop < originalY
+                        ? 0
+                        : scrollTop - originalY + topMargin
+            }, 300);
+        });
+
+    }
+
     window.onpopstate = function (e) {
         back(window.location.href);
     };
