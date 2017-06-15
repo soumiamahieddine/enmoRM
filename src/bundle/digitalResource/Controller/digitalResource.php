@@ -91,8 +91,9 @@ class digitalResource
 
         // Basic path information
         $pathinfo = pathinfo($filename);
-        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s").".".$pathinfo['extension'];
+        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
         if (isset($pathinfo['extension'])) {
+            $resource->fileName .= "." . $pathinfo['extension'];
             $resource->fileExtension = $pathinfo['extension'];
         }
 
