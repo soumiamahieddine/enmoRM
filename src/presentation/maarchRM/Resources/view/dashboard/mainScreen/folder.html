@@ -13,7 +13,7 @@
         <div class="row hide">
             <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
                 <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
                 </ul>

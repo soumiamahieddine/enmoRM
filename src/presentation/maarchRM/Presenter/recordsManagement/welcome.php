@@ -98,8 +98,11 @@ class welcome
             }
         }
 
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+
         $this->view->translate();
 
+        $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         $this->view->setSource("userArchivalProfiles", $archivalProfiles);
 
