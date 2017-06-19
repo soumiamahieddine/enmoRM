@@ -26,6 +26,7 @@ namespace bundle\filePlan\Model;
  *
  * @pkey [folderId]
  * @fkey [parentFolderId] filePlan/folder [folderId]
+ * @key [name, parentFolderId]
  */
 class folder
 {
