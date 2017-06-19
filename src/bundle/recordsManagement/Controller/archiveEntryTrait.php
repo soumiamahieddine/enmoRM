@@ -79,6 +79,9 @@ trait archiveEntryTrait
         }
         $archive->status = "received";
 
+        //$fnmController = \laabs::newController("importFromScan/Import");
+        //$archive = $fnmController->receive($archive);
+
         // Load archival profile, service level if specified
         // Instantiate description controller
         $this->useReferences($archive, 'deposit');
@@ -174,13 +177,18 @@ trait archiveEntryTrait
     {
         // Set archive name when mono document
         if (empty($archive->archiveName) && count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
-            $archive->archiveName = pathinfo($archive->digitalResource[0]->fileName, \PATHINFO_FILENAME);
+            $archive->archiveName = pathinfo($archive->digitalResources[0]->fileName, \PATHINFO_FILENAME);
         }
 
         $this->completeManagementMetadata($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
+        }
+
+        $nbArchiveObjects = count($archive->contents);
+        for ($i = 0; $i < $nbArchiveObjects; $i++) {
+            $this->completeMetadata($archive->contents[$i]);
         }
     }
 
@@ -397,7 +405,7 @@ trait archiveEntryTrait
                 $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
                 $archive->contents[$i]->archivalProfileReference = $archive->archivalProfileReference;
                 if ($archive->contents[$i]->originatorOrgRegNumber != $archive->originatorOrgRegNumber) {
-                    $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->$originatorOrgRegNumber;
+                    $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->originatorOrgRegNumber;
                 }
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
