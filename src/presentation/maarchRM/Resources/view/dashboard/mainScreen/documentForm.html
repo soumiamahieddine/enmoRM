@@ -12,6 +12,9 @@
             <i class="fa fa-file-text fileIcon">&nbsp;</i>
             <h5>Click or drop a document</h5>
         </div>
+        <span class="hide">
+            <input name="zipContainer" type="checkbox"> Zip container
+        </span>
     </form>
     <br/>
     <table id="documentList" class="table table-condensed col-xs-12" style="display: none">
@@ -38,6 +41,7 @@
 
     var DocumentForm = {
     	documentFileInput: $('#document_filesBrowser'),
+        zipContainer: false,
 
         reset: function() {
             this.documentFileInput.data('base64', '').val('');
@@ -59,15 +63,28 @@
                 fileObject.fileName = file.name;
                 fileObject.size = file.size;
                 fileObject.type = file.type;
+
+                if (fileObject.type == "application/x-zip-compressed" && DocumentList.card == 0) {
+                    $('#document_XMLDropZone').addClass('hide');
+                    $('#documentForm').find("[name=zipContainer]").prop('checked', true).parent().removeClass('hide');
+                    DocumentForm.zipContainer = true;
+                }
                 
                 DocumentList.addDocument(fileObject);
             };
+        },
+
+        disabledZipContainter: function() {
+            $('#document_XMLDropZone').removeClass('hide');
+            $('#documentForm').find("[name=zipContainer]").prop('checked', false).parent().addClass('hide');
+            this.zipContainer = false;
         }
     }
 
     var DocumentList = {
         table: $('#documentList'),
         list: $('#documentList').find('tbody'),
+        card: 0,
 
         addDocument: function(fileObject) {
             if ($('#documentList').find('td:contains("'+fileObject.fileName+'")').length) {
@@ -87,7 +104,7 @@
             var i = $('<i/>').addClass('fa fa-times text-danger').appendTo(button);
             $('<td>').append(button).appendTo(tr);
 
-            
+            this.card = this.card+1;
             if (this.table.is(":hidden")) {
                 if ($('#archiveForm [name=archiveName]').val() == "") {
                     $('#archiveForm [name=archiveName]').val(fileObject.fileName.replace(/\.[^/.]+$/, ""));
@@ -100,14 +117,17 @@
         removeDocument: function(button) {
             button.closest('tr').remove();
             
+            this.card = this.card-1;
             if (this.list.find("tr").length == 0) {
                 this.table.hide();
             }
         },
 
         clear: function() {
+            this.card = 0;
             this.list.html("");
             this.table.hide();
+            DocumentForm.disabledZipContainter();
         },
 
         serialize: function() {
@@ -183,5 +203,9 @@
             DocumentForm.upload($(this).context.files[i]);
         }
         DocumentForm.reset();
+    })
+
+    $('#documentForm').on('click', '[name=zipContainer]', function() {
+        DocumentForm.disabledZipContainter();
     })
 </script>

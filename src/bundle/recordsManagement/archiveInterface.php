@@ -32,11 +32,12 @@ interface archiveInterface
     /**
      * Create an archive
      *
-     * @param recordsManagement/archive $archive The archive object
+     * @param recordsManagement/archive $archive      The archive object
+     * @param bool                      $zipContainer The archive is a zip container
      *
      * @action recordsManagement/archive/receive
      */
-    public function create($archive);
+    public function create($archive, $zipContainer = false);
 
     /**
      * Receive an archive

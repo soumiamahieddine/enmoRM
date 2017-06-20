@@ -157,6 +157,13 @@ class archive
     protected $storePath;
 
     /**
+     * The compression utility
+     * @var object
+     */
+    protected $zip;
+
+
+    /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory        The dependency sdo factory service
      * @param string                  $hashAlgorithm     The hash algorithm for digital archives
@@ -192,6 +199,8 @@ class archive
         $this->servicePositionController = \laabs::newController('organization/servicePosition');
 
         $this->retentionRuleController = \laabs::newController("recordsManagement/retentionRule");
+
+        $this->zip = \laabs::newService("dependency/fileSystem/plugins/zip");
 
         $this->conversionError = (bool) $conversionError;
 

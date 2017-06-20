@@ -68,9 +68,11 @@ trait archiveEntryTrait
     /**
      * Receive an archive
      *
-     * @param recordsManagement/archive $archive The archive to receive
+     * @param recordsManagement/archive $archive      The archive to receive
+     * @param bool                      $zipContainer The archive is a zip container
+     *
      */
-    public function receive($archive)
+    public function receive($archive, $zipContainer = false)
     {
         $archive = \laabs::cast($archive, 'recordsManagement/archive');
 
@@ -79,8 +81,9 @@ trait archiveEntryTrait
         }
         $archive->status = "received";
 
-        //$fnmController = \laabs::newController("importFromScan/Import");
-        //$archive = $fnmController->receive($archive);
+        if ($zipContainer) {
+            $archive = $this->processZipContainer($archive);
+        }
 
         // Load archival profile, service level if specified
         // Instantiate description controller
@@ -103,6 +106,119 @@ trait archiveEntryTrait
 
         // Send certificate
         $this->sendResponse($archive);
+    }
+
+    /**
+     * Process a zipContainer
+     *
+     * @param recordsManagement/archive $archive The archive
+     */
+    public function processZipContainer($archive)
+    {
+        $zip = $archive->digitalResources[0];
+        
+        $zipDirectory = $this->extractZip($zip);
+
+        $archive->digitalResources = [];
+
+        $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
+        $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
+
+        if (!is_dir($directory)) {
+            // todo : error
+        }
+
+        $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
+
+        foreach ($scannedDirectory as $filename) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference)) {
+                $resource = $this->extractResource($directory, $filename);
+                $resource->setContents(base64_encode($resource->getContents()));
+                $archive->digitalResources[] = $resource;
+            } else {
+                $archiveUnit = $this->extractArchiveUnit($filename);
+                $archiveUnit->archiveId = \laabs::newId();
+                $archiveUnit->digitalResources[] = $this->extractResource($directory, $filename);
+                $archive->contents[] = $archiveUnit;
+            }
+        }
+
+        return $archive;
+    }
+
+    /**
+     * Extract zip
+     *
+     * @param resource $zip
+     *
+     * @return string The direcotry path where the zip is extract
+     */
+    private function extractZip($zip)
+    {
+        $packageDir = \laabs\tempdir() . DIRECTORY_SEPARATOR . "MaarchRM" . DIRECTORY_SEPARATOR;
+
+        if (!is_dir($packageDir)) {
+            mkdir($packageDir, 0777, true);
+        }
+
+        $name = \laabs::newId();
+        $zipfile = $packageDir . $name . ".zip";
+
+        if (!is_dir($packageDir . $name)) {
+            mkdir($packageDir . $name, 0777, true);
+        }
+
+        file_put_contents($zipfile, base64_decode($zip->getContents()));
+
+        $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
+
+        return $packageDir . $name;
+    }
+
+    /**
+     * Extract the archive unit
+     *
+     * @param string $filename         The filename
+     *
+     * @return recordsManagement/archive The extracted archive from directory
+     */
+    private function extractArchiveUnit($filename)
+    {
+        $archivalProfileReference = strtok($filename, " ");
+        $archiveName = substr($archivalProfileReference, strlen($archivalProfileReference) + 1);
+
+        $archive = \laabs::newInstance("recordsManagement/archive");
+        $archive->archiveName = $archiveName;
+        $archive->archiveId = \laabs::newId();
+        $archive->archivalProfileReference = $archivalProfileReference;
+        
+        return $archive;
+    }
+
+    /**
+     * Extract a resource
+     *
+     * @param string $resourceDirectory The directory of the resource
+     * @param string $filename          The filename
+     *
+     * @return digitalResource/digitalResource The extracted digital resource
+     */
+    private function extractResource($resourceDirectory, $filename)
+    {
+        /*
+        if (!isset($this->droid)) {
+            $this->droid = \laabs::newService('dependency/fileSystem/plugins/fid', $this->droidSignatureFile, $this->droidContainerSignatureFile);
+        }
+        */
+
+        $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename);
+
+        //$format = $this->droid->match($resourceDirectory . DIRECTORY_SEPARATOR . $filename);
+        //$resource->puid = $format->puid;
+
+        $this->digitalResourceController->getHash($resource, "SHA256");
+
+        return $resource;
     }
 
     /**

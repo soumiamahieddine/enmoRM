@@ -77,12 +77,12 @@
             if (archive < 0) {
                 return;
             }
-            
+            console.log(DocumentForm.zipContainer);
             ajax($('#import'),
                 {
                     type        : 'POST',
                     url         : "/archive",
-                    data        : JSON.stringify({archive : archive}),
+                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
