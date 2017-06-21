@@ -89,8 +89,13 @@ class digitalResource
 
         $resource = $this->newResource();
 
+        $UTF8filename = $filename;
+        if (!preg_match('//u', $filename)) {
+            $UTF8filename = utf8_encode($filename);
+        }
+            
         // Basic path information
-        $pathinfo = pathinfo($filename);
+        $pathinfo = pathinfo($UTF8filename);
         $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
         if (isset($pathinfo['extension'])) {
             $resource->fileName .= "." . $pathinfo['extension'];

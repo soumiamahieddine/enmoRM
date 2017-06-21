@@ -58,6 +58,7 @@ class welcome
 
         $this->view->translate();
 
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
@@ -82,7 +83,7 @@ class welcome
 
         // archival profiles for search form
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $archivalProfiles = $archivalProfileController->index();
+        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $currentOrganization->registrationNumber);
 
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfileController->readDetail($archivalProfile);
@@ -286,6 +287,12 @@ class welcome
         } else {
             $descriptionHtml = '<table">';
 
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if (!array_key_exists($archiveDescription->fieldName, $archive->descriptionObject)) {
+                    $archive->descriptionObject->{$archiveDescription->fieldName} = "";
+                }
+            }
+
             foreach ($archive->descriptionObject as $name => $value) {
                 $label = $type = $archivalProfileField = null;
                 if ($archivalProfile) {
@@ -293,6 +300,7 @@ class welcome
                         if ($archiveDescription->fieldName == $name) {
                             $label = $archiveDescription->descriptionField->label;
                             $archivalProfileField = true;
+                            $type = $archiveDescription->descriptionField->type;
                         }
                     }
                 }
@@ -300,7 +308,8 @@ class welcome
                 if (empty($label)) {
                     $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                 }
-                if (empty($type)) {
+
+                if (empty($type) && $value != "") {
                     $type = 'text';
                     switch (gettype($value)) {
                         case 'boolean':

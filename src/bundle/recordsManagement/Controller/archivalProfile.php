@@ -386,7 +386,7 @@ class archivalProfile
         foreach ($archivalProfileAccesses as $archivalProfileAccess) {
             $orgUnitArchivalProfiles[] = $this->getByReference($archivalProfileAccess->archivalProfileReference);
         }
-        
+
         return $orgUnitArchivalProfiles;
     }
 }

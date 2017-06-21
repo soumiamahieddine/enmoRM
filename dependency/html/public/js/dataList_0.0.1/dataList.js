@@ -11,6 +11,7 @@
     sorting         -> array of object that define wich properties of datas can be sorted
                        object have to two properties : the name and the label of the sortable property
     unsearchable    -> array of unserchable property
+    resultNumber    -> the result number html. '%d' will be replaced by the result number
 */
 
 var DataList = {
@@ -26,7 +27,7 @@ var DataList = {
                     		'<ul class="pagination pagination-sm" style="margin:0">'+
 								'<li><a href="#" class="firstPage" title="First"><span class="fa fa-angle-double-left"><\/span><\/a><\/li>'+
                         		'<li><a href="#" class="previousPage" title="Previous"><span class="fa fa-angle-left"><\/span><\/a><\/li>'+
-					 			'<li><a href="#" style="padding:0px"><input type="text" style="width:30px; border:none; height:27px; text-align: center; padding: 5px 2px" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
+                                '<li><a href="#" style="padding:0px"><input type="text" style="width:30px; border:none; height:27px; text-align: center; padding: 5px 2px" value="1" title="choice" class="form-control input-sm"\/></a><\/li>'+
                          		'<li><a href="#" class="nextPage" title="Next"><span class="fa fa-angle-right"><\/span><\/a><\/li>'+
 					 			'<li><a href="#" class="lastPage" title="Last"><span class="fa fa-angle-double-right"><\/span><\/a><\/li>'+
                      		'<\/ul>'+
@@ -102,6 +103,14 @@ var DataList = {
             list.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
         }
         
+        if(!options.resultNumber) {
+            this.dataList[id].resultNumber = "<h4 id='rowNumber'>%d results<\/h4>";
+        } else {
+            this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]).attr('id', 'rowNumber');
+        }
+
+        row.before(this.dataList[id].resultNumber);
+
 		this.build(id, options);
 
 		return id;
@@ -284,7 +293,6 @@ var DataList = {
 	    var rowStart = range * this.dataList[id].rowMaxNumber;
 	    var rowEnd = parseInt(rowStart) + parseInt(this.dataList[id].rowMaxNumber);
 
-
 	    this.dataList[id].currentRange = range;
 
 	    for(var i=rowStart; i<rowEnd && i<datas.length; i++) {
@@ -296,7 +304,8 @@ var DataList = {
 
 	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
-
+        $('#rowNumber').html($('#rowNumber').html().replace("%d", datas.length));
+        
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
 	},

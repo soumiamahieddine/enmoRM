@@ -68,8 +68,12 @@
                     $('#document_XMLDropZone').addClass('hide');
                     $('#documentForm').find("[name=zipContainer]").prop('checked', true).parent().removeClass('hide');
                     DocumentForm.zipContainer = true;
+                
+                } else if (DocumentForm.zipContainer) {
+                    DocumentForm.disabledZipContainter();
                 }
                 
+
                 DocumentList.addDocument(fileObject);
             };
         },

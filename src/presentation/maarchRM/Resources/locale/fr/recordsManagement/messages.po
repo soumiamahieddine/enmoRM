@@ -870,3 +870,6 @@ msgstr "Aucun résultat"
 
 msgid "Sub-archive of"
 msgstr "Sous-archive de"
+
+msgid "Zip container"
+msgstr "Fichier conteneur"

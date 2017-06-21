@@ -177,11 +177,14 @@ FulltextSearch = {
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
                     SearchList.searchContents.dataList({
-                        datas        : response.archives,
-                        rowMerge     : SearchList.mergeResultRow,
-                        rowMaxNumber : 10,
-                        emptyMessage : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
-                        sorting: [
+                        datas          : response.archives,
+                        rowMerge       : SearchList.mergeResultRow,
+                        rowMaxNumber   : 10,
+                        paginationType : 'input',
+                        rowTranslation : "lignes",
+                        emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
+                        resultNumber   : "<h2 style='margin:0px'><small>%d archives<\/small><\/h2>",
+                        sorting        : [
                             {
                                 fieldName : 'archiveName',
                                 label     : $('#archiveName_text').text()
