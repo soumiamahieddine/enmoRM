@@ -104,12 +104,13 @@ var DataList = {
         }
         
         if(!options.resultNumber) {
-            this.dataList[id].resultNumber = "<h4 id='rowNumber'>%d results<\/h4>";
+            this.dataList[id].resultNumber = "<h4>%d results<\/h4>";
         } else {
-            this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]).attr('id', 'rowNumber');
+            this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]);
         }
 
         row.before(this.dataList[id].resultNumber);
+        this.dataList[id].resultNumber = row.prev();
 
 		this.build(id, options);
 
@@ -171,6 +172,7 @@ var DataList = {
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             emptyMessage    : this.dataList[id].emptyMessage,
+            resultNumber    : this.dataList[id].resultNumber
         };
 
         this.buildPaginationButtons(id);
@@ -281,8 +283,10 @@ var DataList = {
         if (this.dataList[id].emptyMessage) {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
+                this.dataList[id].resultNumber.addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
+                this.dataList[id].resultNumber.removeClass('hide');
             }
         }
 
@@ -304,7 +308,7 @@ var DataList = {
 
 	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
-        $('#rowNumber').html($('#rowNumber').html().replace("%d", datas.length));
+        this.dataList[id].resultNumber.html(this.dataList[id].resultNumber.html().replace("%d", datas.length));
         
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
