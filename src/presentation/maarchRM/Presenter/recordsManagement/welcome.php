@@ -270,14 +270,10 @@ class welcome
      */
     protected function getDescription($archive)
     {
-        if (!isset($archive->descriptionObject)) {
-            return;
-        }
-
         $archivalProfile = null;
+
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-
             $archive->archivalProfileName = $archivalProfile->name;
         }
 
@@ -293,54 +289,57 @@ class welcome
                 }
             }
 
-            foreach ($archive->descriptionObject as $name => $value) {
-                $label = $type = $archivalProfileField = null;
-                if ($archivalProfile) {
-                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                        if ($archiveDescription->fieldName == $name) {
-                            $label = $archiveDescription->descriptionField->label;
-                            $archivalProfileField = true;
-                            $type = $archiveDescription->descriptionField->type;
+
+            if (isset($archive->descriptionObject)) {
+                foreach ($archive->descriptionObject as $name => $value) {
+                    $label = $type = $archivalProfileField = null;
+                    if ($archivalProfile) {
+                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                            if ($archiveDescription->fieldName == $name) {
+                                $label = $archiveDescription->descriptionField->label;
+                                $archivalProfileField = true;
+                                $type = $archiveDescription->descriptionField->type;
+                            }
                         }
                     }
-                }
 
-                if (empty($label)) {
-                    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                }
-
-                if (empty($type) && $value != "") {
-                    $type = 'text';
-                    switch (gettype($value)) {
-                        case 'boolean':
-                            $type = 'boolean';
-                            break;
-
-                        case 'integer':
-                        case 'double':
-                            $type = 'number';
-                            break;
-
-                        case 'string':
-                            if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                $type = 'date';
-                            }
-                            break;
+                    if (empty($label)) {
+                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
+
+                    if (empty($type) && $value != "") {
+                        $type = 'text';
+                        switch (gettype($value)) {
+                            case 'boolean':
+                                $type = 'boolean';
+                                break;
+
+                            case 'integer':
+                            case 'double':
+                                $type = 'number';
+                                break;
+
+                            case 'string':
+                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                    $type = 'date';
+                                }
+                                break;
+                        }
+                    }
+
+                    if ($archivalProfileField) {
+                        $descriptionHtml .= '<tr class="archivalProfileField">';
+                    } else {
+                        $descriptionHtml .= '<tr>';
+                    }
+
+                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
+                    $descriptionHtml .= '<td title="'.$value.'">'.$value.'</td>';
+                    $descriptionHtml .= '</tr>';
                 }
 
-                if ($archivalProfileField) {
-                    $descriptionHtml .= '<tr class="archivalProfileField">';
-                } else {
-                    $descriptionHtml .= '<tr>';
-                }
-
-                $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                $descriptionHtml .= '<td title="'.$value.'">'.$value.'</td>';
-                $descriptionHtml .= '</tr>';
+                $descriptionHtml .= '</table>';
             }
-
-            $descriptionHtml .= '</table>';
         }
 
         if ($descriptionHtml) {

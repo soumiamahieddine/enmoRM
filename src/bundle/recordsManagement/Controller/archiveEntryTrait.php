@@ -185,7 +185,7 @@ trait archiveEntryTrait
     private function extractArchiveUnit($filename)
     {
         $archivalProfileReference = strtok($filename, " ");
-        $archiveName = substr($archivalProfileReference, strlen($archivalProfileReference) + 1);
+        $archiveName = substr($filename, strlen($archivalProfileReference)+1);
 
         $archive = \laabs::newInstance("recordsManagement/archive");
         $archive->archiveName = $archiveName;
@@ -357,7 +357,12 @@ trait archiveEntryTrait
      */
     public function completeArchivalProfileCodes($archive)
     {
-        $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
+        if ($archive->archivalProfileReference == "") {
+            $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
+        
+        } else {
+            $this->useArchivalProfile($archive->archivalProfileReference);
+        }
 
         if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
@@ -497,7 +502,6 @@ trait archiveEntryTrait
         }
 
         $nbArchiveObjects = count($archive->contents);
-		
 
         try {
             $archive->status = 'preserved';
@@ -510,13 +514,14 @@ trait archiveEntryTrait
             if (!empty($archive->digitalResources)) {
                 $this->storeResources($archive);
             }
-
             $this->storeDescriptiveMetadata($archive);
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
                 $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
+                /*
                 $archive->contents[$i]->archivalProfileReference = $archive->archivalProfileReference;
+                */
                 if ($archive->contents[$i]->originatorOrgRegNumber != $archive->originatorOrgRegNumber) {
                     $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->originatorOrgRegNumber;
                 }
