@@ -2,7 +2,11 @@
     <li>
         <span>
             <i class='fa'/>
-            <span></span>
+            <span/><br/>
+            &nbsp;&nbsp;
+            <small/>&nbsp;
+            <small/>&nbsp;
+            <small><i/></small>
         </span>
     </li>
 </div>
@@ -10,9 +14,14 @@
 <style>
     .archive h5 {
         margin: 6px 0px 6px 0px;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     .archive small {
         font-size: 10px;
+        color: darkgrey;
     }
     .archive .tree-l {
         font-size: 12px;
@@ -20,7 +29,9 @@
     }
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
-        display: inline;
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
     }
     .dataList {
         min-height: 300px;
@@ -36,6 +47,12 @@
     }
     .dataList .fa-caret-right, .dataList .fa-caret-down {
         font-size: 16px;
+    }
+    .archive .archiveContent li>span {
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: normal;
     }
 
 </style>
@@ -113,6 +130,7 @@
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
                     template = this.archiveContentTemplate.clone();
+                    var smalls = template.find('small');
 
                     template.children('span')
                             .children('i')
@@ -125,6 +143,16 @@
                             .html(childrenArchives[j].archiveName)
                             .append($('<a/>').attr('href','#')
                                              .class);
+
+                    if (childrenArchives[j].depositDate) {
+                        $(smalls[0]).text(childrenArchives[j].depositDate.substring(0, 19));
+                    }
+                    if (childrenArchives[j].archivalProfileReference) {
+                        $(smalls[1]).text(childrenArchives[j].archivalProfileReference);
+                    }
+                    if (childrenArchives[j].originatorArchiveId) {
+                        $(smalls[2]).children('i').text(childrenArchives[j].originatorArchiveId);
+                    }
 
                     BootstrapTree.addNode(parent, template, hidden);
 

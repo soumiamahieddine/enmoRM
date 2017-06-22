@@ -504,15 +504,12 @@ trait archiveEntryTrait
             $archive->depositDate = \laabs::newTimestamp();
 			
             $this->openContainers($archive, $path);
-
             
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
-
 
             if (!empty($archive->digitalResources)) {
                 $this->storeResources($archive);
             }
-
 
             $this->storeDescriptiveMetadata($archive);
 

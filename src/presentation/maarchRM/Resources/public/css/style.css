@@ -7836,7 +7836,6 @@ th.visible-print, td.visible-print {
     display:inline-block;
     padding:3px 8px;
     text-decoration:none;
-    max-width : 440px;
 }
 .tree li.parent_li i, .tree-l li.parent_li i {
     cursor:pointer
