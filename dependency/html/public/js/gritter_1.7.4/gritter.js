@@ -1,6 +1,7 @@
 
 gritter = {
     show: function(message, status, errors) {
+        console.log("gritter !!");
         var arg = "";
         if (errors != undefined) {
             $.each(errors,function (key,error) {
