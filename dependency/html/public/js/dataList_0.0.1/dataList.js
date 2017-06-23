@@ -12,6 +12,7 @@
                        object have to two properties : the name and the label of the sortable property
     unsearchable    -> array of unserchable property
     resultNumber    -> the result number html. '%d' will be replaced by the result number
+    translation     -> array with key with translation
 */
 
 var DataList = {
@@ -111,6 +112,12 @@ var DataList = {
 
         row.before(this.dataList[id].resultNumber);
         this.dataList[id].resultNumber = row.prev();
+
+        if (options.translation) {
+            $.each(options.translation, function(key, value) {
+                row.find('[title='+key+']').attr('title', value);
+            })
+        }
 
 		this.build(id, options);
 

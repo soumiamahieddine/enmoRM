@@ -47,6 +47,10 @@
     <span id="emptyFolder_text">Empty folder</span>
     <span id="archiveName_text">Name</span>
     <span id="depositDate_text">Deposit date</span>
+    <span id="first_text">First</span>
+    <span id="previous_text">Previous</span>
+    <span id="next_text">Next</span>
+    <span id="last_text">Last</span>
 </div>
 
 <script type="text/javascript">
@@ -102,7 +106,8 @@
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
             }
-
+console.log({First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
+                );
             $('#folderContentList').dataList({
                 datas          : archives,
                 rowMerge       : ArchiveFolderList.mergeRow,
@@ -111,6 +116,7 @@
 				rowTranslation : "lignes",
                 emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
                 resultNumber   : "<h2 style='margin:0px'><small>%d archives<\/small><\/h2>",
+                translation    : {First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
                 sorting: [
                     {
                         fieldName : 'archiveName',
