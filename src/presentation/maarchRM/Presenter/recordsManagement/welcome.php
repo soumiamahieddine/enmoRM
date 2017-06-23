@@ -90,6 +90,7 @@ class welcome
             $archivalProfile->searchFields = [];
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 switch ($archiveDescription->descriptionField->type) {
+                    case 'text':
                     case 'name':
                     case 'date':
                     case 'number':
