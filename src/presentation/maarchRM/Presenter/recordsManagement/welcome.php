@@ -284,14 +284,13 @@ class welcome
         } else {
             $descriptionHtml = '<table">';
 
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if (!array_key_exists($archiveDescription->fieldName, $archive->descriptionObject)) {
-                    $archive->descriptionObject->{$archiveDescription->fieldName} = "";
-                }
-            }
-
-
             if (isset($archive->descriptionObject)) {
+                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                    if (!array_key_exists($archiveDescription->fieldName, $archive->descriptionObject)) {
+                        $archive->descriptionObject->{$archiveDescription->fieldName} = "";
+                    }
+                }
+            
                 foreach ($archive->descriptionObject as $name => $value) {
                     $label = $type = $archivalProfileField = null;
                     if ($archivalProfile) {
