@@ -184,6 +184,10 @@ trait archiveEntryTrait
      */
     private function extractArchiveUnit($filename)
     {
+        if (!preg_match('//u', $filename)) {
+            $filename = utf8_encode($filename);
+        }
+
         $archivalProfileReference = strtok($filename, " ");
         $archiveName = substr($filename, strlen($archivalProfileReference)+1);
 
