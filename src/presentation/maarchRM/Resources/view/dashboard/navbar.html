@@ -195,7 +195,6 @@
 
 
     function ajax(button, request, timeout) {
-        
         var icon = null;
         var activeButtons = $('.btn').not('[disabled]');
 
@@ -223,11 +222,27 @@
             if (ajaxComplete) {
                 ajaxComplete();
             }
-                
+
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
             })
+
         }
+
+        var errorFunction = request.error;
+        request.error = function(response) {
+            try {
+                errorFunction(response);
+            } catch (err) {
+                gritter.show($('#executionError').text(), false);
+            }
+        }
+
+        request.statusCode = {
+            500: function() {
+                gritter.show($('#executionError').text(), false);
+            }
+      }
 
         return $.ajax(request);
     }

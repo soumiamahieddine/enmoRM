@@ -546,3 +546,6 @@ msgstr "Désactivé"
 
 msgid "Without profile"
 msgstr "Sans profil"
+
+msgid "An error has occurred."
+msgid "Une erreur est survenue."
