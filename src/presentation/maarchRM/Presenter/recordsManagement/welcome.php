@@ -83,22 +83,28 @@ class welcome
 
         // archival profiles for search form
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $currentOrganization->registrationNumber);
+        
+        if (!empty($currentOrganization->registrationNumber)) {
+            $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $currentOrganization->registrationNumber);
 
-        foreach ($archivalProfiles as $archivalProfile) {
-            $archivalProfileController->readDetail($archivalProfile);
-            $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                switch ($archiveDescription->descriptionField->type) {
-                    case 'text':
-                    case 'name':
-                    case 'date':
-                    case 'number':
-                    case 'boolean':
-                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+            foreach ($archivalProfiles as $archivalProfile) {
+                $archivalProfileController->readDetail($archivalProfile);
+                $archivalProfile->searchFields = [];
+                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                    switch ($archiveDescription->descriptionField->type) {
+                        case 'text':
+                        case 'name':
+                        case 'date':
+                        case 'number':
+                        case 'boolean':
+                            $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                    }
                 }
             }
+
+            $this->view->setSource("userArchivalProfiles", $archivalProfiles);
         }
+        
 
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
 
@@ -106,7 +112,7 @@ class welcome
 
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-        $this->view->setSource("userArchivalProfiles", $archivalProfiles);
+        
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
             $this->view->translate($dateRangePickerInput);
