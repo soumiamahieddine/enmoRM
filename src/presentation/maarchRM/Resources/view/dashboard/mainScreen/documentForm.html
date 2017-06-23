@@ -64,7 +64,7 @@
                 fileObject.size = file.size;
                 fileObject.type = file.type;
 
-                if (fileObject.type == "application/x-zip-compressed" && DocumentList.card == 0) {
+                if ((fileObject.type == "application/x-zip-compressed" || fileObject.type == "application/zip") && DocumentList.card == 0) {
                     $('#document_XMLDropZone').addClass('hide');
                     $('#documentForm').find("[name=zipContainer]").prop('checked', true).parent().removeClass('hide');
                     DocumentForm.zipContainer = true;
