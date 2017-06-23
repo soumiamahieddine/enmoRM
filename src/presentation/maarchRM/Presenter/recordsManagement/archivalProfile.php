@@ -316,6 +316,21 @@ class archivalProfile
     }
 
     /**
+     * Get archival profiles
+     * @param string $data The data of codes
+     *
+     * @return string
+     */
+    public function barcode($barcode)
+    {
+        \laabs::setResponseType('application/pdf');
+        $response = \laabs::kernel()->response;
+        $response->setHeader("Content-Disposition", "inline;");
+
+        return $barcode;
+    }
+
+    /**
      * List properties method
      * @param type $class          The class to get properties from
      * @param type $properties     The existing list, to be completed

@@ -78,4 +78,15 @@ interface archivalProfileInterface
      */
     public function deleteArchivalprofile_archivalProfileId_();
 
+    /**
+     * Get an archival profile barcode
+     * 
+     * @param string $data  The data of codes
+     * @param string $label The label
+     *
+     * @return recordsManagement/archivalProfile/barcode
+     *
+     * @uses recordsManagement/code/createGenerate
+     */
+    public function readArchivalprofilebarcode($data, $label);
 }
