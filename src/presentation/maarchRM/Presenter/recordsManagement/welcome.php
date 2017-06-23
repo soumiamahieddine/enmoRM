@@ -102,7 +102,6 @@ class welcome
                 }
             }
 
-            $this->view->setSource("userArchivalProfiles", $archivalProfiles);
         }
         
 
@@ -110,6 +109,7 @@ class welcome
 
         $this->view->translate();
 
+        $this->view->setSource("userArchivalProfiles", $archivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
@@ -165,10 +165,12 @@ class welcome
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
         $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
 
         $this->getDescription($archive);
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
+        $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->merge();
 
         return $this->view->saveHtml();
