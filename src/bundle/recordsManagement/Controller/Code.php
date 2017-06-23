@@ -55,7 +55,7 @@ class Code
         $this->barcodeGenerator($data, $pdf);
 
         $qrCode = $this->qrCodeGenerator($data);
-        $pdf->Image($qrCode, 70, 150);
+        $pdf->Image($qrCode, 80, 150);
 
         
 
