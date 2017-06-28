@@ -106,8 +106,7 @@
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
             }
-console.log({First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
-                );
+
             $('#folderContentList').dataList({
                 datas          : archives,
                 rowMerge       : ArchiveFolderList.mergeRow,
@@ -196,6 +195,9 @@ console.log({First:$('#first_text').html(), Previous:$('#previous_text').html(),
         },
         
         getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
+            $('#archiveForm [name="filePlanPosition"]').val(folderId);
+            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+            
             if (archivalProfiles.length < 1) {
                 $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", {});
                 $('#folderTab').click();
@@ -204,8 +206,6 @@ console.log({First:$('#first_text').html(), Previous:$('#previous_text').html(),
             
             $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", archivalProfiles);
 
-            $('#archiveForm [name="filePlanPosition"]').val(folderId);
-            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
         },
 
         refresh: function() {
@@ -237,7 +237,7 @@ console.log({First:$('#first_text').html(), Previous:$('#previous_text').html(),
             importPanel.find("[data-context-path]:first").text($("#folderPath").text());
             importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
             importPanel.find("[data-context-profil]:first").text(e.text());
-
+            
             $("#archiveForm [name='parentArchiveId']").val('');
             importPanel.find("[data-context-parentarchive]").addClass('hide');
 
