@@ -139,6 +139,7 @@ trait archiveEntryTrait
                 $archiveUnit = $this->extractArchiveUnit($filename);
                 $archiveUnit->archiveId = \laabs::newId();
                 $archiveUnit->digitalResources[] = $this->extractResource($directory, $filename);
+                $archiveUnit->archiveName = basename($archiveUnit->archiveName, $archiveUnit->digitalResources[0]->fileExtension);
                 $archive->contents[] = $archiveUnit;
             }
         }
