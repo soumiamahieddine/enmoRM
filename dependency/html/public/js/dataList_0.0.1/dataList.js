@@ -11,7 +11,7 @@
     sorting         -> array of object that define wich properties of datas can be sorted
                        object have to two properties : the name and the label of the sortable property
     unsearchable    -> array of unserchable property
-    resultNumber    -> the result number html. '%d' will be replaced by the result number
+    resultNumber    -> the result number html. The number will be put in the .resultNumber class
     translation     -> array with key with translation
 */
 
@@ -105,7 +105,7 @@ var DataList = {
         }
         
         if(!options.resultNumber) {
-            this.dataList[id].resultNumber = "<h4>%d results<\/h4>";
+            this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/> results<\/h4>";
         } else {
             this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]);
         }
@@ -315,7 +315,9 @@ var DataList = {
 
 	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
-        this.dataList[id].resultNumber.html(this.dataList[id].resultNumber.html().replace("%d", datas.length));
+
+        // Set the result number
+        this.dataList[id].resultNumber.find('.resultNumber').html(datas.length);
         
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
@@ -418,15 +420,11 @@ var DataList = {
         var id = a.closest('.dataList').data('datalist-id');
         var input = pagination.find('input');
 
-            if((input.val().match('^[0-9]*$')) && (input.val() > 0) && (input.val() < DataList.dataList[id].pageNumber + 1)){
-
-		        DataList.buildList(id, pagination.find('input').val() - 1); 
-
-        }
-        else{
-
+        if((input.val().match('^[0-9]*$')) && (input.val() > 0) && (input.val() < DataList.dataList[id].pageNumber + 1)){
+	        DataList.buildList(id, pagination.find('input').val() - 1); 
+        
+        } else{
             function current(){
-               
                 input.val(DataList.dataList[id].currentRange +1);
             }
             
@@ -486,7 +484,6 @@ var DataList = {
 
                     if(position != -1){
                         filteredDatas.push(element);
-                        console.log(key+' : '+value);
                         return false;
 
                     }
