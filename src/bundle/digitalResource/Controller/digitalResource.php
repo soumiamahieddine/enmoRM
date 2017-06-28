@@ -79,7 +79,7 @@ class digitalResource
      *
      * @return digitalResource/digitalResource
      */
-    public function createFromFile($filename)
+    public function createFromFile($filename, $withDateTime = true)
     {
         if (!file_exists($filename)) {
             return false;
@@ -96,7 +96,13 @@ class digitalResource
             
         // Basic path information
         $pathinfo = pathinfo($UTF8filename);
-        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+
+        $resource->fileName = $pathinfo['filename'];
+
+        if ($withDateTime) {
+            $resource->fileName .= "_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+        }
+
         if (isset($pathinfo['extension'])) {
             $resource->fileName .= "." . $pathinfo['extension'];
             $resource->fileExtension = $pathinfo['extension'];
