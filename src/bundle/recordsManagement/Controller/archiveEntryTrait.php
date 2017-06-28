@@ -215,7 +215,7 @@ trait archiveEntryTrait
         }
         */
 
-        $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename);
+        $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
 
         //$format = $this->droid->match($resourceDirectory . DIRECTORY_SEPARATOR . $filename);
         //$resource->puid = $format->puid;
