@@ -191,12 +191,14 @@ trait archiveEntryTrait
 
         $archivalProfileReference = strtok($filename, " ");
         $archiveName = substr($filename, strlen($archivalProfileReference)+1);
+        $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
 
         $archive = \laabs::newInstance("recordsManagement/archive");
-        $archive->archiveName = $archiveName;
         $archive->archiveId = \laabs::newId();
         $archive->archivalProfileReference = $archivalProfileReference;
-        
+        $this->useArchivalProfile($archivalProfileReference);
+        $archive->archiveName = $archiveName . " _ " . $this->currentArchivalProfile->name;
+
         return $archive;
     }
 
