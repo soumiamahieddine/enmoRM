@@ -76,7 +76,8 @@
                 type = "PUT";
             }
 
-            $.ajax({
+            ajax($('#saveFolder'),
+            {
                 url         : '/filePlan/folder',
                 type        : type,
                 data        : JSON.stringify({folder:folder}),

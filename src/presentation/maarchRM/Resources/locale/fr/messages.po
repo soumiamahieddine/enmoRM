@@ -548,4 +548,4 @@ msgid "Without profile"
 msgstr "Sans profil"
 
 msgid "An error has occurred."
-msgid "Une erreur est survenue."
+msgstr "Une erreur est survenue."
