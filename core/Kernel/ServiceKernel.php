@@ -75,10 +75,9 @@ class ServiceKernel
 
         \core\Observer\Dispatcher::notify(LAABS_REQUEST, self::$instance->request);
 
-        /* Establish routes (input, action, output) */
-        self::$instance->setRoutes();
-
         try {
+            /* Establish routes (input, action, output) */
+            self::$instance->setRoutes();
 
             // Parse request to get arguments from request content
             self::$instance->parseRequest();
