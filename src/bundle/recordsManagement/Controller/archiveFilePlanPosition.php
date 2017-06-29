@@ -179,7 +179,7 @@ class archiveFilePlanPosition
         $archive->digitalResources = $digitalResourceController->getResourcesByArchiveId($archive->archiveId);
 
         // ChildrenArchives
-        $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'");
+        $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'", null, '< archiveName');
         foreach ($childrenArchives as $childArchive) {
             $archive->childrenArchives[] = $this->listArchiveContents($childArchive);
         }
