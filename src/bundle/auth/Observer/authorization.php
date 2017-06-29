@@ -72,6 +72,6 @@ class authorization
             }
         }
 
-        throw new \core\Exception\UnauthorizedException();
+        throw \laabs::newException("auth/forbiddenException", "Forbidden", 403);
     }
 }

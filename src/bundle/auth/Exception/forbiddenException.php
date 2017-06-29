@@ -19,7 +19,7 @@
  */
 namespace bundle\auth\Exception;
 
-class authenticationException
+class forbiddenException
     extends \Exception
 {
     

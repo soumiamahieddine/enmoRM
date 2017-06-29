@@ -105,11 +105,11 @@ class authentication
         }
 
         if (!isset($account)) {
-            throw \laabs::newException("auth/authenticationException", "Missing authentication credential");
+            throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ((!$account->enabled) || ($account->locked)) {
-            throw \laabs::newException("auth/authenticationException", "Missing authentication credential");
+            throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ($account->accountType == "service") {

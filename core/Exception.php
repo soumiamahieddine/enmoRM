@@ -68,7 +68,8 @@ class Exception
      */
     public function __toString()
     {
-        $string = parent::__toString();
+        $string = "";
+        //$string = parent::__toString();
 
         foreach (get_object_vars($this) as $name => $value) {
             if (!in_array($name, array_keys(get_class_vars('Exception')))) {
