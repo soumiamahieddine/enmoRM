@@ -51,10 +51,10 @@ class archiveFilePlanPosition
     public function getFolderContents($orgRegNumber, $folderId=null)
     {
         if (empty($folderId)) {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null and (parentArchiveId = null or parentOriginatorOrgRegNumber != null)';
+            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null and (parentArchiveId = null)';
             $queryArgs = ['orgRegNumber'=>$orgRegNumber];
         } else {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId and (parentArchiveId = null or parentOriginatorOrgRegNumber != null)';
+            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId and (parentArchiveId = null)';
             $queryArgs = ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId];
         }
 
