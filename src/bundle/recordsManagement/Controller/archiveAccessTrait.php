@@ -303,7 +303,7 @@ trait archiveAccessTrait
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
-        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString' OR accessRuleComDate = NULL))";
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString'))";
 
         return "(".implode(" OR ", $queryParts).")";
     }
