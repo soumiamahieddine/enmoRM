@@ -525,12 +525,6 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
                 $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
-                /*
-                $archive->contents[$i]->archivalProfileReference = $archive->archivalProfileReference;
-                */
-                if ($archive->contents[$i]->originatorOrgRegNumber != $archive->originatorOrgRegNumber) {
-                    $archive->contents[$i]->parentOriginatorOrgRegNumber = $archive->originatorOrgRegNumber;
-                }
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
