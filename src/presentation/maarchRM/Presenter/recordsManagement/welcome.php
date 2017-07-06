@@ -109,7 +109,9 @@ class welcome
 
         $this->view->translate();
 
-        $this->view->setSource("userArchivalProfiles", $archivalProfiles);
+        if (!empty($currentOrganization->registrationNumber)) {
+            $this->view->setSource("userArchivalProfiles", $archivalProfiles);
+        }
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
