@@ -159,6 +159,8 @@ class welcome
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
+        $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
+        $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         $this->view->translate();
