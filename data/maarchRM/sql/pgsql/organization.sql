@@ -1,3 +1,4 @@
+DELETE FROM "organization"."archivalProfileAccess";
 DELETE FROM "organization"."userPosition";
 DELETE FROM "organization"."servicePosition";
 DELETE FROM "organization"."orgContact";
@@ -40,3 +41,8 @@ INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function",
 -- Organization service position
 INSERT INTO "organization"."servicePosition" ("serviceAccountId", "orgId") VALUES
 ('System', 'CPT');
+
+-- Organization service position
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess") VALUES
+('CPTCLI', 'FacturesClients', true),
+('CPTFOUR', 'FacturesFournisseurs', true);
