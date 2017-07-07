@@ -398,10 +398,18 @@ class archivalProfile
     public function getdescendantArchivalProfiles()
     {
         $descendantArchivalProfiles = [];
+        $descendantServicesOrgId = [];
 
         $descendantServices = \laabs::callService('organization/userPosition/readDescendantservices');
-        
-        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId=['". \laabs\implode("','" , $descendantServices)."']");
+
+        foreach ($descendantServices as $orgRegNumber) {
+            $organization = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $orgRegNumber);
+            if (!empty($organization)) {
+                $descendantServicesOrgId[] = $organization->orgId;
+            }
+        }
+
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId=['". \laabs\implode("','" , $descendantServicesOrgId)."']");
         
         foreach ($archivalProfileAccesses as $archivalProfileAccess) {
             if (!empty($descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference])){

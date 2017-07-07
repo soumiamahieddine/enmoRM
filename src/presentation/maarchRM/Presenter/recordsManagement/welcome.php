@@ -85,14 +85,7 @@ class welcome
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
         
         if (!empty($currentOrganization->registrationNumber)) {
-            try {
-                $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
-            } catch (\Exception $exc) {
-                echo $exc->getTraceAsString();
-                exit;
-            }
-
-            
+            $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
 
             foreach ($archivalProfiles as $archivalProfile) {
                 $archivalProfileController->readDetail($archivalProfile);
