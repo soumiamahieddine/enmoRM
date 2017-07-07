@@ -22,7 +22,9 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction du profil %6$s'),
     ('recordsManagement/integrityCheck', 'startEventDate endEventDate endEventId', FALSE, 'Validation périodique de l''intégrité'),
     ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId', FALSE, 'Conversion du document %18$s'),
-    ('recordsManagement/descriptionModification','property', FALSE, 'Modification des méta-données de l''archive %6$s.');
+    ('recordsManagement/descriptionModification','property', FALSE, 'Modification des méta-données de l''archive %6$s.'),
+    ('recordsManagement/metadata', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification des métadonnnées de l''archive %6$s');
+
 
 -- EN --
 --INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
