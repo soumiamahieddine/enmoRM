@@ -81,6 +81,9 @@ class archive
         $this->view->addContentFile("recordsManagement/archive/search.html");
 
         $this->view->translate();
+        
+        usort($profiles, create_function('$a, $b', 'return \laabs::alphabeticalSort($a, $b, "name");'));
+        
 
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
