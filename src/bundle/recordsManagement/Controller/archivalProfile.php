@@ -389,4 +389,27 @@ class archivalProfile
 
         return $orgUnitArchivalProfiles;
     }
+
+    /**
+     * Get descendant archival profiles
+     * 
+     * @return array
+     */
+    public function getdescendantArchivalProfiles()
+    {
+        $descendantArchivalProfiles = [];
+
+        $descendantServices = \laabs::callService('organization/userPosition/readDescendantservices');
+        
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId=['". \laabs\implode("','" , $descendantServices)."']");
+        
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            if (!empty($descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference])){
+                continue;
+            }
+            $descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference] = $this->getByReference($archivalProfileAccess->archivalProfileReference);
+        }
+
+        return $descendantArchivalProfiles;
+    }
 }

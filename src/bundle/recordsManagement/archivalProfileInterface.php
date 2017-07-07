@@ -100,4 +100,11 @@ interface archivalProfileInterface
      * @action recordsManagement/archivalProfile/getOrgUnitArchivalProfiles
      */
     public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
+
+    /**
+     * Get descendant profiles
+     * 
+     * @action recordsManagement/archivalProfile/getdescendantArchivalProfiles
+     */
+    public function readDescendantprofiles();
 }
