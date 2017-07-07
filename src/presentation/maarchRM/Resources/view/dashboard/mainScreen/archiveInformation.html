@@ -321,11 +321,10 @@
 
                 var customLabel = $("#inputCustomLabel").clone();
                 customLabel.val(label.html());
-                label.html('').append(customLabel);
-
                 if ($(e).hasClass('archivalProfileField')) {
                     customLabel.prop("disabled", true);
                 }
+                label.html('').append(customLabel);
                 
                 var customField = $("#inputCustomField").clone();
                 customField.val(value.html());
@@ -379,7 +378,7 @@
         },
 
         addField : function(type) {
-            var label = $('#inputCustomLabel').clone().val('');
+            var label = $('#inputCustomLabel').clone().val('').prop('disabled', false);
             var value = $('#inputCustomField').clone().val('');
 
             if(type == 'date') {
