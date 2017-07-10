@@ -162,7 +162,7 @@
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
-    <span id="customFieldError_txt">A label is missing.</span>
+    <span id="customFieldError_txt">Metadatas are incomplete.</span>
 </div>
 
 <style type="text/css">
@@ -321,35 +321,35 @@
 
                 var customLabel = $("#inputCustomLabel").clone();
                 customLabel.val(label.html());
-                if ($(e).hasClass('archivalProfileField')) {
-                    customLabel.prop("disabled", true);
-                }
+                customLabel.attr('name', label.attr('name'));
                 label.html('').append(customLabel);
                 
                 var customField = $("#inputCustomField").clone();
                 customField.val(value.html());
                 value.html('').append(customField);
             });
+            console.log($('#metadata').find('.archivalProfileField'));
+
+            $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
 
         saveMetadata: function() {
             var descriptionFields = {};
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).find('th > input').val();
+                var name = $(e).find('th > input').attr('name');
                 var value = $(e).find('td > input').val();
 
-                if (label != '' && value != '') {
+                if ($(e).hasClass('archivalProfileField')) {
+                    descriptionFields[name] = name;
+                } else if (label != '' && value != '') {
                     descriptionFields[label] = value;
-                } else if (label == '' && value != '') {
-                    gritter.show($('#customFieldError_txt').text(), false);
-                    descriptionFields = -1;
-                    return;
+                } else {
+                    //gritter.show($('#customFieldError_txt').text(), false);
+                    //descriptionFields = -1;
+                    //return;
                 }
             });
-
-            if (descriptionFields == -1) {
-                return;
-            }
 
             var parameters = {
                 archiveId   : ArchiveInformation.archiveId,
