@@ -15,8 +15,9 @@ delete from "digitalResource"."packedResource";
 delete from "digitalResource"."package";
 delete from "digitalResource"."address";
 
-delete from "digitalResource"."digitalResourceRelationship";
 delete from "digitalResource"."digitalResource";
 
 -- schema audit
 delete from "audit"."event";
+
+delete from "filePlan"."position";
