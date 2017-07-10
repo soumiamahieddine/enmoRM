@@ -49,6 +49,12 @@ class archive
     protected $digitalResourceController;
 
     /**
+     * Controller for format
+     * @var digitalResource/Controller/digitalResource
+     */
+    protected $formatController;
+
+    /**
      * Controller for access rules
      * @var recordsManagement/Controller/accessRule
      */
@@ -181,6 +187,8 @@ class archive
         $this->sdoFactory = $sdoFactory;
 
         $this->digitalResourceController = \laabs::newController("digitalResource/digitalResource");
+
+        $this->formatController = \laabs::newController("digitalResource/format");
 
         $this->archiveRelationshipController = \laabs::newController("recordsManagement/archiveRelationship");
 

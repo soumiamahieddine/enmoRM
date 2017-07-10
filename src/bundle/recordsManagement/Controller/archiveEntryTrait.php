@@ -138,7 +138,9 @@ trait archiveEntryTrait
             } else {
                 $archiveUnit = $this->extractArchiveUnit($filename);
                 $archiveUnit->archiveId = \laabs::newId();
-                $archiveUnit->digitalResources[] = $this->extractResource($directory, $filename);
+                $resource = $this->extractResource($directory, $filename);
+                $resource->setContents(base64_encode($resource->getContents()));
+                $archiveUnit->digitalResources[] = $resource;
                 $archive->contents[] = $archiveUnit;
             }
         }
@@ -211,16 +213,7 @@ trait archiveEntryTrait
      */
     private function extractResource($resourceDirectory, $filename)
     {
-        /*
-        if (!isset($this->droid)) {
-            $this->droid = \laabs::newService('dependency/fileSystem/plugins/fid', $this->droidSignatureFile, $this->droidContainerSignatureFile);
-        }
-        */
-
         $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
-
-        //$format = $this->droid->match($resourceDirectory . DIRECTORY_SEPARATOR . $filename);
-        //$resource->puid = $format->puid;
 
         $this->digitalResourceController->getHash($resource, "SHA256");
 
@@ -645,11 +638,10 @@ trait archiveEntryTrait
     protected function validateAttachments($archive)
     {
         if (!$archive->digitalResources) {
-            return;
+            $archive->digitalResources = [];
+        } else {
+            $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         }
-
-        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
-        $droid = \laabs::newService('dependency/fileSystem/plugins/fid');
 
         foreach ($archive->digitalResources as $digitalResource) {
             if (empty($digitalResource->archiveId)) {
@@ -668,18 +660,22 @@ trait archiveEntryTrait
             file_put_contents($filename, $contents);
 
             if ($formatDetection) {
-                if ($format = $droid->match($filename)) {
+                $format = $this->formatController->identifyFormat($filename);
+
+                if ($format) {
                     $digitalResource->puid = $format->puid;
                 }
-            }
-
-            if (empty($digitalResource->puid)) {
-                // todo : error
             }
 
             if (empty($digitalResource->hash) || empty($digitalResource->hashAlgorithm)) {
                 $this->digitalResourceController->getHash($digitalResource, $this->hashAlgorithm);
             }
+        }
+
+        $nbArchiveObjects = count($archive->contents);
+
+        for ($i = 0; $i < $nbArchiveObjects; $i++) {
+            $this->validateAttachments($archive->contents[$i]);
         }
     }
 
