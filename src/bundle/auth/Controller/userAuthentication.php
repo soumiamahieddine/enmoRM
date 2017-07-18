@@ -69,7 +69,7 @@ class userAuthentication
         $exists = $this->sdoFactory->exists('auth/account', array('accountName' => $userName));
 
         if (!$exists) {
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.');
+            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.', 401);
         }
 
         $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
@@ -87,7 +87,7 @@ class userAuthentication
 
         // Check enabled
         if ($userAccount->enabled != true) {
-            throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is disabled");
+            throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is disabled", 403);
         }
 
         // Check locked
@@ -97,7 +97,7 @@ class userAuthentication
                 || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
                 || $currentDate->diff($userAccount->lockDate)->s < $this->securityPolicy['lockDelay'] // Date + delay upper than current date
             ) {
-                throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is locked");
+                throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is locked", 403);
             }
         }
 
@@ -105,15 +105,15 @@ class userAuthentication
         if ($userAccount->password !== $encryptedPassword) {
             // Update bad password count
             $userLogin->badPasswordCount = $userAccount->badPasswordCount + 1;
-
+            $this->sdoFactory->update($userLogin, 'auth/account');
+            
             // If count exceeds max attemps, lock user
             if ($this->securityPolicy['loginAttempts'] && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1) {
-                $userLogin->locked = true;
-                $userLogin->lockDate = $currentDate;
+                \laabs::callService("auth/userAccount/updateLock_userAccountId_", $userLogin->accountId);
+                \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true);
             }
-            $this->sdoFactory->update($userLogin, 'auth/account');
 
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.');
+            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.', 403);
         }
 
         // Login success, update user account values

@@ -333,6 +333,7 @@ class userAccount
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $userAccount->locked = true;
+        $userAccount->lockDate = \laabs::newTimestamp();
 
         return $this->sdoFactory->update($userAccount);
     }

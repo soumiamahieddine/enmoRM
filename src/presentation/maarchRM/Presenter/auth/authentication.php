@@ -114,6 +114,10 @@ class authentication
 
     public function authenticationException($exception)
     {
+        if (!empty($exception->getCode())) {
+            \laabs::setResponseCode($exception->getCode());
+        }
+
         $json = $this->json;
         $json->status = false;
 
