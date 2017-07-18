@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2016 Maarch
+ * Copyright (C) 2015 Maarch
  *
  * This file is part of dependency notification.
  *
@@ -19,19 +19,5 @@
  */
 namespace dependency\notification;
 
-/**
- * Notification interface
- *
- * @package dependency\logger
- * @author Alexis Ragot <alexis.ragot@maarch.org>
- */
-interface NotificationInterface
-{
-    /**
-     * Send a notification
-     * @param string $title     The title of message
-     * @param string $message   The message
-     * @param array  $receivers Array of receiver
-     */
-    public function send($title, $message, $receivers);
+class Exception extends \core\Exception {
 }
