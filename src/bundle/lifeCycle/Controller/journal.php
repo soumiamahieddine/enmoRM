@@ -1035,33 +1035,12 @@ class journal
      */
     private function sendMail($event)
     {
-        if (!$this->mailHost || !$this->mailPassword || !$this->mailPort || !$this->mailUsername || !$this->mailReceiver || !$this->mailSender || !$this->mailSMTPAuth || !$this->mailSMTPSecure) {
-            return null;
-        }
+        $subject = 'Life cycle error';
+        $body = "Error on event '$event->eventId' of type '$event->eventType'. ";
+        $body .= "The object '$event->objectId' of class '$event->objectClass'. ";
+        $body .= "Description : $event->description ";
 
-        require_once 'bundle/lifeCycle/PHPMailer-master/PHPMailerAutoload.php';
-
-        $mail = new \PHPMailer();
-        $mail->isSMTP();
-        $mail->Host = $this->mailHost;
-        $mail->SMTPAuth = $this->mailSMTPAuth;
-        $mail->Username = $this->mailUsername;
-        $mail->Password = $this->mailPassword;
-        $mail->SMTPSecure = $this->mailSMTPSecure;
-        $mail->Port = $this->mailPort;
-
-        $mail->setFrom($this->mailSender);
-        $mail->addAddress($this->mailReceiver);
-
-        $mail->Subject = 'Life cycle error';
-        $mail->Body = "Error on event '<b>$event->eventId</b>' of type '<b>$event->eventType</b>'<br/>";
-        $mail->Body .= "The object '<b>$event->objectId</b>' of class '<b>$event->objectClass</b>'<br/>";
-        $mail->Body .= "Description : $event->description";
-
-        $mail->AltBody = "Error on event '$event->eventId' of type '$event->eventType'\n";
-        $mail->AltBody .= "The object '$event->objectId' of class '$event->objectClass'\n";
-        $mail->AltBody .= "Description : $event->description";
-
-        $mail->send();
+        $notification = \laabs::newService("dependency/notification/Notification");
+        $notification->send($subject, $body);
     }
 }
