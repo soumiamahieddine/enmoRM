@@ -75,12 +75,12 @@ WITH (
 CREATE TABLE "recordsManagement"."archivalProfileRelationship"
 (
 	"parentProfileId" text NOT NULL,
-	"relatedProfileId" text NOT NULL,
-	PRIMARY KEY ("parentProfileId", "relatedProfileId"),
+	"contentProfileId" text NOT NULL,
+	PRIMARY KEY ("parentProfileId", "contentProfileId"),
 	FOREIGN KEY ("parentProfileId")
     REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY ("relatedProfileId")
+    FOREIGN KEY ("contentProfileId")
     REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
 );

@@ -110,16 +110,9 @@ class archivalProfile
     /**
      *  The list of child archival profiles
      *
-     * @var recordsManagement/archivalProfile[]
+     * @var array
      */
-    public $contentsProfile = array();
-
-    /**
-     *  The children profiles
-     *
-     * @var recordsManagement/archivalProfile
-     */
-    public $childrenProfiles = array();
+    public $containedProfiles = array();
 
     /**
      *  The retention rule

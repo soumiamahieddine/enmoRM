@@ -52,7 +52,7 @@ class archivalProfile
     /**
      * List archival profiles
      *
-     * @return recordManagement/archivalProfile[] The list of archival profiles
+     * @return recordsManagement/archivalProfile[] The list of archival profiles
      */
     public function index()
     {
@@ -74,7 +74,7 @@ class archivalProfile
     /**
      * Edit an archival profile
      * @param string $archivalProfileId   The archival profile's identifier
-     * @param bool   $withRelatedProfiles Bring back the children profiles
+     * @param bool   $withRelatedProfiles Bring back the contents profiles
      *
      * @return recordsManagement/archivalProfile The profile object
      */
@@ -85,7 +85,7 @@ class archivalProfile
         $this->readDetail($archivalProfile);
 
         if ($withRelatedProfiles) {
-            $archivalProfile->childrenProfiles = $this->sdoFactory->find('recordManagement/archivalProfile', "parentProfileId ='$archivalProfile->archivalProfileId'");
+            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfileId);
         }
 
         return $archivalProfile;
@@ -174,6 +174,26 @@ class archivalProfile
     }
 
     /**
+     * Get the contents profiles list
+     * string $archivalProfileId The parent profile identifier
+     *
+     * @return array The list of contents archival profile
+     */
+    public function getContentsProfiles($archivalProfileId)
+    {
+        $contentsProfiles = [];
+        $relationships = $this->sdoFactory->find('recordsManagement/archivalProfileRelationship', "parentProfileId ='$archivalProfileId'");
+
+        if (count($relationships)) {
+            foreach ($relationships as $relationship) {
+                $contentsProfiles[] = $this->sdoFactory->read('recordsManagement/archivalProfile', $relationship->containedProfileId);
+            }
+        }
+
+        return $contentsProfiles;
+    }
+
+    /**
      * Get the standard archive field
      * @return array
      */
@@ -251,15 +271,36 @@ class archivalProfile
      */
     public function create($archivalProfile)
     {
-        $archivalProfile->archivalProfileId = \laabs::newId();
+        $transactionControl = !$this->sdoFactory->inTransaction();
 
-        $this->sdoFactory->create($archivalProfile, 'recordsManagement/archivalProfile');
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
 
-        $this->createDetail($archivalProfile);
+        try {
+            $archivalProfile->archivalProfileId = \laabs::newId();
 
-        // Life cycle journal
-        $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-        $this->lifeCycleJournalController->logEvent('recordsManagement/profileCreation', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+            $this->sdoFactory->create($archivalProfile, 'recordsManagement/archivalProfile');
+
+            $this->createDetail($archivalProfile);
+            // Contents profiles
+            $this->updateContainedProfiles($archivalProfile->archivalProfileId, $archiveProfile->containedProfiles);
+
+            // Life cycle journal
+            $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/profileCreation', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
 
         return true;
     }
@@ -272,16 +313,111 @@ class archivalProfile
      */
     public function update($archivalProfile)
     {
-        $archivalProfile = \laabs::cast($archivalProfile, 'recordsManagement/archivalProfile');
+        $transactionControl = !$this->sdoFactory->inTransaction();
 
-        $this->deleteDetail($archivalProfile);
-        $this->createDetail($archivalProfile);
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
 
-        // archival profile
-        $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
-        // Life cycle journal
-        $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-        $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        try {
+            $archivalProfile = \laabs::cast($archivalProfile, 'recordsManagement/archivalProfile');
+
+            $this->deleteDetail($archivalProfile);
+            $this->createDetail($archivalProfile);
+
+            // archival profile
+            $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
+            // Contents profiles
+            $this->updateContainedProfiles($archivalProfile->archivalProfileId, $archivalProfile->containedProfiles);
+
+            // Life cycle journal
+            $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
+
+    /**
+     * Cpdate an archival content profile
+     * @param string $archivalProfileId The parent profile identifier
+     * @param array  $containedProfiles  The content profiles identifiers
+     *
+     * @return boolean The request of the request
+     */
+    protected function updateContainedProfiles($parentProfileId, $containedProfiles)
+    {
+        if (!count($containedProfiles)) {
+            return;
+        }
+
+        // Validation
+        foreach ($containedProfiles as $profileId) {
+            try {
+                $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $profileId);
+
+            } catch (\Exception $e) {
+                throw new \core\Exception\NotFoundException("$profileId can't be found.");
+            }
+            
+            if (!$this->validateContainedProfile($parentProfileId, $profileId)) {
+                throw new \core\Exception\ForbiddenException("$profile->reference can't be content in this archival profile."); 
+            }
+        }
+
+
+        $oldcontainedProfiles = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId = '$parentProfileId'");
+        if (count($oldcontainedProfiles)) {
+            $this->sdoFactory->deleteCollection($oldcontainedProfiles, "recordsManagement/archivalProfileRelationship");
+        }
+
+        $archivalProfileRelationships = [];
+        foreach ($containedProfiles as $containedProfileId) {
+            $archivalProfileRelationship = \laabs::newInstance('recordsManagement/archivalProfileRelationship');
+            $archivalProfileRelationship->parentProfileId = $parentProfileId; 
+            $archivalProfileRelationship->containedProfileId = $containedProfileId;
+
+            $archivalProfileRelationships[] = $archivalProfileRelationship;
+        }
+
+        $this->sdoFactory->createCollection($archivalProfileRelationships, "recordsManagement/archivalProfileRelationship");
+
+        return true;
+    }
+
+    /**
+     * Validate an archival profile contents profiles
+     * @param string $archivalProfileId The parent profile identifier
+     * @param string $containedProfileId    The contents profiles identifiers to validate
+     *
+     * @return boolean The request of the request
+     */
+    protected function validateContainedProfile($parentProfileId, $containedProfileId)
+    {
+        if ($parentProfileId == $containedProfileId) {
+            return false;
+        }
+
+        $relationships = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId = '$containedProfileId'");
+
+        if (count($relationships)) {
+            foreach ($relationships->containedProfileId as $containedProfileId) {
+                if (!validateContentProfile($parentProfileId, $containedProfileId)) {
+                    return false;
+                }
+            }
+        }
 
         return true;
     }
@@ -334,30 +470,6 @@ class archivalProfile
                 $this->sdoFactory->create($description, 'recordsManagement/archiveDescription');
             }
         }
-
-        /*if (!empty($archivalProfile->documentProfile)) {
-            foreach ($archivalProfile->documentProfile as $documentProfile) {
-                if (empty($documentProfile->name)) {
-                    $documentProfile->name = $archivalProfile->name;
-                }
-
-                $documentProfile->archivalProfileId = $archivalProfile->archivalProfileId;
-                $documentProfile->documentProfileId = \laabs\uniqid();
-                $documentProfile->acceptUserIndex = $archivalProfile->acceptUserIndex;
-                $this->sdoFactory->create($documentProfile, 'recordsManagement/documentProfile');
-
-                if (!empty($documentProfile->documentDescription)) {
-                    $position = 0;
-                    foreach ($documentProfile->documentDescription as $description) {
-                        $description->position = $position;
-                        $description->documentProfileId = $documentProfile->documentProfileId;
-                        $this->sdoFactory->create($description, 'recordsManagement/documentDescription');
-                        $position++;
-                    }
-
-                }
-            }
-        }*/
     }
 
     protected function deleteDetail($archivalProfile)

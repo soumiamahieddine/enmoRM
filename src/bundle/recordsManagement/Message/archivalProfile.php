@@ -104,4 +104,11 @@ class archivalProfile
      * @var recordsManagement/archiveDescription[]
      */
     public $archiveDescription = array();
+
+    /**
+     *  The list of child archival profiles
+     *
+     * @var array
+     */
+    public $containedProfiles = array();
 }
