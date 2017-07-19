@@ -28,19 +28,24 @@ class Notification implements \dependency\notification\NotificationInterface
 {
 
     protected $mail;
+    protected $mailHost;
+    protected $mailUsername;
+    protected $mailPassword;
+    protected $mailPort;
+    protected $mailSender;
+    protected $mailSMTPAuth;
+    protected $mailSMTPSecure;
     protected $mailAdminReceiver;
 
     public function __construct($mailHost, $mailUsername, $mailPassword, $mailPort, $mailSender, $mailAdminReceiver, $mailSMTPAuth, $mailSMTPSecure)
     {
-        $this->mail = new \PHPMailer();
-        $this->mail->isSMTP();
-        $this->mail->Host = $mailHost;
-        $this->mail->Username = $mailUsername;
-        $this->mail->Password = $mailPassword;
-        $this->mail->Port = $mailPort;
-        $this->mail->setFrom($mailSender);
-        $this->mail->SMTPAuth = $mailSMTPAuth;
-        $this->mail->SMTPSecure = $mailSMTPSecure;
+        $this->mailHost = $mailHost;
+        $this->mailUsername = $mailUsername;
+        $this->mailPassword = $mailPassword;
+        $this->mailPort = $mailPort;
+        $this->mailSender = $mailSender;
+        $this->mailSMTPAuth = $mailSMTPAuth;
+        $this->mailSMTPSecure = $mailSMTPSecure;
         $this->mailAdminReceiver = $mailAdminReceiver;
     }
 
@@ -52,21 +57,29 @@ class Notification implements \dependency\notification\NotificationInterface
      */
     public function send($title, $message, $receivers = [])
     {
+        $mail = new \PHPMailer();
+        $mail->isSMTP();
+        $mail->Host = $this->mailHost;
+        $mail->Username = $this->mailUsername;
+        $mail->Password = $this->mailPassword;
+        $mail->Port = $this->mailPort;
+        $mail->setFrom($this->mailSender);
+        $mail->SMTPAuth = $this->mailSMTPAuth;
+        $mail->SMTPSecure = $this->mailSMTPSecure;
+        
         if (empty($receivers)) {
-            $this->mail->addAddress($this->mailAdminReceiver);
+            $mail->addAddress($this->mailAdminReceiver);
         } else {
             foreach ($receivers as $receiver) {
-                $this->mail->addAddress($receiver);
+                $mail->addAddress($receiver);
             }
         }
 
-        $this->mail->Subject = $title;
-        $this->mail->Body = $message;
+        $mail->Subject = $title;
+        $mail->Body = $message;
 
-        $this->mail->Timeout = 15;
-        
-        if(!$this->mail->send()) {
-            throw new \dependency\notification\Exception($this->mail->ErrorInfo);
+        if(!$mail->send()) {
+            throw new \dependency\notification\Exception($mail->ErrorInfo);
         } 
         
         return true;
