@@ -57,6 +57,8 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
   "acceptMultipleDocuments" boolean default false,
+  "acceptMultipleDocuments" boolean default false,
+  "acceptArchiveWithoutProfile" boolean default true,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -68,6 +70,19 @@ CREATE TABLE "recordsManagement"."archivalProfile"
 )
 WITH (
   OIDS=FALSE
+);
+
+CREATE TABLE "recordsManagement"."archivalProfileRelationship"
+(
+	"parentProfileId" text NOT NULL,
+	"relatedProfileId" text NOT NULL,
+	PRIMARY KEY ("parentProfileId", "relatedProfileId"),
+	FOREIGN KEY ("parentProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY ("relatedProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 

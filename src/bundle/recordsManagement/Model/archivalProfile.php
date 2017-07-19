@@ -115,6 +115,13 @@ class archivalProfile
     public $contentsProfile = array();
 
     /**
+     *  The children profiles
+     *
+     * @var recordsManagement/archivalProfile
+     */
+    public $childrenProfiles = array();
+
+    /**
      *  The retention rule
      *
      * @var recordsManagement/retentionRule

@@ -73,15 +73,20 @@ class archivalProfile
 
     /**
      * Edit an archival profile
-     * @param string $archivalProfileId The archival profile's identifier
+     * @param string $archivalProfileId   The archival profile's identifier
+     * @param bool   $withRelatedProfiles Bring back the children profiles
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function read($archivalProfileId)
+    public function read($archivalProfileId, $withRelatedProfiles=false)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
         $this->readDetail($archivalProfile);
+
+        if ($withRelatedProfiles) {
+            $archivalProfile->childrenProfiles = $this->sdoFactory->find('recordManagement/archivalProfile', "parentProfileId ='$archivalProfile->archivalProfileId'");
+        }
 
         return $archivalProfile;
     }

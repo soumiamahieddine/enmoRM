@@ -46,10 +46,11 @@ interface archivalProfileInterface
     
     /**
      * Edit a archival profile
+     * @param bool $withRelatedProfiles Bring back the children profiles
      * 
      * @action recordsManagement/archivalProfile/read The profile object
      */
-    public function read_archivalProfileId_();
+    public function read_archivalProfileId_($withRelatedProfiles = false);
 
     /**
      * Edit a archival profile
