@@ -1,0 +1,118 @@
+<div class="form-group col-md-12">
+	<br/>
+	<form class="form-horizontal">
+		<div class="form-group">
+	        <label class="col-md-4 control-label">Accept archives without profile</label>
+	        <div class="col-md-8">
+	            <input type="checkbox" id="acceptArchiveWithoutProfile" name="acceptArchiveWithoutProfile" data-toggle="toggle"> 
+	        </div>
+	    </div>
+	    <div class="form-group">
+	        <label class="col-md-4 control-label">Accept the profile</label>
+	        <div class="col-md-8">
+	        	<div class="input-group">
+			        <select id="profileList" name="profileList" class="form-control" data-profile-list="[?merge profileList ?]" data-contained-profiles="[?merge archivalProfile.containedProfiles ?]">
+			            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Profile to accept</option>
+			        </select>
+			        <span class="input-group-btn">
+	                	<button type="button" id="addProfile" class="btn btn-success"><span class="fa fa-plus"></span></button>
+	                </span>
+                </div>
+		    </div>
+	    </div>
+	    <div class="col-xs-12">
+		    <ul id="containedProfileList" class="list-group"/>
+	    </div>
+    </form>
+</div>
+
+<script>
+	var ArchiveStructure = {
+		list   : $('#containedProfileList'),
+		select : $('#profileList'),
+
+		addProfile: function(profile) {
+			var li = $('<li/>').addClass('list-group-item')
+							   .data('json', profile)
+							   .data('profileid', profile.archivalProfileId)
+							   .html(profile.reference + " : " + profile.name)
+							   .appendTo(this.list);
+
+			$('<span>/').addClass('pull-right')
+						.append(
+							$('<a/>').attr('href', '#')
+									 .addClass('text-danger deleteProfile')
+									 .html($('<i/>').addClass('fa fa-times'))
+							)
+						.appendTo(li);
+
+			$('<span>/').addClass('pull-right')
+						.append(
+							$('<a/>').attr('href', '/archivalProfile/'+profile.archivalProfileId)
+									 .css('margin-right', '10px')
+									 .html($('<i/>').addClass('fa fa-external-link'))
+							)
+						.appendTo(li);
+
+			this.select.val('').find('option[value="'+profile.archivalProfileId+'"]').addClass('hide');
+		},
+
+		removeProfile: function(li) {
+			var profileId = li.data('profileid');
+			li.remove();
+
+			this.select.find('option[value="'+profileId+'"]').removeClass('hide');
+		},
+
+		serialize: function() {
+
+			var containedProfiles = []
+
+			this.list.find('li').each(function() {
+				containedProfiles.push($(this).data('profileid'))
+			});
+
+			return containedProfiles;
+		}
+	}
+
+
+	$("#profileList").ready(function () {
+	 	var select = $('#profileList');
+	 	var profileList = [];
+
+	 	$.each(select.data('profile-list'), function(key, profile) {
+			profileList.push(profile);
+	 	});
+	 	
+	 	profileList.sort(function (a, b) {
+            var aVal = a.reference;
+            var bVal = b.reference;
+
+            return ((aVal < bVal) ? -1 : ((aVal > bVal) ? 1 : 0));
+        });
+
+	 	$.each(profileList, function(key, profile) {
+	 		var option = $('<option/>').val(profile.archivalProfileId).data('json', profile).html(profile.reference+" : "+profile.name).appendTo(select);
+	 	});
+
+	 	$.each(select.data('contained-profiles'), function(key, profile) {
+	 		ArchiveStructure.addProfile(profile);
+	 	});
+
+
+	 	select.removeAttr('data-contained-profiles').removeAttr('data-profile-list');
+
+	});
+
+	$('#addProfile').on('click', function() {
+
+		if (ArchiveStructure.select.val() != '') {
+			ArchiveStructure.addProfile(ArchiveStructure.select.find('option:selected').data('json'));
+		}
+	});
+
+	$('#containedProfileList').on('click', '.deleteProfile', function() {
+		ArchiveStructure.removeProfile($(this).closest('li'));
+	});
+</script>

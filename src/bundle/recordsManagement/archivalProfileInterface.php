@@ -50,7 +50,7 @@ interface archivalProfileInterface
      * 
      * @action recordsManagement/archivalProfile/read The profile object
      */
-    public function read_archivalProfileId_($withRelatedProfiles = false);
+    public function read_archivalProfileId_($withRelatedProfiles = true);
 
     /**
      * Edit a archival profile

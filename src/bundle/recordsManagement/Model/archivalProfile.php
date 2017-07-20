@@ -35,7 +35,7 @@ class archivalProfile
      *
      * @var id
      */
-    public $archivalProfileId;
+    public $archivalProfileId; 
 
     /**
      * The reference
@@ -99,6 +99,13 @@ class archivalProfile
      * @var boolean
      */
     public $acceptUserIndex;
+
+    /**
+     * The archive accepts sub archive without profile
+     *
+     * @var boolean
+     */
+    public $acceptArchiveWithoutProfile;
 
     /**
      *  The list of profile description

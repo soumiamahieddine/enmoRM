@@ -78,7 +78,7 @@ class archivalProfile
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function read($archivalProfileId, $withRelatedProfiles=false)
+    public function read($archivalProfileId, $withRelatedProfiles=true)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 

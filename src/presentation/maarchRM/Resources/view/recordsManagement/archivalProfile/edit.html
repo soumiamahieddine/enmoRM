@@ -44,13 +44,6 @@ file that was distributed with this source code.
                                 <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
                             </div>
                         </div>
-                        <?merge archivalProfile.type.ifeq('1').not() ?>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Allow user indexes</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
-                            </div>
-                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -60,6 +53,8 @@ file that was distributed with this source code.
                             <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
                             <?merge archivalProfile.type.ifeq('1').not() ?>
                             <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                            <?merge archivalProfile.type.ifeq('1').not() ?>
+                            <li role="presentation"><a href="#profileRelationshipTab" aria-controls="profileRelationshipTab" role="tab" data-toggle="tab">Archive structure</a></li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -137,6 +132,9 @@ file that was distributed with this source code.
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade in" id="profileRelationshipTab">
+                                        <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
                                     </div>
                                 </div>
                             </div>
@@ -383,7 +381,8 @@ file that was distributed with this source code.
             accessRuleCode: $('#accessRuleCode').val(),
             retentionRuleCode: $('#code').val(),
             acceptUserIndex: $('#allowUserIndexes').prop("checked"),
-            archiveDescription: []
+            archiveDescription: [],
+            acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked")
         }
 
         if(serializedObject.retentionStartDate ==''){
@@ -397,6 +396,7 @@ file that was distributed with this source code.
         }
         
         serializedObject.archiveDescription = PropertiesList.serialize();
+        serializedObject.containedProfiles = ArchiveStructure.serialize();
         
         return serializedObject;
     }

@@ -87,6 +87,16 @@ class archivalProfile
         $this->view->addContentFile('recordsManagement/archivalProfile/edit.html');
 
         $profilesDirectory = \laabs::configuration('recordsManagement')['profilesDirectory'];
+        $profileList = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+
+        foreach ($profileList as $key => $profile) {
+            if ($profile->archivalProfileId == $archivalProfile->archivalProfileId) {
+                unset($profileList[$key]);
+                break;
+            }
+        }
+
+        $archivalProfile->containedProfiles = json_encode($archivalProfile->containedProfiles);
 
         if ($archivalProfile) {
 
@@ -167,6 +177,8 @@ class archivalProfile
             $this->view->merge($this->view->getElementById("retentionStartDate"));
 
             $this->view->setSource("dateFields", json_encode($dateFields));
+
+            $this->view->setSource("profileList", json_encode($profileList));
 
             $this->view->setSource("descriptionClassList", $descriptionClasses);
 
