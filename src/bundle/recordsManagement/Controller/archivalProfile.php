@@ -284,7 +284,7 @@ class archivalProfile
 
             $this->createDetail($archivalProfile);
             // Contents profiles
-            $this->updateContainedProfiles($archivalProfile->archivalProfileId, $archiveProfile->containedProfiles);
+            $this->updateContainedProfiles($archivalProfile->archivalProfileId, $archivalProfile->containedProfiles);
 
             // Life cycle journal
             $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
@@ -302,7 +302,7 @@ class archivalProfile
             $this->sdoFactory->commit();
         }
 
-        return true;
+        return  $archivalProfile->archivalProfileId;
     }
 
     /**
@@ -412,8 +412,8 @@ class archivalProfile
         $relationships = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId = '$containedProfileId'");
 
         if (count($relationships)) {
-            foreach ($relationships->containedProfileId as $containedProfileId) {
-                if (!validateContentProfile($parentProfileId, $containedProfileId)) {
+            foreach ($relationships as $relationship) {
+                if (!$this->validateContainedProfile($parentProfileId, $relationship->containedProfileId)) {
                     return false;
                 }
             }
@@ -432,6 +432,14 @@ class archivalProfile
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
+
+        // containedProfiles
+        $archivalProfileRelationships = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId='$archivalProfileId' or containedProfileId='$archivalProfileId'");
+        if (count($archivalProfileRelationships)) {
+            $this->sdoFactory->deleteCollection($archivalProfileRelationships, "recordsManagement/archivalProfileRelationship");
+        }
+        //$this->sdoFactory->deleteChildren("recordsManagement/archivalProfileRelationship", $archivalProfile);
+        
         $this->deleteDetail($archivalProfile);
 
         $this->sdoFactory->delete($archivalProfile);
