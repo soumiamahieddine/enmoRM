@@ -94,14 +94,17 @@ class archivalProfile
     /**
      * get an archival profile by reference
      * @param string $archivalProfileReference The archival profile reference
+     * @param bool   $withRelatedProfiles Bring back the contents profiles
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function getByReference($archivalProfileReference)
+    public function getByReference($archivalProfileReference, $withRelatedProfiles=true)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', array('reference' => $archivalProfileReference));
 
-        $this->readDetail($archivalProfile);
+        if ($withRelatedProfiles) {
+            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
+        }
 
         return $archivalProfile;
     }
