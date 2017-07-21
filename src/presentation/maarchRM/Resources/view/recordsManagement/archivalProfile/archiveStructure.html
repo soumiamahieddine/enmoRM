@@ -8,11 +8,11 @@
 	        </div>
 	    </div>
 	    <div class="form-group">
-	        <label class="col-md-4 control-label">Accept the profile</label>
+	        <label class="col-md-4 control-label">Accept the profile :</label>
 	        <div class="col-md-8">
 	        	<div class="input-group">
 			        <select id="profileList" name="profileList" class="form-control" data-profile-list="[?merge profileList ?]" data-contained-profiles="[?merge archivalProfile.containedProfiles ?]">
-			            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Profile to accept</option>
+			            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Select a profile</option>
 			        </select>
 			        <span class="input-group-btn">
 	                	<button type="button" id="addProfile" class="btn btn-success"><span class="fa fa-plus"></span></button>
@@ -24,6 +24,25 @@
 		    <ul id="containedProfileList" class="list-group"/>
 	    </div>
     </form>
+</div>
+
+<span class="hide" id="delete_text">Delete</span>
+<span class="hide" id="goTo_text">Go to</span>
+
+<div class="modal fade" id="saveProfileModal" tabindex="-1" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-body">
+      			<br/>
+        		<h4>Do you want to save the changes before leaving this screen ?</h4> 
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        		<button type="button" class="btn btn-success" data-dismiss="modal" id="saveBeforeChange">Yes</button>
+        		<button type="button" class="btn btn-danger" data-dismiss="modal" id="noSaveBeforeChange">No</button>
+      		</div>
+    	</div>
+  	</div>
 </div>
 
 <script>
@@ -41,6 +60,7 @@
 			$('<span>/').addClass('pull-right')
 						.append(
 							$('<a/>').attr('href', '#')
+									 .attr('title', $('#delete_text').html())
 									 .addClass('text-danger deleteProfile')
 									 .html($('<i/>').addClass('fa fa-times'))
 							)
@@ -49,6 +69,8 @@
 			$('<span>/').addClass('pull-right')
 						.append(
 							$('<a/>').attr('href', '/archivalProfile/'+profile.archivalProfileId)
+									 .attr('title', $('#goTo_text').html())
+									 .addClass('showProfile')
 									 .css('margin-right', '10px')
 									 .html($('<i/>').addClass('fa fa-external-link'))
 							)
@@ -75,7 +97,6 @@
 			return containedProfiles;
 		}
 	}
-
 
 	$("#profileList").ready(function () {
 	 	var select = $('#profileList');
@@ -115,4 +136,31 @@
 	$('#containedProfileList').on('click', '.deleteProfile', function() {
 		ArchiveStructure.removeProfile($(this).closest('li'));
 	});
+
+	$('#containedProfileList').on('click', '.showProfile', function() {
+		var href = this.href;
+
+		console.log($('#contain').data('not-saved'));
+
+        if ($('#contain').data('not-saved') == false) {
+			location.href = href;
+			return;
+        }
+
+		$('#saveProfileModal').modal();
+
+		$('#saveBeforeChange').one('click', function() {
+
+			$('#saveProfileModal').on('hide.bs.modal', function(){
+				ArchivalProfile.save(href);
+			})
+		});
+
+		$('#noSaveBeforeChange').one('click', function(){
+			location.href = href;
+		});
+
+		return false;
+	});
+
 </script>
