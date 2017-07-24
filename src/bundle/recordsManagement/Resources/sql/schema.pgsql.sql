@@ -59,6 +59,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "acceptMultipleDocuments" boolean default false,
   "acceptMultipleDocuments" boolean default false,
   "acceptArchiveWithoutProfile" boolean default true,
+  "acceptAnyProfile" boolean default false,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")

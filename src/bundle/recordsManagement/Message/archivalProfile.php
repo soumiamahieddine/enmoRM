@@ -106,6 +106,13 @@ class archivalProfile
     public $acceptArchiveWithoutProfile;
 
     /**
+     * The archive accepts sub archive of any profile
+     *
+     * @var boolean
+     */
+    public $acceptAnyProfile;
+
+    /**
      *  The list of profile description
      *
      * @var recordsManagement/archiveDescription[]

@@ -238,3 +238,6 @@ msgstr "Voulez vous enregistrer les modifications avant de quitter cet écran ?"
 
 msgid "Go to"
 msgstr "Aller vers"
+
+msgid "Accept any profiles"
+msgstr "Accepter tout les profiles"

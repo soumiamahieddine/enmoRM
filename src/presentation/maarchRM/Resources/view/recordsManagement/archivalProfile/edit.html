@@ -256,7 +256,8 @@ file that was distributed with this source code.
                 retentionRuleCode: $('#code').val(),
                 acceptUserIndex: $('#allowUserIndexes').prop("checked"),
                 archiveDescription: [],
-                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked")
+                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked"),
+                acceptAnyProfile: $('#acceptAnyProfile').prop("checked")
             }
 
             if(serializedObject.retentionStartDate ==''){
@@ -288,7 +289,6 @@ file that was distributed with this source code.
         ArchivalProfile.loadAccessCode();
 
         $('input, select, textarea').on('change', function() {
-            console.log('ok');
             $('#contain').data('not-saved', true);
         })
 

@@ -163,13 +163,25 @@ class welcome
         $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+            $archive->archivalProfileName = $archivalProfile->name;
+        }
+
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        if (count($archivalProfile->containedProfiles) && $archivalProfile->acceptArchiveWithoutProfile == false) {
+            $depositPrivilege = false;
+        }
+
         $this->view->translate();
 
+        $this->view->setSource('containedProfiles', $archivalProfiles->containedProfiles);
         $this->view->setSource("status", $archive->status);
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
         $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
-        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+
 
         $this->getDescription($archive);
         $this->view->setSource('retentionRules', $retentionRules);
@@ -293,6 +305,7 @@ class welcome
         if (!empty($archive->descriptionClass)) {
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
+
         } else {
             $descriptionHtml = '<table">';
 

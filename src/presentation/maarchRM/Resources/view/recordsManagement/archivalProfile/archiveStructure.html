@@ -2,26 +2,34 @@
 	<br/>
 	<form class="form-horizontal">
 		<div class="form-group">
-	        <label class="col-md-4 control-label">Accept archives without profile</label>
-	        <div class="col-md-8">
+	        <label class="col-md-6 control-label">Accept archives without profile</label>
+	        <div class="col-md-6">
 	            <input type="checkbox" id="acceptArchiveWithoutProfile" name="acceptArchiveWithoutProfile" data-toggle="toggle"> 
 	        </div>
 	    </div>
 	    <div class="form-group">
-	        <label class="col-md-4 control-label">Accept the profile :</label>
-	        <div class="col-md-8">
-	        	<div class="input-group">
-			        <select id="profileList" name="profileList" class="form-control" data-profile-list="[?merge profileList ?]" data-contained-profiles="[?merge archivalProfile.containedProfiles ?]">
-			            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Select a profile</option>
-			        </select>
-			        <span class="input-group-btn">
-	                	<button type="button" id="addProfile" class="btn btn-success"><span class="fa fa-plus"></span></button>
-	                </span>
-                </div>
-		    </div>
+	        <label class="col-md-6 control-label">Accept any profiles</label>
+	        <div class="col-md-6">
+	            <input type="checkbox" id="acceptAnyProfile" name="acceptAnyProfile" data-toggle="toggle"> 
+	        </div>
 	    </div>
-	    <div class="col-xs-12">
-		    <ul id="containedProfileList" class="list-group"/>
+	    <div id="subProfile" class="[?merge archivalProfile.acceptAnyProfile.bool().then('hide', '') ?]">
+		    <div class="form-group">
+		        <label class="col-md-4 control-label">Accept the profile :</label>
+		        <div class="col-md-8">
+		        	<div class="input-group">
+				        <select id="profileList" name="profileList" class="form-control" data-profile-list="[?merge profileList ?]" data-contained-profiles="[?merge archivalProfile.containedProfiles ?]">
+				            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Select a profile</option>
+				        </select>
+				        <span class="input-group-btn">
+		                	<button type="button" id="addProfile" class="btn btn-success"><span class="fa fa-plus"></span></button>
+		                </span>
+	                </div>
+			    </div>
+		    </div>
+		    <div class="col-xs-12">
+			    <ul id="containedProfileList" class="list-group"/>
+		    </div>
 	    </div>
     </form>
 </div>
@@ -86,6 +94,19 @@
 			this.select.find('option[value="'+profileId+'"]').removeClass('hide');
 		},
 
+		allowAnyProfile: function() {
+			this.list.find('li').each(function() {
+				ArchiveStructure.removeProfile($(this));
+			});
+
+			$('#subProfile').addClass('hide');
+		},
+
+		limitSubProfile: function() {
+			$('#subProfile').removeClass('hide');
+
+		},
+
 		serialize: function() {
 
 			var containedProfiles = []
@@ -140,8 +161,6 @@
 	$('#containedProfileList').on('click', '.showProfile', function() {
 		var href = this.href;
 
-		console.log($('#contain').data('not-saved'));
-
         if ($('#contain').data('not-saved') == false) {
 			location.href = href;
 			return;
@@ -150,17 +169,24 @@
 		$('#saveProfileModal').modal();
 
 		$('#saveBeforeChange').one('click', function() {
-
-			$('#saveProfileModal').on('hide.bs.modal', function(){
+			$('#saveProfileModal').on('hide.bs.modal', function() {
 				ArchivalProfile.save(href);
 			})
 		});
 
-		$('#noSaveBeforeChange').one('click', function(){
+		$('#noSaveBeforeChange').one('click', function() {
 			location.href = href;
 		});
 
 		return false;
 	});
+
+	$('#acceptAnyProfile').on('change', function() {
+		if ($(this).is(':checked')) {
+			ArchiveStructure.allowAnyProfile();
+		} else {
+			ArchiveStructure.limitSubProfile();
+		}
+	})
 
 </script>

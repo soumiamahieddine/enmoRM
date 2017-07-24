@@ -638,8 +638,9 @@ trait archiveEntryTrait
             }
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
-                if (($archive->contents[$i]->archivalProfileReference == "" && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
+                if (($archive->contents[$i]->archivalProfileReference == "" && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || (!$this->currentArchivalProfile->acceptAnyProfile && !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles))) {
                     throw new \core\Exception\ForbiddenException("Invalid contained archive profile");
+                    }
                 }
 
                 $this->validateManagementMetadata($archive->contents[$i]);
@@ -662,6 +663,10 @@ trait archiveEntryTrait
         $this->useArchivalProfile($parentArchiveId->archivalProfileReference);
 
         if ($archive->archivalProfileReference == "" && $this->currentArchivalProfile->acceptArchiveWithoutProfile) {
+            return;
+        }
+
+        if ($archive->archivalProfileReference != "" && $this->currentArchivalProfile->acceptAnyProfile) {
             return;
         }
 

@@ -1,4 +1,5 @@
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptArchiveWithoutProfile" boolean default true;
+ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptAnyProfile" boolean default false;
 
 CREATE TABLE "recordsManagement"."archivalProfileRelationship"
 (
