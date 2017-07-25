@@ -320,3 +320,7 @@ msgstr "Profil d'archive"
 
 msgid "Archival profiles access updated."
 msgstr "Accès aux profils mis à jour"
+
+msgid "Accept archives without profile"
+msgstr "Autoriser les archives sans profil"
+

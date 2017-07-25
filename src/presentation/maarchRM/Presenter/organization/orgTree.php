@@ -73,6 +73,11 @@ class orgTree
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
 
+        // Sort archival profile by reference
+        usort($archivalProfile, function($a, $b){
+            return strcmp($a->reference, $b->reference);
+        });
+
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");

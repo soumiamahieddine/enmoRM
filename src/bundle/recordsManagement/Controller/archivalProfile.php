@@ -75,17 +75,18 @@ class archivalProfile
      * Edit an archival profile
      * @param string $archivalProfileId   The archival profile's identifier
      * @param bool   $withRelatedProfiles Bring back the contents profiles
+     * @param bool   $recursively         Get contained archival profiles children
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function read($archivalProfileId, $withRelatedProfiles=true)
+    public function read($archivalProfileId, $withRelatedProfiles=true, $recursively=false)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
         $this->readDetail($archivalProfile);
 
         if ($withRelatedProfiles) {
-            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfileId);
+            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfileId, $recursively);
         }
 
         return $archivalProfile;
@@ -178,22 +179,29 @@ class archivalProfile
 
     /**
      * Get the contents profiles list
-     * string $archivalProfileId The parent profile identifier
+     * @param string $archivalProfileId The parent profile identifier
+     * @param bool   $recursively       Get contained archival profiles children
      *
      * @return array The list of contents archival profile
      */
-    public function getContentsProfiles($archivalProfileId)
+    public function getContentsProfiles($archivalProfileId, $recursively = false)
     {
-        $contentsProfiles = [];
+        $containedProfiles = [];
         $relationships = $this->sdoFactory->find('recordsManagement/archivalProfileRelationship', "parentProfileId ='$archivalProfileId'");
 
         if (count($relationships)) {
             foreach ($relationships as $relationship) {
-                $contentsProfiles[] = $this->sdoFactory->read('recordsManagement/archivalProfile', $relationship->containedProfileId);
+                $profile = $this->sdoFactory->read('recordsManagement/archivalProfile', $relationship->containedProfileId);
+
+                if ($recursively) {
+                    $profile->containedProfiles = $this->getContentsProfiles($relationship->containedProfileId, $recursively);
+                }
+
+                $containedProfiles[] = $profile;
             }
         }
 
-        return $contentsProfiles;
+        return $containedProfiles;
     }
 
     /**
