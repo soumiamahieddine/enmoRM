@@ -155,6 +155,8 @@ class welcome
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
+        $acceptUserIndex = true;
+
         // Archive
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
@@ -170,6 +172,8 @@ class welcome
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         if ($depositPrivilege) {
+
+            $acceptArchiveWithoutProfile = true;
             $archivalProfileList = [];
 
             if (!empty($archive->archivalProfileReference)) {
@@ -199,6 +203,9 @@ class welcome
                 if (!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
                     $depositPrivilege = false;
                 }
+
+                $acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+                $acceptUserIndex = $archivalProfile->acceptUserIndex;
             }
         }
 
@@ -209,13 +216,13 @@ class welcome
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
         $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
 
-
         $this->getDescription($archive);
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("archivalProfileList", $archivalProfileList);
-        $this->view->setSource("acceptArchiveWithoutProfile", $archivalProfile->acceptArchiveWithoutProfile);
+        $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
+        $this->view->setSource("acceptUserIndex", $acceptUserIndex);
         $this->view->merge();
 
         return $this->view->saveHtml();

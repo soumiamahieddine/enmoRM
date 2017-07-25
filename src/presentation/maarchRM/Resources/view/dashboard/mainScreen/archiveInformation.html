@@ -45,7 +45,8 @@
         </table>
         <div id="metadata">
         </div>
-        <div class="dropup col-xs-12 hide" id="archiveCustomFieldAddBtn">
+        <?merge acceptUserIndex ?>
+        <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn">
             <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
@@ -304,7 +305,6 @@
             $('#editMetadata').prop('disabled',true);
             $('#saveMetadata').show();
             $('#cancelMetadataEdition').show();
-            $('#archiveCustomFieldAddBtn').removeClass('hide');
             //$('#archiveInformation').find('.originatorArchiveId').hide();
             //$('#archiveInformation').find('.archiveName').hide();
             
