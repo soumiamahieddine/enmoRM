@@ -223,7 +223,7 @@
                 var a = $("<a/>")
                         .addClass("userProfile small newArchive")
                         .data("reference", archivalProfiles[i].reference)
-                        .data("json", JSON.stringify(archivalProfiles[i]))
+                        .data("json", archivalProfiles[i])
                         .attr('style', "cursor: pointer;")
                         .text(archivalProfiles[i].name);
                 $("<li/>").append(a).appendTo(dropdown);

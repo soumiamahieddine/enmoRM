@@ -154,30 +154,56 @@ class welcome
     public function archiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
-        // Retention
-        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
-        for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
-            $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
-        }
+
+        // Archive
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
 
+        // Retention
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
+        for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
+            $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
+        }
+
+        // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        if (!empty($archive->archivalProfileReference)) {
-            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-            $archive->archivalProfileName = $archivalProfile->name;
-            
-            if (!count($archivalProfile->containedProfiles) && !$archivalProfile->acceptArchiveWithoutProfile && !$archivalProfile->acceptAnyProfile) {
-                $depositPrivilege = false;
+        if ($depositPrivilege) {
+            $archivalProfileList = [];
+
+            if (!empty($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                $archive->archivalProfileName = $archivalProfile->name;
+                
+                $list = [];
+
+                if ($archivalProfile->acceptAnyProfile) {
+                    $list = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
+
+                } else if (count($archivalProfile->containedProfiles)) {
+                     $list = $archivalProfile->containedProfiles;
+                }
+
+                if (count($list)) {
+                    foreach ($list as $profile) {
+                        $profileObject = new \stdClass();
+                        $profileObject->reference = $profile->reference;
+                        $profileObject->name = $profile->name;
+                        $profileObject->json = json_encode($profile);
+
+                        $archivalProfileList[] = $profileObject;
+                    }
+                }
+
+                if (!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
+                    $depositPrivilege = false;
+                }
             }
         }
 
-
         $this->view->translate();
 
-       // $this->view->setSource('containedProfiles', $archivalProfiles->containedProfiles);
         $this->view->setSource("status", $archive->status);
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
@@ -188,6 +214,8 @@ class welcome
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("archivalProfileList", $archivalProfileList);
+        $this->view->setSource("acceptArchiveWithoutProfile", $archivalProfile->acceptArchiveWithoutProfile);
         $this->view->merge();
 
         return $this->view->saveHtml();

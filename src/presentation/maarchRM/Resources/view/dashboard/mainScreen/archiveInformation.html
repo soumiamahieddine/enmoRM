@@ -7,7 +7,10 @@
         <div id="archiveToolbarBtn" class="dropdown pull-right btn-group">
             <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <?merge acceptArchiveWithoutProfile.bool() ?>
                 <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
+                <?merge archivalProfileList ?>
+                <li><a class="userProfile small newArchive" style="cursor: pointer;" data-reference="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name?></a></li>
             </ul>
         </div>
     </div>
@@ -27,7 +30,7 @@
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
             <tr class="originator">
-                <th title="Name">Originator</th>
+                <th title="Originator">Originator</th>
                 <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
             </tr>
             <tr class="archiveId">
@@ -328,7 +331,6 @@
                 customField.val(value.html());
                 value.html('').append(customField);
             });
-            console.log($('#metadata').find('.archivalProfileField'));
 
             $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
@@ -392,22 +394,6 @@
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);
-        },
-
-        buildNewArchiveDropdownMenu: function() {
-            var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
-            var dropdown = $("#archiveToolbarBtn .dropdown-menu");
-            dropdown.children().not(":first").remove();
-
-            for (var i = 0; i < archivalProfiles.length; i++) {
-                var a = $("<a/>")
-                        .addClass("userProfile small newArchive")
-                        .data("reference", archivalProfiles[i].reference)
-                        .data("json", JSON.stringify(archivalProfiles[i]))
-                        .attr('style', "cursor: pointer;")
-                        .text(archivalProfiles[i].name);
-                $("<li/>").append(a).appendTo(dropdown);
-            }
         },
 
         loadImportForm: function(e) {
