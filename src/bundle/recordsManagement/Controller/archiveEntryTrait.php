@@ -354,10 +354,11 @@ trait archiveEntryTrait
     public function completeArchivalProfileCodes($archive)
     {
         if ($archive->archivalProfileReference == "") {
-            $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
+            return;
         }
             
         $this->useArchivalProfile($archive->archivalProfileReference);
+            
 
         if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
@@ -640,11 +641,11 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 if (($archive->contents[$i]->archivalProfileReference == "" && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || (!$this->currentArchivalProfile->acceptAnyProfile && !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles))) {
                     throw new \core\Exception\ForbiddenException("Invalid contained archive profile");
-                    }
                 }
-
+                
                 $this->validateManagementMetadata($archive->contents[$i]);
             }
+
         }
     }
 

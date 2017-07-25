@@ -164,19 +164,20 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
 
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
             $archive->archivalProfileName = $archivalProfile->name;
+            
+            if (!count($archivalProfile->containedProfiles) && !$archivalProfile->acceptArchiveWithoutProfile && !$archivalProfile->acceptAnyProfile) {
+                $depositPrivilege = false;
+            }
         }
 
-        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        if (count($archivalProfile->containedProfiles) && $archivalProfile->acceptArchiveWithoutProfile == false) {
-            $depositPrivilege = false;
-        }
 
         $this->view->translate();
 
-        $this->view->setSource('containedProfiles', $archivalProfiles->containedProfiles);
+       // $this->view->setSource('containedProfiles', $archivalProfiles->containedProfiles);
         $this->view->setSource("status", $archive->status);
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");

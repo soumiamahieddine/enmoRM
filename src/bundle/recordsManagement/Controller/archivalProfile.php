@@ -361,45 +361,45 @@ class archivalProfile
      */
     protected function updateContainedProfiles($archivalProfile, $containedProfiles)
     {
+
         if ($archivalProfile->acceptAnyProfile) {
-            $containedProfiles = null;
+            $containedProfiles = [];
         }
 
-        if (!count($containedProfiles)) {
-            $oldcontainedProfiles = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId = '$archivalProfile->archivalProfileId'");
-            if (count($oldcontainedProfiles)) {
-                $this->sdoFactory->deleteCollection($oldcontainedProfiles, "recordsManagement/archivalProfileRelationship");
-            }
+        if (count($containedProfiles)) {
+            // Validation
+            foreach ($containedProfiles as $profileId) {
+                try {
+                    $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $profileId);
 
-            return;
-        }
-
-        // Validation
-        foreach ($containedProfiles as $profileId) {
-            try {
-                $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $profileId);
-
-            } catch (\Exception $e) {
-                throw new \core\Exception\NotFoundException("$profileId can't be found.");
-            }
-            
-            if (!$this->validateContainedProfile($archivalProfile->archivalProfileId, $profileId)) {
-                throw new \core\Exception\ForbiddenException("$profile->reference can't be content in this archival profile."); 
+                } catch (\Exception $e) {
+                    throw new \core\Exception\NotFoundException("$profileId can't be found.");
+                }
+                
+                if (!$this->validateContainedProfile($archivalProfile->archivalProfileId, $profileId)) {
+                    throw new \core\Exception\ForbiddenException("$profile->reference can't be content in this archival profile."); 
+                }
             }
         }
 
-
-        $archivalProfileRelationships = [];
-        foreach ($containedProfiles as $containedProfileId) {
-            $archivalProfileRelationship = \laabs::newInstance('recordsManagement/archivalProfileRelationship');
-            $archivalProfileRelationship->parentProfileId = $archivalProfile->archivalProfileId; 
-            $archivalProfileRelationship->containedProfileId = $containedProfileId;
-
-            $archivalProfileRelationships[] = $archivalProfileRelationship;
+        $oldcontainedProfiles = $this->sdoFactory->find("recordsManagement/archivalProfileRelationship", "parentProfileId = '$archivalProfile->archivalProfileId'");
+        if (count($oldcontainedProfiles)) {
+            $this->sdoFactory->deleteCollection($oldcontainedProfiles, "recordsManagement/archivalProfileRelationship");
         }
 
-        $this->sdoFactory->createCollection($archivalProfileRelationships, "recordsManagement/archivalProfileRelationship");
+        if (count($containedProfiles)) {
+            $archivalProfileRelationships = [];
+            foreach ($containedProfiles as $containedProfileId) {
+                $archivalProfileRelationship = \laabs::newInstance('recordsManagement/archivalProfileRelationship');
+                $archivalProfileRelationship->parentProfileId = $archivalProfile->archivalProfileId; 
+                $archivalProfileRelationship->containedProfileId = $containedProfileId;
 
+                $archivalProfileRelationships[] = $archivalProfileRelationship;
+            }
+
+            $this->sdoFactory->createCollection($archivalProfileRelationships, "recordsManagement/archivalProfileRelationship");
+        }
+        
         return true;
     }
 
