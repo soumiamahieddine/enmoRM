@@ -119,10 +119,13 @@
                     success     : function(response) {
                         $("#preview").removeClass('hide').html(response);
                         $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
+                        if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
+                            $('#preview').find('object').attr('height', '300');
+                        }
                         $('#preview').siblings('i').addClass('hide');
                     },
                     error    : function(response) {
-                        $("preview").removeClass('hide').html(response);
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                     }
                 })
 
