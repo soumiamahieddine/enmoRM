@@ -51,11 +51,11 @@ class authentication
             \dependency\html\Document $view,
             \dependency\json\JsonObject $json,
             \dependency\localisation\TranslatorInterface $translator,
-            $logoUri
+            $logo
     ) {
         $this->view = $view;
 
-        $this->logoUri = $logoUri;
+        $this->logoUri = $logo;
 
         $this->json = $json;
         $this->translator = $translator;
@@ -121,7 +121,8 @@ class authentication
         $json = $this->json;
         $json->status = false;
 
-        $json->message = $this->translator->getText("Username not registered or wrong password.");
+        $exception->setMessage($this->translator->getText($exception->getFormat()));
+        $json->message = $exception->getMessage();
 
         return $json->save();
     }

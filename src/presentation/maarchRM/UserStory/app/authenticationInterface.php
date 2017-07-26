@@ -61,4 +61,13 @@ interface authenticationInterface
      */
     public function updateUser_userName_Password($passwordInformation);
 
+     /**
+     * Generate a new password
+     * @param string $username The username
+     * @param string $email    The email of the user
+     *
+     * @uses auth/userAccount/updateGeneratepassword
+     * @return auth/user/generatePassword
+     */
+    public function updateUserGeneratepassword($username, $email);
 }

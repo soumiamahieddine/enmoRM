@@ -69,7 +69,7 @@ class userAuthentication
         $exists = $this->sdoFactory->exists('auth/account', array('accountName' => $userName));
 
         if (!$exists) {
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.', 401);
+            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 401);
         }
 
         $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
@@ -87,7 +87,8 @@ class userAuthentication
 
         // Check enabled
         if ($userAccount->enabled != true) {
-            throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is disabled", 403);
+            $e = \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($userName));
+            throw $e;
         }
 
         // Check locked
@@ -97,7 +98,7 @@ class userAuthentication
                 || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
                 || $currentDate->diff($userAccount->lockDate)->s < $this->securityPolicy['lockDelay'] // Date + delay upper than current date
             ) {
-                throw \laabs::newException('auth/authenticationException', "Connection failure, user ".$userName." is locked", 403);
+                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
             }
         }
 
@@ -113,7 +114,17 @@ class userAuthentication
                 \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
             }
 
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid username or password.', 403);
+            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
+        }
+
+        if ($userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
+            $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
+            $dateWithInterval = \laabs::newDateTime($userAccount->passwordLastChange)->add($interval);
+            $diff = $dateWithInterval->diff(\laabs::newDateTime());
+
+            if ($diff->invert == 0) {
+                throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
+            }
         }
 
         // Login success, update user account values
