@@ -216,7 +216,7 @@
         buildNewArchiveDropdownMenu: function() {
             var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
             var dropdown = $("#folderToolbarBtn .dropdown-menu");
-            dropdown.children().not(":first").remove();
+            dropdown.children().remove();
 
             for (var i = 0; i < archivalProfiles.length; i++) {
                 if (archivalProfiles[i] == '*') {

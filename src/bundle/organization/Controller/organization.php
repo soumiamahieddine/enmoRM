@@ -748,4 +748,28 @@ class organization
 
         return $orgUnitArchivalProfiles;
     }
+
+    /**
+     * Check if profile is in an organization access list
+     * @param string $archivalProfileReference
+     * @param string $registrationNumber
+     * 
+     * @return bool the result of the operation
+     */
+    public function checkProfileInOrgAccess($archivalProfileReference, $registrationNumber)
+    {
+        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $registrationNumber));
+
+        if (!$archivalProfileReference) {
+            $archivalProfileReference = "*";
+        }
+
+        try {
+            $this->sdoFactory->read("organization/archivalProfileAccess", array('orgId' => $organization->orgId ,'archivalProfileReference' => $archivalProfileReference));
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
 }

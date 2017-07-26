@@ -499,7 +499,12 @@ trait archiveEntryTrait
 
         $nbArchiveObjects = count($archive->contents);
 
+
         try {
+            if (!$archive->parentArchiveId && !$this->organizationController->checkProfileInOrgAccess($archive->archivalProfileReference, $archive->originatorOrgRegNumber)) {
+                throw new \core\Exception\ForbiddenException("Invalid archive profile");
+            }
+
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
 
@@ -520,6 +525,7 @@ trait archiveEntryTrait
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
+
         } catch (\Exception $exception) {
             $nbResources = count($archive->digitalResources);
             for ($i = 0; $i < $nbResources; $i++) {
