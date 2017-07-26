@@ -720,4 +720,32 @@ class organization
 
         return true;
     }
+
+    /**
+     * Get the archival profile descriptions for the given org unit
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     */
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
+    {
+        $archivalProfileAccesses = [];
+        $orgUnitArchivalProfiles = [];
+
+        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
+        
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='".$organization->orgId."'");
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            if ($archivalProfileAccess->archivalProfileReference == "*") {
+                $orgUnitArchivalProfiles[]  ='*';
+                continue;
+            }
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference);
+        }
+
+        return $orgUnitArchivalProfiles;
+    }
 }

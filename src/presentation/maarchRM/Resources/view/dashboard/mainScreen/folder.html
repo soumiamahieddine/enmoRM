@@ -14,9 +14,7 @@
             <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
                 <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
-                </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"/>
             </div>
         </div>
     </div>
@@ -51,6 +49,8 @@
     <span id="previous_text">Previous</span>
     <span id="next_text">Next</span>
     <span id="last_text">Last</span>
+    <span id="withoutProfile_text">Without profile</span>
+    
 </div>
 
 <script type="text/javascript">
@@ -91,6 +91,7 @@
             })
 
             this.getImportForm(orgRegNumber, folderId, archivalProfiles);
+            this.buildNewArchiveDropdownMenu();
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
@@ -210,26 +211,35 @@
 
         refresh: function() {
             FilePlan.selectedNode.find('b:first').click();
-        }
-    }
+        },
 
-    NewArchive = {
         buildNewArchiveDropdownMenu: function() {
             var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
             var dropdown = $("#folderToolbarBtn .dropdown-menu");
             dropdown.children().not(":first").remove();
 
             for (var i = 0; i < archivalProfiles.length; i++) {
-                var a = $("<a/>")
+                if (archivalProfiles[i] == '*') {
+                    var a = $("<a/>")
+                        .addClass("small newArchive")
+                        .data("reference", '')
+                        .attr('style', "cursor: pointer;")
+                        .text($('#withoutProfile_text').html());
+                } else {
+                    var a = $("<a/>")
                         .addClass("userProfile small newArchive")
                         .data("reference", archivalProfiles[i].reference)
                         .data("json", archivalProfiles[i])
                         .attr('style', "cursor: pointer;")
                         .text(archivalProfiles[i].name);
+                }
+                
                 $("<li/>").append(a).appendTo(dropdown);
             }
-        },
+        }
+    }
 
+    NewArchive = {
         loadImportForm: function(e) {
             var importPanel = $("#importPanel");
             $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
@@ -247,7 +257,7 @@
     }
 
     $("#folderToolbarBtn").on("show.bs.dropdown", function() {
-        NewArchive.buildNewArchiveDropdownMenu();
+        //NewArchive.buildNewArchiveDropdownMenu();
     });
 
     $("#folderToolbarBtn").on('click', '.newArchive', function() {

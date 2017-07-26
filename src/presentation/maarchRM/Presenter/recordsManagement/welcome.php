@@ -75,6 +75,7 @@ class welcome
             $this->view->setSource("filePlan", $filePlan);
         }
 
+
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
@@ -82,12 +83,17 @@ class welcome
         }
 
         // archival profiles for search form
+
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
         
         if (!empty($currentOrganization->registrationNumber)) {
-            $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
+            $archivalProfiles = \laabs::callService('organization/userPosition/readDescendantprofiles');
 
             foreach ($archivalProfiles as $archivalProfile) {
+                if ($archivalProfile == "*") {
+                    continue;
+                }
+
                 $archivalProfileController->readDetail($archivalProfile);
                 $archivalProfile->searchFields = [];
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -104,7 +110,6 @@ class welcome
 
         }
         
-
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
 
         $this->view->translate();
@@ -183,7 +188,7 @@ class welcome
                 $list = [];
 
                 if ($archivalProfile->acceptAnyProfile) {
-                    $list = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
+                    $list = \laabs::callService('organization/userPosition/readDescendantprofiles');
 
                 } else if (count($archivalProfile->containedProfiles)) {
                      $list = $archivalProfile->containedProfiles;
@@ -444,7 +449,7 @@ class welcome
 
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
-        $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
+        $orgUnit->archivalProfiles = \laabs::callService('organization/organization/readOrgunitprofiles', $orgUnit->registrationNumber);
 
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {

@@ -92,20 +92,4 @@ interface archivalProfileInterface
      */
     public function delete_archivalProfileId_();
 
-    /**
-     * Get the profiles by orgRegNumber
-     * @param string $orgRegNumber
-     * @param string $originatorAccess
-     * 
-     * @return array
-     * @action recordsManagement/archivalProfile/getOrgUnitArchivalProfiles
-     */
-    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
-
-    /**
-     * Get descendant profiles
-     * 
-     * @action recordsManagement/archivalProfile/getdescendantArchivalProfiles
-     */
-    public function readDescendantprofiles();
 }
