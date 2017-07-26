@@ -243,6 +243,10 @@ class welcome
         $this->view->addContentFile('dashboard/mainScreen/documentInformation.html');
         $this->view->translate();
 
+        if (isset(\laabs::configuration('presentation.maarchRM')['displayableFormat'])) {
+            $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
+            $this->view->merge();
+        }
         return $this->view->saveHtml();
     }
     /**
