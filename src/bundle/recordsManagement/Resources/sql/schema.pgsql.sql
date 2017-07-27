@@ -120,6 +120,8 @@ CREATE TABLE "recordsManagement"."serviceLevel"
   "digitalResourceClusterId" text NOT NULL,
   "control" text,
   "default" boolean,
+  "samplingFrequency" integer,
+  "samplingRate" integer,
   PRIMARY KEY ("serviceLevelId"),
   UNIQUE ("reference")
 )

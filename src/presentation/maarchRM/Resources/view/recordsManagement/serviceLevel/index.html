@@ -30,6 +30,8 @@ file that was distributed with this source code.
                         <thead>
                             <tr>
                                 <th>Reference</th>
+                                <th>Sampling frequency</th>
+                                <th>Sampling rate</th>
                                 <th>Detect format</th>
                                 <th>Validate format</th>
                                 <th>Check for virus</th>
@@ -43,6 +45,8 @@ file that was distributed with this source code.
                             <?merge serviceLevel ?>
                             <tr id="[?merge .serviceLevelId ?]">
                                 <td><?merge .reference ?></td>
+                                <td><?merge .samplingFrequency ?></td>
+                                <td><?merge .samplingRate ?></td>
                                 <td><i class ="fa [?merge .control.contains('formatDetection').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
                                 <td><i class ="fa [?merge .control.contains('formatValidation').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
                                 <td><i class ="fa [?merge .control.contains('virusCheck').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
