@@ -144,13 +144,17 @@ class authentication
             $isUserPosition = false;
 
             foreach ($userPositions as $position) {
-                if ($position->orgId == $organization->orgIds) {
+                if ($position->orgId == $organization->orgId) {
                     $isUserPosition = true;
                 }
             }
 
             if (!$isUserPosition) {
-                throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+                \laabs::clearTokens();
+                \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+                $userCommand->reroute('app/authentication/readUserPrompt');
+
+                return false;
             }
         }
 
