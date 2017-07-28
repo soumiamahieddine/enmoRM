@@ -32,6 +32,50 @@ trait archiveComplianceTrait
 
 
     /**
+     * Check the integrity of archives by a process of sampling
+     */
+    public function sampling()
+    {
+        $serviceLevels = $this->serviceLevelController->index();
+
+        $eventInfo = [];
+        $eventInfo['startDatetime'] = \laabs::newDateTime();
+
+        foreach ($serviceLevels as $serviceLevel) {
+            $nbArchives = $this->sdoFactory->count("recordsManagement/archive", "serviceLevelReference='" . $serviceLevel->reference . "'");
+
+            $nbArchivesPerDay = $nbArchives / $serviceLevel->samplingFrequency;
+            $nbArchivesPerDayToValidate = $nbArchivesPerDay / 100 * $serviceLevel->samplingRate;
+
+            $lastEvent = $this->sdoFactory->find("lifeCycle/event", "eventType='recordsManagement/integrityBySampling'", null, ">timestamp", null, 1);
+
+            if (!empty($lastEvent)) {
+                $diffWithLastEvent = date_diff($lastEvent[0]->timestamp, \laabs::newTimestamp())->days;
+            }
+            
+            if (!empty($diffWithLastEvent)) {
+                $nbArchivesInSample = ceil($nbArchivesPerDay * $diffWithLastEvent);
+                $nbArchivesToValidate = ceil($nbArchivesPerDayToValidate * $diffWithLastEvent);
+            } else {
+                $nbArchivesInSample = ceil($nbArchivesPerDay);
+                $nbArchivesToValidate = ceil($nbArchivesPerDayToValidate);
+            }
+
+            $archives = $this->sdoFactory->find("recordsManagement/archive", null, null, "<lastCheckDate", null, $nbArchivesInSample);
+            shuffle($archives);
+
+            for ($i = 0; $i < $nbArchivesToValidate; $i++) {
+                $archive = array_pop($archives);
+                $this->checkArchiveIntegrity($archive);
+            }
+        }
+
+        $eventInfo['endDatetime'] = \laabs::newDateTime();
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityBySampling', 'recordsManagement/archive', \laabs::getInstanceName(), $eventInfo);
+    }
+
+    /**
      * Check integrity of one or several archives giving their identifiers
      * @param object  $archiveIds         An array of archive identifier or an archive identifier
      * @param boolean $integrityByJournal Validate integrity by life cycle journal or by the database
