@@ -118,6 +118,24 @@ class authentication
             if ($servicePosition != null) {
                 \laabs::setToken("ORGANIZATION", $servicePosition->organization);
             }
+        } else {
+            $organization = \laabs::getToken("ORGANIZATION");
+
+            $userPositions = \laabs::newController("organization/userPosition")->getMyPositions();
+            
+            if (!empty($organization)) {
+                $isUserPosition = false;
+                
+                foreach ($userPositions as $position) {
+                    if ($position->orgId == $organization->orgIds) {
+                        $isUserPosition = true;
+                    }
+                }
+
+                if (!$isUserPosition) {
+                    throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+                }
+            }
         }
 
         return $account;
