@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with FDI. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace dependency\fileSystem\plugins;
 
 /**
  * The metadata and text extraction tool
@@ -24,7 +25,7 @@
  * @author Prosper DE LAURE Maarch <prosper.delaure@maarch.org>
  */
 
-class Tika {
+class tika {
 
     protected $tikaJarFile;
 
@@ -42,7 +43,7 @@ class Tika {
      * @return string
      */
     public function getHTML($filename){
-        return self::run("--html", $filename);
+        return $this->run("--html", $filename);
     }
 
     /**
@@ -50,7 +51,7 @@ class Tika {
      * @return string
      */
     public function getJson($filename){
-        return self::run("--json", $filename);
+        return $this->run("--json", $filename);
     }
     
     /**
@@ -58,7 +59,7 @@ class Tika {
      * @return string
      */
     public function getText($filename) {
-        return self::run("--text", $filename);
+        return $this->run("--text", $filename);
     }
 
     /**
@@ -66,7 +67,7 @@ class Tika {
      * @return string
      */
     public function getMetadata($filename){
-        return self::run("--metadata", $filename);
+        return $this->run("--metadata", $filename);
     }
 
 	/**
@@ -76,17 +77,26 @@ class Tika {
      * @return string
      * @throws \Exception
      */
-    protected static function run($option, $fileName)
+    protected function run($option, $fileName)
     {
-        
-        $shellCommand = 'java -jar ' . $this->tikaJarFile . ' ' . $option . ' "' . $fileName . '"';
-        $process = new Process($shellCommand);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \Exception($process->getErrorOutput());
-        }
+        $command = 'java -jar ' . $this->tikaJarFile . ' ' . $option . ' "' . $fileName . '"';
 
-        return $process->getOutput();
+        $return = null;
+
+        exec($command, $output, $return);
+
+        if ($return !== 0) {
+            $exception = new \dependency\fileSystem\Exception("Failed to load apache tika on the resource");
+            $exception->errors = $output;
+
+            throw $exception;
+            
+        }
+        
+        $output = array_map("utf8_encode", $output );
+        $output = implode("\n", $output);
+
+        return $output;
     }
     
 }
