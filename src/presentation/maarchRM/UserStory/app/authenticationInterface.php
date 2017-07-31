@@ -52,15 +52,6 @@ interface authenticationInterface
      */
     public function readUserLogout();
 
-    /**
-     * Get form to edit user information
-     * @param object $passwordInformation
-     * 
-     * @return auth/authentication/definePassword
-     * @uses auth/authentication/update_userName_Password
-     */
-    public function updateUser_userName_Password($passwordInformation);
-
      /**
      * Generate a new password
      * @param string $username The username
@@ -70,4 +61,13 @@ interface authenticationInterface
      * @return auth/user/generatePassword
      */
     public function updateUserGeneratepassword($username, $email);
+
+    /**
+     * Get form to edit user information
+     * @param object $passwordInformation
+     * 
+     * @return auth/authentication/definePassword
+     * @uses auth/authentication/updatePassword
+     */
+    public function updateUserPassword($passwordInformation);
 }
