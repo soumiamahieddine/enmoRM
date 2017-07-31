@@ -119,6 +119,8 @@ class userAccount
     /**
      * Record a new user & role members
      * @param auth/account $userAccount The user object
+     *
+     * @return string The user identifier
      */
     public function add($userAccount)
     {
@@ -129,13 +131,15 @@ class userAccount
                 \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
             }
         }
+
+        return $userAccountId;
     }
 
     /**
      * Record a new user account
      * @param auth/account $userAccount The user object
      *
-     * @return auth/account The user object
+     * @return string The user identifier
      */
     public function addUserAccount($userAccount)
     {
