@@ -93,8 +93,10 @@ class tika {
             
         }
         
-        $output = array_map("utf8_encode", $output );
         $output = implode("\n", $output);
+        $output = str_replace("\x92", "'", $output);
+        $output = str_replace("\x9C", "oe", $output);
+        $output = utf8_encode($output);
 
         return $output;
     }

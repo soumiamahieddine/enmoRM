@@ -277,4 +277,12 @@ interface archivesInterface
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
     public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
+
+    /**
+     * Index full text 
+     * @param int $limit The maximum number of archive to index
+     *
+     * @action recordsManagement/archive/indexFullText
+     */
+    public function updateIndexfulltext($limit=200);
 }

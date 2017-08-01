@@ -324,6 +324,13 @@ class archive
      */
     public $storagePath;
 
+    /**
+     * The status of fulltext indaxation (requested, indexed, failed, none)
+     *
+     * @var string
+     */
+    public $fullTextIndexation;
+
     /* ************************************************************************
      * Structure
      *********************************************************************** */

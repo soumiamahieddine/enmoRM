@@ -50,4 +50,11 @@ class description
      * @var string
      */
     public $text;
+
+     /**
+     * The status of fulltext indaxation (requested, indexed, failed, none)
+     *
+     * @var string
+     */
+    public $fullTextIndexation;
 }

@@ -184,6 +184,8 @@ CREATE TABLE "recordsManagement"."archive"
   "parentArchiveId" text,
   "parentOriginatorOrgRegNumber" text,
 
+  "fullTextIndexation" text default 'none',
+
   PRIMARY KEY ("archiveId"),
   FOREIGN KEY ("parentArchiveId")
     REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
