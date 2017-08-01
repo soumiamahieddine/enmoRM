@@ -491,7 +491,7 @@ trait archiveModificationTrait
                         $fullTextArray = array_diff($fullTextArray, $stopWords);
                         $fullText = implode(" ", $fullTextArray);
                     } else {
-                        $fullText = preg_replace("/\b[^-]{1,2}\b/u", "-",  $fullText);
+                        $fullText = preg_replace('/\b[a-z]{1,2}\b/', "",  $fullText);
                     }
 
                     $descriptionController->create($archive, $fullText);
