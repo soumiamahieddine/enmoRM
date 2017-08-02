@@ -746,4 +746,14 @@ class archive
 
         return $ftresults;
     }
+
+    /**
+     * Count the archives for an organization
+     * @param string $orgRegNumber The organization registration number
+     */
+    public function countArchiveByOrg($orgRegNumber)
+    {
+        // archive.archiverOrgRegNumber OR archive.originatorOrgRegNumber
+        $this->sdoFactory->count("recordsManagement/archive", )
+    }
 }

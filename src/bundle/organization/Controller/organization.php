@@ -31,15 +31,13 @@ class organization
 
     /**
      * Constructor
-     * @param object $sdoFactory The model for organization
+     * @param object $sdoFactory The dependency sdo factory service
      *
      * @return void
      */
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
-        
         $this->sdoFactory = $sdoFactory;
-
     }
 
     /**
@@ -48,7 +46,7 @@ class organization
      *
      * @return array An array of organization
      */
-    public function index($query=null)
+    public function index($query = null)
     {
         return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber"), $query);
     }
@@ -130,7 +128,7 @@ class organization
      *
      * @return organization/organization[] An array of organizations
      */
-    public function search($name=null, $businessType=null, $orgRoleCode=null, $orgTypeCode=null, $registrationNumber=null, $taxIdentifier=null)
+    public function search($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null)
     {
         $queryParts = array();
         $variables = array();
@@ -719,5 +717,17 @@ class organization
         }
 
         return true;
+    }
+
+    /**
+     * Check if the registration number is use to edit it or not
+     * @param string $registrationNumber The registration number
+     *
+     * @return boolean Boolean to define if the registration number is editable
+     */
+    public function isEditable($registrationNumber)
+    {
+        $recordsManagementController = \laabs::newController("recordsManagement/archive");
+        $recordsManagementController->countArchiveByOrg($registrationNumber);
     }
 }
