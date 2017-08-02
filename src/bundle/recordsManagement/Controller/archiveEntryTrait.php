@@ -303,6 +303,7 @@ trait archiveEntryTrait
 
         $nbArchiveObjects = count($archive->contents);
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
+            $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
             $this->completeMetadata($archive->contents[$i]);
         }
     }
