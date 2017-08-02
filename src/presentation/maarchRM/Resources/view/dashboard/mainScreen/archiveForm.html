@@ -18,6 +18,13 @@
             <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
+    <div class="form-group" data-translate-catalog="recordsManagement/messages">
+        <label class="col-md-3 control-label small">Text indexation</label>
+        <div class="col-md-9">
+            <input type="checkbox" id="textIndexation" name="textIndexation" data-toggle="toggle"> 
+        </div>
+    </div>
+
     <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
@@ -191,7 +198,7 @@
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
-                descriptionObject : null
+                descriptionObject : {}
             }
 
             inputs.each(function() {
@@ -203,6 +210,13 @@
                     archive[$(this).attr('name')] = value;
                 }
             })
+
+            if ($('#textIndexation').prop('checked')) {
+                archive.fullTextIndexation = "requested";
+            } else {
+                archive.fullTextIndexation = "none";
+
+            }
 
             var selectedProfile = $('#archivalProfile').data('json');
 

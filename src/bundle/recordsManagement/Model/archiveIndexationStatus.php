@@ -19,35 +19,32 @@
  */
 namespace bundle\recordsManagement\Model;
 /**
- * Class model that represents an archive description object
+ * Class model that represents an archive
  *
  * @package RecordsManagement
- * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
- *
- * @pkey [archiveId]
+ * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
  * 
  * @substitution recordsManagement/archive
+ * 
+ * @pkey [archiveId]
  */
-class description
+class archiveIndexationStatus
 {
     /**
-     * The identifier of archive unit
+     * The archive identifier
      *
-     * @var id
+     * @var string
+     * @notempty
      */
     public $archiveId;
 
     /**
-     * The description object
-     *
-     * @var mixed
-     */
-    public $description;
-
-    /**
-     * The fulltext index
+     * The status
      *
      * @var string
+     * @enumeration [requested, failed, indexed, none]
      */
-    public $text;
-}
+    public $fullTextIndexation;
+
+
+} // END class archive 

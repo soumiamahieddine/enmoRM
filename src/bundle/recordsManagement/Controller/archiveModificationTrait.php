@@ -495,13 +495,16 @@ trait archiveModificationTrait
                     }
 
                     $descriptionController->create($archive, $fullText);
+                    $archive->fullTextIndexation = "indexed";
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
 
                     $operationResult = true;
 
                 } catch(\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
-                    $this->sdoFactory->update('recordsManagement/archive', $archive);
+                    var_dump($e);
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
                 }
 
                 $eventInfo = array(

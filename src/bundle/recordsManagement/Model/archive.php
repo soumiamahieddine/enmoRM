@@ -305,6 +305,14 @@ class archive
      * Description
      *********************************************************************** */
     /**
+     * The status of fulltext indaxation
+     *
+     * @var string
+     * @enumeration [requested, indexed, failed, none]
+     */
+    public $fullTextIndexation;
+
+    /**
      * The name of description class
      *
      * @var string
@@ -323,13 +331,6 @@ class archive
      * @var string
      */
     public $storagePath;
-
-    /**
-     * The status of fulltext indaxation (requested, indexed, failed, none)
-     *
-     * @var string
-     */
-    public $fullTextIndexation;
 
     /* ************************************************************************
      * Structure

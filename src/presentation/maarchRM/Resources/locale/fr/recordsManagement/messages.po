@@ -873,3 +873,6 @@ msgstr "Sous-archive de"
 
 msgid "Zip container"
 msgstr "Fichier conteneur"
+
+msgid "Text indexation"
+msgstr "Indexation du text"

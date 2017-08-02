@@ -63,7 +63,6 @@ class description
         
         if ($fullText ) {
             $descriptionObject->text .= ' '.$fullText;
-            $descriptionObject->fullTextIndexation = 'indexed';
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
