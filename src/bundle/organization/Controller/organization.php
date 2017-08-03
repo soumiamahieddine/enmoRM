@@ -349,6 +349,12 @@ class organization
     {
         $organization->orgId = $orgId;
 
+        $originalOrganization = $this->read($orgId);
+
+        if ($this->isUsed($originalOrganization->registrationNumber)) {
+            $organization->registrationNumber = $originalOrganization->registrationNumber;
+        }
+
         if (empty($organization->displayName)) {
             $organization->displayName = $organization->orgName;
         }
@@ -725,9 +731,11 @@ class organization
      *
      * @return boolean Boolean to define if the registration number is editable
      */
-    public function isEditable($registrationNumber)
+    public function isUsed($registrationNumber)
     {
         $recordsManagementController = \laabs::newController("recordsManagement/archive");
-        $recordsManagementController->countArchiveByOrg($registrationNumber);
+        $count = $recordsManagementController->countArchiveByOrg($registrationNumber);
+
+        return $count > 0 ? true : false;
     }
 }

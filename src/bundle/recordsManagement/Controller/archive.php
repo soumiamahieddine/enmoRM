@@ -753,7 +753,12 @@ class archive
      */
     public function countArchiveByOrg($orgRegNumber)
     {
-        // archive.archiverOrgRegNumber OR archive.originatorOrgRegNumber
-        $this->sdoFactory->count("recordsManagement/archive", )
+        $queryString = [];
+        $queryString[] = "archiverOrgRegNumber='$orgRegNumber'";
+        $queryString[] = "originatorOrgRegNumber='$orgRegNumber'";
+
+        $count = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" OR ", $queryString));
+
+        return $count;
     }
 }

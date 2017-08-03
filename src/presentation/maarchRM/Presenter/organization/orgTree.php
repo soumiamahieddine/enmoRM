@@ -413,4 +413,17 @@ class orgTree
 
         return $this->json->save();
     }
+
+    /**
+     * Serializer JSON for read method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function readOrg($organization)
+    {
+        $organizationController = \laabs::newController("organization/organization");
+        $organization->isUsed = $organizationController->isUsed($organization->registrationNumber);
+
+        return json_encode($organization);
+    }
 }
