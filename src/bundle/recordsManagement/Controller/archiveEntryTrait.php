@@ -828,12 +828,11 @@ trait archiveEntryTrait
         $logged = false;
         if (isset($archive->digitalResources) && count($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
-                $address = $digitalResource->address[0];
-
                 $eventInfo['resId'] = (string) $digitalResource->resId;
                 $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                 $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $address->path;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
+                $eventInfo['size'] = $digitalResource->size;
 
                 $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
                 $archive->lifeCycleEvent[] = $event;
