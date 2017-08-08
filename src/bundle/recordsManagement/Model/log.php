@@ -63,4 +63,11 @@ class log
      * @var string
      */
     public $processName;
+
+    /**
+     * The owner registration number
+     *
+     * @var string
+     */
+    public $ownerOrgRegNumber;
 }

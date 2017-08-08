@@ -852,6 +852,35 @@ class journal
      */
     public function chainJournal()
     {
+        $journalArray = [];
+
+        if (isset(\laabs::configuration('lifeCycle')['chainJounralByOrganization']) && \laabs::configuration('lifeCycle')['chainJounralByOrganization']) {
+            $orgController = \laabs::newController('organization/organization');
+
+            $organizations = $orgController->index("isOrgUnit=false");
+
+            foreach ($organizations as $organization) {
+                $journalArray[] = $this->processChaining($organization->registrationNumber);
+            }
+        }
+
+        $journalArray[] = $this->processChaining();
+        
+        if (count($journalArray) == 1) {
+            $journalArray = $journalArray[0];
+        }
+
+        return $journalArray;
+    }
+
+    /**
+     * process the chaining of the last journal
+     * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     *
+     * @return string The chained journal file name
+     */
+    protected function processChaining($ownerOrgRegNumber = null)
+    {
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
@@ -861,14 +890,19 @@ class journal
         $newJournal->archiveId = \laabs::newId();
         $newJournal->type = "lifeCycle";
         $newJournal->toDate = \laabs::newTimestamp();
+        $newJournal->ownerOrgRegNumber = $ownerOrgRegNumber;
 
-        $previousJournal = $logController->getLastJournal('lifeCycle');
+        $previousJournal = $logController->getLastJournal('lifeCycle', $ownerOrgRegNumber);
 
         if ($previousJournal) {
             $newJournal->fromDate = $previousJournal->toDate;
             $newJournal->previousJournalId = $previousJournal->archiveId;
 
             $queryString = "timestamp > '$newJournal->fromDate' AND timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND orgUnitRegNumber = '$ownerOrgRegNumber'";
+            }
 
             if ($this->separateInstance) {
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
@@ -878,7 +912,13 @@ class journal
 
         } else {
             // No previous journal, select all events
-            $events = $this->sdoFactory->find('lifeCycle/event', "timestamp <= '$newJournal->toDate'", null, "<timestamp");
+            $queryString = "timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND orgUnitRegNumber = '$ownerOrgRegNumber'";
+            }
+
+            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");
             if (count($events) > 0) {
                 $newJournal->fromDate = reset($events)->timestamp;
             } else {

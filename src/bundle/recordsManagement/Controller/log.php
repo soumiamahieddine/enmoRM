@@ -239,13 +239,16 @@ class log implements archiveDescriptionInterface
 
     /**
      * Get the last usable journal
-     * @param string $type The type of journal
+     * @param string $type              The type of journal
+     * @param string $ownerOrgRegNumber The journal owner organization registration number 
      *
      * @return recordsManagement/log The journal object
      */
-    public function getLastJournal($type)
+    public function getLastJournal($type, $ownerOrgRegNumber = null)
     {
-        $journals = $this->sdoFactory->find('recordsManagement/log', "type='$type'", null, ">fromDate", 0, 1);
+        $query = "type='$type' AND ownerOrgRegNumber = '$ownerOrgRegNumber'";
+        
+        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">fromDate", 0, 1);
 
         if (empty($journals)) {
             return null;
