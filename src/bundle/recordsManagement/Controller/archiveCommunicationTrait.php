@@ -174,6 +174,8 @@ trait archiveCommunicationTrait
 
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
+        $this->logEventConsultation($digitalResource);
+
         return $digitalResource;
     }
 
@@ -187,11 +189,7 @@ trait archiveCommunicationTrait
     {
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        //$archive = $this->getDescription($digitalResource->archiveId);
-
-        //if (!$this->accessVerification($archive)) {
-        //    throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        //}
+        $this->logEventConsultation($digitalResource);
 
         return $digitalResource;
     }
@@ -210,5 +208,34 @@ trait archiveCommunicationTrait
         }
 
         return $digitalResources;
+    }
+
+    /**
+     * Logging event when a resource is consult
+     *
+     * @param digitalResource/digitalResource $digitalResource The consulted resource
+     */
+    private function logEventConsultation($digitalResource)
+    {
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $digitalResource->archiveId);
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+
+        if (strrpos($serviceLevel->control, "logConsultation") == false) {
+            return;
+        }
+
+        $eventItems = [];
+        $eventItems['resId'] = $eventItems['hashAlgorithm'] = $eventItems['hash'] = $eventItems['address'] = null;
+
+        if (empty($digitalResource)) {
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', $resId, $eventItems, null, false);
+        }
+
+        $eventItems['resId'] = $resId;
+        $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+        $eventItems['hash'] = $digitalResource->hash;
+        $eventItems['address'] = $digitalResource->address[0]->path;
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $digitalResource->archiveId, $eventItems);
     }
 }
