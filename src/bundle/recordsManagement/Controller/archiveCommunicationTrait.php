@@ -235,6 +235,7 @@ trait archiveCommunicationTrait
         $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
         $eventItems['hash'] = $digitalResource->hash;
         $eventItems['address'] = $digitalResource->address[0]->path;
+        $eventItems['size'] = $digitalResource->size;
 
         $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $digitalResource->archiveId, $eventItems);
     }
