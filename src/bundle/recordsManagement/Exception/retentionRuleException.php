@@ -19,8 +19,7 @@
  */
 namespace bundle\recordsManagement\Exception;
 
-class retentionRuleException
-    extends \core\Exception
+class retentionRuleException extends \core\Exception
 {
     
 } 

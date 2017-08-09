@@ -115,7 +115,7 @@ class descriptionField
     }
 
     /**
-     *  Delete a description field
+     * Delete a description field
      * @param string $name The description field name
      *
      * @return boolean The request result
@@ -130,7 +130,7 @@ class descriptionField
         try {
             $this->sdoFactory->delete($descriptionField);
         } catch (\core\Exception $e) {
-            throw new \bundle\recordsManagement\Exception\descriptionFieldException("Retention rule not deleted.");
+            throw new \bundle\recordsManagement\Exception\descriptionFieldException("Description field not deleted.");
         }
 
         return true;
