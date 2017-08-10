@@ -30,7 +30,6 @@ class journal
 {
     protected $separateInstance;
     protected $interval;
-    protected $signatureScript;
 
     // Journal files reading
     protected $currentJournalFile;
@@ -56,7 +55,6 @@ class journal
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
      * @param string                  $separateInstance Read only instance events
      * @param string                  $interval         The time bewteen 2 journal changes
-     * @param string                  $signatureScript  The signature script path
      * @param string                  $mailHost         The mail host
      * @param string                  $mailUsername     The mail user name
      * @param string                  $mailPassword     The mail user password
@@ -66,11 +64,10 @@ class journal
      * @param bool                    $mailSMTPAuth     The mail SMTP auth
      * @param string                  $mailSMTPSecure   The mail SMTP secure
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null, $mailHost = null, $mailUsername = null, $mailPassword = null, $mailPort = null, $mailSender = null, $mailReceiver = null, $mailSMTPAuth = null, $mailSMTPSecure = null)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $mailHost = null, $mailUsername = null, $mailPassword = null, $mailPort = null, $mailSender = null, $mailReceiver = null, $mailSMTPAuth = null, $mailSMTPSecure = null)
     {
         $this->separateInstance = $separateInstance;
         $this->interval = $interval;
-        $this->signatureScript = $signatureScript;
         $this->sdoFactory = $sdoFactory;
 
         $this->currentJournalFile = null;
@@ -982,10 +979,11 @@ class journal
         fclose($journalFile);
 
         // create timestamp file
-        if ($this->signatureScript) {
-            include $this->signatureScript;
+        if (isset(\laabs::configuration('lifeCycle')['chainWithTimestamp']) && \laabs::configuration('lifeCycle')['chainWithTimestamp']==true) {
             try {
-                $timestampFileName = getTimestamp($journalFilename);
+                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampFileName = $timestampService->getTimestamp($journalFilename);
+
             } catch (\Exception $e) {
                 throw $e;
             }
