@@ -743,7 +743,7 @@ class organization
                 $orgUnitArchivalProfiles[]  ='*';
                 continue;
             }
-            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference);
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $whitRelatedProfile=true);
         }
 
         return $orgUnitArchivalProfiles;
