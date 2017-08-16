@@ -131,7 +131,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference)) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference+" ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
                 $archive->digitalResources[] = $resource;
