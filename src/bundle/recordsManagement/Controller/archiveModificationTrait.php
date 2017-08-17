@@ -90,7 +90,13 @@ trait archiveModificationTrait
 
             } else {
                 $retentionRule->archiveId = $archiveId;
-                $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+
+                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                } else {
+                    $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
+                }
+                
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 

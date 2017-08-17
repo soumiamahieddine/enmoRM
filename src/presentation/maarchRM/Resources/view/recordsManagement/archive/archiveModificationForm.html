@@ -61,7 +61,11 @@
                     retentionDurationUnit : this.modal.find('[name="retentionDurationUnit"]').val()
                 }
 
-                parameter.retentionRule.retentionDuration = 'P'+parameter.retentionRule.retentionDuration+parameter.retentionRule.retentionDurationUnit;
+                if (parameter.retentionRule.retentionDuration == "" || parameter.retentionRule.retentionDuration == null) {
+                    parameter.retentionRule.retentionDuration = null;
+                } else {
+                    parameter.retentionRule.retentionDuration = 'P'+parameter.retentionRule.retentionDuration+parameter.retentionRule.retentionDurationUnit;
+                }
             }
 
             return parameter;
