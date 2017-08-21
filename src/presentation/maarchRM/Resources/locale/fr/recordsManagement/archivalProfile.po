@@ -240,4 +240,4 @@ msgid "Go to"
 msgstr "Aller vers"
 
 msgid "Accept any profiles"
-msgstr "Accepter tout les profiles"
+msgstr "Accepter tout les profils"
