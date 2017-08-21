@@ -24,7 +24,7 @@ msgid "Convert on deposit"
 msgstr "Convertir au dépôt"
 
 msgid "Log the consultations"
-msgstr "Enregistrer les consultations"
+msgstr "Journaliser les consultations"
 
 msgid "default"
 msgstr "par défaut"
