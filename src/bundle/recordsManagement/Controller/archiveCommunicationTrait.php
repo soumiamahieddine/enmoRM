@@ -149,6 +149,7 @@ trait archiveCommunicationTrait
                 $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                 $eventItems['hash'] = $digitalResource->hash;
                 $eventItems['address'] = $archive->storagePath;
+                $eventItems['size'] = $digitalResource->size;
 
                 $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
             }
