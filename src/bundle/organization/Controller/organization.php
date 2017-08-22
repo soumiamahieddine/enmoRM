@@ -734,7 +734,7 @@ class organization
     public function isUsed($registrationNumber)
     {
         $recordsManagementController = \laabs::newController("recordsManagement/archive");
-        $count = $recordsManagementController->countArchiveByOrg($registrationNumber);
+        $count = $recordsManagementController->countByOrg($registrationNumber);
 
         return $count > 0 ? true : false;
     }
