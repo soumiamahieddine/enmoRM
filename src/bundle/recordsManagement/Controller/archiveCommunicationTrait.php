@@ -213,11 +213,12 @@ trait archiveCommunicationTrait
     /**
      * Logging event when a resource is consult
      *
+     * @param string                          $archiveId       The archive indentifier of the resource
      * @param digitalResource/digitalResource $digitalResource The consulted resource
      */
-    private function logEventConsultation($digitalResource)
+    private function logEventConsultation($archiveId, $digitalResource)
     {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $digitalResource->archiveId);
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
 
         if (strrpos($serviceLevel->control, "logConsultation") == false) {
@@ -228,7 +229,7 @@ trait archiveCommunicationTrait
         $eventItems['resId'] = $eventItems['hashAlgorithm'] = $eventItems['hash'] = $eventItems['address'] = null;
 
         if (empty($digitalResource)) {
-            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', null, $eventItems, null, false);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archiveId, $eventItems, null, false);
         }
 
         $eventItems['resId'] = $digitalResource->resId;
@@ -237,6 +238,6 @@ trait archiveCommunicationTrait
         $eventItems['address'] = $digitalResource->address[0]->path;
         $eventItems['size'] = $digitalResource->size;
 
-        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $digitalResource->archiveId, $eventItems);
+        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archiveId, $eventItems);
     }
 }
