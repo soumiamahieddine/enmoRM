@@ -63,9 +63,9 @@ interface archiveInterface
     /**
      * Retrieve an archive resource by its id
      *
-     * @action recordsManagement/archive/getDigitalResource
+     * @action recordsManagement/archive/consultation
      */
-    public function read_archiveId_DigitalResource_resId_();
+    public function readConsultation_archiveId_DigitalResource_resId_();
 
     /**
      * Retrieve an archive by its id
@@ -77,7 +77,7 @@ interface archiveInterface
     /**
      * Retrieve an archive content document (CDO)
      *
-     * @action recordsManagement/archive/getContents
+     * @action recordsManagement/archive/consultation
      */
     public function readContents_archiveId__resId_();
 

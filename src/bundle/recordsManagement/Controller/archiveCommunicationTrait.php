@@ -164,33 +164,26 @@ trait archiveCommunicationTrait
      *
      * @return digitalResource/digitalResource
      */
-    public function getContents($archiveId, $resId)
+    public function consultation($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+        
+        $found = false;
 
-        if (!$this->accessVerification($archive)) {
+        for ($i = 0; $i < count($archive->digitalResources); $i++) {
+            if ($archive->digitalResources[$i]->resId == $resId) {
+                $found = true;
+            }
+        }
+
+        if (!$this->accessVerification($archive) || !$found) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $this->logEventConsultation($archiveId, $digitalResource);
-
-        return $digitalResource;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $archiveId The archive identifier
-     * @param string $resId     The resource identifier
-     *
-     * @return digitalResource/digitalResource
-     */
-    public function getDigitalResource($archiveId, $resId)
-    {
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
-
-        $this->logEventConsultation($archiveId, $digitalResource);
+        $this->logEventConsultation($archive, $digitalResource);
 
         return $digitalResource;
     }
@@ -214,12 +207,11 @@ trait archiveCommunicationTrait
     /**
      * Logging event when a resource is consult
      *
-     * @param string                          $archiveId       The archive indentifier of the resource
+     * @param recordsManagement/archive       $archive         The archive object
      * @param digitalResource/digitalResource $digitalResource The consulted resource
      */
-    private function logEventConsultation($archiveId, $digitalResource)
+    private function logEventConsultation($archive, $digitalResource)
     {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
 
         if (strrpos($serviceLevel->control, "logConsultation") === false) {
@@ -230,7 +222,7 @@ trait archiveCommunicationTrait
         $eventItems['resId'] = $eventItems['hashAlgorithm'] = $eventItems['hash'] = $eventItems['address'] = null;
 
         if (empty($digitalResource)) {
-            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archiveId, $eventItems, null, false);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems, null, false);
         }
 
         $eventItems['resId'] = $digitalResource->resId;
@@ -239,6 +231,6 @@ trait archiveCommunicationTrait
         $eventItems['address'] = $digitalResource->address[0]->path;
         $eventItems['size'] = $digitalResource->size;
 
-        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archiveId, $eventItems);
+        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
     }
 }

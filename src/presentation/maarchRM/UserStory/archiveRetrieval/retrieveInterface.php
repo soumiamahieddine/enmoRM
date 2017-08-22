@@ -123,7 +123,7 @@ interface retrieveInterface
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/read_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
      */
     public function readRecordsmanagement_archiveId_Digitalresource_resId_();
 
@@ -132,7 +132,7 @@ interface retrieveInterface
      *
      * @return recordsManagement/archive/getContents
      *
-     * @uses  recordsManagement/archive/readContents_archiveId__resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
      */
     public function readRecordsmanagementContents_archiveId__resId_();
 
