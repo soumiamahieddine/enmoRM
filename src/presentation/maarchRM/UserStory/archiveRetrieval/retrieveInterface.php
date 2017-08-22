@@ -123,16 +123,16 @@ interface retrieveInterface
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/readDigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
      */
-    public function readRecordsmanagementDigitalresource_resId_();
+    public function readRecordsmanagement_archiveId_Digitalresource_resId_();
 
     /**
      * Retrieve an archive content document (CDO)
      *
      * @return recordsManagement/archive/getContents
      *
-     * @uses  recordsManagement/archive/readContents_archiveId__resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
      */
     public function readRecordsmanagementContents_archiveId__resId_();
 

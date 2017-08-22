@@ -518,6 +518,7 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
                 $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
+                $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
