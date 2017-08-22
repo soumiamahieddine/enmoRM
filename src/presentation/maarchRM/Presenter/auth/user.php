@@ -294,6 +294,19 @@ class user
         return $json->save();
     }
 
+    /**
+     * Generate a new password
+     * @return type
+     */
+    public function generatePassword()
+    {
+        $json = $this->json;
+        $json->message = "A new password has been generated";
+        $json->message = $this->translator->getText($json->message);
+
+        return $json->save();
+    }
+
     public function requirePasswordChange()
     {
         $json = $this->json;
