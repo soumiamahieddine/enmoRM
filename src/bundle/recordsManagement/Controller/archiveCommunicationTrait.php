@@ -228,10 +228,10 @@ trait archiveCommunicationTrait
         $eventItems['resId'] = $eventItems['hashAlgorithm'] = $eventItems['hash'] = $eventItems['address'] = null;
 
         if (empty($digitalResource)) {
-            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', $resId, $eventItems, null, false);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', null, $eventItems, null, false);
         }
 
-        $eventItems['resId'] = $resId;
+        $eventItems['resId'] = $digitalResource->resId;
         $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
         $eventItems['hash'] = $digitalResource->hash;
         $eventItems['address'] = $digitalResource->address[0]->path;
