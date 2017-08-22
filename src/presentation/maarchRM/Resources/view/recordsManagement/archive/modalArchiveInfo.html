@@ -52,7 +52,8 @@
     // Show document
     $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
         var resId = $(this).data('res-id');
-        archiveDocumentViewer.loadResource(resId);
+        var archiveId = $(this).data('archive-id');
+        archiveDocumentViewer.loadResource(archiveId, resId);
     })
 
     archiveInfoModal = {
@@ -101,8 +102,8 @@
             window.open(url, 'document');
         },
 
-        loadResource: function(resId) {
-            var url = "/recordsManagement/digitalResource/" + resId;
+        loadResource: function(archiveId, resId) {
+            var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
             window.open(url, 'document');
         }
     }

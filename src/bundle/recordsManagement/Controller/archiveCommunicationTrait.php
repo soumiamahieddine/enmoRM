@@ -174,22 +174,23 @@ trait archiveCommunicationTrait
 
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $this->logEventConsultation($digitalResource);
+        $this->logEventConsultation($archiveId, $digitalResource);
 
         return $digitalResource;
     }
 
     /**
      * Retrieve an archive resource contents
-     * @param string $resId The resource identifier
+     * @param string $archiveId The archive identifier
+     * @param string $resId     The resource identifier
      *
      * @return digitalResource/digitalResource
      */
-    public function getDigitalResource($resId)
+    public function getDigitalResource($archiveId, $resId)
     {
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        $this->logEventConsultation($digitalResource);
+        $this->logEventConsultation($archiveId, $digitalResource);
 
         return $digitalResource;
     }
@@ -221,7 +222,7 @@ trait archiveCommunicationTrait
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
 
-        if (strrpos($serviceLevel->control, "logConsultation") == false) {
+        if (strrpos($serviceLevel->control, "logConsultation") === false) {
             return;
         }
 
