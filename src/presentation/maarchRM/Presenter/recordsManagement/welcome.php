@@ -34,7 +34,7 @@ class welcome
     /**
      * Constuctor of welcomePage html serializer
      * @param \dependency\html\Document   $view The view
-     * @param \dependency\json\JsonObject $json
+     * @param \dependency\json\JsonObject $json Json utility
      */
     public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json)
     {
@@ -95,6 +95,7 @@ class welcome
                 }
 
                 $archivalProfileController->readDetail($archivalProfile);
+
                 $archivalProfile->searchFields = [];
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                     switch ($archiveDescription->descriptionField->type) {
@@ -111,7 +112,6 @@ class welcome
         }
         
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-
         $this->view->translate();
 
         if (!empty($currentOrganization->registrationNumber)) {
@@ -187,10 +187,7 @@ class welcome
                 
                 $list = [];
 
-                if ($archivalProfile->acceptAnyProfile) {
-                    $list = \laabs::callService('organization/userPosition/readDescendantprofiles');
-
-                } else if (count($archivalProfile->containedProfiles)) {
+                if (count($archivalProfile->containedProfiles)) {
                      $list = $archivalProfile->containedProfiles;
                 }
 

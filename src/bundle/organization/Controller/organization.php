@@ -101,9 +101,10 @@ class organization
 
     /**
      * Set positions for the organization tree
-     * @param object $roots               The organization tree roots
-     * @param array  $organizationList    The list of organization sorted by parent organization
-     *
+     * @param object $roots            The organization tree roots
+     * @param array  $organizationList The list of organization sorted by parent organization
+     * 
+     * @return array
      */
     protected function buildTree($roots, $organizationList)
     {
@@ -393,7 +394,7 @@ class organization
             }
 
             foreach ($descendants as $descendantOrg) {
-                if((string) $descendantOrg->orgId == $organization->orgId) {
+                if ((string) $descendantOrg->orgId == $organization->orgId) {
                     throw new \bunble\organization\Exception\orgMoveException("Organization can't be moved to a descendent organization");
                 }
 
@@ -473,8 +474,8 @@ class organization
 
     /**
      * Add a service position to an organization
-     * @param string $serviceAccountId The service account identifier
      * @param string $orgId            The organization identifier
+     * @param string $serviceAccountId The service account identifier
      *
      * @return boolean The result of the operation
      */
@@ -578,7 +579,7 @@ class organization
 
         $contacts = array();
         foreach ($orgContacts as $orgContact) {
-            try{
+            try {
                 $contact = \laabs::callService('contact/contact/read_contactId_', $orgContact->contactId);
                 $contacts[] = (object) array_merge((array) $contact, (array) $orgContact);
             } catch (\Exception $e) {
@@ -690,7 +691,7 @@ class organization
         $i = false;
         while ($i == false) {
             if ($org->parentOrgId) {
-                $org = $this->sdoFactory->find('organization/organization',"orgId = '$org->parentOrgId'")[0];
+                $org = $this->sdoFactory->find('organization/organization', "orgId = '$org->parentOrgId'")[0];
                 $parentsOrg[] = $org;
             } else {
                 $i = true;
@@ -712,7 +713,7 @@ class organization
         $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
 
         foreach ($archivalProfileAccess as $access) {
-            $access = (object)$access;
+            $access = (object) $access;
             $access->orgId = $orgId;
 
             $this->sdoFactory->create($access, "organization/archivalProfileAccess");
@@ -743,7 +744,7 @@ class organization
                 $orgUnitArchivalProfiles[]  ='*';
                 continue;
             }
-            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $whitRelatedProfile=true);
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $withRelatedProfile = true);
         }
 
         return $orgUnitArchivalProfiles;

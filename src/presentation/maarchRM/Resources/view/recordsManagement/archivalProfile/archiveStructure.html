@@ -7,13 +7,7 @@
 	            <input type="checkbox" id="acceptArchiveWithoutProfile" name="acceptArchiveWithoutProfile" data-toggle="toggle"> 
 	        </div>
 	    </div>
-	    <div class="form-group">
-	        <label class="col-md-6 control-label">Accept any profiles</label>
-	        <div class="col-md-6">
-	            <input type="checkbox" id="acceptAnyProfile" name="acceptAnyProfile" data-toggle="toggle"> 
-	        </div>
-	    </div>
-	    <div id="subProfile" class="[?merge archivalProfile.acceptAnyProfile.bool().then('hide', '') ?]">
+	    <div id="subProfile">
 		    <div class="form-group">
 		        <label class="col-md-4 control-label">Accept the profile :</label>
 		        <div class="col-md-8">
@@ -180,13 +174,5 @@
 
 		return false;
 	});
-
-	$('#acceptAnyProfile').on('change', function() {
-		if ($(this).is(':checked')) {
-			ArchiveStructure.allowAnyProfile();
-		} else {
-			ArchiveStructure.limitSubProfile();
-		}
-	})
 
 </script>

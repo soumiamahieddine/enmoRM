@@ -41,6 +41,8 @@ class Exception
         $this->view = $view;
         $this->json = $json;
         $this->translator = $translator;
+
+        $this->translator->setCatalog('exceptions/messages');
     }
 
     /**
@@ -64,9 +66,8 @@ class Exception
         if (method_exists($exception, "setMessage")) {
             $exception->setMessage($this->translator->getText($exception->getFormat()));
             $this->json->message = $exception->getMessage();
-        } else if($message = $exception->getMessage()) {
+        } else if ($message = $exception->getMessage()) {
             $this->json->message = $message;
-
         } else {
             $this->json->message = $this->translator->getText(
                 "An error occured during the process of your request. Please contact the administrator of the application.");

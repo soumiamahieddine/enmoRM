@@ -1,15 +1,13 @@
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptArchiveWithoutProfile" boolean default true;
-ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptAnyProfile" boolean default false;
-
-CREATE TABLE "recordsManagement"."archivalProfileRelationship"
+CREATE TABLE "recordsManagement"."archivalProfileContents"
 (
 	"parentProfileId" text NOT NULL,
 	"containedProfileId" text NOT NULL,
 	PRIMARY KEY ("parentProfileId", "containedProfileId"),
 	FOREIGN KEY ("parentProfileId")
-    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION,
+        REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+        ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY ("containedProfileId")
-    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
+        REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+        ON UPDATE NO ACTION ON DELETE NO ACTION
 );

@@ -102,17 +102,10 @@ class archivalProfile
 
     /**
      * The archive accepts sub archive without profile
-     *
+     * 
      * @var boolean
      */
     public $acceptArchiveWithoutProfile;
-
-    /**
-     * The archive accepts sub archive of any profile
-     *
-     * @var boolean
-     */
-    public $acceptAnyProfile;
 
     /**
      *  The list of profile description
@@ -124,7 +117,7 @@ class archivalProfile
     /**
      *  The list of child archival profiles
      *
-     * @var array
+     * @var recordsManagement/archivalProfileContents[]
      */
     public $containedProfiles = array();
 
