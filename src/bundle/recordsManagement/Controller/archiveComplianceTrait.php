@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -36,53 +36,91 @@ trait archiveComplianceTrait
      */
     public function sampling()
     {
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
+
+        if (!$currentOrganization) {
+            throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
+        }
+
         $serviceLevels = $this->serviceLevelController->index();
 
         $eventInfo = [];
-        $eventInfo['startDatetime'] = \laabs::newDateTime();
+        $eventInfo['startDatetime'] = \laabs::newTimestamp();
+
+        $lastEvent = $this->sdoFactory->find("lifeCycle/event", "eventType='recordsManagement/periodicIntegrityCheck'", null, ">timestamp", null, 1);
+
+        if (!empty($lastEvent)) {
+            $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent[0]->timestamp->getTimestamp();
+        } else {
+            $diffWithLastEvent = 3600 * 24;
+        }
+
+        $queryPart = [];
+        $queryPart[] = "status!='error'";
+        $queryPart[] = "status!='disposed'";
+        $queryPart[] = "parentArchiveId=null";
 
         foreach ($serviceLevels as $serviceLevel) {
-            $nbArchives = $this->sdoFactory->count("recordsManagement/archive", "serviceLevelReference='" . $serviceLevel->reference . "'");
+            $queryPart[] = "serviceLevelReference='" . $serviceLevel->reference . "'";
+            $nbArchives = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" AND ", $queryPart));
 
-            $nbArchivesPerDay = $nbArchives / $serviceLevel->samplingFrequency;
-            $nbArchivesPerDayToValidate = $nbArchivesPerDay / 100 * $serviceLevel->samplingRate;
+            $nbArchivesToCheck = $nbArchives / ($diffWithLastEvent / ($serviceLevel->samplingFrequency * 3600 * 24));
+            $nbArchivesInSample = $nbArchivesToCheck * ($serviceLevel->samplingRate / 100);
 
-            $lastEvent = $this->sdoFactory->find("lifeCycle/event", "eventType='recordsManagement/integrityBySampling'", null, ">timestamp", null, 1);
+            $nbArchivesToCheck = ceil($nbArchivesToCheck);
+            $nbArchivesInSample = ceil($nbArchivesInSample);
 
-            if (!empty($lastEvent)) {
-                $diffWithLastEvent = date_diff($lastEvent[0]->timestamp, \laabs::newTimestamp())->days;
-            }
-            
-            if (!empty($diffWithLastEvent)) {
-                $nbArchivesInSample = ceil($nbArchivesPerDay * $diffWithLastEvent);
-                $nbArchivesToValidate = ceil($nbArchivesPerDayToValidate * $diffWithLastEvent);
-            } else {
-                $nbArchivesInSample = ceil($nbArchivesPerDay);
-                $nbArchivesToValidate = ceil($nbArchivesPerDayToValidate);
-            }
-
-            $archives = $this->sdoFactory->find("recordsManagement/archive", null, null, "<lastCheckDate", null, $nbArchivesInSample);
+            $archives = $this->sdoFactory->find("recordsManagement/archive", \laabs\implode(" AND ", $queryPart), null, "<lastCheckDate <depositDate", null, $nbArchivesToCheck);
             shuffle($archives);
 
-            for ($i = 0; $i < $nbArchivesToValidate; $i++) {
+            for ($i = 0; $i < $nbArchivesInSample; $i++) {
                 $archive = array_pop($archives);
                 $this->checkArchiveIntegrity($archive);
             }
+
+            for ($i = 0, $count = count($archives); $i < $count; $i++) {
+                $this->setValidatedArchiveWithoutCheck($archives[$i], $currentOrganization);
+            }
         }
 
-        $eventInfo['endDatetime'] = \laabs::newDateTime();
+        $eventInfo['endDatetime'] = \laabs::newTimestamp();
+        $eventInfo['nbArchivesToCheck'] = $nbArchivesToCheck;
+        $eventInfo['nbArchivesInSample'] = $nbArchivesInSample;
 
-        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityBySampling', 'recordsManagement/archive', \laabs::getInstanceName(), $eventInfo);
+        $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/archive', \laabs::getInstanceName(), $eventInfo);
     }
 
     /**
+     * Set a validated archive with it's children without check
+     * @param recordsManagement/archive $archive The archive object
+     */
+    private function setValidatedArchiveWithoutCheck($archive, $currentOrganization)
+    {
+        $archive->lastCheckDate = \laabs::newTimestamp();
+
+        $this->sdoFactory->update($archive);
+
+        $archiveEventInfo['resId'] = '';
+        $archiveEventInfo['hashAlgorithm'] = '';
+        $archiveEventInfo['hash'] = '';
+        $archiveEventInfo['address'] = '';
+        $archiveEventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
+        $archiveEventInfo['info'] = 'Without check';
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $archiveEventInfo);
+
+        $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId' AND status!='error' AND status!='disposed'");
+        for ($i = 0, $count = count($children); $i < $count; $i++) {
+            $this->setValidatedArchiveWithoutCheck($children[$i], $currentOrganization);
+        }
+    }
+    /**
      * Check integrity of one or several archives giving their identifiers
      * @param object  $archiveIds         An array of archive identifier or an archive identifier
-     * @param boolean $integrityByJournal Validate integrity by life cycle journal or by the database
      *
      * @return array Array of archive object
      */
-    public function verifyIntegrity($archiveIds, $integrityByJournal = true)
+    public function verifyIntegrity($archiveIds)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -103,31 +141,6 @@ trait archiveComplianceTrait
         return $res;
     }
 
-
-    /**
-     * Periodic integrity compliance method
-     * @param string $limit The limit
-     * @param string $delay The delay
-     *
-     * @return array
-     */
-    public function periodicIntegrityCompliance($limit = 1000, $delay = "P1M")
-    {
-        $this->limit = $limit;
-        $this->delayDate = \laabs::newTimestamp()->sub(\laabs::newDuration($delay));
-
-        $archives = $this->sdoFactory->find('recordsManagement/archive', "status!=:notDeleted AND (lastCheckDate<=:delayDate OR (lastCheckDate=null AND depositDate<=:delayDate)) AND parentArchiveId=null", ['notDeleted' => 'disposed', 'delayDate' => $this->delayDate], 'lastCheckDate, depositDate', 0, $limit);
-
-        $archiveIds = [];
-
-        foreach ($archives as $key => $archive) {
-            $this->checkArchiveIntegrity($archive);
-            $archiveIds[] = $archive->archiveId;
-        }
-
-        return $archiveIds;
-    }
-
     /**
      * Verify archives integrity
      * @param archive $archive The archive object
@@ -142,9 +155,8 @@ trait archiveComplianceTrait
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
         if (!$currentOrganization) {
-            throw \laabs::newException("recordsManagement/logException", "The journal must be archived by an owner organization.");
+            throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
-
 
         try {
             $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
@@ -229,7 +241,11 @@ trait archiveComplianceTrait
         $eventInfo['hash'] = $resource->hash;
         $eventInfo['address'] = $resource->address[0]->path;
         $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
+        $eventInfo['info'] = 'OK';
+
+        if ($valid == false) {
+            $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
+        }
 
         $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'digitalResource/digitalResource', $resource->resId, $eventInfo, $valid);
 

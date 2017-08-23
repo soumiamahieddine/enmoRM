@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -22,7 +22,7 @@
 namespace bundle\recordsManagement;
 
 /**
- * Interface for management of archive
+ * Interface for management of archive compliance
  *
  * @package Recordsmanagement
  */
@@ -31,7 +31,7 @@ interface archiveComplianceInterface
     /**
      * Archive compliance
      *
-     * @action recordsManagement/archive/periodicintegrityCompliance
+     * @action recordsManagement/archive/sampling
      */
-    public function readPeriodic($limit, $delay);
+    public function readPeriodic();
 }
