@@ -200,7 +200,9 @@
         },
 
         load: function(organization) {
+            console.log(organization);
             var orgForm = $('#organization_organizationForm');
+            orgForm.find('[name="registrationNumber"]').removeProp('readonly', false); 
 
             orgForm.find('small.displayName').html(organization.displayName);
             $.each(organization, function(key, value) {
@@ -212,6 +214,11 @@
             } else {
                 $('#organization_orgUnitInfo').css('display', 'none');
                 orgForm.find('.orgFormTitle').html($('#organization_text').html());
+            }
+
+            if (organization.isUsed) {
+                orgForm.find('[name="registrationNumber"]').prop('readonly', true); 
+                orgForm.find('.orgFormTitle').html($('#orgUnit_text').html());
             }
 
             if (organization.orgRoleCodes) {

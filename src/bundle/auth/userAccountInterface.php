@@ -195,6 +195,15 @@ interface userAccountInterface
     public function updatePassword_userAccountId_($newPassword);
 
     /**
+     * Generate a new password
+     * @param string $username The username
+     * @param string $email    The email of the user
+     *
+     * @action auth/userAccount/generatePassword
+     */
+    public function updateGeneratePassword($username, $email);
+
+    /**
      * Required password change
      *
      * @action auth/userAccount/requirePasswordChange

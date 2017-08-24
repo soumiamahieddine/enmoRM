@@ -20,7 +20,7 @@
 namespace bundle\auth\Exception;
 
 class authenticationException
-    extends \Exception
+    extends \core\Exception
 {
     
     const INVALID_USER_DATA = 100;

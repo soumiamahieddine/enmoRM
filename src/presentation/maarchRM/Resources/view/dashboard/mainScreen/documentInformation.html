@@ -4,7 +4,7 @@
         <i class="infoIcon fa fa-file-o"/>
     </div>
     <div class="col-xs-12 text-center">
-        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="">View</button>
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="">View</button>
     </div>
     <div class="col-xs-12">
         <table>
@@ -64,6 +64,7 @@
         load: function (resource) {
             resource.created = resource.created.substring(0, 19);
             DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
@@ -134,6 +135,6 @@
     }
 
     $("#viewResource").on("click", function() {
-        window.open("/recordsManagement/digitalResource/"+$(this).data("resid"));
+        window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
     });
 </script>

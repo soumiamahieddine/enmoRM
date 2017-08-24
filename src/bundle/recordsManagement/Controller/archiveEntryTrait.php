@@ -132,7 +132,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference)) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference+" ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
                 $archive->digitalResources[] = $resource;
@@ -518,6 +518,7 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 $archive->contents[$i]->parentArchiveId = $archive->archiveId;
                 $archive->contents[$i]->originatorOwnerOrgId = $archive->originatorOwnerOrgId;
+                $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
@@ -888,12 +889,11 @@ trait archiveEntryTrait
         $logged = false;
         if (isset($archive->digitalResources) && count($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
-                $address = $digitalResource->address[0];
-
                 $eventInfo['resId'] = (string) $digitalResource->resId;
                 $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                 $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $address->path;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
+                $eventInfo['size'] = $digitalResource->size;
 
                 $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
                 $archive->lifeCycleEvent[] = $event;

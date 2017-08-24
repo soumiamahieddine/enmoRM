@@ -119,6 +119,8 @@ class userAccount
     /**
      * Record a new user & role members
      * @param auth/account $userAccount The user object
+     *
+     * @return string The user identifier
      */
     public function add($userAccount)
     {
@@ -129,13 +131,15 @@ class userAccount
                 \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
             }
         }
+
+        return $userAccountId;
     }
 
     /**
      * Record a new user account
      * @param auth/account $userAccount The user object
      *
-     * @return auth/account The user object
+     * @return string The user identifier
      */
     public function addUserAccount($userAccount)
     {
@@ -304,8 +308,62 @@ class userAccount
 
         $userAccount->password = $encryptedPassword;
         $userAccount->accountId = $userAccountId;
+        $userAccount->passwordLastChange = \laabs::newDateTime();
 
         return $this->sdoFactory->update($userAccount);
+    }
+
+    /**
+     * Genrate a new password
+     * @param string $username The username
+     * @param string $email    The email of the user
+     *
+     * @return boolean The result of the request
+     */
+    public function generatePassword($username, $email)
+    {
+        if (!$this->sdoFactory->exists("auth/account", array("accountName" => $username))) {
+             throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
+        }
+
+        $userAccount = $this->sdoFactory->read("auth/account", array("accountName" => $username));
+
+        /*if ($userAccount->locked == true) {
+            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
+                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
+                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
+                || \laabs::newTimestamp()->diff($userAccount->lockDate)->s < $this->securityPolicy['lockDelay'] // Date + delay upper than current date
+            ) {
+                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($username));
+            }
+        }
+
+        if ($userAccount->enabled != true) {
+            throw \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($userName));
+        }*/
+
+        if ($email != $userAccount->emailAddress) {
+            throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
+        }
+
+        $newPassword = \laabs::newId();
+        $this->setPassword($userAccount->accountId, $newPassword);
+        $this->requirePasswordChange($userAccount->accountId);
+
+        $title = "Maarch RM - user information";
+        $message = 'Your password has been reset. Your new password is  %1$s';
+        
+        if (!empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
+            $message .= '  and you have %2$d hour to change it';
+            $message = sprintf($message, $newPassword, $this->securityPolicy["newPasswordValidity"]);
+        } else {
+            $message = sprintf($message, $newPassword);
+        }
+
+        $notificationDependency = \laabs::newService("dependency/notification/Notification");
+        $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
+
+        return $result;
     }
 
     /**
@@ -333,6 +391,7 @@ class userAccount
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $userAccount->locked = true;
+        $userAccount->lockDate = \laabs::newTimestamp();
 
         return $this->sdoFactory->update($userAccount);
     }

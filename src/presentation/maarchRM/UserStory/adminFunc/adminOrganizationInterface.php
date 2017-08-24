@@ -59,6 +59,7 @@ interface AdminOrganizationInterface
      * Edit an organization
      * 
      * @uses organization/organization/read_orgId_
+     * @return organization/orgTree/readOrg
      */
     public function readOrganization_orgId_();
 
