@@ -44,27 +44,35 @@ trait archiveComplianceTrait
 
         $serviceLevels = $this->serviceLevelController->index();
 
-        $eventInfo = [];
-        $eventInfo['startDatetime'] = \laabs::newTimestamp();
-
-        $lastEvent = $this->sdoFactory->find("lifeCycle/event", "eventType='recordsManagement/periodicIntegrityCheck'", null, ">timestamp", null, 1);
-
-        if (!empty($lastEvent)) {
-            $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent[0]->timestamp->getTimestamp();
-        } else {
-            $diffWithLastEvent = 3600 * 24;
-        }
-
         $queryPart = [];
-        $queryPart[] = "status!='error'";
-        $queryPart[] = "status!='disposed'";
-        $queryPart[] = "parentArchiveId=null";
+        $queryPart["status"] = "status!='error' AND status!='disposed'";
+        $queryPart["parentArchiveId"] = "parentArchiveId=null";
 
         foreach ($serviceLevels as $serviceLevel) {
-            $queryPart[] = "serviceLevelReference='" . $serviceLevel->reference . "'";
+            $eventInfo = [];
+            $eventInfo['startDatetime'] = \laabs::newTimestamp();
+
+            $events = $this->lifeCycleJournalController->getObjectEvents($serviceLevel->serviceLevelId, 'recordsManagement/serviceLevel', 'recordsManagement/periodicIntegrityCheck');
+            $lastEvent = end($events);
+
+            if (!empty($lastEvent)) {
+                $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent[0]->timestamp->getTimestamp();
+                $remainder = $lastEvent->nbArchivesToCheck - $lastEvent->archivesChecked;
+            } else {
+                $diffWithLastEvent = 3600 * 24;
+                $remainder = 0;
+            }
+
+            $queryPart["serviceLevelReference"] = "serviceLevelReference='" . $serviceLevel->reference . "'";
             $nbArchives = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" AND ", $queryPart));
 
-            $nbArchivesToCheck = $nbArchives / ($diffWithLastEvent / ($serviceLevel->samplingFrequency * 3600 * 24));
+            $percentage = $diffWithLastEvent / ($serviceLevel->samplingFrequency * 3600 * 24);
+            
+            if ($percentage > 1) {
+                $percentage = 1;
+            }
+            
+            $nbArchivesToCheck = ($nbArchives * $percentage) + $remainder ;
             $nbArchivesInSample = $nbArchivesToCheck * ($serviceLevel->samplingRate / 100);
 
             $nbArchivesToCheck = ceil($nbArchivesToCheck);
@@ -73,21 +81,36 @@ trait archiveComplianceTrait
             $archives = $this->sdoFactory->find("recordsManagement/archive", \laabs\implode(" AND ", $queryPart), null, "<lastCheckDate <depositDate", null, $nbArchivesToCheck);
             shuffle($archives);
 
+            $success = true;
+            $archivesChecked = 0;
+
             for ($i = 0; $i < $nbArchivesInSample; $i++) {
                 $archive = array_pop($archives);
-                $this->checkArchiveIntegrity($archive);
+                $success = $this->checkArchiveIntegrity($archive);
+
+                if (!$success) {
+                    break;
+                } else {
+                    $archivesChecked++;
+                }
             }
 
-            for ($i = 0, $count = count($archives); $i < $count; $i++) {
-                $this->setValidatedArchiveWithoutCheck($archives[$i], $currentOrganization);
+            if ($success) {
+                for ($i = 0, $count = count($archives); $i < $count; $i++) {
+                    $this->setValidatedArchiveWithoutCheck($archives[$i], $currentOrganization);
+                    $archivesChecked++;
+                }
             }
+
+            $eventInfo['endDatetime'] = \laabs::newTimestamp();
+            $eventInfo['nbArchivesToCheck'] = $nbArchivesToCheck;
+            $eventInfo['nbArchivesInSample'] = $nbArchivesInSample;
+            $eventInfo['archivesChecked'] = $archivesChecked;
+
+            $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
         }
 
-        $eventInfo['endDatetime'] = \laabs::newTimestamp();
-        $eventInfo['nbArchivesToCheck'] = $nbArchivesToCheck;
-        $eventInfo['nbArchivesInSample'] = $nbArchivesInSample;
-
-        $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/archive', \laabs::getInstanceName(), $eventInfo);
+        return true;
     }
 
     /**
@@ -110,6 +133,7 @@ trait archiveComplianceTrait
         $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $archiveEventInfo);
 
         $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId' AND status!='error' AND status!='disposed'");
+
         for ($i = 0, $count = count($children); $i < $count; $i++) {
             $this->setValidatedArchiveWithoutCheck($children[$i], $currentOrganization);
         }
