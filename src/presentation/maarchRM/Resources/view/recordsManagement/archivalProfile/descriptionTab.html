@@ -11,6 +11,13 @@
 </div-->
 <div class="form-group col-md-12">
     <br/>
+    <?merge archivalProfile.type.ifeq('1').not() ?>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Allow user indexes</label>
+        <div class="col-md-8">
+            <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
+        </div>
+    </div>
     <label class="col-md-4 control-label">Description class</label>
     <div class="col-md-7">
         <select id="descriptionClass" name="descriptionClass" class="form-control">

@@ -221,6 +221,23 @@ msgstr "Le champ ne doit pas être vide"
 msgid "Originator"
 msgstr "Producteur"
 
-msgid "Generate bar code"
-msgstr "Générer un code à barres"
+msgid "Archive structure"
+msgstr "Structure d'archive"
 
+msgid "Accept archives without profile"
+msgstr "Autoriser les archives sans profil"
+
+msgid "Accept the profile :"
+msgstr "Autoriser le profil :"
+
+msgid "Select a profile"
+msgstr "Choisir un profil"
+
+msgid "Do you want to save the changes before leaving this screen ?"
+msgstr "Voulez vous enregistrer les modifications avant de quitter cet écran ?"
+
+msgid "Go to"
+msgstr "Aller vers"
+
+msgid "Accept any profiles"
+msgstr "Accepter tout les profils"

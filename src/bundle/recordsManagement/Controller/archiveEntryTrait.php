@@ -70,7 +70,6 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive      The archive to receive
      * @param bool                      $zipContainer The archive is a zip container
-     *
      */
     public function receive($archive, $zipContainer = false)
     {
@@ -112,6 +111,8 @@ trait archiveEntryTrait
      * Process a zipContainer
      *
      * @param recordsManagement/archive $archive The archive
+     * 
+     * @return recordsManagement/archive
      */
     public function processZipContainer($archive)
     {
@@ -180,7 +181,7 @@ trait archiveEntryTrait
     /**
      * Extract the archive unit
      *
-     * @param string $filename         The filename
+     * @param string $filename The filename
      *
      * @return recordsManagement/archive The extracted archive from directory
      */
@@ -278,6 +279,7 @@ trait archiveEntryTrait
      */
     public function validateCompliance($archive)
     {
+        $this->validateFileplan($archive);
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
@@ -314,10 +316,7 @@ trait archiveEntryTrait
      */
     protected function completeManagementMetadata($archive)
     {
-        if (!empty($this->currentArchivalProfile)) {
-            $this->completeArchivalProfileCodes($archive);
-        }
-
+        $this->completeArchivalProfileCodes($archive);
         $this->completeRetentionRule($archive);
         $this->completeAccessRule($archive);
         $this->completeServiceLevel($archive);
@@ -357,11 +356,11 @@ trait archiveEntryTrait
     public function completeArchivalProfileCodes($archive)
     {
         if ($archive->archivalProfileReference == "") {
-            $archive->archivalProfileReference = $this->currentArchivalProfile->reference;
-        
-        } else {
-            $this->useArchivalProfile($archive->archivalProfileReference);
+            return;
         }
+            
+        $this->useArchivalProfile($archive->archivalProfileReference);
+            
 
         if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
@@ -410,16 +409,13 @@ trait archiveEntryTrait
 
             if (is_string($archive->retentionStartDate)) {
                 $qname = \laabs\explode("/", $archive->retentionStartDate);
-                if ($qname[0] == "description") {
-                    if (isset($archive->descriptionObject->{$qname[1]})) {
-                        $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
-                    }
+                if ($qname[0] == "description" && isset($archive->descriptionObject->{$qname[1]})) {
+                    $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
                 } else {
-                    // todo
+                    $archive->retentionStartDate = null;
                 }
             }
         }
-
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
@@ -439,10 +435,13 @@ trait archiveEntryTrait
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
     }
+
     /**
      * Convert resources of archive
      *
      * @param recordsManagement/archive $archive The archive to convert
+     * 
+     * @return void
      */
     public function convertArchive($archive)
     {
@@ -502,10 +501,11 @@ trait archiveEntryTrait
 
         $nbArchiveObjects = count($archive->contents);
 
+
         try {
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
-			
+
             $this->openContainers($archive, $path);
             
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
@@ -522,6 +522,7 @@ trait archiveEntryTrait
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
+
         } catch (\Exception $exception) {
             $nbResources = count($archive->digitalResources);
             for ($i = 0; $i < $nbResources; $i++) {
@@ -629,7 +630,66 @@ trait archiveEntryTrait
         if (isset($archive->accessRuleCode) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->accessRuleCode)) {
             // todo : error
         }
+
+        $nbArchiveObjects = count($archive->contents);
+
+        if ($nbArchiveObjects) {
+            $containedProfiles = [];
+
+            $this->useArchivalProfile($archive->archivalProfileReference);
+            foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
+                $containedProfiles[] = $profile->reference;
+            }
+
+            for ($i = 0; $i < $nbArchiveObjects; $i++) {
+                if (($archive->contents[$i]->archivalProfileReference == "" && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || (!$this->currentArchivalProfile->acceptAnyProfile && !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles))) {
+                    throw new \core\Exception\ForbiddenException("Invalid contained archive profile");
+                }
+                
+                $this->validateManagementMetadata($archive->contents[$i]);
+            }
+
+        }
     }
+
+    /**
+     * Validate archival profile of a child archive
+     *
+     * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
+     */
+    protected function validateFileplan($archive)
+    {
+        if ($archive->parentArchiveId == "") {
+            if (!$this->organizationController->checkProfileInOrgAccess($archive->archivalProfileReference, $archive->originatorOrgRegNumber)) {
+                throw new \core\Exception\BadRequestException("Invalid archive profile");
+            }
+
+            return;
+        }
+
+        $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+        if (!empty($parentArchive->archivalProfileReference)) {
+            if (!isset($this->archivalProfiles[$parentArchive->archivalProfileReference])) {
+                $parentArchivalProfile = $this->archivalProfileController->getByReference($parentArchive->archivalProfileReference);
+                $this->archivalProfiles[$parentArchive->archivalProfileReference] = $parentArchivalProfile;
+            } else {
+                $parentArchivalProfile = $this->archivalProfiles[$parentArchive->archivalProfileReference];
+            }
+        }
+
+        if ($archive->archivalProfileReference == "" && !$parentArchivalProfile->acceptArchiveWithoutProfile) {
+            throw new \core\Exception\BadRequestException("Invalid archive profile");
+        }
+
+        foreach ($parentArchivalProfile->containedProfiles as $containedProfile) {
+            if ($containedProfile->reference == $archive->archivalProfileReference) {
+                return;
+            }
+        }
+        
+        throw new \core\Exception\BadRequestException("Invalid archive profile");
+    }
+
 
     /**
      * Validate the archive management metadata

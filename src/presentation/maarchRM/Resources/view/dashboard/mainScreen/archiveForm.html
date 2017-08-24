@@ -106,7 +106,7 @@
 
             var selectedProfile = "";
             if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
-                selectedProfile = JSON.parse(dataJson);
+                selectedProfile = dataJson;
             }
 
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
@@ -134,7 +134,7 @@
                 return;
             }
             
-            var selectedProfile = JSON.parse($('#archivalProfile').data('json'));
+            var selectedProfile = $('#archivalProfile').data('json');
             
             Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
             
@@ -207,7 +207,7 @@
             var selectedProfile = $('#archivalProfile').data('json');
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
-                selectedProfile = JSON.parse(selectedProfile);
+                selectedProfile = selectedProfile;
                 archive.descriptionClass = selectedProfile.descriptionClass;
             }
 

@@ -52,17 +52,9 @@ class digitalResource
 
         $url = \laabs::createPublicResource($contents);
 
+
         $this->view->addContent(
-            '<div class="container-fluid">
-                <br/>
-                <div class="row">
-                    <pre>'.print_r($resource, true).'</pre>
-                    <div class="col col-lg-12">
-                        <object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'">
-                        </object>
-                    </div>
-                </div>
-            </div>'
+            '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"></object>'
         );
 
         return $this->view->saveHtml();

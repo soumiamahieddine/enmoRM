@@ -5,7 +5,7 @@ This file is part of the digitalResource package.
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #-->
-<div id="contain" data-archivalprofileid="[?merge archivalProfile.archivalProfileId ?]">
+<div id="contain" data-archivalprofileid="[?merge archivalProfile.archivalProfileId ?]" data-not-saved="false">
     <div data-form-ns="archivalProfile" class="dataForm" data-translate-catalog="recordsManagement/archivalProfile">
         <div class="container-fluid">
             <div class="page-header">
@@ -44,13 +44,6 @@ file that was distributed with this source code.
                                 <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
                             </div>
                         </div>
-                        <?merge archivalProfile.type.ifeq('1').not() ?>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Allow user indexes</label>
-                            <div class="col-md-9">
-                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
-                            </div>
-                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -60,6 +53,8 @@ file that was distributed with this source code.
                             <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
                             <?merge archivalProfile.type.ifeq('1').not() ?>
                             <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                            <?merge archivalProfile.type.ifeq('1').not() ?>
+                            <li role="presentation"><a href="#profileRelationshipTab" aria-controls="profileRelationshipTab" role="tab" data-toggle="tab">Archive structure</a></li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -138,6 +133,9 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
+                                    <div role="tabpanel" class="tab-pane fade in" id="profileRelationshipTab">
+                                        <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,6 +170,112 @@ file that was distributed with this source code.
 
 <script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
+
+    var ArchivalProfile = {
+        loadRetentionRule: function() {
+            var retentionRule = $('#code').find(":selected");
+            var duration = retentionRule.data('duration');
+            var durationUnit = retentionRule.data('duration-unit');
+            var finalDisposition = retentionRule.data("final-disposition");
+            if (finalDisposition) {
+                if(durationUnit) {
+                    $('.finalDisposition').css('display','');
+                    $('#duration').html(duration + ' ' + $('#text_' + durationUnit).html());
+                    $('#finalDisposition').html($('#text_' + finalDisposition).html());
+                } else {
+                    $('#duration').html($('#text_I').html());
+                    $('.finalDisposition').css('display','none');
+                    $('#finalDisposition').html('');
+                }
+            } else {
+                $('.finalDisposition').css('display','');
+                $('#duration').html('');
+                $('#finalDisposition').html('');
+            }
+        },
+
+        loadAccessCode: function() {
+            var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
+            var accessRuleTable = $('#accessRuleTable');
+
+            if (accessRuleCode) {
+                var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+                $('#accessRule').css("display", 'block');
+                $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+            } else {
+                $('#accessRule').css("display", 'none');
+            }
+        },
+
+        save: function(returnUrl) {
+            var parameters = {
+                archivalProfile : this.serialize()
+            };
+            
+            if($("#contain").data('archivalprofileid')) {
+                type= 'PUT';
+                url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
+            } else {
+                type= 'POST';
+                url='/archivalProfile';
+            }
+            if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
+                gritter.show($("#empty_text").text(), false);
+                return;
+            }
+            ajax($('#save'), {
+                url: url,
+                type: type,
+                data: JSON.stringify(parameters),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        
+                        load(returnUrl);
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        serialize: function() {
+
+            serializedObject = {
+                archivalProfileId: $('#archivalProfileId').val(),
+                reference: $('#reference').val(),
+                name: $('#name').val(),
+                descriptionClass: $('#descriptionClass').val(),
+                retentionStartDate: $('#startDate option:selected').val(),
+                description: $('#description').val(),
+                accessRuleCode: $('#accessRuleCode').val(),
+                retentionRuleCode: $('#code').val(),
+                acceptUserIndex: $('#allowUserIndexes').prop("checked"),
+                archiveDescription: [],
+                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked"),
+            }
+
+            if(serializedObject.retentionStartDate ==''){
+                serializedObject.retentionStartDate = null;
+            }
+            if(serializedObject.accessRuleCode ==''){
+                serializedObject.accessRuleCode = null;
+            }
+            if(serializedObject.retentionRuleCode ==''){
+                serializedObject.retentionRuleCode = null;
+            }
+            
+            serializedObject.archiveDescription = PropertiesList.serialize();
+            serializedObject.containedProfiles = ArchiveStructure.serialize();
+            
+            return serializedObject;
+        }
+    }
+
     $("#archivalProfileCancelBtn").on("click", function (){
         load('/archivalProfiles');
     });
@@ -180,8 +284,12 @@ file that was distributed with this source code.
 
         $("#archivalProfileNavControl").find('a').first().click();
 
-        loadRetentionRule();
-        loadAccessCode();
+        ArchivalProfile.loadRetentionRule();
+        ArchivalProfile.loadAccessCode();
+
+        $('input, select, textarea').on('change', function() {
+            $('#contain').data('not-saved', true);
+        })
 
         //date properties
         let datesProperties = $('#retentionStartDate option');
@@ -252,8 +360,7 @@ file that was distributed with this source code.
                 });
             },
             skipCache: true
-        }
-        ).on('typeahead:selected', function ($event, suggestion, source) {
+        }).on('typeahead:selected', function ($event, suggestion, source) {
             var typeahead = $("#groupTypeahead");
             var groupList = typeahead.data('groupsids');
             typeahead.data('group', suggestion);
@@ -261,6 +368,7 @@ file that was distributed with this source code.
             typeahead.data('groupsids', groupList);
             $("#addGroup").prop('disabled', false);
         });
+
     });
 
    
@@ -292,113 +400,16 @@ file that was distributed with this source code.
     })
 
     $("#contain").on('change', '#code', function () {
-        loadRetentionRule();
+        ArchivalProfile.loadRetentionRule();
     })
 
     $("#contain").on('change', '#accessRuleCode', function () {
-        loadAccessCode();
+        ArchivalProfile.loadAccessCode();
     })
 
     //save
     $("#contain").on('click', '#save', function () {
-        var parameters = {
-            archivalProfile : serialize()
-        };
-        
-        if($("#contain").data('archivalprofileid')) {
-            type= 'PUT';
-            url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
-        } else {
-            type= 'POST';
-            url='/archivalProfile';
-        }
-        if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
-            gritter.show($("#empty_text").text(), false);
-            return;
-        }
-        ajax($('#save'), {
-            url: url,
-            type: type,
-            data: JSON.stringify(parameters),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (response) {
-                gritter.show(response.message, response.status, response.errors);
-                if (response.status) {
-                    
-                    load("/archivalProfiles");
-                }
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
+        ArchivalProfile.save("/archivalProfiles");
     });
-    
-    function loadRetentionRule() {
-        var retentionRule = $('#code').find(":selected");
-        var duration = retentionRule.data('duration');
-        var durationUnit = retentionRule.data('duration-unit');
-        var finalDisposition = retentionRule.data("final-disposition");
-        if (finalDisposition) {
-            if(durationUnit) {
-                $('.finalDisposition').css('display','');
-                $('#duration').html(duration + ' ' + $('#text_' + durationUnit).html());
-                $('#finalDisposition').html($('#text_' + finalDisposition).html());
-            } else {
-                $('#duration').html($('#text_I').html());
-                $('.finalDisposition').css('display','none');
-                $('#finalDisposition').html('');
-            }
-        } else {
-            $('.finalDisposition').css('display','');
-            $('#duration').html('');
-            $('#finalDisposition').html('');
-        }
-    }
-
-    function loadAccessCode() {
-        var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
-        var accessRuleTable = $('#accessRuleTable');
-
-        if (accessRuleCode) {
-            var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
-            var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
-            $('#accessRule').css("display", 'block');
-            $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
-        } else {
-            $('#accessRule').css("display", 'none');
-        }
-    }
-
-    function serialize() {
-
-        serializedObject = {
-            archivalProfileId: $('#archivalProfileId').val(),
-            reference: $('#reference').val(),
-            name: $('#name').val(),
-            descriptionClass: $('#descriptionClass').val(),
-            retentionStartDate: $('#startDate option:selected').val(),
-            description: $('#description').val(),
-            accessRuleCode: $('#accessRuleCode').val(),
-            retentionRuleCode: $('#code').val(),
-            acceptUserIndex: $('#allowUserIndexes').prop("checked"),
-            archiveDescription: []
-        }
-
-        if(serializedObject.retentionStartDate ==''){
-            serializedObject.retentionStartDate = null;
-        }
-        if(serializedObject.accessRuleCode ==''){
-            serializedObject.accessRuleCode = null;
-        }
-        if(serializedObject.retentionRuleCode ==''){
-            serializedObject.retentionRuleCode = null;
-        }
-        
-        serializedObject.archiveDescription = PropertiesList.serialize();
-        
-        return serializedObject;
-    }
 
 </script>

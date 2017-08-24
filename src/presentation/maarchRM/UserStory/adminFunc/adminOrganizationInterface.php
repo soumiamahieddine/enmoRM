@@ -137,4 +137,12 @@ interface AdminOrganizationInterface
      * @uses contact/contact/readIndex
      */
     public function readContactIndex();
+
+    /**
+     * Export file plan
+     *
+     * @return organization/orgTree/exportFilePlan
+     * @uses organization/organization/readTree
+     */
+    public function readExportfileplan();
 }
