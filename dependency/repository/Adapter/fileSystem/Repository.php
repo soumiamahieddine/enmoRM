@@ -73,6 +73,8 @@ class Repository
      */
     public function createContainer($name, $metadata=null)
     {
+        $name = str_replace("/", DIRECTORY_SEPARATOR, $name);
+
         $dir = $this->getDir($name);
 
         if ($metadata) {
@@ -227,13 +229,14 @@ class Repository
         // Create sub path from pattern
         $dir = false;
         $steps = explode(DIRECTORY_SEPARATOR, $pattern);
+
         foreach ($steps as $step) {
             $step = $this->getName($step, $dir);
 
             $dir .= DIRECTORY_SEPARATOR . $step;
 
             if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
-                mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0777, true);
+                mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
             } 
         }
 
@@ -299,7 +302,7 @@ class Repository
                     return $packages[$i];
                 } else {
                     $package = str_pad(intval($packages[$i])+1, 8, "0", STR_PAD_LEFT);
-                    mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0755, true);
+                    mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
 
                     return $package;
                 }
@@ -308,7 +311,7 @@ class Repository
         }
 
         $package = str_pad('1', 8, "0", STR_PAD_LEFT);
-        mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0755, true);
+        mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
 
         return $package;
     }
