@@ -11,3 +11,14 @@ CREATE TABLE "recordsManagement"."archivalProfileContents"
         REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
         ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+CREATE TABLE "organization"."archivalProfileAccess"
+(
+  "orgId" text NOT NULL,
+  "archivalProfileReference" text NOT NULL,
+  "originatorAccess" boolean DEFAULT true,
+  CONSTRAINT "archivalProfileAccess_orgId_fkey" FOREIGN KEY ("orgId")
+      REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "archivalProfileAccess_orgId_archivalProfileReference_key" UNIQUE ("orgId", "archivalProfileReference")
+);
