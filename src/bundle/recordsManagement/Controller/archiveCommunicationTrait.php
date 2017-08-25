@@ -149,6 +149,7 @@ trait archiveCommunicationTrait
                 $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                 $eventItems['hash'] = $digitalResource->hash;
                 $eventItems['address'] = $archive->storagePath;
+                $eventItems['size'] = $digitalResource->size;
 
                 $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
             }
@@ -164,34 +165,26 @@ trait archiveCommunicationTrait
      *
      * @return digitalResource/digitalResource
      */
-    public function getContents($archiveId, $resId)
+    public function consultation($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+        
+        $found = false;
 
-        if (!$this->accessVerification($archive)) {
+        for ($i = 0; $i < count($archive->digitalResources); $i++) {
+            if ($archive->digitalResources[$i]->resId == $resId) {
+                $found = true;
+            }
+        }
+
+        if (!$this->accessVerification($archive) || !$found) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
         $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        return $digitalResource;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $resId The resource identifier
-     *
-     * @return digitalResource/digitalResource
-     */
-    public function getDigitalResource($resId)
-    {
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
-
-        //$archive = $this->getDescription($digitalResource->archiveId);
-
-        //if (!$this->accessVerification($archive)) {
-        //    throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        //}
+        $this->logEventConsultation($archive, $digitalResource);
 
         return $digitalResource;
     }
@@ -210,5 +203,35 @@ trait archiveCommunicationTrait
         }
 
         return $digitalResources;
+    }
+
+    /**
+     * Logging event when a resource is consult
+     *
+     * @param recordsManagement/archive       $archive         The archive object
+     * @param digitalResource/digitalResource $digitalResource The consulted resource
+     */
+    private function logEventConsultation($archive, $digitalResource)
+    {
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+
+        if (strrpos($serviceLevel->control, "logConsultation") === false) {
+            return;
+        }
+
+        $eventItems = [];
+        $eventItems['resId'] = $eventItems['hashAlgorithm'] = $eventItems['hash'] = $eventItems['address'] = null;
+
+        if (empty($digitalResource)) {
+            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems, null, false);
+        }
+
+        $eventItems['resId'] = $digitalResource->resId;
+        $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+        $eventItems['hash'] = $digitalResource->hash;
+        $eventItems['address'] = $digitalResource->address[0]->path;
+        $eventItems['size'] = $digitalResource->size;
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
     }
 }

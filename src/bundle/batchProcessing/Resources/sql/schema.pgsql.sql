@@ -56,3 +56,22 @@ CREATE TABLE "batchProcessing"."logScheduling"
   "info" text,
   PRIMARY KEY ("logId")
 );
+
+
+-- Table: "batchProcessing".notification
+
+-- DROP TABLE "batchProcessing".notification;
+
+CREATE TABLE "batchProcessing".notification
+(
+  "notificationId" text NOT NULL,
+  "receivers" text NOT NULL,
+  "message" text NOT NULL,
+  "title" text NOT NULL,
+  "createdDate" timestamp without time zone NOT NULL,
+  "createdBy" text,
+  "status" text NOT NULL,
+  "sendDate" timestamp without time zone,
+  "sendBy" text,
+  PRIMARY KEY ("notificationId")
+);

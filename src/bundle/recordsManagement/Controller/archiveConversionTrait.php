@@ -196,6 +196,7 @@ trait archiveConversionTrait
             $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
             $eventInfo['convertedHash'] = $convertedResource->hash;
             $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
+            $eventInfo['size'] = $convertedResource->size;
         }
 
         $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $originalResource->archiveId, $eventInfo, $status);

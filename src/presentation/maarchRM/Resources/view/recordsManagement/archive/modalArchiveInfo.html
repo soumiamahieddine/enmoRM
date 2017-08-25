@@ -52,7 +52,8 @@
     // Show document
     $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
         var resId = $(this).data('res-id');
-        archiveDocumentViewer.loadResource(resId);
+        var archiveId = $(this).data('archive-id');
+        archiveDocumentViewer.loadResource(archiveId, resId);
     })
 
     archiveInfoModal = {
@@ -93,16 +94,16 @@
     }
 
     archiveDocumentViewer = {
-        load: function(archiveIdResId, action) {
-            var url = "/recordsManagement/contents/" + archiveIdResId;
+        load: function(archiveId, resId, action) {
+            var url = "/recordsManagement/" + archiveId + "/digitalResource/" + resId;
             if (action) {
-                url = action + archiveIdResId;
+                url = action + archiveId + "/" + resId;
             }
             window.open(url, 'document');
         },
 
-        loadResource: function(resId) {
-            var url = "/recordsManagement/digitalResource/" + resId;
+        loadResource: function(archiveId, resId) {
+            var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
             window.open(url, 'document');
         }
     }

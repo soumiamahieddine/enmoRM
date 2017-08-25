@@ -46,10 +46,11 @@ interface archivalProfileInterface
     
     /**
      * Edit a archival profile
+     * @param bool $withRelatedProfiles Bring back the children profiles
      * 
      * @action recordsManagement/archivalProfile/read The profile object
      */
-    public function read_archivalProfileId_();
+    public function read_archivalProfileId_($withRelatedProfiles = true);
 
     /**
      * Edit a archival profile
@@ -91,20 +92,4 @@ interface archivalProfileInterface
      */
     public function delete_archivalProfileId_();
 
-    /**
-     * Get the profiles by orgRegNumber
-     * @param string $orgRegNumber
-     * @param string $originatorAccess
-     * 
-     * @return array
-     * @action recordsManagement/archivalProfile/getOrgUnitArchivalProfiles
-     */
-    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
-
-    /**
-     * Get descendant profiles
-     * 
-     * @action recordsManagement/archivalProfile/getdescendantArchivalProfiles
-     */
-    public function readDescendantprofiles();
 }

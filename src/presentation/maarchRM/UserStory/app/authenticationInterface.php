@@ -52,13 +52,22 @@ interface authenticationInterface
      */
     public function readUserLogout();
 
+     /**
+     * Generate a new password
+     * @param string $username The username
+     * @param string $email    The email of the user
+     *
+     * @uses auth/userAccount/updateGeneratepassword
+     * @return auth/user/generatePassword
+     */
+    public function updateUserGeneratepassword($username, $email);
+
     /**
      * Get form to edit user information
      * @param object $passwordInformation
      * 
      * @return auth/authentication/definePassword
-     * @uses auth/authentication/update_userName_Password
+     * @uses auth/authentication/updatePassword
      */
-    public function updateUser_userName_Password($passwordInformation);
-
+    public function updateUserPassword($passwordInformation);
 }

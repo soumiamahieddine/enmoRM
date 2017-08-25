@@ -261,4 +261,44 @@ abstract class abstractPosition
 
         return $childrenService;
     }
+
+    /**
+     * Get descendant archival profiles
+     * 
+     * @return array
+     */
+    public function getdescendantArchivalProfiles()
+    {
+        $descendantArchivalProfiles = [];
+        $descendantServicesOrgId = [];
+
+        $descendantServices = $this->listMyCurrentDescendantServices();
+
+        foreach ($descendantServices as $orgRegNumber) {
+            $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
+            if (!empty($organization)) {
+                $descendantServicesOrgId[] = $organization->orgId;
+            }
+        }
+
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId=['". \laabs\implode("','" , $descendantServicesOrgId)."']");
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            if ($archivalProfileAccess->archivalProfileReference == '*') {
+                $descendantArchivalProfiles['*']='*';
+                continue;
+            }
+
+            if (!empty($descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference])){
+                continue;
+            }
+            
+            if ($archivalProfileAccess->archivalProfileReference != '*') {
+                $descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference);
+            }
+        }
+
+        return $descendantArchivalProfiles;
+    }
 }
