@@ -171,8 +171,8 @@ CREATE TABLE "recordsManagement"."archive"
   
   "retentionRuleCode" text,
   "retentionStartDate" date,
-  "retentionDuration" text NOT NULL,
-  "finalDisposition" text NOT NULL,
+  "retentionDuration" text,
+  "finalDisposition" text,
   "disposalDate" date,
 
   "accessRuleCode" text,
