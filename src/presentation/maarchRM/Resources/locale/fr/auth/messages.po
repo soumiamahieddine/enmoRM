@@ -95,7 +95,7 @@ msgstr "Gérer le plan de classement"
 msgctxt "userStory"
 
 msgid "serviceLevel"
-msgstr "Gérer les niveau de service"
+msgstr "Gérer les niveaux de service"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -547,8 +547,8 @@ msgstr "L'utilisateur %1$s est vérrouillé"
 msgid "Invalid username or email."
 msgstr "Nom d'utilisateur ou courriel incorrect."
 
-msgid "Forgot account ?"
-msgstr "Compte oublié ?"
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
 
 msgid "User connected"
 msgstr "Utilisateur connecté"
