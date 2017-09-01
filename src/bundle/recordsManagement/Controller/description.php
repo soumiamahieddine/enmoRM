@@ -70,7 +70,10 @@ class description
             case 'string' :
             case 'integer' :
             case 'double' :
-                return (string) $data;
+                if (strlen((string) $data) > 2) {
+                    return (string) $data;
+                }
+                break;
                 
             case 'object':
                 if (method_exists($data, '__toString')) {
