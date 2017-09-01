@@ -642,7 +642,7 @@ trait archiveEntryTrait
             }
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
-                if (($archive->contents[$i]->archivalProfileReference == "" && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || (!$this->currentArchivalProfile->acceptAnyProfile && !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles))) {
+                if ((empty($archive->contents[$i]->archivalProfileReference) && !$this->currentArchivalProfile->acceptArchiveWithoutProfile) || (!$this->currentArchivalProfile->acceptAnyProfile && !in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles))) {
                     throw new \core\Exception\ForbiddenException("Invalid contained archive profile");
                 }
                 
@@ -659,7 +659,8 @@ trait archiveEntryTrait
      */
     protected function validateFileplan($archive)
     {
-        if ($archive->parentArchiveId == "") {
+        // No parent, check orgUnit can deposit with the profile
+        if (empty($archive->parentArchiveId)) {
             if (!$this->organizationController->checkProfileInOrgAccess($archive->archivalProfileReference, $archive->originatorOrgRegNumber)) {
                 throw new \core\Exception\BadRequestException("Invalid archive profile");
             }
@@ -667,20 +668,28 @@ trait archiveEntryTrait
             return;
         }
 
+        // Parent : read and check fileplan
         $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-        if (!empty($parentArchive->archivalProfileReference)) {
-            if (!isset($this->archivalProfiles[$parentArchive->archivalProfileReference])) {
-                $parentArchivalProfile = $this->archivalProfileController->getByReference($parentArchive->archivalProfileReference);
-                $this->archivalProfiles[$parentArchive->archivalProfileReference] = $parentArchivalProfile;
-            } else {
-                $parentArchivalProfile = $this->archivalProfiles[$parentArchive->archivalProfileReference];
-            }
+
+        // No profile on parent, accept any profile
+        if (empty($parentArchive->archivalProfileReference)) {
+            return;
         }
 
-        if ($archive->archivalProfileReference == "" && !$parentArchivalProfile->acceptArchiveWithoutProfile) {
-            throw new \core\Exception\BadRequestException("Invalid archive profile");
+        // Load parent archive profile
+        if (!isset($this->archivalProfiles[$parentArchive->archivalProfileReference])) {
+            $parentArchivalProfile = $this->archivalProfileController->getByReference($parentArchive->archivalProfileReference);
+            $this->archivalProfiles[$parentArchive->archivalProfileReference] = $parentArchivalProfile;
+        } else {
+            $parentArchivalProfile = $this->archivalProfiles[$parentArchive->archivalProfileReference];
         }
 
+        // No profile : check parent profile accepts archives without profile
+        if (empty($archive->archivalProfileReference) && $parentArchivalProfile->acceptArchiveWithoutProfile) {
+            return;
+        }
+
+        // Profile on content : check profile is accepted
         foreach ($parentArchivalProfile->containedProfiles as $containedProfile) {
             if ($containedProfile->reference == $archive->archivalProfileReference) {
                 return;
