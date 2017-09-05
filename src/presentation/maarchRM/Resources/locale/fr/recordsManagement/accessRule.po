@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Access codes"
-msgstr "Codes d'accès"
+msgstr "Règles d'accès"
 
 msgid "code(s)"
 msgstr "code(s)"

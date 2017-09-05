@@ -45,7 +45,7 @@ msgid "Object identifier :"
 msgstr "Identifiant de l'objet :"
 
 msgid "Audit search"
-msgstr "Événements de l'application"
+msgstr "Journal de l'application"
 
 msgid "Entry date to"
 msgstr "Date d'entrée du"

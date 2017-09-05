@@ -23,7 +23,7 @@ msgstr "Format de l'événement"
 msgctxt "model"
 
 msgid "Life cycle event search"
-msgstr "Recherche d'événements du journal de cycle de vie"
+msgstr "Journal du cycle de vie"
 
 msgid "Event Type"
 msgstr "Type d'événement"

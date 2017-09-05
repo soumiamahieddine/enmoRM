@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Search logs"
-msgstr "Recherche de journaux"
+msgstr "Archives de journaux"
 
 msgid "Archive identifier"
 msgstr "Identifiant de l'archive"

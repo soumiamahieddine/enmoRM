@@ -226,8 +226,8 @@ msgid "Scheduling"
 msgstr "Planificateur"
 msgctxt "layout"
 
-msgid "Task"
-msgstr "Tâche"
+msgid "Tasks"
+msgstr "Tâches"
 msgctxt "layout"
 
 msgid "Logs schedulings"

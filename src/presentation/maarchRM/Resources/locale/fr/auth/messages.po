@@ -296,7 +296,7 @@ msgctxt "userStory"
 # ---------------------------------------------------------
 
 msgid "Authorization roles"
-msgstr "Rôles utilisateur"
+msgstr "Rôles"
 
 msgid "authorization role(s)"
 msgstr "rôle(s) d'autorisation"
@@ -640,7 +640,7 @@ msgid "Service account(s)"
 msgstr "Compte(s) de service"
 
 msgid "Manage service account"
-msgstr "Gestion des comptes de service"
+msgstr "Comptes de service"
 
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"

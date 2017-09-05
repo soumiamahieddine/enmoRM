@@ -8,6 +8,9 @@ msgstr "Information du format"
 msgid "Formats"
 msgstr "Formats"
 
+msgid "Format list"
+msgstr "Liste des formats"
+
 msgid "Click or drop a file"
 msgstr "Cliquer ou déposer un fichier"
 

@@ -381,7 +381,7 @@ msgid "Archival agreement"
 msgstr "Accord de versement"
 
 msgid "Search archives"
-msgstr "Recherche d'archives"
+msgstr "Gestion"
 
 msgid "Archive identifier of originator"
 msgstr "Identifiant d'archive producteur"
