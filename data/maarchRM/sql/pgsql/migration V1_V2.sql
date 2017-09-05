@@ -1,5 +1,3 @@
-ALTER TABLE "recordsManagement"."log" ADD COLUMN "ownerOrgRegNumber" text;
-
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptArchiveWithoutProfile" boolean default true;
 CREATE TABLE "recordsManagement"."archivalProfileContents"
 (

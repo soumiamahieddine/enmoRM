@@ -58,26 +58,7 @@ trait archiveRestitutionTrait
         $valid = count($statusChanged["success"]) ? true : false;
 
         // Life cycle journal
-        $eventItems = array(
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-        );
-
-        $eventItems['resId'] = null;
-        $eventItems['hashAlgorithm'] = null;
-        $eventItems['hash'] = null;
-        $eventItems['address'] = $archive->storagePath;
-        $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'recordsManagement/archive', $archive->archiveId, $eventItems, $valid);
-
-        for ($i = 0, $count = count($archive->digitalResources); $i < $count; $i++) {
-            $eventItems['resId'] = $archive->digitalResources[$i]->resId;
-            $eventItems['hashAlgorithm'] = $archive->digitalResources[$i]->hashAlgorithm;
-            $eventItems['hash'] = $archive->digitalResources[$i]->hash;
-            $eventItems['address'] = $archive->digitalResources[$i]->address[0]->path;
-            $eventItems['size'] = $archive->digitalResources[$i]->size;
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'digitalResource/digitalResource', $archive->digitalResources[$i]->resId, $eventItems, $valid);
-        }
+        $this->logRestitution($archive, $valid);
 
         return $valid ? $archive : null;
     }

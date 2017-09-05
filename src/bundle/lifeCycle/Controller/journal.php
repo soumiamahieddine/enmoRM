@@ -857,7 +857,7 @@ class journal
             $organizations = $orgController->index("isOrgUnit=false");
 
             foreach ($organizations as $organization) {
-                $journalArray[] = $this->processChaining($organization->registrationNumber);
+                $journalArray[] = $this->processChaining($organization->registrationNumber, $organization->orgId);
             }
         }
 
@@ -873,10 +873,11 @@ class journal
     /**
      * process the chaining of the last journal
      * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     * @param string $ownerOrgId        The journal owner organization identifier
      *
      * @return string The chained journal file name
      */
-    protected function processChaining($ownerOrgRegNumber = null)
+    protected function processChaining($ownerOrgRegNumber = null, $ownerOrgId = null)
     {
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
@@ -898,7 +899,7 @@ class journal
             $queryString = "timestamp > '$newJournal->fromDate' AND timestamp <= '$newJournal->toDate'";
 
             if ($ownerOrgRegNumber) {
-                $queryString .= " AND orgUnitRegNumber = '$ownerOrgRegNumber'";
+                $queryString .= " AND eventInfo = '*$ownerOrgId*'";
             }
 
             if ($this->separateInstance) {
@@ -912,7 +913,7 @@ class journal
             $queryString = "timestamp <= '$newJournal->toDate'";
 
             if ($ownerOrgRegNumber) {
-                $queryString .= " AND orgUnitRegNumber = '$ownerOrgRegNumber'";
+                $queryString .= " AND eventInfo = '*$ownerOrgId*'";
             }
 
             $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");

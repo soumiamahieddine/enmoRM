@@ -71,25 +71,7 @@ trait archiveDestructionTrait
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
         );
 
-        $logged = false;
-        if (isset($archive->digitalResources) && count($archive->digitalResources)) {
-            foreach ($archive->digitalResources as $digitalResource) {
-                $eventInfo['resId'] = (string) $digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-
-                $logged = true;
-            }
-        }
-
-        if (!$logged) {
-            $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-            $eventInfo['address'] = $archive->storagePath;
-            $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-        }
+        $this->logElimination($archive);
 
         return $result;
     }
@@ -167,29 +149,7 @@ trait archiveDestructionTrait
                 continue;
             }
 
-            $eventInfo['archiverOrgRegNumber'] = $archive->archiverOrgRegNumber;
-            $eventInfo['originatorOrgRegNumber'] = $archive->originatorOrgRegNumber;
-
-            $logged = false;
-            if (isset($archive->digitalResources) && count($archive->digitalResources)) {
-                foreach ($archive->digitalResources as $digitalResource) {
-                    $eventInfo['resId'] = (string) $digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $digitalResource->hash;
-                    $eventInfo['address'] = $digitalResource->address[0]->path;
-                    $eventInfo['size'] = $digitalResource->size;
-
-                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
-
-                    $logged = true;
-                }
-            }
-
-            if (!$logged) {
-                $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-                $eventInfo['address'] = $archive->storagePath;
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
-            }
+            $this->logDestruction($archive);
 
             $destructArchives['success'][] = $archive;
         }
