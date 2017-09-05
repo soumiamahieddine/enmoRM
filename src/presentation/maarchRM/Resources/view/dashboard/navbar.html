@@ -275,7 +275,8 @@ $.fn.initSmoothScrolling = function() {
                 lock = false;
             }
 
-            if ($(window).width() >= 1200 && !lock) {
+
+            if ($(window).height() > element.outerHeight() && $(window).width() >= 1200 && !lock) {
                 var scrollTop = $(window).scrollTop();
                 
                 element.stop(false, false).animate({

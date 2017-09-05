@@ -56,7 +56,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "description" text,
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
-  "acceptMultipleDocuments" boolean default false,
+  "acceptArchiveWithoutProfile" boolean default true,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -68,6 +68,19 @@ CREATE TABLE "recordsManagement"."archivalProfile"
 )
 WITH (
   OIDS=FALSE
+);
+
+CREATE TABLE "recordsManagement"."archivalProfileContents"
+(
+	"parentProfileId" text NOT NULL,
+	"containedProfileId" text NOT NULL,
+	PRIMARY KEY ("parentProfileId", "containedProfileId"),
+	FOREIGN KEY ("parentProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION,
+  FOREIGN KEY ("containedProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 
@@ -158,8 +171,8 @@ CREATE TABLE "recordsManagement"."archive"
   
   "retentionRuleCode" text,
   "retentionStartDate" date,
-  "retentionDuration" text NOT NULL,
-  "finalDisposition" text NOT NULL,
+  "retentionDuration" text,
+  "finalDisposition" text,
   "disposalDate" date,
 
   "accessRuleCode" text,

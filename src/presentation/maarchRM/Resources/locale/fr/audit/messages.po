@@ -1339,7 +1339,7 @@ msgid "batchProcessing/scheduling/readSchedulings"
 msgstr "Lecture de toutes les taches planifiées"
 
 msgid "batchProcessing/scheduling/readExecute_schedulingId_"
-msgstr "Execution manuel d'une tache planifiée"
+msgstr "Execution manuelle d'une tache planifiée"
 
 msgid "batchProcessing/scheduling/create"
 msgstr "Creation d'une planification de tache"

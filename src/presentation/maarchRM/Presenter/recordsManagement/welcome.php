@@ -34,7 +34,7 @@ class welcome
     /**
      * Constuctor of welcomePage html serializer
      * @param \dependency\html\Document   $view The view
-     * @param \dependency\json\JsonObject $json
+     * @param \dependency\json\JsonObject $json Json utility
      */
     public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json)
     {
@@ -75,6 +75,7 @@ class welcome
             $this->view->setSource("filePlan", $filePlan);
         }
 
+
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
@@ -82,13 +83,19 @@ class welcome
         }
 
         // archival profiles for search form
+
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
         
         if (!empty($currentOrganization->registrationNumber)) {
-            $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readDescendantprofiles');
+            $archivalProfiles = \laabs::callService('organization/userPosition/readDescendantprofiles');
 
             foreach ($archivalProfiles as $archivalProfile) {
+                if ($archivalProfile == "*") {
+                    continue;
+                }
+
                 $archivalProfileController->readDetail($archivalProfile);
+
                 $archivalProfile->searchFields = [];
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                     switch ($archiveDescription->descriptionField->type) {
@@ -104,9 +111,7 @@ class welcome
 
         }
         
-
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-
         $this->view->translate();
 
         if (!empty($currentOrganization->registrationNumber)) {
@@ -154,27 +159,72 @@ class welcome
     public function archiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
+
+        $acceptUserIndex = true;
+
+        // Archive
+        $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
+        $archive->originatorOrgName = $originatorOrg->displayName;
+
+        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
-        $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
-        $archive->originatorOrgName = $originatorOrg->displayName;
 
-        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+        // Add a sub archive
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        if ($depositPrivilege) {
+
+            $acceptArchiveWithoutProfile = true;
+            $archivalProfileList = [];
+
+            if (!empty($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                $archive->archivalProfileName = $archivalProfile->name;
+                
+                $list = [];
+
+                if (count($archivalProfile->containedProfiles)) {
+                     $list = $archivalProfile->containedProfiles;
+                }
+
+                if (count($list)) {
+                    foreach ($list as $profile) {
+                        $profileObject = new \stdClass();
+                        $profileObject->reference = $profile->reference;
+                        $profileObject->name = $profile->name;
+                        $profileObject->json = json_encode($profile);
+
+                        $archivalProfileList[] = $profileObject;
+                    }
+                }
+
+                if (!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
+                    $depositPrivilege = false;
+                }
+
+                $acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+                $acceptUserIndex = $archivalProfile->acceptUserIndex;
+            }
+        }
+
         $this->view->translate();
 
         $this->view->setSource("status", $archive->status);
 
         $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
         $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
-        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
 
         $this->getDescription($archive);
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource("archive", $archive);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("archivalProfileList", $archivalProfileList);
+        $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
+        $this->view->setSource("acceptUserIndex", $acceptUserIndex);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -190,6 +240,10 @@ class welcome
         $this->view->addContentFile('dashboard/mainScreen/documentInformation.html');
         $this->view->translate();
 
+        if (isset(\laabs::configuration('presentation.maarchRM')['displayableFormat'])) {
+            $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
+            $this->view->merge();
+        }
         return $this->view->saveHtml();
     }
     /**
@@ -293,6 +347,7 @@ class welcome
         if (!empty($archive->descriptionClass)) {
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
+
         } else {
             $descriptionHtml = '<table">';
 
@@ -395,7 +450,7 @@ class welcome
 
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
-        $orgUnit->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readOrgunitprofiles', $orgUnit->registrationNumber);
+        $orgUnit->archivalProfiles = \laabs::callService('organization/organization/readOrgunitprofiles', $orgUnit->registrationNumber);
 
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {

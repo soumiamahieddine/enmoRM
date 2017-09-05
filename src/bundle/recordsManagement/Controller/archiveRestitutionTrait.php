@@ -74,6 +74,7 @@ trait archiveRestitutionTrait
             $eventItems['hashAlgorithm'] = $archive->digitalResources[$i]->hashAlgorithm;
             $eventItems['hash'] = $archive->digitalResources[$i]->hash;
             $eventItems['address'] = $archive->digitalResources[$i]->address[0]->path;
+            $eventItems['size'] = $archive->digitalResources[$i]->size;
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/restitution', 'digitalResource/digitalResource', $archive->digitalResources[$i]->resId, $eventItems, $valid);
         }

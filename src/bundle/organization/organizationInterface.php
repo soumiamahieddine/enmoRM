@@ -276,4 +276,14 @@ interface organizationInterface
      * @action organization/organization/updateArchivalProfileAccess
      */
     public function update_orgId_Archivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Get the profiles by orgRegNumber
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     * @action organization/organization/getOrgUnitArchivalProfiles
+     */
+    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
 }
