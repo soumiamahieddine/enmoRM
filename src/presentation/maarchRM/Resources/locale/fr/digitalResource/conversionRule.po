@@ -15,7 +15,7 @@ msgid "Conversion service"
 msgstr "Service de conversion"
 
 msgid "Target Puid"
-msgstr "Puid cible"
+msgstr "Format cible"
 
 msgid "Select a format"
 msgstr "Sélectionnez un format"
@@ -30,7 +30,7 @@ msgid "Conversion service is emty"
 msgstr "Le service de conversion est vide"
 
 msgid "Target Puid is empty"
-msgstr "Le Puid cible est vide"
+msgstr "Le format cible est vide"
 
 msgid "Conversion rule created"
 msgstr "Règle de conversion créée"

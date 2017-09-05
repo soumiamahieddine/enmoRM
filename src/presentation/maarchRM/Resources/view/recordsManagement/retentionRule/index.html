@@ -250,7 +250,7 @@
 
                 $.ajax({
                     type        : "PUT",
-                    url         : '/retentionRule',
+                    url         : '/retentionRule/' +  $(this).data('code'),
                     data        : JSON.stringify(parameters),
                     contentType : 'application/json',
                     async       : false,
