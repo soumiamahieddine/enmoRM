@@ -368,23 +368,14 @@ msgstr "Test de conformité"
 msgid "recordsManagement/delivery"
 msgstr "Communication"
 
+msgid "recordsManagement/elimination"
+msgstr "Elimination"
+
+msgid "recordsManagement/descriptionModification"
+msgstr "Modification des métadonnées descriptives"
+
 msgid "recordsManagement/conversion"
 msgstr "Conversion"
-
-msgid "medona/sending"
-msgstr "Envoi d'un message"
-
-msgid "medona/reception"
-msgstr "Reception d'un message"
-
-msgid "medona/processing"
-msgstr "Traitement d'un message"
-
-msgid "medona/acceptance"
-msgstr "Acceptation d'un message"
-
-msgid "medona/rejection"
-msgstr "Rejet d'un message"
 
 msgid "recordsManagement/archive"
 msgstr "Cote de l'archive"
@@ -393,16 +384,37 @@ msgid "recordsManagement/ArchivalProfileModification"
 msgstr "Modification de profil"
 
 msgid "recordsManagement/addRelationship"
-msgstr "Ajout d'une relation à une archive"
+msgstr "Ajout d'une relation d'archive"
 
 msgid "recordsManagement/deleteRelationship"
-msgstr "Suppression d'une relation d'une une archive"
+msgstr "Suppression d'une relation d'archive"
 
 msgid "recordsManagement/integrityDataSystem"
 msgstr "Vérification d'intégrité par le système de données"
 
 msgid "recordsManagement/integrityLifeCycle"
-msgstr "Véfication d'intégrité par le Journal de cycle de vie"
+msgstr "Vérification d'intégrité par le Journal du cycle de vie"
+
+msgid "medona/sending"
+msgstr "Envoi d'un message"
+
+msgid "medona/reception"
+msgstr "Reception d'un message"
+
+msgid "medona/validation"
+msgstr "Validation d'un message"
+
+msgid "medona/processing"
+msgstr "Traitement d'un message"
+
+msgid "medona/acceptance"
+msgstr "Acceptation d'un message"
+
+msgid "medona/acknowledgement"
+msgstr "Accusé de reception"
+
+msgid "medona/rejection"
+msgstr "Rejet d'un message"
 
 msgid "Result"
 msgstr "Résultat"
