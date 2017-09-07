@@ -9,3 +9,4 @@ data/maarchRM/medona/
 data/maarchRM/luceneIndex/
 data/maarchRM/conf/confvars.ini
 data/maarchRM/conf/vhost.win.conf
+/dependency/fileSystem/plugins/fid/cache/*
