@@ -114,7 +114,7 @@
             if ($.inArray(resource.mimetype, displayableFormat) > -1) {
 
                 $.ajax({
-                    url         : "/digitalResource/"+resource.resId,
+                    url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
                     type        : "GET",
                     dataType    : 'html',
                     success     : function(response) {

@@ -46,7 +46,7 @@ CREATE TABLE "organization"."organization"
   "otherOrgName" text,
   "displayName" text NOT NULL,
 
-  "registrationNumber" text,
+  "registrationNumber" text NOT NULL,
   "beginDate" date,
   "endDate" date,
   "legalClassification" text,
