@@ -8,6 +8,15 @@ msgstr "Archives de journaux"
 msgid "Archive identifier"
 msgstr "Identifiant de l'archive"
 
+msgid "Lifecycle"
+msgstr "Cycle de vie"
+
+msgid "Application"
+msgstr "Application"
+
+msgid "System"
+msgstr "Système"
+
 msgid "Process identifier"
 msgstr "Identifiant du processus"
 
