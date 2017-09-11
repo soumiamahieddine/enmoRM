@@ -216,7 +216,7 @@ msgid "restitutionValidation"
 msgstr "Récupérer les restitutions"
 msgctxt "userStory"
 
-# 
+#
 # Commit restitution destruction
 msgid "restitutionProcess"
 msgstr "Traiter les restitutions acquittées"
@@ -246,7 +246,7 @@ msgctxt "userStory"
 msgid "transferSend"
 msgstr "Mes bordereaux à traiter"
 msgctxt "userStory"
- 
+
 # ---------------------------------------------------------
 # Search/retrieve
 # ---------------------------------------------------------
@@ -259,8 +259,12 @@ msgid "searchPublicArchive"
 msgstr "Accéder au registre des entrées"
 msgctxt "userStory"
 
-msgid "searchAdminArchive"
-msgstr "Recherche d'archives admnistratives"
+msgid "searchPublicArchive"
+msgstr "Accéder au registre des entrées"
+msgctxt "userStory"
+
+msgid "IndexCourrier"
+msgstr "Accéder au registre des courriers"
 msgctxt "userStory"
 
 msgid "retrieve"
