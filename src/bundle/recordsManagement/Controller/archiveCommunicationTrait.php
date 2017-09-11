@@ -213,6 +213,10 @@ trait archiveCommunicationTrait
      */
     private function logEventConsultation($archive, $digitalResource)
     {
+        if (empty($archive->serviceLevelReference)) {
+            return;
+        }
+
         $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
 
         if (strrpos($serviceLevel->control, "logConsultation") === false) {
