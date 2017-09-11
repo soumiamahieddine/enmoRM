@@ -56,3 +56,5 @@ msgstr "L'URI du dépôt est vide"
 msgid "Reference"
 msgstr "Référence"
 
+msgid "Size"
+msgstr "Taille"
