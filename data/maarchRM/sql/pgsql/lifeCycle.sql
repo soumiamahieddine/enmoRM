@@ -2,29 +2,29 @@ TRUNCATE TABLE "lifeCycle"."eventFormat" CASCADE;
 
 -- FR --
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
-    ('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber ownerOrgId', FALSE, 'Réception de l''archive %6$s'),
-    ('recordsManagement/validation', 'hashAlgorithm hash ownerOrgId', FALSE, 'Validation de l''archive %6$s'),
-    ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size ownerOrgId', FALSE, 'Dépôt de l''archive %6$s'),
-    ('recordsManagement/depositOfLinkedResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format linkedResId relationshipType ownerOrgId', FALSE, 'Ajout de la resource liée %9$s'),
-    ('recordsManagement/integrityLifeCycle', 'resId hashAlgorithm hash address requesterOrgRegNumber ownerOrgId', FALSE, 'Validation de l''intégrité de l''archive %6$s par le journal de cycle de vie.'),
-    ('recordsManagement/integrityDataSystem', 'resId hashAlgorithm hash address requesterOrgRegNumber ownerOrgId', FALSE, 'Validation de l''intégrité de l''archive %6$s par le systeme de données.'),
-    ('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId ownerOrgId', FALSE, 'Relation avec l''archive %6$s supprimée'),
-    ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId ownerOrgId', FALSE, 'Relation ajoutée avec l''archive %6$s'),
-    ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber ownerOrgId', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
-    ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber ownerOrgId', FALSE, 'Modification de la règle d''accès de l''archive %6$s'),
-    ('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber ownerOrgId', FALSE, 'Gel de l''archive %6$s'),
-    ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber ownerOrgId', FALSE, 'Dégel de l''archive %6$s'),
-    ('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size ownerOrgId', FALSE, 'Communication de l''archive %6$s'),
-    ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size ownerOrgId', FALSE, 'Restitution de l''archive %6$s'),
-    ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size ownerOrgId', FALSE, 'Destruction de l''archive %6$s'),
+    ('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Réception de l''archive %6$s'),
+    ('recordsManagement/validation', 'hashAlgorithm hash originatorOwnerOrgRegNumber', FALSE, 'Validation de l''archive %6$s'),
+    ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorOwnerOrgRegNumber', FALSE, 'Dépôt de l''archive %6$s'),
+    ('recordsManagement/depositOfLinkedResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format linkedResId relationshipType originatorOwnerOrgRegNumber', FALSE, 'Ajout de la resource liée %9$s'),
+    ('recordsManagement/integrityLifeCycle', 'resId hashAlgorithm hash address requesterOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Validation de l''intégrité de l''archive %6$s par le journal de cycle de vie.'),
+    ('recordsManagement/integrityDataSystem', 'resId hashAlgorithm hash address requesterOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Validation de l''intégrité de l''archive %6$s par le systeme de données.'),
+    ('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorOwnerOrgRegNumber', FALSE, 'Relation avec l''archive %6$s supprimée'),
+    ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorOwnerOrgRegNumber', FALSE, 'Relation ajoutée avec l''archive %6$s'),
+    ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
+    ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Modification de la règle d''accès de l''archive %6$s'),
+    ('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Gel de l''archive %6$s'),
+    ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Dégel de l''archive %6$s'),
+    ('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size originatorOwnerOrgRegNumber', FALSE, 'Communication de l''archive %6$s'),
+    ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorOwnerOrgRegNumber', FALSE, 'Restitution de l''archive %6$s'),
+    ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorOwnerOrgRegNumber', FALSE, 'Destruction de l''archive %6$s'),
     ('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Création du profil %6$s'),
     ('recordsManagement/ArchivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
     ('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction du profil %6$s'),
     ('recordsManagement/integrityCheck', 'startEventDate endEventDate endEventId', FALSE, 'Validation périodique de l''intégrité'),
-    ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size ownerOrgId', FALSE, 'Conversion du document %18$s'),
+    ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size originatorOwnerOrgRegNumber', FALSE, 'Conversion du document %18$s'),
     ('recordsManagement/descriptionModification','property', FALSE, 'Modification des méta-données de l''archive %6$s.'),
-    ('recordsManagement/metadata', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber ownerOrgId', FALSE, 'Modification des métadonnnées de l''archive %6$s'),
-    ('recordsManagement/consultation', 'resId hash hashAlgorith address size ownerOrgId', FALSE, 'Consultation de la resource %9$s');
+    ('recordsManagement/metadata', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorOwnerOrgRegNumber', FALSE, 'Modification des métadonnnées de l''archive %6$s'),
+    ('recordsManagement/consultation', 'resId hash hashAlgorith address size originatorOwnerOrgRegNumber', FALSE, 'Consultation de la resource %9$s');
 
 
 -- EN --

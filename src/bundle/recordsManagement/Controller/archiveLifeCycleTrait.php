@@ -41,7 +41,7 @@ trait archiveLifeCycleTrait
 		$eventItems = $eventInfo ? $eventInfo : [];
 		$res = null;
 
-        $eventItems["ownerOrgId"] = $archive->originatorOwnerOrgId;
+        $eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
 
         if ($resource) {
         	$eventItems['resId'] = $resource->resId;

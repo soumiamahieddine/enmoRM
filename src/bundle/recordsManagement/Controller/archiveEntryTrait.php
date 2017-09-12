@@ -346,6 +346,7 @@ trait archiveEntryTrait
         }
 
         $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
+        $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
     }
 
     /**
