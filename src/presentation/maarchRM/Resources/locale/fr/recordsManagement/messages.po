@@ -253,6 +253,9 @@ msgstr "Lecture seule"
 msgid "Deposit date"
 msgstr "Date de dépôt"
 
+msgid "Last check date"
+msgstr "Date du dernier contrôle"
+
 msgid "Date of deposit from"
 msgstr "Date de dépôt du"
 
@@ -381,7 +384,7 @@ msgid "Archival agreement"
 msgstr "Accord de versement"
 
 msgid "Search archives"
-msgstr "Recherche d'archives"
+msgstr "Gestion"
 
 msgid "Archive identifier of originator"
 msgstr "Identifiant d'archive producteur"

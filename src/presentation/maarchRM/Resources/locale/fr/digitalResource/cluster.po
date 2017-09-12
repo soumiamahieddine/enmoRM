@@ -103,3 +103,6 @@ msgstr "Le nom ne doit pas contenir d'espace"
 
 msgid "clusterName"
 msgstr "Nom de la grappe"
+
+msgid "Repositories number"
+msgstr "Nombre de sites de dépôt"

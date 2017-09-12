@@ -45,7 +45,7 @@ msgid "Object identifier :"
 msgstr "Identifiant de l'objet :"
 
 msgid "Audit search"
-msgstr "Événements de l'application"
+msgstr "Journal de l'application"
 
 msgid "Entry date to"
 msgstr "Date d'entrée du"
@@ -1242,6 +1242,12 @@ msgstr "Modification du mot de passe utilisateur"
 msgid "auth/userAccount/updatePasswordchangerequest_userAccountId_"
 msgstr "Demande de changement de mot de passe utilisateur"
 
+msgid "auth/authentication/updatePassword"
+msgstr "Modification du mot de passe"
+
+msgid "auth/userAccount/updateGeneratePassword"
+msgstr "Géneration d'un mot de passe utilisateur"
+
 msgid "contact/communicationMean/readIndex"
 msgstr "Lecture de tous les moyens de communication"
 
@@ -1365,6 +1371,12 @@ msgstr "Lecture d'un journal d'une tache planifiée"
 msgid "batchProcessing/logscheduling/read_schedulingId_"
 msgstr "Lecture de l'historique d'une tache planifiée"
 
+msgid "batchProcessing/notification/create"
+msgstr "Création d'une notification pour les taches planifiées"
+
+msgid "batchProcessing/notification/updateProcess"
+msgstr "Execution du processus de notification des taches planifiées"
+
 msgid "archivesPubliques/content/createSearch"
 msgstr "Lecture de toutes les archives publiques"
 
@@ -1439,3 +1451,27 @@ msgstr "Suppression d'un document sur un brouillon de bordereau de transfert"
 
 msgid "seda2/ArchiveTransferComposition/updateSenddraft_messageId_"
 msgstr "Envoi du brouillon de bordereau de transfert"
+
+msgid "archivesCourrier/Content/readSearch"
+msgstr "Recherche courrier"
+
+msgid "medona/archiveTransfer/readReference_reference_"
+msgstr "Recherche un message de transfert par sa reference"
+
+msgid "medona/archiveDelivery/readReference_reference_"
+msgstr "Recherche d'un message de communication par sa reference"
+
+msgid "medona/archiveRestitution/readReference_reference_"
+msgstr "Recherche d'un message de restitution par sa reference"
+
+msgid "medona/archiveNotification/readReference_reference_"
+msgstr "Recherche d'un message de notification par sa reference"
+
+msgid "medona/archiveAuthorization/readReference_reference_"
+msgstr "Recherche d'un message d'autorisation par sa reference"
+
+msgid "medona/archiveDestruction/readReference_reference_"
+msgstr "Recherche d'un message d'élimination par sa reference"
+
+msgid "medona/message/readReference_reference_"
+msgstr "Recherche un message par sa reference"

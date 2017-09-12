@@ -182,4 +182,5 @@ trait archiveCommunicationTrait
 
         return $digitalResources;
     }
+
 }

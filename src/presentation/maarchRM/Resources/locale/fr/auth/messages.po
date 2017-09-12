@@ -216,7 +216,7 @@ msgid "restitutionValidation"
 msgstr "Récupérer les restitutions"
 msgctxt "userStory"
 
-# 
+#
 # Commit restitution destruction
 msgid "restitutionProcess"
 msgstr "Traiter les restitutions acquittées"
@@ -246,7 +246,7 @@ msgctxt "userStory"
 msgid "transferSend"
 msgstr "Mes bordereaux à traiter"
 msgctxt "userStory"
- 
+
 # ---------------------------------------------------------
 # Search/retrieve
 # ---------------------------------------------------------
@@ -259,8 +259,12 @@ msgid "searchPublicArchive"
 msgstr "Accéder au registre des entrées"
 msgctxt "userStory"
 
-msgid "searchAdminArchive"
-msgstr "Recherche d'archives admnistratives"
+msgid "searchPublicArchive"
+msgstr "Accéder au registre des entrées"
+msgctxt "userStory"
+
+msgid "IndexCourrier"
+msgstr "Accéder au registre des courriers"
 msgctxt "userStory"
 
 msgid "retrieve"
@@ -296,7 +300,7 @@ msgctxt "userStory"
 # ---------------------------------------------------------
 
 msgid "Authorization roles"
-msgstr "Rôles utilisateur"
+msgstr "Rôles"
 
 msgid "authorization role(s)"
 msgstr "rôle(s) d'autorisation"
@@ -542,7 +546,7 @@ msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
 
 msgid "User %1$s is locked"
-msgstr "L'utilisateur %1$s est vérrouillé"
+msgstr "L'utilisateur %1$s est verrouillé"
 
 msgid "Invalid username or email."
 msgstr "Nom d'utilisateur ou courriel incorrect."
@@ -640,7 +644,7 @@ msgid "Service account(s)"
 msgstr "Compte(s) de service"
 
 msgid "Manage service account"
-msgstr "Gestion des comptes de service"
+msgstr "Comptes de service"
 
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"

@@ -82,7 +82,7 @@ msgid "Task name"
 msgstr "Nom de la tâche"
 
 msgid "Task"
-msgstr "Tâche"
+msgstr "Tâches"
 
 msgid "task(s)"
 msgstr "tâche(s)"
