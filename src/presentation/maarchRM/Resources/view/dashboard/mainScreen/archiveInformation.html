@@ -42,6 +42,11 @@
                 <th title="Name">Originator archive identifier</th>
                 <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
             </tr>
+            <?merge archive.originatingDate.bool() ?>
+            <tr class="originatingDate">
+                <th title="Name">Originating date</th>
+                <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
+            </tr>
         </table>
         <div id="metadata">
         </div>
