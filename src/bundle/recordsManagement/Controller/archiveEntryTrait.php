@@ -711,6 +711,7 @@ trait archiveEntryTrait
             $archive->digitalResources = [];
         } else {
             $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
+            $formatValidation = strrpos($this->currentServiceLevel->control, "formatValidation") === false ? false : true;
         }
 
         foreach ($archive->digitalResources as $digitalResource) {
@@ -734,6 +735,13 @@ trait archiveEntryTrait
 
                 if ($format) {
                     $digitalResource->puid = $format->puid;
+                }
+            }
+
+            if ($formatValidation) {
+                $validation = $this->formatController->validateFormat($filename);
+                if (!$validation !== true && is_array($validation)) {
+                    throw new \core\Exception\BadRequestException("Invalid format attachments for '$digitalResource->fileName'");
                 }
             }
 
