@@ -39,16 +39,6 @@ class journal
     protected $journalCursor;
     protected $eventFormats;
 
-    // Mail notification
-    protected $mailHost;
-    protected $mailUsername;
-    protected $mailPassword;
-    protected $mailPort;
-    protected $mailSender;
-    protected $mailReceiver;
-    protected $mailSMTPAuth;
-    protected $mailSMTPSecure;
-
     protected $journals;
 
     /**
@@ -66,7 +56,7 @@ class journal
      * @param bool                    $mailSMTPAuth     The mail SMTP auth
      * @param string                  $mailSMTPSecure   The mail SMTP secure
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null, $mailHost = null, $mailUsername = null, $mailPassword = null, $mailPort = null, $mailSender = null, $mailReceiver = null, $mailSMTPAuth = null, $mailSMTPSecure = null)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null)
     {
         $this->separateInstance = $separateInstance;
         $this->interval = $interval;
@@ -81,15 +71,6 @@ class journal
         foreach ($this->eventFormats as $eventFormat) {
             $eventFormat->format = explode(' ', $eventFormat->format);
         }
-
-        $this->mailHost = $mailHost;
-        $this->mailUsername = $mailUsername;
-        $this->mailPassword = $mailPassword;
-        $this->mailPort = $mailPort;
-        $this->mailSender = $mailSender;
-        $this->mailReceiver = $mailReceiver;
-        $this->mailSMTPAuth = $mailSMTPAuth;
-        $this->mailSMTPSecure = $mailSMTPSecure;
 
         $this->journals = [];
 
@@ -185,8 +166,8 @@ class journal
 
         $this->sdoFactory->create($event);
 
-        if (!$operationResult) {
-            $this->sendMail($event);
+        if (!$operationResult && $eventFormat->notification == true) {
+            $this->notify($event);
         }
 
         return $event;
@@ -1030,17 +1011,16 @@ class journal
     }
 
     /**
-     * Send email
+     * Notify
      * @param lifeCycle/event $event The event
      */
-    private function sendMail($event)
+    private function notify($event)
     {
         $subject = 'Life cycle error';
         $body = "Error on event '$event->eventId' of type '$event->eventType'. ";
         $body .= "The object '$event->objectId' of class '$event->objectClass'. ";
         $body .= "Description : $event->description ";
 
-        $notification = \laabs::newService("dependency/notification/Notification");
-        $notification->send($subject, $body);
+        \laabs::callService("batchProcessing/notification/create", $subject, $body, array());
     }
 }
