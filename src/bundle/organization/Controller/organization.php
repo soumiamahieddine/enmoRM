@@ -716,6 +716,17 @@ class organization
     {
         $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
 
+        $org = $this->sdoFactory->read('organization/organization', $orgId);
+        
+        try {
+            if (!$org->isOrgUnit) {
+                throw new \core\Exception("Organization Archival Profile Access can't be update ");
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
         foreach ($archivalProfileAccess as $access) {
             $access = (object) $access;
             $access->orgId = $orgId;
