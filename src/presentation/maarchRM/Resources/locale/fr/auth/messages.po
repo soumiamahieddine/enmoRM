@@ -34,6 +34,10 @@ msgid "adminOrganization"
 msgstr "Gérer l'organisation fonctionnelle"
 msgctxt "userStory"
 
+msgid "AdminArchivalProfileAccess"
+msgstr "Gérer accès aux profils d'archive"
+msgctxt "userStory"
+
 msgid "adminAuthorization"
 msgstr "Gérer les rôles"
 msgctxt "userStory"
@@ -290,6 +294,10 @@ msgctxt "userStory"
 msgid "archiveDeposit"
 msgstr "Dépôt unitaire"
 msgctxt "userStoryGroup"
+
+msgid "deposit"
+msgstr "Déposer un archive"
+msgctxt "userStory"
 
 msgid "messageComposer"
 msgstr "Génerer un bordereau"
