@@ -195,7 +195,6 @@ CREATE TABLE "recordsManagement"."archive"
   "status" text NOT NULL,
 
   "parentArchiveId" text,
-  "parentOriginatorOrgRegNumber" text,
 
   PRIMARY KEY ("archiveId"),
   FOREIGN KEY ("parentArchiveId")

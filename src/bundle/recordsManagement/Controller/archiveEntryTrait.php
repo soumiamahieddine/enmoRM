@@ -329,15 +329,6 @@ trait archiveEntryTrait
             }
         }
 
-        // Parent
-        if (!empty($archive->parentArchiveId)) {
-            $parentArchive = $this->read($archive->parentArchiveId);
-
-            if ($archive->originatorOrgRegNumber != $parentArchive->originatorOrgRegNumber) {
-                $archive->parentOriginatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
-            }
-        }
-
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
             $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
             $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originatorOrg;
