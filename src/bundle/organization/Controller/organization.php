@@ -350,8 +350,16 @@ class organization
     {
         $organization->orgId = $orgId;
 
-        $originalOrganization = $this->read($orgId);
+        try {
+            if ($organization->beginDate>$organization->endDate) {
+                throw new \core\Exception("The end date is lower than the begin date ");
+            }
 
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        $originalOrganization = $this->read($orgId);
         if ($this->isUsed($originalOrganization->registrationNumber)) {
             $organization->registrationNumber = $originalOrganization->registrationNumber;
         }
