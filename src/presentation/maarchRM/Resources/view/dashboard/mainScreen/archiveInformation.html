@@ -66,6 +66,7 @@
                     <a role="button" data-toggle="collapse" href="#managementInfo" >
                         <span class="text-info">Management information</span>
                     </a>
+                    <?merge managementPrivilege.bool() ?>
                     <button type="button" class="btn btn-default btn-sm" id="editManagementMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
                     <!--<a href="#" class="unfreeze [?merge status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze" title="Unfreeze"><i class="fa fa-unlock"></i></a>
                     <a href="#" class="freeze [?merge status.ifeq('frozen').then('hide', '') ?]" data-type="freeze" title="Freeze"><i class="fa fa-lock"></i></a>-->

@@ -162,6 +162,8 @@ class welcome
 
         $acceptUserIndex = true;
 
+        $managementPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+
         // Archive
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
@@ -225,6 +227,8 @@ class welcome
         $this->view->setSource("archivalProfileList", $archivalProfileList);
         $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $acceptUserIndex);
+        $this->view->setSource('managementPrivilege', $managementPrivilege);
+
         $this->view->merge();
 
         return $this->view->saveHtml();
