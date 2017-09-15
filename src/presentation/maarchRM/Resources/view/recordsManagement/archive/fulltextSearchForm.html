@@ -25,8 +25,17 @@
 <!-- Search profiles tabs -->
 <ul class="nav nav-tabs col-md-12" role="tablist" data-search-tab>
     <li role="presentation" class="active small"><a href="#all" data-toggle="tab">All</a></li>
+    <li class="dropdown profileDropdown" role="presentation" class="small">
+        <a href="#" class="dropdown-toggle small" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span>Profiles</span> <i class="fa fa-caret-down"/>
+            <ul class="dropdown-menu">
+                <?merge userArchivalProfiles ?>
+                <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
+            </ul>
+        </a>
+    </li>
     <?merge userArchivalProfiles ?>
-    <li role="presentation" class="small"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
+    <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
 </ul>
 <br/>
 <div class="tab-content col-md-12" data-search-tabContent>

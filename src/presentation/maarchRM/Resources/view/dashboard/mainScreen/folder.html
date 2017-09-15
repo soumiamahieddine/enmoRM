@@ -263,7 +263,19 @@
     });
 
     $("#folderToolbarSearch").on('click', function() {
-        SearchTab.run($(this).data("orgregnumber"), $(this).data("folderid"));
+        var folder = $('#folderPath').text().split('/');
+        var profiles = [];
+
+        var currentOrg = $('#filePlanTree').find('.node-warning').closest('.organization');
+        var profiles = currentOrg.data('archivalprofiles');
+        var children = currentOrg.find('.organization');
+
+        children.each(function() {
+            profiles = $.merge(profiles, $(this).data('archivalprofiles'));
+        })
+
+        folder =  folder[folder.length-1];        
+        SearchTab.run($(this).data("orgregnumber"), $(this).data("folderid"), folder, profiles);
     });
     
     $("#folderToolbarBtn").on('click','.freeze', function() {
@@ -324,4 +336,5 @@
     $("#folderContentList").on('click','.pagination li', function() {
         ArchiveFolderList.initDragNDrop();
     });
+
 </script>
