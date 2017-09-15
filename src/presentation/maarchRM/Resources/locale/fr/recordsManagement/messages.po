@@ -664,7 +664,7 @@ msgid "Access rule"
 msgstr "Règle de communicabilité"
 
 msgid "The modification will be applied on"
-msgstr "La modification portera sur"
+msgstr "L'action portera sur"
 msgctxt "validationModal"
 
 msgid "%1$s archive(s) flagged for restitution."
