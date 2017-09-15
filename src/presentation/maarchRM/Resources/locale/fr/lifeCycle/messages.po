@@ -315,6 +315,13 @@ msgid "relationshipType"
 msgstr "Type de relation"
 msgctxt "eventInfo"
 
+msgid "size"
+msgstr "Taille"
+msgctxt "eventInfo"
+
+msgid "originatorOwnerOrgRegNumber"
+msgstr "Identifiant du producteur"
+msgctxt "eventInfo"
 
 # ---------------------------------------------------------
 # Event types
