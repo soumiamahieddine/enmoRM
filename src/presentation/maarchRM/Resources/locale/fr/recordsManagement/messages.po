@@ -866,7 +866,7 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "Select a retention rule"
-msgstr "Selectionner une règle de retention"
+msgstr "Selectionner une règle de conservation"
 
 msgid "No result"
 msgstr "Aucun résultat"
