@@ -28,6 +28,10 @@
                 <th title="Format">Format</th>
                 <td name="format">
             </tr>
+            <tr>
+                <th title="PUID">PUID</th>
+                <td name="puid">
+            </tr>
         </table>
     </div>
 </div>
@@ -69,6 +73,12 @@
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
             DocumentInformation.form.find('[name="resId"]').text(resource.resId).attr('title', resource.resId);
+            if (resource.puid == null) {
+                DocumentInformation.form.find('[name="puid"]').closest('tr').addClass('hide');
+            } else {
+                DocumentInformation.form.find('[name="puid"]').text(resource.puid).attr('title', resource.puid);
+
+            }
 
             if (resource.format) {
                 var formatname = resource.format.name+' '+resource.format.version;
