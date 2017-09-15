@@ -441,6 +441,8 @@ class organization
         $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
         $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
         $contacts = $this->sdoFactory->readChildren("organization/orgContact", $organization);
+        $archivalProfilesAccess = $this->sdoFactory->readChildren("organization/archivalProfileAccess", $organization);
+        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
 
         foreach ($children as $child) {
             $this->delete($child);
