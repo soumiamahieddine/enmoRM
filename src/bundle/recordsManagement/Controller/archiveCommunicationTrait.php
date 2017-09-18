@@ -56,8 +56,8 @@ trait archiveCommunicationTrait
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null
-    ) {
+        $text = null)
+    {
         $archives = [];
 
         $archiveArgs = [
@@ -76,13 +76,12 @@ trait archiveCommunicationTrait
         if (!empty($description) || !empty($text)) {
             $searchClasses = [];
             if (!$profileReference) {
-                $archivalProfiles = $this->archivalProfileController->index();
-                foreach ($archivalProfiles as $archivalProfile) {
-                    if ($archivalProfile->descriptionClass != '' && !isset($searchClasses[$archivalProfile->descriptionClass])) {
-                        $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
-                    } elseif (!isset($searchClasses['recordsManagement/description'])) {
-                        $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
-                    }
+                 $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+
+                $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+
+                foreach ($descriptionClassController->index() as $descriptionClass) {
+                    $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
                 }
             } else {
                 $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
