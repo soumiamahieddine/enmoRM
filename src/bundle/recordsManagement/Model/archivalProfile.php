@@ -37,7 +37,7 @@ class archivalProfile
      *
      * @var id
      */
-    public $archivalProfileId;
+    public $archivalProfileId; 
 
     /**
      * The reference
@@ -103,7 +103,14 @@ class archivalProfile
     public $acceptUserIndex;
 
     /**
-     * The list of profile description
+     * The archive accepts sub archive without profile
+     * 
+     * @var boolean
+     */
+    public $acceptArchiveWithoutProfile;
+
+    /**
+     *  The list of profile description
      *
      * @var recordsManagement/archiveDescription[]
      */
@@ -112,9 +119,9 @@ class archivalProfile
     /**
      * The list of child archival profiles
      *
-     * @var recordsManagement/archivalProfile[]
+     * @var recordsManagement/archivalProfileContents[]
      */
-    public $contentsProfile = array();
+    public $containedProfiles = array();
 
     /**
      * The retention rule

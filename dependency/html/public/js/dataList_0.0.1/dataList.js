@@ -291,9 +291,11 @@ var DataList = {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
                 this.dataList[id].resultNumber.addClass('hide');
+                this.dataList[id].element.find('.selectAll').addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
                 this.dataList[id].resultNumber.removeClass('hide');
+                this.dataList[id].element.find('.selectAll').removeClass('hide');
             }
         }
 

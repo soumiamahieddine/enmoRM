@@ -2,11 +2,14 @@
 /data/maarchRM/log.txt
 /data/maarchRM/repository/
 /data/maarchRM/tmp/
-/src/ext/archivesPubliques/
-/src/ext/thirdPartyArchiving/
+/src/ext/*
 /web/public/dependency/
 /nbproject/
 data/maarchRM/medona/
 data/maarchRM/luceneIndex/
 data/maarchRM/conf/confvars.ini
+data/maarchRM/conf/configuration.ini"
 data/maarchRM/conf/vhost.win.conf
+data/maarchRM/conf/vhost.conf
+/dependency/fileSystem/plugins/fid/cache/*
+web/tmp

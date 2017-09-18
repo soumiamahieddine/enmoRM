@@ -335,12 +335,6 @@ class archive
     public $parentArchiveId;
 
     /**
-     * The parent archive originator
-     * @var string
-     */
-    public $parentOriginatorOrgRegNumber;
-
-    /**
      * The contained archives list
      *
      * @var recordManagement/archive[]

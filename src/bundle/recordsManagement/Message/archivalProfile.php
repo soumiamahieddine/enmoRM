@@ -99,9 +99,23 @@ class archivalProfile
     public $acceptUserIndex;
 
     /**
+     * The archive accepts sub archive without profile
+     *
+     * @var boolean
+     */
+    public $acceptArchiveWithoutProfile;
+
+    /**
      *  The list of profile description
      *
      * @var recordsManagement/archiveDescription[]
      */
     public $archiveDescription = array();
+
+    /**
+     *  The list of child archival profiles
+     *
+     * @var array
+     */
+    public $containedProfiles = array();
 }

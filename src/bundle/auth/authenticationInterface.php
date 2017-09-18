@@ -45,11 +45,12 @@ interface authenticationInterface
 
     /**
      * Change a user Account password
+     * @param string $userName    The username
      * @param string $oldPassword The user's old password
      * @param string $newPassword The user's new password
      * @param string $requestPath The requested path
      *
      * @action auth/userAuthentication/definePassword
      */
-    public function update_userName_Password($oldPassword, $newPassword, $requestPath);
+    public function updatePassword($userName, $oldPassword, $newPassword, $requestPath);
 }

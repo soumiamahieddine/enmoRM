@@ -34,7 +34,7 @@ trait exceptionTrait
      */
     public function exception($exception)
     {
-        if (isset($this->translator)) {
+        if (isset($this->translator) && method_exists($exception, "setMessage")) {
             $exception->setMessage($this->translator->getText($exception->getFormat()));
         }
         

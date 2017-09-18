@@ -185,7 +185,11 @@ trait archiveComplianceTrait
         $eventInfo['hash'] = $resource->hash;
         $eventInfo['address'] = $resource->address[0]->path;
         $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
+        //$eventInfo['size'] = $resource->size;
+        
+        if (!$valid) {
+            $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
+        }
 
         $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'digitalResource/digitalResource', $resource->resId, $eventInfo, $valid);
 

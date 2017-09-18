@@ -40,3 +40,6 @@ msgstr "Une erreur est survenue durant le traitement de votre requête. Veuillez
 
 msgid "The format identification failed."
 msgstr "Le format du fichier n'a pas pu être identifié."
+
+msgid "Invalid archive profile"
+msgstr "Profil d'archive invalide"

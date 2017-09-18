@@ -177,6 +177,7 @@ trait archiveDestructionTrait
                     $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                     $eventInfo['hash'] = $digitalResource->hash;
                     $eventInfo['address'] = $digitalResource->address[0]->path;
+                    $eventInfo['size'] = $digitalResource->size;
 
                     $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
 

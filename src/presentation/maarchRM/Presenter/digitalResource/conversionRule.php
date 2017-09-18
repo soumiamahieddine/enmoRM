@@ -60,11 +60,18 @@ class conversionRule
      */
     public function index(array $conversionRules)
     {
+        $conversionServices = \laabs::configuration("dependency.fileSystem")["conversionServices"];
         $this->view->addContentFile('digitalResource/conversionRule/index.html');
 
         foreach ( $conversionRules as $conversionRule ) {
             $conversionRule->puidName = \laabs::callService('digitalResource/format/readGet', $conversionRule->puid)->name;
             $conversionRule->targetPuidName = \laabs::callService('digitalResource/format/readGet', $conversionRule->targetPuid)->name;
+
+            foreach ($conversionServices as $conversionService) {
+                if ($conversionService['serviceName'] == $conversionRule->conversionService) {
+                    $conversionRule->conversionServiceName = $conversionService['softwareName'];
+                }
+            }
         }
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
