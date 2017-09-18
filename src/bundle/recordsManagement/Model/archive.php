@@ -118,7 +118,7 @@ class archive
      * Management Data
      *********************************************************************** */
     /**
-     * The restriction rule code
+     * The retention rule code
      *
      * @var string
      */

@@ -141,6 +141,11 @@
                         }
                     } else {
                         rule = response.retentionRule;
+
+                        if (rule.retentionDuration == "" || rule.retentionDuration == null) {
+                            return;
+                        }
+
                         rule.retentionDurationUnit = rule.retentionDuration.substring(rule.retentionDuration.length-1);
                         rule.retentionDuration = rule.retentionDuration.substring(1, rule.retentionDuration.length-1);
                     }

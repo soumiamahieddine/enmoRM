@@ -28,7 +28,7 @@ WITH (
 CREATE TABLE "recordsManagement"."retentionRule"
 (
   "code" text NOT NULL,
-  "duration" text,
+  "duration" text NOT NULL,
   "finalDisposition" text,
   "description" text,
   "label" text,

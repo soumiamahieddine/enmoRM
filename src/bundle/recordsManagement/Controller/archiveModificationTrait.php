@@ -31,7 +31,7 @@ trait archiveModificationTrait
      * Read the retention rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archiveRetentionRule
      */
     public function editArchiveRetentionRule($archiveId)
     {
@@ -47,7 +47,7 @@ trait archiveModificationTrait
      * Read the access rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archiveAccessRule
      */
     public function editArchiveAccessRule($archiveId)
     {
@@ -59,7 +59,7 @@ trait archiveModificationTrait
     }
 
     /**
-     * Modify the archive retention
+     * Modify the archive retention rule
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param mixed                                  $archiveIds    The archives ids
      *
@@ -74,7 +74,6 @@ trait archiveModificationTrait
         $res = array('success' => array(), 'error' => array());
 
         $archives = array();
-        $events = array();
 
         if (!$currentOrg = \laabs::getToken("ORGANIZATION")) {
             throw \laabs::newException('recordsManagement/noOrgUnitException', "Permission denied: You have to choose a working organization unit to proceed this action.");
@@ -91,7 +90,13 @@ trait archiveModificationTrait
 
             } else {
                 $retentionRule->archiveId = $archiveId;
-                $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+
+                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                } else {
+                    $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
+                }
+                
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 

@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Model;
+
 /**
  * Class model that represents a retentionRule
  *

@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Message;
+
 /**
  * Class model that represents an archive
  *
@@ -76,7 +78,7 @@ class archive
     public $serviceLevelReference;
 
     /**
-     * The restriction rule code
+     * The retention rule code
      *
      * @var string
      */

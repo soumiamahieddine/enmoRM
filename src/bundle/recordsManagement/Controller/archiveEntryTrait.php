@@ -54,7 +54,10 @@ trait archiveEntryTrait
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
 
             $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
-            $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
+
+            if ($this->currentArchivalProfile->retentionRuleCode) {
+                $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
+            }
         }
 
         // Use current service level
@@ -611,15 +614,15 @@ trait archiveEntryTrait
     protected function validateManagementMetadata($archive)
     {
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", $archive->archivalProfileReference)) {
-            // todo : error
+            throw new \core\Exception\NotFoundException("The archival profile reference not found");
         }
 
         if (isset($archive->retentionRuleCode) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->retentionRuleCode)) {
-            // todo : error
+            throw new \core\Exception\NotFoundException("The retention rule not found");
         }
 
-        if (isset($archive->accessRuleCode) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->accessRuleCode)) {
-            // todo : error
+        if (isset($archive->accessRuleCode) && !$this->sdoFactory->exists("recordsManagement/accessRule", $archive->accessRuleCode)) {
+            throw new \core\Exception\NotFoundException("The access rule not found");
         }
 
         $nbArchiveObjects = count($archive->contents);

@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Model;
+
 /**
  * Class model that represents an archival profile
  *
@@ -26,7 +28,7 @@ namespace bundle\recordsManagement\Model;
  * @pkey [archivalProfileId]
  * @key [reference]
  * @fkey [accessRuleCode] recordsManagement/accessRule [code]
- * @fkey [code] recordsManagement/retentionRule [code]
+ * @fkey [retentionRuleCode] recordsManagement/retentionRule [code]
  */
 class archivalProfile
 {
@@ -87,7 +89,7 @@ class archivalProfile
     public $retentionRuleCode;
 
     /**
-     *  The access code
+     * The access code
      *
      * @var string
      */
@@ -115,21 +117,21 @@ class archivalProfile
     public $archiveDescription = array();
 
     /**
-     *  The list of child archival profiles
+     * The list of child archival profiles
      *
      * @var recordsManagement/archivalProfileContents[]
      */
     public $containedProfiles = array();
 
     /**
-     *  The retention rule
+     * The retention rule
      *
      * @var recordsManagement/retentionRule
      */
     public $retentionRule;
 
     /**
-     *  The retention rule
+     * The retention rule
      *
      * @var recordsManagement/accessRule
      */
