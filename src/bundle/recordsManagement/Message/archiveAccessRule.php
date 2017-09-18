@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Message;
+
 /**
- * Class model that represents a retentionRule applied to an archive
+ * Class model that represents a accessRule applied to an archive
  *
  * @package RecordsManagement
  * @author  Alexandre MORIN (Maarch) <alexandre.morin@maarch.org>
- * 
- *
  */
 class archiveAccessRule
 {

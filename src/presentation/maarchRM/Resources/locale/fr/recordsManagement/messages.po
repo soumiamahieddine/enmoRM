@@ -253,6 +253,9 @@ msgstr "Lecture seule"
 msgid "Deposit date"
 msgstr "Date de dépôt"
 
+msgid "Last check date"
+msgstr "Date du dernier contrôle"
+
 msgid "Date of deposit from"
 msgstr "Date de dépôt du"
 
@@ -381,7 +384,7 @@ msgid "Archival agreement"
 msgstr "Accord de versement"
 
 msgid "Search archives"
-msgstr "Recherche d'archives"
+msgstr "Gestion"
 
 msgid "Archive identifier of originator"
 msgstr "Identifiant d'archive producteur"
@@ -661,7 +664,7 @@ msgid "Access rule"
 msgstr "Règle de communicabilité"
 
 msgid "The modification will be applied on"
-msgstr "La modification portera sur"
+msgstr "L'action portera sur"
 msgctxt "validationModal"
 
 msgid "%1$s archive(s) flagged for restitution."
@@ -863,7 +866,7 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "Select a retention rule"
-msgstr "Selectionner une règle de retention"
+msgstr "Selectionner une règle de conservation"
 
 msgid "No result"
 msgstr "Aucun résultat"
@@ -873,3 +876,6 @@ msgstr "Sous-archive de"
 
 msgid "Zip container"
 msgstr "Fichier conteneur"
+
+msgid "Originating date"
+msgstr "Date de prodution"

@@ -34,6 +34,10 @@ msgid "adminOrganization"
 msgstr "Gérer l'organisation fonctionnelle"
 msgctxt "userStory"
 
+msgid "AdminArchivalProfileAccess"
+msgstr "Gérer accès aux profils d'archive"
+msgctxt "userStory"
+
 msgid "adminAuthorization"
 msgstr "Gérer les rôles"
 msgctxt "userStory"
@@ -95,7 +99,7 @@ msgstr "Gérer le plan de classement"
 msgctxt "userStory"
 
 msgid "serviceLevel"
-msgstr "Gérer les niveau de service"
+msgstr "Gérer les niveaux de service"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -216,7 +220,7 @@ msgid "restitutionValidation"
 msgstr "Récupérer les restitutions"
 msgctxt "userStory"
 
-# 
+#
 # Commit restitution destruction
 msgid "restitutionProcess"
 msgstr "Traiter les restitutions acquittées"
@@ -246,7 +250,7 @@ msgctxt "userStory"
 msgid "transferSend"
 msgstr "Mes bordereaux à traiter"
 msgctxt "userStory"
- 
+
 # ---------------------------------------------------------
 # Search/retrieve
 # ---------------------------------------------------------
@@ -259,8 +263,12 @@ msgid "searchPublicArchive"
 msgstr "Accéder au registre des entrées"
 msgctxt "userStory"
 
-msgid "searchAdminArchive"
-msgstr "Recherche d'archives admnistratives"
+msgid "searchPublicArchive"
+msgstr "Accéder au registre des entrées"
+msgctxt "userStory"
+
+msgid "IndexCourrier"
+msgstr "Accéder au registre des courriers"
 msgctxt "userStory"
 
 msgid "retrieve"
@@ -287,6 +295,10 @@ msgid "archiveDeposit"
 msgstr "Dépôt unitaire"
 msgctxt "userStoryGroup"
 
+msgid "deposit"
+msgstr "Déposer un archive"
+msgctxt "userStory"
+
 msgid "messageComposer"
 msgstr "Génerer un bordereau"
 msgctxt "userStory"
@@ -296,7 +308,7 @@ msgctxt "userStory"
 # ---------------------------------------------------------
 
 msgid "Authorization roles"
-msgstr "Rôles utilisateur"
+msgstr "Rôles"
 
 msgid "authorization role(s)"
 msgstr "rôle(s) d'autorisation"
@@ -535,6 +547,21 @@ msgstr "Confirmer le mot de passe"
 msgid "Username not registered or wrong password."
 msgstr "Nom d'utilisateur ou mot de passe incorrect."
 
+msgid "A new password has been generated"
+msgstr "Un nouveau mot de passe a été généré"
+
+msgid "User %1$s is disabled"
+msgstr "L'utilisateur %1$s est désactivé"
+
+msgid "User %1$s is locked"
+msgstr "L'utilisateur %1$s est verrouillé"
+
+msgid "Invalid username or email."
+msgstr "Nom d'utilisateur ou courriel incorrect."
+
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
+
 msgid "User connected"
 msgstr "Utilisateur connecté"
 
@@ -546,6 +573,9 @@ msgstr "Le mot de passe est le même que le précédent."
 
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
+
+msgid "Generate a new password"
+msgstr "Générer un nouveau mot de passe"
 
 msgid "User added"
 msgstr "Utilisateur ajouté"
@@ -622,7 +652,7 @@ msgid "Service account(s)"
 msgstr "Compte(s) de service"
 
 msgid "Manage service account"
-msgstr "Gestion des comptes de service"
+msgstr "Comptes de service"
 
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"

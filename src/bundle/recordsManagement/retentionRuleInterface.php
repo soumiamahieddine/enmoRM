@@ -17,48 +17,50 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement;
+
+/**
+ * Interface for management of retention rules
+ *
+ * @package Recordsmanagement
+ */
 interface retentionRuleInterface
 {
     /**
-     *  List the access rule's code
-     * 
+     * List the retention rules
+     *
      * @action recordsManagement/retentionRule/index 
      */
     public function readIndex();
 
     /**
-     * Create an access rule
-     * @param recordsManagement/retentionRule $retentionRule The preservation rule
-     * 
-     * @action recordsManagement/retentionRule/create
+     * Create a retention orule
+     * @param recordsManagement/retentionRule $retentionRule The retention rule
      *
+     * @action recordsManagement/retentionRule/create
      */
     public function create($retentionRule);
 
     /**
-     * Read an access rule
-     * 
-     * @action recordsManagement/retentionRule/read
+     * Read a retention rule
      *
+     * @action recordsManagement/retentionRule/read
      */
     public function read_code_();
 
     /**
-     *  Update an access rule
-     * @param recordsManagement/retentionRule $retentionRule The access rule
-     * 
-     * @action recordsManagement/retentionRule/update
+     * Update a retention rule
+     * @param recordsManagement/retentionRule $retentionRule The retention rule
      *
+     * @action recordsManagement/retentionRule/update
      */
     public function update($retentionRule);
 
     /**
-     *  Delete an access rule
-     * 
+     * Delete an retention rule
+     *
      * @action recordsManagement/retentionRule/delete
-     * 
      */
     public function delete_code_();
-
 }

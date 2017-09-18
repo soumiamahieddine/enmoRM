@@ -118,7 +118,7 @@ class archive
      * Management Data
      *********************************************************************** */
     /**
-     * The restriction rule code
+     * The retention rule code
      *
      * @var string
      */
@@ -246,6 +246,13 @@ class archive
     public $originatorOwnerOrgId;
 
     /**
+     * Registration number of originator root organisation
+     *
+     * @var string
+     */
+    public $originatorOwnerOrgRegNumber;
+
+    /**
      * Registration number of depositor organisation
      *
      * @var string
@@ -270,6 +277,13 @@ class archive
      * @var timestamp
      */
     public $depositDate;
+
+    /**
+     * The originating date of the archive
+     *
+     * @var timestamp
+     */
+    public $originatingDate;
 
     /**
      * @var timestamp
@@ -333,12 +347,6 @@ class archive
      * @var string
      */
     public $parentArchiveId;
-
-    /**
-     * The parent archive originator
-     * @var string
-     */
-    public $parentOriginatorOrgRegNumber;
 
     /**
      * The contained archives list

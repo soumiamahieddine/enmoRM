@@ -7,7 +7,10 @@
         <div id="archiveToolbarBtn" class="dropdown pull-right btn-group">
             <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <?merge acceptArchiveWithoutProfile.bool() ?>
                 <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
+                <?merge archivalProfileList ?>
+                <li><a class="userProfile small newArchive" style="cursor: pointer;" data-reference="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name?></a></li>
             </ul>
         </div>
     </div>
@@ -27,7 +30,7 @@
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
             <tr class="originator">
-                <th title="Name">Originator</th>
+                <th title="Originator">Originator</th>
                 <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
             </tr>
             <tr class="archiveId">
@@ -39,10 +42,16 @@
                 <th title="Name">Originator archive identifier</th>
                 <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
             </tr>
+            <?merge archive.originatingDate.bool() ?>
+            <tr class="originatingDate">
+                <th title="Name">Originating date</th>
+                <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
+            </tr>
         </table>
         <div id="metadata">
         </div>
-        <div class="dropup col-xs-12 hide" id="archiveCustomFieldAddBtn">
+        <?merge acceptUserIndex ?>
+        <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn" style="display: none">
             <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
@@ -62,6 +71,7 @@
                     <a role="button" data-toggle="collapse" href="#managementInfo" >
                         <span class="text-info">Management information</span>
                     </a>
+                    <?merge managementPrivilege.bool() ?>
                     <button type="button" class="btn btn-default btn-sm" id="editManagementMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
                     <!--<a href="#" class="unfreeze [?merge status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze" title="Unfreeze"><i class="fa fa-unlock"></i></a>
                     <a href="#" class="freeze [?merge status.ifeq('frozen').then('hide', '') ?]" data-type="freeze" title="Freeze"><i class="fa fa-lock"></i></a>-->
@@ -294,6 +304,7 @@
 
         cancelMetadataEdition: function() {
             Archive.getInfo(ArchiveInformation.archiveId);
+            $('#archiveCustomFieldAddBtn').hide();
         },
 
         editMetadata: function() {
@@ -301,7 +312,7 @@
             $('#editMetadata').prop('disabled',true);
             $('#saveMetadata').show();
             $('#cancelMetadataEdition').show();
-            $('#archiveCustomFieldAddBtn').removeClass('hide');
+            $('#archiveCustomFieldAddBtn').show();
             //$('#archiveInformation').find('.originatorArchiveId').hide();
             //$('#archiveInformation').find('.archiveName').hide();
             
@@ -328,7 +339,6 @@
                 customField.val(value.html());
                 value.html('').append(customField);
             });
-            console.log($('#metadata').find('.archivalProfileField'));
 
             $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
@@ -375,6 +385,8 @@
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                 }
             });
+
+            $('#archiveCustomFieldAddBtn').hide();
         },
 
         addField : function(type) {
@@ -392,22 +404,6 @@
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);
-        },
-
-        buildNewArchiveDropdownMenu: function() {
-            var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
-            var dropdown = $("#archiveToolbarBtn .dropdown-menu");
-            dropdown.children().not(":first").remove();
-
-            for (var i = 0; i < archivalProfiles.length; i++) {
-                var a = $("<a/>")
-                        .addClass("userProfile small newArchive")
-                        .data("reference", archivalProfiles[i].reference)
-                        .data("json", JSON.stringify(archivalProfiles[i]))
-                        .attr('style', "cursor: pointer;")
-                        .text(archivalProfiles[i].name);
-                $("<li/>").append(a).appendTo(dropdown);
-            }
         },
 
         loadImportForm: function(e) {

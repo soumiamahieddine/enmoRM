@@ -69,12 +69,12 @@ FulltextSearch = {
         query.profileReference = selectedProfile;
         
         var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
-		
+
 		searchFields.each(function() {
             var value = $(this).val();
             var name = $(this).attr('name');
             var type = $(this).attr('type');
-            
+
             if (type == "" || type == null || type == undefined) {
                 type = $(this).attr('data-type');
             }
@@ -126,47 +126,36 @@ FulltextSearch = {
 
                 case 'number':
                     if (value !== '') {
-                        // format numbers
-                        var parts = value.split('.'); 
-                        value = pad(parts[0], 16, "0", 1);
-                        if (parts[1] != undefined) {
-                            value = value + pad(parts[1].substr(0, 14), 14, "0");
+                        var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                        value = name + operation + $(this).val();
+                        
+                        // Fill start and end values
+                        if (query.description[name] == undefined) {
+                            query.description[name] = value;
                         } else {
-                            value = value + "00000000000000";
+                            query.description[name] = query.description[name] +'&&'+value;
                         }
-                    } else {
-                        value = "*";
-                    }
-                    
-                    // Fill start and end values
-                    if (query.description == undefined) {
-                        query.description = name+'="'+value+'"';
-                    } else {
-                        query.description = query.description+value+'.."'+value+'"';
-                    }
-                    if (query.description == name+'="*".."*"') {
-                        delete query.description;
                     }
                     break;
             }
         });
 
-         var arr = [];
+        var arr = [];
         for (name in query.description) {
             arr.push(query.description[name]);
         }
 
         query.description = arr.join(' && ');
 
-        if (query.text == '' && query.description.length == '') {
-            searchPanel.find("[data-search-result]").css('display', 'none');
+        if (query.text == '' && query.description == "") {
+            // searchPanel.find("[data-search-result]").css('display', 'none');
             return; 
         }
 
         searchPanel.find("[data-search-result]").css('display', '');
 
         query.filePlanPosition = searchPanel.data("context-folderid");
-        query.orgRegNumber = searchPanel.data("context-orgregnumber");
+        query.originatorOrgRegNumber = searchPanel.data("context-orgregnumber");
 
         ajax(btn,{
             type        : 'GET',

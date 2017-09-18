@@ -34,7 +34,8 @@ class archive
         archiveRestitutionTrait,
         archiveComplianceTrait,
         archiveConversionTrait,
-        archiveDestructionTrait;
+        archiveDestructionTrait,
+        archiveLifeCycleTrait;
 
     /**
      * Sdo Factory for management of archive persistance
@@ -745,5 +746,22 @@ class archive
         }
 
         return $ftresults;
+    }
+
+    /**
+     * Count the archives for an organization
+     * @param string $orgRegNumber The organization registration number
+     *
+     * @return int The number of archives with this organization
+     */
+    public function countByOrg($orgRegNumber)
+    {
+        $queryString = [];
+        $queryString[] = "archiverOrgRegNumber='$orgRegNumber'";
+        $queryString[] = "originatorOrgRegNumber='$orgRegNumber'";
+
+        $count = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" OR ", $queryString));
+
+        return $count;
     }
 }

@@ -46,7 +46,7 @@ msgid "APR"
 msgstr "AVR"
 msgctxt "month"
 
-msgid "MAI"
+msgid "MAY"
 msgstr "MAI"
 msgctxt "month"
 
@@ -82,7 +82,7 @@ msgid "Task name"
 msgstr "Nom de la tâche"
 
 msgid "Task"
-msgstr "Tâche"
+msgstr "Tâches"
 
 msgid "task(s)"
 msgstr "tâche(s)"
@@ -109,7 +109,7 @@ msgid "Select a service account"
 msgstr "Selectionner un compte de service"
 
 msgid "Daily"
-msgstr "Tous les jours"
+msgstr "Quotidien"
 
 msgid "Weekly"
 msgstr "Hebdomadaire"
@@ -178,7 +178,7 @@ msgid "Are you sur to delete this scheduled task ?"
 msgstr "Etes vous sûr de vouloir supprimer cette tâche plannifiée ?"
 
 msgid "The task will be executed the last day of months with less than selected days."
-msgstr "La tâche sera éxècutée le dernier jour du mois si les jours selectionnés n'existent pas"
+msgstr "La tâche sera exécutée le dernier jour du mois si les jours sélectionnés n'existent pas"
 
 msgid "Last execution"
 msgstr "Derniere exécution"

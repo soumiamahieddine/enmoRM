@@ -60,8 +60,6 @@ trait archiveAccessTrait
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
 
-        $this->logging($archive);
-
         return $archive;
     }
 
@@ -128,8 +126,6 @@ trait archiveAccessTrait
             $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($archive->digitalResources[$i]->resId);
         }
 
-        $this->logging($archive);
-
         return $archive;
     }
 
@@ -168,31 +164,6 @@ trait archiveAccessTrait
         //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         // }
 
-        // $this->logging($archive);
-    }
-
-    /**
-     * Log the archive access
-     *
-     * @param recordsManagement/archive $archive The archive logged
-     */
-    public function logging($archive)
-    {
-        // Journaliser la consultation
-        $eventItems['resId'] = null;
-        $eventItems['hashAlgorithm'] = null;
-        $eventItems['hash'] = null;
-        $eventItems['address'] = $archive->storagePath;
-        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
-
-        foreach ($archive->digitalResources as $digitalResource) {
-            $eventItems['resId'] = $digitalResource->resId;
-            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-            $eventItems['hash'] = $digitalResource->hash;
-            $eventItems['address'] = $archive->storagePath;
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
-        }
     }
 
     /**

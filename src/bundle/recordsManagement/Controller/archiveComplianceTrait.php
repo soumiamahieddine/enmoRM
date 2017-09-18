@@ -187,7 +187,7 @@ trait archiveComplianceTrait
 
             if (count($archive->digitalResources)) {
                 foreach ($archive->digitalResources as $digitalResource) {
-                    if (!$this->checkResourceIntegrity($archive, $digitalResource, $currentOrganization)) {
+                    if (!$this->checkResourceIntegrity($archive, $digitalResource)) {
                         $valid = false;
                     }
                 }
@@ -215,21 +215,13 @@ trait archiveComplianceTrait
 
         $this->sdoFactory->update($archive);
 
-        $eventInfo['resId'] = '';
-        $eventInfo['hashAlgorithm'] = '';
-        $eventInfo['hash'] = '';
-        $eventInfo['address'] = '';
-        $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $eventInfo['info'] = $info;
-
-        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $valid);
-
         return $valid;
     }
 
-    protected function checkResourceIntegrity($archive, $resource, $currentOrganization)
+    protected function checkResourceIntegrity($archive, $resource)
     {
         $valid = false;
+        $info = "";
 
         // Retrieve resource creation event
         $creationEvents = $this->lifeCycleJournalController->matchEvent((string) $resource->created, $resource->resId);

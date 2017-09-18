@@ -29,6 +29,9 @@ msgstr "Validation de format"
 msgid "Convert on deposit"
 msgstr "Convertir au dépôt"
 
+msgid "Log the consultations"
+msgstr "Journaliser les consultations"
+
 msgid "default"
 msgstr "par défaut"
 

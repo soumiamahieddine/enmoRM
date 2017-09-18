@@ -1,0 +1,98 @@
+<div class="modal fade" id="forgotAccountModal">
+    <div class="modal-dialog">
+        <form id="forgotAccountForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" style="float:left;">
+                        <i class="fa fa-fw fa-warning">&nbsp;</i>Forgot password ?
+                    </h4>
+                    <span style="float:right;width:100px;height:30px;text-align:right;background:url('[?merge logo ?]');background-size:100% 100%;"></span>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" placeholder="Username" class="form-control" name="forgotAccountUsername" id="forgotAccountUsername">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Email" class="form-control" name="forgotAccountEmail" id="forgotAccountEmail">
+                    </div>
+                    <div class="form-group">
+                        <p class="" id="forgotAccountMessage"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-info btn-block" id="forgotAccountSendButton" type="button" title="Save">Save</button>
+                    <br/>
+                    <center>
+                        <a class="center" id="forgotAccountCancelButton">Cancel</a>
+                    </center>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#loginForm").on("click", "#forgotAccount", function() {
+        ForgotAccount.show();
+    });
+
+    $("#forgotAccountForm").on("click", "#forgotAccountSendButton", function() {
+        ForgotAccount.send();
+    });
+
+    $("#forgotAccountForm").on("click", "#forgotAccountCancelButton", function() {
+        ForgotAccount.hide();
+    });
+
+    var ForgotAccount = {
+        form : $("#forgotAccountForm"),
+        show : function() {
+            $('#signInModal').modal('hide');
+            $('#forgotAccountModal').modal({
+                backdrop: 'static',
+                keyboard: false,
+            });
+        },
+        hide : function() {
+            $('#forgotAccountModal').modal('hide');
+            $('#signInModal').modal({
+                backdrop: 'static',
+                keyboard: false,
+            });
+            ForgotAccount.clear();
+        },
+        clear : function() {
+            $('#forgotAccountUsername').val("");
+            $('#forgotAccountEmail').val("");
+            $('#forgotAccountMessage').text("");
+        },
+        send : function() {
+            let username = $.trim($('#forgotAccountUsername').val());
+            let email = $.trim($('#forgotAccountEmail').val());
+
+            if (username == "" || username == undefined || email == "" || email == undefined) {
+                return;
+            }
+            
+            ajax($('#forgotAccountSendButton'),
+                {
+                    type        : 'PUT',
+                    url         : "/user/generatePassword",
+                    data        : JSON.stringify({username : username, email : email}),
+                    contentType : 'application/json',
+                    dataType    : 'json',
+                    success     : function (response) {
+                        $('#forgotAccountMessage').removeClass("text-danger");
+                        ForgotAccount.hide();
+                    },
+                    error       : function (response) {
+                        var response = JSON.parse(response.responseText);
+                        $('#forgotAccountMessage').addClass("text-danger");
+                        $('#forgotAccountMessage').text(response.message);
+                    }
+                }
+            );
+        }
+    }
+</script>

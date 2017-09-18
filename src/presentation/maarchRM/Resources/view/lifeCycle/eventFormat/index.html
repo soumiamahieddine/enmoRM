@@ -45,9 +45,6 @@
                                             <button type="button" class="editEventFormat btn btn-warning" title="Edit" data-type="[?merge .type ?]">
                                                 <span class="fa fa-fw fa-edit"></span>
                                             </button>
-                                            <button type="button" class="deleteEventFormat btn btn-danger" title="Remove" data-type="[?merge .type ?]">
-                                                <span class="fa fa-fw fa-remove"></span>
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -220,28 +217,6 @@ $("#saveEventFormat").on("click", function() {
             gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
         }
     })
-});
-
-$("#eventsFormatsList").on("click", ".deleteEventFormat", function() {
-    
-    $(this).prop("disabled", true);
-
-    ajax($(this), {
-        url: '/lifecycle/eventFormat/' + $(this).attr("data-type"),
-        type: 'DELETE',
-        dataType: 'json',
-        success : function (response) {
-            gritter.show(response.message, response.status, response.errors);
-            if (response.status) {
-                load("/lifeCycle/eventsFormats");
-            }
-        },
-        error : function(response) {
-            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-        }
-    })
-
-    $(this).prop("disabled", false);
 });
 
 $("#eventsFormatsList").on("click",".editEventFormat", function() {

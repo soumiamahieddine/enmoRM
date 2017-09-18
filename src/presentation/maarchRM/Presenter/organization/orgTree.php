@@ -73,6 +73,11 @@ class orgTree
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
 
+        // Sort archival profile by reference
+        usort($archivalProfile, function($a, $b){
+            return strcmp($a->reference, $b->reference);
+        });
+
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
@@ -278,6 +283,83 @@ class orgTree
         }
     }
 
+    /**
+     * Export the file plan
+     * @param array $organizations Array of organization
+     *
+     * @return xml The file plan
+     */
+    public function exportFilePlan($organizations)
+    {
+        $document = new \DomDocument("1.0", "ISO-8859-1");
+
+        $filePlan = $document->createElement('FilePlan');
+        $this->addOrganizatonToFilePlan($organizations, $filePlan, $document);
+        $document->appendChild($filePlan);
+
+        \laabs::setResponseType("application/xml");
+        $response = \laabs::kernel()->response;
+        $response->setHeader("Content-Disposition", "inline; filename=filePlanExport.xml");
+
+        return $document->saveXML();
+    }
+
+    /**
+     * Export the file plan organization
+     * @param array       $organizations Array of organization
+     * @param domNode     $parentNode    The parent node
+     * @param domDocument $document      The document
+     */
+    protected function addOrganizatonToFilePlan($organizations, $parentNode, $document)
+    {
+        foreach ($organizations as $organization) {
+            if(!$organization->isOrgUnit){
+                $orgNode = $document->createElement('Organization', (string) $organization->displayName);
+            } else {
+                $orgNode = $document->createElement('Activity');
+            }
+            $orgNode->setAttribute('registrationNumber', $organization->registrationNumber);
+
+            if ($organization->organization){
+                $this->addOrganizatonToFilePlan($organization->organization, $orgNode, $document);
+            }
+
+            $profiles = \laabs::callService("organization/organization/readOrgunitprofiles", $organization->registrationNumber);
+
+            if ($profiles) {
+                $this->addProfileToFilePlan($profiles, $orgNode, $document);
+            }
+
+            $parentNode->appendChild($orgNode);
+        }
+    }
+
+    /**
+     * Export the file plan profiles
+     * @param array       $profiles   Array of profile
+     * @param domNode     $parentNode The parent node
+     * @param domDocument $document   The document
+     */
+    protected function addProfileToFilePlan($profiles, $parentNode, $document)
+    {
+        foreach ($profiles as $profile) {
+            if ($profile=="*") {
+                continue;
+            }
+
+            $profileNode = $document->createElement('DocumentProfile', (string) $profile->name);
+            $profileNode->setAttribute('reference', (string) $profile->reference);
+            $profileNode->setAttribute('retentionRuleCode', (string) $profile->retentionRuleCode);
+
+            if ($profile->containedProfiles){
+                $this->addProfileToFilePlan($profile->containedProfiles, $profileNode, $document);
+            }
+
+            $parentNode->appendChild($profileNode);
+        }
+
+    }
+
     // JSON
     /**
      * Serializer JSON for create method
@@ -412,5 +494,18 @@ class orgTree
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for read method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function readOrg($organization)
+    {
+        $organizationController = \laabs::newController("organization/organization");
+        $organization->isUsed = $organizationController->isUsed($organization->registrationNumber);
+
+        return json_encode($organization);
     }
 }

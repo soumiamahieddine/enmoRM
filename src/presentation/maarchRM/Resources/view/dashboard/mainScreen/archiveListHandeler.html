@@ -87,7 +87,6 @@
                 type        : "GET",
                 success     : function (response) {
                     $('#rightColumn').empty().html(response);
-                    ArchiveInformation.buildNewArchiveDropdownMenu();
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
