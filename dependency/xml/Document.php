@@ -296,7 +296,8 @@ class Document
                 break;
 
             case \XML_TEXT_NODE:
-                if (ctype_space($node->nodeValue) && $node->previousSibling && $node->previousSibling->nodeType == \XML_TEXT_NODE) {
+                if (ctype_space($node->nodeValue)) { 
+                    //&& $node->previousSibling && $node->previousSibling->nodeType == \XML_TEXT_NODE) {
                     $node->nodeValue = trim($node->nodeValue);
                 }
                 break;

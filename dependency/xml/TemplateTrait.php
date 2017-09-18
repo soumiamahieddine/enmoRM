@@ -478,6 +478,10 @@ trait TemplateTrait
      */
     public function mergeNode($pi, $instr, $DOMNode)
     {
+        if ($pi->ownerDocument != $DOMNode->ownerDocument) {
+            $DOMNode = $pi->ownerDocument->importNode($DOMNode, true);
+        }
+
         $pi->parentNode->insertBefore($DOMNode, $pi);
 
         return true;
