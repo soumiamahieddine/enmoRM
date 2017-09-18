@@ -21,6 +21,22 @@ logo = "/presentation/img/RM_MNCHM.svg"
 favicon = "/presentation/img/rm.ico"
 title = "Maarch RM"
 
+; Set a title in the navbar with a specific style
+;navbarTitle = "[
+;    {
+;        'style' : 'font-size:44px;',
+;        'value' : 'm'
+;    },
+;    {
+;        'style' : 'font-size:32px; font-weight:bold;',
+;        'value' : 'aarch R'
+;    },
+;    {
+;        'style' : 'font-size:44px;',
+;        'value' : 'm'
+;    }
+;]"
+
 ; List of displayable format as preview
 displayableFormat = "['application/pdf', 'image/jpeg', 'image/png', 'text/plain']"
 
@@ -44,15 +60,17 @@ conversionError = false
 ; Storage path configuration
 ; Use this following variables to défine the storage path
 ;          KEY                         BUNDLE              DESRIPTION
-;       archiveId                   recordsManagement The archive identifier
-;       originatorOwnerOrgId        recordsManagement The owner originator identifier
-;       originatorOrgRegNumber      recordsManagement The originator registration number
-;       archivalProfileReference    recordsManagement The archival profile reference
-;       batchId                     medona            The message identifier
-;       archiverOrgRegNumber        medona            The archiver registration number
-;       depositorOrgRegNumber       medona            The depositor registration number
-;       messageDate                 medona            The date of message
-;       messageReference            medona            The message reference
+;       app                         N.A                 The app name
+;       instance                    N.A                 The instance name
+;       archiveId                   recordsManagement   The archive identifier
+;       originatorOwnerOrgId        recordsManagement   The owner originator identifier
+;       originatorOrgRegNumber      recordsManagement   The originator registration number
+;       archivalProfileReference    recordsManagement   The archival profile reference
+;       batchId                     medona              The message identifier
+;       archiverOrgRegNumber        medona              The archiver registration number
+;       depositorOrgRegNumber       medona              The depositor registration number
+;       messageDate                 medona              The date of message
+;       messageReference            medona              The message reference
 ;
 ;
 ; To include a part of date, you must use :
@@ -62,9 +80,10 @@ conversionError = false
 ;
 ; To make pakages, use a number.
 ;       ex : <200> to make incremental containers of two hundred items
-storePath = "<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<messageId>/<archiveId>"
+storePath = "<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<Y>/<m>/<d>"
 
 [audit]
+; Send notifications on audit event
 ;notifications = "{
 ;    'auth/userAccount/updateLock_userAccountId_' : {
 ;        'receivers' : ['alexis.ragot@maarch.org'],
