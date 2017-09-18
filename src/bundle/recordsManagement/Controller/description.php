@@ -160,6 +160,8 @@ class description
 
         $queryString = implode(' and ', $queryParts);
 
+        var_dump($queryString);
+        exit;
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
 
         foreach ($archiveUnits as $archiveUnit) {
@@ -212,6 +214,15 @@ class description
     protected function getComparisonExpression($comparison)
     {
         $left = "description->>'".$comparison->left."'";
+
+        switch (true) {
+            case $comparison->right instanceof \core\Language\NumberOperand :
+            case $comparison->right instanceof \core\Language\RangeOperand 
+                && ( $comparison->right->from instanceof \core\Language\StringOperand 
+                || $comparison->right->to instanceof \core\Language\NumberOperand ) :
+                $left .= '::numeric';
+                break;
+        }
         
         $right = $this->getOperandExpression($comparison->right);
 
@@ -324,8 +335,8 @@ class description
                 return $this->getTimestampExpression($operand->value);*/
 
             case $operand instanceof \core\Language\RangeOperand:
-                $fromExpression = $this->getOperandExpression($operand->from, $cast);
-                $toExpression = $this->getOperandExpression($operand->to, $cast);
+                $fromExpression = $this->getOperandExpression($operand->from);
+                $toExpression = $this->getOperandExpression($operand->to);
 
                 return $fromExpression . ' AND ' . $toExpression;
 
