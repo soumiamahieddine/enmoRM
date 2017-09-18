@@ -72,6 +72,7 @@ var DataList = {
         this.dataList[id] = {
             element      : element,
             list         : list,
+            toolbar      : row
         };
         		
         // Build header row
@@ -178,6 +179,7 @@ var DataList = {
             unsearchable    : options.unsearchable,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
+            toolbar         : this.dataList[id].toolbar,
             emptyMessage    : this.dataList[id].emptyMessage,
             resultNumber    : this.dataList[id].resultNumber
         };
@@ -291,11 +293,11 @@ var DataList = {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
                 this.dataList[id].resultNumber.addClass('hide');
-                this.dataList[id].element.find('.selectAll').addClass('hide');
+                this.dataList[id].toolbar.find('.selectAll, .filterList, .datalistPagination, .datalistRowNumber, .dataList-sorting').addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
                 this.dataList[id].resultNumber.removeClass('hide');
-                this.dataList[id].element.find('.selectAll').removeClass('hide');
+                this.dataList[id].toolbar.find('.selectAll, .filterList, .datalistPagination, .datalistRowNumber, .dataList-sorting').removeClass('hide');
             }
         }
 

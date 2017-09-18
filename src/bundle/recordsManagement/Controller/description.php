@@ -135,7 +135,6 @@ class description
 
             $queryParts[] = '<?SQL '.$this->getAssertExpression($assert).' ?>';
         }
-
         // Fulltext
         if (!empty($text)) {
             /*$lexer = new \core\Language\lexer();
@@ -160,8 +159,6 @@ class description
 
         $queryString = implode(' and ', $queryParts);
 
-        var_dump($queryString);
-        exit;
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
 
         foreach ($archiveUnits as $archiveUnit) {
