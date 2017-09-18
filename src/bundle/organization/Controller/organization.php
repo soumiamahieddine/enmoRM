@@ -350,8 +350,16 @@ class organization
     {
         $organization->orgId = $orgId;
 
-        $originalOrganization = $this->read($orgId);
+        try {
+            if ($organization->beginDate>$organization->endDate) {
+                throw new \core\Exception("The end date is lower than the begin date ");
+            }
 
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        $originalOrganization = $this->read($orgId);
         if ($this->isUsed($originalOrganization->registrationNumber)) {
             $organization->registrationNumber = $originalOrganization->registrationNumber;
         }
@@ -433,6 +441,8 @@ class organization
         $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
         $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
         $contacts = $this->sdoFactory->readChildren("organization/orgContact", $organization);
+        $archivalProfilesAccess = $this->sdoFactory->readChildren("organization/archivalProfileAccess", $organization);
+        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
 
         foreach ($children as $child) {
             $this->delete($child);
@@ -715,6 +725,17 @@ class organization
     public function updateArchivalProfileAccess($orgId, $archivalProfileAccess)
     {
         $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
+
+        $org = $this->sdoFactory->read('organization/organization', $orgId);
+        
+        try {
+            if (!$org->isOrgUnit) {
+                throw new \core\Exception("Organization Archival Profile Access can't be update ");
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
 
         foreach ($archivalProfileAccess as $access) {
             $access = (object) $access;

@@ -92,11 +92,14 @@
             // Is orgUnit ?
             if(organization.isOrgUnit) {
                 $('#organizationInfo_usersTab').css('display', '');
+                $('#organizationInfo_profileTab').css('display','');
             } else {
                 if ($('#organizationInfo_usersTab').hasClass('active')) {
                     $('#organizationInfo_informationTab').find('a').click();
                 }
                 $('#organizationInfo_usersTab').css('display', 'none');
+                $('#organizationInfo_profileTab').css('display','none');
+
             }
 
             // Roles
