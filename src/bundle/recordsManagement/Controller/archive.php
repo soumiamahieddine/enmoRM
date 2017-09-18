@@ -34,7 +34,8 @@ class archive
         archiveRestitutionTrait,
         archiveComplianceTrait,
         archiveConversionTrait,
-        archiveDestructionTrait;
+        archiveDestructionTrait,
+        archiveLifeCycleTrait;
 
     /**
      * Sdo Factory for management of archive persistance

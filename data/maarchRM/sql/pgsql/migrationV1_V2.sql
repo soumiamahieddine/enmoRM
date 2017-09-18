@@ -1,3 +1,8 @@
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatorOwnerOrgRegNumber" text;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatingDate" timestamp;
+
+ALTER TABLE "recordsManagement"."log" ADD COLUMN "ownerOrgRegNumber" text;
+
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptArchiveWithoutProfile" boolean default true;
 
 CREATE TABLE "recordsManagement"."archivalProfileContents"

@@ -337,6 +337,7 @@ trait archiveEntryTrait
         }
 
         $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
+        $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
     }
 
     /**
@@ -531,7 +532,7 @@ trait archiveEntryTrait
             $this->sdoFactory->commit();
         }
 
-        $this->loggingDeposit($archive);
+        $this->logDeposit($archive);
 
         return $archive;
     }
@@ -822,20 +823,6 @@ trait archiveEntryTrait
         }
 
         $descriptionController->create($archive);
-
-        /*} elseif (\laabs::hasDependency('fulltext')) {
-            $fulltextController = \laabs::newController("recordsManagement/fulltext");
-
-            $index = isset($archive->archivalProfileReference) ? $archive->archivalProfileReference : 'archives';
-
-            $baseIndex = $fulltextController->getArchiveIndex($archive);
-
-            if (isset($archive->descriptionObject)) {
-                $archiveIndex = clone($baseIndex);
-                $fulltextController->mergeIndex($archive->descriptionObject, $archiveIndex);
-                $fulltextController->addDocument($index, $archiveIndex);
-            }
-        }*/
     }
 
     /**
@@ -879,42 +866,5 @@ trait archiveEntryTrait
         }
 
         return $pattern;
-    }
-
-    /**
-     * Log the archive entry
-     *
-     * @param recordsManagement/archive $archive The archive logged
-     */
-    protected function loggingDeposit($archive)
-    {
-        $eventInfo = array(
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-            'depositorOrgRegNumber' => $archive->depositorOrgRegNumber,
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-        );
-
-        $logged = false;
-        if (isset($archive->digitalResources) && count($archive->digitalResources)) {
-            foreach ($archive->digitalResources as $digitalResource) {
-                $eventInfo['resId'] = (string) $digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
-                $eventInfo['size'] = $digitalResource->size;
-
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-                $archive->lifeCycleEvent[] = $event;
-
-                $logged = true;
-            }
-        }
-
-        if (!$logged) {
-            $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-            $eventInfo['address'] = $archive->storagePath;
-            $event = $this->lifeCycleJournalController->logEvent('recordsManagement/deposit', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-            $archive->lifeCycleEvent[] = $event;
-        }
     }
 }

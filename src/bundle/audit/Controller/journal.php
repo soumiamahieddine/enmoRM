@@ -121,6 +121,18 @@ class journal
 
         fclose($journalFile);
 
-        return $logController->archiveJournal($journalFilename, $newJournal);
+        // create timestamp file
+        $timestampFileName = null;
+        if (isset(\laabs::configuration('audit')['chainWithTimestamp']) && \laabs::configuration('audit')['chainWithTimestamp']==true) {
+            try {
+                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampFileName = $timestampService->getTimestamp($journalFilename);
+
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+        return $logController->archiveJournal($journalFilename, $newJournal, $timestampFileName);
     }
 }

@@ -246,6 +246,13 @@ class archive
     public $originatorOwnerOrgId;
 
     /**
+     * Registration number of originator root organisation
+     *
+     * @var string
+     */
+    public $originatorOwnerOrgRegNumber;
+
+    /**
      * Registration number of depositor organisation
      *
      * @var string
@@ -270,6 +277,13 @@ class archive
      * @var timestamp
      */
     public $depositDate;
+
+    /**
+     * The originating date of the archive
+     *
+     * @var timestamp
+     */
+    public $originatingDate;
 
     /**
      * @var timestamp

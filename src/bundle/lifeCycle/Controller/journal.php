@@ -30,7 +30,6 @@ class journal
 {
     protected $separateInstance;
     protected $interval;
-    protected $signatureScript;
 
     // Journal files reading
     protected $currentJournalFile;
@@ -46,7 +45,6 @@ class journal
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
      * @param string                  $separateInstance Read only instance events
      * @param string                  $interval         The time bewteen 2 journal changes
-     * @param string                  $signatureScript  The signature script path
      * @param string                  $mailHost         The mail host
      * @param string                  $mailUsername     The mail user name
      * @param string                  $mailPassword     The mail user password
@@ -60,7 +58,6 @@ class journal
     {
         $this->separateInstance = $separateInstance;
         $this->interval = $interval;
-        $this->signatureScript = $signatureScript;
         $this->sdoFactory = $sdoFactory;
 
         $this->currentJournalFile = null;
@@ -833,6 +830,35 @@ class journal
      */
     public function chainJournal()
     {
+        $journalArray = [];
+
+        if (isset(\laabs::configuration('lifeCycle')['chainJounralByOrganization']) && \laabs::configuration('lifeCycle')['chainJounralByOrganization']) {
+            $orgController = \laabs::newController('organization/organization');
+
+            $organizations = $orgController->index("isOrgUnit=false");
+
+            foreach ($organizations as $organization) {
+                $journalArray[] = $this->processChaining($organization->registrationNumber);
+            }
+        }
+
+        $journalArray[] = $this->processChaining();
+        
+        if (count($journalArray) == 1) {
+            $journalArray = $journalArray[0];
+        }
+
+        return $journalArray;
+    }
+
+    /**
+     * process the chaining of the last journal
+     * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     *
+     * @return string The chained journal file name
+     */
+    protected function processChaining($ownerOrgRegNumber = null)
+    {
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
@@ -842,14 +868,19 @@ class journal
         $newJournal->archiveId = \laabs::newId();
         $newJournal->type = "lifeCycle";
         $newJournal->toDate = \laabs::newTimestamp();
+        $newJournal->ownerOrgRegNumber = $ownerOrgRegNumber;
 
-        $previousJournal = $logController->getLastJournal('lifeCycle');
+        $previousJournal = $logController->getLastJournal('lifeCycle', $ownerOrgRegNumber);
 
         if ($previousJournal) {
             $newJournal->fromDate = $previousJournal->toDate;
             $newJournal->previousJournalId = $previousJournal->archiveId;
 
             $queryString = "timestamp > '$newJournal->fromDate' AND timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND eventInfo = '*$ownerOrgRegNumber*'";
+            }
 
             if ($this->separateInstance) {
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
@@ -859,7 +890,13 @@ class journal
 
         } else {
             // No previous journal, select all events
-            $events = $this->sdoFactory->find('lifeCycle/event', "timestamp <= '$newJournal->toDate'", null, "<timestamp");
+            $queryString = "timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND eventInfo = '*$ownerOrgRegNumber*'";
+            }
+
+            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");
             if (count($events) > 0) {
                 $newJournal->fromDate = reset($events)->timestamp;
             } else {
@@ -923,10 +960,11 @@ class journal
         fclose($journalFile);
 
         // create timestamp file
-        if ($this->signatureScript) {
-            include $this->signatureScript;
+        if (isset(\laabs::configuration('lifeCycle')['chainWithTimestamp']) && \laabs::configuration('lifeCycle')['chainWithTimestamp']==true) {
             try {
-                $timestampFileName = getTimestamp($journalFilename);
+                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampFileName = $timestampService->getTimestamp($journalFilename);
+
             } catch (\Exception $e) {
                 throw $e;
             }

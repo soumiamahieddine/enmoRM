@@ -162,11 +162,16 @@ class welcome
 
         $acceptUserIndex = true;
 
+        $managementPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+
         // Archive
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+        if ($archive->originatingDate) {
+            $archive->originatingDate = $archive->originatingDate->format('Y-m-d H:i:s');
+        }
 
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
@@ -225,6 +230,8 @@ class welcome
         $this->view->setSource("archivalProfileList", $archivalProfileList);
         $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $acceptUserIndex);
+        $this->view->setSource('managementPrivilege', $managementPrivilege);
+
         $this->view->merge();
 
         return $this->view->saveHtml();

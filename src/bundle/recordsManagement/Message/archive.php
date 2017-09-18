@@ -111,6 +111,13 @@ class archive
     public $disposalDate;
 
     /**
+     * The originating date of the archive
+     *
+     * @var timestamp
+     */
+    public $originatingDate;
+
+    /**
      * The access restriction rule code
      *
      * @var string
