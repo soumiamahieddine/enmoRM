@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2017 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -32,13 +32,119 @@ trait archiveComplianceTrait
 
 
     /**
+     * Check the integrity of archives by a process of sampling
+     */
+    public function sampling()
+    {
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
+
+        if (!$currentOrganization) {
+            throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
+        }
+
+        $serviceLevels = $this->serviceLevelController->index();
+
+        $queryPart = [];
+        $queryPart["status"] = "status!='error' AND status!='disposed'";
+        $queryPart["parentArchiveId"] = "parentArchiveId=null";
+
+        foreach ($serviceLevels as $serviceLevel) {
+            $eventInfo = [];
+            $eventInfo['startDatetime'] = \laabs::newTimestamp();
+
+            $events = $this->lifeCycleJournalController->getObjectEvents($serviceLevel->serviceLevelId, 'recordsManagement/serviceLevel', 'recordsManagement/periodicIntegrityCheck');
+            $lastEvent = end($events);
+
+            if (!empty($lastEvent)) {
+                $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent[0]->timestamp->getTimestamp();
+                $remainder = $lastEvent->nbArchivesToCheck - $lastEvent->archivesChecked;
+            } else {
+                $diffWithLastEvent = 3600 * 24;
+                $remainder = 0;
+            }
+
+            $queryPart["serviceLevelReference"] = "serviceLevelReference='" . $serviceLevel->reference . "'";
+            $nbArchives = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" AND ", $queryPart));
+
+            $percentage = $diffWithLastEvent / ($serviceLevel->samplingFrequency * 3600 * 24);
+            
+            if ($percentage > 1) {
+                $percentage = 1;
+            }
+            
+            $nbArchivesToCheck = ($nbArchives * $percentage) + $remainder ;
+            $nbArchivesInSample = $nbArchivesToCheck * ($serviceLevel->samplingRate / 100);
+
+            $nbArchivesToCheck = ceil($nbArchivesToCheck);
+            $nbArchivesInSample = ceil($nbArchivesInSample);
+
+            $archives = $this->sdoFactory->find("recordsManagement/archive", \laabs\implode(" AND ", $queryPart), null, "<lastCheckDate <depositDate", null, $nbArchivesToCheck);
+            shuffle($archives);
+
+            $success = true;
+            $archivesChecked = 0;
+
+            for ($i = 0; $i < $nbArchivesInSample; $i++) {
+                $archive = array_pop($archives);
+                $success = $this->checkArchiveIntegrity($archive);
+
+                if (!$success) {
+                    break;
+                } else {
+                    $archivesChecked++;
+                }
+            }
+
+            if ($success) {
+                for ($i = 0, $count = count($archives); $i < $count; $i++) {
+                    $this->setValidatedArchiveWithoutCheck($archives[$i], $currentOrganization);
+                    $archivesChecked++;
+                }
+            }
+
+            $eventInfo['endDatetime'] = \laabs::newTimestamp();
+            $eventInfo['nbArchivesToCheck'] = $nbArchivesToCheck;
+            $eventInfo['nbArchivesInSample'] = $nbArchivesInSample;
+            $eventInfo['archivesChecked'] = $archivesChecked;
+
+            $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
+        }
+
+        return true;
+    }
+
+    /**
+     * Set a validated archive with it's children without check
+     * @param recordsManagement/archive $archive The archive object
+     */
+    private function setValidatedArchiveWithoutCheck($archive, $currentOrganization)
+    {
+        $archive->lastCheckDate = \laabs::newTimestamp();
+
+        $this->sdoFactory->update($archive);
+
+        $archiveEventInfo['resId'] = '';
+        $archiveEventInfo['hashAlgorithm'] = '';
+        $archiveEventInfo['hash'] = '';
+        $archiveEventInfo['address'] = '';
+        $archiveEventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
+        $archiveEventInfo['info'] = 'Without check';
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $archiveEventInfo);
+
+        $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId' AND status!='error' AND status!='disposed'");
+
+        for ($i = 0, $count = count($children); $i < $count; $i++) {
+            $this->setValidatedArchiveWithoutCheck($children[$i], $currentOrganization);
+        }
+    }
+    /**
      * Check integrity of one or several archives giving their identifiers
      * @param object  $archiveIds         An array of archive identifier or an archive identifier
-     * @param boolean $integrityByJournal Validate integrity by life cycle journal or by the database
      *
      * @return array Array of archive object
      */
-    public function verifyIntegrity($archiveIds, $integrityByJournal = true)
+    public function verifyIntegrity($archiveIds)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -59,31 +165,6 @@ trait archiveComplianceTrait
         return $res;
     }
 
-
-    /**
-     * Periodic integrity compliance method
-     * @param string $limit The limit
-     * @param string $delay The delay
-     *
-     * @return array
-     */
-    public function periodicIntegrityCompliance($limit = 1000, $delay = "P1M")
-    {
-        $this->limit = $limit;
-        $this->delayDate = \laabs::newTimestamp()->sub(\laabs::newDuration($delay));
-
-        $archives = $this->sdoFactory->find('recordsManagement/archive', "status!=:notDeleted AND (lastCheckDate<=:delayDate OR (lastCheckDate=null AND depositDate<=:delayDate)) AND parentArchiveId=null", ['notDeleted' => 'disposed', 'delayDate' => $this->delayDate], 'lastCheckDate, depositDate', 0, $limit);
-
-        $archiveIds = [];
-
-        foreach ($archives as $key => $archive) {
-            $this->checkArchiveIntegrity($archive);
-            $archiveIds[] = $archive->archiveId;
-        }
-
-        return $archiveIds;
-    }
-
     /**
      * Verify archives integrity
      * @param archive $archive The archive object
@@ -94,6 +175,12 @@ trait archiveComplianceTrait
     {
         $valid = true;
         $info = 'OK';
+
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
+
+        if (!$currentOrganization) {
+            throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
+        }
 
         try {
             $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
@@ -164,10 +251,19 @@ trait archiveComplianceTrait
             $valid = $this->digitalResourceController->verifyResource($resource);
         }
 
-        if (!$valid) {
-            $info = 'Invalid hash: resource may have been altered on the repository';
+        $eventInfo = [];
+        $eventInfo['resId'] = $resource->resId;
+        $eventInfo['hashAlgorithm'] = $resource->hashAlgorithm;
+        $eventInfo['hash'] = $resource->hash;
+        $eventInfo['address'] = $resource->address[0]->path;
+        $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
+        $eventInfo['info'] = 'OK';
+
+        if ($valid == false) {
+            $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
         }
-        $this->logIntegrity($resource, $archive, $info, $valid);
+
+        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'digitalResource/digitalResource', $resource->resId, $eventInfo, $valid);
 
         foreach ($resource->relatedResource as $relatedResource) {
             if (!$this->checkResourceIntegrity($archive, $relatedResource, $currentOrganization)) {

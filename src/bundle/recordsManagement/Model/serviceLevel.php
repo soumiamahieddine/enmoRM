@@ -65,4 +65,18 @@ class serviceLevel
      * @var boolean
      */
     public $default;
+
+    /**
+     * The sampling frequency
+     *
+     * @var integer
+     */
+    public $samplingFrequency;
+
+    /**
+     * The sampling rate
+     *
+     * @var integer
+     */
+    public $samplingRate;
 }

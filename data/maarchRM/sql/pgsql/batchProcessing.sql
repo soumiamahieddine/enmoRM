@@ -7,7 +7,7 @@ INSERT INTO "batchProcessing"."task"
 ("taskId", "route", "description") VALUES 
 ('01', 'audit/event/createChainjournal', 'Chainer le journal de l''application'),
 ('02', 'lifeCycle/journal/createChainjournal', 'Chainer le journal du cyle de vie'),
-('03', 'recordsManagement/archiveCompliance/readPeriodic', 'Intégrité périodique');
+('03', 'recordsManagement/archiveCompliance/readPeriodic', 'Valider l''intégrité des archives');
 
 -- communication --
 INSERT INTO "batchProcessing"."scheduling" 

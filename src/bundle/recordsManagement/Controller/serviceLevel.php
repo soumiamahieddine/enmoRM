@@ -78,15 +78,16 @@ class serviceLevel
     {
         $serviceLevel = \laabs::cast($serviceLevel, 'recordsManagement/serviceLevel');
         $defaultServiceLevel = $this->sdoFactory->find("recordsManagement/serviceLevel", "default=true");
+
         if (!count($defaultServiceLevel)) {
             $serviceLevel->default = true;
         }
 
         $serviceLevel->serviceLevelId = \laabs::newId();
-        try{
-        $this->sdoFactory->create($serviceLevel, "recordsManagement/serviceLevel");
 
-        }  catch (\Exception $e){
+        try {
+            $this->sdoFactory->create($serviceLevel, "recordsManagement/serviceLevel");
+        } catch (\Exception $e) {
             throw new \bundle\recordsManagement\Exception\serviceLevelException("Service level not created.");
         }
 
@@ -131,10 +132,10 @@ class serviceLevel
     public function update($serviceLevel)
     {
         $serviceLevel = \laabs::cast($serviceLevel, 'recordsManagement/serviceLevel');
-        try{
-            $result = $this->sdoFactory->update($serviceLevel, "recordsManagement/serviceLevel");
 
-        }  catch (\Exception $e){
+        try {
+            $result = $this->sdoFactory->update($serviceLevel, "recordsManagement/serviceLevel");
+        } catch (\Exception $e) {
             throw new \bundle\recordsManagement\Exception\serviceLevelException("Service level not updated.");
         }
 
@@ -150,17 +151,18 @@ class serviceLevel
     public function delete($serviceLevelId)
     {
         $serviceLevel = $this->sdoFactory->read("recordsManagement/serviceLevel", $serviceLevelId);
-        
+
         if ($serviceLevel->default) {
             return false;
         }
-    
-        try{
+
+        try {
             $result = $this->sdoFactory->delete($serviceLevel, "recordsManagement/serviceLevel");
 
-        }  catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new \bundle\recordsManagement\Exception\serviceLevelException("Service level not deleted.");
         }
+
         return $result;
     }
 
