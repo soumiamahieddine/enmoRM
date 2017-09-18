@@ -40,11 +40,11 @@ trait archiveDestructionTrait
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $this->checkRights($archive);
 
-            if ($archive->finalDisposition != "destruction") {
+            if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Archive not set for destruction.");
             }
 
-            if ($archive->disposalDate > $currentDate) {
+            if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
         }

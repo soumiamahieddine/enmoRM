@@ -40,7 +40,7 @@
 <div id="management" class="panel-collapse collapse in">
     <form id="managementMetadataForm" class="form-horizontal">
         <div class="form-group">
-            <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
+            <label class="col-md-3 control-label small">Retention rule</label>
             <div class="col-md-6">
                 <select class="input-sm form-control archiveInput" name="retentionRuleCode" id="retentionRule">
                     <option value=""></option>
@@ -220,11 +220,6 @@
             archive.descriptionObject = Metadata.serialize($('#allFields'));
             if (archive.descriptionObject === true) {
                 return -1;
-            }
-
-            if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
-                gritter.show($('#retentionRuleCodeMissing_error').text(), false);
-                return -2;
             }
 
             if (archive.archiveName == null || archive.archiveName == "") {

@@ -89,7 +89,7 @@ interface archivesInterface
 
     /**
      * Read the retention rule of multiple archives
-     * @param array $archiveIds Array of archive identifier or sigle archive identifier
+     * @param mixte $archiveIds Array of archive identifier or sigle archive identifier
      *
      * @action recordsManagement/archive/editArchiveRetentionRule
      *
@@ -129,7 +129,7 @@ interface archivesInterface
 
     /**
      * Update a access rule
-     * @param recordsManagement/archiveAccessRule $accessRule  The retention rule object
+     * @param recordsManagement/archiveAccessRule $accessRule  The access rule object
      * @param array                               $archiveIds  The archives ids
      * @param string                              $comment     The comment of modification
      * @param string                              $identifiant Message identifiant
