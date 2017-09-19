@@ -105,15 +105,17 @@
             if (e.hasClass('organization')) {
                 path = e.find('b:first').html();
                 profile = e.data('archivalprofiles');
+                acceptArchiveWithoutProfile = e.data('acceptarchivewithoutprofile');
             } else {
                 folderId = e.attr('id');
                 path = e.data('path')
                 description = e.data('description')
                 profile = e.closest('.organization').data('archivalprofiles');
+                acceptArchiveWithoutProfile = e.closest('.organization').data('acceptarchivewithoutprofile');
                 locked = e.data('closed');
             }
 
-            ArchiveFolderList.getfolderContents(orgRegNumber, folderId, path, description, profile, locked);
+            ArchiveFolderList.getfolderContents(orgRegNumber, folderId, path, description, profile, locked, acceptArchiveWithoutProfile);
             $('#folderTab').click();
         },
 

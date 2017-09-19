@@ -31,6 +31,8 @@ class welcome
     public $view;
     public $json;
 
+    protected $userArchivalProfiles = [];
+
     /**
      * Constuctor of welcomePage html serializer
      * @param \dependency\html\Document   $view The view
@@ -75,7 +77,6 @@ class welcome
             $this->view->setSource("filePlan", $filePlan);
         }
 
-
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
@@ -83,40 +84,30 @@ class welcome
         }
 
         // archival profiles for search form
-
-        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        
-        if (!empty($currentOrganization->registrationNumber)) {
-            $archivalProfiles = \laabs::callService('organization/userPosition/readDescendantprofiles');
-
-            foreach ($archivalProfiles as $archivalProfile) {
-                if ($archivalProfile == "*") {
-                    continue;
-                }
-
-                $archivalProfileController->readDetail($archivalProfile);
-
-                $archivalProfile->searchFields = [];
-                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                    switch ($archiveDescription->descriptionField->type) {
-                        case 'text':
-                        case 'name':
-                        case 'date':
-                        case 'number':
-                        case 'boolean':
-                            $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
-                    }
-                }
+        foreach ($this->userArchivalProfiles as $archivalProfile) {
+            /*if ($archivalProfile == "*") {
+                $currentOrganization->acceptArchiveWithoutProfile = true;
             }
 
+            $archivalProfileController->readDetail($archivalProfile);*/
+
+            $archivalProfile->searchFields = [];
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'text':
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                }
+            }
         }
         
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         $this->view->translate();
 
-        if (!empty($currentOrganization->registrationNumber)) {
-            $this->view->setSource("userArchivalProfiles", $archivalProfiles);
-        }
+        $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
@@ -170,7 +161,7 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('Y-m-d H:i:s');
+            $archive->originatingDate = $archive->originatingDate->format('Y-m-d');
         }
 
         // Retention
@@ -251,6 +242,7 @@ class welcome
             $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
             $this->view->merge();
         }
+
         return $this->view->saveHtml();
     }
     /**
@@ -421,7 +413,6 @@ class welcome
     /**
      * Mark leaf for html merging
      * @param object $tree The tree
-     *
      */
     protected function markTreeLeaf($tree)
     {
@@ -443,7 +434,6 @@ class welcome
      * Add owner organization name in folder path
      * @param object $tree      The tree
      * @param string $ownerName The owner organizaiton name
-     *
      */
     protected function updateFolderPath($tree, $ownerName)
     {
@@ -458,6 +448,17 @@ class welcome
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
         $orgUnit->archivalProfiles = \laabs::callService('organization/organization/readOrgunitprofiles', $orgUnit->registrationNumber);
+
+        foreach ($orgUnit->archivalProfiles as $i => $archivalProfile) {
+            if ($archivalProfile == "*") {
+                $orgUnit->acceptArchiveWithoutProfile = true;
+                unset($orgUnit->archivalProfiles[$i]);
+            } else {
+                $this->userArchivalProfiles[$archivalProfile->reference] = $archivalProfile;
+            }
+        }
+
+        $orgUnit->archivalProfiles = array_values($orgUnit->archivalProfiles);
 
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {

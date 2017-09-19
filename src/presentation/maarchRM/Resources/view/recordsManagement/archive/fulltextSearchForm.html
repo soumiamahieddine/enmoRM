@@ -43,8 +43,25 @@
     </div>
     <?merge userArchivalProfiles ?>
     <div role="tabpanel" class="tab-pane fade" id="[?merge .reference ?]">
-        <form class="form-horizontal">
-            <br/>
+        <br/>
+        <!--form class="form-horizontal" data-archiveProperties>
+            <div class="form-group col-md-6">
+                <label class="col-md-6 control-label text-primary"><small>Originator archive identifier</small></label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control input-sm" id="searchOriginatorArchiveId" name="originatorArchiveId" />
+                </div>
+            </div>
+            <div class="form-group col-md-12">  
+                <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
+                <div class="input-group input-group-sm input-daterange col-md-4">
+                    <input type="text" data-range='start' id="searchFromOriginatingDate" class="form-control input-sm datePicker col-md-6" name="originatingDate" />
+                    <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                    <input type="text" data-range='end' id="searchToOriginatingDate" class="form-control input-sm datePicker col-md-6" name="originatingDate" />
+                </div>
+                <div class="col-md-5"> </div>
+            </div>
+        </form-->
+        <form class="form-horizontal" data-descriptionFields>
             <?merge .searchFields ?>
             <div>
                 <?merge .type.ifeq('name') ?>

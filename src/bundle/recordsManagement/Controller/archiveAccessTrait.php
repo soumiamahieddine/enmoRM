@@ -226,6 +226,17 @@ trait archiveAccessTrait
         if (!empty($args['originatorOrgRegNumber'])) {
             $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
         }
+        if (!empty($args['originatorArchiveId'])) {
+            $queryParts[] = "originatorArchiveId='".$args['originatorArchiveId']."'";
+        }
+        if (!empty($args['originatingDate'])) {
+            if (!empty($args['originatingDate'][0])) {
+                $queryParts[] = "originatingDate>='".$args['originatingDate'][0]."'";
+            }
+            if (!empty($args['originatingDate'][1])) {
+                $queryParts[] = "originatingDate<='".$args['originatingDate'][1]."'";
+            }
+        }
         if (!empty($args['depositorOrgRegNumber'])) {
             $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
         }

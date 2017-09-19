@@ -58,7 +58,7 @@
         rowTemplate: $('#listTemplate > .archive'),
         folderContents: $('#folderContentList'),
 
-        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles, locked) {
+        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
             var url = "/folder?orgRegNumber="+orgRegNumber;
             if (folderId) {
                 url = url + "&folderId="+folderId;
@@ -90,8 +90,10 @@
                 }
             })
 
-            this.getImportForm(orgRegNumber, folderId, archivalProfiles);
-            this.buildNewArchiveDropdownMenu();
+            this.getImportForm(orgRegNumber, folderId);
+
+            this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
+            
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
@@ -193,17 +195,17 @@
             })
         },
         
-        getImportForm: function(orgRegNumber, folderId, archivalProfiles) {
+        getImportForm: function(orgRegNumber, folderId) {
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
 
-            if (archivalProfiles.length < 1) {
+            /*if (archivalProfiles.length < 1) {
                 $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", {});
                 $('#folderTab').click();
                 return;
             }
             
-            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", archivalProfiles);
+            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", archivalProfiles);*/
 
         },
 
@@ -211,26 +213,33 @@
             FilePlan.selectedNode.find('b:first').click();
         },
 
-        buildNewArchiveDropdownMenu: function() {
-            var archivalProfiles = $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles");
+        buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
             var dropdown = $("#folderToolbarBtn .dropdown-menu");
             dropdown.children().remove();
 
+            if (!acceptArchivesWithoutProfiles && archivalProfiles.length == 0) {
+                $("#folderToolbarImport").attr('disabled', 'disabled');
+
+                return;
+            }
+
+            if (acceptArchivesWithoutProfiles) {
+                var a = $("<a/>")
+                    .addClass("small newArchive")
+                    .data("reference", '')
+                    .attr('style', "cursor: pointer;")
+                    .text($('#withoutProfile_text').html());
+
+                $("<li/>").append(a).appendTo(dropdown);
+            };
+
             for (var i = 0; i < archivalProfiles.length; i++) {
-                if (archivalProfiles[i] == '*') {
-                    var a = $("<a/>")
-                        .addClass("small newArchive")
-                        .data("reference", '')
-                        .attr('style', "cursor: pointer;")
-                        .text($('#withoutProfile_text').html());
-                } else {
-                    var a = $("<a/>")
-                        .addClass("userProfile small newArchive")
-                        .data("reference", archivalProfiles[i].reference)
-                        .data("json", archivalProfiles[i])
-                        .attr('style', "cursor: pointer;")
-                        .text(archivalProfiles[i].name);
-                }
+                var a = $("<a/>")
+                    .addClass("userProfile small newArchive")
+                    .data("reference", archivalProfiles[i].reference)
+                    .data("json", archivalProfiles[i])
+                    .attr('style', "cursor: pointer;")
+                    .text(archivalProfiles[i].name);
                 
                 $("<li/>").append(a).appendTo(dropdown);
             }

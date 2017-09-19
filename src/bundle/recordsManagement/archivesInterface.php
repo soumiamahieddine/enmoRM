@@ -40,6 +40,8 @@ interface archivesInterface
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
      * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
@@ -57,6 +59,8 @@ interface archivesInterface
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
@@ -262,7 +266,7 @@ interface archivesInterface
     /**
      * Move an archive into a folder
      * @param string $archiveId the archive identifier
-     * @param string $folderId The folder identifier
+     * @param string $folderId  The folder identifier
      * 
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */

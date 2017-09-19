@@ -878,4 +878,4 @@ msgid "Zip container"
 msgstr "Fichier conteneur"
 
 msgid "Originating date"
-msgstr "Date de prodution"
+msgstr "Date"

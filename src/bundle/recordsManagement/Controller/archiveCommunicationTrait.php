@@ -37,6 +37,8 @@ trait archiveCommunicationTrait
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
      * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
@@ -53,6 +55,8 @@ trait archiveCommunicationTrait
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
@@ -69,6 +73,8 @@ trait archiveCommunicationTrait
             'archiveExpired' => $archiveExpired,
             'finalDisposition' => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
+            'originatorArchiveId' => $originatorArchiveId,
+            'originatingDate' => $originatingDate,
             'filePlanPosition' => $filePlanPosition,
             'hasParent' => $hasParent,
         ];
@@ -91,7 +97,6 @@ trait archiveCommunicationTrait
                     $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
                 }
             }
-
             foreach ($searchClasses as $descriptionClass => $descriptionController) {
                 $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
             }
@@ -114,7 +119,7 @@ trait archiveCommunicationTrait
                 }
             }
         }
-
+        
         return $archives;
     }
 

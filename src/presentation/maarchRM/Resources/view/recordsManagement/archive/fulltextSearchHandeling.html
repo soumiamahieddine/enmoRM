@@ -54,6 +54,8 @@ FulltextSearch = {
             profileReference : "",
             filePlanPosition : "",
             orgRegNumber     : "",
+            originatingDate  : [],
+            originatorArchiveId  : "",
         };
         var searchPanel = btn.closest("[data-search-panel]");
 
@@ -68,7 +70,7 @@ FulltextSearch = {
         var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
         query.profileReference = selectedProfile;
         
-        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
+        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form[data-descriptionFields] input, form[data-description] select');
 
 		searchFields.each(function() {
             var value = $(this).val();
@@ -147,15 +149,15 @@ FulltextSearch = {
 
         query.description = arr.join(' && ');
 
-        if (query.text == '' && query.description == "") {
-            // searchPanel.find("[data-search-result]").css('display', 'none');
-            return; 
-        }
-
-        searchPanel.find("[data-search-result]").css('display', '');
-
         query.filePlanPosition = searchPanel.data("context-folderid");
         query.originatorOrgRegNumber = searchPanel.data("context-orgregnumber");
+        query.originatorArchiveId = $('#searchOriginatorArchiveId').val();
+
+        if (query.text == '' && query.description == "" && query.originatorArchiveId == '') {
+            return; 
+        }
+        
+        searchPanel.find("[data-search-result]").css('display', '');      
 
         ajax(btn,{
             type        : 'GET',

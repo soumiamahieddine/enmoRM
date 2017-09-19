@@ -57,6 +57,9 @@ class description
         if (!empty($archive->originatorArchiveId)) {
             $descriptionObject->text .= $archive->originatorArchiveId.' ';
         }
+        if (!empty($archive->originatingDate)) {
+            $descriptionObject->text .= $archive->originatingDate.' ';
+        }
 
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
         $descriptionObject->description = json_encode($archive->descriptionObject);
@@ -215,7 +218,7 @@ class description
         switch (true) {
             case $comparison->right instanceof \core\Language\NumberOperand :
             case $comparison->right instanceof \core\Language\RangeOperand 
-                && ( $comparison->right->from instanceof \core\Language\StringOperand 
+                && ( $comparison->right->from instanceof \core\Language\NumberOperand 
                 || $comparison->right->to instanceof \core\Language\NumberOperand ) :
                 $left = '('. $left.')::numeric';
                 break;
