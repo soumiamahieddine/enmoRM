@@ -43,3 +43,6 @@ msgstr "Le format du fichier n'a pas pu être identifié."
 
 msgid "Invalid archive profile"
 msgstr "Profil d'archive invalide"
+
+msgid "The organization %s1 is used in archives."
+msgstr "L'organisation %s1 est utilisée sur des archives."

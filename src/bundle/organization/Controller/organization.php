@@ -359,8 +359,8 @@ class organization
             throw $e;
         }
 
-        $originalOrganization = $this->read($orgId);
         if ($this->isUsed($originalOrganization->registrationNumber)) {
+            $originalOrganization = $this->read($orgId);
             $organization->registrationNumber = $originalOrganization->registrationNumber;
         }
 
@@ -437,6 +437,11 @@ class organization
     public function delete($orgId)
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
+        
+        if ($this->isUsed($organization->registrationNumber)) {
+            throw new \core\Exception\ForbiddenException("The organization %s1 is used in archives.", 403, null, [$organization->registrationNumber]);
+        }
+
         $children = $this->sdoFactory->readChildren("organization/organization", $organization);
         $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
         $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
