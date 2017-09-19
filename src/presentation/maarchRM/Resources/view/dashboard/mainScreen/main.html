@@ -56,18 +56,24 @@
 
     $('#toggleLeftColumn').on('click', function() {
         var leftColumn = $('#leftColumn');
+        var rightColumn = $('#rightColumn');
 
         if (leftColumn.hasClass('col-md-3')) {
             leftColumn.hide("slide", { direction: "left" }, 200, function() {
                 leftColumn.removeClass("col-md-3");
                 $("#middleColumn").removeClass("col-md-6")
-                                  .addClass("col-md-9");
+                                  .addClass("col-md-7");
+                rightColumn.removeClass("col-md-3")
+                            .addClass("col-md-5");
             });
+            
             $(this).children('i').addClass('fa-rotate-180');
 
         } else {
-            $("#middleColumn").removeClass("col-md-9")
+            $("#middleColumn").removeClass("col-md-7")
                               .addClass("col-md-6");
+            rightColumn.removeClass("col-md-5")
+                            .addClass("col-md-3");
             leftColumn.addClass("col-md-3")
                       .show("slide", { direction: "left" }, 200);
             $(this).children('i').removeClass('fa-rotate-180');
