@@ -94,6 +94,8 @@ trait archiveEntryTrait
         // Complete management metadata from profile and service level
         $this->completeMetadata($archive);
 
+        $this->useReferences($archive, 'deposit');
+
         // Validate metadata
         $this->validateCompliance($archive);
 
@@ -135,7 +137,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference+" ")) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference." ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
                 $archive->digitalResources[] = $resource;
@@ -295,6 +297,8 @@ trait archiveEntryTrait
 
         $nbArchiveObjects = count($archive->contents);
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
+            $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
+            $this->useReferences($archive->contents[$i], 'deposit');
             $this->completeMetadata($archive->contents[$i]);
         }
     }
@@ -386,7 +390,7 @@ trait archiveEntryTrait
             $archive->finalDisposition =  $retentionRule->finalDisposition;
 
             if ($archive->retentionStartDate == "depositDate") {
-                    $archive->retentionStartDate = $archive->depositDate;
+                $archive->retentionStartDate = $archive->depositDate;
             }
 
             if (is_string($archive->retentionStartDate)) {
