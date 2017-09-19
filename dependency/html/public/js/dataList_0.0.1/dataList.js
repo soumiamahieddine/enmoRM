@@ -224,7 +224,7 @@ var DataList = {
 
             if (this.dataList[id].paginationType == "input") {
                 pagination.removeClass('hide')
-                          .find('input').off().on('keyup', DataList.bind_pageChoice)
+                          .find('input').val('1').off().on('keyup', DataList.bind_pageChoice)
                           .closest('ul').find('a').off().on('click', DataList.bind_pageChanging);
 
             } else {
