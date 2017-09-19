@@ -134,6 +134,10 @@ msgid "modify"
 msgstr "Modifier les règles de gestion d'une archive"
 msgctxt "userStory"
 
+msgid "modifyDescription"
+msgstr "Modifier les métadonnées d'une archive"
+msgctxt "userStory"
+
 msgid "migration"
 msgstr "Gérer les migrations de format"
 msgctxt "userStory"
