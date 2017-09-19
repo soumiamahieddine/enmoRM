@@ -352,7 +352,7 @@
                 var value = $(e).find('td > input').val();
 
                 if ($(e).hasClass('archivalProfileField')) {
-                    descriptionFields[name] = name;
+                    descriptionFields[name] = value;
                 } else if (label != '' && value != '') {
                     descriptionFields[label] = value;
                 } else {
@@ -368,7 +368,7 @@
                 archiveName : $('#archiveInformation').find('#inputArchiveName').val(),
                 description : JSON.stringify(descriptionFields)
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsmanagement/archive/metadata",
