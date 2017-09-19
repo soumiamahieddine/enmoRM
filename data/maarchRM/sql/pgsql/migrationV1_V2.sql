@@ -1,5 +1,5 @@
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatorOwnerOrgRegNumber" text;
-ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatingDate" timestamp;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatingDate" date;
 
 ALTER TABLE "recordsManagement"."log" ADD COLUMN "ownerOrgRegNumber" text;
 

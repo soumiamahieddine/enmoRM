@@ -157,6 +157,7 @@ CREATE TABLE "recordsManagement"."archive"
   "archiveName" text,
   "storagePath" text,
   "filePlanPosition" text,
+  "originatingDate" date,
   
   "descriptionClass" text,
   "description" jsonb,
@@ -191,7 +192,6 @@ CREATE TABLE "recordsManagement"."archive"
   "classificationOwner" text,
 
   "depositDate" timestamp NOT NULL,
-  "originatingDate" timestamp,
   "lastCheckDate" timestamp,
   "lastDeliveryDate" timestamp,
   "lastModificationDate" timestamp,

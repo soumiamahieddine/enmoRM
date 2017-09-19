@@ -89,6 +89,12 @@ class archive
      */
     public $filePlanPosition;
 
+    /**
+     * The originating date of the archive
+     *
+     * @var date
+     */
+    public $originatingDate;
 
     /* ************************************************************************
      * Management Refs
@@ -277,13 +283,6 @@ class archive
      * @var timestamp
      */
     public $depositDate;
-
-    /**
-     * The originating date of the archive
-     *
-     * @var timestamp
-     */
-    public $originatingDate;
 
     /**
      * @var timestamp
