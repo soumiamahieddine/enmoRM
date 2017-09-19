@@ -598,10 +598,10 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 if (empty($archive->contents[$i]->archivalProfileReference)) {
                     if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) { 
-                        throw new \core\Exception\BadRequestException("Invalid contained archive profile");
+                        throw new \core\Exception\BadRequestException("Invalid contained archive profile %s1", 400, null, $archive->contents[$i]->archivalProfileReference);
                     }
                 } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archive profile");
+                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s1", 400, null, $archive->contents[$i]->archivalProfileReference);
                 }
                 
                 $this->validateManagementMetadata($archive->contents[$i]);
