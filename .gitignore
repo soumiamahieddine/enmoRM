@@ -3,8 +3,6 @@ data/maarchRM/repository/
 data/maarchRM/tmp/
 data/maarchRM/medona/
 data/maarchRM/luceneIndex/
-data/maarchRM/conf/confvars.ini
-data/maarchRM/conf/configuration.ini"
 data/maarchRM/conf/vhost.win.conf
 data/maarchRM/conf/vhost.conf
 web/tmp
@@ -12,3 +10,5 @@ web/public/dependency/
 dependency/fileSystem/plugins/fid/cache/*
 nbproject/
 src/ext/*
+data/maarchRM/conf/configuration.ini
+data/maarchRM/conf/confvars.ini
