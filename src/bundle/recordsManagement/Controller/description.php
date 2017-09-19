@@ -217,7 +217,7 @@ class description
             case $comparison->right instanceof \core\Language\RangeOperand 
                 && ( $comparison->right->from instanceof \core\Language\StringOperand 
                 || $comparison->right->to instanceof \core\Language\NumberOperand ) :
-                $left .= '::numeric';
+                $left = '('. $left.')::numeric';
                 break;
         }
         
