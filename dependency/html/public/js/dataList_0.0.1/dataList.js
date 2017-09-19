@@ -293,11 +293,11 @@ var DataList = {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
                 this.dataList[id].resultNumber.addClass('hide');
-                this.dataList[id].toolbar.find('.selectAll, .filterList, .datalistPagination, .datalistRowNumber, .dataList-sorting').addClass('hide');
+                this.dataList[id].toolbar.find('.selectAll').addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
                 this.dataList[id].resultNumber.removeClass('hide');
-                this.dataList[id].toolbar.find('.selectAll, .filterList, .datalistPagination, .datalistRowNumber, .dataList-sorting').removeClass('hide');
+                this.dataList[id].toolbar.find('.selectAll').removeClass('hide');
             }
         }
 
@@ -377,6 +377,8 @@ var DataList = {
         var pagination = a.closest('.datalistPagination');
         var id = a.closest('.dataList').data('datalist-id');
 
+        DataList.dataList[id].element.trigger("datalist.pagechanging");
+        
         if (a.hasClass('previousPage')) {
             var range = DataList.dataList[id].currentRange - 1;
             if (range >= 0) {
@@ -415,7 +417,7 @@ var DataList = {
             pagination.find('.active').removeClass('active');
             a.parent().addClass('active');
             DataList.condensePaginationDisplay(id);
-        }
+        }        
     },
 	
 	bind_pageChoice: function() {

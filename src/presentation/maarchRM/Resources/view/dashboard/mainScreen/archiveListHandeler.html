@@ -229,4 +229,9 @@
         Archive.getResourceInfo(doc);
     })
 
+    $('#middleColumn').on('datalist.pagechanging', function(e) {
+        $(e.target).find('.fa-caret-down').click();
+
+    })
+
 </script>
