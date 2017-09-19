@@ -236,10 +236,6 @@ class journal
 
         $events = $this->sdoFactory->find('lifeCycle/event', $query, null, 'timestamp');
 
-        foreach ($events as $key => $event) {
-            $events[$key] = $this->getEventFromJournal($event);
-        }
-
         return $events;
     }
 
