@@ -60,6 +60,10 @@ class descriptionField
      */
     public function create($descriptionField)
     {
+        if ($this->sdoFactory->exists("recordsManagement/descriptionField", $descriptionField->name)){
+            throw new \core\Exception\ConflictException("The description field already exists.");
+        }
+
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }
