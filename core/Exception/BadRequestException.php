@@ -15,9 +15,10 @@ class BadRequestException
      * @param string    $message
      * @param integer   $code
      * @param Exception $previous
+     * @param array     $variables
      */
-    public function __construct($message="Bad request", $code=400, $previous=null)
+    public function __construct($message="Bad request", $code=400, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }

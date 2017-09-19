@@ -13,8 +13,8 @@ class UnauthorizedException
      * @param integer   $code
      * @param Exception $previous
      */
-    public function __construct($message="Unauthorized", $code=401, $previous=null)
+    public function __construct($message="Unauthorized", $code=401, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }

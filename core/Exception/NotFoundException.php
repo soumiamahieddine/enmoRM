@@ -13,8 +13,8 @@ class NotFoundException
      * @param integer   $code
      * @param Exception $previous
      */
-    public function __construct($message="Not found", $code=404, $previous=null)
+    public function __construct($message="Not found", $code=404, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }

@@ -13,8 +13,8 @@ class ForbiddenException
      * @param integer   $code
      * @param Exception $previous
      */
-    public function __construct($message="Forbidden", $code=403, $previous=null)
+    public function __construct($message="Forbidden", $code=403, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }

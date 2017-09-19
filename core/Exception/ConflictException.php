@@ -13,8 +13,8 @@ class ConflictException
      * @param integer   $code
      * @param Exception $previous
      */
-    public function __construct($message="Conflict", $code=409, $previous=null)
+    public function __construct($message="Conflict", $code=409, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }
