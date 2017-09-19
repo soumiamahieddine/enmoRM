@@ -52,3 +52,7 @@ msgstr "Le profil d'archivage contenu %s1 n'est pas autorisé."
 
 msgid "The description field already exists."
 msgstr "Le champs de description existe déjà."
+
+msgid "All repositories must be accessible"
+msgstr "Tout les répertoires de stockage doivent être accessibles"
+
