@@ -31,3 +31,6 @@ CREATE TABLE "organization"."archivalProfileAccess"
 
 ALTER TABLE "recordsManagement"."archive" ALTER COLUMN "finalDisposition" DROP NOT NULL;
 ALTER TABLE "recordsManagement"."archive" ALTER COLUMN "retentionDuration" DROP NOT NULL;
+
+ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingFrequency" integer;
+ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingRate" integer;

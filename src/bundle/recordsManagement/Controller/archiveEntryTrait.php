@@ -573,7 +573,7 @@ trait archiveEntryTrait
      */
     protected function validateManagementMetadata($archive)
     {
-        if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", $archive->archivalProfileReference)) {
+        if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
             throw new \core\Exception\NotFoundException("The archival profile reference not found");
         }
 
