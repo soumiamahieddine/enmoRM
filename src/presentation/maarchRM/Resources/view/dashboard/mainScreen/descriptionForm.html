@@ -309,19 +309,28 @@
             }
 
             $.each(inputsArchivalProfile, function() {
-                var value = $.trim($(this).val());
+                //var value = $.trim($(this).val());
                 var type = $(this).attr("data-type");
                 var name = $(this).attr('name');
                 var required = $(this).attr('data-required');
                 
-                if (type == "boolean") {
-                    if (!$(this).parent().hasClass("active")) {
-                        return;
-                    }
+                switch(type) {
+                    case "boolean":
+                        value = Boolean($.trim($(this).prop("checked")));
+                        break;
+                    
+                    case "date":
+                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        break;
+                    
+                    case 'number':
+                        value = Number($.trim($(this).val()));
+                        break;
 
-                    value = $(this).val();
-                }                
-
+                    default :
+                        value = $.trim($(this).val());
+                }
+   
                 if (required == "true" && (value === "" || value === null || value === undefined)) {
                     flagEmptyRequiredField = true;
                     $(this).closest(".form-group").addClass('has-error');
@@ -332,9 +341,6 @@
                     $(this).closest(".form-group").removeClass('has-error');
                 }
 
-                if (type == "date") {
-                    value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                }
                 descriptionObject[name] = value;
             });
             
@@ -372,7 +378,7 @@
             });
             
             var result = descriptionObject;
-            
+
             if (flagEmptyRequiredField) {
                 result = true;
                 gritter.show($('#fieldLabel_error').text(), false);
