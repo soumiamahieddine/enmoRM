@@ -277,6 +277,7 @@ CREATE TABLE "recordsManagement"."log"
   "processId" text,
   "processName" text,
   "type" text NOT NULL,
+  "ownerOrgRegNumber" text,
 
   PRIMARY KEY ("archiveId")
 )
