@@ -47,6 +47,8 @@ trait archiveDestructionTrait
             if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
+
+            $this->logDestructionRequest($archive);
         }
 
         $archiveList = $this->setStatus($archiveIds, 'disposable');

@@ -191,6 +191,18 @@ trait archiveLifeCycleTrait
     }
 
     /**
+     * Log an archive destruction request
+     * @param recordsManagement/archive $archive   	     The archive
+     * @param bool  					$operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logDestructionRequest($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/detructionRequest', $archive, $operationResult);
+    }
+
+    /**
      * Log an archive destruction
      * @param recordsManagement/archive $archive   	     The archive
      * @param bool  					$operationResult The operation result
