@@ -26,137 +26,139 @@ namespace bundle\recordsManagement\Controller;
  */
 trait archiveLifeCycleTrait
 {
-	/**
+    /**
      * Log an archive life cycle event
-     * @param string 						  $type      	   The eventType
-     * @param recordsManagement/archive 	  $archive   	   The archive
-     * @param bool  						  $operationResult The event result
+     * @param string                          $type      	   The eventType
+     * @param recordsManagement/archive       $archive   	   The archive
+     * @param bool                            $operationResult     The event result
      * @param digitalResource/digitalResource $resource   	   The resouce
-     * @param array 						  $eventInfo 	   The event information
+     * @param array                           $eventInfo 	   The event information
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	protected function logLifeCycleEvent($type, $archive, $operationResult = true, $resource = null, $eventInfo = null)
-	{
-		$eventItems = $eventInfo ? $eventInfo : [];
-		$res = null;
+    protected function logLifeCycleEvent($type, $archive, $operationResult = true, $resource = null, $eventInfo = null)
+    {
+        $eventItems = $eventInfo ? $eventInfo : [];
+        $res = null;
 
         $eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
 
         if ($resource) {
-        	$eventItems['resId'] = $resource->resId;
-        	$eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
-        	$eventItems['hash'] = $resource->hash;
-        	$eventInfo['address'] = $resource->address[0]->path;
+            $eventItems['resId'] = $resource->resId;
+            $eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
+            $eventItems['hash'] = $resource->hash;
+            $eventInfo['address'] = $resource->address[0]->path;
 
-        	$res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
+            $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
 
-        
         } else if ($eventInfo !== false && !empty($archive->digitalResources)) {
-        	$res = [];
+            $res = [];
 
-			foreach ($archive->digitalResources as $digitalResource) {
-				$eventItems['resId'] = $digitalResource->resId;
-        		$eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-        		$eventItems['hash'] = $digitalResource->hash;
-        		$eventInfo['address'] = $digitalResource->address[0]->path;
+            foreach ($archive->digitalResources as $digitalResource) {
+                $eventItems['resId'] = $digitalResource->resId;
+                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                $eventItems['hash'] = $digitalResource->hash;
+                $eventInfo['address'] = $digitalResource->address[0]->path;
 
-        		$res[] = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
-			}
+                $res[] = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
+            }
 
-		} else {
-			$eventItems= [];
-			$eventItems['resId'] = null;
-	        $eventItems['hashAlgorithm'] = null;
-	        $eventItems['hash'] = null;
-	        $eventItems['address'] = $archive->storagePath;
+        } else {
+            $eventItems= [];
+            $eventItems['resId'] = null;
+            $eventItems['hashAlgorithm'] = null;
+            $eventItems['hash'] = null;
+            $eventItems['address'] = $archive->storagePath;
 
-        	$res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
-		}
+            $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
+        }
 
         return $res;
-	}
+    }
 
-
-
-	// DEPOSIT -> archiveEntryTrait
-	/**
+    /**
      * Log an archive deposit
-     * @param recordsManagement/archive $archive   	   The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive   	 The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logDeposit($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/deposit', $archive, $operationResult);
-	}
+    public function logDeposit($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/deposit', $archive, $operationResult);
+    }
 
-	// CONSULTATION -> archiveCommunicationTrait
-	/**
+    /**
      * Log an archive consultation
-     * @param recordsManagement/archive 	  $archive   	   The archive
-     * @param digitalResource/digitalResource $resource   	   The resouce
-     * @param bool  						  $operationResult The operation result
+     * @param recordsManagement/archive       $archive         The archive
+     * @param digitalResource/digitalResource $resource        The resouce
+     * @param bool                            $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logConsultation($archive, $resource, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource);
-	}
+    public function logConsultation($archive, $resource, $operationResult = true)
+    {
+        if (empty($archive->serviceLevelReference)) {
+            return;
+        }
+
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+
+        if (strrpos($serviceLevel->control, "logConsultation") === false) {
+            return;
+        }
+
+        return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource);
+    }
 
 
-	// DELIVERY -> archiveCommunicationTrait
-	/**
+    /**
      * Log an archive delivery
-     * @param recordsManagement/archive $archive   	   The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logDelivery($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/delivery',$archive, $operationResult);
-	}
+    public function logDelivery($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/delivery',$archive, $operationResult);
+    }
 
-	// INTEGRITY -> archiveComplianceTrait
-	/**
+    /**
      * Log an archive resource integrity check
      * @param digitalResource/digitalResource $resource   	   The resouce
      * @param recordsManagement/archive       $archive         The archive
      * @param bool  						  $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logIntegrity($resource, $archive, $info, $operationResult = true)
-	{
+    public function logIntegrity($resource, $archive, $info, $operationResult = true)
+    {
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
-		$eventInfo = [];
+        $eventInfo = [];
         $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
         $eventInfo['info'] = $info;
 
         return $this->logLifeCycleEvent('recordsManagement/integrityCheck', $archive, $operationResult, $resource, $eventInfo);
-	}
+    }
 
-	// CONVERSION -> archiveConversionTrait
-	/**
-     * Log an archive resource integrity check
+    /**
+     * Log an archive resource conversion
      * @param digitalResource/digitalResource $originalResource  The resouce
      * @param digitalResource/digitalResource $convertedResource The resouce
      * @param recordsManagement/archive       $archive           The archive
-     * @param bool  						  $operationResult   The operation result
+     * @param bool                            $operationResult   The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logConvertion($originalResource, $convertedResource, $archive, $operationResult = true)
-	{
-		$eventInfo = [];
+    public function logConvertion($originalResource, $convertedResource, $archive, $operationResult = true)
+    {
+        $eventInfo = [];
         if ($convertedResource) {
-        	if (!empty($convertedResource->address)) {
-            	$eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
-        	}
+            if (!empty($convertedResource->address)) {
+                $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
+            }
 
             if (!empty($convertedResource->resId)) {
                 $eventInfo['convertedResId'] = $convertedResource->resId;
@@ -165,62 +167,58 @@ trait archiveLifeCycleTrait
             $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
             $eventInfo['convertedHash'] = $convertedResource->hash;
             $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-		}
+        }
 
         return $this->logLifeCycleEvent('recordsManagement/conversion', $archive, $operationResult, $originalResource, $eventInfo);
-	}
+    }
 
-	// ELIMINATION -> archiveDestructionTrait
-	/**
+    /**
      * Log an archive elimination
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logElimination($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult);
-	}
+    public function logElimination($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult);
+    }
 
-	// DESTRUCTION -> archiveDestructionTrait
-	/**
+    /**
      * Log an archive destruction
      * @param recordsManagement/archive $archive   	     The archive
      * @param bool  					$operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logDestruction($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/detruction', $archive, $operationResult);
-	}
+    public function logDestruction($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/detruction', $archive, $operationResult);
+    }
 
-	// RESTITUTION -> archiveRestitutionTrait
-	/**
+    /**
      * Log an archive restitution
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logRestitution($archive, $operationResult = true)
-	{
+    public function logRestitution($archive, $operationResult = true)
+    {
         return $this->logLifeCycleEvent('recordsManagement/restitution', $archive, $operationResult);
-	}
+    }
 
-	// RETENTION RULE MODIFICATION -> archiveModificationTrait
-	/**
+    /**
      * Log an archive retention rule modification
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param object 					$retentionRule   The retention rule object
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param object                    $retentionRule   The retention rule object
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logRetentionRuleModification($archive, $retentionRule, $operationResult = true)
-	{
-	  	$eventInfo = array(
+    public function logRetentionRuleModification($archive, $retentionRule, $operationResult = true)
+    {
+        $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             'retentionStartDate' => (string) $retentionRule->retentionStartDate,
@@ -231,21 +229,20 @@ trait archiveLifeCycleTrait
             'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
         );
 
-		return $this->logLifeCycleEvent('recordsManagement/retentionRuleModification', $archive, $operationResult, false, $eventInfo);
-	}
+        return $this->logLifeCycleEvent('recordsManagement/retentionRuleModification', $archive, $operationResult, false, $eventInfo);
+    }
 
-	// ACCESS RULE MODIFICATION -> archiveModificationTrait
-	/**
+    /**
      * Log an archive access rule modification
-     * @param recordsManagement/archive $archive   	     The archive
+     * @param recordsManagement/archive                 $archive         The archive
      * @param object 					$accessRule      The access rule object
      * @param bool  					$operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logAccessRuleModification($archive, $accessRule, $operationResult = true)
-	{
-		$eventInfo = array(
+    public function logAccessRuleModification($archive, $accessRule, $operationResult = true)
+    {
+        $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             'accessRuleStartDate' => (string) $accessRule->accessRuleStartDate,
@@ -254,91 +251,85 @@ trait archiveLifeCycleTrait
             'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
         );
 
-		return $this->logLifeCycleEvent('recordsManagement/accessRuleModification', $archive, $operationResult, false, $eventInfo);
-	}
+        return $this->logLifeCycleEvent('recordsManagement/accessRuleModification', $archive, $operationResult, false, $eventInfo);
+    }
 
-	// FREEZE -> archiveModificationTrait
-	/**
+    /**
      * Log an archive freeze
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logFreeze($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/freeze', $archive, $operationResult);
-	}
+    public function logFreeze($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/freeze', $archive, $operationResult);
+    }
 
-	// UNFREEZE -> archiveModificationTrait
-	/**
+    /**
      * Log an archive unfreeze
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logUnfreeze($archive, $operationResult = true)
-	{
-		return $this->logLifeCycleEvent('recordsManagement/unfreeze', $archive, $operationResult);
-	}
+    public function logUnfreeze($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/unfreeze', $archive, $operationResult);
+    }
 
-	// METADATA -> archiveModificationTrait
-	/**
+    /**
      * Log an archive metadata modification
-     * @param recordsManagement/archive $archive   	     The archive
-     * @param bool  					$operationResult The operation result
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logMetadataModification($archive, $operationResult = true)
-	{
-		$eventInfo = array(
+    public function logMetadataModification($archive, $operationResult = true)
+    {
+        $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
         );
 
-		return $this->logLifeCycleEvent('recordsManagement/metadata', $archive, $operationResult, false, $eventInfo);
-	}
+        return $this->logLifeCycleEvent('recordsManagement/metadata', $archive, $operationResult, false, $eventInfo);
+    }
 
-	// ADD RELATIONSHIP -> archiveModificationTrait
-	/**
+    /**
      * Log an archive relatationship adding
-     * @param recordsManagement/archive $archive   	         The archive
-     * @param object 					$archiveRelationship The access rule object
-     * @param bool  					$operationResult     The operation result
+     * @param recordsManagement/archive $archive             The archive
+     * @param object                    $archiveRelationship The access rule object
+     * @param bool                      $operationResult     The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logRelationshipAdding($archive, $archiveRelationship, $operationResult = true)
-	{
-		$eventInfo = array(
+    public function logRelationshipAdding($archive, $archiveRelationship, $operationResult = true)
+    {
+        $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             'relatedArchiveId' => $archiveRelationship->relatedArchiveId
         );
 
-		return $this->logLifeCycleEvent('recordsManagement/addRelationship', $archive, $operationResult, false, $eventInfo);
-	}
+        return $this->logLifeCycleEvent('recordsManagement/addRelationship', $archive, $operationResult, false, $eventInfo);
+    }
 
-	// ADD RELATIONSHIP -> archiveModificationTrait
-	/**
+    /**
      * Log an archive relatationship deleting
-     * @param recordsManagement/archive $archive   	         The archive
-     * @param object 					$archiveRelationship The access rule object
-     * @param bool  					$operationResult     The operation result
+     * @param recordsManagement/archive $archive             The archive
+     * @param object                    $archiveRelationship The access rule object
+     * @param bool                      $operationResult     The operation result
      *
-     * @return mixed The created event or the list of created envent
+     * @return mixed The created event or the list of created event
      */
-	public function logRelationshipDeleting($archive, $archiveRelationship, $operationResult = true)
-	{
-		$eventInfo = array(
+    public function logRelationshipDeleting($archive, $archiveRelationship, $operationResult = true)
+    {
+        $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
             'relatedArchiveId' => $archiveRelationship->relatedArchiveId
         );
 
-		return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, false, $eventInfo);
-	}
-
+        return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, false, $eventInfo);
+    }
 }
