@@ -38,7 +38,7 @@ trait archiveLifeCycleTrait
      */
     protected function logLifeCycleEvent($type, $archive, $operationResult = true, $resource = null, $eventInfo = null)
     {
-        $eventItems = $eventInfo ? $eventInfo : [];
+        $eventItems = !empty($eventInfo) ? $eventInfo : [];
         $res = null;
 
         $eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
@@ -47,24 +47,24 @@ trait archiveLifeCycleTrait
             $eventItems['resId'] = $resource->resId;
             $eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
             $eventItems['hash'] = $resource->hash;
-            $eventInfo['address'] = $resource->address[0]->path;
+            $eventItems['address'] = $resource->address[0]->path;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
 
-        } else if ($eventInfo !== false && !empty($archive->digitalResources)) {
+        } else if (!empty($archive->digitalResources)) {
             $res = [];
 
             foreach ($archive->digitalResources as $digitalResource) {
                 $eventItems['resId'] = $digitalResource->resId;
                 $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
                 $eventItems['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
+                $eventItems['address'] = $digitalResource->address[0]->path;
+                $eventItems['size'] = $digitalResource->size;
 
                 $res[] = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
             }
 
         } else {
-            $eventItems= [];
             $eventItems['resId'] = null;
             $eventItems['hashAlgorithm'] = null;
             $eventItems['hash'] = null;
@@ -108,7 +108,11 @@ trait archiveLifeCycleTrait
             return;
         }
 
-        return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource);
+        if (empty($resource)) {
+            $operationResult = false;
+        }
+
+        return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource, $eventInfo);
     }
 
 
@@ -126,9 +130,10 @@ trait archiveLifeCycleTrait
 
     /**
      * Log an archive resource integrity check
-     * @param digitalResource/digitalResource $resource   	   The resouce
-     * @param recordsManagement/archive       $archive         The archive
-     * @param bool  						  $operationResult The operation result
+     * @param digitalResource/digitalResource $resource The resouce
+     * @param recordsManagement/archive       $archive  The archive
+     * @param string                          $info     The information
+     * @param bool  			      $operationResult The operation result
      *
      * @return mixed The created event or the list of created event
      */
@@ -167,6 +172,7 @@ trait archiveLifeCycleTrait
             $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
             $eventInfo['convertedHash'] = $convertedResource->hash;
             $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
+            $eventInfo["size"] = $convertedResource->size;
         }
 
         return $this->logLifeCycleEvent('recordsManagement/conversion', $archive, $operationResult, $originalResource, $eventInfo);
