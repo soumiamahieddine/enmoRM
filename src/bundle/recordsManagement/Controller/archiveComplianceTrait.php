@@ -251,20 +251,6 @@ trait archiveComplianceTrait
             $valid = $this->digitalResourceController->verifyResource($resource);
         }
 
-        $eventInfo = [];
-        $eventInfo['resId'] = $resource->resId;
-        $eventInfo['hashAlgorithm'] = $resource->hashAlgorithm;
-        $eventInfo['hash'] = $resource->hash;
-        $eventInfo['address'] = $resource->address[0]->path;
-        $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $eventInfo['info'] = 'OK';
-
-        if ($valid == false) {
-            $eventInfo['info'] = 'Invalid hash: resource may have been altered on the repository';
-        }
-
-        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'digitalResource/digitalResource', $resource->resId, $eventInfo, $valid);
-
         foreach ($resource->relatedResource as $relatedResource) {
             if (!$this->checkResourceIntegrity($archive, $relatedResource, $currentOrganization)) {
                 $valid = false;

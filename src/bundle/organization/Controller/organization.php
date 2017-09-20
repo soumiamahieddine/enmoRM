@@ -753,6 +753,23 @@ class organization
     }
 
     /**
+     * Delete an archival pofile accesss from every organization
+     * @param array  $archivalProfileReference The archival profile reference
+     *
+     * @return bool The result of the operation
+     */
+    public function deleteArchivalProfileAccess($archivalProfileReference)
+    {
+        $archivalProfileAccess = $this->sdoFactory->find("organization/archivalProfileAccess", "archivalProfileReference='$archivalProfileReference'");
+
+        if($archivalProfileAccess) {
+            return $this->sdoFactory->deleteCollection($archivalProfileAccess, "organization/archivalProfileAccess");
+        }
+
+        return false;
+    }
+
+    /**
      * Get the archival profile descriptions for the given org unit
      * @param string $orgRegNumber
      * @param string $originatorAccess
