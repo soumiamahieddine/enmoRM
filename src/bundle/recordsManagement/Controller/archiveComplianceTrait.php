@@ -97,7 +97,7 @@ trait archiveComplianceTrait
 
             if ($success) {
                 for ($i = 0, $count = count($archives); $i < $count; $i++) {
-                    $this->setValidatedArchiveWithoutCheck($archives[$i], $currentOrganization);
+                    $this->setValidatedArchiveWithoutCheck($archives[$i]);
                     $archivesChecked++;
                 }
             }
@@ -117,25 +117,18 @@ trait archiveComplianceTrait
      * Set a validated archive with it's children without check
      * @param recordsManagement/archive $archive The archive object
      */
-    private function setValidatedArchiveWithoutCheck($archive, $currentOrganization)
+    private function setValidatedArchiveWithoutCheck($archive)
     {
         $archive->lastCheckDate = \laabs::newTimestamp();
 
         $this->sdoFactory->update($archive);
 
-        $archiveEventInfo['resId'] = '';
-        $archiveEventInfo['hashAlgorithm'] = '';
-        $archiveEventInfo['hash'] = '';
-        $archiveEventInfo['address'] = '';
-        $archiveEventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $archiveEventInfo['info'] = 'Without check';
-
-        $this->lifeCycleJournalController->logEvent('recordsManagement/integrityCheck', 'recordsManagement/archive', $archive->archiveId, $archiveEventInfo);
+        $this->logIntegrityCheck($archive, "Without check");
 
         $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId' AND status!='error' AND status!='disposed'");
 
         for ($i = 0, $count = count($children); $i < $count; $i++) {
-            $this->setValidatedArchiveWithoutCheck($children[$i], $currentOrganization);
+            $this->setValidatedArchiveWithoutCheck($children[$i]);
         }
     }
     /**
@@ -174,7 +167,7 @@ trait archiveComplianceTrait
     protected function checkArchiveIntegrity($archive)
     {
         $valid = true;
-        $info = 'OK';
+        $info = 'Cheking succeeded';
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
@@ -189,7 +182,11 @@ trait archiveComplianceTrait
                 foreach ($archive->digitalResources as $digitalResource) {
                     if (!$this->checkResourceIntegrity($archive, $digitalResource)) {
                         $valid = false;
+                        $info = "Invalid resource";
+                        $this->logIntegrityCheck($archive, $info, $digitalResource, false);
                     }
+
+                    $this->logIntegrityCheck($archive, "Cheking succeeded", $digitalResource, true);
                 }
             }
         } catch (\Exception $e) {
@@ -214,6 +211,8 @@ trait archiveComplianceTrait
         $archive->lastCheckDate = \laabs::newTimestamp();
 
         $this->sdoFactory->update($archive);
+        
+        $this->logIntegrityCheck($archive, $info, $valid);
 
         return $valid;
     }

@@ -65,9 +65,7 @@ trait archiveLifeCycleTrait
             }
 
         } else {
-            $eventItems['resId'] = null;
-            $eventItems['hashAlgorithm'] = null;
-            $eventItems['hash'] = null;
+
             $eventItems['address'] = $archive->storagePath;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
@@ -349,5 +347,27 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, false, $eventInfo);
+    }
+
+        /**
+     * Log an archive integrity checking
+     * @param recordsManagement/archive       $archive         The archive
+     * @param string                          $info            The information
+     * @param digitalResource/digitalResource $resource        The resouce
+     * @param bool                            $operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logIntegrityCheck($archive, $info, $resource = null, $operationResult = true)
+    { 
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
+        $archive->digitalResources = null;
+
+        $eventInfo = array(
+            'requesterOrgRegNumber' => $currentOrganization->registrationNumber,
+            'info' => $info,
+        );
+
+        return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, $resource, $eventInfo);
     }
 }

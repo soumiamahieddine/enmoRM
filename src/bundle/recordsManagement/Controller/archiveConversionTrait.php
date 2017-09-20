@@ -57,7 +57,7 @@ trait archiveConversionTrait
                 $status = true;
             }
 
-            $this->loggingConversion($digitalResource, $convertedResource, $status);
+            $this->logConvertion($digitalResource, $convertedResource, $archive, $status);
         } catch (\Exception $e) {
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
