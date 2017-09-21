@@ -15,10 +15,10 @@ msgid "New service level"
 msgstr "Nouveau niveau de service"
 
 msgid "Sampling frequency"
-msgstr "Fréquence d'échantillonnage"
+msgstr "Fréquence d'échantillonnage (en jours)"
 
 msgid "Sampling rate"
-msgstr "Taux d'échantillonnage"
+msgstr "Taux d'échantillonnage (en %)"
 
 msgid "Detect format"
 msgstr "Détection de format"
