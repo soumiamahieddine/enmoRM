@@ -343,7 +343,7 @@ class archivalProfile
 
             // Life cycle journal
             $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-            $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
         
         } catch (\Exception $exception) {
             if ($transactionControl) {
@@ -370,7 +370,19 @@ class archivalProfile
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
+        if ($this->isUsed($archivalProfile)) {
+            throw new \core\Exception\ForbiddenException("The archival profile %s1 currently in use.", 403, null, [$archivalProfile->reference]);
+        }
+
         $this->deleteDetail($archivalProfile);
+
+        $archivalProfileContents = $this->sdoFactory->find('recordsManagement/archivalProfileContents', "parentProfileId='$archivalProfileId' OR containedProfileId='$archivalProfileId'");
+        if($archivalProfileContents) {
+            $this->sdoFactory->deleteCollection($archivalProfileContents, 'recordsManagement/archivalProfileContents');
+        }
+        
+        $organizationController = \laabs::newController('organization/organization');
+        $organizationController->deleteArchivalProfileAccess($archivalProfile->reference);
 
         $this->sdoFactory->delete($archivalProfile);
 
@@ -394,6 +406,17 @@ class archivalProfile
         $descriptionObject->descriptionClass =  $archivalProfile->descriptionClass;
 
         return $descriptionObject;
+    }
+
+    /**
+     * Check if archival
+     * @param type $archivalProfileReference The reference of the archival profile
+     *
+     * @return bool The result of the operation
+     */
+    public function isUsed($archivalProfile)
+    {
+        return (bool) $this->sdoFactory->count('recordsManagement/archive', "archivalProfileReference = '$archivalProfile->reference'");
     }
 
     protected function createDetail($archivalProfile)
@@ -438,5 +461,7 @@ class archivalProfile
 
         $this->sdoFactory->deleteChildren('recordsManagement/archivalProfileContents', $archivalProfile, 'recordsManagement/archivalProfile');
     }
+
+
 
 }

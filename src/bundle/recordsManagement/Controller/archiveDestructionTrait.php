@@ -47,6 +47,8 @@ trait archiveDestructionTrait
             if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
+
+            $this->logDestructionRequest($archive);
         }
 
         $archiveList = $this->setStatus($archiveIds, 'disposable');
@@ -84,6 +86,11 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->logDestructionRequestCancel($archive);
+        }
+
         return $this->setStatus($archiveIds, 'preserved');
     }
 

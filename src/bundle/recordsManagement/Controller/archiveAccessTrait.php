@@ -197,6 +197,7 @@ trait archiveAccessTrait
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
+        $queryParts = [];
         if (!empty($args['archiveName'])) {
             $queryParts[] = "archiveName='*".$args['archiveName']."*'";
         }
@@ -211,8 +212,6 @@ trait archiveAccessTrait
         }
         if (!empty($args['status'])) {
             $queryParts[] = "status='".$args['status']."'";
-        } else {
-            $queryParts[] = "status!='disposed'";
         }
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
             $queryParts[] = "disposalDate<='".$currentDateString."'";
