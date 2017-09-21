@@ -126,25 +126,6 @@ trait archiveLifeCycleTrait
         return $this->logLifeCycleEvent('recordsManagement/delivery',$archive, $operationResult);
     }
 
-    /**
-     * Log an archive resource integrity check
-     * @param digitalResource/digitalResource $resource        The resouce
-     * @param recordsManagement/archive       $archive         The archive
-     * @param string                          $info            The information
-     * @param bool  			              $operationResult The operation result
-     *
-     * @return mixed The created event or the list of created event
-     */
-    public function logIntegrity($resource, $archive, $info, $operationResult = true)
-    {
-        $currentOrganization = \laabs::getToken("ORGANIZATION");
-
-        $eventInfo = [];
-        $eventInfo['requesterOrgRegNumber'] = $currentOrganization->registrationNumber;
-        $eventInfo['info'] = $info;
-
-        return $this->logLifeCycleEvent('recordsManagement/integrityCheck', $archive, $operationResult, $resource, $eventInfo);
-    }
 
     /**
      * Log an archive resource conversion
@@ -380,6 +361,6 @@ trait archiveLifeCycleTrait
             'info' => $info,
         );
 
-        return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, $resource, $eventInfo);
+        return $this->logLifeCycleEvent('recordsManagement/integrityCheck',$archive, $operationResult, $resource, $eventInfo);
     }
 }
