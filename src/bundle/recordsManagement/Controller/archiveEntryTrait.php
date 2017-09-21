@@ -82,6 +82,7 @@ trait archiveEntryTrait
             $archive->archiveId = \laabs::newId();
         }
         $archive->status = "received";
+        $archive->depositDate = \laabs::newTimestamp();
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
