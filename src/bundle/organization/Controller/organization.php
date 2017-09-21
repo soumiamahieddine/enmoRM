@@ -18,6 +18,7 @@
  * along with bundle organization.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\organization\Controller;
+use core\Exception;
 
 /**
  * Control of the organization
@@ -359,16 +360,21 @@ class organization
             throw $e;
         }
 
-        if ($this->isUsed($organization->registrationNumber)) {
-            $originalOrganization = $this->read($orgId);
-            $organization->registrationNumber = $originalOrganization->registrationNumber;
+        try {
+            if ($this->isUsed($organization->registrationNumber)) {
+                $originalOrganization = $this->read($orgId);
+                $organization->registrationNumber = $originalOrganization->registrationNumber;
+            }
+
+            if (empty($organization->displayName)) {
+                $organization->displayName = $organization->orgName;
+            }
+            $res = $this->sdoFactory->update($organization, 'organization/organization');
+        } catch (\Exception $e) {
+            throw new \core\Exception("Key already exists");
         }
 
-        if (empty($organization->displayName)) {
-            $organization->displayName = $organization->orgName;
-        }
-
-        return $this->sdoFactory->update($organization, 'organization/organization');
+        return $res;
     }
 
     /**
