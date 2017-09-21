@@ -224,7 +224,7 @@ msgstr "Création par batch d'archive(s)"
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'un document"
 
-msgid "recordsManagement/archive/readDigitalresource_resId_"
+msgid "recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_"
 msgstr "Lecture d'une ressource"
 
 msgid "recordsManagement/archive/read_archiveId_"
@@ -1427,6 +1427,21 @@ msgstr "Modification d'un emplacement dossier dans le plan de classement"
 
 msgid "filePlan/filePlan/delete_folder_"
 msgstr "Suppression d'une dossier dans le plan de classement"
+
+msgid "recordsManagement/Code/createGenerate"
+msgstr "Génération d'un code à barre"
+
+msgid "organization/userPosition/readDescendantprofiles"
+msgstr "Lecture des profils d'archivage accordé à un utilisitateur"
+
+msgid "organization/organization/update_orgId_Archivalprofileaccess"
+msgstr "Mise à jour des access aux profiles d'archivage d'un service"
+
+msgid "organization/organization/readOrgunitprofiles"
+msgstr "Lecture des profiles d'archivage d'une organization"
+
+
+
 
 msgid "seda2/ArchiveTransferComposition/create"
 msgstr "Création d'un bordereau de transfert"

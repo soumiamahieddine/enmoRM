@@ -190,7 +190,7 @@ trait archiveLifeCycleTrait
      */
     public function logDestructionRequestCancel($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/destructionRequestCancel', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/destructionRequestCanceling', $archive, $operationResult);
     }
 
     /**
@@ -301,7 +301,7 @@ trait archiveLifeCycleTrait
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
         );
 
-        return $this->logLifeCycleEvent('recordsManagement/metadata', $archive, $operationResult, false, $eventInfo);
+        return $this->logLifeCycleEvent('recordsManagement/metadataModification', $archive, $operationResult, false, $eventInfo);
     }
 
     /**
