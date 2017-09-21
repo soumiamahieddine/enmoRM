@@ -39,7 +39,7 @@ msgid "set default"
 msgstr "utiliser par défaut"
 
 msgid "Cluster"
-msgstr "Grappe"
+msgstr "Grappe de stockage"
 
 msgid "Check for virus"
 msgstr "Contrôle antivirus"
