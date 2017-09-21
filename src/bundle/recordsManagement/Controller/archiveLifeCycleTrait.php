@@ -197,7 +197,7 @@ trait archiveLifeCycleTrait
      */
     public function logDestructionRequest($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/detructionRequest', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/destructionRequest', $archive, $operationResult);
     }
 
     /**
@@ -209,7 +209,7 @@ trait archiveLifeCycleTrait
      */
     public function logDestructionRequestCancel($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/detructionRequestCancel', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/destructionRequestCancel', $archive, $operationResult);
     }
 
     /**
@@ -221,7 +221,7 @@ trait archiveLifeCycleTrait
      */
     public function logDestruction($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/detruction', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/destruction', $archive, $operationResult);
     }
 
     /**

@@ -343,7 +343,7 @@ class archivalProfile
 
             // Life cycle journal
             $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-            $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
         
         } catch (\Exception $exception) {
             if ($transactionControl) {
