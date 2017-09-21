@@ -4,6 +4,7 @@
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
 
     <div class="col-xs-12">
+        <?merge acceptArchiveWithoutProfile.bool().add(archivalProfileList.count()).bool() ?>
         <div id="archiveToolbarBtn" class="dropdown pull-right btn-group">
             <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
