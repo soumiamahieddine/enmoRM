@@ -213,7 +213,6 @@
             var selectedProfile = $('#archivalProfile').data('json');
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
-                selectedProfile = selectedProfile;
                 archive.descriptionClass = selectedProfile.descriptionClass;
             }
 
@@ -228,10 +227,6 @@
             }
 
             archive.digitalResources = DocumentList.serialize();
-            if (archive.digitalResources == null) {
-                //gritter.show($('#documentMissing_error').text(), false);
-                //return -2;
-            }
 
             return archive;
         },
