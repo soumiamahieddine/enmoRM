@@ -171,6 +171,23 @@
     </div-->
     <input id="inputArchiveName" name="archiveName" type="text" class="col-xs-12"/>
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
+
+    <input id="inputCustomNumericField" placeholder="Value" type="number" class="col-xs-12"/>
+
+    <div  id="inputCustomBooleanField" class="btn-group" data-toggle="buttons">
+        <label class="btn btn-xs btn-default">
+            <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+        </label>
+        <label class="btn btn-xs btn-default active">
+            <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+        </label>
+        <label class="btn btn-xs btn-default">
+            <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+        </label>
+    </div>
+
+    <input id="inputCustomBooleanField" placeholder="Value" type="text" class="col-xs-12"/>
+
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
     <span id="customFieldError_txt">Metadatas are incomplete.</span>
@@ -330,16 +347,42 @@
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
+                var customField = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
-                customLabel.val(label.html());
-                customLabel.attr('name', label.attr('name'));
+                customLabel.removeAttr('id').val(label.html()).attr('name', label.attr('name'));
                 label.html('').append(customLabel);
+                var booleanInput = null;
+
+                switch(label.data('type')) {
+                    case 'boolean' :
+                        customField = $("#inputCustomBooleanField").clone();
+                        var intValue = value.find('i').data('value');
+                        booleanInput = customField.find('input[value="'+intValue+'"]');
+                        break;
+                    case 'number':
+                        customField = $("#inputCustomNumericField").clone();
+                        customField.val(value.html());
+                        break;
+                    case 'date': 
+                        customField = $("#inputCustomField").clone();
+                        customField.datepicker({
+                            language:$('#wrapper').attr('lang'),
+                            autoclose:true
+                        }).val(value.html());
+                        break;
+                    default :
+                        customField = $("#inputCustomField").clone();
+                        customField.val(value.html());
+                }
                 
-                var customField = $("#inputCustomField").clone();
-                customField.val(value.html());
-                value.html('').append(customField);
+                value.html('').append(customField.removeAttr('id'));
+
+                if (booleanInput && booleanInput.length) {
+                    booleanInput.click();
+                }
             });
+
 
             $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
@@ -349,18 +392,28 @@
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).find('th > input').val();
                 var name = $(e).find('th > input').attr('name');
-                var value = $(e).find('td > input').val();
+                var valueInput = $(e).find('td > input[type="text"], td > input[type="number"]');
+
+                if (valueInput.length == 0) {
+                    valueInput = $(e).find('td input[type="radio"]').parent('.active').find('input');
+                }
+
+                var value = valueInput.val();
 
                 if ($(e).hasClass('archivalProfileField')) {
                     descriptionFields[name] = value;
                 } else if (label != '' && value != '') {
                     descriptionFields[label] = value;
-                } else {
-                    //gritter.show($('#customFieldError_txt').text(), false);
-                    //descriptionFields = -1;
-                    //return;
+                } else if (label == '' && value != '') {
+                    gritter.show($('#customFieldError_txt').text(), false);
+                    descriptionFields = false;
+                    return;
                 }
             });
+
+            if (!descriptionFields) {
+                return;
+            }
 
             var parameters = {
                 archiveId   : ArchiveInformation.archiveId,
