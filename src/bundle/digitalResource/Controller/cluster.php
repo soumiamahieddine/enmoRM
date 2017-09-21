@@ -384,7 +384,6 @@ class cluster
         if ($hash == strtolower($resource->hash)) {
             $address->integrityCheckResult = true;
         }
-
         $this->sdoFactory->update($address);
 
         return $address->integrityCheckResult;
