@@ -26,14 +26,6 @@ namespace bundle\auth;
  */
 interface userAccountInterface
 {
-
-     /**
-     * TEST !!!!!!
-     *
-     * @action auth/test/testFunction
-     */
-    public function readTest();
-
     /**
      * List the user account information
      * @param string $query
