@@ -86,6 +86,7 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        $this->logDestructionRequestCancel($archive);
         return $this->setStatus($archiveIds, 'preserved');
     }
 
