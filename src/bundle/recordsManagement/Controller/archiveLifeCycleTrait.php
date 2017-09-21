@@ -110,7 +110,7 @@ trait archiveLifeCycleTrait
             $operationResult = false;
         }
 
-        return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource, $eventInfo);
+        return $this->logLifeCycleEvent('recordsManagement/consultation',$archive, $operationResult, $resource);
     }
 
 
@@ -128,10 +128,10 @@ trait archiveLifeCycleTrait
 
     /**
      * Log an archive resource integrity check
-     * @param digitalResource/digitalResource $resource The resouce
-     * @param recordsManagement/archive       $archive  The archive
-     * @param string                          $info     The information
-     * @param bool  			      $operationResult The operation result
+     * @param digitalResource/digitalResource $resource        The resouce
+     * @param recordsManagement/archive       $archive         The archive
+     * @param string                          $info            The information
+     * @param bool  			              $operationResult The operation result
      *
      * @return mixed The created event or the list of created event
      */
