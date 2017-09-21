@@ -359,7 +359,7 @@ class organization
             throw $e;
         }
 
-        if ($this->isUsed($originalOrganization->registrationNumber)) {
+        if ($this->isUsed($organization->registrationNumber)) {
             $originalOrganization = $this->read($orgId);
             $organization->registrationNumber = $originalOrganization->registrationNumber;
         }
