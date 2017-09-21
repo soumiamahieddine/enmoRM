@@ -86,7 +86,11 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
-        $this->logDestructionRequestCancel($archive);
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->logDestructionRequestCancel($archive);
+        }
+
         return $this->setStatus($archiveIds, 'preserved');
     }
 
