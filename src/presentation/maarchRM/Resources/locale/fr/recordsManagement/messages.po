@@ -778,9 +778,6 @@ msgstr "Objets contenus"
 msgid "A keyword label is missing."
 msgstr "Un libellé de mot clé n'a pas été renseigné."
 
-msgid "The document is missing."
-msgstr "Aucun document n'a été sélectionné."
-
 msgid "The indexes of the archive have been modified"
 msgstr "Les index de l'archive ont été modifiés"
 

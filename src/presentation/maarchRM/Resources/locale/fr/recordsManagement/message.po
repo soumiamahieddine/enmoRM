@@ -154,9 +154,6 @@ msgstr "Message approuvé"
 msgid "Message rejected"
 msgstr "Message rejeté"
 
-msgid "The document is missing."
-msgstr "Le document est manquant."
-
 msgid "You must define all required fields."
 msgstr "Vous devez remplir tous les champs obligatoires."
 
