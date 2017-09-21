@@ -34,3 +34,6 @@ ALTER TABLE "recordsManagement"."archive" ALTER COLUMN "retentionDuration" DROP 
 
 ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingFrequency" integer;
 ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingRate" integer;
+
+ALTER TABLE "recordsManagement"."archive" DROP CONSTRAINT "archive_retentionRuleCode_fkey";
+
