@@ -71,7 +71,7 @@ msgstr "Administration archivistique"
 msgctxt "userStoryGroup"
 
 msgid "adminAccessRule"
-msgstr "Gérer les règles d'accès"
+msgstr "Gérer les règles de communicabilité"
 msgctxt "userStory"
 
 msgid "adminRetentionRule"
@@ -348,7 +348,7 @@ msgid "Role privileges"
 msgstr "Privilèges du rôle"
 
 msgid "Access rules"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "Privileges"
 msgstr "Privilèges"

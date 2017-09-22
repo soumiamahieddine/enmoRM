@@ -18,7 +18,7 @@ msgid "New profile"
 msgstr "Nouveau profil"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Description class"
 msgstr "Modèle de description"
@@ -96,7 +96,7 @@ msgid "Read"
 msgstr "Lecture"
 
 msgid "Access rule"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "Retention rule"
 msgstr "Règle de conservation"
@@ -189,7 +189,7 @@ msgid "Archival profile uploaded"
 msgstr "Profil d'archive téléversé"
 
 msgid "Select a access rule code"
-msgstr "Selectionnez une règles d'accès"
+msgstr "Selectionnez une règles de communicabilité"
 
 msgid "Select a retention start date"
 msgstr "Selectionnez une date de référence"

@@ -248,7 +248,7 @@ msgstr "Ancien sort final"
 msgctxt "eventInfo"
 
 msgid "archivalProfileId"
-msgstr "Identifiant du profil d'archivage"
+msgstr "Identifiant du profil d'archive"
 msgctxt "eventInfo"
 
 msgid "archivalProfileReference"
@@ -402,6 +402,27 @@ msgstr "Vérification d'intégrité par le système de données"
 msgid "recordsManagement/integrityLifeCycle"
 msgstr "Vérification d'intégrité par le Journal du cycle de vie"
 
+msgid "recordsManagement/archivalProfileModification"
+msgstr "Modification d'un profil d'archive"
+
+msgid "recordsManagement/consultation"
+msgstr "Consultation d'archive"
+
+msgid "recordsManagement/depositOfLinkedResource"
+msgstr "Dépôt d'une resource liée"
+
+msgid "recordsManagement/destructionRequest"
+msgstr "Demande de destruction"
+
+msgid "recordsManagement/destructionRequestCanceling"
+msgstr "Annulation de demande de destruction"
+
+msgid "recordsManagement/metadataModification"
+msgstr "Modification de métadonnées"
+
+msgid "recordsManagement/periodicIntegrityCheck"
+msgstr "Vérification périodique d'intégrité"
+
 msgid "medona/sending"
 msgstr "Envoi d'un message"
 
@@ -545,4 +566,7 @@ msgstr "Format d'événement modifié"
 
 msgid "The format is empty."
 msgstr "Le format est vide."
+
+msgid "Archival profile"
+msgstr "Profil d'archive"
 

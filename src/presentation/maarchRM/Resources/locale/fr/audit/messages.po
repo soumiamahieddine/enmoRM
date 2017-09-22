@@ -224,7 +224,7 @@ msgstr "Création par batch d'archive(s)"
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'un document"
 
-msgid "recordsManagement/archive/readDigitalresource_resId_"
+msgid "recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_"
 msgstr "Lecture d'une ressource"
 
 msgid "recordsManagement/archive/read_archiveId_"
@@ -276,7 +276,7 @@ msgid "recordsManagement/archives/updateRetentionrule"
 msgstr "Modification d'une règle de conservation d'une ou plusieurs archive(s)"
 
 msgid "recordsManagement/archives/readAccessrule"
-msgstr "Lecture de toutes les règles d'accès"
+msgstr "Lecture de toutes les règles de communicabilité"
 
 msgid "recordsManagement/archives/updateAccessrule"
 msgstr "Modification d'une règle d'accès"
@@ -1108,7 +1108,7 @@ msgid "auth/role/read_roleId_Privileges"
 msgstr "Lecture des privilèges d'un rôle"
 
 msgid "auth/role/read_roleId_Accessrules"
-msgstr "Lecture des règles d'accès d'un rôle"
+msgstr "Lecture des règles de communicabilité d'un rôle"
 
 msgid "auth/role/create"
 msgstr "Création d'un rôle"
@@ -1117,7 +1117,7 @@ msgid "auth/role/create_roleId_Privilege"
 msgstr "Création de privilèges pour un rôle"
 
 msgid "auth/role/create_roleId_Accessrule"
-msgstr "Création de règles d'accès pour un rôle"
+msgstr "Création de règles de communicabilité pour un rôle"
 
 msgid "auth/role/update_roleId_"
 msgstr "Modification d'un rôle"
@@ -1222,7 +1222,7 @@ msgid "auth/userAccount/readHasprivilege"
 msgstr "Lecture d'un privilège"
 
 msgid "auth/userAccount/readAccessrule_objectClass_"
-msgstr "Lecture des règles d'accès d'un compte utilisateur en fonction d'une classe d’objet"
+msgstr "Lecture des règles de communicabilité d'un compte utilisateur en fonction d'une classe d’objet"
 
 msgid "auth/userAccount/updateDisable_userAccountId_"
 msgstr "Désactivation d'un compte utilisateur"
@@ -1427,6 +1427,21 @@ msgstr "Modification d'un emplacement dossier dans le plan de classement"
 
 msgid "filePlan/filePlan/delete_folder_"
 msgstr "Suppression d'une dossier dans le plan de classement"
+
+msgid "recordsManagement/Code/createGenerate"
+msgstr "Génération d'un code à barre"
+
+msgid "organization/userPosition/readDescendantprofiles"
+msgstr "Lecture des profils d'archivage accordé à un utilisitateur"
+
+msgid "organization/organization/update_orgId_Archivalprofileaccess"
+msgstr "Mise à jour des access aux profiles d'archivage d'un service"
+
+msgid "organization/organization/readOrgunitprofiles"
+msgstr "Lecture des profiles d'archivage d'une organization"
+
+
+
 
 msgid "seda2/ArchiveTransferComposition/create"
 msgstr "Création d'un bordereau de transfert"

@@ -82,6 +82,10 @@ class serviceLevel
         if (!count($defaultServiceLevel)) {
             $serviceLevel->default = true;
         }
+        
+        $serviceLevel->samplingRate > 100 ? 100 : $serviceLevel->samplingRate;
+        $serviceLevel->samplingRate < 0 ? 0 : $serviceLevel->samplingRate;
+        $serviceLevel->samplingFrequency < 0 ? 0 : $serviceLevel->samplingFrequency;
 
         $serviceLevel->serviceLevelId = \laabs::newId();
 
@@ -132,6 +136,10 @@ class serviceLevel
     public function update($serviceLevel)
     {
         $serviceLevel = \laabs::cast($serviceLevel, 'recordsManagement/serviceLevel');
+        
+        $serviceLevel->samplingRate > 100 ? 100 : $serviceLevel->samplingRate;
+        $serviceLevel->samplingRate < 0 ? 0 : $serviceLevel->samplingRate;
+        $serviceLevel->samplingFrequency < 0 ? 0 : $serviceLevel->samplingFrequency;
 
         try {
             $result = $this->sdoFactory->update($serviceLevel, "recordsManagement/serviceLevel");

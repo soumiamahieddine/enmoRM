@@ -212,7 +212,7 @@ trait archiveComplianceTrait
 
         $this->sdoFactory->update($archive);
         
-        $this->logIntegrityCheck($archive, $info, $valid);
+        $this->logIntegrityCheck($archive, $info, null, $valid);
 
         return $valid;
     }

@@ -61,7 +61,7 @@ class Code
 
         $pdf->SetXY(10, 30);
         $pdf->setFont('Arial', 'B', 16);
-        $pdf->MultiCell(0, 10, "Profil d'archivage", 1, "C");
+        $pdf->MultiCell(0, 10, "Profil d'archive", 1, "C");
         
         $pdf->SetXY(10, 40);
         $pdf->setFont('Arial', '', 16);

@@ -66,7 +66,7 @@ class serviceLevel
         
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(1, 2, 3, 4, 5, 7, 8);
+        $dataTable->setUnsortableColumns(1, 2, 3);
         
         $this->view->translate();
         

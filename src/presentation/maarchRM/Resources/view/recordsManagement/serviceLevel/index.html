@@ -30,13 +30,6 @@ file that was distributed with this source code.
                         <thead>
                             <tr>
                                 <th>Reference</th>
-                                <th>Sampling frequency</th>
-                                <th>Sampling rate</th>
-                                <th>Detect format</th>
-                                <th>Validate format</th>
-                                <th>Check for virus</th>
-                                <th>Convert on deposit</th>
-                                <th>Log the consultations</th>
                                 <th>Cluster</th>
                                 <th></th>
                                 <th style="min-width:100px;"></th>
@@ -46,13 +39,6 @@ file that was distributed with this source code.
                             <?merge serviceLevel ?>
                             <tr id="[?merge .serviceLevelId ?]">
                                 <td><?merge .reference ?></td>
-                                <td><?merge .samplingFrequency ?></td>
-                                <td><?merge .samplingRate ?></td>
-                                <td><i class ="fa [?merge .control.contains('formatDetection').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
-                                <td><i class ="fa [?merge .control.contains('formatValidation').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
-                                <td><i class ="fa [?merge .control.contains('virusCheck').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
-                                <td><i class ="fa [?merge .control.contains('convertOnDeposit').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
-                                <td><i class ="fa [?merge .control.contains('logConsultation').then('fa-check', 'fa-times') ?]">&nbsp;</i></td>
                                 <td><?merge .clusterName ?></td>
                                 <td><button class="btn btn-xs [?merge .default.then('btn-primary disabled isDefault', 'setDefault btn-default') ?]" style="visibility:[?merge .default.then('visible', 'hidden') ?]"><?merge .default.then('default', 'set default').translate('recordsManagement/serviceLevel', '') ?></buton> <i class ="fa [?merge .default.then('default', '') ?]">&nbsp;</i></td>
                                 <td class="action_btn">

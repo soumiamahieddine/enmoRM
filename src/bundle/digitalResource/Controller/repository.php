@@ -232,6 +232,10 @@ class repository
             $repositoryService = $repository->getService();
             $contents = $repositoryService->readObject($address->path);
         } catch (\Exception $e) {
+            $address->lastIntegrityCheck = \laabs::newTimestamp();
+            $address->integrityCheckResult = false;
+
+            $this->sdoFactory->update($address);
             throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address ".$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
         }
 
@@ -344,10 +348,10 @@ class repository
             }
 
         } catch (\Exception $exception) {
-
             $address->integrityCheckResult = false;
         }
 
+            var_dump('ok');
         $this->sdoFactory->update($address, 'digitalResource/address');
 
         return $address->integrityCheckResult;

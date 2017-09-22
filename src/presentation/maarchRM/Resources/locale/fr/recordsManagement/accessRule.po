@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Access codes"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "code(s)"
 msgstr "code(s)"
@@ -24,7 +24,7 @@ msgid "Edit an access code"
 msgstr "Edition d'un code d'accès"
 
 msgid "Access rules"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "Group"
 msgstr "Groupe"
@@ -84,7 +84,7 @@ msgid "Access Code is empty."
 msgstr "Code d'accès vide."
 
 msgid "Access entries"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "Originator"
 msgstr "Producteur"

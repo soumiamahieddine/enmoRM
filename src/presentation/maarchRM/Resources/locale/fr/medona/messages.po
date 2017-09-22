@@ -270,7 +270,7 @@ msgid "Sender organization"
 msgstr "Émetteur"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Service level"
 msgstr "Niveau de service"

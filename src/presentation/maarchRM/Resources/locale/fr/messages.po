@@ -187,7 +187,7 @@ msgstr "Profils"
 msgctxt "layout"
 
 msgid "Access rules"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 msgctxt "layout"
 
 msgid "Retention rules"
@@ -549,3 +549,6 @@ msgstr "Sans profil"
 
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
+
+msgid "registrationNumber"
+msgstr "Identifiant"

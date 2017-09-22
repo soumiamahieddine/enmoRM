@@ -33,7 +33,7 @@ msgid "You must chose an archive name"
 msgstr "Vous devez choisir un nom d'archive"
 
 msgid "You must chose an archival profile"
-msgstr "Vous devez choisir un profil d'archivage"
+msgstr "Vous devez choisir un profil d'archive"
 
 msgid "You must chose an archival agreement"
 msgstr "Vous devez choisir une convention d'archivage"
