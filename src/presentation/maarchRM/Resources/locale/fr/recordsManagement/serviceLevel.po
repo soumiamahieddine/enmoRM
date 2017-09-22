@@ -14,11 +14,17 @@ msgstr "Ajouter un niveau de service"
 msgid "New service level"
 msgstr "Nouveau niveau de service"
 
-msgid "Sampling frequency"
+msgid "Sampling frequency (in days)"
 msgstr "Fréquence d'échantillonnage (en jours)"
 
-msgid "Sampling rate"
+msgid "Sampling rate (in %)"
 msgstr "Taux d'échantillonnage (en %)"
+
+msgid "The rate must be between 0 and 100"
+msgstr "Le taux doit être compris entre 0 et 100"
+
+msgid "The frequency must be positive"
+msgstr "La fréquence doit être positive"
 
 msgid "Detect format"
 msgstr "Détection de format"
