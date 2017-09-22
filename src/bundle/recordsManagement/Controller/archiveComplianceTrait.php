@@ -49,7 +49,7 @@ trait archiveComplianceTrait
         $queryPart["parentArchiveId"] = "parentArchiveId=null";
 
         foreach ($serviceLevels as $serviceLevel) {
-            if ($serviceLevel->samplingFrequency <= 0 || $serviceLevel->samplingRate <= 0) {
+            if (($serviceLevel->samplingFrequency <= 0) || ($serviceLevel->samplingRate <= 0)) {
                 continue;
             }
 
@@ -224,7 +224,6 @@ trait archiveComplianceTrait
     protected function checkResourceIntegrity($archive, $resource)
     {
         $valid = false;
-        $info = "";
 
         // Retrieve resource creation event
         $creationEvents = $this->lifeCycleJournalController->matchEvent((string) $resource->created, $resource->resId);
@@ -255,7 +254,7 @@ trait archiveComplianceTrait
         }
 
         foreach ($resource->relatedResource as $relatedResource) {
-            if (!$this->checkResourceIntegrity($archive, $relatedResource, $currentOrganization)) {
+            if (!$this->checkResourceIntegrity($archive, $relatedResource)) {
                 $valid = false;
             }
         }
