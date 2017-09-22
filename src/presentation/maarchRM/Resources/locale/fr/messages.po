@@ -489,7 +489,7 @@ msgstr "Une erreur est survenue durant le traitement de votre requête."
 msgid "Key already exists"
 msgstr "La clé existe déjà"
 
-msgid "The fields with a star are compulsory."
+msgid "The fields with a star are required."
 msgstr "Les champs avec une étoile sont obligatoire"
 
 msgid "You don't avec any role that enables you tu use search."
