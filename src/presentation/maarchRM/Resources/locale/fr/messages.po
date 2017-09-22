@@ -549,3 +549,6 @@ msgstr "Sans profil"
 
 msgid "An error has occurred."
 msgstr "Une erreur est survenue."
+
+msgid "registrationNumber"
+msgstr "Identifiant"
