@@ -56,7 +56,7 @@ trait archiveComplianceTrait
             $lastEvent = end($events);
 
             if (!empty($lastEvent)) {
-                $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent[0]->timestamp->getTimestamp();
+                $diffWithLastEvent = \laabs::newTimestamp()->getTimestamp() - $lastEvent->timestamp->getTimestamp();
                 $remainder = $lastEvent->nbArchivesToCheck - $lastEvent->archivesChecked;
             } else {
                 $diffWithLastEvent = 3600 * 24;
