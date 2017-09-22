@@ -59,7 +59,7 @@ msgstr "Document"
 msgctxt "model"
 
 msgid "accessRule"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 msgctxt "model"
 
 msgid "archivalAgreement"

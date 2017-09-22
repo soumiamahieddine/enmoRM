@@ -276,7 +276,7 @@ msgid "recordsManagement/archives/updateRetentionrule"
 msgstr "Modification d'une règle de conservation d'une ou plusieurs archive(s)"
 
 msgid "recordsManagement/archives/readAccessrule"
-msgstr "Lecture de toutes les règles d'accès"
+msgstr "Lecture de toutes les règles de communicabilité"
 
 msgid "recordsManagement/archives/updateAccessrule"
 msgstr "Modification d'une règle d'accès"
@@ -1108,7 +1108,7 @@ msgid "auth/role/read_roleId_Privileges"
 msgstr "Lecture des privilèges d'un rôle"
 
 msgid "auth/role/read_roleId_Accessrules"
-msgstr "Lecture des règles d'accès d'un rôle"
+msgstr "Lecture des règles de communicabilité d'un rôle"
 
 msgid "auth/role/create"
 msgstr "Création d'un rôle"
@@ -1117,7 +1117,7 @@ msgid "auth/role/create_roleId_Privilege"
 msgstr "Création de privilèges pour un rôle"
 
 msgid "auth/role/create_roleId_Accessrule"
-msgstr "Création de règles d'accès pour un rôle"
+msgstr "Création de règles de communicabilité pour un rôle"
 
 msgid "auth/role/update_roleId_"
 msgstr "Modification d'un rôle"
@@ -1222,7 +1222,7 @@ msgid "auth/userAccount/readHasprivilege"
 msgstr "Lecture d'un privilège"
 
 msgid "auth/userAccount/readAccessrule_objectClass_"
-msgstr "Lecture des règles d'accès d'un compte utilisateur en fonction d'une classe d’objet"
+msgstr "Lecture des règles de communicabilité d'un compte utilisateur en fonction d'une classe d’objet"
 
 msgid "auth/userAccount/updateDisable_userAccountId_"
 msgstr "Désactivation d'un compte utilisateur"
