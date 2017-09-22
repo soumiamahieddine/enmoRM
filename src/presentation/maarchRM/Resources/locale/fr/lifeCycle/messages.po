@@ -248,7 +248,7 @@ msgstr "Ancien sort final"
 msgctxt "eventInfo"
 
 msgid "archivalProfileId"
-msgstr "Identifiant du profil d'archivage"
+msgstr "Identifiant du profil d'archive"
 msgctxt "eventInfo"
 
 msgid "archivalProfileReference"
@@ -403,7 +403,7 @@ msgid "recordsManagement/integrityLifeCycle"
 msgstr "Vérification d'intégrité par le Journal du cycle de vie"
 
 msgid "recordsManagement/archivalProfileModification"
-msgstr "Modification d'un profil d'archivage"
+msgstr "Modification d'un profil d'archive"
 
 msgid "recordsManagement/consultation"
 msgstr "Consultation d'archive"
@@ -568,5 +568,5 @@ msgid "The format is empty."
 msgstr "Le format est vide."
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 

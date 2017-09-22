@@ -363,7 +363,7 @@ msgid "You not have the permission to view the informations of archive"
 msgstr "Vous n'avez pas la permission de visualiser les informations de cette archive"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Retention start date"
 msgstr "Date de référence"
@@ -734,7 +734,7 @@ msgid "Permission denied: You have to choose a working organization unit to proc
 msgstr "Permission non accordée: Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
-msgstr "La classe description ne correspond pas aux profil d'archivage."
+msgstr "La classe description ne correspond pas aux profil d'archive."
 
 msgid "Archive not set for destruction."
 msgstr "Archive non prévue pour destruction."

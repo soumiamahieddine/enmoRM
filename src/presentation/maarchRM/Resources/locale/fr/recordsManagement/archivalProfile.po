@@ -18,7 +18,7 @@ msgid "New profile"
 msgstr "Nouveau profil"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Description class"
 msgstr "Modèle de description"
