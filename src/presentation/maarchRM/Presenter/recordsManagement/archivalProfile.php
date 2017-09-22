@@ -131,24 +131,14 @@ class archivalProfile
                     $properties = json_encode($properties);
                     $dateProperties = json_encode($dateProperties);
 
-                    //$descriptionClass->dateProperties = $dateProperties;
+                    $descriptionClass->dateProperties = $dateProperties;
                     $descriptionClass->properties = $properties;
                 }
             }
 
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
-            $dateFields = [];
-            $customeDateForRentention = [];
-
-            foreach ($descriptionFields as $descriptionField) {
-                if ($descriptionField->type != 'date') {
-                    continue;
-                }
-
-                $dateFields[] = $descriptionField->name;
-                $customeDateForRentention[$descriptionField->name] = $descriptionField;
-            }
+            $dateFields = $retentionStartDateFields = [];
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng";
@@ -166,23 +156,24 @@ class archivalProfile
                 $this->view->setSource("profileFileLastModified", \laabs::newDatetime(date("Y-m-d H:i:s", filemtime($filename))));
             }
 
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if (strtolower($archiveDescription->descriptionField->type) == "date" && $archiveDescription->required == true) {
-                    $archiveDescription->descriptionField->required = true;
-                    $customeDateForRentention[$archiveDescription->descriptionField->name] = $archiveDescription->descriptionField;
+            foreach ($descriptionFields as $descriptionField) {
+                if (in_array(strtolower($descriptionField->type), ['date', 'datetime', 'timestamp'])) {
+                    $dateFields[] = $descriptionField;
+                    //$retentionStartDateFields[$archiveDescription->descriptionField->name] = $archiveDescription->descriptionField;
                 }
             }
 
-            $this->view->setSource("customeDateForRentention", $customeDateForRentention);
-            $this->view->merge($this->view->getElementById("retentionStartDate"));
+            //$this->view->setSource("retentionStartDateFields", $retentionStartDateFields);
+            //$this->view->merge($this->view->getElementById("retentionStartDate"));
 
-            $this->view->setSource("dateFields", json_encode($dateFields));
+            $this->view->setSource("dateFields", $dateFields);
+            $this->view->setSource("descriptionFields", $descriptionFields);
 
             $this->view->setSource("profileList", json_encode($profileList));
 
-            $this->view->setSource("descriptionClassList", $descriptionClasses);
+            $this->view->setSource("descriptionClasses", $descriptionClasses);
 
-            $this->view->setSource("descriptionFields", $descriptionFields);
+            
 
             $this->view->setSource("archivalProfile", $archivalProfile);
 
@@ -214,9 +205,9 @@ class archivalProfile
                 $retentionRule->retentionDuration = substr($retentionRule->duration, 1, -1);
             }
         }
-        //$retentionRuleSlector = $this->view->getElementById("code");
         $this->view->setSource("retentionRules", $retentionRules);
-        //$this->view->merge($retentionRuleSlector);
+        $retentionRuleSlector = $this->view->getElementById("code");
+        $this->view->merge($retentionRuleSlector);
 
         $this->view->setSource("profilesDirectory", $profilesDirectory);
 
@@ -227,8 +218,7 @@ class archivalProfile
 
     /**
      * Get The profile type from the configuration
-     * @param recordsManagement/archivalProfile The archival profile
-     *
+     * @param recordsManagement/archivalProfile $archivalProfile The archival profile
      */
     protected function getProfileType($archivalProfile)
     {
@@ -329,7 +319,7 @@ class archivalProfile
 
     /**
      * Get archival profiles
-     * @param string $data The data of codes
+     * @param string $barcode The data of codes
      *
      * @return string
      */
@@ -344,10 +334,10 @@ class archivalProfile
 
     /**
      * List properties method
-     * @param type $class          The class to get properties from
-     * @param type $properties     The existing list, to be completed
-     * @param type $dateProperties 
-     * @param type $containerClass
+     * @param type $class           The class to get properties from
+     * @param type &$properties     The existing list, to be completed
+     * @param type &$dateProperties The date properties
+     * @param type $containerClass  The container class
      */
 
     protected function listProperties($class, &$properties, &$dateProperties, $containerClass = '')
@@ -377,9 +367,10 @@ class archivalProfile
                 $qualifiedName = $property->name;
             }
             
-            if ($type == "date" || $type == "timestamp") {
+            if (in_array(strtolower($type), ['date', 'datetime', 'timestamp'])) {
                 array_push($dateProperties, $descriptionProperty);
             }
+
             array_push($properties, $descriptionProperty);
             if (!$property->isScalar()) {
                 if ($property->isArray()) {

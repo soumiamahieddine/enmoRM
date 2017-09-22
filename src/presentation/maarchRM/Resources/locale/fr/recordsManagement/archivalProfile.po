@@ -113,6 +113,9 @@ msgstr "Durée de non-communicabilité"
 msgid "To be defined later"
 msgstr "À définir plus tard"
 
+msgid "Originating date"
+msgstr "Date de production"
+
 msgid "Created date"
 msgstr "Date de création"
 

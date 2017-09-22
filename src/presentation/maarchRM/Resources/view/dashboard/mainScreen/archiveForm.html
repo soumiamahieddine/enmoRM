@@ -121,7 +121,9 @@
                 $('#retentionRule').val(selectedProfile.retentionRuleCode).change().attr("disabled", "disabled");
             }
 
-            if (value == '' || selectedProfile.retentionStartDate == '' || selectedProfile.retentionStartDate == "definedLater" || selectedProfile.retentionStartDate == null) {
+            if (value == '' 
+                || selectedProfile.retentionStartDate == '' 
+                || selectedProfile.retentionStartDate == null) {
                 var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
                 retentionStartDate.data("datepicker").setDate(new Date())
                 retentionStartDate.closest(".form-group").removeClass("hide");

@@ -108,8 +108,8 @@ trait archiveDepositTrait
                 $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
             }
 
-            if (!empty($this->currentArchivalProfile->retentionStartDate) && $this->currentArchivalProfile->retentionStartDate != "definedLater") {
-                $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
+            if (empty($this->currentArchivalProfile->retentionStartDate)) {
+                $archive->retentionStartDate = null;
             }
         }
 
@@ -272,6 +272,10 @@ trait archiveDepositTrait
             switch ($dateRule) {
                 case 'definedLater':
                     $archive->retentionStartDate = null;
+                    break;
+
+                case 'originatingDate':
+                    $archive->retentionStartDate = $archive->originatingDate;
                     break;
 
                 case 'depositDate':

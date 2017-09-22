@@ -356,7 +356,7 @@ trait archiveEntryTrait
             $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
         }
 
-        if (isset($this->currentArchivalProfile->retentionStartDate) && $this->currentArchivalProfile->retentionStartDate != "definedLater") {
+        if (!empty($this->currentArchivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
         }
     }
@@ -390,16 +390,23 @@ trait archiveEntryTrait
             $archive->retentionDuration =  $retentionRule->duration;
             $archive->finalDisposition =  $retentionRule->finalDisposition;
 
-            if ($archive->retentionStartDate == "depositDate") {
-                $archive->retentionStartDate = $archive->depositDate;
-            }
-
             if (is_string($archive->retentionStartDate)) {
-                $qname = \laabs\explode("/", $archive->retentionStartDate);
-                if ($qname[0] == "description" && isset($archive->descriptionObject->{$qname[1]})) {
-                    $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
-                } else {
-                    $archive->retentionStartDate = null;
+                switch ($archive->retentionStartDate) {
+                    case 'originatingDate':
+                        $archive->retentionStartDate = $archive->originatingDate;
+                        break;
+
+                    case 'depositDate':
+                        $archive->retentionStartDate = \laabs::newDate();
+                        break;
+
+                    default:
+                        $qname = \laabs\explode("/", $archive->retentionStartDate);
+                        if ($qname[0] == "description" && isset($archive->descriptionObject->{$qname[1]})) {
+                            $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
+                        } else {
+                            $archive->retentionStartDate = null;
+                        }
                 }
             }
         }

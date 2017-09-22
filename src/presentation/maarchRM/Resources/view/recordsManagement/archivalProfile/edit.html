@@ -97,15 +97,15 @@ file that was distributed with this source code.
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Retention start date</label>
                                                 <div class="col-md-9" id="retentionStartDate">
-                                                    <input type="hidden" name="retentionStartDate" />
+                                                    <input type="hidden" name="retentionStartDate" value="[?merge .retentionStartDate ?]"/>
                                                     <select id="startDate" class="form-control">
-                                                        <option value="definedLater">To be defined later </option>
+                                                        <option value="">To be defined later </option>
+                                                        <option value="originatingDate" >Originating date </option>
                                                         <option value="depositDate" >Deposit date </option>
-                                                        <?merge customeDateForRentention ?>
+                                                        <!--?merge retentionStartDateFields ?>
                                                         <span>
-                                                            <?merge .required.bool().not().then("display: none;") @style ?>
-                                                            <option value= "description/[?merge .name ?]"><?merge .label ?></option>
-                                                        </span>
+                                                            <option data-origin="description" value="description/[?merge .name ?]"><?merge .label ?></option>
+                                                        </span-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -297,78 +297,17 @@ file that was distributed with this source code.
 
         var currentRetentionStartDate = $('#retentionStartDate > input').val();
         if (datesProperties) {
-            /*$.each(requiredProperty, function () {
-                var fieldName = $(this).closest('tr').find('.fieldName').html();
-
-                if (!$.inArray(fieldName, $('#descriptionClass').find(':selected').data('dateproperties'))) {
-                    $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
-                }
-            })*/
             for(var i = 0; i < datesProperties.length; i++) {
                 let element = $(datesProperties[i]);
                 var value = element.val();
                 if (value == currentRetentionStartDate && (element.css('display') != 'none')) {
                     element.attr('selected', 'selected');
-                    return false;
+                    break;
                 } else {
-                    $('#retentionStartDate').val('definedLater');
+                    $('#retentionStartDate').val('');
                 }
             }
         }
-
-        // Define data source for person typeahead
-        var groupsSource = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/recordsManagement/queryGroups/%QUERY',
-                ajax: {
-                    async: false
-                }
-            },
-            limit: 100
-        });
-        groupsSource.initialize();
-
-        // initialize typeahead
-        $('#groupTypeahead').typeahead(
-                {
-                    hint: true,
-                    highlight: true,
-                    minLength: 3
-                },
-        // data source contacts
-        {
-            name: 'groups',
-            displayKey: 'displayName',
-            templates: {
-                empty: function () {
-                    return "<span class='well well-sm'>No group found</span>";
-                },
-                suggestion: function (group) {
-                    return group.displayName;
-                }
-            },
-            source: function (query, cb) {
-                groupsSource.get(query, function (suggestions) {
-                    var i = suggestions.length
-                    while (i--) {
-                        if ($.inArray(suggestions[i].objectId + suggestions[i].objectClass, $('#groupTypeahead').data('groupsids')) > -1)
-                            suggestions.splice(i, 1);
-                    }
-                    cb(suggestions);
-                });
-            },
-            skipCache: true
-        }).on('typeahead:selected', function ($event, suggestion, source) {
-            var typeahead = $("#groupTypeahead");
-            var groupList = typeahead.data('groupsids');
-            typeahead.data('group', suggestion);
-            groupList.push(suggestion.objectId + suggestion.objectClass);
-            typeahead.data('groupsids', groupList);
-            $("#addGroup").prop('disabled', false);
-        });
-
     });
 
    
