@@ -195,7 +195,7 @@ trait laabsAppTrait
             }
         }
 
-        throw new \core\Exception("Undefined user command for route $method $uri");
+        throw new \core\Exception\NotFoundException('Undefined user command for route %1$s %2$s', 404, null, [$method, $uri]);
     }
 
     /**

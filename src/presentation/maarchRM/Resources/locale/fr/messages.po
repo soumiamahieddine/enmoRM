@@ -552,3 +552,6 @@ msgstr "Une erreur est survenue."
 
 msgid "registrationNumber"
 msgstr "Identifiant"
+
+msgid "Undefined user command for route %1$s %2$s"
+msgstr "La page demandée '%1$s %2$s' n'existe pas ou n'est pas accessible."

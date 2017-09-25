@@ -57,14 +57,13 @@ class PresentationKernel
 
         \core\Observer\Dispatcher::notify(LAABS_REQUEST, self::$instance->request);
 
-        /* Establish routes (input, action, output) */
-        self::$instance->setRoutes();
-
-        self::$instance->parseRequest();
-
-        /* Call Command */
         try {
+            /* Establish routes (input, action, output) */
+            self::$instance->setRoutes();
 
+            self::$instance->parseRequest();
+
+            /* Call Command */
             self::$instance->callUserCommand();
 
         } catch (\Exception $exception) {
@@ -323,34 +322,36 @@ class PresentationKernel
         }
 
         // Try to find view for the raised exception else send exception as string as response content
-        if (isset($this->viewRouter)) {
-            switch (true) {
-                case $this->viewRouter->presenter->hasView($exceptionName) :
-                    $this->viewRouter->setView($exceptionName);
+        switch (true) {
+            case isset($this->viewRouter) && $this->viewRouter->presenter->hasView($exceptionName) :
+                $this->viewRouter->setView($exceptionName);
 
-                    return true;
+                return true;
 
-                case $this->viewRouter->presenter->hasView('Exception'):
-                    $this->viewRouter->setView('Exception');
+            case isset($this->viewRouter) && $this->viewRouter->presenter->hasView('Exception'):
+                $this->viewRouter->setView('Exception');
 
-                    return true;
+                return true;
 
+            case \laabs::presentation()->hasPresenter('Exception'):
+                $reflectionRouter = new \ReflectionClass('core\Route\ViewRouter');
+                $this->viewRouter = $reflectionRouter->newInstanceWithoutConstructor();
 
-                case \laabs::presentation()->hasPresenter('Exception'):
-                    $presenter = \laabs::presentation()->getPresenter('Exception');
-                    $this->viewRouter->setPresenter("Exception");
-                    switch (true) {
-                        case $this->viewRouter->presenter->hasView($exceptionName) :
-                            $this->viewRouter->setView($exceptionName);
+                $this->viewRouter->presentation = \laabs::presentation();
 
-                            return true;
+                $presenter = \laabs::presentation()->getPresenter('Exception');
+                $this->viewRouter->setPresenter("Exception");
+                switch (true) {
+                    case $this->viewRouter->presenter->hasView($exceptionName) :
+                        $this->viewRouter->setView($exceptionName);
 
-                        case $this->viewRouter->presenter->hasView('Exception'):
-                            $this->viewRouter->setView('Exception');
+                        return true;
 
-                            return true;
-                    }
-            }
+                    case $this->viewRouter->presenter->hasView('Exception'):
+                        $this->viewRouter->setView('Exception');
+
+                        return true;
+                }
         }
 
         return false;
