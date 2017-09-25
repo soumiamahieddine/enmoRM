@@ -102,16 +102,6 @@ class archivalProfile
 
             $this->getProfileType($archivalProfile);
 
-            /*if ($archivalProfile->retentionStartDate != "") {
-                $startDateRule = strtok($archivalProfile->retentionStartDate, LAABS_URI_SEPARATOR);
-                if ($startDateRule == 'description') {
-                    $startDateDescription = strtok(' ');
-                    $descriptionDatePropertySelector = $this->view->getElementById("startDateDescription")->removeAttribute("style");
-                    $archivalProfile->retentionStartDate = $startDateRule;
-                    $archivalProfile->startDateDescription = $startDateDescription;
-                }
-            }*/
-
             $requiredProperties = array();
             foreach ($archivalProfile->archiveDescription as $property) {
                 array_push($requiredProperties, $property->fieldName);
@@ -138,7 +128,7 @@ class archivalProfile
 
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
-            $dateFields = $retentionStartDateFields = [];
+            $dateFields = [];
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng";
@@ -159,12 +149,8 @@ class archivalProfile
             foreach ($descriptionFields as $descriptionField) {
                 if (in_array(strtolower($descriptionField->type), ['date', 'datetime', 'timestamp'])) {
                     $dateFields[] = $descriptionField;
-                    //$retentionStartDateFields[$archiveDescription->descriptionField->name] = $archiveDescription->descriptionField;
                 }
             }
-
-            //$this->view->setSource("retentionStartDateFields", $retentionStartDateFields);
-            //$this->view->merge($this->view->getElementById("retentionStartDate"));
 
             $this->view->setSource("dateFields", $dateFields);
             $this->view->setSource("descriptionFields", $descriptionFields);
@@ -172,8 +158,6 @@ class archivalProfile
             $this->view->setSource("profileList", json_encode($profileList));
 
             $this->view->setSource("descriptionClasses", $descriptionClasses);
-
-            
 
             $this->view->setSource("archivalProfile", $archivalProfile);
 
