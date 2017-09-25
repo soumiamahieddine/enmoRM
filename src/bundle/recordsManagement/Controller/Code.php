@@ -48,8 +48,8 @@ class Code
     {
         $label = strtr(utf8_decode($label), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
         
-        require_once 'bundle/recordsManagement/fpdf/fpdf.php';
-        $pdf = new \FPDF();
+        $PDFFactory = \laabs::newService('dependency/PDF/Factory');
+        $pdf = $PDFFactory->getFpdf();
         $pdf->AddPage();
 
         $this->barcodeGenerator($data, $pdf);

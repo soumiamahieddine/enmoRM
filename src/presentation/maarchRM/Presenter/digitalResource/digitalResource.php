@@ -47,11 +47,43 @@ class digitalResource
         //$this->view->addHeaders();
 
        //$this->view->useLayout();
-
         $contents = $resource->getContents();
 
-        $url = \laabs::createPublicResource($contents);
+        if (strlen($contents) > 65536) {
+            try {
+                switch ($resource->mimetype) {
+                    case 'application/pdf':
+                        $fp = fopen('php://temp', 'r+');
+                        fwrite($fp, $contents);
 
+                        $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
+                        
+                        $docpages = $fpdi->setSourceFile($fp);
+                        if ($docpages > 2) {
+                            $page = $fpdi->importPage(1);
+                            $size = $fpdi->getTemplateSize($page);
+                            $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                            $fpdi->useTemplate($page);
+
+                            $page = $fpdi->importPage(2);
+                            $size = $fpdi->getTemplateSize($page);
+                            $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                            $fpdi->useTemplate($page);
+
+                            $contents = $fpdi->Output('S');
+                        }
+                        break;
+
+                    case 'text/plain':
+                        $contents = substr($contents, 0, 65536);
+                        break;
+                }
+            } catch (\Exception $exception) {
+                \laabs::setResponseCode('500');
+            }
+        }
+
+        $url = \laabs::createPublicResource($contents);
 
         $this->view->addContent(
             '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"></object>'
