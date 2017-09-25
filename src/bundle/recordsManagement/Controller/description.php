@@ -42,11 +42,12 @@ class description
 
     /**
      * Create the description
-     * @param obejct $archive The described archive
+     * @param obejct $archive  The described archive
+     * @param string $fullText The archive fullText
      * 
      * @return bool
      */
-    public function create($archive)
+    public function create($archive, $fullText=false)
     {
         $descriptionObject = \laabs::newInstance('recordsManagement/description');
         $descriptionObject->archiveId = $archive->archiveId;
@@ -62,6 +63,11 @@ class description
         }
 
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
+        
+        if ($fullText ) {
+            $descriptionObject->text .= ' '.$fullText;
+        }
+
         $descriptionObject->description = json_encode($archive->descriptionObject);
         
         $this->sdoFactory->update($descriptionObject);
@@ -184,6 +190,9 @@ class description
         $archive = $archiveController->read($archiveId);
         
         $archive->descriptionObject = $description;
+        if ($archive->fullTextIndexation == "indexed") {
+            $archive->fullTextIndexation == "requested";
+        }
         
         $this->create($archive);
     }

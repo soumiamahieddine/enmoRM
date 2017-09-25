@@ -211,6 +211,14 @@ class archive
     public $descriptionObject;
 
     /**
+     * The status of fulltext indaxation
+     *
+     * @var string
+     * @enumeration [requested, indexed, failed, none]
+     */
+    public $fullTextIndexation;
+
+    /**
      * The life cycle events
      *
      * @var recordsManagement/lifeCycleEvent[]

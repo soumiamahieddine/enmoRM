@@ -306,4 +306,88 @@ trait archiveModificationTrait
 
         return true;
     }
+
+
+    /**
+     * Index full text 
+     * @param int $limit The maximum number of archive to index
+     *
+     * @return array The result of the operation
+     */
+    public function indexFullText($limit=200)
+    {
+        $res = [];
+        $res['success'] = [];
+        $res['fail'] = [];
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
+            $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
+            $stopWords = utf8_encode(file_get_contents($stopWords));
+            $stopWords = preg_replace('/[\r\n]/', " ",$stopWords);
+            $stopWords = explode(" ", $stopWords);
+        }
+
+        if (count($archivesToIndex)) {
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
+
+            foreach ($archivesToIndex as $archive) {
+                $archive = $this->getDescription($archive->archiveId);
+
+                try {
+                    $fullText = $this->digitalResourceController->getFullTextByArchiveId($archive->archiveId);
+                    $fullText = strtolower($fullText);
+                    $fullText = preg_replace('/[.,\/#!?$%\^&\*;:{}=\-_\'`~()\r\n]|\s+/'," ", $fullText);
+
+                    if (isset($stopWords)) {
+                        $fullTextArray = explode(" ", $fullText);
+                        $fullTextArray = array_diff($fullTextArray, $stopWords);
+                        $fullText = implode(" ", $fullTextArray);
+                    } else {
+                        $fullText = preg_replace('/\b[a-z]{1,2}\b/', "",  $fullText);
+                    }
+
+                    $descriptionController->create($archive, $fullText);
+                    $archive->fullTextIndexation = "indexed";
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+
+                    $operationResult = true;
+
+                } catch(\Exception $e) {
+                    $operationResult = false;
+                    $archive->fullTextIndexation = "failed";
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+                }
+
+                $eventInfo = array(
+                    'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+                    'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+                );
+
+                foreach ($archive->digitalResources as $digitalResource) {
+                    $eventInfo['resId'] = $digitalResource->resId;
+                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                    $eventInfo['hash'] = $digitalResource->hash;
+                    $eventInfo['address'] = $digitalResource->address[0]->path;
+
+                    $event = $this->lifeCycleJournalController->logEvent(
+                        'recordsManagement/metadata',
+                        'recordsManagement/archive',
+                        $archive->archiveId,
+                        $eventInfo,
+                        $operationResult
+                    );
+
+                }
+                $archive->lifeCycleEvent = array($event);
+
+                if ($operationResult) {
+                    $res['success'][] = (string)$archive->archiveId;
+                } else {
+                    $res['error'][] = (string)$archive->archiveId;
+                }
+            }
+        }
+
+        return $res;
+    }
 }

@@ -96,6 +96,9 @@ storePath = "<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileRef
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWhithTimestamp = false;
 
+;The path of the stopword file for fullTextIndexing
+stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
+
 
 [auth]
 ; Encryption algorithm (MD5, SHA256, SHA512...)
