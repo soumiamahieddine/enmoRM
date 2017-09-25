@@ -351,13 +351,15 @@ class organization
     {
         $organization->orgId = $orgId;
 
-        try {
-            if ($organization->beginDate>$organization->endDate) {
-                throw new \core\Exception("The end date is lower than the begin date ");
-            }
+        if ($organization->beginDate>$organization->endDate) {
+            throw new \core\Exception("The end date is lower than the begin date.");
+        }
 
-        } catch (\Exception $e) {
-            throw $e;
+
+        if (isset($organization->orgRoleCodes) && $organization->orgRoleCodes->contains("owner")) {
+            if($this->sdoFactory->count("organization/organization", "registrationNumber!='$organization->registrationNumber' AND orgRoleCodes='*owner*'")) {
+                throw new \core\Exception("An owner is already defined.");
+            }
         }
 
         try {
