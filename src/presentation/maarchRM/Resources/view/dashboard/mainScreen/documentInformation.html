@@ -121,26 +121,31 @@
             }
 
             var displayableFormat = $('#preview').data('format');
-            if ($.inArray(resource.mimetype, displayableFormat) > -1) {
 
-                $.ajax({
-                    url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
-                    type        : "GET",
-                    dataType    : 'html',
-                    success     : function(response) {
-                        $("#preview").removeClass('hide').html(response);
-                        $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
-                        if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
-                            $('#preview').find('object').attr('height', '300');
+            $.each(displayableFormat, function (pos, mimetype) {
+
+                if (resource.mimetype.match(mimetype)) {
+                    $.ajax({
+                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        type        : "GET",
+                        dataType    : 'html',
+                        success     : function(response) {
+                            $("#preview").removeClass('hide').html(response);
+                            $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
+                            if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
+                                $('#preview').find('object').attr('height', '300');
+                            }
+                            $('#preview').siblings('i').addClass('hide');
+                        },
+                        error    : function(response) {
+                            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                         }
-                        $('#preview').siblings('i').addClass('hide');
-                    },
-                    error    : function(response) {
-                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                    }
-                })
+                    });
 
-            }
+                    return;
+                }
+
+            });
         }
     }
 
