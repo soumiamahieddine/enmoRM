@@ -41,3 +41,5 @@ ALTER TABLE "recordsManagement"."archive" DROP CONSTRAINT "archive_retentionRule
 UPDATE "lifeCycle"."eventFormat" SET type = 'recordsManagement/archivalProfileModification' WHERE type = 'recordsManagement/ArchivalProfileModification';
 INSERT INTO "lifeCycle"."eventFormat"(type, format, message, notification) VALUES ('recordsManagement/destructionRequest','resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size','Demande de destruction de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat"(type, format, message, notification) VALUES ('recordsManagement/destructionRequestCancel','resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size','Annulation de la demande de destruction de l''archive %6$s', false);
+
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "fullTextIndexation" text default 'none';

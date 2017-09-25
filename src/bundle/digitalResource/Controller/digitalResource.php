@@ -425,7 +425,7 @@ class digitalResource
                 $contents = null;
                 if (!$contents) {
                     try {
-                        $contents = $repositoryService->readObject($address->address);
+                        $contents = $repositoryService->readObject($address->path);
                         // Check hash
                         $hash = hash($resource->hashAlgorithm, $contents);
                         if ($hash !== $resource->hash) {
@@ -682,5 +682,34 @@ class digitalResource
         $convertedResource->relatedResId = $digitalResource->resId;
 
         return $convertedResource;
+    }
+
+    /**
+     * Get the text of the resources of an archive
+     * @param string $archiveId The resources archive identifier
+     *
+     * @return string The text of the resources
+     */
+    public function getFullTextByArchiveId($archiveId)
+    {
+        $fullText = "";
+        $digitalResources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
+
+        if (count($digitalResources)) {
+            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/tika');
+
+            foreach ($digitalResources as $digitalResource) {
+                $contents = $this->contents($digitalResource->resId);
+                $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
+                
+                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
+
+                file_put_contents($srcfile, $contents);
+
+                $fullText .= $fullTextService->getText($srcfile);
+            }
+        }
+
+        return $fullText;
     }
 }

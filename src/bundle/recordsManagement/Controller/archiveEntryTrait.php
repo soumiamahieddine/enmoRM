@@ -300,6 +300,7 @@ trait archiveEntryTrait
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
             $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
             $this->useReferences($archive->contents[$i], 'deposit');
+            $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
             $this->completeMetadata($archive->contents[$i]);
         }
     }
