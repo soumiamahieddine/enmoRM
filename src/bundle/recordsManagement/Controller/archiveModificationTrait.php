@@ -355,7 +355,6 @@ trait archiveModificationTrait
                 } catch(\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
-                    var_dump($e);
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
                 }
 
