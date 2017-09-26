@@ -575,6 +575,18 @@ msgstr "L'utilisateur est désactivé"
 msgid "The password is the same as the precedent."
 msgstr "Le mot de passe est le même que le précédent."
 
+msgid "The password is too short."
+msgstr "Le mot de passe est trop court"
+
+msgid "The password must contain special characters."
+msgstr "Le mot de passe doit contenir des caractères spéciaux."
+
+msgid "The password must contain digits."
+msgstr "Le mot de passe doit contenir des chiffres."
+
+msgid "The password must contain upper and lower case."
+msgstr "Le mot de passe doit contenir des majuscules et minuscules"
+
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
 

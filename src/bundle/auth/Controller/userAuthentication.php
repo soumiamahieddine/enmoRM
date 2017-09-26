@@ -119,7 +119,7 @@ class userAuthentication
             throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
         }
 
-        if ($userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
+        if (!empty($userAccount->lastLogin) && $userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
             $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
             $limitToChange = $userAccount->passwordLastChange->shift($interval)->getTimestamp();
             $diff = $limitToChange - \laabs::newDateTime()->getTimestamp();
@@ -177,16 +177,19 @@ class userAuthentication
         if ($userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName))) {
             //validation of security policy
             if ($this->securityPolicy['passwordMinLength'] && strlen($newPassword) < $this->securityPolicy['passwordMinLength']) {
-                throw new \core\Exception\ForbiddenException("The password is to short.", 403);
+                throw new \core\Exception\ForbiddenException("The password is too short.", 403);
             }
-            if ($this->securityPolicy['passwordRequiresSpecialChars'] && !ctype_alnum($newPassword)) {
+
+            if ($this->securityPolicy['passwordRequiresSpecialChars'] && ctype_alnum($newPassword)) {
                 throw new \core\Exception\ForbiddenException("The password must contain special characters.", 403);
             }
-            if ($this->securityPolicy['passwordRequiresDigits'] && preg_match('/.*\d.*', $newPassword)) {
+
+            if ($this->securityPolicy['passwordRequiresDigits'] && !preg_match('~[0-9]~', $newPassword)) {
                 throw new \core\Exception\ForbiddenException("The password must contain digits.", 403);
             }
-            if ($this->securityPolicy['passwordRequiresMixedCase'] && !preg_match('^(?=.*[a-z])(?=.*[A-Z]).+$', $newPassword)) {
-                throw new \core\Exception\ForbiddenException("The password must contain upper and lower case characters", 403);
+
+            if ($this->securityPolicy['passwordRequiresMixedCase'] && (!preg_match('~[A-Z]~', $newPassword) || !preg_match('~[a-z]~', $newPassword))) {
+                throw new \core\Exception\ForbiddenException("The password must contain upper and lower case.", 403);
             }
 
             $encryptedPassword = $newPassword;
