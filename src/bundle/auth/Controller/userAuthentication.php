@@ -121,7 +121,7 @@ class userAuthentication
 
         if ($userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
             $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
-            $limitToChange = $userAccount->passwordLastChange->add($interval)->getTimestamp();
+            $limitToChange = $userAccount->passwordLastChange->shift($interval)->getTimestamp();
             $diff = $limitToChange - \laabs::newDateTime()->getTimestamp();
 
             if ($diff < 0) {
@@ -147,11 +147,11 @@ class userAuthentication
         $accountToken->accountId = $userAccount->accountId;
         \laabs::setToken('AUTH', $accountToken, $tokenDuration);
 
-        // Check password validity
-        if ($this->securityPolicy['passwordValidity']
-            && $currentDate->diff($userAccount->passwordLastChange)->days > $this->securityPolicy['passwordValidity']
-        ) {
-            throw \laabs::newException('auth/userPasswordChangeRequestException');
+        if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
+            $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / 86400;
+            if ($diff > $this->securityPolicy['passwordValidity']) {
+                throw \laabs::newException('auth/userPasswordChangeRequestException');
+            }
         }
 
         if ($userAccount->passwordChangeRequired == true) {
