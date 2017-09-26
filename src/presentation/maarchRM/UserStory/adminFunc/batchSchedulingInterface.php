@@ -70,14 +70,6 @@ interface batchSchedulingInterface
     public function readBatchprocessing_schedulingId_Execute();
 
     /**
-     * Process batch scedulings
-     *
-     * @uses batchProcessing/scheduling/readProcess
-     * @return batchProcessing/scheduling/process
-     */
-    public function updateBatchprocessingProcess();
-
-    /**
      * Update status of scheduling
      *
      * @param string $schedulingId

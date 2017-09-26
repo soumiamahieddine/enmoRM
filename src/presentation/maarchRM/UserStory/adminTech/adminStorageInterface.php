@@ -108,19 +108,6 @@ interface adminStorageInterface
     public function updateRepository_repositoryId_($repository);
 
     /**
-     * Check the integrty of all resources in a repository
-     * @param string  $repositoryReference The reference of the repository to check
-     * @param bool    $init                Start an new integrity check or continue from last check
-     * @param integer $addressLimit        The maximum address to check
-     * @param integer $maxError            The maximum number of error before the end of the process
-     *
-     * @uses digitalResource/repository/updateCheckintegrity
-     * @return  digitalResource/repository/checkIntegrity
-     */
-    public function updateRepository_repositoryReference_Checkintegrity($init, $addressLimit, $maxError);
-
-
-    /**
      *  Get addesses wich fail the integrity test
      *
      * @uses digitalResource/repository/readFlawedAddresses

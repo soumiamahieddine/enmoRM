@@ -35,13 +35,4 @@ interface userPositionInterface
      */
     public function updateCurrentposition_orgId_();
 
-
-    /**
-     * Get the user orgs
-     *
-     * @return organization/userPosition/getMyPositions
-     * 
-     * @uses organization/userPosition/read
-     */
-    public function readOrganizationPositions();
 }

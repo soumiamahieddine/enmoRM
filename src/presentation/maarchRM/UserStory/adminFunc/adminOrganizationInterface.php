@@ -131,14 +131,6 @@ interface AdminOrganizationInterface
     public function updateOrganizationtype_code_($orgType);
 
     /**
-     * Get all contacts
-     *
-     * @return contact/contact/index
-     * @uses contact/contact/readIndex
-     */
-    public function readContactIndex();
-
-    /**
      * Export file plan
      *
      * @return organization/orgTree/exportFilePlan

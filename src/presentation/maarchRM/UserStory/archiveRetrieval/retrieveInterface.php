@@ -112,14 +112,6 @@ interface retrieveInterface
     public function readRecordsmanagementArchivedescription_archiveId_();
 
     /**
-     * Retrieve an archive document by its id
-     *
-     * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/readDocument_docId_
-     */
-    public function readRecordsmanagementDocument_docId_();
-
-    /**
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
@@ -145,17 +137,6 @@ interface retrieveInterface
     public function readRecordsmanagementContents_archiveId__resId_();
 
     /**
-     * Retrieve an archive content document (CDO)
-     * @param string $originatorArchiveId    The archive identifier of the originator
-     * @param string $originatorOrgRegNumber The originatoriOrgRegNumber
-     *
-     * @return recordsManagement/archive/getContents
-     *
-     * @uses  recordsManagement/archive/readContentsbyoriginatorarchiveid_originatorArchiveId__originatorOrgRegNumber_
-     */
-    public function readRecordsmanagementContentsbyoriginatorarchiveid($originatorArchiveId, $originatorOrgRegNumber);
-
-    /**
      * Check if archive exists
      * @param string $archiveId The archive identifier
      *
@@ -164,9 +145,6 @@ interface retrieveInterface
      * @uses recordsManagement/archive/read_archiveId_Exists
      */
     public function readRecordsmanagementArchive_archiveId_Exists($archiveId);
-
-
-    /* V2 */
 
     /**
      * Retrieve archive info

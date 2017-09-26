@@ -60,13 +60,4 @@ interface adminEventFormatInterface
      * @return lifeCycle/eventFormat/update
      */
     public function updateLifecycleEventformat($eventFormat);
-    
-    /**
-     * Delete an event format
-     * @var qname type The type of event format to remove
-     *
-     * @uses lifeCycle/eventFormat/deleteEventformat_type_
-     * @return lifeCycle/eventFormat/delete
-     */
-    public function deleteLifecycleEventformat_type_();
 }

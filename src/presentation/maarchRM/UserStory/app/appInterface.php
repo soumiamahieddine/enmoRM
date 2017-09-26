@@ -14,13 +14,6 @@ interface appInterface
     public function read();
 
     /**
-     * No privilege
-     *
-     * @return auth/authentication/noPrivilege
-     */
-    public function readNoprivilege();
-
-    /**
      * Folder contents
      * @param string $orgRegNumber
      * @param string $folderId
