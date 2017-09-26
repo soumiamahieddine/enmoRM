@@ -58,7 +58,7 @@ class userAccount
      * List all users to display
      * @param string $query
      *
-     * @return Array The array of stdClass with dislpay name and user identifier
+     * @return array The array of stdClass with dislpay name and user identifier
      */
     public function index($query = null)
     {
@@ -77,11 +77,10 @@ class userAccount
     /**
      * List all users to display
      *
-     * @return Array The array of stdClass
+     * @return array The array of stdClass
      */
     public function userList()
     {
-        $users = array();
         $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user' AND accountId!='superadmin'");
 
         return $userAccounts;
@@ -91,7 +90,7 @@ class userAccount
      * List all users to display
      * @param string $query
      *
-     * @return Array The array of stdClass with dislpay name and user identifier
+     * @return array The array of stdClass with dislpay name and user identifier
      */
     public function search($query = null)
     {
@@ -107,7 +106,7 @@ class userAccount
     }
 
     /**
-     *  Prepare an empty user object
+     * Prepare an empty user object
      *
      * @return auth/account The user object
      */
@@ -139,6 +138,9 @@ class userAccount
      * Record a new user account
      * @param auth/account $userAccount The user object
      *
+     * @throws \bundle\auth\Exception\userAlreadyExistException
+     * @throws \bundle\auth\Exception\invalidUserInformationException
+     *
      * @return string The user identifier
      */
     public function addUserAccount($userAccount)
@@ -163,7 +165,8 @@ class userAccount
 
         $userAccount->password = $encryptedPassword;
         $userAccount->passwordChangeRequired = true;
-        $userAccount->passwordLastChange = \laabs::newDate();
+        $userAccount->passwordLastChange = \laabs::newTimestamp();
+
         $userAccount->badPasswordCount = 0;
         $userAccount->lastLogin = null;
         $userAccount->lastIp = null;
@@ -250,6 +253,8 @@ class userAccount
      * Modify userAccount information
      * @param auth/accountInformation $userAccount The user object
      *
+     * @throws \bundle\auth\Exception\unknownUserException
+     *
      * @return boolean The result of the request
      */
     public function updateUserInformation($userAccount = null)
@@ -317,6 +322,8 @@ class userAccount
      * Genrate a new password
      * @param string $username The username
      * @param string $email    The email of the user
+     *
+     * @throws \bundle\auth\Exception\authenticationException
      *
      * @return boolean The result of the request
      */
@@ -499,9 +506,9 @@ class userAccount
      * Search user account
      * @param string $query The query
      *
-     * @return array The list of fouded users
+     * @return array The list of founded users
      */
-    public function queryUserAccounts($query = false)
+    public function queryUserAccounts($query = "")
     {
         $queryTokens = \laabs\explode(" ", $query);
         $queryTokens = array_unique($queryTokens);

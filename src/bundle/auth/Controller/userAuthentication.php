@@ -55,9 +55,11 @@ class userAuthentication
     }
 
     /**
-     * authenticate a user
+     * Authenticate a user
      * @param string $userName The user name
      * @param string $password The user password
+     *
+     * @throws \bundle\auth\Exception\authenticationException
      *
      * @return bool
      */
@@ -96,7 +98,7 @@ class userAuthentication
             if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
                 || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
                 || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
-                || $currentDate->diff($userAccount->lockDate)->s < $this->securityPolicy['lockDelay'] // Date + delay upper than current date
+                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay'] * 60) // Date + delay upper than current date
             ) {
                 throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
             }
@@ -107,8 +109,8 @@ class userAuthentication
             // Update bad password count
             $userLogin->badPasswordCount = $userAccount->badPasswordCount + 1;
             $this->sdoFactory->update($userLogin, 'auth/account');
-            
-            // If count exceeds max attemps, lock user
+
+            // If count exceeds max attempts, lock user
             if ($this->securityPolicy['loginAttempts'] && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1) {
                 \laabs::callService("auth/userAccount/updateLock_userAccountId_", $userLogin->accountId);
                 \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
@@ -119,10 +121,10 @@ class userAuthentication
 
         if ($userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
             $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
-            $dateWithInterval = \laabs::newDateTime($userAccount->passwordLastChange)->add($interval);
-            $diff = $dateWithInterval->diff(\laabs::newDateTime());
+            $limitToChange = $userAccount->passwordLastChange->add($interval)->getTimestamp();
+            $diff = $limitToChange - \laabs::newDateTime()->getTimestamp();
 
-            if ($diff->invert == 0) {
+            if ($diff < 0) {
                 throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
             }
         }
@@ -175,25 +177,24 @@ class userAuthentication
         if ($userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName))) {
             //validation of security policy
             if ($this->securityPolicy['passwordMinLength'] && strlen($newPassword) < $this->securityPolicy['passwordMinLength']) {
-                throw \laabs::newException('auth\invalidPasswordException', "The password is to short.");
+                throw new \core\Exception\ForbiddenException("The password is to short.", 403);
             }
             if ($this->securityPolicy['passwordRequiresSpecialChars'] && !ctype_alnum($newPassword)) {
-                throw \laabs::newException('auth\invalidPasswordException', "The password must contain special characters.");
+                throw new \core\Exception\ForbiddenException("The password must contain special characters.", 403);
             }
             if ($this->securityPolicy['passwordRequiresDigits'] && preg_match('/.*\d.*', $newPassword)) {
-                throw \laabs::newException('auth\invalidPasswordException', "The password must contain digits.");
+                throw new \core\Exception\ForbiddenException("The password must contain digits.", 403);
             }
             if ($this->securityPolicy['passwordRequiresMixedCase'] && !preg_match('^(?=.*[a-z])(?=.*[A-Z]).+$', $newPassword)) {
-                throw \laabs::newException('auth\invalidPasswordException', "The password must contain upper and lower case characters");
+                throw new \core\Exception\ForbiddenException("The password must contain upper and lower case characters", 403);
             }
-
 
             $encryptedPassword = $newPassword;
             if ($this->passwordEncryption != null) {
                 $encryptedPassword = hash($this->passwordEncryption, $newPassword);
             }
             if ($userAccount->password == $encryptedPassword) {
-                throw \laabs::newException("auth/samePasswordException", "The password is the same as the precedent.");
+                throw new \core\Exception\ForbiddenException("The password is the same as the precedent.", 403);
             }
 
             $userAccount->password = $encryptedPassword;

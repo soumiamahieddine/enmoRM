@@ -241,6 +241,12 @@
                     $('#confirmPassword').val('');
                     $('#changePasswordMessage').text(response.message);
                 }
+            },
+            error : function (response) {
+                response = JSON.parse(response.responseText);
+                $('#newPassword').val('');
+                $('#confirmPassword').val('');
+                $('#changePasswordMessage').text(response.message);
             }
         });
     }
