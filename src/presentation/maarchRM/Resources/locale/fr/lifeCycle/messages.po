@@ -490,10 +490,10 @@ msgid "beforeAccessRuleDuration"
 msgstr "Précédente durée de la règle d'accès"
 
 msgid "retentionStartDate"
-msgstr "Date de départ de la rétention"
+msgstr "Date de départ de la conservation"
 
 msgid "retentionDuration"
-msgstr "Durée de rétention"
+msgstr "Durée de conservation"
 
 msgid "finalDisposition"
 msgstr "Sort final"

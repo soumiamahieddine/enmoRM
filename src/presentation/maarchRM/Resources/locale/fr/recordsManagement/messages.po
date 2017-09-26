@@ -47,7 +47,7 @@ msgstr "Gestion des niveaux de service"
 msgctxt "interface"
 
 msgid "retentionRule"
-msgstr "Gestion des règles de rétention"
+msgstr "Gestion des règles de conservation"
 msgctxt "interface"
 
 msgid "message"
@@ -99,7 +99,7 @@ msgstr "Description de profil"
 msgctxt "model"
 
 msgid "retentionRule"
-msgstr "Règles de rétention"
+msgstr "Règles de conservation"
 msgctxt "model"
 
 msgid "serviceLevel"
@@ -107,7 +107,7 @@ msgstr "Niveaux de service"
 msgctxt "model"
 
 msgid "archiveRetentionRule"
-msgstr "Règle de rétention de l'archive"
+msgstr "Règle de conservation de l'archive"
 msgctxt "model"
 
 msgid "message"
