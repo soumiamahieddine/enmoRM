@@ -162,7 +162,7 @@
 
     /********************************************** Edition modal ************************************************/
     $("#contain").on('keyup change', '.form-control', function () {
-        if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() != '*')) {
+        if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
             $("#add, #update").removeClass('hide');
         }
         else {
