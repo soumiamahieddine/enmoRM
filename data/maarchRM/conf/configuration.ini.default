@@ -112,7 +112,7 @@ passwordEncryption = SHA256
 ; Password must content character digits from 0 to 9 (On|Off, 0|1, true|false)
 ; Password must content mixed case alphabetic characters (On|Off, 0|1, true|false)
 ; Time in second of the session
-; Lock time in minute
+; Lock time in seconds
 securityPolicy = "{
     'loginAttempts' : 3,
     'passwordValidity' : 0,

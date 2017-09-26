@@ -98,7 +98,7 @@ class userAuthentication
             if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
                 || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
                 || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
-                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay'] * 60) // Date + delay upper than current date
+                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay']) // Date + delay upper than current date
             ) {
                 throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
             }
