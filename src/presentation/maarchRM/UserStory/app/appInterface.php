@@ -22,4 +22,54 @@ interface appInterface
      * @return recordsManagement/welcome/folderContents
      */
     public function readFolder($orgRegNumber, $folderId=false);
+
+    /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/archiveInfo
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readArchive_archiveId_();
+
+    /**
+     * Retrieve archive contents
+     *
+     * @return recordsManagement/welcome/archiveContent
+     * @uses  recordsManagement/archives/readArchivecontents_archive_
+     */
+    public function readArchivecontents_archive_();
+
+    /**
+     * Retrieve archive info
+     *
+     * @return recordsManagement/welcome/documentInfo
+     */
+    public function readDocumentinfo();
+
+    /**
+     * Retrieve an archive resource by its id
+     *
+     * @return recordsManagement/archive/getContents
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     */
+    public function readRecordsmanagement_archiveId_Digitalresource_resId_();
+
+    /**
+     * Display a preview of the contents
+     *
+     * @return digitalResource/digitalResource/retrieve
+     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     */
+    public function read_archiveId_Digitalresource_resId_();
+
+    /**
+     * Move an archive into a folder
+     * @param array  $archiveIds   The archive identifier list
+     * @param string $fromFolderId The originating folder identifier
+     * @param string $toFolderId   The destination folder identifier
+     * 
+     * @return recordsManagement/welcome/moveArchivesToFolder
+     * @uses recordsManagement/archives/udpateMovearchivestofolder
+     */
+    public function updateArchivesMovetofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 }
