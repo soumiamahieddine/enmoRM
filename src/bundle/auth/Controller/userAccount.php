@@ -391,14 +391,18 @@ class userAccount
     /**
      * Lock a user
      * @param string $userAccountId The identifier of the user
+     * @param bool   $setLockDate   Set true to set the lock date
      *
      * @return boolean The result of the request
      */
-    public function lock($userAccountId)
+    public function lock($userAccountId, $setLockDate = false)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $userAccount->locked = true;
-        $userAccount->lockDate = \laabs::newTimestamp();
+
+        if ($setLockDate) {
+            $userAccount->lockDate = \laabs::newTimestamp();
+        }
 
         return $this->sdoFactory->update($userAccount);
     }
