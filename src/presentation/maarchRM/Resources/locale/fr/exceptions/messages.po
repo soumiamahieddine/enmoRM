@@ -12,19 +12,10 @@ msgid "Bad request"
 msgstr "Données invalides"
 
 msgid "Null value not allowed"
-msgstr "Champ vide non permis"
+msgstr "Champ nul non permis"
 
 msgid "Empty value not allowed"
 msgstr "Champ vide non permis"
-
-msgid "The value of '%1$s' not respect the type '%2$s'"
-msgstr "La valeur de '%1$s' ne respecte pas le type '%2$s'"
-
-msgid "The field '%1$s' is required"
-msgstr "Le champs '%1$s' est requis"
-
-msgid "Conversion rule '%1$s' exist."
-msgstr "Le règle de conversation '%1$s' existe déjà"
 
 msgid "The relation control authority and orignator already exists."
 msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
@@ -61,3 +52,288 @@ msgstr "La date de fin est plus petite que la date de début."
 
 msgid "An owner is already defined."
 msgstr "Un opérateur d'archive est déjà défini."
+
+msgid "Role not created"
+msgstr "Rôle non créé"
+
+msgid "Role not updated"
+msgstr "Rôle non mis à jour"
+
+msgid "Role not deleted"
+msgstr "Rôle non supprimé"
+
+msgid "Connection failure, invalid service name."
+msgstr "Erreur de connexion, le nom de service est invalide."
+
+msgid "The fields contain white spaces."
+msgstr "Les champs comportent des espaces vides"
+
+msgid "Invalid username or email."
+msgstr "Nome d'utilisateur ou courriel invalide"
+
+msgid "User %1$s is locked"
+msgstr "L'utilisateur %1$s est bloqué"
+
+msgid "User %1$s is disabled"
+msgstr "L'utilisateur %1$s est désactivé"
+
+msgid "Username not registered or wrong password."
+msgstr "Utilisateur non enregistrer ou mot de passe invalide"
+
+msgid "The password is to short."
+msgstr "Le mot de passe est trop court"
+
+msgid "The password must contain special characters."
+msgstr "Le mot de passe doit contenir des caractères spéciaux"
+
+msgid "The password must contain digits."
+msgstr "Le mot de passe doit contenir des chiffres"
+
+msgid "The password must contain upper and lower case characters"
+msgstr "Le mot de passe doit contenir des caractères majuscules et minuscules"
+
+msgid "The password is the same as the precedent."
+msgstr "Le mot de passe est le même que le précédent"
+
+msgid "Scheduling not updated."
+msgstr "Plannification non mise à jour"
+
+msgid "Scheduling not deleted."
+msgstr "Plannification non détruite"
+
+msgid "Invalid identifiant."
+msgstr "Identifiant invalide"
+
+msgid "Execution error."
+msgstr "Erreur d'execution"
+
+msgid "Missing authentication credential"
+msgstr "Le jeton d'authentification est manquant"
+
+msgid "Task not created."
+msgstr "Tâche non créé"
+
+msgid "Task not updated."
+msgstr "Tâche non mis à jour"
+
+msgid "Task not deleted."
+msgstr "Tâche non détruite"
+
+msgid "An address with this purpose already exist."
+msgstr "Une adresse avec ce point de contact existe déjà."
+
+msgid "A communication mean with this purpose already exist."
+msgstr "Un moyen de communication avec ce point de contact existe déjà."
+
+msgid "Cluster name is empty"
+msgstr "Le nom de la grappe de dépôt est vide."
+
+msgid "Cluster repository is empty"
+msgstr "Le nom du répertoire de stockage est vide"
+
+msgid "Source format is empty"
+msgstr "Le format source est vide."
+
+msgid "Conversion service is empty"
+msgstr "Le service de conversion est vide."
+
+msgid "Target Puid is empty"
+msgstr "Le Puid cible est vide."
+
+msgid "Invalid hash."
+msgstr "Empreinte numérique invalide"
+
+msgid "Resource unavailable"
+msgstr "Ressource indisponible"
+
+msgid "Resource not found"
+msgstr "Ressource non trouvé"
+
+msgid "Repository URI already exist."
+msgstr "L'adresse du répertoire existe déjà."
+
+msgid "Service not found."
+msgstr "Service non trouvé"
+
+msgid "The parent folder does not exist"
+msgstr "Le dossier parent n'existe pas."
+
+msgid "The folder already exists"
+msgstr "Le dossier existe déjà."
+
+msgid "The folder can"t be found."
+msgstr "Le dossier n'existe pas"
+
+msgid "Can"t move to another service !"
+msgstr "Impossible de déplaccer dans un autre service !"
+
+msgid "The folder is closed."
+msgstr "Le dossier est fermé."
+
+msgid "Folder does not exist."
+msgstr "Le dossier n'existe pas."
+
+msgid "Journal hash is incorrect."
+msgstr "L'empreinte numérique du journal est incorrecte."
+
+msgid "Invalid journal: invalid hash integrity."
+msgstr "Journal invalide: empreinte numérique non valide."
+
+msgid "Invalid journal date: latest date is in the future."
+msgstr "Journal invalide: La dernière date est dans le futur."
+
+msgid "Invalid journal: Next journal chaining event is incomplete."
+msgstr "Journal invalide: L'événement de chainage du journal suivant est incomplète."
+
+msgid "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
+msgstr "Journal invalide: Le journal suivant est manquant ou l'événement de chainage a un identifiant de journal invalide"
+
+msgid "Invalid journal: Chaining event has a different hash."
+msgstr "Journal invalid: L'événement de chainage a une empreinte différente."
+
+msgid "Unknown event type."
+msgstr "Type d'événement inconnu"
+
+msgid "Key already exists"
+msgstr "La clé existe déjà"
+
+msgid "Organization can"t be moved to a descendent organization"
+msgstr "L'organisation' ne peux être déplacé sous une organisation descendant."
+
+msgid "Organization Archival Profile Access can"t be update "
+msgstr "Les acces aux profils d'archives ne peut pas être mis à jour."
+
+msgid "Access Code not created."
+msgstr "Règle de communicabilité non créé"
+
+msgid "Access Code not updated."
+msgstr "Règle de communicabilité non mis à jour"
+
+msgid "Access Code not deleted."
+msgstr "Règle de communicabilité non détruite"
+
+msgid "The archival profile %s1 currently in use."
+msgstr "Le profile d'archive %s1 est utilisé."
+
+msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
+msgstr "Le niveau de service à besoin que la grappe de dépôt puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
+
+msgid "The Service level requires a redundant storage, but the selected cluster does not have sufficiant repositories."
+msgstr "Le niveau de service à besoin de plus d'un espace de stockage. La grappe de dépôt sélectionnée n'en possède qu'un."
+
+msgid "Permission denied"
+msgstr "Vous n'avez pas l'authorisation d'effectuer cette action."
+
+msgid "An organization is required to check an archive integrity"
+msgstr "Vous devez vous positionner dans un service pour verifier l'intégité d'une archive."
+
+msgid "Permission denied: You have to choose a working organization unit to proceed this action."
+msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
+
+msgid "The description class does not match with the archival profile."
+msgstr "La classe de description ne correspond pas au profile d'archive."
+
+msgid "Archive not set for destruction."
+msgstr "L'archive n'est pas prévu pour être détruite."
+
+msgid "Disposal date not reached."
+msgstr "La date de fin d'utilisation atteinte."
+
+msgid "The batch folder does not exist."
+msgstr "Le dossier de traitement par lot n'existe pas."
+
+msgid "The description file can not be read."
+msgstr "Le fichier de description ne peut pas être lu."
+
+msgid "The description file is malformed."
+msgstr "Le fichier de description comporte des erreurs."
+
+msgid "Metadata %1$s is not allowed"
+msgstr "La métadonnée %1$s n'est pas autorisée."
+
+msgid "Null value not allowed for metadata %1$s"
+msgstr "La valeur nulle n'est pas autoriée pour la métadonnée %1$s"
+
+msgid "Forbidden value for metadata %1$s"
+msgstr "Valeur interdite pour la métadonnée %1$s"
+
+msgid "Invalid value for metadata %1$s"
+msgstr "Valeur non valide pour la métadonnée %1$s"
+
+msgid "The archival profile reference not found"
+msgstr "La référence du profile d'archive n'a pas été trouvée."
+
+msgid "The retention rule not found"
+msgstr "La règle de conservation n'a pas été trouvée."
+
+msgid "The access rule not found"
+msgstr "La règle de communicabilité n'a pas été trouvée.""
+
+msgid "The archive can not be moved in a different organization unit."
+msgstr "L'archive ne peut pas être déplacé dans un autre service."
+
+msgid "Description field not deleted."
+msgstr "Le champs de description n'a pas été détruite."
+
+msgid "The field \"%1$s\" is required"
+msgstr "Le champs \"%1$s\" est obligatoire."
+
+msgid "The value of \"%1$s\" not respect the type \"%2$s\""
+msgstr "La valeur de \"%1$s\" ne respecte pas le type \"%2$s\""
+
+msgid "Invalid log data"
+msgstr "Les données du journal sont invalide."
+
+msgid "The journal type is not allowed."
+msgstr "Le type de journal n'est pas autorisé."
+
+msgid "The journal must be archived by an owner organization."
+msgstr "Le journal doit être archivé par un opérateur d'archivage."
+
+msgid "Retention rule not created."
+msgstr "Règle de conservation non créée"
+
+msgid "Retention rule not updated."
+msgstr "Règle de conservation non mise à jour"
+
+msgid "Retention rule not deleted."
+msgstr "Règle de conservation non détruite"
+
+msgid "Service level not created."
+msgstr "Niveau de service non créé"
+
+msgid "No default service level found."
+msgstr "Aucun niveau de service par défaut"
+
+msgid "Service level not updated."
+msgstr "Niveau de service non mis à jour"
+
+msgid "Service level not deleted."
+msgstr "Niveau de service non détruit"
+
+msgid "Content not created"
+msgstr "Contenu non créé"
+
+msgid "Content description not updated"
+msgstr "Contenu de description non mis à jour"
+
+msgid "Content description not deleted"
+msgstr "Contenu de description non détruit"
+
+msgid "Unable to detect format"
+msgstr "Impossible de detecter le format"
+
+msgid "La référence du message existe déjà."
+msgstr "La référence du bordereau est déjà utilisée."
+
+msgid "No current organization choosen"
+msgstr "Aucune organisation de travail selectionné"
+
+msgid "Error of conversion process"
+msgstr "Erreur lors de la conversion"
+
+msgid "Relation not deleted."
+msgstr "La relation n'a pas pu être détruite."
+
+msgid "The message does not exist"
+msgstr "Le bordereau n'existe pas."
