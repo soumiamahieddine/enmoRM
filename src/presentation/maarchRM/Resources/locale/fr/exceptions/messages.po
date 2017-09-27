@@ -126,7 +126,7 @@ msgid "A communication mean with this purpose already exist."
 msgstr "Un moyen de communication avec ce point de contact existe déjà."
 
 msgid "Cluster name is empty"
-msgstr "Le nom de la grappe de dépôt est vide."
+msgstr "Le nom de la grappe de stockage est vide."
 
 msgid "Cluster repository is empty"
 msgstr "Le nom du répertoire de stockage est vide"
@@ -216,10 +216,10 @@ msgid "The archival profile %s1 currently in use."
 msgstr "Le profile d'archive %s1 est utilisé."
 
 msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
-msgstr "Le niveau de service à besoin que la grappe de dépôt puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
+msgstr "Le niveau de service à besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
 
 msgid "The Service level requires a redundant storage, but the selected cluster does not have sufficiant repositories."
-msgstr "Le niveau de service à besoin de plus d'un espace de stockage. La grappe de dépôt sélectionnée n'en possède qu'un."
+msgstr "Le niveau de service à besoin de plus d'un espace de stockage. La grappe de stockage sélectionnée n'en possède qu'un."
 
 msgid "Permission denied"
 msgstr "Vous n'avez pas l'authorisation d'effectuer cette action."

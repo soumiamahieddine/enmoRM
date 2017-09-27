@@ -33,16 +33,16 @@ msgid "Repository options"
 msgstr "Options"
 
 msgid "Repository created"
-msgstr "Site de dépôt créé"
+msgstr "Support de stockage créé"
 
 msgid "Repository updated"
-msgstr "Site de dépôt modifié"
+msgstr "Support de stockage modifié"
 
 msgid "Service not found."
 msgstr "Service non trouvé"
 
 msgid "Add a repository"
-msgstr "Ajouter un site de dépôt"
+msgstr "Ajouter un support de stockage"
 
 msgid "Repository name is empty"
 msgstr "Le nom du dépôt est vide"

@@ -31,20 +31,11 @@
                 <th title="Name">Name</th>
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
-            <tr class="originator">
-                <th title="Originator">Originator</th>
-                <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
-            </tr>
-            <tr class="archiveId">
-                <th title="Identifier">Identifier</th>
-                <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
-            </tr>
             <?merge archive.originatorArchiveId.bool() ?>
             <tr class="originatorArchiveId">
                 <th title="Name">Originator archive identifier</th>
                 <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
             </tr>
-            <?merge archive.originatingDate.bool() ?>
             <tr class="originatingDate">
                 <th title="Name">Originating date</th>
                 <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
@@ -79,8 +70,16 @@
                     <a href="#" class="freeze [?merge status.ifeq('frozen').then('hide', '') ?]" data-type="freeze" title="Freeze"><i class="fa fa-lock"></i></a>-->
                 </strong>
             </div>
-            <div id="managementInfo" class="panel-collapse collapse in" role="tabpanel">
+            <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
                 <table>
+                    <tr class="originator">
+                        <th title="Originator">Originator</th>
+                        <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
+                    </tr>
+                    <tr class="archiveId">
+                        <th title="Identifier">Identifier</th>
+                        <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
+                    </tr>
                     <tr>
                         <th title="Deposit date">Deposit date</th>
                         <td title='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
@@ -278,6 +277,10 @@
             $('#editManagementMetadata').prop('disabled',true);
             $('#saveManagementMetadata').show();
             $('#cancelManagementEdition').show();
+
+            if(!$('#managementInfo').hasClass('in')) {
+                $('#managementInfo').addClass('in');
+            }
             
             $('#retentionRuleSelect').show();
             $('#startDate').show();
