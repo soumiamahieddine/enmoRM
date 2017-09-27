@@ -11,7 +11,7 @@ msgstr "Gérer le stockage"
 msgctxt "userStory"
 
 msgid "adminFormat"
-msgstr "Gérer les formats"
+msgstr "Gérer le format des documents"
 msgctxt "userStory"
 
 msgid "adminEventFormat"
@@ -75,7 +75,7 @@ msgstr "Gérer les règles de communicabilité"
 msgctxt "userStory"
 
 msgid "adminRetentionRule"
-msgstr "Gérer le tableau de gestion"
+msgstr "Gérer les règles de conservation"
 msgctxt "userStory"
 
 msgid "archivalAgreement"
@@ -95,7 +95,7 @@ msgstr "Gérer les champs de description"
 msgctxt "userStory"
 
 msgid "filePlan"
-msgstr "Gérer le plan de classement"
+msgstr "Gérer les dossiers de classement"
 msgctxt "userStory"
 
 msgid "serviceLevel"
@@ -135,7 +135,7 @@ msgstr "Modifier les règles de gestion des archives"
 msgctxt "userStory"
 
 msgid "modifyDescription"
-msgstr "Modifier les métadonnées des archives"
+msgstr "Modifier la description des archives"
 msgctxt "userStory"
 
 msgid "migration"
@@ -272,7 +272,7 @@ msgstr "Accéder au registre des courriers"
 msgctxt "userStory"
 
 msgid "retrieve"
-msgstr "Consulter données et métadonnées"
+msgstr "Accéder au registre"
 msgctxt "userStory"
 
 msgid "originatorAccess"
