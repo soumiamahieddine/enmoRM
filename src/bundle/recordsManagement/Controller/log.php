@@ -312,6 +312,7 @@ class log implements archiveDescriptionInterface
         $archive->accessRuleDuration = 'P0D';
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
+        $archive->archiveName = 'journal/'.$log->type.' '.$log->toDate;
 
          // Create resource
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
@@ -341,6 +342,12 @@ class log implements archiveDescriptionInterface
         $archive->originatorOwnerOrgId = (string) $currentOrganization->orgId;
 
         $archive->serviceLevelReference = $archiveController->useServiceLevel("deposit")->reference;
+
+        if (strpos($archiveController->useServiceLevel("deposit")->control, "fullTextIndexation")) {
+            $archive->fullTextIndexation = "requested";
+        } else {
+            $archive->fullTextIndexation = "none";
+        }
 
         return $archiveController->deposit($archive, 'journal/'.$log->type.'/<Y>/<m>');
     }
