@@ -286,8 +286,19 @@ trait archiveEntryTrait
     public function completeMetadata($archive)
     {
         // Set archive name when mono document
-        if (empty($archive->archiveName) && count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
-            $archive->archiveName = pathinfo($archive->digitalResources[0]->fileName, \PATHINFO_FILENAME);
+        if (empty($archive->archiveName)) {
+            if (count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
+                $archive->archiveName = pathinfo($archive->digitalResources[0]->fileName, \PATHINFO_FILENAME);
+            } else {
+                $name = '';
+                if (!empty($archive->archivalProfileReference)) {
+                    $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);   
+                    $name .= $archivalProfile->name;
+                }
+                if (!empty($archive->originatorArchiveId)) {
+                    $name .= ' '.$archive->originatorArchiveId;
+                }
+            }
         }
 
         $this->completeManagementMetadata($archive);
@@ -347,18 +358,17 @@ trait archiveEntryTrait
             return;
         }
             
-        $this->useArchivalProfile($archive->archivalProfileReference);
-            
+        $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);   
 
-        if (!empty($this->currentArchivalProfile->retentionRuleCode)) {
-            $archive->retentionRuleCode = $this->currentArchivalProfile->retentionRuleCode;
+        if (!empty($archivalProfile->retentionRuleCode)) {
+            $archive->retentionRuleCode = $archivalProfile->retentionRuleCode;
         }
-        if (!empty($this->currentArchivalProfile->accessRuleCode)) {
-            $archive->accessRuleCode = $this->currentArchivalProfile->accessRuleCode;
+        if (!empty($archivalProfile->accessRuleCode)) {
+            $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
 
-        if (!empty($this->currentArchivalProfile->retentionStartDate)) {
-            $archive->retentionStartDate = $this->currentArchivalProfile->retentionStartDate;
+        if (!empty($archivalProfile->retentionStartDate)) {
+            $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
     }
     /**
