@@ -39,7 +39,7 @@ msgid "Service level"
 msgstr "Niveau de service"
 
 msgid "Cluster"
-msgstr "Grappe de dépôt"
+msgstr "Grappe de stocakge"
 
 msgid "Select a service level"
 msgstr "Sélectionnez un niveau de service"

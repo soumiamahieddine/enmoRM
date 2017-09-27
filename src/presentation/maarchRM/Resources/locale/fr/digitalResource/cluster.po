@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Cluster"
-msgstr "Grappe de dépôt"
+msgstr "Grappe de stockage"
 
 msgid "Clusters"
 msgstr "Grappes de dépôt"
@@ -36,7 +36,7 @@ msgid "Edit a cluster"
 msgstr "Modifier une grappe"
 
 msgid "Add repository"
-msgstr "Ajouter site de dépôt"
+msgstr "Ajouter support de stockage"
 
 msgid "Cluster Name"
 msgstr "Nom de la grappe"
@@ -45,10 +45,10 @@ msgid "Edit a new cluster"
 msgstr "Nouvelle grappe"
 
 msgid "Repository name"
-msgstr "Nom du site de dépôt"
+msgstr "Nom du support de stockage"
 
 msgid "Please to select a repository"
-msgstr "Sélectionnez un site de dépôt"
+msgstr "Sélectionnez un support de stockage"
 
 msgid "Read priority"
 msgstr "Priorité de lecture"
@@ -66,22 +66,22 @@ msgid "Disabled"
 msgstr "Désactiver"
 
 msgid "Validate cluster"
-msgstr "Valider la grappe de dépôt"
+msgstr "Valider la grappe de stockage"
 
 msgid "Add cluster repository"
-msgstr "Ajouter le site de dépôt"
+msgstr "Ajouter le support de stockage"
 
 msgid "Update cluster"
 msgstr "Modifier la grappe"
 
 msgid "Cluster created"
-msgstr "Grappe de dépôt créée"
+msgstr "Grappe de stockage créée"
 
 msgid "Cluster updated"
-msgstr "Grappe de dépôt modifiée"
+msgstr "Grappe de stockage modifiée"
 
 msgid "The form must be completed to add a cluster repository"
-msgstr "Le formulaire doit être complété pour ajouter une grappe de dépôt."
+msgstr "Le formulaire doit être complété pour ajouter une grappe de stockage."
 
 msgid "The value of read priority must be a number"
 msgstr "La valeur pour la priorité de lecture doit être un chiffre"

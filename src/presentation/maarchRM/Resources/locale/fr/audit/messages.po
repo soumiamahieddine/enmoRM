@@ -862,16 +862,16 @@ msgid "medona/controlAuthority/delete"
 msgstr "Suppression d'une autorité de contrôle"
 
 msgid "digitalResource/cluster/readList"
-msgstr "Lecture de toutes les grappes de dépôt"
+msgstr "Lecture de toutes les grappes de stockage"
 
 msgid "digitalResource/cluster/read_clusterId_"
-msgstr "Lecture d'une grappe de dépôt"
+msgstr "Lecture d'une grappe de stockage"
 
 msgid "digitalResource/cluster/create"
-msgstr "Création d'une grappe de dépôt"
+msgstr "Création d'une grappe de stockage"
 
 msgid "digitalResource/cluster/update"
-msgstr "Modification d'une grappe de dépôt"
+msgstr "Modification d'une grappe de stockage"
 
 msgid "digitalResource/contentType/read"
 msgstr "Lecture des types de contenu"
@@ -916,13 +916,13 @@ msgid "digitalResource/repository/readList"
 msgstr "Lecture de tous les sites de dépôt"
 
 msgid "digitalResource/repository/read_repositoryId_"
-msgstr "Lecture d'un site de dépôt"
+msgstr "Lecture d'un support de stockage"
 
 msgid "digitalResource/repository/create"
-msgstr "Création d'un site de dépôt"
+msgstr "Création d'un support de stockage"
 
 msgid "digitalResource/repository/update"
-msgstr "Modification d'un site de dépôt"
+msgstr "Modification d'un support de stockage"
 
 msgid "digitalResource/repository/readFlawedaddresses"
 msgstr "Lecture des adresses erronées"
