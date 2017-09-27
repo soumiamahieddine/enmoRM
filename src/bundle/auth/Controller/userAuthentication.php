@@ -112,7 +112,7 @@ class userAuthentication
 
             // If count exceeds max attempts, lock user
             if ($this->securityPolicy['loginAttempts'] && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1) {
-                \laabs::callService("auth/userAccount/updateLock_userAccountId_", $userLogin->accountId);
+                \laabs::callService("auth/userAccount/updateLock_userAccountId_", $userLogin->accountId, true);
                 \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
             }
 
