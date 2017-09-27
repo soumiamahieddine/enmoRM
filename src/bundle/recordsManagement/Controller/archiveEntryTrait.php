@@ -439,6 +439,12 @@ trait archiveEntryTrait
         }
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
+
+        if (strpos($this->currentServiceLevel->control, "fullTextIndexation")) {
+            $archive->fullTextIndexation = "requested";
+        } else {
+            $archive->fullTextIndexation = "none";
+        }
     }
 
     /**

@@ -82,3 +82,6 @@ msgstr "Référence"
 
 msgid "reference"
 msgstr "Référence"
+
+msgid "Full text indexation"
+msgstr "Indexation plein texte"

@@ -58,6 +58,7 @@ INSERT INTO "batchProcessing"."task"
 ('03', 'recordsManagement/archiveCompliance/readPeriodic', 'Valider l''intégrité des archives'),
 ('04', 'recordsManagement/archives/deleteDisposablearchives', 'Détruire les archives'),
 ('05', 'batchProcessing/notification/updateProcess', 'Envoyer notification');
+('06', 'recordsManagement/archives/updateIndexfulltext', 'Extraction plein texte');
 
 
 INSERT INTO "batchProcessing"."scheduling"
