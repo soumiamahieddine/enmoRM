@@ -287,17 +287,27 @@ trait archiveEntryTrait
     {
         // Set archive name when mono document
         if (empty($archive->archiveName)) {
-            if (count($archive->digitalResources) == 1 && isset($archive->digitalResources[0]->fileName)) {
-                $archive->archiveName = pathinfo($archive->digitalResources[0]->fileName, \PATHINFO_FILENAME);
+            if (count($archive->digitalResources)) {
+                foreach ($archive->digitalResources as $digitalResource) {
+                    if (isset($digitalResource->fileName)) {
+                        $archive->archiveName = pathinfo($digitalResource->fileName, \PATHINFO_FILENAME);
+
+                        break;
+                    }
+                }
             } else {
-                $name = '';
                 if (!empty($archive->archivalProfileReference)) {
                     $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);   
-                    $name .= $archivalProfile->name;
+                    $archive->archiveName .= $archivalProfile->name;
                 }
                 if (!empty($archive->originatorArchiveId)) {
-                    $name .= ' '.$archive->originatorArchiveId;
+                    $archive->archiveName .= ' '.$archive->originatorArchiveId;
                 }
+                if (!empty($archive->originatingDate)) {
+                    $archive->archiveName .= ' '.$archive->originatingDate;
+                }
+
+                $archive->archiveName = trim($archive->archiveName);
             }
         }
 

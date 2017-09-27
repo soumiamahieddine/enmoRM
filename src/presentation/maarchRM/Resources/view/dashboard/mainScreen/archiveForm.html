@@ -7,7 +7,7 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-sm-3  control-label small">Name<span style="color: red">&nbsp;*</span></label>
+        <label class="col-sm-3 control-label small">Name</label>
         <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
@@ -115,6 +115,12 @@
             if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
                 selectedProfile = dataJson;
             }
+
+            /*if (value == '' || value == null) {
+                $('#requireArchiveName').removeClass("hide");
+            } else {
+                $('#requireArchiveName').addClass("hide");
+            }*/
 
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
                 $('#retentionRule').val('').removeAttr("disabled").change();
@@ -224,10 +230,10 @@
                 return -1;
             }
 
-            if (archive.archiveName == null || archive.archiveName == "") {
+            /*if (archive.archiveName == null || archive.archiveName == "") {
                 gritter.show($('#fieldLabel_error').text(), false);
                 return -2;
-            }
+            }*/
 
             archive.digitalResources = DocumentList.serialize();
 
