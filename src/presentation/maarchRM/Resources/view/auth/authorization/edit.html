@@ -44,10 +44,10 @@
                         </div>
                         <div class="form-group">
                             <div class="btn-group" data-toggle="buttons" id="roleStatus">
-                                <label class="btn btn-info [?merge .enabled.then('', 'active') ?]" title="Enabled">
+                                <label class="btn btn-info [?merge role.enabled.then('active', '') ?]" title="Enabled">
                                     <input type="radio" name="enabled" value="1"><i class="fa fa-unlock">&nbsp;</i> Enabled
                                 </label>
-                                <label class="btn btn-danger [?merge .enabled.then('active', '') ?]" title="Disabled">
+                                <label class="btn btn-danger [?merge role.enabled.then('', 'active') ?]" title="Disabled">
                                     <input type="radio" name="enabled" value="0"><i class="fa fa-lock">&nbsp;</i> Disabled
                                 </label>
                             </div>
