@@ -35,11 +35,11 @@ msgstr "Le format du fichier n'a pas pu être identifié."
 msgid "Invalid archive profile"
 msgstr "Profil d'archive invalide"
 
-msgid "The organization %s1 is used in archives."
-msgstr "L'organisation %s1 est utilisée sur des archives."
+msgid "The organization %s is used in archives."
+msgstr "L'organisation %s est utilisée sur des archives."
 
-msgid "Invalid contained archive profile %s1"
-msgstr "Le profil d'archive contenu %s1 n'est pas autorisé."
+msgid "Invalid contained archive profile %s"
+msgstr "Le profil d'archive contenu %s n'est pas autorisé."
 
 msgid "The description field already exists."
 msgstr "Le champs de description existe déjà."
@@ -212,8 +212,8 @@ msgstr "Règle de communicabilité non mis à jour"
 msgid "Access Code not deleted."
 msgstr "Règle de communicabilité non détruite"
 
-msgid "The archival profile %s1 currently in use."
-msgstr "Le profile d'archive %s1 est utilisé."
+msgid "The archival profile %s currently in use."
+msgstr "Le profile d'archive %s est utilisé."
 
 msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
 msgstr "Le niveau de service à besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
@@ -338,69 +338,69 @@ msgstr "La relation n'a pas pu être détruite."
 msgid "The message does not exist"
 msgstr "Le bordereau n'existe pas."
 
-msgid "Cluster %s1 not found."
-msgstr "La grappe de stockage %s1 est introuvable."
+msgid "Cluster %s not found."
+msgstr "La grappe de stockage %s est introuvable."
 
-msgid "Cluster %s1 not created."
-msgstr "La grappe de stockage %s1 n'a pas été créé."
+msgid "Cluster %s not created."
+msgstr "La grappe de stockage %s n'a pas été créé."
 
-msgid "Cluster %s1 not updated."
-msgstr "La grappe de stockage %s1 n'a pas été mise à jour."
+msgid "Cluster %s not updated."
+msgstr "La grappe de stockage %s n'a pas été mise à jour."
 
-msgid "No repository for %s1 mode"
+msgid "No repository for %s mode"
 msgstr "Aucun espace de stockage pour le mode %1s"
 
-msgid "Container %s1 counld not be opened."
-msgstr "Le conteneur %s1 ne peut pas être ouvert."
+msgid "Container %s counld not be opened."
+msgstr "Le conteneur %s ne peut pas être ouvert."
 
-msgid "%s1 not found"
-msgstr "%s1 n'a pas été trouvé."
+msgid "%s not found"
+msgstr "%s n'a pas été trouvé."
 
-msgid "Invalid hash for resource %s1 at address %s2"
-msgstr "Empreinte numérique invalide pour la resource %s1 à l'adresse %s2."
+msgid "Invalid hash for resource %1$s at address %2$s"
+msgstr "Empreinte numérique invalide pour la resource %1$s à l'adresse %2$s."
 
-msgid "Conversion rule %s1 not found."
-msgstr "Règle de conversion %s1 non trouvé"
+msgid "Conversion rule %s not found."
+msgstr "Règle de conversion %s non trouvé"
 
-msgid "Conversion rule with Puid %s1 already exist."
-msgstr "La règle de conversion avec le Puid %s1 existe déjà."
+msgid "Conversion rule with Puid %s already exist."
+msgstr "La règle de conversion avec le Puid %s existe déjà."
 
-msgid "Resource %s1 not created: %s2"
-msgstr "La resource %s1 n'a pas été créé : %s2"
+msgid "Resource %1$s not created: %2$s"
+msgstr "La resource %s n'a pas été créé : %2$s"
 
-msgid "Resource %s1 could not be retrieved."
-msgstr "Le resource %s1 n'a pas été retrouvé."
+msgid "Resource %s could not be retrieved."
+msgstr "Le resource %s n'a pas été retrouvé."
 
-msgid "Resource not deleted at address %s1 : %s2"
-msgstr "La resource n'a pas pu être supprimée à l'adresse %s1 : %s2"
+msgid "Resource not deleted at address %1$s : %2$s"
+msgstr "La resource n'a pas pu être supprimée à l'adresse %1$s : %2$s"
 
-msgid "No address return for creation of container in repository %s1."
-msgstr "Aucune adresse pour la création du conteneur dans le support de stockage %s1."
+msgid "No address return for creation of container in repository %s."
+msgstr "Aucune adresse pour la création du conteneur dans le support de stockage %s."
 
-msgid "No address return for storage of resource in repository %s1."
-msgstr "Aucune adresse pour le stockage de resource dans le support de stockage %s1."
+msgid "No address return for storage of resource in repository %s."
+msgstr "Aucune adresse pour le stockage de resource dans le support de stockage %s."
 
-msgid "Resource contents not available at address %s1."
-msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s1."
+msgid "Resource contents not available at address %s."
+msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s."
 
-msgid "No repository found with reference %s1"
-msgstr "Aucune repertoire de stockage trouvé avec la référence %s1."
+msgid "No repository found with reference %s"
+msgstr "Aucune repertoire de stockage trouvé avec la référence %s."
 
-msgid "Unknown event type: %s1"
-msgstr "Evénement de type %s1 non trouvé"
+msgid "Unknown event type: %s"
+msgstr "Evénement de type %s non trouvé"
 
-msgid "%s1 can"t be found."
-msgstr "%s1 n'a pas été trouvé."
+msgid "%s can"t be found."
+msgstr "%s n'a pas été trouvé."
 
-msgid "The archive identifier %s1 does not exist."
-msgstr "L'identifiant d'archive %s1 n'existe pas."
+msgid "The archive identifier %s does not exist."
+msgstr "L'identifiant d'archive %s n'existe pas."
 
-msgid "Invalid format attachments for '%s1'"
-msgstr "Format invalide pour '%s1'"
+msgid "Invalid format attachments for %s"
+msgstr "Format invalide pour '%s'"
 
-msgid "The archive %s1 is not from the folder %s2."
-msgstr "L'archive %s1 n'est pas dans le dossier %s2."
+msgid "The archive %1$s is not from the folder %2$s."
+msgstr "L'archive %1$s n'est pas dans le dossier %2$s."
 
-msgid "The folder only accepts archives originated from %s1."
-msgstr "Le dossier n'accepte que des archives du service producteur %s1."
+msgid "The folder only accepts archives originated from %s."
+msgstr "Le dossier n'accepte que des archives du service producteur %s."
 

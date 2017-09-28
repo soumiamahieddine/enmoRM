@@ -371,7 +371,7 @@ class archivalProfile
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
         if ($this->isUsed($archivalProfile)) {
-            throw new \core\Exception\ForbiddenException("The archival profile %s1 currently in use.", 403, null, [$archivalProfile->reference]);
+            throw new \core\Exception\ForbiddenException("The archival profile %s currently in use.", 403, null, [$archivalProfile->reference]);
         }
 
         $this->deleteDetail($archivalProfile);
@@ -442,7 +442,7 @@ class archivalProfile
                     $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $containedProfileId);
 
                 } catch (\Exception $e) {
-                    throw new \core\Exception\NotFoundException("%s1 can't be found.", 404, null, [$containedProfileId]);
+                    throw new \core\Exception\NotFoundException("%s can't be found.", 404, null, [$containedProfileId]);
                 }
                 
                 $archivalProfileContents = \laabs::newInstance('recordsManagement/archivalProfileContents');

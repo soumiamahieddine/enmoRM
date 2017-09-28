@@ -447,7 +447,7 @@ class organization
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
         
         if ($this->isUsed($organization->registrationNumber)) {
-            throw new \core\Exception\ForbiddenException("The organization %s1 is used in archives.", 403, null, [$organization->registrationNumber]);
+            throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
         }
 
         $children = $this->sdoFactory->readChildren("organization/organization", $organization);

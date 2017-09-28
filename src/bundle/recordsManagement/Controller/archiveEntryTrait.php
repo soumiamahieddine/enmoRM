@@ -640,10 +640,10 @@ trait archiveEntryTrait
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 if (empty($archive->contents[$i]->archivalProfileReference)) {
                     if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) { 
-                        throw new \core\Exception\BadRequestException("Invalid contained archive profile %s1", 400, null, $archive->contents[$i]->archivalProfileReference);
+                        throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                     }
                 } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s1", 400, null, $archive->contents[$i]->archivalProfileReference);
+                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                 }
                 
                 $this->validateManagementMetadata($archive->contents[$i]);
@@ -746,7 +746,7 @@ trait archiveEntryTrait
             if ($formatValidation) {
                 $validation = $this->formatController->validateFormat($filename);
                 if (!$validation !== true && is_array($validation)) {
-                    throw new \core\Exception\BadRequestException("Invalid format attachments for %s1", 404, null, [$digitalResource->fileName]);
+                    throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
                 }
             }
 
