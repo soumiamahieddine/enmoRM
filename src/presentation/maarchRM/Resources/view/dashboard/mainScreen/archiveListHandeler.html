@@ -1,8 +1,11 @@
 <div id="archiveContentTemplate" class="hide">
     <li>
         <span>
-            <i class='fa'/>
-            <span/><br/>
+            <span>
+                <i class='fa'/>
+                <span name="archiveOrDocument">&nbsp;</span>
+            </span>
+            <br/>
             &nbsp;&nbsp;
             <small/>&nbsp;
             <small/>&nbsp;
@@ -64,16 +67,16 @@
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
             if (!c) {
-                e.addClass('bg-success');
+                e.addClass('bg-info');
             } else { 
-                e.removeClass('bg-success');
-                c.addClass('selectedChild').closest('li').addClass('bg-success'); 
+                e.removeClass('bg-info');
+                c.addClass('selectedChild').closest('li').addClass('bg-info'); 
             }
         },
 
         unselect: function(dataList) {
             $('#rightColumn').html('');
-            dataList.find('.bg-success').removeClass('bg-success')
+            dataList.find('.bg-info').removeClass('bg-info')
                     .find('.selectedChild').removeClass('selectedChild');
         },
 
@@ -131,7 +134,14 @@
                     template = this.archiveContentTemplate.clone();
                     var smalls = template.find('small');
 
+                    if (childrenArchives[j].fileplanLevel == 'item') {
+                        var icon = $('<i class="fa fa-file">&nbsp;</i>');
+                    } else {
+                        var icon = $('<i class="fa fa-folder">&nbsp;</i>');
+                    }
+
                     template.children('span')
+                            .children('span')
                             .children('i')
                             .addClass('fa')
                             .data('closed-icon', 'fa-caret-right')
@@ -139,9 +149,11 @@
                             .siblings('span')
                             .addClass('childrenArchive')
                             .attr('id', childrenArchives[j].archiveId)
-                            .html(childrenArchives[j].archiveName)
-                            .append($('<a/>').attr('href','#')
-                                             .class);
+                            .append(icon)
+                            .append($('<span>').html(childrenArchives[j].archiveName))
+                            .append($('<a/>').attr('href','#').class);
+
+                    
 
                     if (childrenArchives[j].depositDate) {
                         $(smalls[0]).text(childrenArchives[j].depositDate.substring(0, 19));
@@ -169,13 +181,15 @@
                     template = this.archiveContentTemplate.clone();
 
                     template.children('span')
+                            .children('span')
                             .children('i')
-                            .addClass('fa fa-file-o')
+                            .html('&nbsp;&nbsp;')
                             .siblings('span')
                             .addClass('document')
                             .data('json', digitalResources[i])
                             .attr('id', digitalResources[i].resId)
-                            .html(digitalResources[i].fileName);
+                            .append($('<i class="fa fa-file-o">&nbsp;</i>'))
+                            .append($('<span>').html(digitalResources[i].fileName));
 
                     BootstrapTree.addNode(parent, template, hidden);
                 }

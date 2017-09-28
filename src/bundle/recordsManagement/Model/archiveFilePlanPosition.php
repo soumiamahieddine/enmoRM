@@ -88,6 +88,13 @@ class archiveFilePlanPosition
     public $filePlanPosition;
 
     /**
+     * The file plan level
+     *
+     * @var string
+     */
+    public $fileplanLevel;
+
+    /**
      * The folder status
      *
      * @var string

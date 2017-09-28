@@ -380,6 +380,13 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
+
+        if (empty($archive->fileplanLevel)) {
+            $archive->fileplanLevel = 'file';
+            if (!empty($archivalProfile->fileplanLevel)) {
+                $archive->fileplanLevel = $archivalProfile->fileplanLevel;
+            }
+        }
     }
     /**
      * Complete the access rule metadata
@@ -663,6 +670,11 @@ trait archiveEntryTrait
 
         // Parent : read and check fileplan
         $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+
+        // Check level in file plan
+        if ($parentArchive->fileplanLevel == 'item') {
+            throw new \core\Exception\BadRequestException("Parent archive is an item and can not contain items.");
+        }
 
         // No profile on parent, accept any profile
         if (empty($parentArchive->archivalProfileReference)) {

@@ -25,6 +25,7 @@
         <div class="archiveInfo col-xs-11">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
+                <i class="fileplanLevel">&nbsp;</i>
                 <a href="#" class="archiveName"></a>
                 <br/>
                 &nbsp;&nbsp;
@@ -141,10 +142,20 @@
 
         mergeRow: function(archive) {
             var archiveDiv = ArchiveFolderList.rowTemplate.clone();
+            var icon = archiveDiv.find('.fileplanLevel');
             var siblings = archiveDiv.attr('id', archive.archiveId)
                                      .find('.archiveName').text(archive.archiveName)
                                      .siblings('small');
+            
+            switch (archive.fileplanLevel) {
+                case 'item':
+                    icon.addClass('fa fa-file');
+                    break;
 
+                case 'file':
+                default:
+                    icon.addClass('fa fa-folder');
+            }
             if (archive.depositDate) {
                 $(siblings[0]).text(archive.depositDate.substring(0, 19));
             }
