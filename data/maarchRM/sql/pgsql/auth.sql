@@ -47,7 +47,8 @@ INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName
     ('user', 'bbain', 'BAIN', 'Barbara', 'Mme.', 'Barbara BAIN', 'bbain', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 
 INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "enabled") VALUES
-    ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true);
+    ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true),
+    ('service', 'SystemDepositor', 'Système versant', 'Systeme versant', 'info@maarch.org', true);
 
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
@@ -58,10 +59,11 @@ INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
 -- servicePrivilege
 INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES
     ('System', 'recordsManagement/archives/deleteDisposablearchives'),
-    ('System', 'recordsManagement/archive/createArchiveBatch'),
+    ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch'),
     ('System', 'audit/event/createChainjournal'),
     ('System', 'lifeCycle/journal/createChainjournal'),
-    ('System', 'recordsmanagement/archivecompliance/readperiodic');
+    ('System', 'recordsmanagement/archivecompliance/readperiodic'),
+    ('System', 'batchProcessing/scheduling/updateProcess');
 
 
 -- roleMember
@@ -80,14 +82,23 @@ INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
 -- privilege
 INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('ADMIN', 'adminTech/*'),
-    ('ADMIN', 'adminFunc/*'),
+    ('ADMIN', 'adminFunc/AdminArchivalProfileAccess'),
+    ('ADMIN', 'adminFunc/adminAuthorization'),
+    ('ADMIN', 'adminFunc/adminOrgContact'),
+    ('ADMIN', 'adminFunc/adminOrgUser'),
+    ('ADMIN', 'adminFunc/adminOrganization'),
+    ('ADMIN', 'adminFunc/adminServiceaccount'),
+    ('ADMIN', 'adminFunc/adminUseraccount'),
+    ('ADMIN', 'adminFunc/contact'),
+    ('ADMIN', 'journal/audit'),
 	
     ('CORRESPONDANT_ARCHIVES', 'adminArchive/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveRetrieval/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
-    ('CORRESPONDANT_ARCHIVES', 'journal/*'),
-    ('CORRESPONDANT_ARCHIVES', 'archiveAuthorization/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/*'),
+    ('CORRESPONDANT_ARCHIVES', 'adminFunc/batchScheduling'),
+    ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal'),
+    ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive'),
 
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
