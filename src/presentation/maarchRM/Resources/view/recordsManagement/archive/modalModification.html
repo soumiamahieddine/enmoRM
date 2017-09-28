@@ -53,6 +53,8 @@
     <span id="text_D">day(s)</span>
     <span id="text_M">month(s)</span>
     <span id="text_Y">year(s)</span>
+    <span id="text_preservation">preservation</span>
+    <span id="text_destruction">destruction</span>
 </div>
 
 <style>
@@ -64,6 +66,10 @@
         ModificationModal.loadAccessCode();
     });
     
+    $("#retentionRuleCode").on('change', function () {
+        ModificationModal.loadRetentionCode();
+    });
+
     $("#comment").bind('input propertychange', function () {
         if ($("#comment").val() == "") {
             $("#save").prop("disabled",true);
@@ -99,17 +105,17 @@
             $('#selectedArchiveReference').css('display', '').find('span').html(archiveName);
 
             if (type == 'accessRule') {
-                $('#startDate, #code').css('display', '');
-                $('#duration, #finalDisposition').css('display', 'none');
+                $('#startDate, #accessCode').css('display', '');
+                $('#retentionCode').css('display', 'none');
                 this.loadRule(archiveId, archiveName, type);
 
             } else if (type == "retentionRule") { 
-                $('#startDate, #duration, #finalDisposition').css('display', '');
-                $('#code').css('display', 'none');
+                $('#startDate,#retentionCode').css('display', '');
+                $('#accessCode').css('display', 'none');
                 this.loadRule(archiveId, archiveName);
 
             } else {
-                $('#startDate, #code, #duration, #finalDisposition').css('display', 'none');
+                $('#startDate,accessCode,#retentionCode').css('display', 'none');
             }
             
             $('#save').data("archiveids", "");
@@ -141,13 +147,6 @@
                         }
                     } else {
                         rule = response.retentionRule;
-
-                        if (rule.retentionDuration == "" || rule.retentionDuration == null) {
-                            return;
-                        }
-
-                        rule.retentionDurationUnit = rule.retentionDuration.substring(rule.retentionDuration.length-1);
-                        rule.retentionDuration = rule.retentionDuration.substring(1, rule.retentionDuration.length-1);
                     }
 
                     $.each(rule, function(key, value) {
@@ -156,6 +155,10 @@
 
                     if( ModificationModal.modalType === "accessRule") {
                         ModificationModal.loadAccessCode();
+                    }
+
+                     if( ModificationModal.modalType === "retentionRule") {
+                        ModificationModal.loadRetentionCode();
                     }
 
                     // Set datepicker Date
@@ -219,7 +222,7 @@
             } else {
                 type = 'PUT';
             }
-
+            console.log(this.actionsList[this.modalType])
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,
@@ -275,6 +278,41 @@
             }
         },
         
+         loadRetentionCode: function() {
+            var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
+            var retentionRules = "";
+            var retentionRuleTable = $('#retentionRuleTable');
+
+            if (retentionRuleCode) {
+                if (retentionRuleCode.duration) {
+                    var retentionRules = retentionRuleCode.retentionRules;
+                    var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
+                    var retentionRuleFinalDisposition= retentionRuleCode.finalDisposition;
+
+                    var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
+                    $('#retentionRule').css("display", '');
+                    $('#retentionRuleDuration').html(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                    $('#retentionRuleFinalDisposition').html( $('#text_' + retentionRuleFinalDisposition).html());
+                
+                } else {
+                    $('#retentionRule').css("display", '');
+                    $('#retentionRuleDuration').html(retentionRuleCode.durationUnit);
+                    $('#retentionRuleFinalDisposition').html($('#text_' + retentionRuleFinalDisposition).html());
+                }
+
+            } else {
+                $('#retentionRule').css("display", 'none');
+            }
+            
+            if(retentionRules){
+                if (!retentionRules.length) {
+                    $('#retentionRuleTable').css('display', 'none');
+                } else {
+                    var checked = $('<i>').addClass('fa fa-check').html('&nbsp;');
+                }
+            }
+        },
+
         loadTable: function(ids, names) {
             var table = $('#archiveTable');
             var tbody = table.find('tbody');
