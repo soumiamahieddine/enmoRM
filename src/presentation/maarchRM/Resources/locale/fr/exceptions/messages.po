@@ -45,7 +45,7 @@ msgid "The description field already exists."
 msgstr "Le champs de description existe déjà."
 
 msgid "All repositories must be accessible"
-msgstr "Tout les répertoires de stockage doivent être accessibles"
+msgstr "Tout les supports de stockage doivent être accessibles"
 
 msgid "The end date is lower than the begin date."
 msgstr "La date de fin est plus petite que la date de début."
@@ -80,7 +80,7 @@ msgstr "L'utilisateur %1$s est désactivé"
 msgid "Username not registered or wrong password."
 msgstr "Utilisateur non enregistrer ou mot de passe invalide"
 
-msgid "The password is to short."
+msgid "The password is too short."
 msgstr "Le mot de passe est trop court"
 
 msgid "The password must contain special characters."
@@ -89,7 +89,7 @@ msgstr "Le mot de passe doit contenir des caractères spéciaux"
 msgid "The password must contain digits."
 msgstr "Le mot de passe doit contenir des chiffres"
 
-msgid "The password must contain upper and lower case characters"
+msgid "The password must contain upper and lower case."
 msgstr "Le mot de passe doit contenir des caractères majuscules et minuscules"
 
 msgid "The password is the same as the precedent."
@@ -129,7 +129,7 @@ msgid "Cluster name is empty"
 msgstr "Le nom de la grappe de stockage est vide."
 
 msgid "Cluster repository is empty"
-msgstr "Le nom du répertoire de stockage est vide"
+msgstr "Le nom du support de stockage est vide"
 
 msgid "Source format is empty"
 msgstr "Le format source est vide."
@@ -150,7 +150,7 @@ msgid "Resource not found"
 msgstr "Ressource non trouvé"
 
 msgid "Repository URI already exist."
-msgstr "L'adresse du répertoire existe déjà."
+msgstr "L'adresse du support de stockage existe déjà."
 
 msgid "Service not found."
 msgstr "Service non trouvé"
@@ -337,3 +337,70 @@ msgstr "La relation n'a pas pu être détruite."
 
 msgid "The message does not exist"
 msgstr "Le bordereau n'existe pas."
+
+msgid "Cluster %s1 not found."
+msgstr "La grappe de stockage %s1 est introuvable."
+
+msgid "Cluster %s1 not created."
+msgstr "La grappe de stockage %s1 n'a pas été créé."
+
+msgid "Cluster %s1 not updated."
+msgstr "La grappe de stockage %s1 n'a pas été mise à jour."
+
+msgid "No repository for %s1 mode"
+msgstr "Aucun espace de stockage pour le mode %1s"
+
+msgid "Container %s1 counld not be opened."
+msgstr "Le conteneur %s1 ne peut pas être ouvert."
+
+msgid "%s1 not found"
+msgstr "%s1 n'a pas été trouvé."
+
+msgid "Invalid hash for resource %s1 at address %s2"
+msgstr "Empreinte numérique invalide pour la resource %s1 à l'adresse %s2."
+
+msgid "Conversion rule %s1 not found."
+msgstr "Règle de conversion %s1 non trouvé"
+
+msgid "Conversion rule with Puid %s1 already exist."
+msgstr "La règle de conversion avec le Puid %s1 existe déjà."
+
+msgid "Resource %s1 not created: %s2"
+msgstr "La resource %s1 n'a pas été créé : %s2"
+
+msgid "Resource %s1 could not be retrieved."
+msgstr "Le resource %s1 n'a pas été retrouvé."
+
+msgid "Resource not deleted at address %s1 : %s2"
+msgstr "La resource n'a pas pu être supprimée à l'adresse %s1 : %s2"
+
+msgid "No address return for creation of container in repository %s1."
+msgstr "Aucune adresse pour la création du conteneur dans le support de stockage %s1."
+
+msgid "No address return for storage of resource in repository %s1."
+msgstr "Aucune adresse pour le stockage de resource dans le support de stockage %s1."
+
+msgid "Resource contents not available at address %s1."
+msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s1."
+
+msgid "No repository found with reference %s1"
+msgstr "Aucune repertoire de stockage trouvé avec la référence %s1."
+
+msgid "Unknown event type: %s1"
+msgstr "Evénement de type %s1 non trouvé"
+
+msgid "%s1 can"t be found."
+msgstr "%s1 n'a pas été trouvé."
+
+msgid "The archive identifier %s1 does not exist."
+msgstr "L'identifiant d'archive %s1 n'existe pas."
+
+msgid "Invalid format attachments for '%s1'"
+msgstr "Format invalide pour '%s1'"
+
+msgid "The archive %s1 is not from the folder %s2."
+msgstr "L'archive %s1 n'est pas dans le dossier %s2."
+
+msgid "The folder only accepts archives originated from %s1."
+msgstr "Le dossier n'accepte que des archives du service producteur %s1."
+

@@ -262,6 +262,17 @@ class archive
             }
         }
 
+         //retention code selector
+        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $retentionRules = $retentionRuleController->index();
+        foreach ($retentionRules as $retentionRule) {
+            $retentionRule->json = json_encode($retentionRule);
+            if ($retentionRule->duration != null) {
+                $retentionRule->retentionRuleDurationUnit = substr($retentionRule->duration, -1);
+                $retentionRule->retentionRuleDuration = substr($retentionRule->duration, 1, -1);
+            }
+        }
+
         $orgController = \laabs::newController('organization/organization');
         $orgsByRegNumber = $orgController->orgList();
 
@@ -292,6 +303,7 @@ class archive
         $this->readPrivilegesOnArchives();
 
         $this->view->setSource("accessRules", $accessRules);
+        $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
         $this->view->merge();
 

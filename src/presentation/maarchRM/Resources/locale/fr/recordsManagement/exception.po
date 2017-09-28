@@ -9,7 +9,7 @@ msgid "You are not allowed to access to this archive !"
 msgstr "Vous n'avez pas les droits d'accès à cette archive !"
 
 msgid "This archive could not be found on the repository."
-msgstr "L'archive n'a pas été trouvée sur les sites de dépôt."
+msgstr "L'archive n'a pas été trouvée sur les supports de stockage."
 
 msgid "Not found"
 msgstr "Archive manquante"

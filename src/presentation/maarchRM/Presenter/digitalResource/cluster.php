@@ -116,7 +116,7 @@ class cluster
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(2);
+        $dataTable->setUnsortableColumns(4);
 
         $this->view->translate();
 

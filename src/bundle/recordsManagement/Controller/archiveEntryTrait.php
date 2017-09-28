@@ -746,7 +746,7 @@ trait archiveEntryTrait
             if ($formatValidation) {
                 $validation = $this->formatController->validateFormat($filename);
                 if (!$validation !== true && is_array($validation)) {
-                    throw new \core\Exception\BadRequestException("Invalid format attachments for '$digitalResource->fileName'");
+                    throw new \core\Exception\BadRequestException("Invalid format attachments for %s1", 404, null, [$digitalResource->fileName]);
                 }
             }
 

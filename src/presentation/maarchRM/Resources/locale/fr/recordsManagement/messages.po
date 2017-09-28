@@ -795,7 +795,7 @@ msgstr "Modification de l'index"
 msgid "Reference"
 msgstr "Cote"
 
-msgid "Select an access rule code"
+msgid "Select a rule"
 msgstr "Selectionnez une règle"
 
 

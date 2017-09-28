@@ -125,15 +125,15 @@ class archiveFilePlanPosition
 
                 // Validation
                 if (!$archive) {
-                    throw new \core\Exception\NotFoundException("The archive identifier '$archiveId' does not exist.");
+                    throw new \core\Exception\NotFoundException("The archive identifier %s1 does not exist.", 404, null, [$archiveId]);
                 }
 
                 if ($fromFolderId != $archive->filePlanPosition) {
-                    throw new \core\Exception\ForbiddenException("The archive '$archiveId' is not from the folder '$fromFolderId'.");
+                    throw new \core\Exception\ForbiddenException("The archive %s1 is not from the folder %s2.", 404, null, [$archiveId, $fromFolderId]);
                 }
 
                 if ($toFolder && $toFolder->ownerOrgRegNumber != $archive->originatorOrgRegNumber) {
-                    throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from '$folder->ownerOrgRegNumber'.");
+                    throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from %s1.", 404, null, [$folder->ownerOrgRegNumber]);
                 }
 
                 // Update

@@ -36,6 +36,13 @@ class archiveRetentionRule
     public $archiveId;
 
     /**
+     * The code of retention rules
+     *
+     * @var string
+     */
+    public $retentionRuleCode;
+
+    /**
      * The status
      *
      * @var string

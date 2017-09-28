@@ -6,13 +6,13 @@ msgid "Cluster"
 msgstr "Grappe de stockage"
 
 msgid "Clusters"
-msgstr "Grappes de dépôt"
+msgstr "Grappes de stockage"
 
 msgid "cluster(s)"
-msgstr "grappe(s) de dépôt"
+msgstr "grappe(s) de stockage"
 
 msgid "Repositories management"
-msgstr "Sites de dépôt"
+msgstr "Sites de stockage"
 
 msgid "Cluster identifier"
 msgstr "Identifiant"
@@ -27,7 +27,7 @@ msgid "Store metadata"
 msgstr "Métadonnées"
 
 msgid "Cluster repositories"
-msgstr "Sites de dépôt"
+msgstr "Sites de stockage"
 
 msgid "New cluster"
 msgstr "Nouvelle grappe"
@@ -93,10 +93,10 @@ msgid "The value of delete priority must be a number"
 msgstr "La valeur pour la priorité de suppression doit être un chiffre"
 
 msgid "Cluster name is empty"
-msgstr "Le nom de la grappe dépôt est vide"
+msgstr "Le nom de la grappe stockage est vide"
 
 msgid "Cluster repository is empty"
-msgstr "Les sites de dépôt sont vide"
+msgstr "Les sites de stockage sont vide"
 
 msgid "The name should not contain spaces"
 msgstr "Le nom ne doit pas contenir d'espace"
@@ -105,4 +105,4 @@ msgid "clusterName"
 msgstr "Nom de la grappe"
 
 msgid "Repositories number"
-msgstr "Nombre de sites de dépôt"
+msgstr "Nombre de sites de stockage"
