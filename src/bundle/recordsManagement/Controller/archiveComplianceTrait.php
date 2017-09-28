@@ -49,7 +49,7 @@ trait archiveComplianceTrait
         $queryPart["parentArchiveId"] = "parentArchiveId=null";
 
         foreach ($serviceLevels as $serviceLevel) {
-            if (($serviceLevel->samplingFrequency <= 0) || ($serviceLevel->samplingRate <= 0)) {
+            if (($serviceLevel->samplingFrequency <= 0) || ($serviceLevel->samplingRate <= 0)) {
                 continue;
             }
 

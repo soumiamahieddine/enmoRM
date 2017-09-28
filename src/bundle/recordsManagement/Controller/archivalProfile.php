@@ -442,7 +442,7 @@ class archivalProfile
                     $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $containedProfileId);
 
                 } catch (\Exception $e) {
-                    throw new \core\Exception\NotFoundException("$containedProfileId can't be found.");
+                    throw new \core\Exception\NotFoundException("%s1 can't be found.", 404, null, [$containedProfileId]);
                 }
                 
                 $archivalProfileContents = \laabs::newInstance('recordsManagement/archivalProfileContents');

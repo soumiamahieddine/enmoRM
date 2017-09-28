@@ -7,7 +7,7 @@ msgstr "Ressources numériques"
 msgctxt "bundle"
 
 msgid "cluster"
-msgstr "Gestion des grappes de dépôt"
+msgstr "Gestion des grappes de stockage"
 msgctxt "interface"
 
 msgid "format"
@@ -15,7 +15,7 @@ msgstr "Gestion des formats de fichier"
 msgctxt "interface"
 
 msgid "repository"
-msgstr "Gestion des répertoires"
+msgstr "Gestion des support de stockage"
 msgctxt "interface"
 
 msgid "address"
@@ -27,7 +27,7 @@ msgstr "Grappes"
 msgctxt "model"
 
 msgid "clusterRepository"
-msgstr "Répertoires des grappes"
+msgstr "Grappes de stockage"
 msgctxt "model"
 
 msgid "digitalResource"
@@ -47,11 +47,11 @@ msgstr "Ressources empaquetées"
 msgctxt "model"
 
 msgid "repository"
-msgstr "Répertoires"
+msgstr "Support de stockage"
 msgctxt "model"
 
 msgid "repositoryParam"
-msgstr "Paramètres des répertoires"
+msgstr "Paramètres des suport de stockage"
 msgctxt "model"
 
 msgid "digitalResourceRelationship"

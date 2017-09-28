@@ -499,7 +499,7 @@ msgid "medona/archiveAuthorization/update_messageId_Archive"
 msgstr "Archivage d'un bordereau d'autorisation"
 
 msgid "medona/archiveAuthorization/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de demande d'autorisation dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de demande d'autorisation dans le support de stockage temporaire"
 
 msgid "medona/archiveDelivery/readIncominglist"
 msgstr "Liste des bordereaux de demandes de communication reçus"
@@ -562,10 +562,9 @@ msgid "medona/archiveDelivery/readReplies"
 msgstr "Lecture des réponses de demande de communication"
 
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
-msgstr "Export de l'archive demandée (communication)"
-
+msgstr "Export de l'archive demandée (communicationsupport de stockage
 msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de demande de communication dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de demande de communication dans le support de stockage temporaire"
 
 msgid "medona/archiveDelivery/readIncominglist"
 msgstr "Liste des bordereaux de demande de communication reçus"
@@ -610,7 +609,7 @@ msgid "medona/archiveDestruction/update_messageId_Archive"
 msgstr "Archivage d'une demande de destruction"
 
 msgid "medona/archiveDestruction/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de demande de destruction dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de demande de destruction dans le support de stockage temporaire"
 
 msgid "medona/archiveDestruction/readHistory"
 msgstr "Lecture de l'historique de destruction"
@@ -631,7 +630,7 @@ msgid "medona/archiveModification/updateAccessrule"
 msgstr "Modification de la règle d'accès avec génération d'une bordereau de modification"
 
 msgid "medona/archiveNotification/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de demande de notification dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de demande de notification dans le support de stockage temporaire"
 
 msgid "medona/archiveNotification/readList"
 msgstr "Liste des bordereaux de notification"
@@ -715,7 +714,7 @@ msgid "medona/archiveRestitution/update_messageId_Archive"
 msgstr "Archivage d'un bordereau de demande de restitution"
 
 msgid "medona/archiveRestitution/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de demande de restitution dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de demande de restitution dans le support de stockage temporaire"
 
 msgid "medona/archiveRestitution/readHistory"
 msgstr "Lecture de l'historique de restitution"
@@ -808,7 +807,7 @@ msgid "medona/archiveTransfer/updateRequestvalidate_messageId_"
 msgstr "Validation du message"
 
 msgid "medona/archiveTransfer/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux de transfert dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux de transfert dans le support de stockage temporaire"
 
 msgid "medona/archiveTransfer/readHistory"
 msgstr "Lecture de l'historique de transfert"
@@ -847,7 +846,7 @@ msgid "medona/message/update_messageId_Archive"
 msgstr "Archivage d'un bordereau"
 
 msgid "medona/message/deleteMessagedirectorypurge"
-msgstr "Suppression automatique des bordereaux dans le répertoire de dépôt temporaire"
+msgstr "Suppression automatique des bordereaux dans le support de stockage temporaire"
 
 msgid "medona/controlAuthority/readList"
 msgstr "Lecture des autorités de contrôle"
@@ -913,7 +912,7 @@ msgid "digitalResource/format/createFileformatinformation"
 msgstr "Information sur le format d'un document"
 
 msgid "digitalResource/repository/readList"
-msgstr "Lecture de tous les sites de dépôt"
+msgstr "Lecture de tous les supports de stockage"
 
 msgid "digitalResource/repository/read_repositoryId_"
 msgstr "Lecture d'un support de stockage"

@@ -140,7 +140,7 @@ class journal
             }
 
             if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: ".$event->eventType);
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: %s1", 404, null, [$event->eventType]);
             }
 
             $eventFormat = $this->eventFormats[$event->eventType];

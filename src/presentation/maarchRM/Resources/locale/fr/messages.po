@@ -159,11 +159,11 @@ msgstr "Gestion du stockage"
 msgctxt "layout"
 
 msgid "Repositories"
-msgstr "Sites de dépôt"
+msgstr "Supports de stockage"
 msgctxt "layout"
 
 msgid "Clusters"
-msgstr "Grappes de dépôt"
+msgstr "Grappes de stockage"
 msgctxt "layout"
 
 msgid "Formats"
@@ -183,7 +183,7 @@ msgstr "Gestion de l'archive"
 msgctxt "layout"
 
 msgid "Profiles"
-msgstr "Profils"
+msgstr "Profils d'archive"
 msgctxt "layout"
 
 msgid "Access rules"
