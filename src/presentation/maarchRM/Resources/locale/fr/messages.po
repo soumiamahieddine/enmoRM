@@ -380,6 +380,9 @@ msgstr "Filtre:"
 msgid "Filters"
 msgstr "Filtres"
 
+msgid "Size"
+msgstr "Taille"
+
 msgid "Show _MENU_ entries"
 msgstr "Montrer _MENU_ lignes"
 
