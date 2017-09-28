@@ -164,5 +164,7 @@ msgid "A keyword label is missing."
 msgstr "Le label mot clé est manquant."
 
 msgid "The retention rule is missing."
-msgstr "La règle de conservation est manquante"
+msgstr "La règle de conservation est manquante."
 
+msgid "You must deposit at least one document."
+msgstr "Vous devez téléverser au moins un document."

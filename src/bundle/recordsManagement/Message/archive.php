@@ -262,6 +262,13 @@ class archive
     public $archiverOrgRegNumber;
 
     /**
+     * The archive description level
+     *
+     * @var string
+     */
+    public $fileplanLevel;
+
+    /**
      * The contained archives list
      *
      * @var recordManagement/archive[]

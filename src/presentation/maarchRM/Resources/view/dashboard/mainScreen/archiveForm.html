@@ -29,6 +29,7 @@
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
+    <input type="hidden" class="archiveInput" name="fileplanLevel" value='file'/>
 </form>
 
 <?hinclude dashboard/mainScreen/descriptionForm.html ?>
@@ -223,6 +224,9 @@
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
                 archive.descriptionClass = selectedProfile.descriptionClass;
+                if (selectedProfile.fileplanLevel != null) {
+                    archive.fileplanLevel = selectedProfile.fileplanLevel;
+                }
             }
 
             archive.descriptionObject = Metadata.serialize($('#allFields'));
@@ -236,6 +240,12 @@
             }*/
 
             archive.digitalResources = DocumentList.serialize();
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
+                    gritter.show($('#documentMissing_error').text(), false);
+                    return -2;
+                }
+            }
 
             return archive;
         },

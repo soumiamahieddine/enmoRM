@@ -247,3 +247,12 @@ msgstr "Accepter tout les profils"
 
 msgid "Generate bar code"
 msgstr "Générer bar code"
+
+msgid "Fileplan level"
+msgstr "Niveau dans le plan"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "File"
+msgstr "Dossier"

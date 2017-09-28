@@ -1,9 +1,11 @@
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatorOwnerOrgRegNumber" text;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "originatingDate" date;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "fileplanLevel" text;
 
 ALTER TABLE "recordsManagement"."log" ADD COLUMN "ownerOrgRegNumber" text;
 
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "acceptArchiveWithoutProfile" boolean default true;
+ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "fileplanLevel" text;
 
 CREATE TABLE "recordsManagement"."archivalProfileContents"
 (

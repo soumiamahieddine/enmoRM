@@ -339,6 +339,14 @@ class archive
     public $descriptionObject;
 
     /**
+     * The archive classification level
+     *
+     * @var string
+     * @enumeration [file, recordgrp, subgrp, item]
+     */
+    public $fileplanLevel;
+
+    /**
      * The storage path
      *
      * @var string

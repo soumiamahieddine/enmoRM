@@ -110,6 +110,14 @@ class archivalProfile
     public $acceptArchiveWithoutProfile;
 
     /**
+     * The archival profile classification level
+     *
+     * @var string
+     * @enumeration [file, recordgrp, subgrp, item]
+     */
+    public $fileplanLevel;
+
+    /**
      *  The list of profile description
      *
      * @var recordsManagement/archiveDescription[]

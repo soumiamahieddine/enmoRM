@@ -106,6 +106,13 @@ class archivalProfile
     public $acceptArchiveWithoutProfile;
 
     /**
+     * The archive description level
+     *
+     * @var string
+     */
+    public $fileplanLevel;
+
+    /**
      *  The list of profile description
      *
      * @var recordsManagement/archiveDescription[]

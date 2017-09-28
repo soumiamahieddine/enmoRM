@@ -44,17 +44,22 @@ file that was distributed with this source code.
                                 <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Fileplan level</label>
+                            <div class="col-md-9">
+                                <input type='hidden' id="fileplanLevel" name="fileplanLevel">
+                                <input type="checkbox" id="fileplanLevelToggle">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
                         <!-- Nav tabs -->
+                        <?merge archivalProfile.type.ifeq('1').not() ?>
                         <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
                             <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation"><a href="#profileRelationshipTab" aria-controls="profileRelationshipTab" role="tab" data-toggle="tab">Archive structure</a></li>
+                            <li role="presentation" id="managementTabBtn"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                            <li role="presentation" id="contentsTabBtn"><a href="#profileContentsTab" aria-controls="profileContentsTab" role="tab" data-toggle="tab">Archive structure</a></li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -133,7 +138,7 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                     </div>
-                                    <div role="tabpanel" class="tab-pane fade in" id="profileRelationshipTab">
+                                    <div role="tabpanel" class="tab-pane fade in" id="profileContentsTab">
                                         <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
                                     </div>
                                 </div>
@@ -163,6 +168,8 @@ file that was distributed with this source code.
             <span id="text_preservation">preservation</span>
             <span id="text_destruction">destruction</span>
             <span id="empty_text">The fields with a star are required.</span>
+            <span id="text_file"><i class='fa fa-folder'></i> File</span>
+            <span id="text_item"><i class='fa fa-file'></i> Item</span>          
         </div>
     </div>
 </div>
@@ -244,19 +251,18 @@ file that was distributed with this source code.
         },
 
         serialize: function() {
-
             serializedObject = {
                 archivalProfileId: $('#archivalProfileId').val(),
                 reference: $('#reference').val(),
                 name: $('#name').val(),
+                fileplanLevel : $("#fileplanLevel").val(),
                 descriptionClass: $('#descriptionClass').val(),
                 retentionStartDate: $('#startDate option:selected').val(),
                 description: $('#description').val(),
                 accessRuleCode: $('#accessRuleCode').val(),
                 retentionRuleCode: $('#code').val(),
                 acceptUserIndex: $('#allowUserIndexes').prop("checked"),
-                archiveDescription: [],
-                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked"),
+                archiveDescription: []
             }
 
             if(serializedObject.retentionStartDate ==''){
@@ -270,7 +276,15 @@ file that was distributed with this source code.
             }
             
             serializedObject.archiveDescription = PropertiesList.serialize();
-            serializedObject.containedProfiles = ArchiveStructure.serialize();
+
+            
+            if ($("#fileplanLevel").val() != 'item') {
+                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked");
+                serializedObject.containedProfiles = ArchiveStructure.serialize();
+            } else {
+                serializedObject.acceptArchiveWithoutProfile = false;
+                serializedObject.containedProfiles = [];
+            }
             
             return serializedObject;
         }
@@ -281,6 +295,15 @@ file that was distributed with this source code.
     });
     
     $("#contain").ready(function () {
+        $('#fileplanLevelToggle').bootstrapToggle({
+          on: $('#text_item'),
+          off: $('#text_file'),
+        });
+
+        if($('#fileplanLevel').val() == 'item') {
+            $('#fileplanLevelToggle').bootstrapToggle('on');
+            $("#contentsTabBtn").addClass('hide');
+        }
 
         $("#archivalProfileNavControl").find('a').first().click();
 
@@ -349,6 +372,17 @@ file that was distributed with this source code.
     //save
     $("#contain").on('click', '#save', function () {
         ArchivalProfile.save("/archivalProfiles");
+    });
+
+    
+    $('#fileplanLevelToggle').on('change', function (e) {
+        if ($('#fileplanLevelToggle').prop('checked')) {
+            $("#fileplanLevel").val('item');
+            $("#contentsTabBtn").addClass('hide');
+        } else {
+            $("#fileplanLevel").val('file');
+            $("#contentsTabBtn").removeClass('hide');
+        }
     });
 
 </script>

@@ -57,6 +57,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
   "acceptArchiveWithoutProfile" boolean default true,
+  "fileplanLevel" text,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -157,6 +158,7 @@ CREATE TABLE "recordsManagement"."archive"
   "archiveName" text,
   "storagePath" text,
   "filePlanPosition" text,
+  "fileplanLevel" text,
   "originatingDate" date,
   
   "descriptionClass" text,
