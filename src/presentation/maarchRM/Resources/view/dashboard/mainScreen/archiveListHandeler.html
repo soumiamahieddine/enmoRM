@@ -4,19 +4,19 @@
             <span>
                 <i class='fa'/>
                 <span name="archiveOrDocument">&nbsp;</span>
+                <br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <small/>&nbsp;
+                <small/>&nbsp;
+                <small><i/></small>
             </span>
-            <br/>
-            &nbsp;&nbsp;
-            <small/>&nbsp;
-            <small/>&nbsp;
-            <small><i/></small>
         </span>
     </li>
 </div>
 
 <style>
     .archive h5 {
-        margin: 6px 0px 6px 0px;
+        margin: 5px 0px 5px 0px;
         width: 100%;
         white-space: nowrap;
         text-overflow: crop;
@@ -56,6 +56,16 @@
         white-space: nowrap;
         text-overflow: crop;
         line-height: normal;
+        padding: 0px 0px;
+    }
+    .childrenArchive {
+        padding: 0px 8px !important;
+    }
+    .archive  > h5 {
+        margin: 0px;
+    }
+    .archive > h4 {
+        margin-top: 3px;
     }
 
 </style>
@@ -154,7 +164,6 @@
                             .append($('<a/>').attr('href','#').class);
 
                     
-
                     if (childrenArchives[j].depositDate) {
                         $(smalls[0]).text(childrenArchives[j].depositDate.substring(0, 19));
                     }
@@ -190,7 +199,7 @@
                             .attr('id', digitalResources[i].resId)
                             .append($('<i class="fa fa-file-o">&nbsp;</i>'))
                             .append($('<span>').html(digitalResources[i].fileName));
-
+                    template.find('small, br').remove();
                     BootstrapTree.addNode(parent, template, hidden);
                 }
             }
