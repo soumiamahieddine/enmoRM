@@ -93,11 +93,11 @@ class cluster
         // pre_load values
         if ($clusterId) {
             if (!$this->sdoFactory->exists("digitalResource/cluster", $clusterId)) {
-                throw \laabs::newException("digitalResource/clusterException", "Cluster %s1 not found.", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "Cluster %s not found.", 404, null, [$clusterId]);
             }
             $cluster = $this->sdoFactory->read("digitalResource/cluster", $clusterId);
             if (!$cluster) {
-                throw \laabs::newException("digitalResource/clusterException", "Cluster %s1 not found.", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "Cluster %s not found.", 404, null, [$clusterId]);
             }
 
             $cluster->clusterRepository = $this->sdoFactory->readChildren("digitalResource/clusterRepository", $cluster);
@@ -136,7 +136,7 @@ class cluster
             $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
         } catch (\Exception $e) {
             $this->sdoFactory->rollback();
-            throw \laabs::newException("digitalResource/clusterException", "Cluster %s1 not created.", 404, null, [$clusterId]);
+            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not created.", 404, null, [$clusterId]);
         }
         $this->sdoFactory->commit();
 
@@ -160,7 +160,7 @@ class cluster
             }
         } catch (\core\Route\Exception $e) {
             $this->sdoFactory->rollback();
-            throw \laabs::newException("digitalResource/clusterException", "Cluster %s1 not updated.", 404, null, [$clusterId]);
+            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$clusterId]);
         }
         $this->sdoFactory->commit();
 
@@ -237,7 +237,7 @@ class cluster
             }
 
             if (count($cluster->clusterRepository) == 0) {
-                throw \laabs::newException("digitalResource/noClusterRepositoryException", "No repository for %s1 mode", 404, null, [$mode]);
+                throw \laabs::newException("digitalResource/noClusterRepositoryException", "No repository for %s mode", 404, null, [$mode]);
             }
         }
     }
@@ -260,7 +260,7 @@ class cluster
             $realPath = $this->repositoryController->openContainer($clusterRepository->repository, $path, $metadata);
 
             if (!$realPath) {
-                throw \laabs::newException("digitalResource/clusterException", "Container %s1 counld not be opened.", 404, null, [$path]);
+                throw \laabs::newException("digitalResource/clusterException", "Container %s counld not be opened.", 404, null, [$path]);
             }
         }
     }
@@ -280,7 +280,7 @@ class cluster
             $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource);
 
             if (!$address) {
-                throw \laabs::newException("digitalResource/clusterException", "%s1 not found", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "%s not found", 404, null, [$clusterId]);
             }
 
             $resource->address[$index] = $address;
@@ -323,7 +323,7 @@ class cluster
                     $contents = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
 
                     if (isset($resource->hash) && !$this->checkHash($address, $resource, $contents)) {
-                        throw \laabs::newException("digitalResource/clusterException", "Invalid hash for resource %s1 at address %s2", 404, null, [$resource->resId, $address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
+                        throw \laabs::newException("digitalResource/clusterException", 'Invalid hash for resource %1$s at address %2$S', 404, null, [$resource->resId, $address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
                     }
 
                     $resource->setContents($contents);
@@ -335,8 +335,8 @@ class cluster
                     \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
                 }
             } else {
-                throw \laabs::newException("digitalResource/clusterException", "Cluster %s1 not updated.", 404, null, [$clusterId]);
-                \laabs::notify(LAABS_BUSINESS_EXCEPTION, \laabs::newException("digitalResource/clusterException", "No address found for ressource %s1", 404, null, [$resource->resId]));
+                throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$clusterId]);
+                \laabs::notify(LAABS_BUSINESS_EXCEPTION, \laabs::newException("digitalResource/clusterException", "No address found for ressource %s", 404, null, [$resource->resId]));
             }
         }
 

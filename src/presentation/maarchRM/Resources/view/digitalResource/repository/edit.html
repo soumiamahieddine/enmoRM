@@ -210,8 +210,8 @@ file that was distributed with this source code.
             var value = $('#optionValue').val();
 
             if (name && value) {
-                $('<tr/>').append($('<td/>').html(' ' + name))
-                    .append($('<td/>').html(' ' + value))
+                $('<tr/>').append($('<td/>').text(' ' + name))
+                    .append($('<td/>').text(' ' + value))
                     .append($('<td/>').append($('<button/>').addClass('btn btn-danger btn-sm deleteOption')
                                           .attr('type', 'button')
                                           .attr('title', $('#delete_text').html())

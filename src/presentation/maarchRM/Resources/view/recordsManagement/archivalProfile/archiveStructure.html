@@ -56,7 +56,7 @@
 			var li = $('<li/>').addClass('list-group-item')
 							   .data('json', profile)
 							   .data('profileid', profile.archivalProfileId)
-							   .html(profile.reference + " : " + profile.name)
+							   .text(profile.reference + " : " + profile.name)
 							   .appendTo(this.list);
 
 			$('<span>/').addClass('pull-right')
@@ -129,7 +129,7 @@
         });
 
 	 	$.each(profileList, function(key, profile) {
-	 		var option = $('<option/>').val(profile.archivalProfileId).data('json', profile).html(profile.reference+" : "+profile.name).appendTo(select);
+	 		var option = $('<option/>').val(profile.archivalProfileId).data('json', profile).text(profile.reference+" : "+profile.name).appendTo(select);
 	 	});
 
 	 	$.each(select.data('contained-profiles'), function(key, profile) {

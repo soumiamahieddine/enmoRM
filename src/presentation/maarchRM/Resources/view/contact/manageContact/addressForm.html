@@ -269,19 +269,19 @@
 
             if (address.room) {
                 $('<p/>').addClass('list-group-item-text')
-                         .text($('#contact_text_room').html() + ' ' + address.room)
+                         .text($('#contact_text_room').text() + ' ' + address.room)
                          .appendTo(a);
             }
 
             if (address.floor) {
                 $('<p/>').addClass('list-group-item-text')
-                         .text($('#contact_text_floor').html() + ' ' + address.floor)
+                         .text($('#contact_text_floor').text() + ' ' + address.floor)
                          .appendTo(a);
             }
 
             if (address.building) {
                 $('<p/>').addClass('list-group-item-text')
-                         .text($('#contact_text_building').html() + ' ' + address.building)
+                         .text($('#contact_text_building').text() + ' ' + address.building)
                          .appendTo(a);
             }
 

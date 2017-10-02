@@ -117,7 +117,7 @@
             $('#informationTab').find('dt, dd').css('display', 'none');
             $.each(organization, function(key, value) {
                 if (value !=null) {
-                    $('#orgInfo_' + key).css('display', '').html(value).prev().css('display', '');
+                    $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
             });
 

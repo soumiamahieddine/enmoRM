@@ -410,9 +410,9 @@
         var value = $(this).data('value');
 
         if(value == "M") {
-            $('#frequencyUnit').html($('#minutes_text').html()).data('value', value);
+            $('#frequencyUnit').text($('#minutes_text').html()).data('value', value);
         } else {
-            $('#frequencyUnit').html($('#hours_text').html()).data('value', value);
+            $('#frequencyUnit').text($('#hours_text').html()).data('value', value);
         }
     })
 
@@ -502,7 +502,7 @@
                         .attr('parameters', value)
                         .addClass('list-group-item clearfix')
                         .appendTo(liste)
-                        .html(value);
+                        .text(value);
 
                 var span = $('<span/>')
                     .addClass('pull-right')
@@ -599,7 +599,7 @@
                 .attr('parameters', parameters)
                 .addClass('list-group-item clearfix')
                 .appendTo(liste)
-                .html(parameters);
+                .text(parameters);
 
             var span = $('<span/>')
                 .addClass('pull-right')

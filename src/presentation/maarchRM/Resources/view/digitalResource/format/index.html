@@ -278,8 +278,8 @@ file that was distributed with this source code.
         oFileReader.readAsDataURL(file);
         oFileReader.onload = function() {
             $('#inputFormatFile').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
-            $('#formatFile_fileName').html(file.name);
-            $('#formatFile_fileSize').html(file.size + ' ' + $('#byte_text').html());
+            $('#formatFile_fileName').text(file.name);
+            $('#formatFile_fileSize').text(file.size + ' ' + $('#byte_text').html());
             $('#formatFileDropZone').addClass('hide');
             $('#formatFileInfo').removeClass('hide');
         }

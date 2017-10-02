@@ -48,6 +48,7 @@ trait archiveLifeCycleTrait
             $eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
             $eventItems['hash'] = $resource->hash;
             $eventItems['address'] = $resource->address[0]->path;
+            $eventItems['size'] = $resource->size;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
 

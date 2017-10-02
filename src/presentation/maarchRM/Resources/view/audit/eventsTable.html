@@ -32,9 +32,9 @@
     $("#list").on('click', '.auditEvent', function () {
         datas = $(this).attr('data-event');
         datas = datas.split("#");
-        $('#audit_eventDate').html(datas[0]);
-        $('#audit_eventType').html(datas[1]);
-        $('#audit_userName').html(datas[2]);
-        $('#audit_message').html(datas[3]);
+        $('#audit_eventDate').text(datas[0]);
+        $('#audit_eventType').text(datas[1]);
+        $('#audit_userName').text(datas[2]);
+        $('#audit_message').text(datas[3]);
     })
 </script>

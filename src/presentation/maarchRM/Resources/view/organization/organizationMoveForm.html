@@ -48,7 +48,7 @@
             var select = element.closest('li').find('input[type="checkbox"]');
             var orgForm = $('#organization_moveForm');
             orgForm.find('input[name="orgId"]').val(element.attr('id'));
-            orgForm.find('small[name="displayName"]').html(orgName);
+            orgForm.find('small[name="displayName"]').text(orgName);
 
             if (element.closest('li').hasClass('organizationNode')) {
                 $('#organization_orgTree').find('.organizationNode').children('input[type="checkbox"]').not(select).removeClass('hide');
@@ -66,7 +66,7 @@
             var organization = element.closest('li').find('span:first');
 
             if (!element.prop('checked')) {
-                $('#organization_newParent').html($('#root_text').html());
+                $('#organization_newParent').text($('#root_text').html());
                 orgForm.find('input[name="newParentOrgId"]').val("");
                 orgForm.find('input[name="newOwnerOrgId"]').val("");
 
@@ -115,7 +115,7 @@
             $('#organization_moveForm').css('display', 'none');
             $('#organization_moveForm').find('input').val('');
             $('#organization_orgTree').find('input[type="checkbox"]').prop('checked', false).addClass('hide');
-            $('#organization_newParent').html($('#root_text').html());
+            $('#organization_newParent').text($('#root_text').html());
         }
     }
 

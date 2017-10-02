@@ -40,7 +40,7 @@ DeleteConfirmationModal = {
         var message = $('#deleteFolderMessage_txt').html();
 
         message = message.replace("%1$s", '<i class="text-primary">'+ this.target.find('b:first').text() +'<\/i>');
-        this.messageDiv.html(message);
+        this.messageDiv.text(message);
         
         modal.modal();
     },

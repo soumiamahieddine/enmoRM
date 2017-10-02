@@ -301,7 +301,7 @@ class digitalResource
                 $this->sdoFactory->rollback();
             }
 
-            throw \laabs::newException("digitalResource/clusterException", "Resource %s1 not created: %s2", 404, $exception, [$resource->resId, $exception->getMessage()]);
+            throw \laabs::newException("digitalResource/clusterException", 'Resource %1$s not created: %2$s', 404, $exception, [$resource->resId, $exception->getMessage()]);
         }
 
         // All repositories returned an uri, save all
@@ -383,14 +383,14 @@ class digitalResource
 
                         $resource->setContents($contents);
                     } catch (\Exception $exception) {
-                        throw \laabs::newException("digitalResource/clusterException", "Resource %s1 could not be retrieved.", 404, null, [$resource->resId]);
+                        throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
                     }
                 }
             }
         }
 
         if (!$contents) {
-            throw \laabs::newException("digitalResource/clusterException", "Resource %s1 could not be retrieved.", 404, null, [$resource->resId]);
+            throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
         }
 
         $relatedResources = $this->getRelatedResources($resource->resId);
@@ -565,7 +565,7 @@ class digitalResource
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
-            throw \laabs::newException("digitalResource/clusterException", "Resource not deleted at address %s1 : %s2",  404, $exception, [$address->path, $exception->getMessage()]);
+            throw \laabs::newException("digitalResource/clusterException", 'Resource not deleted at address %1$s : %2$s',  404, $exception, [$address->path, $exception->getMessage()]);
         }
         if ($transactionControl) {
             $this->sdoFactory->commit();

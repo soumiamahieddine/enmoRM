@@ -45,4 +45,5 @@ INSERT INTO "organization"."servicePosition" ("serviceAccountId", "orgId") VALUE
 -- Organization service position
 INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess") VALUES
 ('CPTCLI', 'FacturesClients', true),
-('CPTFOUR', 'FacturesFournisseurs', true);
+('CPTFOUR', 'FacturesFournisseurs', true),
+('RH', 'DossierPersonnel', true);

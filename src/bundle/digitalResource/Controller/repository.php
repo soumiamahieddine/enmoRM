@@ -168,7 +168,7 @@ class repository
         $repository->currentContainer = $uri;
 
         if (!$uri) {
-            throw \laabs::newException("digitalResource/repositoryException", "No address return for creation of container in repository %s1.", 404, null, [$repository->repositoryId]);
+            throw \laabs::newException("digitalResource/repositoryException", "No address return for creation of container in repository %s.", 404, null, [$repository->repositoryId]);
         }
 
         return $uri;
@@ -188,7 +188,7 @@ class repository
         $uri = $repositoryService->createObject($resource->getContents(), $repository->currentContainer.'/'.$resource->resId);
         
         if (!$uri) {
-            throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository %s1.", 404, null, [$repository->repositoryId]);
+            throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository %s.", 404, null, [$repository->repositoryId]);
         }
 
         $address = \laabs::newInstance("digitalResource/address");
@@ -236,7 +236,7 @@ class repository
             $address->integrityCheckResult = false;
 
             $this->sdoFactory->update($address);
-            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address %s1.", 404, null, [$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
+            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address %s.", 404, null, [$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
         }
 
         return $contents;
@@ -260,7 +260,7 @@ class repository
         $repository = $this->sdoFactory->find('digitalResource/repository', "repositoryReference = '$repositoryReference'");
 
         if (count($repository) == 0) {
-            throw \laabs::newException("digitalResource/repositoryException", "No repository found with reference %s1", 404, null, [$repositoryReference]);
+            throw \laabs::newException("digitalResource/repositoryException", "No repository found with reference %s", 404, null, [$repositoryReference]);
 
             return -1;
         }

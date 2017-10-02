@@ -9,9 +9,9 @@ TRUNCATE TABLE "recordsManagement"."retentionRule" CASCADE;
 
 TRUNCATE TABLE "recordsManagement"."descriptionField" CASCADE;
 
-INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "digitalResourceClusterId", "control", "default") VALUES
-    ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false),
-    ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true);
+INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "digitalResourceClusterId", "control", "default", "samplingFrequency","samplingRate") VALUES
+    ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50),
+    ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true,2 ,50);
 
 
 INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description", "duration", "finalDisposition") VALUES
@@ -33,9 +33,11 @@ INSERT INTO "recordsManagement"."accessRule" ("code", "duration", "description")
     ('ComptabiliteVente','P999Y','Comptabilité vente'),
     ('DocumentsGestion','P999Y','Documents de gestion');
 
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode") VALUES
-    ('FacturesClients', 'FacturesClients', 'Factures clients', null, null, 'definedLater', 'DocumentComptables', 'Factures de vente clients', 'ComptabiliteVente'),
-    ('FacturesFournisseurs', 'FacturesFournisseurs', 'Factures fournisseurs', null, null, 'definedLater', 'DocumentComptables', 'Factures d''achats fournisseurs', 'ComptabiliteAchats');
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode","acceptArchiveWithoutProfile","fileplanLevel") VALUES
+    ('FacturesClients', 'FacturesClients', 'Factures clients', null, null, 'definedLater', 'DocumentComptables', 'Factures de vente clients', 'ComptabiliteVente',false,'item'),
+    ('FacturesFournisseurs', 'FacturesFournisseurs', 'Factures fournisseurs', null, null, 'definedLater', 'DocumentComptables', 'Factures d''achats fournisseurs', 'ComptabiliteAchats',false,'item'),
+    ('DossierPersonnel', 'DossierPersonnel', 'Dossier personnel', null, null, 'depositDate', 'DossierDuPersonnel', 'Dossier du personnel', 'DossierDuPersonnel',false,'file'),
+    ('DemandeConges', 'DemandeConges', 'Demande congés', null, null, NULL, NULL, 'Demande de congés', NULL,false,'item');
 
 INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "minLength", "maxLength", "minValue", "maxValue", "enumeration", "pattern") VALUES
     ('NumeroFacture', 'Numéro de facture', 'name', null, null, null, null, null, null, null),
@@ -46,3 +48,6 @@ INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fiel
     ('FacturesClients', 'NumeroFacture', true, 0),
     ('FacturesClients', 'Client', false, 1),
     ('FacturesClients', 'DateFacture', true, 2);
+
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES
+    ('DossierPersonnel','DemandeConges');

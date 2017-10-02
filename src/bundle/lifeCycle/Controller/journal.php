@@ -140,7 +140,7 @@ class journal
             }
 
             if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: %s1", 404, null, [$event->eventType]);
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: %s", 404, null, [$event->eventType]);
             }
 
             $eventFormat = $this->eventFormats[$event->eventType];
@@ -828,7 +828,7 @@ class journal
     {
         $journalArray = [];
 
-        if (isset(\laabs::configuration('lifeCycle')['chainJounralByOrganization']) && \laabs::configuration('lifeCycle')['chainJounralByOrganization']) {
+        if (isset(\laabs::configuration('lifeCycle')['chainJournalByOrganization']) && \laabs::configuration('lifeCycle')['chainJounralByOrganization']) {
             $orgController = \laabs::newController('organization/organization');
 
             $organizations = $orgController->index("isOrgUnit=false");

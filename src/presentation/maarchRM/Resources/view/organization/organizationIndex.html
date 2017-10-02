@@ -171,7 +171,7 @@
                 .data('orgname', org.orgName)
                 .data('ownerorgid', org.ownerOrgId); 
 
-            template.find('.showDetails').html(org.displayName);
+            template.find('.showDetails').text(org.displayName);
             template.removeAttr('id').removeClass('hide');
 
             if (!parentId) {
@@ -187,7 +187,7 @@
         updateNode: function(org) {
             $('#'+org.orgId).data('orgname', org.orgName)
                             .data('ownerorgid', org.ownerOrgId)
-                            .find('.showDetails').html(org.displayName);
+                            .find('.showDetails').text(org.displayName);
         },
 
         removeNode: function(node) {

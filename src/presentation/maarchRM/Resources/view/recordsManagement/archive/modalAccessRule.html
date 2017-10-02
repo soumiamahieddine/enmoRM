@@ -223,11 +223,11 @@
                 var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
                 var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
                 $('#accessRule').css("display", 'block');
-                $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
                 
                 } else {
                     $('#accessRule').css("display", 'block');
-                    $('#accessRuleDuration').html(accessRuleCode.durationUnit);
+                    $('#accessRuleDuration').text(accessRuleCode.durationUnit);
                 }
 
             } else {
