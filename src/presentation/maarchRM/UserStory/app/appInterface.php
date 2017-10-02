@@ -63,6 +63,26 @@ interface appInterface
     public function read_archiveId_Digitalresource_resId_();
 
     /**
+     * Search form
+     *
+     * @uses recordsManagement/archives/read
+     *
+     * @return recordsManagement/welcome/folderContents
+     */
+    public function readRecordsmanagementArchivesSearch(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $description = null,
+        $text = null
+    );
+
+    /**
      * Move an archive into a folder
      * @param array  $archiveIds   The archive identifier list
      * @param string $fromFolderId The originating folder identifier
