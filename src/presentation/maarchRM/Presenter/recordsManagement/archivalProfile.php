@@ -326,10 +326,12 @@ class archivalProfile
 
     protected function listProperties($class, &$properties, &$dateProperties, $containerClass = '')
     {
-        $key = $class->getPrimaryKey();
-        $fields = $key->getFields();
+        $keyfields = [];
+        if ($key = $class->getPrimaryKey()) {
+            $keyfields = $key->getFields();
+        }
         foreach ($class->getProperties() as $property) {
-            if (in_array($property->name, $fields)) {
+            if (in_array($property->name, $keyfields)) {
                 continue;
             }
 
@@ -356,14 +358,14 @@ class archivalProfile
             }
 
             array_push($properties, $descriptionProperty);
-            if (!$property->isScalar()) {
+            /*if (!$property->isScalar()) {
                 if ($property->isArray()) {
                     $type = substr($type, 0, -2);
                 }
                 $childClass = \laabs::getClass($type);
-
+                var_dump($type);
                 $this->listProperties($childClass, $properties, $dateProperties, $qualifiedName);
-            }
+            }*/
         }
     }
 }

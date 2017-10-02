@@ -97,8 +97,6 @@ class user
     {
         $user->roles = empty($user->roles) ? false : json_encode($user->roles);
 
-        $publicArchive = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-
         $roles = $this->sdoFactory->find('auth/role');
 
         $view = $this->view;
@@ -107,7 +105,7 @@ class user
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
-        $view->setSource('publicArchive', $publicArchive);
+        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $view->setSource('user', $user);
         $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_",$user->accountId);
 
@@ -167,6 +165,7 @@ class user
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
+        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $view->setSource('user', $user);
 
         $view->merge();

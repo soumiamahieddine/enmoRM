@@ -174,7 +174,7 @@ msgid "To date"
 msgstr "Date de fin"
 
 msgid "Message identifier"
-msgstr "Référence du bordereau"
+msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
 msgstr "Demande de communication"

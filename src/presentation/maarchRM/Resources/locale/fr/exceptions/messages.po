@@ -110,6 +110,9 @@ msgstr "Erreur d'execution"
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
 
+msgid "Task already exists."
+msgstr "Une tâche avec la même route existe déjà."
+
 msgid "Task not created."
 msgstr "Tâche non créé"
 
@@ -161,10 +164,10 @@ msgstr "Le dossier parent n'existe pas."
 msgid "The folder already exists"
 msgstr "Le dossier existe déjà."
 
-msgid "The folder can"t be found."
+msgid "The folder can''t be found."
 msgstr "Le dossier n'existe pas"
 
-msgid "Can"t move to another service !"
+msgid "Can''t move to another service !"
 msgstr "Impossible de déplaccer dans un autre service !"
 
 msgid "The folder is closed."
@@ -197,10 +200,10 @@ msgstr "Type d'événement inconnu"
 msgid "Key already exists"
 msgstr "La clé existe déjà"
 
-msgid "Organization can"t be moved to a descendent organization"
+msgid "Organization can''t be moved to a descendent organization"
 msgstr "L'organisation' ne peux être déplacé sous une organisation descendant."
 
-msgid "Organization Archival Profile Access can"t be update "
+msgid "Organization Archival Profile Access can''t be update "
 msgstr "Les acces aux profils d'archives ne peut pas être mis à jour."
 
 msgid "Access Code not created."
@@ -267,7 +270,7 @@ msgid "The retention rule not found"
 msgstr "La règle de conservation n'a pas été trouvée."
 
 msgid "The access rule not found"
-msgstr "La règle de communicabilité n'a pas été trouvée.""
+msgstr "La règle de communicabilité n'a pas été trouvée."
 
 msgid "The archive can not be moved in a different organization unit."
 msgstr "L'archive ne peut pas être déplacé dans un autre service."
@@ -389,7 +392,7 @@ msgstr "Aucune repertoire de stockage trouvé avec la référence %s."
 msgid "Unknown event type: %s"
 msgstr "Evénement de type %s non trouvé"
 
-msgid "%s can"t be found."
+msgid "%s can''t be found."
 msgstr "%s n'a pas été trouvé."
 
 msgid "The archive identifier %s does not exist."

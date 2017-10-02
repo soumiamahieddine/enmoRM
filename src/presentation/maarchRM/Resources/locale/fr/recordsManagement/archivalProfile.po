@@ -8,8 +8,8 @@ msgstr "Profils"
 msgid "profile(s)"
 msgstr "profil(s)"
 
-msgid "Profile reference"
-msgstr "Référence du profil"
+msgid "Identifier"
+msgstr "Identifiant"
 
 msgid "Add a profile"
 msgstr "Ajouter un profil"
