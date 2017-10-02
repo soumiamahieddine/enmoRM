@@ -5,9 +5,6 @@
 msgid "Search messages"
 msgstr "Recherche de messages"
 
-msgid "Message reference"
-msgstr "Référence du message"
-
 msgid "Message type"
 msgstr "Type de message"
 
