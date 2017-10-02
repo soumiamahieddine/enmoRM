@@ -110,6 +110,9 @@ msgstr "Erreur d'execution"
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
 
+msgid "Task already exists."
+msgstr "Une tâche avec la même route existe déjà."
+
 msgid "Task not created."
 msgstr "Tâche non créé"
 
@@ -389,7 +392,7 @@ msgstr "Aucune repertoire de stockage trouvé avec la référence %s."
 msgid "Unknown event type: %s"
 msgstr "Evénement de type %s non trouvé"
 
-msgid "%s can"t be found."
+msgid "%s can''t be found."
 msgstr "%s n'a pas été trouvé."
 
 msgid "The archive identifier %s does not exist."
