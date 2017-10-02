@@ -1434,10 +1434,10 @@ msgid "organization/userPosition/readDescendantprofiles"
 msgstr "Lecture des profils d'archivage accordé à un utilisitateur"
 
 msgid "organization/organization/update_orgId_Archivalprofileaccess"
-msgstr "Mise à jour des access aux profiles d'archivage d'un service"
+msgstr "Mise à jour des profils d'archive d'un service producteur"
 
 msgid "organization/organization/readOrgunitprofiles"
-msgstr "Lecture des profiles d'archivage d'une organization"
+msgstr "Lecture des profils d'archive d'un service producteur"
 
 
 
