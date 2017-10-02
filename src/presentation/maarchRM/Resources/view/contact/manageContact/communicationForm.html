@@ -218,9 +218,9 @@
             $('<b/>').addClass('list-item-heading')
                      .text(communication.purpose)
                      .appendTo(a);
-            $('<p/>').addClass('list-group-item-text').html($('#contact_comMeanCode').find('[value="'+communication.comMeanCode+'"]').html()).appendTo(a);
-            $('<p/>').addClass('list-group-item-text').html(communication.value).appendTo(a);
-            $('<p/>').addClass('list-group-item-text').html(communication.info).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').text($('#contact_comMeanCode').find('[value="'+communication.comMeanCode+'"]').html()).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').text(communication.value).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').text(communication.info).appendTo(a);
         },
 
         cancel: function() {

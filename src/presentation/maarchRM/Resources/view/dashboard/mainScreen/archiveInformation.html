@@ -480,7 +480,7 @@
             $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
             importPanel.find("[data-context-parentarchive]")
                        .removeClass('hide')
-                       .find('[data-context-parentname]').html(parentArchiveName);
+                       .find('[data-context-parentname]').text(parentArchiveName);
 
             $('#importTab').click();
             $('#rightColumn').empty();

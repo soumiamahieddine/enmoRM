@@ -159,13 +159,13 @@ $("#addFormat").on("click", function() {
             .attr('format', format)
             .addClass('list-group-item clearfix')
             .appendTo(liste)
-            .html(format);
+            .text(format);
     var span = $('<span/>')
             .addClass('pull-right')
             .appendTo(li);
     var i = $('<i/>')
             .addClass('badge')
-            .html(nb)
+            .text(nb)
             .appendTo(span);
     var format = $("#formFormat").val("");
 });
@@ -237,7 +237,7 @@ $("#eventsFormatsList").on("click",".editEventFormat", function() {
             
             $("#formDomain").val(split[0]);
             $("#formType").val(split[1]);
-            $("#formMessage").html(response.eventFormat.message);
+            $("#formMessage").text(response.eventFormat.message);
             $("#formNotification").prop("checked",response.eventFormat.notification);
             var splitFormat = response.eventFormat.format.split(" ");
 
@@ -252,7 +252,7 @@ $("#eventsFormatsList").on("click",".editEventFormat", function() {
                         .attr('format', value)
                         .addClass('list-group-item clearfix')
                         .appendTo(liste)
-                        .html(value);
+                        .text(value);
                 var span = $('<span/>')
                         .addClass('pull-right')
                         .appendTo(li);

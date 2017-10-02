@@ -187,10 +187,10 @@ file that was distributed with this source code.
             if (finalDisposition) {
                 if(durationUnit) {
                     $('.finalDisposition').css('display','');
-                    $('#duration').html(duration + ' ' + $('#text_' + durationUnit).html());
-                    $('#finalDisposition').html($('#text_' + finalDisposition).html());
+                    $('#duration').text(duration + ' ' + $('#text_' + durationUnit).html());
+                    $('#finalDisposition').text($('#text_' + finalDisposition).html());
                 } else {
-                    $('#duration').html($('#text_I').html());
+                    $('#duration').text($('#text_I').html());
                     $('.finalDisposition').css('display','none');
                     $('#finalDisposition').html('');
                 }
@@ -209,7 +209,7 @@ file that was distributed with this source code.
                 var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
                 var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
                 $('#accessRule').css("display", 'block');
-                $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
             } else {
                 $('#accessRule').css("display", 'none');
             }
@@ -344,7 +344,7 @@ file that was distributed with this source code.
 
         $("#addGroup").prop('disabled', true);
         newTr.data('objectid', group.objectId).data('objectclass', group.objectClass).addClass('profileAccessElement').find('input').css('display', '');
-        newTr.find('.groupName:first').html(group.displayName);
+        newTr.find('.groupName:first').text(group.displayName);
 
         $('#groupTypeahead').val('');
 

@@ -84,11 +84,11 @@ eventInfo = {
                     var e = $(this)
                     var name = e.attr('name');
 
-                    e.html(response[name]);
+                    e.text(response[name]);
                     delete response[name];
                 });
 
-                $('#eventDescription').find('[name="description"]').html(response.description);
+                $('#eventDescription').find('[name="description"]').text(response.description);
                 delete response.description;
 
                 $('#eventCertificate').addClass('hide');

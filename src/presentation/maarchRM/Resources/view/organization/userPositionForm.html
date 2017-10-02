@@ -197,7 +197,7 @@
                 .attr('id', accountId)
                 .addClass('list-group-item clearfix')
                 .appendTo(positionList)
-                .html(displayName);
+                .text(displayName);
             
             if ($('#organization_userTypeahead').length) {
                 var span = $('<span/>')
@@ -212,13 +212,13 @@
 
                 var defaultBtn = $('<a/>')
                     .addClass('btn btn-info btn-xs defaultBtn disabled')
-                    .html($('#default_text').html())
+                    .text($('#default_text').html())
                     .appendTo(span);
 
                 var setDefaultBtn = $('<a/>')
                     .addClass('btn btn-default btn-xs setDefaultBtn')
                     .css('visibility', 'hidden')
-                    .html($('#setDefault_text').html())
+                    .text($('#setDefault_text').html())
                     .appendTo(span);
 
                 var a = $('<a/>')
@@ -248,7 +248,7 @@
                 .attr('id', accountId)
                 .addClass('list-group-item clearfix')
                 .appendTo(positionList)
-                .html(displayName);
+                .text(displayName);
         },
 
         setDefault: function(btn) {

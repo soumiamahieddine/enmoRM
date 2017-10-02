@@ -160,7 +160,7 @@
                             .addClass('childrenArchive')
                             .attr('id', childrenArchives[j].archiveId)
                             .append(icon)
-                            .append($('<span>').html(childrenArchives[j].archiveName))
+                            .append($('<span>').text(childrenArchives[j].archiveName))
                             .append($('<a/>').attr('href','#').class);
 
                     
@@ -198,7 +198,7 @@
                             .data('json', digitalResources[i])
                             .attr('id', digitalResources[i].resId)
                             .append($('<i class="fa fa-file-o">&nbsp;</i>'))
-                            .append($('<span>').html(digitalResources[i].fileName));
+                            .append($('<span>').text(digitalResources[i].fileName));
                     template.find('small, br').remove();
                     BootstrapTree.addNode(parent, template, hidden);
                 }

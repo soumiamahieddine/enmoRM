@@ -172,7 +172,7 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').html(folder.name);
+                .children('b').text(folder.name);
 
             return node;
         },

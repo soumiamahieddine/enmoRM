@@ -181,7 +181,7 @@
         if (format['version']) {
             display += ' ' + format['version'];
         }
-        var li = $('<li/>').addClass('list-group-item').attr('data-puid', format.puid).html(display);
+        var li = $('<li/>').addClass('list-group-item').attr('data-puid', format.puid).text(display);
         var span = $('<span/>').addClass('pull-right').appendTo(li);
         var a = $('<a/>').attr('onclick', 'load(\'#\')').addClass('pull-right removeFormat').appendTo(span)
         var i = $('<i/>').addClass('fa fa-times').appendTo(a);

@@ -84,7 +84,7 @@
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
                     $('#folderPath').text(path);
-                    $('#folderDescription').html(description);
+                    $('#folderDescription').text(description);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);

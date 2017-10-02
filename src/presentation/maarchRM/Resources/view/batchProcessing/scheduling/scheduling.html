@@ -341,28 +341,28 @@
             a.find('.startTime')
              .html('')
              .append(task.startHours)
-             .append($('<b/>').html(':'))
+             .append($('<b/>').text(':'))
              .append(task.startMinutes);
             a.find('.lastExecution')
-             .html(task.lastExecution);
+             .text(task.lastExecution);
             a.find('.nextExecution')
-             .html(task.nextExecution);
+             .text(task.nextExecution);
             a.find('.executeNow').prop('disabled', false);
 
             // Repetition 
             if (task.frequencyNumber) {
                 repetition = a.find('.repetition'); 
                 if (task.frequencyUnit == "M") {
-                    repetition.html(task.frequencyNumber +' '+$('#minutes_text').html());
+                    repetition.text(task.frequencyNumber +' '+$('#minutes_text').html());
                 } else {
-                    repetition.html(task.frequencyNumber +' '+$('#hours_text').html());
+                    repetition.text(task.frequencyNumber +' '+$('#hours_text').html());
                 }
 
                 if(task.endMinutes) {
                     a.find('.endTime')
                      .html('')
                      .append(task.endHours)
-                     .append($('<b/>').html(':'))
+                     .append($('<b/>').text(':'))
                      .append(task.endMinutes);
 
                 } else {
@@ -387,11 +387,11 @@
             if (task.monthDays.length) {
                 var monthDays = a.find('.monthDays small');
                 if (task.month.length) {
-                    b = $('<b/>').html(task.month.join(', '));
+                    b = $('<b/>').text(task.month.join(', '));
                     monthDays.append(b).append($('<br/>'));
                 }
 
-                span = $('<span/>').html(task.monthDays.join(', '));
+                span = $('<span/>').text(task.monthDays.join(', '));
                 monthDays.append(span);
                 a.find('.monthDays').css('display', '');
 
@@ -402,7 +402,7 @@
 
             if (task.parameters) {
             	a.find('.taskParameters').removeClass('hide');
-            	a.find('.parametersList').html(task.parameters.join(' '));
+            	a.find('.parametersList').text(task.parameters.join(' '));
             }
 
             return a;

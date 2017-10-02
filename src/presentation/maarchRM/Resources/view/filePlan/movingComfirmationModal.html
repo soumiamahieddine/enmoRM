@@ -53,7 +53,7 @@ MovingConfirmationModal = {
         message = message.replace("%1$s", '<i class="text-primary">'+ element.find('b').html() +'<\/i>');
         message = message.replace("%2$s", '<i class="text-primary">'+ target.find('b').html() +'<\/i>');
 
-        messageDiv.html(message);
+        messageDiv.text(message);
 
         $('#moveFolderModal').modal();
     },

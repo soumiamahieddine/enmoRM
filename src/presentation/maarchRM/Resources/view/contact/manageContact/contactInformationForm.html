@@ -170,29 +170,29 @@
             } else if (firstName != "" && lastName != "") {
                 defaultName = firstName+' '+lastName;
 
-                list.find('a').html(firstName+' '+lastName);
+                list.find('a').text(firstName+' '+lastName);
                 list.clone().appendTo(displayNames);
 
-                list.find('a').html(lastName+' '+firstName);
+                list.find('a').text(lastName+' '+firstName);
                 list.clone().appendTo(displayNames);
 
                 if(orgName != "") {
-                    list.find('a').html(firstName+' '+lastName+' ('+orgName+')');
+                    list.find('a').text(firstName+' '+lastName+' ('+orgName+')');
                     list.clone().appendTo(displayNames);
                 }
             } else if (firstName + lastName == "" && orgName != "") {
                 defaultName = orgName;
-                list.find('a').html(orgName);
+                list.find('a').text(orgName);
                 list.clone().appendTo(displayNames);
                 
             } else {
                 defaultName = firstName+lastName;
 
-                list.find('a').html(firstName+lastName);
+                list.find('a').text(firstName+lastName);
                 list.clone().appendTo(displayNames);
 
                 if (orgName != "") {
-                    list.find('a').html(firstName+lastName+' ('+orgName+')')
+                    list.find('a').text(firstName+lastName+' ('+orgName+')')
                     list.clone().appendTo(displayNames);
                 }
             }
