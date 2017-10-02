@@ -286,4 +286,12 @@ interface organizationInterface
      * @action organization/organization/getOrgUnitArchivalProfiles
      */
     public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
+
+    /**
+     * Get the user postions by accountId
+     *
+     * @return array
+     * @action organization/organization/readUserOrgs
+     */
+    public function readUserpositions_accountId_();
 }

@@ -109,6 +109,9 @@ class user
         $view->setSource('roles', $roles);
         $view->setSource('publicArchive', $publicArchive);
         $view->setSource('user', $user);
+        $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_",$user->accountId);
+
+        $view->setSource('userPositions', $userPositions);
 
         $view->merge();
         $view->translate();

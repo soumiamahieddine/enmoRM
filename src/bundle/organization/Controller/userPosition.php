@@ -34,15 +34,19 @@ class userPosition extends abstractPosition
      *
      * @return array The list of positions
      */
-    protected function listPositions()
+    protected function listPositions($accountUserId = null)
     {
-        $accountToken = \laabs::getToken('AUTH');
-        $currentOrg = \laabs::getToken('ORGANIZATION');
+        if(!$accountUserId){
 
-        if (!$accountToken) {
+            $accountToken = \laabs::getToken('AUTH');
+            $accountUserId= $accountToken->accountId;
+//            $currentOrg = \laabs::getToken('ORGANIZATION');
+        }
+
+        if (!$accountUserId) {
             return array();
         }
 
-        return $this->sdoFactory->find('organization/userPosition', "userAccountId = '".$accountToken->accountId."'");
+        return $this->sdoFactory->find('organization/userPosition', "userAccountId = '".$accountUserId."'");
     }
 }

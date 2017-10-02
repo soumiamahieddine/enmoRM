@@ -507,6 +507,24 @@ class userAccount
     }
 
     /**
+     * Get user positions
+     * @param string $accountId The user identifier
+     *
+     * @return organization/userPositionTree[] The list of user position
+     */
+    public function readUserPositions($accountId)
+    {
+        $users = $this->sdoFactory->find("organization/userPosition", "accountId = '$accountId'");
+        $users = \laabs::castMessageCollection($users, 'organization/userPositionTree');
+
+        foreach ($users as $user) {
+            $user->displayName = $this->sdoFactory->read("organization/organization", $user->orgId)->displayName;
+        }
+
+        return $users;
+    }
+
+    /**
      * Search user account
      * @param string $query The query
      *
