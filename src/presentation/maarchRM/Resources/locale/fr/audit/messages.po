@@ -562,7 +562,8 @@ msgid "medona/archiveDelivery/readReplies"
 msgstr "Lecture des réponses de demande de communication"
 
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
-msgstr "Export de l'archive demandée (communicationsupport de stockage
+msgstr "Export de l''archive demandée (communicationsupport de stockage"
+
 msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
 msgstr "Suppression automatique des bordereaux de demande de communication dans le support de stockage temporaire"
 

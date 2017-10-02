@@ -25,4 +25,3 @@ msgctxt "interface"
 msgid "orgType"
 msgstr "Type d'organisation"
 msgctxt "interface"
-
