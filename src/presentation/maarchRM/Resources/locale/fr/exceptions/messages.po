@@ -264,7 +264,7 @@ msgid "Invalid value for metadata %1$s"
 msgstr "Valeur non valide pour la métadonnée %1$s"
 
 msgid "The archival profile reference not found"
-msgstr "La référence du profile d'archive n'a pas été trouvée."
+msgstr "La référence du profil d'archive n'a pas été trouvée."
 
 msgid "The retention rule not found"
 msgstr "La règle de conservation n'a pas été trouvée."
