@@ -220,7 +220,6 @@ class welcome
         $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $acceptUserIndex);
         $this->view->setSource('managementPrivilege', \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify"));
-        $this->view->setSource('modificationPrivilege', \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription"));
 
         $this->view->merge();
 
@@ -336,6 +335,8 @@ class welcome
     protected function getDescription($archive)
     {
         $archivalProfile = null;
+        $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
+
 
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
@@ -345,6 +346,7 @@ class welcome
         if (!empty($archive->descriptionClass)) {
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
+            $modificationPrivilege = false;
 
         } else {
             $descriptionHtml = '<table">';
@@ -411,6 +413,8 @@ class welcome
         } else {
             unset($archive->descriptionObject);
         }
+
+        $this->view->setSource('modificationPrivilege', $modificationPrivilege);
     }
 
     /**
