@@ -282,7 +282,7 @@ file that was distributed with this source code.
 
             
             if ($("#fileplanLevel").val() != 'item') {
-                acceptArchiveWithoutProfile: $('#acceptArchiveWithoutProfile').prop("checked");
+                serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
                 serializedObject.containedProfiles = ArchiveStructure.serialize();
             } else {
                 serializedObject.acceptArchiveWithoutProfile = false;
