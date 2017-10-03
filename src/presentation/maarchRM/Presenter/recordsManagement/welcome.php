@@ -154,7 +154,7 @@ class welcome
         $acceptUserIndex = true;
 
         // Archive
-        $originatorOrg = \laabs::callService('organization/organization/readByregnumber_registrationNumber_', $archive->originatorOrgRegNumber);
+        $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
