@@ -417,27 +417,28 @@ trait archiveEntryTrait
 
             $archive->retentionDuration =  $retentionRule->duration;
             $archive->finalDisposition =  $retentionRule->finalDisposition;
+        }
 
-            if (is_string($archive->retentionStartDate)) {
-                switch ($archive->retentionStartDate) {
-                    case 'originatingDate':
-                        $archive->retentionStartDate = $archive->originatingDate;
-                        break;
+        if (is_string($archive->retentionStartDate)) {
+            switch ($archive->retentionStartDate) {
+                case 'originatingDate':
+                    $archive->retentionStartDate = $archive->originatingDate;
+                    break;
 
-                    case 'depositDate':
-                        $archive->retentionStartDate = \laabs::newDate();
-                        break;
+                case 'depositDate':
+                    $archive->retentionStartDate = \laabs::newDate();
+                    break;
 
-                    default:
-                        $qname = \laabs\explode("/", $archive->retentionStartDate);
-                        if ($qname[0] == "description" && isset($archive->descriptionObject->{$qname[1]})) {
-                            $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
-                        } else {
-                            $archive->retentionStartDate = null;
-                        }
-                }
+                default:
+                    $qname = \laabs\explode("/", $archive->retentionStartDate);
+                    if ($qname[0] == "description" && isset($archive->descriptionObject->{$qname[1]})) {
+                        $archive->retentionStartDate = \laabs::newDate($archive->descriptionObject->{$qname[1]});
+                    } else {
+                        $archive->retentionStartDate = null;
+                    }
             }
         }
+        
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
