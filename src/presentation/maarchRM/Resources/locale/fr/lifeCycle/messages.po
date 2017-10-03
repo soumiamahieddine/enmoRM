@@ -327,12 +327,6 @@ msgctxt "eventInfo"
 # Event types
 # ---------------------------------------------------------
 
-msgid "recordsManagement/reception"
-msgstr "Reception"
-
-msgid "recordsManagement/validation"
-msgstr "Validation"
-
 msgid "recordsManagement/deposit"
 msgstr "Dépôt"
 
@@ -378,9 +372,6 @@ msgstr "Communication"
 msgid "recordsManagement/elimination"
 msgstr "Elimination"
 
-msgid "recordsManagement/descriptionModification"
-msgstr "Modification des métadonnées descriptives"
-
 msgid "recordsManagement/conversion"
 msgstr "Conversion"
 
@@ -407,9 +398,6 @@ msgstr "Modification d'un profil d'archive"
 
 msgid "recordsManagement/consultation"
 msgstr "Consultation d'archive"
-
-msgid "recordsManagement/depositOfLinkedResource"
-msgstr "Dépôt d'une resource liée"
 
 msgid "recordsManagement/destructionRequest"
 msgstr "Demande de destruction"

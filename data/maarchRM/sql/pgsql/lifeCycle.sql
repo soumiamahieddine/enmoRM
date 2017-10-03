@@ -22,16 +22,12 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Création du profil %6$s'),
     ('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction du profil %6$s'),
     ('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked', FALSE, 'Validation périodique de l''intégrité'),
-    ('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber', FALSE, 'Réception de l''archive %6$s'),
     ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Restitution de l''archive %6$s'),
     ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
-    ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s'),
-    ('recordsManagement/validation', 'hashAlgorithm hash', FALSE, 'Validation de l''archive %6$s');
+    ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s');
 
 -- EN --
 --INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
-    --('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber', FALSE, 'Reception of archive %5$s'),
-    --('recordsManagement/validation', 'hashAlgorithm hash', FALSE, 'Validation of archive %5$s'),
     --('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber', FALSE, 'Deposit of archive %5$s''),
     --('recordsManagement/integrityLifeCycle', 'resId hashAlgorithm hash address requesterOrgRegNumber', FALSE, 'Validate integrity of archive %65$s' by the life cycle journal.'),
     --('recordsManagement/integrityDataSystem', 'resId hashAlgorithm hash address requesterOrgRegNumber', FALSE, 'Validate integrity of archive %5$s by data system.'),
