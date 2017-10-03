@@ -94,7 +94,6 @@ class organization
     /**
      * The registration number
      *
-     * @pattern #^[A-Za-z0-9_]*$#
      * @var string
      * @notempty
      */

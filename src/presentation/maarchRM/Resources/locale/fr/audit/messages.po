@@ -987,7 +987,7 @@ msgstr "Lecture de toutes les unités organisationnelles"
 msgid "organization/organization/read_orgId_"
 msgstr "Lecture d'une organisation"
 
-msgid "organization/organization/readByregnumber_registrationNumber_"
+msgid "organization/organization/readByregnumber"
 msgstr "Lecture d'une organisation en fonction de son numéro d'immatriculation"
 
 msgid "organization/organization/readByrole_role_"
@@ -1019,9 +1019,6 @@ msgstr "Suppression d'un contact d'une organisation"
 
 msgid "organization/organization/readServicepositions_orgId_"
 msgstr "Lecture d'une organisation en fonction d'une position d'un service"
-
-msgid "organization/organization/readHasrole_registrationNumber__role_"
-msgstr "Vérification qu'une organisation possède un rôle"
 
 msgid "organization/organization/update_orgId_"
 msgstr "Modification d'une organisation"
