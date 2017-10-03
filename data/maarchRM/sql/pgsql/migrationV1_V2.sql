@@ -38,6 +38,7 @@ ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingFrequency" in
 ALTER TABLE "recordsManagement"."serviceLevel" ADD COLUMN "samplingRate" integer;
 
 ALTER TABLE "recordsManagement"."archive" DROP CONSTRAINT "archive_retentionRuleCode_fkey";
+ALTER TABLE "filePlan"."archive" DROP CONSTRAINT "folder_name_key";
 
 
 UPDATE "lifeCycle"."eventFormat" SET type = 'recordsManagement/archivalProfileModification' WHERE type = 'recordsManagement/ArchivalProfileModification';
