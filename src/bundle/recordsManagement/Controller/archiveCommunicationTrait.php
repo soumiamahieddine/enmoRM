@@ -150,21 +150,11 @@ trait archiveCommunicationTrait
     public function consultation($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
-        
-        $found = false;
+        $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        for ($i = 0; $i < count($archive->digitalResources); $i++) {
-            if ($archive->digitalResources[$i]->resId == $resId) {
-                $found = true;
-            }
-        }
-
-        if (!$this->accessVerification($archive) || !$found) {
+        if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
-
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
 
         $this->logConsultation($archive, $digitalResource);
 
