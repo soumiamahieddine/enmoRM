@@ -19,11 +19,6 @@
                         </label>
                     </div>
                 </div>
-                <?merge profile.bool().not() ?>
-                <!--<div class="form-group">
-                    <button class="btn btn-default" id="user_passwordChangeRequest" type="button" data-useraccountid="[?merge user.accountId ?]" title="Request a password change">
-                        <i class="fa fa-refresh fa-f"></i> Request a password change</button>
-                </div>-->
                 <?merge profile.bool() ?>
                 <div class="form-group">
                     <a class="btn btn-default" role="button" data-toggle="collapse" id="user_showNewPasswordForm" href="#user_password" aria-expanded="false" title="Change password">
@@ -133,22 +128,6 @@
         $('#disableUserModal').modal('show');
         $('#replacingUser').val('');
         $('#confirmDisabling').data('useraccountid', $(this).data('useraccountid'));
-    });
-
-// Password change request
-    $("#user_passwordChangeRequest").on('click', function () {
-        ajax($(this), {
-            url         : "/userAccount/" + $(this).data('useraccountid')+'/requirePasswordChange',
-            type        : "PUT",
-            contentType : 'application/json',
-            dataType    :'json',
-            success: function (response) {
-                gritter.show(response.message, response.status, response.errors);
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        })
     });
 
     // generate a new password
