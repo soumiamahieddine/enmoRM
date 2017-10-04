@@ -92,4 +92,12 @@ interface appInterface
      * @uses recordsManagement/archives/udpateMovearchivestofolder
      */
     public function updateArchivesMovetofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
+
+    /**
+     * Search formats
+     *
+     * @uses digitalResource/format/readFind_query_
+     * @return digitalResource/format/find
+     */
+    public function readDigitalresourceFormatFind_query_();
 }
