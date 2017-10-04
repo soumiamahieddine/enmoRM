@@ -5,15 +5,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_1",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000002",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -21,15 +19,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_10",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000003",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -37,15 +33,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_11",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000004",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -53,15 +47,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_12",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000005",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -69,15 +61,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_2",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000006",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -85,15 +75,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_3",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000007",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -101,15 +89,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_4",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000008",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -117,15 +103,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_5",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_000009",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -133,15 +117,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_6",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000010",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -149,15 +131,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_7",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000011",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -165,15 +145,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_8",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000012",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -181,15 +159,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Adobe"
+			"customer":"Adobe"
 		},
 		"archiveName":"F_9",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000013",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -197,15 +173,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_13",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000014",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -213,15 +187,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_14",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000015",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -229,15 +201,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_15",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000016",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -245,15 +215,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_16",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000017",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -261,15 +229,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_17",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000018",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -277,15 +243,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_18",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000019",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -293,15 +257,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_19",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000020",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -309,15 +271,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_20",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000021",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -325,15 +285,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_21",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000022",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -341,15 +299,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_22",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000023",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -357,15 +313,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_23",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000024",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -373,15 +327,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_24",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000025",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -389,15 +341,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_25",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000026",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -405,15 +355,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_26",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000027",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -421,15 +369,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_27",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000028",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -437,15 +383,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurotunnel"
+			"customer":"Eurotunnel"
 		},
 		"archiveName":"F_28",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000029",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -453,15 +397,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_13",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000032",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -469,15 +411,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_14",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000033",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -485,15 +425,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_15",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000034",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -501,15 +439,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_16",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000035",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -517,15 +453,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_17",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000036",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -533,15 +467,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_18",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000037",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -549,15 +481,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_19",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000038",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -565,15 +495,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_20",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000039",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -581,15 +509,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_21",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000040",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -597,15 +523,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_22",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000041",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -613,15 +537,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_23",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000042",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -629,15 +551,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_24",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000043",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -645,15 +565,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_25",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000044",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -661,15 +579,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_26",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000045",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -677,15 +593,13 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_27",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000046",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	},
 	{
 		"digitalResources":[{
@@ -693,14 +607,12 @@
 		}],
 		"descriptionObject":
 		{
-			"Client":"Eurosam"
+			"customer":"Eurosam"
 		},
 		"archiveName":"F_28",
 		"originatingDate":"2017-03-09",	
 		"originatorArchiveId":"FAA_0000047",
-		"archivalProfileReference":"FacturesClients",
-		"originatorOrgRegNumber":"regNum_CPTCLI",
-		"retentionRuleCode":"compta_1_01",
-		"retentionStartDate":"2017-03-21"
+		"archivalProfileReference":"FACVEN",
+		"originatorOrgRegNumber":"CC"
 	}
 ]
