@@ -62,7 +62,6 @@ conversionError = false
 ;          KEY                         BUNDLE              DESRIPTION
 ;       app                         N.A                 The app name
 ;       instance                    N.A                 The instance name
-;       archiveId                   recordsManagement   The archive identifier
 ;       originatorOwnerOrgId        recordsManagement   The owner originator identifier
 ;       originatorOrgRegNumber      recordsManagement   The originator registration number
 ;       archivalProfileReference    recordsManagement   The archival profile reference
@@ -72,15 +71,15 @@ conversionError = false
 ;       messageDate                 medona              The date of message
 ;       messageReference            medona              The message reference
 ;
-;
-; To include a part of date, you must use :
+; To include a part of date, you must use <date(format)>. 
 ;   - Y for a full numeric representation of a year, 4 digits
 ;   - m for the numeric representation of a month, with leading zeros
 ;   - d for day of the month, 2 digits with leading zeros
 ;
-; To make pakages, use a number.
-;       ex : <200> to make incremental containers of two hundred items
-storePath = "<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<Y>/<m>/<d>"
+; To make pakages, use a number. Packages must be the only variable on the directory step name
+;       good ex : /<200>/ to make incremental containers of two hundred items
+;       bad example : /prefix_<200>/
+storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<date(Y)>/<date(m)>/<date(d)>"
 
 [audit]
 ; Send notifications on audit event

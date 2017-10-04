@@ -178,6 +178,16 @@ class archiveFilePlanPosition
         $digitalResourceController = \laabs::newController("digitalResource/digitalResource");
         $archive->digitalResources = $digitalResourceController->getResourcesByArchiveId($archive->archiveId);
 
+        foreach ($archive->digitalResources as $digitalResource) {
+            $convertedResources = $digitalResourceController->getRelatedResources($digitalResource->resId, "isConversionOf");
+
+            if (is_array($convertedResources)) {
+                $archive->digitalResources = array_merge($archive->digitalResources, $convertedResources);
+            } else {
+                $archive->digitalResources[] = $convertedResources;
+            }
+        }
+
         // ChildrenArchives
         $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'", null, '< archiveName');
         foreach ($childrenArchives as $childArchive) {

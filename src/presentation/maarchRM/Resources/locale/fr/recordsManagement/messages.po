@@ -879,3 +879,6 @@ msgstr "Date"
 
 msgid "Text indexation"
 msgstr "Indexation du text"
+
+msgid "Profiles"
+msgstr "Profils"

@@ -253,11 +253,11 @@ class Repository
                         $name = str_replace($variable, \laabs::getApp(), $name);
                         break;
 
-                    case $token == 'inst':
+                    case $token == 'instance':
                         if ($instanceName = \laabs::getInstanceName()) {
                             $name = str_replace($variable, \laabs::getInstanceName(), $name);
                         } else {
-                            $name = "inst";
+                            $name = "instance";
                         }
                         break;
 
@@ -265,7 +265,6 @@ class Repository
                         $name = $this->getPackage($dir, $token);
                         break;
 
-                    
                     case substr($token, 0, 5) == 'date(':
                         $format = substr($token, 5, -1);
                         $name = str_replace($variable, date($format), $name);
@@ -298,11 +297,12 @@ class Repository
 
             if (is_dir($packagefile)) {
                 $size = count(scandir($packagefile)) - 2;
+
                 if ($size < $packSize) {
                     return $packages[$i];
                 } else {
                     $package = str_pad(intval($packages[$i])+1, 8, "0", STR_PAD_LEFT);
-                    mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
+                    //mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
 
                     return $package;
                 }
@@ -311,7 +311,7 @@ class Repository
         }
 
         $package = str_pad('1', 8, "0", STR_PAD_LEFT);
-        mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
+        //mkdir($this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $package, 0775, true);
 
         return $package;
     }
