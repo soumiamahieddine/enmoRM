@@ -35,7 +35,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
     ('UTILISATEUR', 'archiveManagement/modify'),
-    ('UTILISATEUR', 'archiveManagement/retrieve');
+    ('UTILISATEUR', 'archiveManagement/retrieve'),
     ('UTILISATEUR', 'archiveManagement/filePlan');
 
 
@@ -357,6 +357,7 @@ INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fiel
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('74', 'service', false, 0);
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('75', 'service', false, 0);
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('76', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('79', 'customer', false, 0);
 
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ppetit', 'PETIT', 'Patricia', 'Mme', 'Patricia PETIT', 'ppetit', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'aadams', 'ADAMS', 'Amy', 'Mme', 'Amy ADAMS', 'aadams', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
