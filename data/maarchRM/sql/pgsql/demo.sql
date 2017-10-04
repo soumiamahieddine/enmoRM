@@ -427,7 +427,7 @@ INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDA
 -- Insert postprocess SQL queries here
 INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "enabled") VALUES ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true); 
 
-INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', 'batchProcessing/scheduling/updateProcess');
+INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', '*');
 
 
 -- End of postProcess
