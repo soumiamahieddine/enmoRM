@@ -134,7 +134,7 @@ trait archiveAccessTrait
      *
      * @param string $archiveId The archive identifier
      */
-    public function getConmmunicationPackage($archiveId)
+    public function getCommunicationPackage($archiveId)
     {
         // Constituer les paquets à communiquer avec aip
 
