@@ -166,7 +166,7 @@ class description
             $queryParts[] = "<?SQL text @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
         }
 
-        $queryString = implode(' and ', $queryParts);
+        $queryString = \laabs\implode(' and ', $queryParts);
 
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
 
