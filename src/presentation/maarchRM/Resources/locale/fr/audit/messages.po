@@ -1487,3 +1487,9 @@ msgstr "Recherche d'un message d'élimination par sa reference"
 
 msgid "medona/message/readReference_reference_"
 msgstr "Recherche un message par sa reference"
+
+msgid "organization/organization/readUserpositions_accountId_"
+msgstr "Lister les services d'un utilisateur"
+
+msgid "recordsManagement/archives/updateIndexfulltext"
+msgstr "Indexation plein texte"

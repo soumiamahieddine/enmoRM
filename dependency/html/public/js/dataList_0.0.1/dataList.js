@@ -284,7 +284,6 @@ var DataList = {
 
         var datas = this.dataList[id].datas;
         if(filteredDatas != undefined){
-            console.log('ok');
             datas = filteredDatas;
         } else {
             this.dataList[id].element.find('.filterList').find('input').val('');
