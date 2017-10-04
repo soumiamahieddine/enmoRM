@@ -18,7 +18,7 @@
  * along with MaarchRM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace presentation\maarchRM\UserStory\archiveRetrieval;
+namespace presentation\maarchRM\UserStory\archiveManagement;
 
 /**
  * Interface for management of file plan
@@ -61,4 +61,5 @@ interface filePlanInterface
      * @return filePlan/filePlan/delete
      */
     public function deleteFileplanFolder_folder_();
+
 }

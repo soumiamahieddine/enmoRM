@@ -65,7 +65,7 @@ class welcome
         $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
 
         // File plan tree
-        $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "adminArchive/filePlan");
+        $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
@@ -305,7 +305,7 @@ class welcome
     }
 
     /**
-     * Show the result of moving an archive into a folder
+     * Show the result of movin²g an archive into a folder
      * @param int $result
      *
      * @return string
