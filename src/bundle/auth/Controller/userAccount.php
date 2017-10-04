@@ -315,6 +315,9 @@ class userAccount
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
 
+        $userAuthenticationController = \laabs::newController("auth/userAuthentication");
+        $userAuthenticationController->checkPasswordPolicies($newPassword);
+
         $encryptedPassword = $newPassword;
         if ($this->passwordEncryption != null) {
             $encryptedPassword = hash($this->passwordEncryption, $newPassword);
