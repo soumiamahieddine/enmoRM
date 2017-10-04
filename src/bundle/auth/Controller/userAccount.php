@@ -81,7 +81,16 @@ class userAccount
      */
     public function userList()
     {
-        $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user' AND accountId!='superadmin'");
+        $accountId = \laabs::getToken("AUTH")->accountId;
+
+        $queryAssert = [];
+        $queryAssert[] = "accountType='user'";
+
+        if ($accountId != "superadmin") {
+            $queryAssert[] = "accountId!='superadmin'\"";
+        }
+
+        $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $userAccounts;
     }
