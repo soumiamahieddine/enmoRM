@@ -399,6 +399,9 @@ msgstr "Lecture du niveau de service par défaut"
 msgid "recordsManagement/log/createDepositjournal"
 msgstr "Création d'un journal de l'application"
 
+msgid "recordsManagement/archivalProfile/readArchivalprofileExport_profileReference_"
+msgstr "Export du profil"
+
 msgid "documentManagement/fulltext/read"
 msgstr "Lecture fulltext"
 
@@ -1493,3 +1496,4 @@ msgstr "Lister les services d'un utilisateur"
 
 msgid "recordsManagement/archives/updateIndexfulltext"
 msgstr "Indexation plein texte"
+
