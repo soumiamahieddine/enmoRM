@@ -210,6 +210,7 @@ var DataList = {
 
             datas = filteredDatas;
         } 
+            filterInput.find('input').off().on('keyup', DataList.bind_filterList);
 
         if (datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
@@ -283,8 +284,10 @@ var DataList = {
 
         var datas = this.dataList[id].datas;
         if(filteredDatas != undefined){
-
             datas = filteredDatas;
+        } else {
+            this.dataList[id].element.find('.filterList').find('input').val('');
+
         }
 
         this.dataList[id].list.empty();
@@ -459,7 +462,6 @@ var DataList = {
     },
 
     bind_filterList: function(){
-
         var a = $(this);
         var id = a.closest('.dataList').data('datalist-id');
         var filterInput = a.closest('.filterList');

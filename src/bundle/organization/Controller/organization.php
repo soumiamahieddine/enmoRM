@@ -345,20 +345,6 @@ class organization
     }
 
     /**
-     * Check if an organization has a given role
-     * @param string $registrationNumber The organization identifier
-     * @param string $role               The role
-     *
-     * @return boolean The result of the operation
-     */
-    public function hasRole($registrationNumber, $role)
-    {
-        $organization = $this->sdoFactory->find('organization/organization', "registrationNumber = '$registrationNumber' AND orgRoleCodes = '*$role*'");
-
-        return (bool) count($organization);
-    }
-
-    /**
      * Update an organization
      * @param string                    $orgId        The organization identifier
      * @param organization/organization $organization The organization object to update

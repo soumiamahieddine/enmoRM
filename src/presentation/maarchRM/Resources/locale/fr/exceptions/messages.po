@@ -216,7 +216,7 @@ msgid "Access Code not deleted."
 msgstr "Règle de communicabilité non détruite"
 
 msgid "The archival profile %s currently in use."
-msgstr "Le profile d'archive %s est utilisé."
+msgstr "Le profil d'archive %s est utilisé."
 
 msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
 msgstr "Le niveau de service à besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
@@ -234,7 +234,7 @@ msgid "Permission denied: You have to choose a working organization unit to proc
 msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
-msgstr "La classe de description ne correspond pas au profile d'archive."
+msgstr "La classe de description ne correspond pas au profil d'archive."
 
 msgid "Archive not set for destruction."
 msgstr "L'archive n'est pas prévu pour être détruite."
@@ -255,7 +255,7 @@ msgid "Metadata %1$s is not allowed"
 msgstr "La métadonnée %1$s n'est pas autorisée."
 
 msgid "Null value not allowed for metadata %1$s"
-msgstr "La valeur nulle n'est pas autoriée pour la métadonnée %1$s"
+msgstr "La valeur nulle n'est pas autorisée pour la métadonnée %1$s"
 
 msgid "Forbidden value for metadata %1$s"
 msgstr "Valeur interdite pour la métadonnée %1$s"
@@ -264,7 +264,7 @@ msgid "Invalid value for metadata %1$s"
 msgstr "Valeur non valide pour la métadonnée %1$s"
 
 msgid "The archival profile reference not found"
-msgstr "La référence du profile d'archive n'a pas été trouvée."
+msgstr "La référence du profil d'archive n'a pas été trouvée."
 
 msgid "The retention rule not found"
 msgstr "La règle de conservation n'a pas été trouvée."
@@ -273,10 +273,10 @@ msgid "The access rule not found"
 msgstr "La règle de communicabilité n'a pas été trouvée."
 
 msgid "The archive can not be moved in a different organization unit."
-msgstr "L'archive ne peut pas être déplacé dans un autre service."
+msgstr "L'archive ne peut pas être déplacée vers un autre service producteur."
 
 msgid "Description field not deleted."
-msgstr "Le champs de description n'a pas été détruite."
+msgstr "Le champs de description n'a pas été détruit."
 
 msgid "The field \"%1$s\" is required"
 msgstr "Le champs \"%1$s\" est obligatoire."
@@ -285,7 +285,7 @@ msgid "The value of \"%1$s\" not respect the type \"%2$s\""
 msgstr "La valeur de \"%1$s\" ne respecte pas le type \"%2$s\""
 
 msgid "Invalid log data"
-msgstr "Les données du journal sont invalide."
+msgstr "Les données du journal sont invalides."
 
 msgid "The journal type is not allowed."
 msgstr "Le type de journal n'est pas autorisé."
@@ -324,7 +324,7 @@ msgid "Content description not deleted"
 msgstr "Contenu de description non détruit"
 
 msgid "Unable to detect format"
-msgstr "Impossible de detecter le format"
+msgstr "Impossible de détecter le format"
 
 msgid "La référence du message existe déjà."
 msgstr "La référence du bordereau est déjà utilisée."

@@ -35,7 +35,7 @@ msgstr "Niveau de service"
 msgctxt "interface"
 
 msgid "adminFunc"
-msgstr "Administration fonctionelle"
+msgstr "Administration fonctionnelle"
 msgctxt "bundle"
 
 msgid "adminTech"
@@ -49,4 +49,3 @@ msgctxt "bundle"
 msgid "archiveConversion"
 msgstr "Conversion de format"
 msgctxt "bundle"
-

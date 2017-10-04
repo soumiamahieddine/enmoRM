@@ -562,7 +562,8 @@ msgid "medona/archiveDelivery/readReplies"
 msgstr "Lecture des réponses de demande de communication"
 
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
-msgstr "Export de l'archive demandée (communicationsupport de stockage
+msgstr "Export de l''archive demandée (communicationsupport de stockage"
+
 msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
 msgstr "Suppression automatique des bordereaux de demande de communication dans le support de stockage temporaire"
 
@@ -986,7 +987,7 @@ msgstr "Lecture de toutes les unités organisationnelles"
 msgid "organization/organization/read_orgId_"
 msgstr "Lecture d'une organisation"
 
-msgid "organization/organization/readByregnumber_registrationNumber_"
+msgid "organization/organization/readByregnumber"
 msgstr "Lecture d'une organisation en fonction de son numéro d'immatriculation"
 
 msgid "organization/organization/readByrole_role_"
@@ -1018,9 +1019,6 @@ msgstr "Suppression d'un contact d'une organisation"
 
 msgid "organization/organization/readServicepositions_orgId_"
 msgstr "Lecture d'une organisation en fonction d'une position d'un service"
-
-msgid "organization/organization/readHasrole_registrationNumber__role_"
-msgstr "Vérification qu'une organisation possède un rôle"
 
 msgid "organization/organization/update_orgId_"
 msgstr "Modification d'une organisation"
@@ -1434,10 +1432,10 @@ msgid "organization/userPosition/readDescendantprofiles"
 msgstr "Lecture des profils d'archivage accordé à un utilisitateur"
 
 msgid "organization/organization/update_orgId_Archivalprofileaccess"
-msgstr "Mise à jour des access aux profiles d'archivage d'un service"
+msgstr "Mise à jour des profils d'archive d'un service producteur"
 
 msgid "organization/organization/readOrgunitprofiles"
-msgstr "Lecture des profiles d'archivage d'une organization"
+msgstr "Lecture des profils d'archive d'un service producteur"
 
 
 
@@ -1489,3 +1487,9 @@ msgstr "Recherche d'un message d'élimination par sa reference"
 
 msgid "medona/message/readReference_reference_"
 msgstr "Recherche un message par sa reference"
+
+msgid "organization/organization/readUserpositions_accountId_"
+msgstr "Lister les services d'un utilisateur"
+
+msgid "recordsManagement/archives/updateIndexfulltext"
+msgstr "Indexation plein texte"

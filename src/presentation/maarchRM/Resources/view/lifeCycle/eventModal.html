@@ -84,7 +84,7 @@ eventInfo = {
                     var e = $(this)
                     var name = e.attr('name');
 
-                    e.text(response[name]);
+                    e.html(response[name]);
                     delete response[name];
                 });
 
@@ -104,7 +104,6 @@ eventInfo = {
                 var eventInfo = $('#eventInfo');
                 eventInfo.html('');
                 $.each(response, function(key, value) {
-                    console.log(value);
                     if (value != "") {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
                         $('<dd></dd>').text(value).css('word-break', 'break-all').appendTo(eventInfo);

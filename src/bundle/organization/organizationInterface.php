@@ -84,7 +84,7 @@ interface organizationInterface
      *
      * @action organization/organization/getOrgByRegNumber
      */
-    public function readByregnumber_registrationNumber_();
+    public function readByregnumber($registrationNumber);
 
     /**
      * Get organizations by role
@@ -189,15 +189,6 @@ interface organizationInterface
      * @action organization/organization/readServicepositions
      */
     public function readServicepositions_orgId_();
-
-    /**
-     * Check if an organization has a given role
-     *
-     * @return boolean The result of the operation
-     *
-     * @action organization/organization/hasRole
-     */
-    public function readHasrole_registrationNumber__role_();
 
     /**
      * Update an organization
