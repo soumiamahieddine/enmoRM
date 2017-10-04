@@ -581,7 +581,7 @@ trait archiveEntryTrait
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
-                if (count($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
                     throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
                 }
                 break;
