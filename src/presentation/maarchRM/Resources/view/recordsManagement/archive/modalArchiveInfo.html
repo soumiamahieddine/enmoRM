@@ -71,7 +71,11 @@
                     archiveInfoModal.close();
                     $('#modalArchiveInfo').one('hidden.bs.modal', function () {
                         archiveInfoModal.load(archiveId);
-                    })
+                    });
+                    $('#modalArchiveInfo').one('shown.bs.modal', function () {
+                        console.log($("#modalArchiveInfo").find('[href=#digitalResourcesTab]'));
+                        $("#modalArchiveInfo").find('[href=#digitalResourcesTab]').tab("show");
+                    });
                 }
             }
         });
