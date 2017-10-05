@@ -246,14 +246,15 @@ interface archivesInterface
      */
     /**
      * Update metadata of archive
-     * @param string    $archiveId
-     * @param string    $originatorArchiveId
-     * @param string    $archiveName
-     * @param string    $description     
+     * @param string $archiveId
+     * @param string $originatorArchiveId
+     * @param string $archiveName
+     * @param string $description
+     * @param string $originatingDate
      * 
      * @action recordsManagement/archive/modifyMetadata
      */
-    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$description = null);
+    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
 
     /**
      * List an archive resources and children archives

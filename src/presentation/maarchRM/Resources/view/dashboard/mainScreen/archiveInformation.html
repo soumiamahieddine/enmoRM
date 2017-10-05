@@ -2,6 +2,7 @@
     <input class="archiveInformationId hide" value="[?merge archive.archiveId ?]">
     <input class="archiveName hide" value="[?merge archive.archiveName ?]">
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
+    <input class="originatingDate hide" value="[?merge archive.originatingDate ?]">
 
     <div class="col-xs-12">
         <?merge acceptArchiveWithoutProfile.bool().add(archivalProfileList.count()).bool() ?>
@@ -31,13 +32,12 @@
                 <th title="Name">Name</th>
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
-            <?merge archive.originatorArchiveId.bool() ?>
             <tr class="originatorArchiveId">
-                <th title="Name">Originator archive identifier</th>
+                <th title="Originator archive identifier">Originator archive identifier</th>
                 <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
             </tr>
             <tr class="originatingDate">
-                <th title="Name">Originating date</th>
+                <th title="Originating date">Originating date</th>
                 <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
             </tr>
         </table>
@@ -171,6 +171,7 @@
     </div-->
     <input id="inputArchiveName" name="archiveName" type="text" class="col-xs-12"/>
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
+    <input id="inputOriginatingDate" name="originatingDate" type="text" class="col-xs-12 datePicker"/>
 
     <input id="inputCustomNumericField" placeholder="Value" type="number" class="col-xs-12"/>
 
@@ -348,6 +349,11 @@
                               .html('')
                               .append($('#inputOriginatorArchiveId').val($('#archiveInformation').find('.originatorArchiveId').val()));
 
+            archiveInformation.find('.originatingDate')
+                              .children('td')
+                              .html('')
+                              .append($('#inputOriginatingDate').val($('#archiveInformation').find('.originatingDate').val()));
+
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
@@ -394,15 +400,22 @@
         saveMetadata: function() {
             var descriptionFields = {};
             $('#metadata').find('tr').each(function(i, e) {
-                var label = $(e).find('th > input').val();
-                var name = $(e).find('th > input').attr('name');
-                var valueInput = $(e).find('td > input[type="text"], td > input[type="number"]');
+                var input = $(e).find('th > input');
+                var valueInput = $(e).find('td > input');
+                var label = input.val();
+                var name = input.attr('name');
 
-                if (valueInput.length == 0) {
-                    valueInput = $(e).find('td input[type="radio"]').parent('.active').find('input');
+                switch (valueInput.attr("type")) {
+                    case "text" :
+                        value = valueInput.val();
+                        break;
+                    case "number" :
+                        value = parseInt(valueInput.val());
+                        break;
+                    default:
+                        inputValue = valueInput.parent('.active').find('input').val();
+                        value = valueInput == 1 ? true : false;
                 }
-
-                var value = valueInput.val();
 
                 if ($(e).hasClass('archivalProfileField')) {
                     descriptionFields[name] = value;
@@ -415,15 +428,12 @@
                 }
             });
 
-            if (!descriptionFields) {
-                return;
-            }
-
             var parameters = {
-                archiveId   : ArchiveInformation.archiveId,
-                originatorArchiveId : $('#archiveInformation').find('#inputOriginatorArchiveId').val(),
-                archiveName : $('#archiveInformation').find('#inputArchiveName').val(),
-                description : JSON.stringify(descriptionFields)
+                archiveId           : ArchiveInformation.archiveId,
+                originatorArchiveId : $('#inputOriginatorArchiveId').val(),
+                archiveName         : $('#inputArchiveName').val(),
+                originatingDate     : $('#inputOriginatingDate').val(),
+                description         : JSON.stringify(descriptionFields)
             };
 
             $.ajax({

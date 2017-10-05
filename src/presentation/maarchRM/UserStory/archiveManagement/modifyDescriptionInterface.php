@@ -26,15 +26,16 @@ interface modifyDescriptionInterface
 {
     /**
      * Change the information of archive
-     * @param string    $archiveId
-     * @param string    $originatorArchiveId
-     * @param string    $archiveName     
-     * @param string    $description 
+     * @param string $archiveId
+     * @param string $originatorArchiveId
+     * @param string $archiveName     
+     * @param string $originatingDate     
+     * @param string $description 
      * 
      * 
      * @return recordsManagement/archive/metadata
      * 
      * @uses recordsManagement/archives/updateMetadata
      */
-    public function updateRecordsmanagementArchiveMetadata($archiveId,$originatorArchiveId,$archiveName,$description);
+    public function updateRecordsmanagementArchiveMetadata($archiveId,$originatorArchiveId,$archiveName,$originatingDate,$description);
 }
