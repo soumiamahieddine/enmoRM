@@ -406,31 +406,20 @@ class archive
             !empty($archive->parentRelationships)
             || !empty($archive->childrenRelationships)
         );
-        //var_dump($archive->childrenRelationships);
-        //var_dump($archive->parentRelationships);
+
         if ($archive->status == "disposed") {
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {
-                /*if (isset($digitalResource->format)) {
-                    foreach ((array) $format->mimetypes as $mimetype) {
 
-                        if (!strpos($mimetype, "/")) {
-                            continue;
-                        } 
-                        $mediatype = strtok($mimetype, "/");
+                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
 
-                        if (in_array($mediatype, ['application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image'])) {
-                            $format->mediatype = $mediatype;
-                            break;
-                        }
-                    }
-                }*/
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                     continue;
                 }
                 foreach ($digitalResource->relatedResource as $relatedResource) {
+                    $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
                     $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
                 }
             }

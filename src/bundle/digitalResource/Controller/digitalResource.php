@@ -610,23 +610,15 @@ class digitalResource
      */
     public function convert($digitalResource)
     {
-        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
+        $convert = $this->isConvertible($digitalResource);
+
+        if($convert == false) {
             return false;
         }
-
-        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
         $configuration =  \laabs::configuration('dependency.fileSystem');
-
-        if (!isset($configuration['conversionServices'])) {
-            return false;
-        }
-
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
         $conversionServices = $configuration['conversionServices'];
-
-        if (!is_array($conversionServices)) {
-            return false;
-        }
 
         $outputFormats = null;
         $convertService = null;
@@ -637,9 +629,6 @@ class digitalResource
             }
         }
 
-        if (!$outputFormats) {
-            return false;
-        }
 
         $contents = $digitalResource->getContents();
 
@@ -653,11 +642,9 @@ class digitalResource
 
         file_put_contents($srcfile, $contents);
 
-        $converter = \laabs::newService($conversionRule->conversionService);
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
-        if (!($converter instanceof \dependency\fileSystem\conversionInterface)) {
-            return false;
-        }
+        $converter = \laabs::newService($conversionRule->conversionService);
 
         $tgtfile = $converter->convert($srcfile, $outputFormats[$conversionRule->targetPuid]);
 
@@ -682,6 +669,59 @@ class digitalResource
         $convertedResource->relatedResId = $digitalResource->resId;
 
         return $convertedResource;
+    }
+
+    /**
+     * Check if the resource can be convertible
+     * @param $digitalResource/digitalResource $digitalResource The resource object
+     *
+     * @return mixte The convertion rule or false if it's no possible
+     */
+    public function isConvertible($digitalResource) {
+        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
+            return false;
+        }
+
+        $configuration =  \laabs::configuration('dependency.fileSystem');
+
+        if (!isset($configuration['conversionServices'])) {
+            return false;
+        }
+
+        $conversionServices = $configuration['conversionServices'];
+
+        if (!is_array($conversionServices)) {
+            return false;
+        }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
+
+        $outputFormats = null;
+        $convertService = null;
+        foreach ($conversionServices as $service) {
+            if ($service["serviceName"] == $conversionRule->conversionService) {
+                $outputFormats = $service["outputFormats"];
+                $convertService = $service;
+            }
+        }
+
+        if (!in_array($digitalResource->puid, $convertService["inputFormats"])) {
+            return false;
+        }
+
+        if (!$outputFormats) {
+            return false;
+        }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
+
+        $converter = \laabs::newService($conversionRule->conversionService);
+
+        if (!($converter instanceof \dependency\fileSystem\conversionInterface)) {
+            return false;
+        }
+
+        return $converter;
     }
 
     /**
