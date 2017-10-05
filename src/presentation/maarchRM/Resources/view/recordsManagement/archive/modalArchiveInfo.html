@@ -56,6 +56,27 @@
         archiveDocumentViewer.loadResource(archiveId, resId);
     })
 
+    // Show document
+    $("#modalArchiveInfo").on('click', '[data-convertresource]', function () {
+        var resId = $(this).data('convertresource');
+        var archiveId = $(this).data('archive-id');
+
+        $.ajax({
+            type        : "PUT",
+            url         : "/recordsManagement/InteractiveConversion/" + resId,
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status && response.result != false) {
+                    archiveInfoModal.close();
+                    $('#modalArchiveInfo').one('hidden.bs.modal', function () {
+                        archiveInfoModal.load(archiveId);
+                    })
+                }
+            }
+        });
+    })
+
     archiveInfoModal = {
          load: function(archiveId) {
             $.ajax({
