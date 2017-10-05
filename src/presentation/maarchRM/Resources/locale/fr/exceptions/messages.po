@@ -45,7 +45,7 @@ msgid "The description field already exists."
 msgstr "Le champs de description existe déjà."
 
 msgid "All repositories must be accessible"
-msgstr "Tout les supports de stockage doivent être accessibles"
+msgstr "Tous les supports de stockage doivent être accessibles"
 
 msgid "The end date is lower than the begin date."
 msgstr "La date de fin est plus petite que la date de début."

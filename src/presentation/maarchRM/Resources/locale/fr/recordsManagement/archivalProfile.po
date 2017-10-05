@@ -243,7 +243,7 @@ msgid "Go to"
 msgstr "Aller vers"
 
 msgid "Accept any profiles"
-msgstr "Accepter tout les profils"
+msgstr "Accepter tous les profils"
 
 msgid "Generate bar code"
 msgstr "Générer bar code"
