@@ -264,13 +264,13 @@ trait archiveEntryTrait
                 $digitalResource->size = filesize($filePath);
             }
 
-            if ($archive->filePlanFolder) {
+            /*if ($archive->filePlanFolder) {
                 if (!isset($filePlanFoldersByName[$archive->filePlanFolder])) {
                     $filePlanFoldersByName[$archive->filePlanFolder] = $filePlanController->readByName($archive->filePlanFolder);
                 }
                 
                 $archive->filePlanPosition = $filePlanFoldersByName[$archive->filePlanFolder]->folderId;
-            }
+            }*/
 
             $this->receive($archive);
         }

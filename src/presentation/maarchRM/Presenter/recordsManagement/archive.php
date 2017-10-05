@@ -712,9 +712,15 @@ class archive
      */
     public function convert($result)
     {
+        if ($result == false) {
+            $count = 0;
+        } else {
+            $count = count($result);
+        }
         $this->json->message = '%1$s document(s) converted.';
         $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, count($result));
+        $this->json->message = sprintf($this->json->message, $count);
+        $this->json->result = $result;
 
         return $this->json->save();
     }

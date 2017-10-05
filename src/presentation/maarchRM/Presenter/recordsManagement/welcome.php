@@ -151,8 +151,6 @@ class welcome
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
-        $acceptUserIndex = true;
-
         // Archive
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
@@ -168,13 +166,12 @@ class welcome
             $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
         }
 
+        $archivalProfileList = [];
+        $acceptArchiveWithoutProfile = $acceptUserIndex = false;
+
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         if ($depositPrivilege) {
-
-            $acceptArchiveWithoutProfile = true;
-            $archivalProfileList = [];
-
             if (!empty($archive->archivalProfileReference)) {
                 $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
                 $archive->archivalProfileName = $archivalProfile->name;

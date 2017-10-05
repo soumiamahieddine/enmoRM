@@ -72,7 +72,7 @@
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
             }
 
-            this.messageDiv.text(message).removeClass('hide');
+            this.messageDiv.html(message).removeClass('hide');
             this.modal.modal();
         },
 
@@ -103,7 +103,7 @@
                 message = message.replace("%2$s", '<i class="text-primary">'+ folderName +'<\/i>');
             }
 
-            this.messageDiv.text(message).removeClass('hide');
+            this.messageDiv.html(message).removeClass('hide');
             this.modal.modal();
         },
 

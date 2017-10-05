@@ -35,7 +35,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
     ('UTILISATEUR', 'archiveManagement/modify'),
-    ('UTILISATEUR', 'archiveManagement/retrieve');
+    ('UTILISATEUR', 'archiveManagement/retrieve'),
     ('UTILISATEUR', 'archiveManagement/filePlan');
 
 
@@ -141,14 +141,14 @@ INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "p
 INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ES', 'Études et Statistiques', 'Études et Statistiques', 'DESR', 'ACME', NULL, 'ES',true);
 INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DG', 'Direction Générale', 'Direction Générale', 'ACME', 'ACME', NULL, 'DG',true);
 INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CAICG', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'DG', 'ACME', NULL, 'CAICG',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CC', 'Comptabilité client', 'Comptabilité client', 'DOP', 'ACME', NULL, 'CC',true);
 
 
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('Org', 'Organisation', 'name', '', '["ACME Paris","ACME Dakar","ACME Cotonou"]');
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('dateRef', 'Date de référence', 'date', '', '');
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('lastName', 'Nom', 'name', '', '');
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('firstName', 'Prénom', 'name', '', '');
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('matricule', 'Matricule', 'name', '', '');
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('Service', 'Entité/Service', 'name', '', '');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('org', 'Organisation', 'name', '', '["ACME Paris","ACME Dakar","ACME Cotonou"]');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('fullname', 'Nom complet', 'name', '', '');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('empid', 'Matricule', 'name', '', '');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('service', 'Entité/Service', 'name', '', '');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('customer', 'Client', 'text', '', '');
 
 
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex") VALUES ('1', 'COUA', 'Courrier Administratif', NULL, 'document', NULL, NULL, true);
@@ -229,6 +229,7 @@ INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "referen
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex") VALUES ('76', 'COUABID', 'Courrier Arrivée BID', NULL, 'document', NULL, NULL, true);
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex") VALUES ('77', 'SMIROP', 'Fiche de visite SMIROP', NULL, 'document', NULL, NULL, true);
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex") VALUES ('78', 'VISA', 'Visas obtenus', NULL, 'document', NULL, NULL, true);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex") VALUES ('79', 'FACVEN', 'Facture de vente', NULL, 'document', NULL, NULL, true);
 
 
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('7', '8');
@@ -262,42 +263,42 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "c
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '55');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '57');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('29', '30');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('29', '31');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('29', '32');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('29', '33');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('29', '34');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '30');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '31');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '32');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '33');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '34');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('35', '36');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('35', '37');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('35', '38');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '36');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '37');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '38');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('39', '40');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('39', '77');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '40');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '77');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '42');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '43');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '25');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '44');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '45');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '46');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('41', '47');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '42');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '43');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '25');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '44');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '45');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '46');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '47');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '48');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '49');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '50');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '51');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '52');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '53');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('1', '54');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '48');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '49');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '50');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '51');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '52');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '53');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '54');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('55', '56');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '56');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('57', '58');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('57', '59');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('57', '60');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('57', '54');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('57', '78');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '58');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '59');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '60');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '54');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '78');
 
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '17');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '69');
@@ -337,47 +338,26 @@ INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileRef
 INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPAE');
 INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPER');
 INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'COUABID');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CC', 'FACVEN');
 
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('1', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('1', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('2', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('2', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('3', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('3', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('4', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('4', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('5', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('5', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('6', 'Org', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('6', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('7', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('12', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('15', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('17', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('18', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('19', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('27', 'dateRef', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('28', 'lastName', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('28', 'firstName', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('28', 'matricule', false, 2);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('61', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('61', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('69', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('69', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('70', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('70', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('71', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('71', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('72', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('72', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('73', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('73', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('74', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('74', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('75', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('75', 'dateRef', false, 1);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('76', 'Service', false, 0);
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('76', 'dateRef', false, 1);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('1', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('2', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('3', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('4', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('5', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('6', 'org', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('28', 'fullname', false, 1);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('28', 'empid', false, 2);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('61', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('69', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('70', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('71', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('72', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('73', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('74', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('75', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('76', 'service', false, 0);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('79', 'customer', false, 0);
 
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ppetit', 'PETIT', 'Patricia', 'Mme', 'Patricia PETIT', 'ppetit', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'aadams', 'ADAMS', 'Amy', 'Mme', 'Amy ADAMS', 'aadams', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
@@ -393,6 +373,9 @@ INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'bblier', 'BLIER', 'Bernard', 'M.', 'Bernard BLIER', 'bblier', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'kmama', 'MAMA', 'Karima', 'Mme', 'Karima MAMA', 'kmama', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ccharles', 'CHARLES', 'Charlotte', 'Mme', 'Charlotte CHARLES', 'ccharles', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
+INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ttong', 'TONG', 'Tony', 'M.', 'Tony TONG', 'ttong', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
+INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ddur', 'DUR', 'Dominique', 'Mme', 'Dominique DUR', 'ddur', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
+INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ssissoko', 'SISSOKO', 'Sylvain', 'M.', 'Sylvain SISSOKO', 'ssissoko', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 
 
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ppetit', 'ACME', '', true);
@@ -409,6 +392,9 @@ INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function",
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bblier', 'ARC', '', true);
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('kmama', 'ARC', '', true);
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ccharles', 'ARC', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ttong', 'CC', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddur', 'CC', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ssissoko', 'CC', '', true);
 
 
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ppetit');
@@ -421,13 +407,17 @@ INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ggrand');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'cchaplin');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'sstar');
+INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ttong');
+INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ddur');
+INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ssissoko');
+INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ddaull');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'bblier');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'kmama');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'ccharles');
 -- Insert postprocess SQL queries here
 INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "enabled") VALUES ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true); 
 
-INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', 'batchProcessing/scheduling/updateProcess');
+INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', '*');
 
 
 -- End of postProcess

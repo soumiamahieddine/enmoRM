@@ -96,7 +96,7 @@ FulltextSearch = {
                         break;
                     }
 
-                    query.description[name] = name+'="'+$(this).val()+'"';
+                    query.description[name] = name+'='+$(this).val() == 1 ? true : false;
                     break;
 
                 case 'text':
@@ -221,17 +221,14 @@ SearchList = {
         if (archive.originatorOrgName) {
             $(siblings[0]).text(archive.originatorOrgName);
         }
-        if (archive.originatorArchiveId) {
-            $(siblings[1]).children('i').text(archive.originatorArchiveId);
-        }
         if (archive.depositDate) {
-            $(siblings[2]).text(archive.depositDate.substring(0, 19));
+            $(siblings[1]).text(archive.depositDate.substring(0, 19));
         }
         if (archive.archivalProfileReference) {
-            $(siblings[3]).text(archive.archivalProfileReference);
+            $(siblings[2]).text(archive.archivalProfileReference);
         }
         if (archive.text) {
-            $(siblings[4]).text(archive.text.substring(0, 30));
+            $(siblings[3]).text(archive.text.substring(0, 60));
         }
 
         return archiveDiv;

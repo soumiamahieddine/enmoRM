@@ -81,7 +81,16 @@ class userAccount
      */
     public function userList()
     {
-        $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user' AND accountId!='superadmin'");
+        $accountId = \laabs::getToken("AUTH")->accountId;
+
+        $queryAssert = [];
+        $queryAssert[] = "accountType='user'";
+
+        if ($accountId != "superadmin") {
+            $queryAssert[] = "accountId!='superadmin'\"";
+        }
+
+        $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $userAccounts;
     }
@@ -305,6 +314,9 @@ class userAccount
     public function setPassword($userAccountId, $newPassword)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+
+        $userAuthenticationController = \laabs::newController("auth/userAuthentication");
+        $userAuthenticationController->checkPasswordPolicies($newPassword);
 
         $encryptedPassword = $newPassword;
         if ($this->passwordEncryption != null) {
