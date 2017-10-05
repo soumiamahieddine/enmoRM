@@ -445,10 +445,10 @@ msgid "medona/archivalAgreement/delete_archivalAgreementId_"
 msgstr "Suppression d'une convention d'archivage"
 
 msgid "medona/archiveAuthorization/readIncominglist"
-msgstr "Liste des bordereaux d'autorisation envoyés"
+msgstr "Liste des bordereaux d'autorisation envoyées"
 
 msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
-msgstr "Liste des bordereaux d'autorisation de communication envoyés"
+msgstr "Liste des bordereaux d'autorisation de communication envoyées"
 
 msgid "medona/archiveAuthorization/readCommunicationincominglist"
 msgstr "Liste des bordereaux d'autorisation de communication reçus"
@@ -457,7 +457,7 @@ msgid "medona/archiveAuthorization/readCommunicationcount"
 msgstr "Nombre de bordereaux d'autorisation de communication"
 
 msgid "medona/archiveAuthorization/readDestructionoutgoinglist"
-msgstr "Liste des bordereaux d'autorisation de destruction envoyés"
+msgstr "Liste des bordereaux d'autorisation de destruction envoyées"
 
 msgid "medona/archiveAuthorization/readDestructionincominglist"
 msgstr "Liste des bordereaux d'autorisation de destruction reçus"
@@ -508,7 +508,7 @@ msgid "medona/archiveDelivery/readIncominglist"
 msgstr "Liste des bordereaux de demandes de communication reçus"
 
 msgid "medona/archiveDelivery/readOutgoinglist"
-msgstr "Liste des bordereaux de demandes de communication envoyés"
+msgstr "Liste des bordereaux de demandes de communication envoyées"
 
 msgid "medona/archiveDelivery/readCount"
 msgstr "Nombre de bordereaux de demande de communication"
@@ -577,7 +577,7 @@ msgid "medona/archiveDestruction/readIncominglist"
 msgstr "Liste des bordereaux de demande de destruction reçus"
 
 msgid "medona/archiveDestruction/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de destruction envoyés"
+msgstr "Liste des bordereaux de demande de destruction envoyées"
 
 msgid "medona/archiveDestruction/readCount"
 msgstr "Nombre de bordereaux de demande de destruction"
@@ -670,7 +670,7 @@ msgid "medona/archiveRestitution/readRestitutionlist"
 msgstr "Liste des bordereaux de demande de restitution"
 
 msgid "medona/archiveRestitution/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de restitution envoyés"
+msgstr "Liste des bordereaux de demande de restitution envoyées"
 
 msgid "medona/archiveRestitution/readCount"
 msgstr "Nombre de bordereaux de demande de restitution"
@@ -760,7 +760,7 @@ msgid "medona/archiveTransfer/readIncominglist"
 msgstr "Liste des bordereaux de demande de transfert reçus"
 
 msgid "medona/archiveTransfer/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de transfert envoyés"
+msgstr "Liste des bordereaux de demande de transfert envoyées"
 
 msgid "medona/archiveTransfer/readCount"
 msgstr "Nombre de bordereaux de demande de transfert"
