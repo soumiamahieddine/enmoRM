@@ -253,13 +253,25 @@ trait archiveModificationTrait
         }
         
         if ($description) {
+            $descritionObject = json_decode($description);
+            if (!empty($archive->archivalProfileReference)) {
+                $this->useArchivalProfile($archive->archivalProfileReference);
+                
+                if (!empty($this->currentArchivalProfile->descriptionClass)) {
+                    $this->validateDescriptionClass($descritionObject, $this->currentArchivalProfile);
+                } else {
+                    $this->validateDescriptionModel($descritionObject, $this->currentArchivalProfile);
+                }
+            }
+
             if (!empty($archive->descriptionClass)) {
                 $descriptionController = $this->useDescriptionController($archive->descriptionClass);
             } else {
                 $descriptionController = $this->useDescriptionController('recordsManagement/description');
             }
+            $archive->descritionObject = $descritionObject;
             
-            $descriptionController->update(json_decode($description),$archiveId);
+            $descriptionController->update($archive);
         }
         
         $this->sdoFactory->update($archive, 'recordsManagement/archive');

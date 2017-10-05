@@ -25,7 +25,7 @@ namespace bundle\recordsManagement\Controller;
  * @package RecordsManagement
  * @author  Cyril VAZQUEZ <cyril.vazquez@maarch.org> 
  */
-class description
+class description implements \bundle\recordsManagement\Controller\archiveDescriptionInterface
 {
     protected $sdoFactory;
 
@@ -184,17 +184,23 @@ class description
      * 
      * @return bool
      */
-    public function update($description, $archiveId)
+    public function update($archive)
     {
-        $archiveController = \laabs::newController('recordsManagement/archive');
-        $archive = $archiveController->read($archiveId);
-        
-        $archive->descriptionObject = $description;
         if ($archive->fullTextIndexation == "indexed") {
             $archive->fullTextIndexation == "requested";
         }
         
         $this->create($archive);
+    }
+
+     /**
+     * Delete the description object
+     * @param id   $archiveId
+     * @param bool $deleteDescription
+     */
+    public function delete($archiveId, $deleteDescription = true)
+    {
+
     }
 
     /**
