@@ -32,6 +32,23 @@
     <span id="originatorOrgName_text">Originator</span>
 </div>
 
+<style>
+.advancedSearchPanel {
+    font-size: 85%;
+}
+.advancedSearchPanel .form-control {
+    height: 25px;
+    font-size: 85%;
+}
+.advancedSearchPanel .input-group-addon {
+    height: 25px;
+    padding: 1px 6px;
+}
+.advancedSearchPanel .form-group {
+    margin-bottom: 5px;
+}
+</style>
+
 <script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
 
@@ -70,7 +87,8 @@ FulltextSearch = {
         var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
         query.profileReference = selectedProfile;
         
-        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form[data-descriptionFields] input, form[data-description] select');
+        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('.descriptionInput');
+        var activeSearchTab = searchPanel.find('.tab-pane.active');
 
 		searchFields.each(function() {
             var value = $(this).val();
@@ -96,26 +114,23 @@ FulltextSearch = {
                         break;
                     }
 
-                    query.description[name] = name+'='+$(this).val() == 1 ? true : false;
+                    value = $(this).val() == 1 ? 'true' : 'false';
+                    query.description[name] = name+'='+ value;
                     break;
 
                 case 'text':
                     // format dates
                     if ($(this).hasClass('datePicker')) {
                         if (value !== '') {
-                            value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        } else {
-                            value = '*';
-                        }
+                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                            value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
 
-                        // Fill start and end values
-                        if (query.description[name] == undefined) {
-                            query.description[name] = name+'="'+value+'"';
-                        } else {
-                            query.description[name] = query.description[name] +'.."'+value+'"';
-                        }
-                        if (query.description[name] == name+'="*".."*"') {
-                            delete query.description[name];
+                            // Fill start and end values
+                            if (query.description[name] == undefined) {
+                                query.description[name] = value;
+                            } else {
+                                query.description[name] = query.description[name] +'&&'+value;
+                            }
                         }
                         break;
                     }
@@ -152,6 +167,7 @@ FulltextSearch = {
         query.filePlanPosition = searchPanel.data("context-folderid");
         query.originatorOrgRegNumber = searchPanel.data("context-orgregnumber");
         query.originatorArchiveId = $('#searchOriginatorArchiveId').val();
+        query.originatingDate = [activeSearchTab.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'), activeSearchTab.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')];
 
         if (query.text == '' && query.description == "") {
             return; 

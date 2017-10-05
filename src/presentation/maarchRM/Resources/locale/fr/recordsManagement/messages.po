@@ -875,7 +875,7 @@ msgid "Zip container"
 msgstr "Fichier conteneur"
 
 msgid "Originating date"
-msgstr "Date"
+msgstr "Date du document"
 
 msgid "Text indexation"
 msgstr "Indexation du text"
