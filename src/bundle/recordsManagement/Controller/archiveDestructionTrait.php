@@ -32,9 +32,10 @@ trait archiveDestructionTrait
      *
      * @return bool
      */
-    public function dispose($archiveIds)
+    public function dispose($archiveIds) 
     {
         $currentDate = \laabs::newTimestamp();
+        $archives = [];
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -48,10 +49,13 @@ trait archiveDestructionTrait
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
 
-            $this->logDestructionRequest($archive);
+            $archives[] = $archive;
         }
 
         $archiveList = $this->setStatus($archiveIds, 'disposable');
+        foreach ($archives as $archive) {
+            $this->logDestructionRequest($archive);
+        }
 
         return $archiveList;
     }
