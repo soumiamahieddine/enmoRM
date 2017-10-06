@@ -115,7 +115,7 @@
                 this.loadRule(archiveId, archiveName);
 
             } else {
-                $('#startDate,accessCode,#retentionCode').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
             }
             
             $('#save').data("archiveids", "");
@@ -211,6 +211,12 @@
 
         save: function() {
             parameters = ArchiveModification.serialize(this.modalType);
+
+            if (!parameters.comment) {
+                gritter.show($('#empty_text').html(), false);
+                return;
+            }
+
             parameters.archiveIds = $("#save").data('archiveids');
 
             if(!parameters.archiveIds) {
@@ -222,7 +228,7 @@
             } else {
                 type = 'PUT';
             }
-            console.log(this.actionsList[this.modalType])
+
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,

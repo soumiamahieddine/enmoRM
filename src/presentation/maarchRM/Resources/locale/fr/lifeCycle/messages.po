@@ -167,6 +167,10 @@ msgid "resId"
 msgstr "Identifiant de la ressource"
 msgctxt "eventInfo"
 
+msgid "type"
+msgstr "Type"
+msgctxt "eventInfo"
+
 msgid "hashAlgorithm"
 msgstr "Algorithme de hachage"
 msgctxt "eventInfo"
@@ -205,6 +209,14 @@ msgctxt "eventInfo"
 
 msgid "originatorOrgRegNumber"
 msgstr "Identifiant du service producteur"
+msgctxt "eventInfo"
+
+msgid "senderOrgName"
+msgstr "Nom du service producteur"
+msgctxt "eventInfo"
+
+msgid "recipientOrgName"
+msgstr "Nom du service destinataire"
 msgctxt "eventInfo"
 
 msgid "accessRuleStartDate"
