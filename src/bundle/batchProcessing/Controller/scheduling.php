@@ -310,6 +310,10 @@ class scheduling
     {
         $currentDate = \laabs::newDateTime();
         $endDate = \laabs::newDateTime();
+        $UTC_Offset = date('Z');
+
+        $H_Offset = $UTC_Offset/3600;
+        $M_Offset = ($UTC_Offset - $H_Offset)/60;
 
         /**
          * [0] start Minutes
@@ -325,8 +329,20 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
+        if(isset($frequency[0])) {
+            $frequency[0] += $M_Offset; 
+        }
+        if(isset($frequency[1])) {
+            $frequency[1] += $H_Offset; 
+        }
+        if(isset($frequency[7])) {
+            $frequency[7] += $M_Offset; 
+        }
+        if(isset($frequency[8])) {
+            $frequency[8] += $H_Offset; 
+        }
+        
         if ($frequency[6] != "") {
-            var_dump($frequency[6]);
             if ($frequency[2] == "" && $frequency[3] == "") {
                 $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                 $currentDate->add(new \DateInterval($timeAdd));

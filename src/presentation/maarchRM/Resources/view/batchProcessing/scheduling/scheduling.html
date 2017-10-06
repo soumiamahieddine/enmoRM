@@ -432,6 +432,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
                         a.find('.nextExecution').html(response.object.nextExecution);
+                        a.find('.lastExecution').html(response.object.lastExecution);
                     }
                 },
                 error       : function(response) {
