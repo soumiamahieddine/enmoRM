@@ -246,7 +246,7 @@ msgid "Accept any profiles"
 msgstr "Accepter tous les profils"
 
 msgid "Generate bar code"
-msgstr "Générer bar code"
+msgstr "Générer un code à barres"
 
 msgid "Fileplan level"
 msgstr "Niveau dans le plan"
