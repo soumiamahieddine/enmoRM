@@ -33,5 +33,14 @@ interface destructionRequestInterface
      * @return recordsManagement/archive/dispose
      */
     public function updateRecordsmanagementDispose($archiveIds);
+
+    /**
+     * Cancel destruction
+     * @param array $archiveIds Array of archive identifier
+     *
+     * @uses recordsManagement/archives/updateCancelDestruction
+     * @return recordsManagement/archive/cancelDestruction
+     */
+    public function updateRecordsmanagementCanceldestruction($archiveIds);
 }
   
