@@ -82,6 +82,15 @@
         send : function() {
             var archive = this.serialize();
 
+            console.log(archive);
+            console.log(archive.name == "");
+            console.log(archive.digitalResources.length);
+            console.log(archive.originatorArchiveId);
+            if (archive.name == "" && archive.originatorArchiveId == "" && archive.originatingDate == "" && archive.digitalResources.length == 0) {
+                console.log("FUCK");
+                return;
+            }
+return;
             if (archive < 0) {
                 return;
             }
@@ -198,8 +207,8 @@
                 case 'preservation' : finalDisposition = $("#preservation_text").text();
                            break;
             }
-            retentionRuleText = retentionRuleText.replace(/%s1/g, finalDisposition);
-            retentionRuleText = retentionRuleText.replace(/%s2/g, numeric+' '+unit);
+            retentionRuleText = retentionRuleText.replace(/%1\$s/g, finalDisposition);
+            retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
         serialize : function() {
