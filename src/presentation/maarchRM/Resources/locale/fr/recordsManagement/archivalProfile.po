@@ -87,7 +87,7 @@ msgid "Months"
 msgstr "Mois"
 
 msgid "Access rules"
-msgstr "Règle d'accès"
+msgstr "Règle de communicabilité"
 
 msgid "Group"
 msgstr "Groupe"

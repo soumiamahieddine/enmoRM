@@ -82,3 +82,11 @@ msgctxt "duration"
 msgid "D"
 msgstr "jour(s)"
 msgctxt "duration"
+
+
+msgid "destruction"
+msgstr "Destruction"
+
+msgid "preservation"
+msgstr "Conservervation"
+

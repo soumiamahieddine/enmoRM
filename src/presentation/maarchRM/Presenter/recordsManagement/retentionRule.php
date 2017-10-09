@@ -77,6 +77,7 @@ class retentionRule
                 $rule->duration = substr($rule->duration, 1, -1);
                 $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
             }
+            $rule->finalDispositionTran = $this->view->translator->getText($rule->finalDisposition, false, "recordsManagement/retentionRule");
         }
         $this->view->setSource('retentionRule', $retentionRule);
         $this->view->merge();

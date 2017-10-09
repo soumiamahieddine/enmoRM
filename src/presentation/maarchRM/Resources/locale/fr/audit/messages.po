@@ -210,7 +210,7 @@ msgid "recordsManagement/archive/read_archiveId_Retentionrule"
 msgstr "Lecture d'une archive en fonction de sa durée de conservation"
 
 msgid "recordsManagement/archive/readAccessrule_archiveId_"
-msgstr "Lecture d'une règle d'accès en fonction d'une archive"
+msgstr "Lecture d'une règle de communicabilité en fonction d'une archive"
 
 msgid "recordsManagement/archive/readContentsbyoriginatorarchiveid"
 msgstr "Lecture du contenu par originatorArchiveId"
@@ -240,7 +240,7 @@ msgid "recordsManagement/archive/read_archiveId_Retentionrule"
 msgstr "Lecture de la règle de conservation d'une archive"
 
 msgid "recordsManagement/archive/readAccessrule_archiveId_"
-msgstr "Lecture de la règle d'accès d'une archive"
+msgstr "Lecture de la règle de communicabilité d'une archive"
 
 msgid "recordsManagement/archive/updateIndex"
 msgstr "Modification de l'index d'une archive"
@@ -279,7 +279,7 @@ msgid "recordsManagement/archives/readAccessrule"
 msgstr "Lecture de toutes les règles de communicabilité"
 
 msgid "recordsManagement/archives/updateAccessrule"
-msgstr "Modification d'une règle d'accès"
+msgstr "Modification d'une règle de communicabilité"
 
 msgid "recordsManagement/archives/createDelivery"
 msgstr "Demande de communication d'une archive"
@@ -631,7 +631,7 @@ msgid "medona/archiveModification/updateRetentionrule"
 msgstr "Modification de la règle de conservation avec génération d'une bordereau de modification"
 
 msgid "medona/archiveModification/updateAccessrule"
-msgstr "Modification de la règle d'accès avec génération d'une bordereau de modification"
+msgstr "Modification de la règle de communicabilité avec génération d'une bordereau de modification"
 
 msgid "medona/archiveNotification/deleteMessagedirectorypurge"
 msgstr "Suppression automatique des bordereaux de demande de notification dans le support de stockage temporaire"

@@ -9,19 +9,19 @@ msgid "code(s)"
 msgstr "code(s)"
 
 msgid "Add an access code"
-msgstr "Ajouter un code d'accès"
+msgstr "Ajouter un code de communicabilité"
 
 msgid "edit"
 msgstr "modifier"
 
 msgid "Access rules duration"
-msgstr "Durée de la règle d'accès"
+msgstr "Durée de la règle de communicabilité"
 
 msgid "New access code"
-msgstr "Nouveau code d'accès"
+msgstr "Nouveau code de communicabilité"
 
 msgid "Edit an access code"
-msgstr "Edition d'un code d'accès"
+msgstr "Edition d'un code de communicabilité"
 
 msgid "Access rules"
 msgstr "Règles de communicabilité"
@@ -45,16 +45,16 @@ msgid "Preservation"
 msgstr "Conservation"
 
 msgid "New access code created"
-msgstr "Code d'accès créé"
+msgstr "Code de communicabilité créé"
 
 msgid "Access code updated"
-msgstr "Code d'accès modifié"
+msgstr "Code de communicabilité modifié"
 
 msgid "Final disposition"
 msgstr "Sort final"
 
 msgid "Access rule duration"
-msgstr "Durée de la règle d'accès"
+msgstr "Durée de la règle de communicabilité"
 
 msgid "Day(s)"
 msgstr "Jour(s)"
@@ -81,7 +81,7 @@ msgstr "jour(s)"
 msgctxt "duration"
 
 msgid "Access Code is empty."
-msgstr "Code d'accès vide."
+msgstr "Code de communicabilité vide."
 
 msgid "Access entries"
 msgstr "Règles de communicabilité"

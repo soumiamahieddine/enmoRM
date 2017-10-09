@@ -7,7 +7,7 @@ msgstr "Archives"
 msgctxt "bundle"
 
 msgid "accessRule"
-msgstr "Gestion des codes d'accès"
+msgstr "Gestion des codes de communicabilité"
 msgctxt "interface"
 
 msgid "archivalAgreement"
@@ -224,7 +224,7 @@ msgid "Depositor"
 msgstr "Service Versant"
 
 msgid "Access rule code"
-msgstr "Code d'accès"
+msgstr "Code de communicabilité"
 
 msgid "Communication date"
 msgstr "Date de communicabilité"
@@ -354,7 +354,7 @@ msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
 
 msgid "Edit access rule"
-msgstr "Modifier la règle d'accès"
+msgstr "Modifier la règle de communicabilité"
 
 msgid "You not have the permission to view the documents of archive"
 msgstr "Vous n'avez pas la permission de visualiser les documents de cette archive"
@@ -432,10 +432,10 @@ msgid "preserved"
 msgstr "Conservée"
 
 msgid "destruction"
-msgstr "Détruire"
+msgstr "Destruction"
 
 msgid "preservation"
-msgstr "Conserver"
+msgstr "Conservation"
 
 msgid "Disposable archives"
 msgstr "Archives à terme"
@@ -570,7 +570,7 @@ msgid "Archive created"
 msgstr "Archive créé"
 
 msgid "Access Code modification"
-msgstr "Règle d'accès modifié"
+msgstr "Règle de communicabilité modifié"
 
 msgid "Retention rule updated"
 msgstr "Règle de conservation modifiée"
@@ -658,7 +658,7 @@ msgid "Modify retention rule"
 msgstr "Modifier règle de conservation"
 
 msgid "Modify access rule"
-msgstr "Modifier règle d'accès"
+msgstr "Modifier règle de communicabilité"
 
 msgid "Access rule"
 msgstr "Règle de communicabilité"

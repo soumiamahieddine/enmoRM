@@ -220,19 +220,19 @@ msgstr "Nom du service destinataire"
 msgctxt "eventInfo"
 
 msgid "accessRuleStartDate"
-msgstr "Nouvelle date de début de la règle d'accès"
+msgstr "Nouvelle date de début de la règle de communicabilité"
 msgctxt "eventInfo"
 
 msgid "accessRuleDuration"
-msgstr "Nouvelle durée pour la règle d'accès"
+msgstr "Nouvelle durée pour la règle de communicabilité"
 msgctxt "eventInfo"
 
 msgid "previousAccessRuleStartDate"
-msgstr "Ancienne date de début de la règle d'accès"
+msgstr "Ancienne date de début de la règle de communicabilité"
 msgctxt "eventInfo"
 
 msgid "previousAccessRuleDuration"
-msgstr "Ancienne durée pour la règle d'accès"
+msgstr "Ancienne durée pour la règle de communicabilité"
 msgctxt "eventInfo"
 
 msgid "retentionStartDate"
@@ -349,7 +349,7 @@ msgid "recordsManagement/retentionRuleModification"
 msgstr "Modification de la règle de conservation"
 
 msgid "recordsManagement/accessRuleModification"
-msgstr "Modification de la règle d'accès"
+msgstr "Modification de la règle de communicabilité"
 
 msgid "recordsManagement/freeze"
 msgstr "Gel"
@@ -484,10 +484,10 @@ msgid "beforeFinalDisposition"
 msgstr "Précédent sort final"
 
 msgid "beforeAccessRuleStartDate"
-msgstr "Précédente date de départ de la règle d'accès"
+msgstr "Précédente date de départ de la règle de communicabilité"
 
 msgid "beforeAccessRuleDuration"
-msgstr "Précédente durée de la règle d'accès"
+msgstr "Précédente durée de la règle de communicabilité"
 
 msgid "retentionStartDate"
 msgstr "Date de départ de la conservation"
@@ -499,10 +499,10 @@ msgid "finalDisposition"
 msgstr "Sort final"
 
 msgid "accessRuleStartDate"
-msgstr "Date de départ de la règle d'accès"
+msgstr "Date de départ de la règle de communicabilité"
 
 msgid "accessRuleDuration"
-msgstr "Durée de la règle d'accès"
+msgstr "Durée de la règle de communicabilité"
 
 msgid "Domain"
 msgstr "Domaine"
