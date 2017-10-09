@@ -103,6 +103,9 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 ; Encryption algorithm (MD5, SHA256, SHA512...)
 passwordEncryption = SHA256
 
+; Allow the user to modify his or her information
+allowUserModification = true
+
 ; Number of login attempts before the user account is locked. ignored if 0
 ; Duration of validity for password. ignored if 0
 ; Duration in hour of the generated password. ignored if 0
