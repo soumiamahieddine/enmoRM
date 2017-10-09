@@ -49,6 +49,10 @@ trait archiveDestructionTrait
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
 
+            if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
+            }
+
             $archives[] = $archive;
         }
 

@@ -285,6 +285,10 @@ class archive
                 $archive->disposable = true;
             }
 
+            if (empty($archive->disposalDate) && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))) {
+                $archive->noRetention = true;
+            }
+
             if (isset($orgsByRegNumber[$archive->originatorOrgRegNumber])) {
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
             }

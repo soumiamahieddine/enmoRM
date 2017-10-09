@@ -94,15 +94,19 @@ var ArchivesAction = {
         var names = [];
         var additionalSelector = "";
 
-        if (type == "flagForDestruction") {
-            additionalSelector = "[data-disposable='1'][data-final-disposition='destruction']";
-        }
 
         if (status == '') {
             dataSelector.push('[data-archive-status]');
         } else {
             $.each(status, function (index, value) {
-                dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
+                if (type == "flagForDestruction") {
+                    let additionalSelector = "[data-disposable='1'][data-final-disposition='destruction']";
+                    let additionalSelector2 = "[data-noretention='1']";
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector2);
+                } else {
+                    dataSelector.push('[data-archive-status="' + value + '"]');
+                }
             })
         }
         
