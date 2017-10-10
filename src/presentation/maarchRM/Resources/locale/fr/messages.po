@@ -493,7 +493,7 @@ msgid "Key already exists"
 msgstr "La clé existe déjà"
 
 msgid "The fields with a star are required."
-msgstr "Les champs avec une étoile sont obligatoire"
+msgstr "Les champs avec une étoile sont obligatoires"
 
 msgid "You don't avec any role that enables you tu use search."
 msgstr "Vous n'avez aucun rôle permettant l'utilisation de la recherche d'archive ou de document."

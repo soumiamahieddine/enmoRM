@@ -199,6 +199,10 @@ msgid "requesterOrgRegNumber"
 msgstr "Identifiant du demandeur"
 msgctxt "eventInfo"
 
+msgid "accountId"
+msgstr "Identifiant utilisateur"
+msgctxt "eventInfo"
+
 msgid "depositorOrgRegNumber"
 msgstr "Identifiant du service versant"
 msgctxt "eventInfo"

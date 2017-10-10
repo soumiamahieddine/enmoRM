@@ -283,6 +283,10 @@ class journal
 
         $this->currentEvent = $event;
 
+        $user = \laabs::callService('auth/userAccount/read_userAccountId_', $event->accountId);
+
+        $event->accountDisplayName = $user->displayName;
+
         return $event;
     }
 
