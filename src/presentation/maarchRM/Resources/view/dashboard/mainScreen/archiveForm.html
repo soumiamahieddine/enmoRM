@@ -63,6 +63,10 @@
     </form>
 </div>
 
+<div class="hide">
+    <span id="message_requiredFieldOnEmptyForm">You must define at least the name, the identifier, the date of the document or a document</span>
+</div>
+
 <script type="text/javascript">
     $('#app_maarchRM_main').ready(function () {
         $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
@@ -82,19 +86,10 @@
         send : function() {
             var archive = this.serialize();
 
-            console.log(archive);
-            console.log(archive.name == "");
-            console.log(archive.digitalResources.length);
-            console.log(archive.originatorArchiveId);
-            if (archive.name == "" && archive.originatorArchiveId == "" && archive.originatingDate == "" && archive.digitalResources.length == 0) {
-                console.log("FUCK");
-                return;
-            }
-return;
             if (archive < 0) {
                 return;
             }
-            
+
             ajax($('#import'),
                 {
                     type        : 'POST',
@@ -249,11 +244,17 @@ return;
             }*/
 
             archive.digitalResources = DocumentList.serialize();
+
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
                 if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
                     gritter.show($('#documentMissing_error').text(), false);
                     return -2;
                 }
+            }
+
+            if (!selectedProfile && !archive.name && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
+                gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
+                return -3;
             }
 
             return archive;

@@ -260,6 +260,11 @@
     NewArchive = {
         loadImportForm: function(e) {
             var importPanel = $("#importPanel");
+
+            if (!e.data("json")) {
+                e.data("json", "");
+            }
+
             $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
 
             importPanel.find("[data-context-path]:first").text($("#folderPath").text());

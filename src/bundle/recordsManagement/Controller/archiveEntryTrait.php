@@ -252,9 +252,6 @@ trait archiveEntryTrait
             throw new \core\Exception("The description file is malformed.");
         }
 
-        $filePlanController = \laabs::newController('filePlan/filePlan');
-        $filePlanFoldersByName = [];
-
         foreach ($archives as $archive) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $filePath = $batchDirectory . DIRECTORY_SEPARATOR . $digitalResource->fileName;
@@ -263,14 +260,6 @@ trait archiveEntryTrait
                 $digitalResource->handler = base64_encode($fileContent);
                 $digitalResource->size = filesize($filePath);
             }
-
-            /*if ($archive->filePlanFolder) {
-                if (!isset($filePlanFoldersByName[$archive->filePlanFolder])) {
-                    $filePlanFoldersByName[$archive->filePlanFolder] = $filePlanController->readByName($archive->filePlanFolder);
-                }
-                
-                $archive->filePlanPosition = $filePlanFoldersByName[$archive->filePlanFolder]->folderId;
-            }*/
 
             $this->receive($archive);
         }
@@ -308,6 +297,10 @@ trait archiveEntryTrait
                 }
 
                 $archive->archiveName = trim($archive->archiveName);
+
+                if (empty($archive->archiveName)) {
+                    throw new \core\Exception\BadRequestException('You must define at least the name, the identifier, the date of the document or a document', 400);
+                }
             }
         }
 
@@ -556,7 +549,7 @@ trait archiveEntryTrait
                 $value = $object->{$name};
             }
 
-            $this->validateDescriptionMetadata($value, $archiveDescription, $archivalProfile);
+            $this->validateDescriptionMetadata($value, $archiveDescription);
         }
 
         foreach ($object as $name => $value) {
@@ -566,7 +559,7 @@ trait archiveEntryTrait
         }
     }
 
-    protected function validateDescriptionMetadata($value, $archiveDescription, $archivalProfile)
+    protected function validateDescriptionMetadata($value, $archiveDescription)
     {
         if (is_null($value)) {
             if ($archiveDescription->required) {
