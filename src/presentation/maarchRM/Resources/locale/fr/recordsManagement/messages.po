@@ -323,6 +323,9 @@ msgstr "Suspendu"
 msgid "Preserved"
 msgstr "Conservé"
 
+msgid "error"
+msgstr "Erreur"
+
 msgid "Waiting for restitution"
 msgstr "Restituable"
 
