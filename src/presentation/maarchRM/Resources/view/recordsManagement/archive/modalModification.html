@@ -181,16 +181,17 @@
             $('#selectedArchiveId, #selectedArchiveReference').css('display', 'none');
 
             if( type === "accessRule") {
-                $('#startDate, #code').css('display', '');
-                $('#finalDisposition, #duration').css('display', 'none');
+                $('#startDate, #accessCode').css('display', '');
+                $('#retentionCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '')
 
             } else if ( type === "retentionRule") {
-                $('#startDate, #finalDisposition, #duration').css('display', '');
-                $('#code').css('display', 'none');
+                $('#startDate,#retentionCode').css('display', '');
+                $('#accessCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '')
 
             } else {
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', 'none')
             }
                 
