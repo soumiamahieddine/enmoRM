@@ -169,7 +169,7 @@ FulltextSearch = {
         query.originatorArchiveId = $('#searchOriginatorArchiveId').val();
         query.originatingDate = [activeSearchTab.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'), activeSearchTab.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')];
 
-        if (query.text == '' && query.description == "") {
+        if (query.text == '' && query.description == "" && query.originatingDate == "") {
             return; 
         }
         
@@ -190,7 +190,7 @@ FulltextSearch = {
                         paginationType : 'input',
                         rowTranslation : "lignes",
                         emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
-                        resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> archives<\/small><\/h2>",
+                        resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> archive(s)<\/small><\/h2>",
                         sorting        : [
                             {
                                 fieldName : 'archiveName',
