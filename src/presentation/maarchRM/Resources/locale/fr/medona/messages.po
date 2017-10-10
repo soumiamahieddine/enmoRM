@@ -60,7 +60,7 @@ msgid "Delivery incoming list"
 msgstr "Demande de communication"
 
 msgid "Destruction incoming list"
-msgstr "Demande d'éliminatiion"
+msgstr "Demande d'élimination"
 
 msgid "Transfer history"
 msgstr "Historique des transferts entrants"
