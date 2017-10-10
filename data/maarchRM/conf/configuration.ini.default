@@ -93,7 +93,7 @@ storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archiva
 ;}"
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
-chainWhithTimestamp = false;
+chainWithTimestamp = false;
 
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
