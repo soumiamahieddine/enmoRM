@@ -103,6 +103,9 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 ; Encryption algorithm (MD5, SHA256, SHA512...)
 passwordEncryption = SHA256
 
+; Admin user account name
+adminUsers = "['superadmin']"
+
 ; Allow the user to modify his or her information
 allowUserModification = true
 
