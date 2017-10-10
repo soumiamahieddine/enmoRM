@@ -33,6 +33,7 @@ class userAccount
     protected $sdoFactory;
     protected $passwordEncryption;
     protected $securityPolicy;
+    protected $adminUsers;
     protected $currentAccount;
     protected $accountPrivileges;
     protected $publicUserStoriesController;
@@ -43,11 +44,12 @@ class userAccount
      * @param string                  $passwordEncryption The password encryption algorythm
      * @param array                   $securityPolicy     The array of security policy parameters
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory = null, $passwordEncryption = 'md5', $securityPolicy = [])
+    public function __construct(\dependency\sdo\Factory $sdoFactory = null, $passwordEncryption = 'md5', $securityPolicy = [], $adminUsers = [])
     {
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
+        $this->adminUsers = $adminUsers;
         $this->currentAccount = \laabs::getToken('AUTH');
 
         $this->publicUserStoriesController = \laabs::newController("auth/publicUserStory");
@@ -86,8 +88,9 @@ class userAccount
         $queryAssert = [];
         $queryAssert[] = "accountType='user'";
 
-        if ($accountId != "superadmin") {
-            $queryAssert[] = "accountId!='superadmin'\"";
+        $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+        if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
+            $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
         }
 
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
