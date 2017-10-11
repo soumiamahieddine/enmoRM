@@ -352,7 +352,7 @@
             archiveInformation.find('.originatingDate')
                               .children('td')
                               .html('')
-                              .append($('#inputOriginatingDate').val($('#archiveInformation').find('.originatingDate').val()));
+                              .append($('#inputOriginatingDate').datepicker('setDate', $('#archiveInformation').find('.originatingDate').val()));
 
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
@@ -379,7 +379,7 @@
                         customField.datepicker({
                             language:$('#wrapper').attr('lang'),
                             autoclose:true
-                        }).val(value.html());
+                        }).datepicker('setDate', value.html());
                         break;
                     default :
                         customField = $("#inputCustomField").clone();
@@ -401,20 +401,29 @@
             var descriptionFields = {};
             $('#metadata').find('tr').each(function(i, e) {
                 var input = $(e).find('th > input');
-                var valueInput = $(e).find('td > input');
+                var valueInput = $(e).find('td input');
                 var label = input.val();
                 var name = input.attr('name');
+                var type = $(e).find('th').data('type');
+
+                console.log(type);
 
                 switch (valueInput.attr("type")) {
+                    case "name" :
                     case "text" :
                         value = valueInput.val();
+                        break;
+                    case "date" :
+                        value = valueInput.datepicker({ dateFormat: 'yy-mm-dd'}).val();
                         break;
                     case "number" :
                         value = parseInt(valueInput.val());
                         break;
-                    default:
+                    case "number" :
                         inputValue = valueInput.parent('.active').find('input').val();
                         value = valueInput == 1 ? true : false;
+                        break;
+                    default:
                 }
 
                 if ($(e).hasClass('archivalProfileField')) {
@@ -432,7 +441,7 @@
                 archiveId           : ArchiveInformation.archiveId,
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
-                originatingDate     : $('#inputOriginatingDate').val(),
+                originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
                 description         : JSON.stringify(descriptionFields)
             };
 
