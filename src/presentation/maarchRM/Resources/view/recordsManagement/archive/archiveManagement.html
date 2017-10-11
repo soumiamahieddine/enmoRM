@@ -60,7 +60,7 @@ $('.multipleActionMenu').on('click', 'li', function() {
 
 })
 
-$('.actionMenu').on('click', 'li', function() {
+$('#archiveList').on('click', '.actionMenu li', function() {
     var button = $(this);
     var type = button.data('type');
     var tr = button.closest('tr');
