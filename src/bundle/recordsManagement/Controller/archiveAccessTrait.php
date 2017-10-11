@@ -219,6 +219,9 @@ trait archiveAccessTrait
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "false") {
             $queryParts[] = "disposalDate>='".$currentDateString."'";
         }
+        if (!empty($args['partialRetentionRule']) && $args['partialRetentionRule'] == "true") {
+            $queryParts[] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+        }
         if (!empty($args['finalDisposition'])) {
             $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
         }

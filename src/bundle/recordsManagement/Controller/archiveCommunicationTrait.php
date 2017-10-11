@@ -43,6 +43,7 @@ trait archiveCommunicationTrait
      * @param bool   $hasParent
      * @param string $description
      * @param string $text
+     * @param bool   $partialRetentionRule
      *
      * @return recordsManagement/archive[]
      */
@@ -60,8 +61,9 @@ trait archiveCommunicationTrait
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null)
-    {
+        $text = null,
+        $partialRetentionRule = null
+    ) {
         $archives = [];
 
         $archiveArgs = [
@@ -77,6 +79,7 @@ trait archiveCommunicationTrait
             'originatingDate' => $originatingDate,
             'filePlanPosition' => $filePlanPosition,
             'hasParent' => $hasParent,
+            'partialRetentionRule' => $partialRetentionRule,
         ];
 
         if (!empty($description) || !empty($text)) {

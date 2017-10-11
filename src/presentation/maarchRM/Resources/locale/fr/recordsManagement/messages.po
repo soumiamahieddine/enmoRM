@@ -888,3 +888,6 @@ msgstr "Indexation du text"
 
 msgid "Profiles"
 msgstr "Profils"
+
+msgid "Partial retention rule"
+msgstr "Règle de conservation partielle"
