@@ -59,6 +59,7 @@
 <span class="hide" id="modify_text">Modify</span>
 <span class="hide" id="default_text">default</span>
 <span class="hide" id="setDefault_text">set default</span>
+<span class="hide" id="no_user_found_text">No user found</span>
 
 
 <script>
@@ -83,7 +84,7 @@
                 displayKey: 'displayName',
                 templates: {
                     empty: function() {
-                        return "<span class='well well-sm'>No user found</span>";
+                        return "<span class='well well-sm'>"+$('#no_user_found_text').text()+"</span>";
                     },
                     suggestion: function(user) {
                         var display = 

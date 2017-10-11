@@ -329,3 +329,6 @@ msgstr "Exporter le plan de classement"
 
 msgid "Metadatas"
 msgstr "Métadonnées"
+
+msgid "No user found"
+msgstr "Aucun utilisateur trouvé"
