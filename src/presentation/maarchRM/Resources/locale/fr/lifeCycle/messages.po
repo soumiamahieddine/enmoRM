@@ -427,6 +427,15 @@ msgstr "Modification de métadonnées"
 msgid "recordsManagement/periodicIntegrityCheck"
 msgstr "Vérification périodique d'intégrité"
 
+msgid "recordsManagement/reception"
+msgstr "Reception d'une archive"
+
+msgid "recordsManagement/validation"
+msgstr "Validation d'une archive"
+
+msgid "recordsManagement/descriptionModification"
+msgstr "Modification des méta-données de l'archive"
+
 msgid "medona/sending"
 msgstr "Envoi d'un message"
 
