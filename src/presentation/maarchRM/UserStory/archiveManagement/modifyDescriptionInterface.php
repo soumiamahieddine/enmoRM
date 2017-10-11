@@ -29,7 +29,7 @@ interface modifyDescriptionInterface
      * @param string $archiveId
      * @param string $originatorArchiveId
      * @param string $archiveName     
-     * @param string $originatingDate     
+     * @param date   $originatingDate     
      * @param string $description 
      * 
      * 

@@ -157,7 +157,7 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('Y-m-d');
+            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
         }
 
         // Retention
@@ -392,7 +392,13 @@ class welcome
                     }
 
                     $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                    $textValue = $value;
+                    if ($type == "date") {
+                            $textValue = \laabs::newDate($value);
+                            $textValue = $textValue->format("d/m/Y");
+                    } else {
+                        $textValue = $value;
+
+                    }
                     if ($type == 'boolean') {
                         $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
                     }
@@ -400,8 +406,8 @@ class welcome
                     $descriptionHtml .= '</tr>';
                 }
 
-                $descriptionHtml .= '</table>';
             }
+            $descriptionHtml .= '</table>';
         }
 
         if ($descriptionHtml) {
