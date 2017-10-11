@@ -332,3 +332,7 @@ msgstr "Métadonnées"
 
 msgid "No user found"
 msgstr "Aucun utilisateur trouvé"
+
+msgid "Organization"
+msgstr "Organisation"
+msgctxt "org"
