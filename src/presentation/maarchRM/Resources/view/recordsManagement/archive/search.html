@@ -45,6 +45,12 @@
                             <hr/>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="col-sm-4 control-label">Fulltext</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="text" placeholder="Fulltext"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-4 control-label">Archival profile</label>
                                     <div class="col-sm-6">
                                         <select class="form-control" name="profileReference">
@@ -67,12 +73,6 @@
                                             <?merge deleteDescription.bool().not() ?>
                                             <option value="disposed">Disposed</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Intitul&eacute;</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="archiveName" placeholder="Intitul&eacute;"/>
                                     </div>
                                 </div>
                                 <br/>
@@ -220,6 +220,7 @@
     $("#archive_resetForm").on("click", function () {
         $('#archive_searchForm').find('input[type="text"], select').val('');
         $('#archive_searchForm').find("input[name='archiveExpired'][value='']").parent().click();
+        $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
         $('#archive_searchResult').empty();
     });
 

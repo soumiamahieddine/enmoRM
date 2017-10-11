@@ -891,3 +891,6 @@ msgstr "Profils"
 
 msgid "Partial retention rule"
 msgstr "Règle de conservation partielle"
+
+msgid "Fulltext"
+msgstr "Texte intégral"
