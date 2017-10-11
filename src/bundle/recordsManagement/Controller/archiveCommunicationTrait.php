@@ -62,7 +62,8 @@ trait archiveCommunicationTrait
         $hasParent = null,
         $description = null,
         $text = null,
-        $partialRetentionRule = null
+        $partialRetentionRule = null,
+        $retentionRuleCode = null
     ) {
         $archives = [];
 
@@ -80,6 +81,7 @@ trait archiveCommunicationTrait
             'filePlanPosition' => $filePlanPosition,
             'hasParent' => $hasParent,
             'partialRetentionRule' => $partialRetentionRule,
+            'retentionRuleCode' => $retentionRuleCode,
         ];
 
         if (!empty($description) || !empty($text)) {

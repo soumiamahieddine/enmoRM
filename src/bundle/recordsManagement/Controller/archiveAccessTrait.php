@@ -213,6 +213,9 @@ trait archiveAccessTrait
         if (!empty($args['status'])) {
             $queryParts[] = "status='".$args['status']."'";
         }
+        if (!empty($args['retentionRuleCode'])) {
+            $queryParts[] = "retentionRuleCode='".$args['retentionRuleCode']."'";
+        }
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
             $queryParts[] = "disposalDate<='".$currentDateString."'";
         }

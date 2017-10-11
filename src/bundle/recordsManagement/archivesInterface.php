@@ -47,6 +47,7 @@ interface archivesInterface
      * @param string $description
      * @param string $text
      * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
      *
      * @action recordsManagement/archive/search
      *
@@ -66,7 +67,8 @@ interface archivesInterface
         $hasParent = null,
         $description = null,
         $text = null,
-        $partialRetentionRule = null
+        $partialRetentionRule = null,
+        $retentionRuleCode = null
     );
 
     /*

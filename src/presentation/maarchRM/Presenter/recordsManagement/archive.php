@@ -78,6 +78,9 @@ class archive
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
 
+        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $retentionRules = $retentionRuleController->index();
+
         $this->view->addContentFile("recordsManagement/archive/search.html");
 
         $this->view->translate();
@@ -89,6 +92,7 @@ class archive
             $deleteDescription = (bool) \laabs::configuration("recordsManagement")['deleteDescription'];
         }
 
+        $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
