@@ -320,6 +320,9 @@ msgstr "Identifiant service producteur"
 msgid "Frozen"
 msgstr "Suspendu"
 
+msgid "Disposed"
+msgstr "Détruite"
+
 msgid "Preserved"
 msgstr "Conservé"
 

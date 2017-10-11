@@ -64,6 +64,8 @@
                                             <option value="disposable">Waiting for destruction</option>
                                             <option value="restituable">Waiting for restitution</option>
                                             <option value="restituted">Restituted</option>
+                                            <?merge deleteDescription.bool().not() ?>
+                                            <option value="disposed">Disposed</option>
                                         </select>
                                     </div>
                                 </div>

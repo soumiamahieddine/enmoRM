@@ -83,11 +83,16 @@ class archive
         $this->view->translate();
         
         usort($profiles, create_function('$a, $b', 'return \laabs::alphabeticalSort($a, $b, "name");'));
-        
+
+        $deleteDescription = true;
+        if (isset(\laabs::configuration("recordsManagement")['deleteDescription'])) {
+            $deleteDescription = (bool) \laabs::configuration("recordsManagement")['deleteDescription'];
+        }
 
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
+        $this->view->setSource("deleteDescription", $deleteDescription);
 
         $this->view->merge();
 
