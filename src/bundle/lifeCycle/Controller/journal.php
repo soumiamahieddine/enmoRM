@@ -285,6 +285,7 @@ class journal
 
         $user = \laabs::callService('auth/userAccount/read_userAccountId_', $event->accountId);
 
+        $event->accountName = $user->accountName;
         $event->accountDisplayName = $user->displayName;
 
         return $event;
