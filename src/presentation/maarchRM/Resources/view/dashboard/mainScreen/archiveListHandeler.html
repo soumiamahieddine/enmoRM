@@ -100,6 +100,14 @@
                 type        : "GET",
                 success     : function (response) {
                     $('#rightColumn').empty().html(response);
+                    var archiveToolbarBtn = $('#archiveToolbarBtn');
+
+                    if(FilePlan.selectedNode.data('closed')){
+                        archiveToolbarBtn.addClass('hide');
+                    }else {
+                        archiveToolbarBtn.removeClass('hide');
+                    }
+
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
