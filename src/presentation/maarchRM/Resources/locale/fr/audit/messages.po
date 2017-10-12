@@ -1497,3 +1497,5 @@ msgstr "Lister les services d'un utilisateur"
 msgid "recordsManagement/archives/updateIndexfulltext"
 msgstr "Indexation plein texte"
 
+msgid "digitalResource/digitalResource/updateIsconvertible"
+msgstr "Vérification de la convertibilité d'une ressource"
