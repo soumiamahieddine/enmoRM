@@ -86,6 +86,7 @@
       line-height: @line-height-base;
       border: 1px solid transparent;
       border-radius: @border-radius-base @border-radius-base 0 0;
+      border-color: transparent;
       &:hover {
         border-color: @nav-tabs-link-hover-border-color @nav-tabs-link-hover-border-color @nav-tabs-border-color;
       }
@@ -96,10 +97,10 @@
       &,
       &:hover,
       &:focus {
-        color: @nav-tabs-active-link-hover-color;
-        background-color: @nav-tabs-active-link-hover-bg;
-        border: 1px solid @nav-tabs-active-link-hover-border-color;
-        border-bottom-color: transparent;
+        color: #555;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-color: #ddd #ddd white;
         cursor: default;
       }
     }

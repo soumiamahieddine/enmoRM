@@ -22,8 +22,10 @@
 require_once('../core/laabs.php');
 
 laabs::init();
-
 switch (true) {
+    case ($_SERVER['SCRIPT_NAME'] == "/RegenerateCss"):
+        include("../web/RegenerateCss.php");
+        break;
     // Uri is a static resource
     case (strrpos($_SERVER['SCRIPT_NAME'], ".")):
         \core\Kernel\StaticKernel::start();
