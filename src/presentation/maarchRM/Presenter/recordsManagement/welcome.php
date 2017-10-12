@@ -199,6 +199,8 @@ class welcome
 
                 $acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
                 $acceptUserIndex = $archivalProfile->acceptUserIndex;
+            } else {
+                $acceptArchiveWithoutProfile = true;
             }
         }
 

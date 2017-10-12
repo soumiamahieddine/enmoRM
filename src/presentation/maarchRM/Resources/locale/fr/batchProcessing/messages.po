@@ -172,10 +172,10 @@ msgid "Errors"
 msgstr "Erreur"
 
 msgid "Delete a scheduled task"
-msgstr "Supprimer une tâche plannifiée"
+msgstr "Supprimer une tâche planifiée"
 
 msgid "Are you sur to delete this scheduled task ?"
-msgstr "Etes vous sûr de vouloir supprimer cette tâche plannifiée ?"
+msgstr "Etes vous sûr de vouloir supprimer cette tâche planifiée ?"
 
 msgid "The task will be executed the last day of months with less than selected days."
 msgstr "La tâche sera exécutée le dernier jour du mois si les jours sélectionnés n'existent pas"

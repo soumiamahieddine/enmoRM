@@ -832,7 +832,7 @@ class journal
     {
         $journalArray = [];
 
-        if (isset(\laabs::configuration('lifeCycle')['chainJournalByOrganization']) && \laabs::configuration('lifeCycle')['chainJounralByOrganization']) {
+        if (isset(\laabs::configuration('lifeCycle')['chainJournalByOrganization']) && \laabs::configuration('lifeCycle')['chainJournalByOrganization']) {
             $orgController = \laabs::newController('organization/organization');
 
             $organizations = $orgController->index("isOrgUnit=false");
