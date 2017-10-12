@@ -336,3 +336,6 @@ msgstr "Aucun utilisateur trouvé"
 msgid "Organization"
 msgstr "Organisation"
 msgctxt "org"
+
+msgid "Delete organization"
+msgstr "Supprimer l'organisation"
