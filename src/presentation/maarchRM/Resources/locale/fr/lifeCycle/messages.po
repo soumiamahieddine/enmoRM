@@ -268,7 +268,7 @@ msgstr "Identifiant du profil d'archive"
 msgctxt "eventInfo"
 
 msgid "archivalProfileReference"
-msgstr "Référence du profil d'archivage"
+msgstr "Référence du profil d'archive"
 msgctxt "eventInfo"
 
 msgid "startEventDate"

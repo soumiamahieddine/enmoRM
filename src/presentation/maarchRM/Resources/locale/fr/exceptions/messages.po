@@ -264,7 +264,7 @@ msgid "Invalid value for metadata %1$s"
 msgstr "Valeur non valide pour la métadonnée %1$s"
 
 msgid "The archival profile reference not found"
-msgstr "La référence du profil d'archive n'a pas été trouvée."
+msgstr "L'identifiant du profil d'archive n'a pas été trouvée."
 
 msgid "The retention rule not found"
 msgstr "La règle de conservation n'a pas été trouvée."
@@ -326,9 +326,6 @@ msgstr "Contenu de description non détruit"
 msgid "Unable to detect format"
 msgstr "Impossible de détecter le format"
 
-msgid "La référence du message existe déjà."
-msgstr "La référence du bordereau est déjà utilisée."
-
 msgid "No current organization choosen"
 msgstr "Aucune organisation de travail selectionné"
 
@@ -387,7 +384,7 @@ msgid "Resource contents not available at address %s."
 msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s."
 
 msgid "No repository found with reference %s"
-msgstr "Aucune repertoire de stockage trouvé avec la référence %s."
+msgstr "Aucune repertoire de stockage trouvé avec l'identifiant %s."
 
 msgid "Unknown event type: %s"
 msgstr "Evénement de type %s non trouvé"
