@@ -350,6 +350,26 @@ msgid "originatorOwnerOrgRegNumber"
 msgstr "Identifiant du producteur"
 msgctxt "eventInfo"
 
+msgid "startDatetime"
+msgstr "Date de début"
+msgctxt "eventInfo"
+
+msgid "endDatetime"
+msgstr "Date de fin"
+msgctxt "eventInfo"
+
+msgid "nbArchivesToCheck"
+msgstr "Nombre d'archives à vérifier"
+msgctxt "eventInfo"
+
+msgid "nbArchivesInSample"
+msgstr "Nombre d'archives dans l'échantillon"
+msgctxt "eventInfo"
+
+msgid "archivesChecked"
+msgstr "Nombre d'archives vérifiées"
+msgctxt "eventInfo"
+
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------
@@ -593,4 +613,3 @@ msgstr "Le format est vide."
 
 msgid "Archival profile"
 msgstr "Profil d'archive"
-
