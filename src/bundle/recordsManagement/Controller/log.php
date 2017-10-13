@@ -246,9 +246,18 @@ class log implements archiveDescriptionInterface
      */
     public function getLastJournal($type, $ownerOrgRegNumber = null)
     {
-        $query = "type='$type' AND ownerOrgRegNumber = '$ownerOrgRegNumber'";
+        if ($ownerOrgRegNumber) {
+            $query = "type='$type' AND ownerOrgRegNumber = '$ownerOrgRegNumber'";
+        
+        } else {
+            $query = "type='$type' AND ownerOrgRegNumber = null";
+        }
         
         $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">fromDate", 0, 1);
+
+        var_dump($query);
+        var_dump($ownerOrgRegNumber);
+        var_dump($journals);
 
         if (empty($journals)) {
             return null;
