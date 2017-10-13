@@ -354,6 +354,6 @@ class log implements archiveDescriptionInterface
             $archive->fullTextIndexation = "none";
         }
 
-        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<Y>/<m>');
+        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
     }
 }
