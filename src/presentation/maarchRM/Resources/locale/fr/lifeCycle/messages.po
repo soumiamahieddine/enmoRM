@@ -318,12 +318,16 @@ msgid "software"
 msgstr "Logiciel de conversion"
 msgctxt "eventInfo"
 
-msgid "docId"
-msgstr "Identifiant de document"
+msgid "puid"
+msgstr "Format"
 msgctxt "eventInfo"
 
-msgid "format"
-msgstr "Format"
+msgid "convertedPuid"
+msgstr "Format cible"
+msgctxt "eventInfo"
+
+msgid "convertedPuid"
+msgstr "Format cible"
 msgctxt "eventInfo"
 
 msgid "linkedResId"
@@ -336,6 +340,10 @@ msgctxt "eventInfo"
 
 msgid "size"
 msgstr "Taille"
+msgctxt "eventInfo"
+
+msgid "convertedSize"
+msgstr "Taille cible"
 msgctxt "eventInfo"
 
 msgid "originatorOwnerOrgRegNumber"
