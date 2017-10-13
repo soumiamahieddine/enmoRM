@@ -329,16 +329,16 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
-        if(isset($frequency[0])) {
+        if(!empty($frequency[0])) {
             $frequency[0] -= $M_Offset; 
         }
-        if(isset($frequency[1])) {
+        if(!empty($frequency[1])) {
             $frequency[1] -= $H_Offset; 
         }
-        if(isset($frequency[7])) {
+        if(!empty($frequency[7])) {
             $frequency[7] -= $M_Offset; 
         }
-        if(isset($frequency[8])) {
+        if(!empty($frequency[8])) {
             $frequency[8] -= $H_Offset; 
         }
         
