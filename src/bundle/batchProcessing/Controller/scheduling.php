@@ -160,7 +160,7 @@ class scheduling
             throw \laabs::newException("batchProcessing/schedulingException", "Execution error : %s", 500, $e, [$e->getMessage()]);
         }
 
-        $scheduling->lastExecution = \laabs::newDateTime();
+        $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
         $scheduling->status = "scheduled";
 
         $frequency = explode(";", $scheduling->frequency);
@@ -180,7 +180,7 @@ class scheduling
     public function process()
     {
         $schedulings = $this->sdoFactory->find("batchProcessing/scheduling");
-        $currentDate = \laabs::newDateTime();
+        $currentDate = \laabs::newDateTime(null, 'UTC');
 
         $res = [];
         /**
@@ -308,12 +308,12 @@ class scheduling
      */
     private function nextExecution($frequency)
     {
-        $currentDate = \laabs::newDateTime();
-        $endDate = \laabs::newDateTime();
+        $currentDate = \laabs::newDateTime(null, 'UTC');
+        $endDate = \laabs::newDateTime(null, 'UTC');
         $UTC_Offset = date('Z');
 
         $H_Offset = $UTC_Offset/3600;
-        $M_Offset = ($UTC_Offset - $H_Offset)/60;
+        $M_Offset = ($UTC_Offset - $H_Offset*3600)/60;
 
         /**
          * [0] start Minutes
@@ -330,16 +330,16 @@ class scheduling
          */
 
         if(isset($frequency[0])) {
-            $frequency[0] += $M_Offset; 
+            $frequency[0] -= $M_Offset; 
         }
         if(isset($frequency[1])) {
-            $frequency[1] += $H_Offset; 
+            $frequency[1] -= $H_Offset; 
         }
         if(isset($frequency[7])) {
-            $frequency[7] += $M_Offset; 
+            $frequency[7] -= $M_Offset; 
         }
         if(isset($frequency[8])) {
-            $frequency[8] += $H_Offset; 
+            $frequency[8] -= $H_Offset; 
         }
         
         if ($frequency[6] != "") {
@@ -488,7 +488,7 @@ class scheduling
                 }
             }
         }
-        $nextDate = \laabs::newDateTime();
+        $nextDate = \laabs::newDateTime('UTC');
         $nextDate->setTimestamp($nextDayTime);
 
         return $nextDate;
@@ -504,7 +504,7 @@ class scheduling
     {
         $lastDayOfMonth = date('t', strtotime('today'));
         $currentDayNum = strtoupper(date("d"));
-        $endDate = \laabs::newDateTime();
+        $endDate = \laabs::newDateTime('UTC');
         $totalMore = 0;
         $totalLess = 0;
 
