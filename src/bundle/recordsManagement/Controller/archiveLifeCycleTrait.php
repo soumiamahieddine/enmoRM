@@ -31,12 +31,12 @@ trait archiveLifeCycleTrait
      * @param string                          $type      	   The eventType
      * @param recordsManagement/archive       $archive   	   The archive
      * @param bool                            $operationResult The event result
-     * @param digitalResource/digitalResource $resource   	   The resouce
+     * @param digitalResource/digitalResource $digitalResource The resouce
      * @param array                           $eventInfo 	   The event information
      *
      * @return mixed The created event or the list of created event
      */
-    protected function logLifeCycleEvent($type, $archive, $operationResult = true, $resource = null, $eventInfo = null)
+    protected function logLifeCycleEvent($type, $archive, $operationResult = true, $digitalResource = null, $eventInfo = null)
     {
         $eventItems = !empty($eventInfo) ? $eventInfo : [];
         $res = null;
@@ -45,13 +45,13 @@ trait archiveLifeCycleTrait
 
         //$eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
 
-        if ($resource) {
-            $eventItems = array_merge($eventItems, get_object_vars($resource));
+        if ($digitalResource) {
+            $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
 
             //$eventItems['resId'] = $resource->resId;
             //$eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
             //$eventItems['hash'] = $resource->hash;
-            $eventItems['address'] = $resource->address[0]->path;
+            $eventItems['address'] = $digitalResource->address[0]->path;
             //$eventItems['size'] = $resource->size;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
@@ -60,7 +60,7 @@ trait archiveLifeCycleTrait
             $res = [];
 
             foreach ($archive->digitalResources as $digitalResource) {
-                $eventItems = array_merge($eventItems, get_object_vars($resource));
+                $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
 
                 //$eventItems['resId'] = $digitalResource->resId;
                 //$eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
@@ -147,18 +147,19 @@ trait archiveLifeCycleTrait
     {
         $eventInfo = [];
         if ($convertedResource) {
-            if (!empty($convertedResource->address)) {
-                $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
-            }
-
             if (!empty($convertedResource->resId)) {
                 $eventInfo['convertedResId'] = $convertedResource->resId;
+            }
+
+            if (!empty($convertedResource->address)) {
+                $eventInfo['convertedAddress'] = $convertedResource->address[0]->path;
             }
 
             $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
             $eventInfo['convertedHash'] = $convertedResource->hash;
             $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-            $eventInfo["convertedSize"] = $convertedResource->size;
+            $eventInfo['convertedSize'] = $convertedResource->size;
+            $eventInfo['convertedPuid'] = $convertedResource->puid;
         }
 
         return $this->logLifeCycleEvent('recordsManagement/conversion', $archive, $operationResult, $originalResource, $eventInfo);
