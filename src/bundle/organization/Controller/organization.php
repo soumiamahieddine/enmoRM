@@ -49,7 +49,7 @@ class organization
      */
     public function index($query = null)
     {
-        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber"), $query);
+        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "ownerOrgId"), $query);
     }
 
     /**
