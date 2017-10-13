@@ -76,13 +76,13 @@
 .tree .root, .node-success {
     border:1px solid #999;
     color: white;
-    background-color: @btn-success-bg
+    background-color: spin(@btn-success-bg, 15)
 }
 
 .tree .node, .node-primary {
     border:1px solid #999;
     color: white;
-    background-color: @btn-primary-bg
+    background-color: lighten(@btn-primary-bg, 5%)
 }
 
 .node-info {
@@ -94,7 +94,7 @@
 .node-warning {
     border:1px solid #999;
     color: white;
-    background-color: @btn-warning-bg
+    background-color: darken(@btn-warning-bg, 5%)
 }
 
 .node-danger {
