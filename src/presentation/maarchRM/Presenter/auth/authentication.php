@@ -114,7 +114,8 @@ class authentication
 
     public function authenticationException($exception)
     {
-        if (!empty($exception->getCode())) {
+        $code = $exception->getCode();
+        if (!empty($code)) {
             \laabs::setResponseCode($exception->getCode());
         }
 
