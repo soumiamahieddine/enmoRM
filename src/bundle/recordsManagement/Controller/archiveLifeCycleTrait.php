@@ -30,7 +30,7 @@ trait archiveLifeCycleTrait
      * Log an archive life cycle event
      * @param string                          $type      	   The eventType
      * @param recordsManagement/archive       $archive   	   The archive
-     * @param bool                            $operationResult     The event result
+     * @param bool                            $operationResult The event result
      * @param digitalResource/digitalResource $resource   	   The resouce
      * @param array                           $eventInfo 	   The event information
      *
@@ -41,14 +41,18 @@ trait archiveLifeCycleTrait
         $eventItems = !empty($eventInfo) ? $eventInfo : [];
         $res = null;
 
-        $eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
+        $eventItems = array_merge($eventItems, get_object_vars($archive));
+
+        //$eventItems["originatorOwnerOrgRegNumber"] = $archive->originatorOwnerOrgRegNumber;
 
         if ($resource) {
-            $eventItems['resId'] = $resource->resId;
-            $eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
-            $eventItems['hash'] = $resource->hash;
+            $eventItems = array_merge($eventItems, get_object_vars($resource));
+
+            //$eventItems['resId'] = $resource->resId;
+            //$eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
+            //$eventItems['hash'] = $resource->hash;
             $eventItems['address'] = $resource->address[0]->path;
-            $eventItems['size'] = $resource->size;
+            //$eventItems['size'] = $resource->size;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
 
@@ -56,11 +60,13 @@ trait archiveLifeCycleTrait
             $res = [];
 
             foreach ($archive->digitalResources as $digitalResource) {
-                $eventItems['resId'] = $digitalResource->resId;
-                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventItems['hash'] = $digitalResource->hash;
+                $eventItems = array_merge($eventItems, get_object_vars($resource));
+
+                //$eventItems['resId'] = $digitalResource->resId;
+                //$eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
+                //$eventItems['hash'] = $digitalResource->hash;
                 $eventItems['address'] = $digitalResource->address[0]->path;
-                $eventItems['size'] = $digitalResource->size;
+                //$eventItems['size'] = $digitalResource->size;
 
                 $res[] = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
             }
@@ -152,7 +158,7 @@ trait archiveLifeCycleTrait
             $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
             $eventInfo['convertedHash'] = $convertedResource->hash;
             $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-            $eventInfo["size"] = $convertedResource->size;
+            $eventInfo["convertedSize"] = $convertedResource->size;
         }
 
         return $this->logLifeCycleEvent('recordsManagement/conversion', $archive, $operationResult, $originalResource, $eventInfo);
