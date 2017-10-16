@@ -1,0 +1,104 @@
+/* collapsible tree */
+
+.tree, .tree-l {
+    min-height:20px;
+    margin-bottom:20px;
+}
+
+.tree ul, .tree-l ul {
+    padding-left:20px; 
+}
+
+.tree li, .tree-l li {
+    list-style-type:none;
+    margin:0;
+    padding:5px 5px 0 5px;
+    position:relative
+}
+.tree li::before, .tree li::after {
+    content:'';
+    left:-10px;
+    position:absolute;
+    right:auto
+}
+.tree li::before {
+    border-left:1px solid #999;
+    bottom:10px;
+    height:100%;
+    top:0;
+    width:1px
+}
+.tree li::after {
+    border-top:1px solid #999;
+    height:20px;
+    top:20px;
+    width:15px
+}
+.tree .dropdown-menu li::before, .tree-l .dropdown-menu li::before {
+    border-left:none;
+}
+.tree .dropdown-menu li::after, .tree-l .dropdown-menu li::after {
+    border-top:none;
+}
+.tree button, .tree button::hover, .tree-l button, .tree-l button::hover{
+    background-color: none;
+    border: none;
+}
+.tree li span, .tree-l li span {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    display:inline-block;
+    padding:3px 8px;
+    text-decoration:none;
+}
+.tree li.parent_li i, .tree-l li.parent_li i {
+    cursor:pointer
+}
+.tree>ul>li::before, .tree>ul>li::after, .tree-l>ul>li::before, .tree-l>ul>li::after {
+    border:0
+}
+.tree li:last-child::before, .tree-l li:last-child::before {
+    height:30px
+}
+/*.tree li.parent_li>span:hover, .tree li.parent_li>span:hover+ul li span {
+    background:#eee;
+    border:1px solid #94a0b4;
+    color:#000
+}*/
+
+.node-default {
+    border:1px solid #999;
+    color: #333;
+    background-color: @btn-default-bg
+}
+
+.tree .root, .node-success {
+    border:1px solid #999;
+    color: white;
+    background-color: spin(@btn-success-bg, 15)
+}
+
+.tree .node, .node-primary {
+    border:1px solid #999;
+    color: white;
+    background-color: lighten(@btn-primary-bg, 5%)
+}
+
+.node-info {
+    border:1px solid #999;
+    color: white;
+    background-color: @btn-info-bg
+}
+
+.node-warning {
+    border:1px solid #999;
+    color: white;
+    background-color: darken(@btn-warning-bg, 5%)
+}
+
+.node-danger {
+    border:1px solid #999;
+    color: white;
+    background-color: @btn-danger-bg
+}
