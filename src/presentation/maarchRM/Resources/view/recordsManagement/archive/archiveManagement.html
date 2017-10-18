@@ -82,7 +82,7 @@ var ArchivesAction = {
         unfreeze           : ['frozen'],
         flagForDestruction : ['preserved'],
         cancelDestruction  : ['disposable'],
-        checkHash          : ''
+        checkHash          : ['preserved', 'frozen', 'restituable', 'disposable']
     },
 
     getSelectedArchives : function(type) {
