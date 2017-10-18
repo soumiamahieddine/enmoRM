@@ -252,7 +252,7 @@
                 }
             }
 
-            if (!selectedProfile && !archive.name && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
+            if (!selectedProfile && !archive.archiveName && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
                 gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
                 return -3;
             }
