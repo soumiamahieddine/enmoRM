@@ -137,7 +137,7 @@ class userAccount
     {
         $userAccountId = $this->addUserAccount($userAccount);
 
-        if (is_array($userAccount->roles)) {
+        if (is_array($userAccount->roles && !empty($userAccount->roles))) {
             foreach ($userAccount->roles as $roleId) {
                 \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
             }
@@ -250,7 +250,7 @@ class userAccount
 
         $this->sdoFactory->deleteChildren("auth/roleMember", $userAccount, "auth/account");
 
-        if (is_array($userAccount->roles)) {
+        if (is_array($userAccount->roles) && !empty($userAccount->roles)) {
             foreach ($userAccount->roles as $roleId) {
                 if ($roleId == null) {
                     continue;

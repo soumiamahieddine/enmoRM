@@ -106,6 +106,7 @@ class user
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
+        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_",$user->accountId);
 
         $view->setSource('userPositions', $userPositions);
