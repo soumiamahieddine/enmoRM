@@ -895,8 +895,6 @@ trait archiveEntryTrait
         // Add archiveId as container name in path
         $path .= "/".$archive->archiveId;
 
-        $archive->storagePath = $path;
-
         if (!$this->currentServiceLevel) {
             if (isset($archive->serviceLevelReference)) {
                 $this->useServiceLevel('deposit', $archive->serviceLevelReference);
@@ -913,7 +911,9 @@ trait archiveEntryTrait
             }
         }
 
-        $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $path, $metadata);
+        $storagePath = $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $path, $metadata);
+
+        $archive->storagePath = $storagePath;
     }
 
     /**

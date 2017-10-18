@@ -263,6 +263,8 @@ class cluster
                 throw \laabs::newException("digitalResource/clusterException", "Container %s counld not be opened.", 404, null, [$path]);
             }
         }
+
+        return $realPath;
     }
 
     /**

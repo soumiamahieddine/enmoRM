@@ -210,13 +210,13 @@ class digitalResource
      * @param string $path
      * @param mixed  $metadata
      * 
-     * @return void
+     * @return string
      */
     public function openContainers($clusterId, $path, $metadata=null)
     {
         $cluster = $this->useCluster($clusterId, 'write', true);
 
-        $this->clusterController->openContainers($cluster, $path, $metadata);
+        return $this->clusterController->openContainers($cluster, $path, $metadata);
     }
 
 
