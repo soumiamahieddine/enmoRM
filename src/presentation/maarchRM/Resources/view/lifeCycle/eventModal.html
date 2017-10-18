@@ -17,7 +17,7 @@
                             <dt>Timestamp</dt><dd name="timestamp"></dd>
                             <dt name="objectClass"></dt><dd name="objectId"></dd>
                             <dt>User name</dt><dd name="accountDisplayName"></dd>
-                            <dt>User identifiant</dt><dd name="accountName"></dd>
+                            <dd  class='hide' name="accountId"></dd>
                             <dt>Operation result</dt><dd name="operationResult"></dd>
                         </dl>
                     </div>
@@ -105,9 +105,9 @@ eventInfo = {
                 var eventInfo = $('#eventInfo');
                 eventInfo.html('');
                 $.each(response, function(key, value) {
-                    if (value != "") {
+                    if (value) {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
-                        $('<dd></dd>').text(value).css('word-break', 'break-all').appendTo(eventInfo);
+                        $('<dd></dd>').html(value).css('word-break', 'break-all').appendTo(eventInfo);
                     } else {
                         console.log("cocuou");
                     }

@@ -156,11 +156,11 @@ msgstr "Description"
 msgid "Description"
 msgstr "Description"
 
-msgid "User identifiant"
+msgid "User identifier"
 msgstr "Identifiant utilisateur"
 
 msgid "User name"
-msgstr "Nom utilisateur"
+msgstr "Utilisateur"
 
 # ---------------------------------------------------------
 # Event info detail
@@ -202,9 +202,9 @@ msgid "requesterOrgRegNumber"
 msgstr "Identifiant du demandeur"
 msgctxt "eventInfo"
 
-msgid "accountId"
-msgstr "Identifiant technique utilisateur"
-msgctxt "eventInfo"
+# msgid "accountId"
+# msgstr "Identifiant technique utilisateur"
+# msgctxt "eventInfo"
 
 msgid "depositorOrgRegNumber"
 msgstr "Identifiant du service versant"

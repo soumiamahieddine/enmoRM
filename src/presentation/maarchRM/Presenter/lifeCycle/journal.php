@@ -195,10 +195,15 @@ class journal
     public function readEvent($event)
     {
         $eventObject = new \stdClass();
+
         foreach ($event as $key => $value) {
             $newKey = $this->translator->getText($key, 'eventInfo');
             $eventObject->$newKey = $value;
         }
+
+        $user = \laabs::callService('auth/userAccount/read_userAccountId_', $event->accountId);
+
+        $eventObject->accountDisplayName = $user->displayName.' ('.$user->accountName.')';
 
         $objectClass = \laabs\dirname($event->objectClass);
         $this->translator->setCatalog('lifeCycle/messages');
