@@ -12,7 +12,7 @@ msgid "cluster(s)"
 msgstr "grappe(s) de stockage"
 
 msgid "Repositories management"
-msgstr "Sites de stockage"
+msgstr "Supports de stockage"
 
 msgid "Cluster identifier"
 msgstr "Identifiant"
@@ -27,7 +27,7 @@ msgid "Store metadata"
 msgstr "Métadonnées"
 
 msgid "Cluster repositories"
-msgstr "Sites de stockage"
+msgstr "Supports de stockage"
 
 msgid "New cluster"
 msgstr "Nouvelle grappe"
