@@ -31,7 +31,7 @@ interface adminUseraccountInterface
      * @return auth/user/indexHtml
      * @uses auth/userAccount/readUserlist
      */
-    public function readUseraccounts();
+    public function readUseraccounts($query = null);
 
     /**
      * Prepare an empty user object

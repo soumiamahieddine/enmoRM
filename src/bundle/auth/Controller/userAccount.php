@@ -78,17 +78,23 @@ class userAccount
 
     /**
      * List all users to display
+     * @param string $query
      *
      * @return array The array of stdClass
      */
-    public function userList()
+    public function userList($query = null)
     {
         $accountId = \laabs::getToken("AUTH")->accountId;
 
         $queryAssert = [];
         $queryAssert[] = "accountType='user'";
 
+        if ($query) {
+            $queryAssert[] = "$query";
+        }
+
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
         }

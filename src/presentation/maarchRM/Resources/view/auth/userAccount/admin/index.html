@@ -10,10 +10,17 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label">Display only activated users</label>
+                    <input type="checkbox" name="activatedUsers" id="activatedUsers" data-toggle="toggle" data-size="mini">
+                </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading clearfix">
                         <div class="pull-left">
                             <h4>Users</h4>
+                        </div>
+                        <div class="pull-left">
+
                         </div>
                         <div class="pull-right">
                             <button type="button" class="btn btn-default btn-sm" id="user_newUser" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
@@ -75,8 +82,34 @@
         <?hinclude auth/userAccount/admin/modalsForDisabling.html ?>
     </div>
 </div>
+<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="application/javascript">
-    
+
+    $("#contain").ready(function() {
+        /*$('#activatedUsers').bootstrapToggle({
+            size: 'mini',
+            on: 'Yes',
+            off: 'All'
+        });*/
+
+        var url = new URL(document.URL);
+        var deactivatedUsers = url.searchParams.get("query");
+
+        if (deactivatedUsers === 'enabled=true') {
+            $("#activatedUsers").bootstrapToggle('on');
+        }
+    });
+
+    $("#contain").on('click', '#activatedUsers', function() {
+        let value = $(this).prop('checked');
+
+        if (value) {
+            let param = encodeURIComponent("enabled=true");
+            window.location.replace("/userAccounts?query="+param);
+        } else {
+            window.location.replace("/userAccounts");
+        }
+    });
     
 //add
 $("#user_newUser").on('click',  function() {

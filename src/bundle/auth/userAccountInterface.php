@@ -36,10 +36,11 @@ interface userAccountInterface
 
     /**
      * List the user account
+     * @param string $query
      *
      * @action auth/userAccount/userList
      */
-    public function readUserlist();
+    public function readUserlist($query = null);
 
     /**
      * List the user account detail
