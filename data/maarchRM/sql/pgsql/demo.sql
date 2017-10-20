@@ -34,7 +34,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess'),
     ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact'),
     ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgUser'),
-    ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization');
+    ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization'),
 
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
