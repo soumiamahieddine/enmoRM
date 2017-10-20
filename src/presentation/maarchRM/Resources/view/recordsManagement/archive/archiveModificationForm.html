@@ -15,8 +15,9 @@
                                 <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
                         </select><br>
                        
-                        <dl id="accessRule">
-                            <dt><span>Duration</span> : <span id="accessRuleDuration"></span></dt>
+                        <dl class="dl dl-horizontal" id="accessRule">
+                            <dt><span>Duration</span> : </dt><dd span id="accessRuleDuration"></dd>
+                            <dt><span>Description</span> : </dt><dd id="accessRuleDescription"></dd>
                         </dl>
                         
                     </td></tr>
@@ -26,13 +27,13 @@
                                 <?merge retentionRules ?>
                                 <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .label ?></option>
                         </select><br>
-                        <dl id="retentionRules">
-                            <dt><span>Duration</span> : <span id="retentionRuleDuration"></span></dt>
-                            <dt><span>Final disposition</span> : <span id="retentionRuleFinalDisposition"></span></dt>
-                        </dl>
+                        <dl class="dl dl-horizontal" id="retentionRule">
+                        <dt><span>Duration</span> : </dt><dd id="retentionRuleDuration"></dd>
+                        <dt><span>Final disposition</span> : </dt><dd id="retentionRuleFinalDisposition"></dd>
+                        <dt><span>Description</span> : </dt><dd id="retentionRuleDescription"></dd>
+                    </dl>
 
                     </tr>
-
                 </tbody>
             </table>
         </div>
