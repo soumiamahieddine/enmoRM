@@ -171,7 +171,7 @@ trait archiveComplianceTrait
     protected function checkArchiveIntegrity($archive)
     {
         $valid = true;
-        $info = 'Cheking succeeded';
+        $info = 'Checking succeeded';
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
@@ -190,7 +190,7 @@ trait archiveComplianceTrait
                         $this->logIntegrityCheck($archive, $info, $digitalResource, false);
                     }
 
-                    $this->logIntegrityCheck($archive, "Cheking succeeded", $digitalResource, true);
+                    $this->logIntegrityCheck($archive, "Checking succeeded", $digitalResource, true);
                 }
             }
         } catch (\Exception $e) {
