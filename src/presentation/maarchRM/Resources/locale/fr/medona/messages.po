@@ -407,8 +407,11 @@ msgstr "Brouillon"
 msgid "Download"
 msgstr "Télécharger"
 
-msgid "authorization_wait"
-msgstr "En attente d'autorisation"
+msgid "originator_authorization_wait"
+msgstr "En attente d'autorisation du producteur"
+
+msgid "control_authorization_wait"
+msgstr "En attente d'autorisation du service de contrôle"
 
 msgid "Appraisal rule"
 msgstr "Règle de conservation"
