@@ -98,11 +98,17 @@ msgstr "Lecture"
 msgid "Create"
 msgstr "Création"
 
+msgid "Update"
+msgstr "Modification"
+
+msgid "Delete"
+msgstr "Suppression"
+
 msgid "Event type"
 msgstr "Type d'événement"
 
 msgid "Event"
-msgstr "Evénement"
+msgstr "Événement"
 
 msgid "Account"
 msgstr "Compte"
@@ -303,7 +309,7 @@ msgid "recordsManagement/archives/readIntegritycheck"
 msgstr "Vérification d'intégrité de l'archive"
 
 msgid "recordsManagement/archives/readFind"
-msgstr "Lecture de toutes les archives"
+msgstr "Lecture de toutes les archives pour la recherche"
 
 msgid "recordsManagement/archives/deleteDisposablearchives"
 msgstr "Suppression des archives"
@@ -376,7 +382,7 @@ msgid "recordsManagement/serviceLevel/readIndex"
 msgstr "Lecture des différents niveaux de service"
 
 msgid "recordsManagement/serviceLevel/read"
-msgstr "Lecture des différents niveaux de service"
+msgstr "Préparation d'un nouveau niveaux de service"
 
 msgid "recordsManagement/serviceLevel/create"
 msgstr "Création d'un niveau de service"
@@ -424,7 +430,7 @@ msgid "lifeCycle/journal/createChainjournal"
 msgstr "Chainage des journaux du cycle de vie"
 
 msgid "lifeCycle/journal/checkIntegrity"
-msgstr "Vérfication de l'intégrité des journaux du cycle de vie"
+msgstr "Vérification de l'intégrité des journaux du cycle de vie"
 
 msgid "medona/archivalAgreement/readIndex"
 msgstr "Lecture de toutes les conventions d'archivage"
@@ -907,13 +913,13 @@ msgid "digitalResource/format/readList"
 msgstr "Lecture de tous les formats"
 
 msgid "digitalResource/format/readFind_query_"
-msgstr "Recherche de format"
+msgstr "Recherche de formats"
 
 msgid "digitalResource/format/readGet"
 msgstr "Lecture d'un format en fonction du puid"
 
 msgid "digitalResource/format/createFileformatinformation"
-msgstr "Information sur le format d'un document"
+msgstr "Informations sur le format d'un document"
 
 msgid "digitalResource/repository/readList"
 msgstr "Lecture de tous les supports de stockage"
@@ -946,7 +952,7 @@ msgid "organization/orgContact/readOrgcontact_contactId_Contact"
 msgstr "Lecture d'un contact d'une organisation"
 
 msgid "organization/orgContact/deleteOrgcontact"
-msgstr "Suppression d'un contact dans une organisation"
+msgstr "Suppression d’un contact d’une organisation"
 
 msgid "organization/orgRole/readList"
 msgstr "Lecture de tous les rôles (organisation)"
@@ -976,7 +982,7 @@ msgid "organization/organization/readTree"
 msgstr "Lecture de l'arbre des organisations"
 
 msgid "organization/organization/readSearch"
-msgstr "Recherche d'organisation"
+msgstr "Recherche d'organisations"
 
 msgid "organization/organization/create"
 msgstr "Création d'une organisation"
@@ -1153,7 +1159,7 @@ msgid "auth/serviceAccount/readIndex"
 msgstr "Lecture de tous les comptes de service"
 
 msgid "auth/serviceAccount/readSearch"
-msgstr "Recherche de compte de service"
+msgstr "Recherche de comptes de service"
 
 msgid "auth/serviceAccount/readNewservice"
 msgstr "Nouveau compte de service"
@@ -1177,7 +1183,7 @@ msgid "auth/serviceAccount/readServicetoken_serviceAccountId_"
 msgstr "Création d'un jeton pour un compte de service"
 
 msgid "auth/serviceAccount/readQuery_query_"
-msgstr "Autocompletion des comptes de service"
+msgstr "Auto-complétion des comptes de service"
 
 msgid "auth/userAccount/readIndex"
 msgstr "Liste des utilisateurs"
@@ -1189,13 +1195,13 @@ msgid "auth/userAccount/updateProfile"
 msgstr "Modification du profil utilisateur"
 
 msgid "auth/userAccount/readUserlist"
-msgstr "Lecture de tous les comptes utilisateur"
+msgstr "Lecture de tous les comptes utilisateurs"
 
 msgid "auth/userAccount/readSearch"
 msgstr "Recherche des utilisateurs"
 
 msgid "auth/userAccount/readQuery_query_"
-msgstr "Lecture de plusieurs comptes utilisateur"
+msgstr "Lecture de plusieurs comptes utilisateurs"
 
 msgid "auth/userAccount/readNew"
 msgstr "Préparation à la création d'un compte utilisateur"
@@ -1327,55 +1333,55 @@ msgid "lifeCycle/eventFormat/updateEventformat"
 msgstr "Modification d'un format d'événement"
 
 msgid "batchProcessing/task/readIndex"
-msgstr "Lecture de toutes les taches"
+msgstr "Lecture de toutes les tâches"
 
 msgid "batchProcessing/task/create"
-msgstr "Creation d'une tache"
+msgstr "Creation d'une tâche"
 
 msgid "batchProcessing/task/delete_taskId_"
-msgstr "Suppression d'une tache"
+msgstr "Suppression d'une tâche"
 
 msgid "batchProcessing/task/read_taskId_"
-msgstr "Lecture d'une tache"
+msgstr "Lecture d'une tâche"
 
 msgid "batchProcessing/task/update_taskId_"
-msgstr "Modification d'une tache"
+msgstr "Modification d'une tâche"
 
 msgid "batchProcessing/scheduling/readSchedulings"
-msgstr "Lecture de toutes les taches planifiées"
+msgstr "Lecture de toutes les tâches planifiées"
 
 msgid "batchProcessing/scheduling/readExecute_schedulingId_"
-msgstr "Execution manuelle d'une tache planifiée"
+msgstr "Execution manuelle d'une tâche planifiée"
 
 msgid "batchProcessing/scheduling/create"
-msgstr "Creation d'une planification de tache"
+msgstr "Creation d'une planification de tâche"
 
 msgid "batchProcessing/scheduling/update"
-msgstr "Modification d'une planification de tache"
+msgstr "Modification d'une planification de tâche"
 
 msgid "batchProcessing/scheduling/updateChangestatus"
-msgstr "Changement du status d'une tache planifiée"
+msgstr "Changement du statuts d'une tâche planifiée"
 
 msgid "batchProcessing/scheduling/updateProcess"
-msgstr "Execution automatiques des taches planifiées"
+msgstr "Execution automatiques des tâches planifiées"
 
 msgid "batchProcessing/scheduling/readTasks"
-msgstr "Lecture de toutes les taches pour la planifications"
+msgstr "Lecture de toutes les tâches pour la planifications"
 
 msgid "batchProcessing/scheduling/delete_schedulingId_"
-msgstr "Suppression d'une planification de tache"
+msgstr "Suppression d'une planification de tâche"
 
 msgid "batchProcessing/logscheduling/read_logId_"
-msgstr "Lecture d'un journal d'une tache planifiée"
+msgstr "Lecture d'un journal d'une tâche planifiée"
 
 msgid "batchProcessing/logscheduling/read_schedulingId_"
-msgstr "Lecture de l'historique d'une tache planifiée"
+msgstr "Lecture de l'historique d'une tâche planifiée"
 
 msgid "batchProcessing/notification/create"
-msgstr "Création d'une notification pour les taches planifiées"
+msgstr "Création d'une notification pour les tâches planifiées"
 
 msgid "batchProcessing/notification/updateProcess"
-msgstr "Execution du processus de notification des taches planifiées"
+msgstr "Execution du processus de notification des tâches planifiées"
 
 msgid "archivesPubliques/content/createSearch"
 msgstr "Lecture de toutes les archives publiques"
@@ -1499,3 +1505,9 @@ msgstr "Indexation plein texte"
 
 msgid "digitalResource/digitalResource/updateIsconvertible"
 msgstr "Vérification de la convertibilité d'une ressource"
+
+msgid "Variables"
+msgstr "Variable(s)"
+
+msgid "Info"
+msgstr "Informations"

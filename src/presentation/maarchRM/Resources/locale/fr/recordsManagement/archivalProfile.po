@@ -86,7 +86,7 @@ msgstr "Jours"
 msgid "Months"
 msgstr "Mois"
 
-msgid "Access rules"
+msgid "Access rule"
 msgstr "Règle de communicabilité"
 
 msgid "Group"
@@ -95,7 +95,7 @@ msgstr "Groupe"
 msgid "Read"
 msgstr "Lecture"
 
-msgid "Access rule"
+msgid "Access rules"
 msgstr "Règles de communicabilité"
 
 msgid "Retention rule"

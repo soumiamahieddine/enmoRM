@@ -459,7 +459,7 @@ msgid "recordsManagement/periodicIntegrityCheck"
 msgstr "Vérification périodique d'intégrité"
 
 msgid "recordsManagement/reception"
-msgstr "Reception d'une archive"
+msgstr "Réception d'une archive"
 
 msgid "recordsManagement/validation"
 msgstr "Validation d'une archive"
@@ -471,7 +471,7 @@ msgid "medona/sending"
 msgstr "Envoi d'un message"
 
 msgid "medona/reception"
-msgstr "Reception d'un message"
+msgstr "Réception d'un message"
 
 msgid "medona/validation"
 msgstr "Validation d'un message"
@@ -483,7 +483,7 @@ msgid "medona/acceptance"
 msgstr "Acceptation d'un message"
 
 msgid "medona/acknowledgement"
-msgstr "Accusé de reception"
+msgstr "Accusé de réception"
 
 msgid "medona/rejection"
 msgstr "Rejet d'un message"
@@ -492,7 +492,7 @@ msgid "Result"
 msgstr "Résultat"
 
 msgid "Reception of the message"
-msgstr "Reception du message"
+msgstr "Réception du message"
 
 msgid "Processing of the message"
 msgstr "Traitement du message"
@@ -584,7 +584,7 @@ msgstr "3 - Date et heure à la microseconde de l'événement"
 msgid "4 - User or service identifier who have triggered the event"
 msgstr "4 - Identifiant du compte utilisateur ou du compte de service ayant déclenché l'événement"
 
-msgid "5 - Object type impacted by the event"
+msgid "5 - Object type impacted by the event"na
 msgstr "5 - Type d'objet impacté par l'événement"
 
 msgid "6 - Unique object identifier impacted by the event"
@@ -613,3 +613,12 @@ msgstr "Le format est vide."
 
 msgid "Archival profile"
 msgstr "Profil d'archive"
+
+msgid "recordsManagement/depositOfLinkedResource"
+msgstr " Déposer une ressource liée"
+
+msgid "recordsManagement/destructionRequestCancel"
+msgstr "Annuler la demande de destruction de l'archive"
+
+msgid "Account name"
+msgstr "Nom du compte"
