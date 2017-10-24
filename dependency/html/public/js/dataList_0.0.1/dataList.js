@@ -186,9 +186,10 @@ var DataList = {
 
         this.buildPaginationButtons(id);
 
-        if (this.dataList[id].unsearchable) {
-            this.dataList[id].unsearchable = ['html'];
-        }
+        this.dataList[id].unsearchable = ['html'];
+        // if (this.dataList[id].unsearchable) {
+        //     this.dataList[id].unsearchable = ['html'];
+        // }
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
