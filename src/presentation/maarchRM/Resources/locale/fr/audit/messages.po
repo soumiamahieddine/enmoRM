@@ -315,7 +315,7 @@ msgid "recordsManagement/archives/deleteDisposablearchives"
 msgstr "Suppression des archives"
 
 msgid "recordsManagement/archives/updateCancelDestruction"
-msgstr "Annulation de la suppresion d'archives"
+msgstr "Annulation de la suppression d'archives"
 
 msgid "recordsManagement/archives/updateDocumentsconversion"
 msgstr "Marquer les documents pour conversion"
@@ -772,7 +772,7 @@ msgid "medona/archiveTransfer/readCount"
 msgstr "Nombre de bordereaux de demande de transfert"
 
 msgid "medona/archiveTransfer/create"
-msgstr "Creation d'un bordereau de demande de transfert"
+msgstr "Création d'un bordereau de demande de transfert"
 
 msgid "medona/archiveTransfer/updateValidateBatch"
 msgstr "Validation des bordereaux de demande de transfert"
@@ -1366,7 +1366,7 @@ msgid "batchProcessing/scheduling/updateProcess"
 msgstr "Execution automatiques des tâches planifiées"
 
 msgid "batchProcessing/scheduling/readTasks"
-msgstr "Lecture de toutes les tâches pour la planifications"
+msgstr "Lecture de toutes les taches pour la planifications"
 
 msgid "batchProcessing/scheduling/delete_schedulingId_"
 msgstr "Suppression d'une planification de tâche"
