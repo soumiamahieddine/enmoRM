@@ -81,6 +81,9 @@ conversionError = false
 ;       bad example : /prefix_<200>/
 storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<date(Y)>/<date(m)>/<date(d)>"
 
+;The path of the stopword file for fullTextIndexing
+stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
+
 [audit]
 ; Send notifications on audit event
 ;notifications = "{
@@ -94,9 +97,6 @@ storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archiva
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
-
-;The path of the stopword file for fullTextIndexing
-stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
 
 [auth]
