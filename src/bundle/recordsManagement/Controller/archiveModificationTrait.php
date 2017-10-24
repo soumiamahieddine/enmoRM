@@ -384,27 +384,7 @@ trait archiveModificationTrait
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
                 }
 
-                $eventInfo = array(
-                    'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                    'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                );
-
-                foreach ($archive->digitalResources as $digitalResource) {
-                    $eventInfo['resId'] = $digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $digitalResource->hash;
-                    $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                    $event = $this->lifeCycleJournalController->logEvent(
-                        'recordsManagement/metadata',
-                        'recordsManagement/archive',
-                        $archive->archiveId,
-                        $eventInfo,
-                        $operationResult
-                    );
-
-                }
-                $archive->lifeCycleEvent = array($event);
+                $this->logMetadataModification($archive, $operationResult);
 
                 if ($operationResult) {
                     $res['success'][] = (string)$archive->archiveId;
