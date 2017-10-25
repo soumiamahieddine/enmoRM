@@ -1,12 +1,6 @@
 ; Declare variables for database connection
 @include confvars.ini
 
-; Include external app config files for dependencies
-; !! These files declare directives in sections, so all root directives must be declared before
-;    otherwise they will be included on the last opened section
-@include conf.d
-
-
 [presentation.maarchRM]
 @include menu.ini
 
@@ -138,3 +132,163 @@ chainJournalByOrganization = false;
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
+
+[dependency.datasource]
+@Adapter                        = Database
+Dsn                             = %dsn%
+Username                        = %username%
+Password                        = %password%
+
+[dependency.fileSystem]
+
+; Path to the UK National Archives DROID signature file for file format detection
+; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
+
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V91.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20170330.xml"
+
+; Path to libreOffice executable
+;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"
+libreOfficeExecutable = "/usr/bin/libreoffice"
+
+; Conversion paths
+conversionServices = "[
+    {
+        'serviceName'     : 'dependency/fileSystem/plugins/libreOffice',
+        'softwareName'    : 'LibreOffice',
+        'softwareVersion' : '5.4.2.0',
+        'inputFormats'    : ['fmt/412', 'fmt/291', 'fmt/293'],
+        'outputFormats'   : {
+            'fmt/95' : {
+                'extension' : 'pdf',
+                'filter' : 'writer_pdf_Export',
+                'options': 'SelectPdfVersion=1'
+            },
+            'fmt/18' : {
+                'extension' : 'pdf'
+            }
+        }
+    }
+]"
+
+; Path to Clam antivirus executable
+clamScan = "C:\Program Files (x86)\ClamWin\bin\clamscan.exe"
+clamDb = "C:\ProgramData\.clamwin\db"
+
+tikaJarFile = "%laabsDirectory%/dependency/fileSystem/plugins/tika/tika-app-1.16.jar"
+
+;zipExecutable = "C:\Program Files\7-Zip\7z.exe"
+
+[dependency.html]
+headers                         = "['dashboard/head.html']"
+layout                          = "dashboard/layout.html"
+layoutData                      = "presentation/dashboard/layout"
+
+plugins                         = "{
+    'dataTable'       : '\dependency\html\plugins\DataTable\DataTable',
+    'dataList'        : '\dependency\html\plugins\DataList\DataList',
+    'datePicker'      : '\dependency\html\plugins\datePicker\datePicker',
+    'dateRangePicker' : '\dependency\html\plugins\dateRangePicker\dateRangePicker'
+}"
+
+layoutReferer = "['/user/prompt', '/user/logout']"
+
+[dependency.json]
+Options                         = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_FORCE_OBJECT
+
+[dependency.localisation]
+@Adapter                        = Gettext
+lang                            = fr
+dateFormat                      = d-m-Y
+
+[dependency.logger]
+
+loggers = "{
+    'importCustomerRecords' : {
+        'level' : 'INFO',
+        'appenders' : [ 'importCustomerRecordsFile' ],
+        'additivity' : false
+    }
+}"
+
+appenders = "{
+    'default' : {
+        'class' : 'LoggerAppenderFile',
+        'layout' : {
+            'class' : 'LoggerLayoutSimple'
+        },
+        'params' : {
+            'file' : '/var/www/laabs/data/redgreen/log4php.txt',
+            'append' : true
+        }
+    },
+    'importCustomerRecordsFile' : {
+        'class' : 'LoggerAppenderDailyFile',
+        'layout' : {
+            'class' : 'LoggerLayoutPattern',
+            'params' : {
+                    'conversionPattern' : '[%date{d/m/Y H:i:s}] %-5p [%t] %message %newline'
+            }
+        },
+        'params' : {
+            'datePattern' : 'Y-m-d',
+            'file' : '/var/www/laabs/data/maarchRM/importMapping-%s.log',
+            'append' : true
+        }
+    }
+}"
+
+[dependency.notification]
+@Adapter = Mailer
+
+mailHost = 'smtp.gmail.com'
+mailUsername = '';
+mailPassword = '';
+mailPort = 587;
+mailSender = "";
+mailAdminReceiver = "";
+mailSMTPAuth = true;
+mailSMTPSecure = "tls";
+
+;Pour laposte
+;mailHost = 'smtp.laposte.com';
+;mailPort = 25;
+;SMTPSecure = "tls";
+;mailSMTPAuth = true;
+
+;Pour gmail
+;mailHost = 'smtp.gmail.com';
+;mailPort = 587;
+;SMTPSecure = "tls";
+;mailSMTPAuth = true;
+
+[dependency.repository]
+@Adapter                        = Repository
+
+[dependency.sdo]
+@Adapter                        = Database
+Dsn                             = %dsn%
+Username                        = %username%
+Password                        = %password%
+
+; Auto generate ids before create operation
+; 0/false/Off                   = never generate ids
+; 1/true/On                     = generates ids when no id is set on object
+generateKey                     = on
+
+; Sets the boolean storage method
+; 0 : as integer 0 | 1
+; 1 : as boolean true |false
+; 2 : as char Y / N
+boolFormat = 1
+
+dateFormat = YYYY-MM-DD
+timeFormat = HH24:MI:SS
+datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
+
+; Log events in Laabs log
+; 0 = no trace
+; 1 = trace only errors
+; 2 = trace queries
+; 3 = dump queries
+trace = 1

@@ -44,6 +44,11 @@ trait archiveCommunicationTrait
      * @param string $description
      * @param string $text
      * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @return recordsManagement/archive[]
      */
@@ -63,7 +68,11 @@ trait archiveCommunicationTrait
         $description = null,
         $text = null,
         $partialRetentionRule = null,
-        $retentionRuleCode = null
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     ) {
         $archives = [];
 
@@ -82,8 +91,10 @@ trait archiveCommunicationTrait
             'hasParent' => $hasParent,
             'partialRetentionRule' => $partialRetentionRule,
             'retentionRuleCode' => $retentionRuleCode,
+            'depositStartDate' => $depositStartDate,
+            'depositEndDate' => $depositEndDate,
+            'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
         ];
-
         if (!empty($description) || !empty($text)) {
             $searchClasses = [];
             if (!$profileReference) {

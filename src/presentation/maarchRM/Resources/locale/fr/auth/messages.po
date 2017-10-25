@@ -697,4 +697,4 @@ msgid "Passwords are not the same"
 msgstr "Les mots de passe sont pas identiques"
 
 msgid "Display only activated users"
-msgstr "Afficher uniquement les utilisateurs activés"
+msgstr "Afficher uniquement les utilisateurs actifs"

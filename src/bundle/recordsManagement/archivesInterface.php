@@ -48,6 +48,10 @@ interface archivesInterface
      * @param string $text
      * @param bool   $partialRetentionRule
      * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @action recordsManagement/archive/search
      *
@@ -68,7 +72,10 @@ interface archivesInterface
         $description = null,
         $text = null,
         $partialRetentionRule = null,
-        $retentionRuleCode = null
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     );
 
     /*

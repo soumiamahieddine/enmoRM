@@ -21,6 +21,12 @@
         <div class="collapse navbar-collapse" id='leMenu'>
             <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
             
+                <?merge .menu.bool() ?>
+                <li>
+                    <a class="" onclick="load('/', 'HTML_NO_LAYOUT')">
+                        <i class="fa fa-home fa-fw" ></i>
+                    </a>
+                </li>
                 <?merge .menu ?>
                 <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]">
                     <a class="dropdown-toggle" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" data-toggle="dropdown" role="button" aria-expanded="false">

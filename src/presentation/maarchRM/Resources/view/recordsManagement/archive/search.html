@@ -85,9 +85,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <br/>
-                            </div>
-                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Final disposition</label>
                                     <div class="col-sm-6">
@@ -109,6 +106,27 @@
                                                 <option value="[?merge .registrationNumber ?]"><?merge .displayName ?></option>
                                             </optgroup>
                                         </select>
+                                    </div>
+                                </div>
+                                <br/>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Deposit date</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datePicker" name="depositStartDate" placeholder="From date"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datePicker" name="depositEndDate" placeholder="To date"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Originating date</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datePicker" name="originatingStartDate" placeholder="From date"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control datePicker" name="originatingEndDate" placeholder="To date"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -215,7 +233,8 @@
         $.ajax({
             type     : 'GET',
             url      : '/recordsManagement/archives',
-            data     : $("#archive_searchForm").serialize(),
+            //data     : $("#archive_searchForm").serialize(),
+            data     : searchFormSerialize(),
             dataType : 'html',
             success  : function (response) {
                 $('#archive_searchResult').empty().html(response);
@@ -233,6 +252,24 @@
         $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
         $('#archive_searchResult').empty();
     });
+    
+    function searchFormSerialize() {
+        var parameters = new Object();
+
+        $('#archive_searchForm').find('input[type="text"], input[type="number"], select').each(function(){
+            parameters[$(this).attr('name')] = $(this).val();
+        });
+        $('#archive_searchForm').find('input[type="checkbox"]').each(function(){
+            parameters[$(this).attr('name')] = $(this).prop("checked");
+        });
+        parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
+        parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+
+        return parameters;
+    }
 
     /* ----------------------------------------------------------------------------------------------------*/
     /* -- VALIDATION MODAL -- */

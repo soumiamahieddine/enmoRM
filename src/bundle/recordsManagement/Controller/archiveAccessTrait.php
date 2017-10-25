@@ -235,13 +235,43 @@ trait archiveAccessTrait
             $queryParts[] = "originatorArchiveId='".$args['originatorArchiveId']."'";
         }
         if (!empty($args['originatingDate'])) {
-            if (!empty($args['originatingDate'][0])) {
+            if (!empty($args['originatingDate'][0]) && is_string($args['originatingDate'][0])) {
+                $args['originatingDate'][0] = \laabs::newDate($args['originatingDate'][0]);
+            }
+            if (!empty($args['originatingDate'][1]) && is_string($args['originatingDate'][1])) {
+                $args['originatingDate'][1] = \laabs::newDate($args['originatingDate'][1]);
+            }
+
+            if (!empty($args['originatingDate'][0])) { // originatingStartDate
+                $args['originatingDate'][0] = $args['originatingDate'][0]->format('Y-m-d');
                 $queryParts[] = "originatingDate>='".$args['originatingDate'][0]."'";
             }
-            if (!empty($args['originatingDate'][1])) {
+            if (!empty($args['originatingDate'][1])) { // originatingEndDate
+                $args['originatingDate'][1] = $args['originatingDate'][1]->format('Y-m-d');
                 $queryParts[] = "originatingDate<='".$args['originatingDate'][1]."'";
             }
         }
+
+        if (!empty($args['depositStartDate']) && is_string($args['depositStartDate'])) {
+            $args['depositStartDate'] = \laabs::newDate($args['depositStartDate']);
+        }
+        if (!empty($args['depositEndDate']) && is_string($args['depositEndDate'])) {
+            $args['depositEndDate'] = \laabs::newDate($args['depositEndDate']);
+        }
+
+        if (!empty($args['depositStartDate']) && !empty($args['depositEndDate'])) {
+            $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
+            $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
+            $queryParts[] = "depositDate <= '".$args['depositEndDate']."' AND depositDate >= '".$args['depositStartDate']."'";
+        } elseif (!empty($args['depositStartDate'])) {
+            $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
+            $queryParts[] = "depositDate >= '".$args['depositStartDate']."'";
+
+        } elseif (!empty($args['depositEndDate'])) {
+            $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
+            $queryParts[] = "depositDate <= '".$args['depositEndDate']."'";
+        }
+
         if (!empty($args['depositorOrgRegNumber'])) {
             $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
         }
