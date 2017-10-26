@@ -19,7 +19,7 @@ msgstr "Personnes des organisations"
 msgctxt "model"
 
 msgid "orgRole"
-msgstr "Roles des organisations"
+msgstr "Rôles des organisations"
 msgctxt "model"
 
 msgid "orgType"
