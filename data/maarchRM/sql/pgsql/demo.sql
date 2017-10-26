@@ -128,25 +128,23 @@ INSERT INTO "digitalResource"."clusterRepository" ("clusterId", "repositoryId", 
 
 
 
-INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description", "duration", "finalDisposition") VALUES ('document', 'document', '', 'P10Y', 'destruction');
 
 
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ACME', 'Archives Conservation et Mémoire Électronique', 'Archives Conservation et Mémoire Électronique', NULL, NULL, NULL, 'ACME',false);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DOP', 'Direction des Opérations', 'Direction des Opérations', 'ACME', 'ACME', NULL, 'DOP',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CG', 'Comptabilité Générale', 'Comptabilité Générale', 'DOP', 'ACME', NULL, 'CG',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('AC', 'Agence comptable', 'Agence comptable', 'DOP', 'ACME', NULL, 'AC',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ARC', 'Service des Archives', 'Service des Archives', 'DOP', 'ACME', 'owner', 'ARC',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DAM', 'Direction Administrative et du Matériel', 'Direction Administrative et du Matériel', 'ACME', 'ACME', NULL, 'DAM',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('SAM', 'Service Administratif et du Matériel', 'Service Administratif et du Matériel', 'DAM', 'ACME', NULL, 'SAM',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DRH', 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'ACME', 'ACME', NULL, 'DRH',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DESR', 'Direction des Études, de la Stratégie et des Risques', 'Direction des Études, de la Stratégie et des Risques', 'ACME', 'ACME', NULL, 'DESR',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ES', 'Études et Statistiques', 'Études et Statistiques', 'DESR', 'ACME', NULL, 'ES',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DG', 'Direction Générale', 'Direction Générale', 'ACME', 'ACME', NULL, 'DG',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CAICG', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'DG', 'ACME', NULL, 'CAICG',true);
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CC', 'Comptabilité client', 'Comptabilité client', 'DOP', 'ACME', NULL, 'CC',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ArchivesConservationMemoireElectronique', 'Archives Conservation et Mémoire Électronique', 'Archives Conservation et Mémoire Électronique', NULL, NULL, NULL, 'ArchivesConservationMemoireElectronique',false);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DirectionAdministrativesFinanciere', 'Direction Administratives et Financière', 'Direction Administratives et Financière', 'ArchivesConservationMemoireElectronique', 'ArchivesConservationMemoireElectronique', NULL, 'DirectionAdministrativesFinanciere',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ComptabiliteGenerale', 'Comptabilité Générale', 'Comptabilité Générale', 'DirectionAdministrativesFinanciere', 'ArchivesConservationMemoireElectronique', NULL, 'ComptabiliteGenerale',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('AgenceComptable', 'Agence comptable', 'Agence comptable', 'DirectionAdministrativesFinanciere', 'ArchivesConservationMemoireElectronique', NULL, 'AgenceComptable',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ServiceArchives', 'Service des Archives', 'Service des Archives', 'DirectionGenerale', 'ArchivesConservationMemoireElectronique', 'owner', 'ServiceArchives',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DirectionRessourcesHumaines', 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'ArchivesConservationMemoireElectronique', 'ArchivesConservationMemoireElectronique', NULL, 'DirectionRessourcesHumaines',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DirectionEtudes', 'Direction des Études, de la Stratégie et des Risques', 'Direction des Études, de la Stratégie et des Risques', 'ArchivesConservationMemoireElectronique', 'ArchivesConservationMemoireElectronique', NULL, 'DirectionEtudes',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('EtudesStatistiques', 'Études et Statistiques', 'Études et Statistiques', 'DirectionEtudes', 'ArchivesConservationMemoireElectronique', NULL, 'EtudesStatistiques',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('DirectionGenerale', 'Direction Générale', 'Direction Générale', 'ArchivesConservationMemoireElectronique', 'ArchivesConservationMemoireElectronique', NULL, 'DirectionGenerale',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('CelluleAuditInterneControleGestion', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'Cellule d''Audit Interne et du Contrôle de Gestion', 'DirectionGenerale', 'ArchivesConservationMemoireElectronique', NULL, 'CelluleAuditInterneControleGestion',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('ComptabiliteClient', 'Comptabilité client', 'Comptabilité client', 'DirectionAdministrativesFinanciere', 'ArchivesConservationMemoireElectronique', NULL, 'ComptabiliteClient',true);
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES ('Paie', 'Paie', 'Paie', 'DirectionRessourcesHumaines', 'ArchivesConservationMemoireElectronique', NULL, 'Paie',true);
 
 
-INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('org', 'Organisation', 'name', '', '["ACME Paris","ACME Dakar","ACME Cotonou"]');
+INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('org', 'Organisation', 'name', '', '["ArchivesConservationMemoireElectronique Paris","ArchivesConservationMemoireElectronique Dakar","ArchivesConservationMemoireElectronique Cotonou"]');
 INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('fullname', 'Nom complet', 'name', '', '');
 INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('empid', 'Matricule', 'name', '', '');
 INSERT INTO "recordsManagement"."descriptionField" ("name", "label", "type", "default", "enumeration") VALUES ('service', 'Entité/Service', 'name', '', '');
@@ -178,34 +176,21 @@ INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "referen
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('22', 'PRVA', 'Procès-Verbal d''Attribution', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('23', 'PRVOP', 'Proces-Verbal d''Ouverture des Plis', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('24', 'RAPEO', 'Rapport d’Évaluation des Offres', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('25', 'COUDC', 'Courrier Demande de Cotation', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('26', 'DEMC', 'Demande de Cotation', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('27', 'RAPFOR', 'Rapport de Formation', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('28', 'DOSIP', 'Dossier Individuel du Personnel', 'depositDate', 'document', NULL, NULL, true, 'file');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('29', 'ETAC', 'Etat Civil', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('30', 'CURV', 'Curriculum Vitae', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('31', 'EXTAN', 'Extrait d''Acte de Naissance', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('32', 'JUGSAN', 'Jugement Supplétif d''acte de naissance', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('33', 'CASJU', 'Casier Judiciaire', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('34', 'ATTSU', 'Attestation de succès', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('35', 'CTRTRV', 'Contrat de Travail', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('36', 'BORTAD', 'Bordereau de Transmission Avis de Débauchage', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('37', 'ATTT', 'Attestation de Travail', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('38', 'COUTCT', 'Courrier Transmission Contrats de Travail', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('39', 'CNSS', 'Caisse Nationale de Sécurité Sociale', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('40', 'AVID', 'Avis de Débauchage', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('41', 'CAR', 'Carrière', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('42', 'DECIN', 'Décision de nomination', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('43', 'DECIR', 'Décision de redéploiement', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('44', 'CERPS', 'Certificat de Prise de Service', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('45', 'CRIEA', 'Critères d’Évaluation des Agents', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('46', 'ATTP', 'Attestation de Participation', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('47', 'ATTF', 'Attestation de formation', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('48', 'COUFCA', 'Courrier Fin des Congés Administratifs', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('49', 'COUDSCT', 'Courrier Demande de Suspension du Contrat de Travail', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('50', 'COUDAA', 'Courrier Demande d''Autorisation d''Absence', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('51', 'TITCA', 'Titre de Congés Administratifs', 'depositDate', 'document', NULL, NULL, true, 'item');
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('52', 'COUCF', 'Courrier du Concours Financier', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('53', 'COURRN', 'Courrier Répartition du Résultat Net', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('54', 'COUDS', 'Courrier Domiciliation de Salaire', 'depositDate', 'document', NULL, NULL, true, 'item');
 INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", "reference", "name", "retentionStartDate", "retentionRuleCode", "description", "accessRuleCode", "acceptUserIndex", "fileplanLevel") VALUES ('55', 'FICP', 'Fiche de Poste', 'depositDate', 'document', NULL, NULL, true, 'item');
@@ -312,35 +297,33 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "c
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '1');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '68');
 
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'COUA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'PRVN');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'PRVIF');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'ETAR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'RELCC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'CTRF');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DCLTVA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DOSC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DOSB');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'NOTSER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('SAM', 'PM');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('SAM', 'RAPFOR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DRH', 'DOSIP');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ES', 'DOSETU');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'DCRN');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICCR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'LETC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICI');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'NOTSER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'COUA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'BORT');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPAMI');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPAE');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'COUABID');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CC', 'FACVEN');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'COUA');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'PRVN');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'PRVIF');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'ETAR');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'RELCC');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteGenerale', 'CTRF');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AgenceComptable', 'DCLTVA');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AgenceComptable', 'DOSC');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AgenceComptable', 'DOSB');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AgenceComptable', 'FICDG');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AgenceComptable', 'NOTSER');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionRessourcesHumaines', 'DOSIP');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('EtudesStatistiques', 'DOSETU');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'FICDG');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'DCRN');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'FICCR');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'LETC');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'FICI');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'NOTSER');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'COUA');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DirectionGenerale', 'BORT');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CelluleAuditInterneControleGestion', 'FICDG');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CelluleAuditInterneControleGestion', 'RAPAMI');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CelluleAuditInterneControleGestion', 'RAPAE');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CelluleAuditInterneControleGestion', 'RAPER');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CelluleAuditInterneControleGestion', 'COUABID');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ComptabiliteClient', 'FACVEN');
 
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('1', 'org', false, 0);
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('2', 'org', false, 0);
@@ -381,23 +364,22 @@ INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ssissoko', 'SISSOKO', 'Sylvain', 'M.', 'Sylvain SISSOKO', 'ssissoko', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 
 
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ppetit', 'ACME', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('aadams', 'DESR', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('madissa', 'DESR', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bbardot', 'DESR', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddaull', 'DOP', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('aastier', 'DAM', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bbain', 'DRH', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('nboko', 'DRH', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ggrand', 'DRH', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('cchaplin', 'CAICG', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('sstar', 'DG', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bblier', 'ARC', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('kmama', 'ARC', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ccharles', 'ARC', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ttong', 'CC', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddur', 'CC', '', true);
-INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ssissoko', 'CC', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ppetit', 'ArchivesConservationMemoireElectronique', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('aadams', 'DirectionEtudes', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('madissa', 'DirectionEtudes', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bbardot', 'DirectionEtudes', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddaull', 'DirectionAdministrativesFinanciere', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bbain', 'DirectionRessourcesHumaines', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('nboko', 'DirectionRessourcesHumaines', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ggrand', 'DirectionRessourcesHumaines', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('cchaplin', 'CelluleAuditInterneControleGestion', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('sstar', 'DirectionGenerale', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('bblier', 'ServiceArchives', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('kmama', 'ServiceArchives', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ccharles', 'ServiceArchives', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ttong', 'ComptabiliteClient', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddur', 'ComptabiliteClient', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ssissoko', 'ComptabiliteClient', '', true);
 
 
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ppetit');
