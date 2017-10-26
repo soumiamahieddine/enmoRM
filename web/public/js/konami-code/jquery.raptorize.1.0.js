@@ -30,11 +30,11 @@
 			}*/
 			
 			//Raptor Vars
-			var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/public/dependency/html/img/raptor.png" />'
-			var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/public/dependency/html/sound/raptor-sound.mp3" /><source src="/public/dependency/html/sound/raptor-sound.ogg" /></audio>';
+			var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/public/img/raptor.png" />'
+			var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/public/sound/raptor-sound.mp3" /><source src="/public/sound/raptor-sound.ogg" /></audio>';
 
-			//var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/public/dependency/html/img/did.png" />'
-			//var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/public/dependency/html/sound/lustucru.mp3" /><source src="/public/dependency/html/sound/lustucru.mp3" /></audio>';
+			//var raptorImageMarkup = '<img id="elRaptor" style="display: none" src="/public/img/did.png" />'
+			//var raptorAudioMarkup = '<audio id="elRaptorShriek" preload="auto"><source src="/public/sound/lustucru.mp3" /><source src="/public/sound/lustucru.mp3" /></audio>';
 				
 			var locked = false;
 			

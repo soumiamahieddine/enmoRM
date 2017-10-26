@@ -101,9 +101,9 @@ class dateRangePicker
         $format = str_replace('l', 'DD', $format);   // Full day name
         $this->parameters->locale->format = $format;
         
-        $this->element->ownerDocument->addScript("/public/dependency/html/js/bootstrap-daterangepicker/moment.min.js");
-        $this->element->ownerDocument->addScript('/public/dependency/html/js/bootstrap-daterangepicker/daterangepicker.js');
-        $this->element->ownerDocument->addStyle('/public/dependency/html/css/bootstrap-daterangepicker/daterangepicker.css');
+        $this->element->ownerDocument->addScript("/public/js/bootstrap-daterangepicker/moment.min.js");
+        $this->element->ownerDocument->addScript('/public/js/bootstrap-daterangepicker/daterangepicker.js');
+        $this->element->ownerDocument->addStyle('/public/css/bootstrap-daterangepicker/daterangepicker.css');
     }
     /*
     {

@@ -44,7 +44,7 @@ class DataTable
 
         $element->addHtmlClass("dataTable");
 
-        $this->element->ownerDocument->addScript('/public/dependency/html/js/dataTables_1.10.5/dataTables.min.js');
+        $this->element->ownerDocument->addScript('/public/js/dataTables_1.10.5/dataTables.min.js');
         $this->parameters->sPaginationType = "full_numbers";
     }
 
@@ -248,7 +248,7 @@ EOS;
             $this->columnFilter->sPlaceHolder = $placeHolder;
         }
 
-        $this->element->ownerDocument->addScript('/public/dependency/html/js/dataTables_1.10.5/dataTables.columnFilter.js');
+        $this->element->ownerDocument->addScript('/public/js/dataTables_1.10.5/dataTables.columnFilter.js');
     }
 
     public function setColumnFilter($index, $type, $values=array()) 
