@@ -267,14 +267,14 @@ trait archiveModificationTrait
         }
         
         if ($description) {
-            $descritionObject = json_decode($description);
+            $descriptionObject = json_decode($description);
             if (!empty($archive->archivalProfileReference)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 if (!empty($this->currentArchivalProfile->descriptionClass)) {
-                    $this->validateDescriptionClass($descritionObject, $this->currentArchivalProfile);
+                    $this->validateDescriptionClass($descriptionObject, $this->currentArchivalProfile);
                 } else {
-                    $this->validateDescriptionModel($descritionObject, $this->currentArchivalProfile);
+                    $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
                 }
             }
 
@@ -283,7 +283,7 @@ trait archiveModificationTrait
             } else {
                 $descriptionController = $this->useDescriptionController('recordsManagement/description');
             }
-            $archive->descritionObject = $descritionObject;
+            $archive->descriptionObject = $descriptionObject;
             
             $descriptionController->update($archive);
         }
