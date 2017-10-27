@@ -88,5 +88,5 @@ msgid "destruction"
 msgstr "Destruction"
 
 msgid "preservation"
-msgstr "Conservervation"
+msgstr "Conservation"
 
