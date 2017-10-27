@@ -48,11 +48,13 @@
     <span id="mtext_cancelDestruction">Cancel destruction</span>
     <span id="mtext_freeze">Freeze</span>
     <span id="mtext_unfreeze">Unfreeze</span>
-    <span id="empty_text">The fields with a star are compulsory.</span>
+    <span id="empty_text">The fields with a star are required.</span>
 
     <span id="text_D">day(s)</span>
     <span id="text_M">month(s)</span>
     <span id="text_Y">year(s)</span>
+    <span id="text_preservation">preservation</span>
+    <span id="text_destruction">destruction</span>
 </div>
 
 <style>
@@ -64,6 +66,10 @@
         ModificationModal.loadAccessCode();
     });
     
+    $("#retentionRuleCode").on('change', function () {
+        ModificationModal.loadRetentionCode();
+    });
+
     $("#comment").bind('input propertychange', function () {
         if ($("#comment").val() == "") {
             $("#save").prop("disabled",true);
@@ -95,21 +101,21 @@
 
             this.loadTitle();
             
-            $('#selectedArchiveId').css('display', '').find('span').html(archiveId);
-            $('#selectedArchiveReference').css('display', '').find('span').html(archiveName);
+            $('#selectedArchiveId').css('display', '').find('span').text(archiveId);
+            $('#selectedArchiveReference').css('display', '').find('span').text(archiveName);
 
             if (type == 'accessRule') {
-                $('#startDate, #code').css('display', '');
-                $('#duration, #finalDisposition').css('display', 'none');
+                $('#startDate, #accessCode').css('display', '');
+                $('#retentionCode').css('display', 'none');
                 this.loadRule(archiveId, archiveName, type);
 
             } else if (type == "retentionRule") { 
-                $('#startDate, #duration, #finalDisposition').css('display', '');
-                $('#code').css('display', 'none');
+                $('#startDate,#retentionCode').css('display', '');
+                $('#accessCode').css('display', 'none');
                 this.loadRule(archiveId, archiveName);
 
             } else {
-                $('#startDate, #code, #duration, #finalDisposition').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
             }
             
             $('#save').data("archiveids", "");
@@ -141,8 +147,6 @@
                         }
                     } else {
                         rule = response.retentionRule;
-                        rule.retentionDurationUnit = rule.retentionDuration.substring(rule.retentionDuration.length-1);
-                        rule.retentionDuration = rule.retentionDuration.substring(1, rule.retentionDuration.length-1);
                     }
 
                     $.each(rule, function(key, value) {
@@ -151,6 +155,10 @@
 
                     if( ModificationModal.modalType === "accessRule") {
                         ModificationModal.loadAccessCode();
+                    }
+
+                     if( ModificationModal.modalType === "retentionRule") {
+                        ModificationModal.loadRetentionCode();
                     }
 
                     // Set datepicker Date
@@ -173,16 +181,17 @@
             $('#selectedArchiveId, #selectedArchiveReference').css('display', 'none');
 
             if( type === "accessRule") {
-                $('#startDate, #code').css('display', '');
-                $('#finalDisposition, #duration').css('display', 'none');
+                $('#startDate, #accessCode').css('display', '');
+                $('#retentionCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '')
 
             } else if ( type === "retentionRule") {
-                $('#startDate, #finalDisposition, #duration').css('display', '');
-                $('#code').css('display', 'none');
+                $('#startDate,#retentionCode').css('display', '');
+                $('#accessCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '')
 
             } else {
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', 'none')
             }
                 
@@ -203,6 +212,12 @@
 
         save: function() {
             parameters = ArchiveModification.serialize(this.modalType);
+
+            if (!parameters.comment) {
+                gritter.show($('#empty_text').html(), false);
+                return;
+            }
+
             parameters.archiveIds = $("#save").data('archiveids');
 
             if(!parameters.archiveIds) {
@@ -250,12 +265,15 @@
                     var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
                     var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
                     $('#accessRule').css("display", '');
-                    $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
-                
+                    $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                    $('#accessRuleDescription').text(accessRuleCode.description);
                 } else {
                     $('#accessRule').css("display", '');
-                    $('#accessRuleDuration').html(accessRuleCode.durationUnit);
+                    $('#accessRuleDuration').text(accessRuleCode.durationUnit);
+                    $('#accessRuleDescription').text(accessRuleCode.description);
                 }
+
+                
 
             } else {
                 $('#accessRule').css("display", 'none');
@@ -270,6 +288,42 @@
             }
         },
         
+         loadRetentionCode: function() {
+            var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
+            var retentionRules = "";
+            var retentionRuleTable = $('#retentionRuleTable');
+
+            if (retentionRuleCode) {
+                if (retentionRuleCode.duration) {
+                    var retentionRules = retentionRuleCode.retentionRules;
+                    var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
+                    var retentionRuleFinalDisposition= retentionRuleCode.finalDisposition;
+
+                    var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
+                    $('#retentionRule').css("display", '');
+                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                    $('#retentionRuleFinalDisposition').text( $('#text_' + retentionRuleFinalDisposition).html());
+                    $('#retentionRuleDescription').text(retentionRuleCode.description);
+                } else {
+                    $('#retentionRule').css("display", '');
+                    $('#retentionRuleDuration').text(retentionRuleCode.durationUnit);
+                    $('#retentionRuleFinalDisposition').text($('#text_' + retentionRuleFinalDisposition).html());
+                    $('#retentionRuleDescription').text(retentionRuleCode.description);
+                }
+
+            } else {
+                $('#retentionRule').css("display", 'none');
+            }
+            
+            if(retentionRules){
+                if (!retentionRules.length) {
+                    $('#retentionRuleTable').css('display', 'none');
+                } else {
+                    var checked = $('<i>').addClass('fa fa-check').html('&nbsp;');
+                }
+            }
+        },
+
         loadTable: function(ids, names) {
             var table = $('#archiveTable');
             var tbody = table.find('tbody');
@@ -277,8 +331,8 @@
 
             $.each(ids,function(index,value) {
                 var tr = $('<tr/>');
-                var tdId = $('<td/>').html(value).appendTo(tr);
-                var tdName = $('<td/>').html(names[index]).appendTo(tr);
+                var tdId = $('<td/>').text(value).appendTo(tr);
+                var tdName = $('<td/>').text(names[index]).appendTo(tr);
                 tr.appendTo(tbody);
             });
 

@@ -4,18 +4,25 @@
     <div class="col-lg-5 col-md-8">
         <select id="descriptionClass" name="descriptionClass" class="form-control">
             <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
-            <?merge descriptionClassList ?>
+            <?merge descriptionClasses ?>
             <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
         </select>
     </div>
 </div-->
 <div class="form-group col-md-12">
     <br/>
+    <?merge archivalProfile.type.ifeq('1').not() ?>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Allow user indexes</label>
+        <div class="col-md-8">
+            <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
+        </div>
+    </div>
     <label class="col-md-4 control-label">Description class</label>
     <div class="col-md-7">
         <select id="descriptionClass" name="descriptionClass" class="form-control">
-            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Custom description fields</option>
-            <?merge descriptionClassList ?>
+            <option value="" data-properties="[?merge descriptionFields.json() ?]" data-dateproperties="[?merge dateFields.json() ?]">Custom description fields</option>
+            <?merge descriptionClasses ?>
             <option value="[?merge .name ?]" data-dateproperties="[?merge .dateProperties ?]" data-properties="[?merge .properties ?]"><?merge .label ?></option>
         </select>
     </div>
@@ -271,7 +278,7 @@
             let dateField = $("#startDate [value='description/"+ JSON.parse(e.attr('data-json')).fieldName +"']");
 
             if (dateField.prop("selected")) {
-                $('#startDate').val("definedLater");
+                $('#startDate').val("");
             }
             dateField.css("display","none");
             e.remove();
@@ -304,6 +311,7 @@
 <script  type="text/javascript">
     //load description object properties
     $("#contain").on('change', '#descriptionClass', function () {
+        var className = $(this).find(':selected').val();
         var dateProperties = $(this).find(':selected').data('dateproperties');
         var properties = $('option:selected', this).data('properties');
         var archiveDescription = $('#archiveDescription');
@@ -311,7 +319,7 @@
         archiveDescription.empty()
         //archiveDescription.append(fieldForm);
 
-        if (properties) {
+        if ($(this).val() != "") {
             $("#descriptionClassProperties").removeClass("hide");
             $("#descriptionFields").addClass("hide");
         } else {
@@ -325,6 +333,18 @@
 
         $.each(properties, function () {
             option.clone().val(this.name).text(this.label).appendTo($("#descriptionClassProperties"));
+        });
+
+        $("#startDate option[data-origin]").remove();
+        var currentRetentionStartDate = $("#retentionStartDate").val();
+
+        $.each(dateProperties, function () {
+            if (this.name) {
+                var option = $('<option/>').val('description/'+this.name).text(this.label).attr('data-origin', 'description').appendTo($("#startDate"));
+                if (this.name == currentRetentionStartDate) {
+                    option.attr('selected', 'selected');
+                }
+            }
         });
     })
 

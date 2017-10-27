@@ -159,11 +159,11 @@ msgstr "Gestion du stockage"
 msgctxt "layout"
 
 msgid "Repositories"
-msgstr "Sites de dépôt"
+msgstr "Supports de stockage"
 msgctxt "layout"
 
 msgid "Clusters"
-msgstr "Grappes de dépôt"
+msgstr "Grappes de stockage"
 msgctxt "layout"
 
 msgid "Formats"
@@ -183,11 +183,11 @@ msgstr "Gestion de l'archive"
 msgctxt "layout"
 
 msgid "Profiles"
-msgstr "Profils"
+msgstr "Profils d'archive"
 msgctxt "layout"
 
 msgid "Access rules"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 msgctxt "layout"
 
 msgid "Retention rules"
@@ -226,8 +226,8 @@ msgid "Scheduling"
 msgstr "Planificateur"
 msgctxt "layout"
 
-msgid "Task"
-msgstr "Tâche"
+msgid "Tasks"
+msgstr "Tâches"
 msgctxt "layout"
 
 msgid "Logs schedulings"
@@ -380,6 +380,9 @@ msgstr "Filtre:"
 msgid "Filters"
 msgstr "Filtres"
 
+msgid "Size"
+msgstr "Taille"
+
 msgid "Show _MENU_ entries"
 msgstr "Montrer _MENU_ lignes"
 
@@ -489,8 +492,8 @@ msgstr "Une erreur est survenue durant le traitement de votre requête."
 msgid "Key already exists"
 msgstr "La clé existe déjà"
 
-msgid "The fields with a star are compulsory."
-msgstr "Les champs avec une étoile sont obligatoire"
+msgid "The fields with a star are required."
+msgstr "Les champs avec une étoile sont obligatoires"
 
 msgid "You don't avec any role that enables you tu use search."
 msgstr "Vous n'avez aucun rôle permettant l'utilisation de la recherche d'archive ou de document."
@@ -546,3 +549,27 @@ msgstr "Désactivé"
 
 msgid "Without profile"
 msgstr "Sans profil"
+
+msgid "An error has occurred."
+msgstr "Une erreur est survenue."
+
+msgid "registrationNumber"
+msgstr "Identifiant"
+
+msgid "Undefined user command for route %1$s %2$s"
+msgstr "La page demandée '%1$s %2$s' n'existe pas ou n'est pas accessible."
+
+msgid "accountName"
+msgstr "Identifiant"
+
+msgid "displayName"
+msgstr "Nom Affiché"
+
+msgid "emailAddress"
+msgstr "Courriel"
+
+msgid "Convert"
+msgstr "Convertir"
+
+msgid "You must define at least the name, the identifier, the date of the document or a document"
+msgstr "Vous devez définir au moins le nom, l'identifiant, la date du document ou un document"

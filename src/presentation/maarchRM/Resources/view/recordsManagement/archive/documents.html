@@ -16,10 +16,17 @@
             <div class="panel-body">
                 <div class="panel panel-primary">
                     <div class="panel-body">
+                        <div class="col-xs-12">
+                            <?merge .isConvertible.bool() ?>
+                            <span class="pull-right">
+                                <a href="#" data-convertresource="[?merge .resId ?]" data-archive-id='[?merge .archiveId ?]'>Convert</a>
+                            </span>
+                        </div>
+
                         <span class="col-xs-1">
                             <?merge archive.communicability.bool() ?>
                             <h1>
-                                <a type="button" class="showDigitalResource [?merge archive.pending.then('hide', '') ?]" data-res-id='[?merge .resId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
+                                <a type="button" class="showDigitalResource [?merge archive.pending.then('hide', '') ?]" data-res-id='[?merge .resId ?]' data-archive-id='[?merge .archiveId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
                             </h1>
                             <!--button type="button" class="showDocument btn btn-info btn-warning pull-left [?merge archive.pending.then('hide', '') ?]" data-doc-id='[?merge .docId ?]' title="View"><i class="fa fa-eye ">&nbsp;</i>View</button-->
                         </span>
@@ -44,12 +51,16 @@
                 <div class="panel panel-warning">
                     <div class="panel-body">
                         <div class="col-xs-12">
-                            <h4><i><?merge .fileName ?></i></h4>
+                            <?merge .isConvertible.bool() ?>
+                            <span class="pull-right">
+                                <a href="#" data-convertresource="[?merge .resId ?]" data-archive-id='[?merge .archiveId ?]'>Convert</a>
+                            </span>
+                            <h4 class="pull-left"><i><?merge .fileName ?></i></h4>
                         </div>
                         <span class="col-xs-1">
                             <?merge archive.communicability.bool() ?>
                             <h1>
-                                <a type="button" class="showDigitalResource" data-res-id='[?merge .resId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
+                                <a type="button" class="showDigitalResource" data-res-id='[?merge .resId ?]' data-archive-id='[?merge .archiveId ?]' href="#" title="View"><i class="fa fa-eye ">&nbsp;</i></a>
                             </h1>
                         </span>
                         <small class="col-xs-11">

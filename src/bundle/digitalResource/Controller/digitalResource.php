@@ -79,7 +79,7 @@ class digitalResource
      *
      * @return digitalResource/digitalResource
      */
-    public function createFromFile($filename)
+    public function createFromFile($filename, $withDateTime = true)
     {
         if (!file_exists($filename)) {
             return false;
@@ -89,10 +89,22 @@ class digitalResource
 
         $resource = $this->newResource();
 
+        $UTF8filename = $filename;
+        if (!preg_match('//u', $filename)) {
+            $UTF8filename = utf8_encode($filename);
+        }
+            
         // Basic path information
-        $pathinfo = pathinfo($filename);
-        $resource->fileName = $pathinfo['filename']."_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s").".".$pathinfo['extension'];
+        $pathinfo = pathinfo($UTF8filename);
+
+        $resource->fileName = $pathinfo['filename'];
+
+        if ($withDateTime) {
+            $resource->fileName .= "_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+        }
+
         if (isset($pathinfo['extension'])) {
+            $resource->fileName .= "." . $pathinfo['extension'];
             $resource->fileExtension = $pathinfo['extension'];
         }
 
@@ -198,13 +210,13 @@ class digitalResource
      * @param string $path
      * @param mixed  $metadata
      * 
-     * @return void
+     * @return string
      */
     public function openContainers($clusterId, $path, $metadata=null)
     {
         $cluster = $this->useCluster($clusterId, 'write', true);
 
-        $this->clusterController->openContainers($cluster, $path, $metadata);
+        return $this->clusterController->openContainers($cluster, $path, $metadata);
     }
 
 
@@ -289,7 +301,7 @@ class digitalResource
                 $this->sdoFactory->rollback();
             }
 
-            throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." not created: ".$exception->getMessage(), null, $exception);
+            throw \laabs::newException("digitalResource/clusterException", 'Resource %1$s not created: %2$s', 404, $exception, [$resource->resId, $exception->getMessage()]);
         }
 
         // All repositories returned an uri, save all
@@ -371,14 +383,14 @@ class digitalResource
 
                         $resource->setContents($contents);
                     } catch (\Exception $exception) {
-                        throw \laabs::newException("digitalResource/clusterException", "Resource".$resource->resId."not retrieved");
+                        throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
                     }
                 }
             }
         }
 
         if (!$contents) {
-            throw \laabs::newException("digitalResource/clusterException", "Resource ".$resource->resId." could not be retrieved.");
+            throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
         }
 
         $relatedResources = $this->getRelatedResources($resource->resId);
@@ -413,7 +425,7 @@ class digitalResource
                 $contents = null;
                 if (!$contents) {
                     try {
-                        $contents = $repositoryService->readObject($address->address);
+                        $contents = $repositoryService->readObject($address->path);
                         // Check hash
                         $hash = hash($resource->hashAlgorithm, $contents);
                         if ($hash !== $resource->hash) {
@@ -553,7 +565,7 @@ class digitalResource
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
-            throw \laabs::newException("digitalResource/clusterException", "Resource not deleted at address $address->path : ".$exception->getMessage());
+            throw \laabs::newException("digitalResource/clusterException", 'Resource not deleted at address %1$s : %2$s',  404, $exception, [$address->path, $exception->getMessage()]);
         }
         if ($transactionControl) {
             $this->sdoFactory->commit();
@@ -598,23 +610,15 @@ class digitalResource
      */
     public function convert($digitalResource)
     {
-        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
+        $convert = $this->isConvertible($digitalResource);
+
+        if($convert == false) {
             return false;
         }
-
-        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
         $configuration =  \laabs::configuration('dependency.fileSystem');
-
-        if (!isset($configuration['conversionServices'])) {
-            return false;
-        }
-
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
         $conversionServices = $configuration['conversionServices'];
-
-        if (!is_array($conversionServices)) {
-            return false;
-        }
 
         $outputFormats = null;
         $convertService = null;
@@ -625,9 +629,6 @@ class digitalResource
             }
         }
 
-        if (!$outputFormats) {
-            return false;
-        }
 
         $contents = $digitalResource->getContents();
 
@@ -641,11 +642,9 @@ class digitalResource
 
         file_put_contents($srcfile, $contents);
 
-        $converter = \laabs::newService($conversionRule->conversionService);
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
-        if (!($converter instanceof \dependency\fileSystem\conversionInterface)) {
-            return false;
-        }
+        $converter = \laabs::newService($conversionRule->conversionService);
 
         $tgtfile = $converter->convert($srcfile, $outputFormats[$conversionRule->targetPuid]);
 
@@ -670,5 +669,87 @@ class digitalResource
         $convertedResource->relatedResId = $digitalResource->resId;
 
         return $convertedResource;
+    }
+
+    /**
+     * Check if the resource can be convertible
+     * @param $digitalResource/digitalResource $digitalResource The resource object
+     *
+     * @return mixte The convertion rule or false if it's no possible
+     */
+    public function isConvertible($digitalResource) {
+        if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
+            return false;
+        }
+
+        $configuration =  \laabs::configuration('dependency.fileSystem');
+
+        if (!isset($configuration['conversionServices'])) {
+            return false;
+        }
+
+        $conversionServices = $configuration['conversionServices'];
+
+        if (!is_array($conversionServices)) {
+            return false;
+        }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
+
+        $outputFormats = null;
+        $convertService = null;
+        foreach ($conversionServices as $service) {
+            if ($service["serviceName"] == $conversionRule->conversionService) {
+                $outputFormats = $service["outputFormats"];
+                $convertService = $service;
+            }
+        }
+
+        if (!in_array($digitalResource->puid, $convertService["inputFormats"])) {
+            return false;
+        }
+
+        if (!$outputFormats) {
+            return false;
+        }
+
+        $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
+
+        $converter = \laabs::newService($conversionRule->conversionService);
+
+        if (!($converter instanceof \dependency\fileSystem\conversionInterface)) {
+            return false;
+        }
+
+        return $converter;
+    }
+
+    /**
+     * Get the text of the resources of an archive
+     * @param string $archiveId The resources archive identifier
+     *
+     * @return string The text of the resources
+     */
+    public function getFullTextByArchiveId($archiveId)
+    {
+        $fullText = "";
+        $digitalResources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
+
+        if (count($digitalResources)) {
+            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/tika');
+
+            foreach ($digitalResources as $digitalResource) {
+                $contents = $this->contents($digitalResource->resId);
+                $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
+                
+                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
+
+                file_put_contents($srcfile, $contents);
+
+                $fullText .= $fullTextService->getText($srcfile);
+            }
+        }
+
+        return $fullText;
     }
 }

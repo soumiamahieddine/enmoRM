@@ -95,7 +95,7 @@
                             <input type="checkbox" name="month" value="APR"/>A
                         </label>
                         <label class="btn btn-default btn-sm month" title="May" data-translate-context="mai">
-                            <input type="checkbox" name="month" value="MAI"/>M
+                            <input type="checkbox" name="month" value="MAY"/>M
                         </label>
                         <label class="btn btn-default btn-sm month" title="June" data-translate-context="jun">
                             <input type="checkbox" name="month" value="JUN"/>J
@@ -174,7 +174,7 @@
             </div>
             <div class="form-group">
                 <label class="col-lg-3 control-label">Start time<span style="color:red">&nbsp;*</span></label>
-                <div class="col-lg-5 col-xs-7 col-xs-offset-1 input-group">
+                <div class="col-lg-7 col-md-8 col-xs-8 col-xs-offset-1 input-group">
                     <select class="form-control col-xs-4" name="startHours" title="Hour">
                         <option value="00">00</option>
                         <option value="01">01</option>
@@ -216,6 +216,7 @@
                         <option value="50">50</option>
                         <option value="55">55</option>
                     </select>
+                    <span class="input-group-addon"><?merge timezone ?></span>
                 </div>
             </div>
 
@@ -251,7 +252,7 @@
 
                 <div class="form-group">
                     <label class="col-lg-3 control-label">End time</label>
-                    <div class="col-lg-5 col-xs-7 input-group">
+                    <div class="col-lg-7 col-md-8 col-xs-8 input-group">
                             <select class="form-control col-xs-4" name="endHours" title="Hour">
                                 <option value="00">00</option>
                                 <option value="01">01</option>
@@ -293,6 +294,7 @@
                                 <option value="50">50</option>
                                 <option value="55">55</option>
                             </select>
+                            <span class="input-group-addon"><?merge timezone ?></span>
                     </div>
                 </div>
             </div>
@@ -323,7 +325,7 @@
     <!-- TRANSLATED TEXT -->
     <span id="minutes_text" class="hide">minute(s)</span>
     <span id="hours_text" class="hide">hour(s)</span>
-    <span id="empty_text" class="hide">The fields with a star are compulsory.</span>
+    <span id="empty_text" class="hide">The fields with a star are required.</span>
 </form>
 
 <style>
@@ -410,9 +412,9 @@
         var value = $(this).data('value');
 
         if(value == "M") {
-            $('#frequencyUnit').html($('#minutes_text').html()).data('value', value);
+            $('#frequencyUnit').text($('#minutes_text').html()).data('value', value);
         } else {
-            $('#frequencyUnit').html($('#hours_text').html()).data('value', value);
+            $('#frequencyUnit').text($('#hours_text').html()).data('value', value);
         }
     })
 
@@ -502,7 +504,7 @@
                         .attr('parameters', value)
                         .addClass('list-group-item clearfix')
                         .appendTo(liste)
-                        .html(value);
+                        .text(value);
 
                 var span = $('<span/>')
                     .addClass('pull-right')
@@ -599,7 +601,7 @@
                 .attr('parameters', parameters)
                 .addClass('list-group-item clearfix')
                 .appendTo(liste)
-                .html(parameters);
+                .text(parameters);
 
             var span = $('<span/>')
                 .addClass('pull-right')

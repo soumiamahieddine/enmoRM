@@ -12,7 +12,7 @@ CREATE SCHEMA "filePlan"
 CREATE TABLE "filePlan"."folder"
 (
   "folderId" text NOT NULL,
-  "name" text NOT NULL UNIQUE,
+  "name" text NOT NULL,
   "parentFolderId" text,
   "description" text,
   "ownerOrgRegNumber" text,

@@ -32,7 +32,24 @@
     <span id="originatorOrgName_text">Originator</span>
 </div>
 
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<style>
+.advancedSearchPanel {
+    font-size: 85%;
+}
+.advancedSearchPanel .form-control {
+    height: 25px;
+    font-size: 85%;
+}
+.advancedSearchPanel .input-group-addon {
+    height: 25px;
+    padding: 1px 6px;
+}
+.advancedSearchPanel .form-group {
+    margin-bottom: 5px;
+}
+</style>
+
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
 
 FulltextSearch = {
@@ -54,6 +71,8 @@ FulltextSearch = {
             profileReference : "",
             filePlanPosition : "",
             orgRegNumber     : "",
+            originatingDate  : [],
+            originatorArchiveId  : "",
         };
         var searchPanel = btn.closest("[data-search-panel]");
 
@@ -68,13 +87,14 @@ FulltextSearch = {
         var selectedProfile = searchPanel.find('[data-search-tab] > .active > a').data('index');
         query.profileReference = selectedProfile;
         
-        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('form input, form select');
-		
+        var searchFields = searchPanel.find('[data-search-tabContent] > .active').find('.descriptionInput');
+        var activeSearchTab = searchPanel.find('.tab-pane.active');
+
 		searchFields.each(function() {
             var value = $(this).val();
             var name = $(this).attr('name');
             var type = $(this).attr('type');
-            
+
             if (type == "" || type == null || type == undefined) {
                 type = $(this).attr('data-type');
             }
@@ -94,26 +114,23 @@ FulltextSearch = {
                         break;
                     }
 
-                    query.description[name] = name+'="'+$(this).val()+'"';
+                    value = $(this).val() == 1 ? 'true' : 'false';
+                    query.description[name] = name+'='+ value;
                     break;
 
                 case 'text':
                     // format dates
                     if ($(this).hasClass('datePicker')) {
                         if (value !== '') {
-                            value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        } else {
-                            value = '*';
-                        }
+                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                            value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
 
-                        // Fill start and end values
-                        if (query.description[name] == undefined) {
-                            query.description[name] = name+'="'+value+'"';
-                        } else {
-                            query.description[name] = query.description[name] +'.."'+value+'"';
-                        }
-                        if (query.description[name] == name+'="*".."*"') {
-                            delete query.description[name];
+                            // Fill start and end values
+                            if (query.description[name] == undefined) {
+                                query.description[name] = value;
+                            } else {
+                                query.description[name] = query.description[name] +'&&'+value;
+                            }
                         }
                         break;
                     }
@@ -126,47 +143,37 @@ FulltextSearch = {
 
                 case 'number':
                     if (value !== '') {
-                        // format numbers
-                        var parts = value.split('.'); 
-                        value = pad(parts[0], 16, "0", 1);
-                        if (parts[1] != undefined) {
-                            value = value + pad(parts[1].substr(0, 14), 14, "0");
+                        var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                        value = name + operation + $(this).val();
+                        
+                        // Fill start and end values
+                        if (query.description[name] == undefined) {
+                            query.description[name] = value;
                         } else {
-                            value = value + "00000000000000";
+                            query.description[name] = query.description[name] +'&&'+value;
                         }
-                    } else {
-                        value = "*";
-                    }
-                    
-                    // Fill start and end values
-                    if (query.description == undefined) {
-                        query.description = name+'="'+value+'"';
-                    } else {
-                        query.description = query.description+value+'.."'+value+'"';
-                    }
-                    if (query.description == name+'="*".."*"') {
-                        delete query.description;
                     }
                     break;
             }
         });
 
-         var arr = [];
+        var arr = [];
         for (name in query.description) {
             arr.push(query.description[name]);
         }
 
         query.description = arr.join(' && ');
 
-        if (query.text == '' && query.description.length == '') {
-            searchPanel.find("[data-search-result]").css('display', 'none');
+        query.filePlanPosition = searchPanel.data("context-folderid");
+        query.originatorOrgRegNumber = searchPanel.data("context-orgregnumber");
+        query.originatorArchiveId = $('#searchOriginatorArchiveId').val();
+        query.originatingDate = [activeSearchTab.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'), activeSearchTab.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')];
+
+        if (query.text == '' && query.description == "" && query.originatingDate == "") {
             return; 
         }
-
-        searchPanel.find("[data-search-result]").css('display', '');
-
-        query.filePlanPosition = searchPanel.data("context-folderid");
-        query.orgRegNumber = searchPanel.data("context-orgregnumber");
+        
+        searchPanel.find("[data-search-result]").css('display', '');      
 
         ajax(btn,{
             type        : 'GET',
@@ -177,11 +184,14 @@ FulltextSearch = {
                 if (response.status) {
                     SearchList.searchContents = searchPanel.find("[data-search-result]:first");
                     SearchList.searchContents.dataList({
-                        datas        : response.archives,
-                        rowMerge     : SearchList.mergeResultRow,
-                        rowMaxNumber : 10,
-                        emptyMessage : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
-                        sorting: [
+                        datas          : response.archives,
+                        rowMerge       : SearchList.mergeResultRow,
+                        rowMaxNumber   : 10,
+                        paginationType : 'input',
+                        rowTranslation : "lignes",
+                        emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyResult_text').html()+'<\/i>',
+                        resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> archive(s)<\/small><\/h2>",
+                        sorting        : [
                             {
                                 fieldName : 'archiveName',
                                 label     : $('#archiveName_text').text()
@@ -227,17 +237,14 @@ SearchList = {
         if (archive.originatorOrgName) {
             $(siblings[0]).text(archive.originatorOrgName);
         }
-        if (archive.originatorArchiveId) {
-            $(siblings[1]).children('i').text(archive.originatorArchiveId);
-        }
         if (archive.depositDate) {
-            $(siblings[2]).text(archive.depositDate.substring(0, 19));
+            $(siblings[1]).text(archive.depositDate.substring(0, 19));
         }
         if (archive.archivalProfileReference) {
-            $(siblings[3]).text(archive.archivalProfileReference);
+            $(siblings[2]).text(archive.archivalProfileReference);
         }
         if (archive.text) {
-            $(siblings[4]).text(archive.text.substring(0, 30));
+            $(siblings[3]).text(archive.text.substring(0, 60));
         }
 
         return archiveDiv;

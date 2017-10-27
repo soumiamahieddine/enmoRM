@@ -50,7 +50,7 @@ class roleMember
     public function editByRole($roleId)
     {
         $role = $this->sdoFactory->read("auth/role", $roleId);
-        $roleMembers = array();
+
         $roleMembers = $this->sdoFactory->readChildren("auth/roleMember", $role);
 
         return $roleMembers;
@@ -66,8 +66,25 @@ class roleMember
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
 
-        $roleMembers = array();
-        $roleMembers = $this->sdoFactory->readChildren("auth/roleMember", $userAccount);
+        $roleController = \laabs::newController("auth/role");
+        $roles = $roleController->index();
+
+        $rolesId = [];
+        foreach ($roles as $role) {
+            if ($role->enabled) {
+                $rolesId[] = $role->roleId;
+            }
+        }
+
+        $queryString = [];
+        $queryString[] = "userAccountId='$userAccount->accountId'";
+
+        if (!empty($rolesId)) {
+            $rolesId = \laabs\implode("','", $rolesId);
+            $queryString[] = "roleId=['$rolesId']";
+        }
+
+        $roleMembers = $this->sdoFactory->find("auth/roleMember", \laabs\implode(" AND ", $queryString));
 
         return $roleMembers;
     }
@@ -87,7 +104,7 @@ class roleMember
         $roleMember->roleId = $roleId;
 
         try {
-            $param = $this->sdoFactory->create($roleMember);
+            $this->sdoFactory->create($roleMember);
         } catch (\Exception $e) {
             throw \laabs::newException("auth/sdoException");
         }
@@ -103,7 +120,6 @@ class roleMember
      */
     public function delete($roleMember)
     {
-        $param = false;
         $roleMember = \laabs::cast($roleMember, "auth/roleMember");
         $param = $this->sdoFactory->delete($roleMember);
 

@@ -2,6 +2,20 @@
     <input class="archiveInformationId hide" value="[?merge archive.archiveId ?]">
     <input class="archiveName hide" value="[?merge archive.archiveName ?]">
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
+    <input class="originatingDate hide" value="[?merge archive.originatingDate ?]">
+
+    <div class="col-xs-12">
+        <?merge acceptArchiveWithoutProfile.bool().add(archivalProfileList.count()).bool() ?>
+        <div id="archiveToolbarBtn" class="dropdown pull-right btn-group">
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <?merge acceptArchiveWithoutProfile.bool() ?>
+                <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
+                <?merge archivalProfileList ?>
+                <li><a class="userProfile small newArchive" style="cursor: pointer;" data-reference="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name?></a></li>
+            </ul>
+        </div>
+    </div>
 
     <div class="col-xs-12 text-center">
         <i class="infoIcon fa fa-archive [?merge status.ifne('frozen').then('hide', '') ?]" style="color: #69B5DB"/>
@@ -10,6 +24,7 @@
     <div class="col-xs-12">
         <h4 class="text-center text-info">
             <?merge archive.archivalProfileName ?>
+            <?merge modificationPrivilege.bool() ?>
             <button type="button" class="btn btn-default btn-sm" id="editMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
         </h4>
         <table>
@@ -17,19 +32,19 @@
                 <th title="Name">Name</th>
                 <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
             </tr>
-            <tr class="archiveId">
-                <th title="Identifier">Identifier</th>
-                <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
-            </tr>
-            <?merge archive.originatorArchiveId.bool() ?>
             <tr class="originatorArchiveId">
-                <th title="Name">Originator archive identifier</th>
+                <th title="Originator archive identifier">Originator archive identifier</th>
                 <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
+            </tr>
+            <tr class="originatingDate">
+                <th title="Originating date">Originating date</th>
+                <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
             </tr>
         </table>
         <div id="metadata">
         </div>
-        <div class="dropup col-xs-12 hide" id="archiveCustomFieldAddBtn">
+        <?merge acceptUserIndex ?>
+        <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn" style="display: none">
             <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
@@ -49,13 +64,22 @@
                     <a role="button" data-toggle="collapse" href="#managementInfo" >
                         <span class="text-info">Management information</span>
                     </a>
-                    <button type="button" class="btn btn-default btn-sm" id="editManagementMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
+                    <!--<?merge managementPrivilege.bool() ?>-->
+                    <!--<button type="button" class="btn btn-default btn-sm" id="editManagementMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>-->
                     <!--<a href="#" class="unfreeze [?merge status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze" title="Unfreeze"><i class="fa fa-unlock"></i></a>
                     <a href="#" class="freeze [?merge status.ifeq('frozen').then('hide', '') ?]" data-type="freeze" title="Freeze"><i class="fa fa-lock"></i></a>-->
                 </strong>
             </div>
-            <div id="managementInfo" class="panel-collapse collapse in" role="tabpanel">
+            <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
                 <table>
+                    <tr class="originator">
+                        <th title="Originator">Originator</th>
+                        <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
+                    </tr>
+                    <tr class="archiveId">
+                        <th title="Identifier">Identifier</th>
+                        <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
+                    </tr>
                     <tr>
                         <th title="Deposit date">Deposit date</th>
                         <td title='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
@@ -147,9 +171,27 @@
     </div-->
     <input id="inputArchiveName" name="archiveName" type="text" class="col-xs-12"/>
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
+    <input id="inputOriginatingDate" name="originatingDate" type="text" class="col-xs-12 datePicker"/>
+
+    <input id="inputCustomNumericField" placeholder="Value" type="number" class="col-xs-12"/>
+
+    <div  id="inputCustomBooleanField" class="btn-group" data-toggle="buttons">
+        <label class="btn btn-xs btn-default">
+            <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+        </label>
+        <label class="btn btn-xs btn-default active">
+            <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+        </label>
+        <label class="btn btn-xs btn-default">
+            <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+        </label>
+    </div>
+
+    <input id="inputCustomBooleanField" placeholder="Value" type="text" class="col-xs-12"/>
+
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
-    <span id="customFieldError_txt">A label is missing.</span>
+    <span id="customFieldError_txt">Metadatas are incomplete.</span>
 </div>
 
 <style type="text/css">
@@ -168,7 +210,7 @@
     }
     #archiveInformation table td, #archiveInformation table th {
         padding: 0 5px 0 5px ;
-        text-overflow: ellipsis;
+        text-overflow: crop;
         overflow: hidden;
         white-space: nowrap;
 
@@ -179,7 +221,7 @@
     }
 </style>
 
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
     var ArchiveInformation = {
         archiveId: $('#archiveInformation').find('.archiveInformationId').val(),
@@ -236,6 +278,10 @@
             $('#editManagementMetadata').prop('disabled',true);
             $('#saveManagementMetadata').show();
             $('#cancelManagementEdition').show();
+
+            if(!$('#managementInfo').hasClass('in')) {
+                $('#managementInfo').addClass('in');
+            }
             
             $('#retentionRuleSelect').show();
             $('#startDate').show();
@@ -281,6 +327,7 @@
 
         cancelMetadataEdition: function() {
             Archive.getInfo(ArchiveInformation.archiveId);
+            $('#archiveCustomFieldAddBtn').hide();
         },
 
         editMetadata: function() {
@@ -288,7 +335,7 @@
             $('#editMetadata').prop('disabled',true);
             $('#saveMetadata').show();
             $('#cancelMetadataEdition').show();
-            $('#archiveCustomFieldAddBtn').removeClass('hide');
+            $('#archiveCustomFieldAddBtn').show();
             //$('#archiveInformation').find('.originatorArchiveId').hide();
             //$('#archiveInformation').find('.archiveName').hide();
             
@@ -302,46 +349,102 @@
                               .html('')
                               .append($('#inputOriginatorArchiveId').val($('#archiveInformation').find('.originatorArchiveId').val()));
 
+            archiveInformation.find('.originatingDate')
+                              .children('td')
+                              .html('')
+                              .append($('#inputOriginatingDate').datepicker('setDate', $('#archiveInformation').find('.originatingDate').val()));
+
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
+                var customField = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
-                customLabel.val(label.html());
+                customLabel.removeAttr('id').val(label.html()).attr('name', label.attr('name'));
                 label.html('').append(customLabel);
+                var booleanInput = null;
+
+                switch(label.data('type')) {
+                    case 'boolean' :
+                        customField = $("#inputCustomBooleanField").clone();
+                        var intValue = value.find('i').data('value');
+                        booleanInput = customField.find('input[value="'+intValue+'"]');
+                        break;
+                    case 'number':
+                        customField = $("#inputCustomNumericField").clone();
+                        customField.val(value.html());
+                        break;
+                    case 'date': 
+                        customField = $("#inputCustomField").clone();
+                        customField.datepicker({
+                            language:$('#wrapper').attr('lang'),
+                            autoclose:true
+                        }).datepicker('setDate', value.html());
+                        break;
+                    default :
+                        customField = $("#inputCustomField").clone();
+                        customField.val(value.html());
+                }
                 
-                var customField = $("#inputCustomField").clone();
-                customField.val(value.html());
-                value.html('').append(customField);
+                value.html('').append(customField.removeAttr('id'));
+
+                if (booleanInput && booleanInput.length) {
+                    booleanInput.click();
+                }
             });
+
+
+            $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
 
         saveMetadata: function() {
             var descriptionFields = {};
             $('#metadata').find('tr').each(function(i, e) {
-                var label = $(e).find('th > input').val();
-                var value = $(e).find('td > input').val();
+                var input = $(e).find('th > input');
+                var valueInput = $(e).find('td input');
+                var label = input.val();
+                var name = input.attr('name');
+                var type = $(e).find('th').data('type');
 
-                if (label != '' && value != '') {
+                console.log(type);
+
+                switch (valueInput.attr("type")) {
+                    case "name" :
+                    case "text" :
+                        value = valueInput.val();
+                        break;
+                    case "date" :
+                        value = valueInput.datepicker({ dateFormat: 'yy-mm-dd'}).val();
+                        break;
+                    case "number" :
+                        value = parseInt(valueInput.val());
+                        break;
+                    case "number" :
+                        inputValue = valueInput.parent('.active').find('input').val();
+                        value = valueInput == 1 ? true : false;
+                        break;
+                    default:
+                }
+
+                if ($(e).hasClass('archivalProfileField')) {
+                    descriptionFields[name] = value;
+                } else if (label != '' && value != '') {
                     descriptionFields[label] = value;
                 } else if (label == '' && value != '') {
                     gritter.show($('#customFieldError_txt').text(), false);
-                    descriptionFields = -1;
+                    descriptionFields = false;
                     return;
                 }
             });
 
-            if (descriptionFields == -1) {
-                return;
-            }
-
             var parameters = {
-                archiveId   : ArchiveInformation.archiveId,
-                originatorArchiveId : $('#archiveInformation').find('#inputOriginatorArchiveId').val(),
-                archiveName : $('#archiveInformation').find('#inputArchiveName').val(),
-                description : JSON.stringify(descriptionFields)
+                archiveId           : ArchiveInformation.archiveId,
+                originatorArchiveId : $('#inputOriginatorArchiveId').val(),
+                archiveName         : $('#inputArchiveName').val(),
+                originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
+                description         : JSON.stringify(descriptionFields)
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsmanagement/archive/metadata",
@@ -359,10 +462,12 @@
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                 }
             });
+
+            $('#archiveCustomFieldAddBtn').hide();
         },
 
         addField : function(type) {
-            var label = $('#inputCustomLabel').clone().val('');
+            var label = $('#inputCustomLabel').clone().val('').prop('disabled', false);
             var value = $('#inputCustomField').clone().val('');
 
             if(type == 'date') {
@@ -376,6 +481,28 @@
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);
+        },
+
+        loadImportForm: function(e) {
+            var importPanel = $("#importPanel");
+            var archiveInformation = $('#archiveInformation');
+
+            var parentArchiveId = archiveInformation.find(".archiveInformationId").val();
+            var parentArchiveName = $('#archiveInformation').find('.archiveName').val();
+
+            $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
+
+            importPanel.find("[data-context-path]:first").text($("#folderPath").text());
+            importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
+            importPanel.find("[data-context-profil]:first").text(e.text());
+
+            $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+            importPanel.find("[data-context-parentarchive]")
+                       .removeClass('hide')
+                       .find('[data-context-parentname]').text(parentArchiveName);
+
+            $('#importTab').click();
+            $('#rightColumn').empty();
         }
     }
     
@@ -409,6 +536,10 @@
     
     $('#saveMetadata').on('click', function(){
         ArchiveInformation.saveMetadata();
+    });
+
+    $("#archiveToolbarBtn").on('click', '.newArchive', function() {
+        ArchiveInformation.loadImportForm($(this));
     });
         
 </script>

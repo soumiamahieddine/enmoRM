@@ -81,10 +81,24 @@ class zip
         }
     }
 
-    public function extract($archive, $outdir, $filename=false, array $options=null)
+    /**
+     * Extract a compressed archive
+     *
+     * @param string $archive  The path of the compressed archive
+     * @param string $outdir   The directory where the compressed archive is extract
+     * @param string $filename The file to extract in the compressed archive
+     * @param array  $options
+     * @param string $command  The command to use.
+     *      "e" (default value) extract files from archive (without using directory names)
+     *      "x" extract files with full paths
+     *
+     * @return boolean
+     * @throws \dependency\fileSystem\Exception
+     */
+    public function extract($archive, $outdir, $filename=false, array $options=null, $command = "e")
     {
         $tokens = array('"' . $this->executable . '"');
-        $tokens[] = "e";
+        $tokens[] = $command;
         $tokens[] = '"' . $archive . '"';
         $tokens[] = '-o"' . $outdir . '"';
         //$tokens[] = '-scsUTF-8';

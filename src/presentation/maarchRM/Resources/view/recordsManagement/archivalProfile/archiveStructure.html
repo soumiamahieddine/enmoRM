@@ -1,0 +1,178 @@
+<div class="form-group col-md-12">
+	<br/>
+	<form class="form-horizontal">
+		<div class="form-group">
+	        <label class="col-md-6 control-label">Accept archives without profile</label>
+	        <div class="col-md-6">
+	            <input type="checkbox" id="acceptArchiveWithoutProfile" name="acceptArchiveWithoutProfile" data-toggle="toggle"> 
+	        </div>
+	    </div>
+	    <div id="subProfile">
+		    <div class="form-group">
+		        <label class="col-md-4 control-label">Accept the profile :</label>
+		        <div class="col-md-8">
+		        	<div class="input-group">
+				        <select id="profileList" name="profileList" class="form-control" data-profile-list="[?merge profileList ?]" data-contained-profiles="[?merge archivalProfile.containedProfiles ?]">
+				            <option value="" data-properties="" data-dateproperties="[?merge dateFields ?]">Select a profile</option>
+				        </select>
+				        <span class="input-group-btn">
+		                	<button type="button" id="addProfile" class="btn btn-success"><span class="fa fa-plus"></span></button>
+		                </span>
+	                </div>
+			    </div>
+		    </div>
+		    <div class="col-xs-12">
+			    <ul id="containedProfileList" class="list-group"/>
+		    </div>
+	    </div>
+    </form>
+</div>
+
+<span class="hide" id="delete_text">Delete</span>
+<span class="hide" id="goTo_text">Go to</span>
+
+<div class="modal fade" id="saveProfileModal" tabindex="-1" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-body">
+      			<br/>
+        		<h4>Do you want to save the changes before leaving this screen ?</h4> 
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        		<button type="button" class="btn btn-success" data-dismiss="modal" id="saveBeforeChange">Yes</button>
+        		<button type="button" class="btn btn-danger" data-dismiss="modal" id="noSaveBeforeChange">No</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+<script>
+	var ArchiveStructure = {
+		list   : $('#containedProfileList'),
+		select : $('#profileList'),
+
+		addProfile: function(profile) {
+			var li = $('<li/>').addClass('list-group-item')
+							   .data('json', profile)
+							   .data('profileid', profile.archivalProfileId)
+							   .text(profile.reference + " : " + profile.name)
+							   .appendTo(this.list);
+
+			$('<span>/').addClass('pull-right')
+						.append(
+							$('<a/>').attr('href', '#')
+									 .attr('title', $('#delete_text').html())
+									 .addClass('text-danger deleteProfile')
+									 .html($('<i/>').addClass('fa fa-times'))
+							)
+						.appendTo(li);
+
+			$('<span>/').addClass('pull-right')
+						.append(
+							$('<a/>').attr('href', '/archivalProfile/'+profile.archivalProfileId)
+									 .attr('title', $('#goTo_text').html())
+									 .addClass('showProfile')
+									 .css('margin-right', '10px')
+									 .html($('<i/>').addClass('fa fa-external-link'))
+							)
+						.appendTo(li);
+
+			this.select.val('').find('option[value="'+profile.archivalProfileId+'"]').addClass('hide');
+		},
+
+		removeProfile: function(li) {
+			var profileId = li.data('profileid');
+			li.remove();
+
+			this.select.find('option[value="'+profileId+'"]').removeClass('hide');
+		},
+
+		allowAnyProfile: function() {
+			this.list.find('li').each(function() {
+				ArchiveStructure.removeProfile($(this));
+			});
+
+			$('#subProfile').addClass('hide');
+		},
+
+		limitSubProfile: function() {
+			$('#subProfile').removeClass('hide');
+
+		},
+
+		serialize: function() {
+
+			var containedProfiles = []
+
+			this.list.find('li').each(function() {
+				containedProfiles.push($(this).data('profileid'))
+			});
+
+			return containedProfiles;
+		}
+	}
+
+	$("#profileList").ready(function () {
+	 	var select = $('#profileList');
+	 	var profileList = [];
+
+	 	$.each(select.data('profile-list'), function(key, profile) {
+			profileList.push(profile);
+	 	});
+	 	
+	 	profileList.sort(function (a, b) {
+            var aVal = a.reference;
+            var bVal = b.reference;
+
+            return ((aVal < bVal) ? -1 : ((aVal > bVal) ? 1 : 0));
+        });
+
+	 	$.each(profileList, function(key, profile) {
+	 		var option = $('<option/>').val(profile.archivalProfileId).data('json', profile).text(profile.reference+" : "+profile.name).appendTo(select);
+	 	});
+
+	 	$.each(select.data('contained-profiles'), function(key, profile) {
+	 		ArchiveStructure.addProfile(profile);
+	 	});
+
+
+	 	select.removeAttr('data-contained-profiles').removeAttr('data-profile-list');
+
+	});
+
+	$('#addProfile').on('click', function() {
+
+		if (ArchiveStructure.select.val() != '') {
+			ArchiveStructure.addProfile(ArchiveStructure.select.find('option:selected').data('json'));
+		}
+	});
+
+	$('#containedProfileList').on('click', '.deleteProfile', function() {
+		ArchiveStructure.removeProfile($(this).closest('li'));
+	});
+
+	$('#containedProfileList').on('click', '.showProfile', function() {
+		var href = this.href;
+
+        if ($('#contain').data('not-saved') == false) {
+			location.href = href;
+			return;
+        }
+
+		$('#saveProfileModal').modal();
+
+		$('#saveBeforeChange').one('click', function() {
+			$('#saveProfileModal').on('hide.bs.modal', function() {
+				ArchivalProfile.save(href);
+			})
+		});
+
+		$('#noSaveBeforeChange').one('click', function() {
+			location.href = href;
+		});
+
+		return false;
+	});
+
+</script>

@@ -98,10 +98,5 @@ interface adminServiceaccountInterface
      * @return auth/serviceAccount/disable
      */
     public function updateServiceaccount_serviceAccountId_Disable();
-    /**
-     * Get the list of available users
-     *
-     * @uses auth/userAccount/readQuery_query_
-     */
-    public function readServiceaccountQuery_query_();
+
 }

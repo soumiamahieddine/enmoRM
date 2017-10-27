@@ -89,6 +89,12 @@ class archive
      */
     public $filePlanPosition;
 
+    /**
+     * The originating date of the archive
+     *
+     * @var date
+     */
+    public $originatingDate;
 
     /* ************************************************************************
      * Management Refs
@@ -118,7 +124,7 @@ class archive
      * Management Data
      *********************************************************************** */
     /**
-     * The restriction rule code
+     * The retention rule code
      *
      * @var string
      */
@@ -246,6 +252,13 @@ class archive
     public $originatorOwnerOrgId;
 
     /**
+     * Registration number of originator root organisation
+     *
+     * @var string
+     */
+    public $originatorOwnerOrgRegNumber;
+
+    /**
      * Registration number of depositor organisation
      *
      * @var string
@@ -305,6 +318,14 @@ class archive
      * Description
      *********************************************************************** */
     /**
+     * The status of fulltext indaxation
+     *
+     * @var string
+     * @enumeration [requested, indexed, failed, none]
+     */
+    public $fullTextIndexation;
+
+    /**
      * The name of description class
      *
      * @var string
@@ -316,6 +337,14 @@ class archive
      * @xpath rm:descriptionObject/*
      */
     public $descriptionObject;
+
+    /**
+     * The archive classification level
+     *
+     * @var string
+     * @enumeration [file, recordgrp, subgrp, item]
+     */
+    public $fileplanLevel;
 
     /**
      * The storage path
@@ -333,12 +362,6 @@ class archive
      * @var string
      */
     public $parentArchiveId;
-
-    /**
-     * The parent archive originator
-     * @var string
-     */
-    public $parentOriginatorOrgRegNumber;
 
     /**
      * The contained archives list

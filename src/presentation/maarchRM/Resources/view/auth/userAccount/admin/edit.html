@@ -55,6 +55,8 @@
                 <?merge profile.bool().not() ?>
                 <li><a href="#userRoleTab" data-toggle="tab">User role</a></li>
                 <?merge user.accountId.bool()?>
+                <li><a href="#orgTab" data-toggle="tab">Organization units</a></li>
+                <?merge user.accountId.bool()?>
                 <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
             </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -71,6 +73,10 @@
                         <?merge profile.bool().not() ?>
                         <div class="tab-pane fade" id="userRoleTab">
                             <?hinclude auth/authorization/roleInformationForm.html ?>
+                        </div>
+                        <div class="tab-pane fade" id="orgTab">
+                            <!-- User information form -->
+                            <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
                         </div>
                     </div>
                 </div>
@@ -91,7 +97,7 @@
 
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
         <span class="hide" id="invalidEmail_text">Email malformed</span>
-        <span class="hide" id="empty_text">The fields with a star are compulsory.</span>
+        <span class="hide" id="empty_text">The fields with a star are required.</span>
         
     </div>
 </div>

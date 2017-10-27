@@ -61,7 +61,12 @@ class task
      */
     public function create($task)
     {
-        
+        $tasks = $this->sdoFactory->find("batchProcessing/task", "route='$task->route'");
+
+        if ($tasks) {
+            throw \laabs::newException("batchProcessing/taskException", "Task already exists.");
+        }
+
         $task->taskId = \laabs::newId();
         try {
             $this->sdoFactory->create($task,"batchProcessing/task");
@@ -118,4 +123,5 @@ class task
         
         return true;
     }
+
 }

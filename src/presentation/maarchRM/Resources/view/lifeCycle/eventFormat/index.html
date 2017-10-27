@@ -45,9 +45,6 @@
                                             <button type="button" class="editEventFormat btn btn-warning" title="Edit" data-type="[?merge .type ?]">
                                                 <span class="fa fa-fw fa-edit"></span>
                                             </button>
-                                            <button type="button" class="deleteEventFormat btn btn-danger" title="Remove" data-type="[?merge .type ?]">
-                                                <span class="fa fa-fw fa-remove"></span>
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -59,7 +56,7 @@
         </div>
     </div>
     <div class="hide">
-        <span id="empty_text">The fields with a star are compulsory.</span>
+        <span id="empty_text">The fields with a star are required.</span>
         <span id="emptyFormat_text">The format is empty.</span>
         <span id="qualified_type">Le type doit être qualifié par le nom du bundle et séparé par '/'</span>
         <span id="position_text">The position is higher than number of format.</span>
@@ -129,7 +126,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </div>
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
 $("#btnAddEventTypeForm").on("click", function() {
     $("#modalAddEventFormat").modal();
@@ -162,13 +159,13 @@ $("#addFormat").on("click", function() {
             .attr('format', format)
             .addClass('list-group-item clearfix')
             .appendTo(liste)
-            .html(format);
+            .text(format);
     var span = $('<span/>')
             .addClass('pull-right')
             .appendTo(li);
     var i = $('<i/>')
             .addClass('badge')
-            .html(nb)
+            .text(nb)
             .appendTo(span);
     var format = $("#formFormat").val("");
 });
@@ -222,28 +219,6 @@ $("#saveEventFormat").on("click", function() {
     })
 });
 
-$("#eventsFormatsList").on("click", ".deleteEventFormat", function() {
-    
-    $(this).prop("disabled", true);
-
-    ajax($(this), {
-        url: '/lifecycle/eventFormat/' + $(this).attr("data-type"),
-        type: 'DELETE',
-        dataType: 'json',
-        success : function (response) {
-            gritter.show(response.message, response.status, response.errors);
-            if (response.status) {
-                load("/lifeCycle/eventsFormats");
-            }
-        },
-        error : function(response) {
-            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-        }
-    })
-
-    $(this).prop("disabled", false);
-});
-
 $("#eventsFormatsList").on("click",".editEventFormat", function() {
     var param = {
         eventFormatType : $(this).attr("data-type")
@@ -262,7 +237,7 @@ $("#eventsFormatsList").on("click",".editEventFormat", function() {
             
             $("#formDomain").val(split[0]);
             $("#formType").val(split[1]);
-            $("#formMessage").html(response.eventFormat.message);
+            $("#formMessage").text(response.eventFormat.message);
             $("#formNotification").prop("checked",response.eventFormat.notification);
             var splitFormat = response.eventFormat.format.split(" ");
 
@@ -277,7 +252,7 @@ $("#eventsFormatsList").on("click",".editEventFormat", function() {
                         .attr('format', value)
                         .addClass('list-group-item clearfix')
                         .appendTo(liste)
-                        .html(value);
+                        .text(value);
                 var span = $('<span/>')
                         .addClass('pull-right')
                         .appendTo(li);

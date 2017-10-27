@@ -1,9 +1,10 @@
 <div id="resourceInformation" class="row">
     <div class="col-xs-12 text-center">
+        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]" style="height: 300px"/>
         <i class="infoIcon fa fa-file-o"/>
     </div>
     <div class="col-xs-12 text-center">
-        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="">View</button>
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="">View</button>
     </div>
     <div class="col-xs-12">
         <table>
@@ -27,6 +28,10 @@
                 <th title="Format">Format</th>
                 <td name="format">
             </tr>
+            <tr>
+                <th title="PUID">PUID</th>
+                <td name="puid">
+            </tr>
         </table>
     </div>
 </div>
@@ -47,7 +52,7 @@
     }
     #resourceInformation table td, #resourceInformation table th {
         padding: 0 5px 0 5px ;
-        text-overflow: ellipsis;
+        text-overflow: crop;
         overflow: hidden;
         white-space: nowrap;
     }
@@ -63,10 +68,17 @@
         load: function (resource) {
             resource.created = resource.created.substring(0, 19);
             DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
             DocumentInformation.form.find('[name="resId"]').text(resource.resId).attr('title', resource.resId);
+            if (resource.puid == null) {
+                DocumentInformation.form.find('[name="puid"]').closest('tr').addClass('hide');
+            } else {
+                DocumentInformation.form.find('[name="puid"]').text(resource.puid).attr('title', resource.puid);
+
+            }
 
             if (resource.format) {
                 var formatname = resource.format.name+' '+resource.format.version;
@@ -107,10 +119,37 @@
             if (resource.metadata) {
 
             }
+
+            var displayableFormat = $('#preview').data('format');
+
+            $.each(displayableFormat, function (pos, mimetype) {
+
+                if (resource.mimetype.match(mimetype)) {
+                    $.ajax({
+                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        type        : "GET",
+                        dataType    : 'html',
+                        success     : function(response) {
+                            $("#preview").removeClass('hide').html(response);
+                            $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
+                            if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
+                                $('#preview').find('object').attr('height', '300');
+                            }
+                            $('#preview').siblings('i').addClass('hide');
+                        },
+                        error    : function(response) {
+                            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        }
+                    });
+
+                    return;
+                }
+
+            });
         }
     }
 
     $("#viewResource").on("click", function() {
-        window.open("/recordsManagement/digitalResource/"+$(this).data("resid"));
+        window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
     });
 </script>

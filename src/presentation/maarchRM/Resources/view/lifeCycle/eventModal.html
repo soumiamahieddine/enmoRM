@@ -16,7 +16,8 @@
                             <dt>Type</dt><dd name="eventType"></dd>
                             <dt>Timestamp</dt><dd name="timestamp"></dd>
                             <dt name="objectClass"></dt><dd name="objectId"></dd>
-                            <dt>Account name</dt><dd name="accountId"></dd>
+                            <dt>User name</dt><dd name="accountDisplayName"></dd>
+                            <dd  class='hide' name="accountId"></dd>
                             <dt>Operation result</dt><dd name="operationResult"></dd>
                         </dl>
                     </div>
@@ -88,7 +89,7 @@ eventInfo = {
                     delete response[name];
                 });
 
-                $('#eventDescription').find('[name="description"]').html(response.description);
+                $('#eventDescription').find('[name="description"]').text(response.description);
                 delete response.description;
 
                 $('#eventCertificate').addClass('hide');
@@ -104,12 +105,9 @@ eventInfo = {
                 var eventInfo = $('#eventInfo');
                 eventInfo.html('');
                 $.each(response, function(key, value) {
-                    console.log(value);
-                    if (value != "") {
+                    if (value) {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
-                        $('<dd></dd>').text(value).css('word-break', 'break-all').appendTo(eventInfo);
-                    } else {
-                        console.log("cocuou");
+                        $('<dd></dd>').html(value).css('word-break', 'break-all').appendTo(eventInfo);
                     }
                 })
 

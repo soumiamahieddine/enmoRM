@@ -30,7 +30,6 @@ class journal
 {
     protected $separateInstance;
     protected $interval;
-    protected $signatureScript;
 
     // Journal files reading
     protected $currentJournalFile;
@@ -39,16 +38,6 @@ class journal
     protected $journalCursor;
     protected $eventFormats;
 
-    // Mail notification
-    protected $mailHost;
-    protected $mailUsername;
-    protected $mailPassword;
-    protected $mailPort;
-    protected $mailSender;
-    protected $mailReceiver;
-    protected $mailSMTPAuth;
-    protected $mailSMTPSecure;
-
     protected $journals;
 
     /**
@@ -56,7 +45,6 @@ class journal
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
      * @param string                  $separateInstance Read only instance events
      * @param string                  $interval         The time bewteen 2 journal changes
-     * @param string                  $signatureScript  The signature script path
      * @param string                  $mailHost         The mail host
      * @param string                  $mailUsername     The mail user name
      * @param string                  $mailPassword     The mail user password
@@ -66,11 +54,10 @@ class journal
      * @param bool                    $mailSMTPAuth     The mail SMTP auth
      * @param string                  $mailSMTPSecure   The mail SMTP secure
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null, $mailHost = null, $mailUsername = null, $mailPassword = null, $mailPort = null, $mailSender = null, $mailReceiver = null, $mailSMTPAuth = null, $mailSMTPSecure = null)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null)
     {
         $this->separateInstance = $separateInstance;
         $this->interval = $interval;
-        $this->signatureScript = $signatureScript;
         $this->sdoFactory = $sdoFactory;
 
         $this->currentJournalFile = null;
@@ -81,15 +68,6 @@ class journal
         foreach ($this->eventFormats as $eventFormat) {
             $eventFormat->format = explode(' ', $eventFormat->format);
         }
-
-        $this->mailHost = $mailHost;
-        $this->mailUsername = $mailUsername;
-        $this->mailPassword = $mailPassword;
-        $this->mailPort = $mailPort;
-        $this->mailSender = $mailSender;
-        $this->mailReceiver = $mailReceiver;
-        $this->mailSMTPAuth = $mailSMTPAuth;
-        $this->mailSMTPSecure = $mailSMTPSecure;
 
         $this->journals = [];
 
@@ -162,7 +140,7 @@ class journal
             }
 
             if (!isset($this->eventFormats[$event->eventType])) {
-                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: ".$event->eventType);
+                throw \laabs::newException("lifeCycle/journalException", "Unknown event type: %s", 404, null, [$event->eventType]);
             }
 
             $eventFormat = $this->eventFormats[$event->eventType];
@@ -185,8 +163,8 @@ class journal
 
         $this->sdoFactory->create($event);
 
-        if (!$operationResult) {
-            $this->sendMail($event);
+        if (!$operationResult && $eventFormat->notification == true) {
+            $this->notify($event);
         }
 
         return $event;
@@ -257,10 +235,6 @@ class journal
         }
 
         $events = $this->sdoFactory->find('lifeCycle/event', $query, null, 'timestamp');
-
-        foreach ($events as $key => $event) {
-            $events[$key] = $this->getEventFromJournal($event);
-        }
 
         return $events;
     }
@@ -852,6 +826,35 @@ class journal
      */
     public function chainJournal()
     {
+        $journalArray = [];
+
+        if (isset(\laabs::configuration('lifeCycle')['chainJournalByOrganization']) && \laabs::configuration('lifeCycle')['chainJournalByOrganization']) {
+            $orgController = \laabs::newController('organization/organization');
+
+            $organizations = $orgController->index("isOrgUnit=false");
+
+            foreach ($organizations as $organization) {
+                $journalArray[] = $this->processChaining($organization->registrationNumber);
+            }
+        }
+
+        $journalArray[] = $this->processChaining();
+        
+        if (count($journalArray) == 1) {
+            $journalArray = $journalArray[0];
+        }
+
+        return $journalArray;
+    }
+
+    /**
+     * process the chaining of the last journal
+     * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     *
+     * @return string The chained journal file name
+     */
+    protected function processChaining($ownerOrgRegNumber = null)
+    {
         $tmpdir = \laabs::getTmpDir();
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
@@ -861,14 +864,19 @@ class journal
         $newJournal->archiveId = \laabs::newId();
         $newJournal->type = "lifeCycle";
         $newJournal->toDate = \laabs::newTimestamp();
+        $newJournal->ownerOrgRegNumber = $ownerOrgRegNumber;
 
-        $previousJournal = $logController->getLastJournal('lifeCycle');
+        $previousJournal = $logController->getLastJournal('lifeCycle', $ownerOrgRegNumber);
 
         if ($previousJournal) {
             $newJournal->fromDate = $previousJournal->toDate;
             $newJournal->previousJournalId = $previousJournal->archiveId;
 
             $queryString = "timestamp > '$newJournal->fromDate' AND timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND eventInfo = '*$ownerOrgRegNumber*'";
+            }
 
             if ($this->separateInstance) {
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
@@ -878,7 +886,13 @@ class journal
 
         } else {
             // No previous journal, select all events
-            $events = $this->sdoFactory->find('lifeCycle/event', "timestamp <= '$newJournal->toDate'", null, "<timestamp");
+            $queryString = "timestamp <= '$newJournal->toDate'";
+
+            if ($ownerOrgRegNumber) {
+                $queryString .= " AND eventInfo = '*$ownerOrgRegNumber*'";
+            }
+
+            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");
             if (count($events) > 0) {
                 $newJournal->fromDate = reset($events)->timestamp;
             } else {
@@ -942,10 +956,11 @@ class journal
         fclose($journalFile);
 
         // create timestamp file
-        if ($this->signatureScript) {
-            include $this->signatureScript;
+        if (isset(\laabs::configuration('lifeCycle')['chainWithTimestamp']) && \laabs::configuration('lifeCycle')['chainWithTimestamp']==true) {
             try {
-                $timestampFileName = getTimestamp($journalFilename);
+                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampFileName = $timestampService->getTimestamp($journalFilename);
+
             } catch (\Exception $e) {
                 throw $e;
             }
@@ -1030,38 +1045,16 @@ class journal
     }
 
     /**
-     * Send email
+     * Notify
      * @param lifeCycle/event $event The event
      */
-    private function sendMail($event)
+    private function notify($event)
     {
-        if (!$this->mailHost || !$this->mailPassword || !$this->mailPort || !$this->mailUsername || !$this->mailReceiver || !$this->mailSender || !$this->mailSMTPAuth || !$this->mailSMTPSecure) {
-            return null;
-        }
+        $subject = 'Life cycle error';
+        $body = "Error on event '$event->eventId' of type '$event->eventType'. ";
+        $body .= "The object '$event->objectId' of class '$event->objectClass'. ";
+        $body .= "Description : $event->description ";
 
-        require_once 'bundle/lifeCycle/PHPMailer-master/PHPMailerAutoload.php';
-
-        $mail = new \PHPMailer();
-        $mail->isSMTP();
-        $mail->Host = $this->mailHost;
-        $mail->SMTPAuth = $this->mailSMTPAuth;
-        $mail->Username = $this->mailUsername;
-        $mail->Password = $this->mailPassword;
-        $mail->SMTPSecure = $this->mailSMTPSecure;
-        $mail->Port = $this->mailPort;
-
-        $mail->setFrom($this->mailSender);
-        $mail->addAddress($this->mailReceiver);
-
-        $mail->Subject = 'Life cycle error';
-        $mail->Body = "Error on event '<b>$event->eventId</b>' of type '<b>$event->eventType</b>'<br/>";
-        $mail->Body .= "The object '<b>$event->objectId</b>' of class '<b>$event->objectClass</b>'<br/>";
-        $mail->Body .= "Description : $event->description";
-
-        $mail->AltBody = "Error on event '$event->eventId' of type '$event->eventType'\n";
-        $mail->AltBody .= "The object '$event->objectId' of class '$event->objectClass'\n";
-        $mail->AltBody .= "Description : $event->description";
-
-        $mail->send();
+        \laabs::callService("batchProcessing/notification/create", $subject, $body, array());
     }
 }

@@ -46,7 +46,7 @@ CREATE TABLE "organization"."organization"
   "otherOrgName" text,
   "displayName" text NOT NULL,
 
-  "registrationNumber" text,
+  "registrationNumber" text NOT NULL,
   "beginDate" date,
   "endDate" date,
   "legalClassification" text,
@@ -126,6 +126,25 @@ CREATE TABLE "organization"."orgContact"
   "isSelf" boolean,
 
   PRIMARY KEY ("contactId", "orgId"),
+  FOREIGN KEY ("orgId")
+      REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+-- Table: "organization"."archivalProfileAccess"
+
+-- DROP TABLE "organization"."archivalProfileAccess";
+
+CREATE TABLE "organization"."archivalProfileAccess"
+(
+  "orgId" text NOT NULL,
+  "archivalProfileReference" text NOT NULL,
+  "originatorAccess" boolean default true,
+
+  UNIQUE ("orgId", "archivalProfileReference"),
   FOREIGN KEY ("orgId")
       REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION

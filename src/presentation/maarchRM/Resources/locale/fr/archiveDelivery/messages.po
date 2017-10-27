@@ -39,7 +39,7 @@ msgstr "Messages de communication reçu"
 msgctxt "interface"
 
 msgid "messageDeliveSending"
-msgstr "Messages de communication envoyé"
+msgstr "Messages de communication envoyés"
 msgctxt "interface"
 
 msgid "messageDeliveryValidate"

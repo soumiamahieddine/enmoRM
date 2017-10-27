@@ -19,7 +19,7 @@ msgstr "Personnes des organisations"
 msgctxt "model"
 
 msgid "orgRole"
-msgstr "Roles des organisations"
+msgstr "Rôles des organisations"
 msgctxt "model"
 
 msgid "orgType"
@@ -49,7 +49,7 @@ msgid "Identifier"
 msgstr "Identifiant"
 
 msgid "Organization"
-msgstr "Organisation"
+msgstr "Organigramme"
 
 msgid "Organization unit"
 msgstr "Service"
@@ -315,3 +315,27 @@ msgstr "Type d'organisation créé"
 msgid "Organization type updated"
 msgstr "Type d'organisation mis à jour"
 
+msgid "Archival profile"
+msgstr "Profil d'archive"
+
+msgid "Archival profiles access updated."
+msgstr "Accès aux profils mis à jour"
+
+msgid "Accept archives without profile"
+msgstr "Autoriser les archives sans profil"
+
+msgid "Export the file plan"
+msgstr "Exporter le plan de classement"
+
+msgid "Metadatas"
+msgstr "Métadonnées"
+
+msgid "No user found"
+msgstr "Aucun utilisateur trouvé"
+
+msgid "Organization"
+msgstr "Organisation"
+msgctxt "org"
+
+msgid "Delete organization"
+msgstr "Supprimer l'organisation"

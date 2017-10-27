@@ -84,7 +84,7 @@ interface organizationInterface
      *
      * @action organization/organization/getOrgByRegNumber
      */
-    public function readByregnumber_registrationNumber_();
+    public function readByregnumber($registrationNumber);
 
     /**
      * Get organizations by role
@@ -191,15 +191,6 @@ interface organizationInterface
     public function readServicepositions_orgId_();
 
     /**
-     * Check if an organization has a given role
-     *
-     * @return boolean The result of the operation
-     *
-     * @action organization/organization/hasRole
-     */
-    public function readHasrole_registrationNumber__role_();
-
-    /**
      * Update an organization
      * @param organization/organization $organization The organization object to update
      *
@@ -266,4 +257,32 @@ interface organizationInterface
      * @action organization/organization/addContact
      */
     public function create_orgId_Contact($contact, $isSelf);
+
+    /**
+     * Add an organization archival profile access
+     * @param array $archivalProfileAccess The archival profile access array
+     * 
+     * @return bool
+     *
+     * @action organization/organization/updateArchivalProfileAccess
+     */
+    public function update_orgId_Archivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Get the profiles by orgRegNumber
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     * @action organization/organization/getOrgUnitArchivalProfiles
+     */
+    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
+
+    /**
+     * Get the user postions by accountId
+     *
+     * @return array
+     * @action organization/organization/readUserOrgs
+     */
+    public function readUserpositions_accountId_();
 }

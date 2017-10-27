@@ -5,7 +5,7 @@ This file is part of the digitalResource package.
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #-->
-<div id="contain" data-archivalprofileid="[?merge archivalProfile.archivalProfileId ?]">
+<div id="contain" data-archivalprofileid="[?merge archivalProfile.archivalProfileId ?]" data-not-saved="false">
     <div data-form-ns="archivalProfile" class="dataForm" data-translate-catalog="recordsManagement/archivalProfile">
         <div class="container-fluid">
             <div class="page-header">
@@ -27,7 +27,7 @@ file that was distributed with this source code.
                         <br/>
                         <input type="hidden" id="archivalProfileId" name="archivalProfileId">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Reference <span style="color: red">*</span></label>
+                            <label class="col-md-3 control-label">Identifier <span style="color: red">*</span></label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
                             </div>
@@ -41,14 +41,15 @@ file that was distributed with this source code.
                         <div class="form-group">
                             <label class="col-md-3 control-label">Description</label>
                             <div class="col-md-9">
-                                <textarea class="form-control" id="description" name="description" placeholder="description"></textarea>
+                                <textarea class="form-control" id="description" name="description" placeholder="Description"></textarea>
                             </div>
                         </div>
                         <?merge archivalProfile.type.ifeq('1').not() ?>
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Allow user indexes</label>
+                            <label class="col-md-3 control-label">Fileplan level</label>
                             <div class="col-md-9">
-                                <input type="checkbox" id="allowUserIndexes" name="acceptUserIndex" data-toggle="toggle"> 
+                                <input type='hidden' id="fileplanLevel" name="fileplanLevel">
+                                <input type="checkbox" id="fileplanLevelToggle">
                             </div>
                         </div>
                     </div>
@@ -59,7 +60,9 @@ file that was distributed with this source code.
                             <?merge archivalProfile.type.ifeq('1').not() ?>
                             <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
                             <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                            <li role="presentation" id="managementTabBtn"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
+                            <?merge archivalProfile.type.ifeq('1').not() ?>
+                            <li role="presentation" id="contentsTabBtn"><a href="#profileContentsTab" aria-controls="profileContentsTab" role="tab" data-toggle="tab">Archive structure</a></li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -68,10 +71,10 @@ file that was distributed with this source code.
                                     <div role="tabpanel" class="tab-pane fade in" id="descriptionTab">
                                         <?hinclude recordsManagement/archivalProfile/descriptionTab.html ?>
                                     </div>
-                                    <?merge .type.ifeq('1').not() ?>
+                                    <?merge archivalProfile.type.ifeq('1').not() ?>
                                     <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
                                         <div class="col-xs-12">
-                                            <h5 class="text-info"><strong>Retention rule<strong/></h5>
+                                            <h5 class="text-info"><strong>Retention rule</strong></h5>
                                             <br/>
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Retention rule code</label>
@@ -102,15 +105,15 @@ file that was distributed with this source code.
                                             <div class="form-group">
                                                 <label class="col-md-3 control-label">Retention start date</label>
                                                 <div class="col-md-9" id="retentionStartDate">
-                                                    <input type="hidden" name="retentionStartDate" />
+                                                    <input type="hidden" name="retentionStartDate" value="[?merge .retentionStartDate ?]"/>
                                                     <select id="startDate" class="form-control">
-                                                        <option value="definedLater">To be defined later </option>
+                                                        <option value="">To be defined later </option>
+                                                        <option value="originatingDate" >Originating date </option>
                                                         <option value="depositDate" >Deposit date </option>
-                                                        <?merge customeDateForRentention ?>
+                                                        <!--?merge retentionStartDateFields ?>
                                                         <span>
-                                                            <?merge .required.bool().not().then("display: none;") @style ?>
-                                                            <option value= "description/[?merge .name ?]"><?merge .label ?></option>
-                                                        </span>
+                                                            <option data-origin="description" value="description/[?merge .name ?]"><?merge .label ?></option>
+                                                        </span-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -135,19 +138,11 @@ file that was distributed with this source code.
                                                         <span id="accessRuleDuration"></span>
                                                     </small>
                                                 </div>
-                                                <div class="col-md-offset-3 col-md-7" style="font-size:12px" id="accessEntriesTable">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <th>Service</th>
-                                                            <th>Originator</th>
-                                                        </thead>
-                                                        <tbody id="accessEntries">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade in" id="profileContentsTab">
+                                        <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
                                     </div>
                                 </div>
                             </div>
@@ -175,24 +170,152 @@ file that was distributed with this source code.
             <span id="text_I">Illimited</span>
             <span id="text_preservation">preservation</span>
             <span id="text_destruction">destruction</span>
-            <span id="empty_text">The fields with a star are compulsory.</span>
+            <span id="empty_text">The fields with a star are required.</span>
+            <span id="text_file"><i class='fa fa-folder'></i> File</span>
+            <span id="text_item"><i class='fa fa-file'></i> Item</span>          
         </div>
     </div>
 </div>
 
 
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
+
+    var ArchivalProfile = {
+        loadRetentionRule: function() {
+            var retentionRule = $('#code').find(":selected");
+            var duration = retentionRule.data('duration');
+            var durationUnit = retentionRule.data('duration-unit');
+            var finalDisposition = retentionRule.data("final-disposition");
+            if (finalDisposition) {
+                if(durationUnit) {
+                    $('.finalDisposition').css('display','');
+                    $('#duration').text(duration + ' ' + $('#text_' + durationUnit).html());
+                    $('#finalDisposition').text($('#text_' + finalDisposition).html());
+                } else {
+                    $('#duration').text($('#text_I').html());
+                    $('.finalDisposition').css('display','none');
+                    $('#finalDisposition').html('');
+                }
+            } else {
+                $('.finalDisposition').css('display','');
+                $('#duration').html('');
+                $('#finalDisposition').html('');
+            }
+        },
+
+        loadAccessCode: function() {
+            var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
+            var accessRuleTable = $('#accessRuleTable');
+
+            if (accessRuleCode) {
+                var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+                $('#accessRule').css("display", 'block');
+                $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+            } else {
+                $('#accessRule').css("display", 'none');
+            }
+        },
+
+        save: function(returnUrl) {
+            var parameters = {
+                archivalProfile : this.serialize()
+            };
+            
+            if($("#contain").data('archivalprofileid')) {
+                type= 'PUT';
+                url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
+            } else {
+                type= 'POST';
+                url='/archivalProfile';
+            }
+            if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
+                gritter.show($("#empty_text").text(), false);
+                return;
+            }
+            ajax($('#save'), {
+                url: url,
+                type: type,
+                data: JSON.stringify(parameters),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        
+                        load(returnUrl);
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        serialize: function() {
+            serializedObject = {
+                archivalProfileId: $('#archivalProfileId').val(),
+                reference: $('#reference').val(),
+                name: $('#name').val(),
+                fileplanLevel : $("#fileplanLevel").val(),
+                descriptionClass: $('#descriptionClass').val(),
+                retentionStartDate: $('#startDate option:selected').val(),
+                description: $('#description').val(),
+                accessRuleCode: $('#accessRuleCode').val(),
+                retentionRuleCode: $('#code').val(),
+                acceptUserIndex: $('#allowUserIndexes').prop("checked"),
+                archiveDescription: []
+            }
+
+            if(serializedObject.retentionStartDate ==''){
+                serializedObject.retentionStartDate = null;
+            }
+            if(serializedObject.accessRuleCode ==''){
+                serializedObject.accessRuleCode = null;
+            }
+            if(serializedObject.retentionRuleCode ==''){
+                serializedObject.retentionRuleCode = null;
+            }
+            
+            serializedObject.archiveDescription = PropertiesList.serialize();
+
+            
+            if ($("#fileplanLevel").val() != 'item') {
+                serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
+                serializedObject.containedProfiles = ArchiveStructure.serialize();
+            } else {
+                serializedObject.acceptArchiveWithoutProfile = false;
+                serializedObject.containedProfiles = [];
+            }
+            
+            return serializedObject;
+        }
+    }
+
     $("#archivalProfileCancelBtn").on("click", function (){
         load('/archivalProfiles');
     });
     
     $("#contain").ready(function () {
+        $('#fileplanLevelToggle').bootstrapToggle({
+          on: $('#text_item'),
+          off: $('#text_file'),
+        });
+
+        if($('#fileplanLevel').val() == 'item') {
+            $('#fileplanLevelToggle').bootstrapToggle('on');
+            $("#contentsTabBtn").addClass('hide');
+        }
 
         $("#archivalProfileNavControl").find('a').first().click();
 
-        loadRetentionRule();
-        loadAccessCode();
+        ArchivalProfile.loadRetentionRule();
+        ArchivalProfile.loadAccessCode();
+
+        $('input, select, textarea').on('change', function() {
+            $('#contain').data('not-saved', true);
+        })
 
         //date properties
         let datesProperties = $('#retentionStartDate option');
@@ -200,78 +323,17 @@ file that was distributed with this source code.
 
         var currentRetentionStartDate = $('#retentionStartDate > input').val();
         if (datesProperties) {
-            /*$.each(requiredProperty, function () {
-                var fieldName = $(this).closest('tr').find('.fieldName').html();
-
-                if (!$.inArray(fieldName, $('#descriptionClass').find(':selected').data('dateproperties'))) {
-                    $('<option/>').val(fieldName).text(fieldName).appendTo('#startDateDescription');
-                }
-            })*/
             for(var i = 0; i < datesProperties.length; i++) {
                 let element = $(datesProperties[i]);
                 var value = element.val();
                 if (value == currentRetentionStartDate && (element.css('display') != 'none')) {
                     element.attr('selected', 'selected');
-                    return false;
+                    break;
                 } else {
-                    $('#retentionStartDate').val('definedLater');
+                    $('#retentionStartDate').val('');
                 }
             }
         }
-
-        // Define data source for person typeahead
-        var groupsSource = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/recordsManagement/queryGroups/%QUERY',
-                ajax: {
-                    async: false
-                }
-            },
-            limit: 100
-        });
-        groupsSource.initialize();
-
-        // initialize typeahead
-        $('#groupTypeahead').typeahead(
-                {
-                    hint: true,
-                    highlight: true,
-                    minLength: 3
-                },
-        // data source contacts
-        {
-            name: 'groups',
-            displayKey: 'displayName',
-            templates: {
-                empty: function () {
-                    return "<span class='well well-sm'>No group found</span>";
-                },
-                suggestion: function (group) {
-                    return group.displayName;
-                }
-            },
-            source: function (query, cb) {
-                groupsSource.get(query, function (suggestions) {
-                    var i = suggestions.length
-                    while (i--) {
-                        if ($.inArray(suggestions[i].objectId + suggestions[i].objectClass, $('#groupTypeahead').data('groupsids')) > -1)
-                            suggestions.splice(i, 1);
-                    }
-                    cb(suggestions);
-                });
-            },
-            skipCache: true
-        }
-        ).on('typeahead:selected', function ($event, suggestion, source) {
-            var typeahead = $("#groupTypeahead");
-            var groupList = typeahead.data('groupsids');
-            typeahead.data('group', suggestion);
-            groupList.push(suggestion.objectId + suggestion.objectClass);
-            typeahead.data('groupsids', groupList);
-            $("#addGroup").prop('disabled', false);
-        });
     });
 
    
@@ -285,7 +347,7 @@ file that was distributed with this source code.
 
         $("#addGroup").prop('disabled', true);
         newTr.data('objectid', group.objectId).data('objectclass', group.objectClass).addClass('profileAccessElement').find('input').css('display', '');
-        newTr.find('.groupName:first').html(group.displayName);
+        newTr.find('.groupName:first').text(group.displayName);
 
         $('#groupTypeahead').val('');
 
@@ -303,141 +365,27 @@ file that was distributed with this source code.
     })
 
     $("#contain").on('change', '#code', function () {
-        loadRetentionRule();
+        ArchivalProfile.loadRetentionRule();
     })
 
     $("#contain").on('change', '#accessRuleCode', function () {
-        loadAccessCode();
+        ArchivalProfile.loadAccessCode();
     })
 
     //save
     $("#contain").on('click', '#save', function () {
-        var parameters = {
-            archivalProfile : serialize()
-        };
-        
-        if($("#contain").data('archivalprofileid')) {
-            type= 'PUT';
-            url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
-        } else {
-            type= 'POST';
-            url='/archivalProfile';
-        }
-        if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
-            gritter.show($("#empty_text").text(), false);
-            return;
-        }
-        ajax($('#save'), {
-            url: url,
-            type: type,
-            data: JSON.stringify(parameters),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (response) {
-                gritter.show(response.message, response.status, response.errors);
-                if (response.status) {
-                    
-                    load("/archivalProfiles");
-                }
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
+        ArchivalProfile.save("/archivalProfiles");
     });
+
     
-    function loadRetentionRule() {
-        var retentionRule = $('#code').find(":selected");
-        var duration = retentionRule.data('duration');
-        var durationUnit = retentionRule.data('duration-unit');
-        var finalDisposition = retentionRule.data("final-disposition");
-        if (finalDisposition) {
-            if(durationUnit) {
-                $('.finalDisposition').css('display','');
-                $('#duration').html(duration + ' ' + $('#text_' + durationUnit).html());
-                $('#finalDisposition').html($('#text_' + finalDisposition).html());
-            } else {
-                $('#duration').html($('#text_I').html());
-                $('.finalDisposition').css('display','none');
-                $('#finalDisposition').html('');
-            }
+    $('#fileplanLevelToggle').on('change', function (e) {
+        if ($('#fileplanLevelToggle').prop('checked')) {
+            $("#fileplanLevel").val('item');
+            $("#contentsTabBtn").addClass('hide');
         } else {
-            $('.finalDisposition').css('display','');
-            $('#duration').html('');
-            $('#finalDisposition').html('');
+            $("#fileplanLevel").val('file');
+            $("#contentsTabBtn").removeClass('hide');
         }
-    }
-
-    function loadAccessCode() {
-        var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
-        var accessEntries = "";
-        var accessRuleTable = $('#accessRuleTable');
-
-        if (accessRuleCode) {
-            var accessEntries = accessRuleCode.accessEntry;
-            var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
-            var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
-            $('#accessRule').css("display", 'block');
-            $('#accessRuleDuration').html(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
-        } else {
-            $('#accessRule').css("display", 'none');
-        }
-
-        $('#accessEntries').empty();
-        $("#accessEntriesTable").hide();
-        if(accessEntries != "") {
-            $("#accessEntriesTable").show();
-            for(var i=0; i<accessEntries.length; i++) {
-                loadAccessEntry(accessEntries[i]);
-            }
-        }
-
-    }
-
-    function loadAccessEntry(accessEntry) {
-        var iconeSucess  = $('<span/>').html('<i class="fa fa-check text-success">&nbsp;</i>');
-        var iconeError  = $('<span/>').html('<i class="fa fa-times text-danger">&nbsp;</i>');
-
-        var tr = $('<tr/>');
-        $('<td/>').text(accessEntry.displayName).appendTo(tr);
-        
-        if (accessEntry.originatorAccess == true) {
-            $('<td/>').append(iconeSucess).appendTo(tr);
-        } else {
-            $('<td/>').appendTo(tr);
-        }
-        
-        $('#accessEntries').append(tr);
-    }
-
-    function serialize() {
-
-        serializedObject = {
-            archivalProfileId: $('#archivalProfileId').val(),
-            reference: $('#reference').val(),
-            name: $('#name').val(),
-            descriptionClass: $('#descriptionClass').val(),
-            retentionStartDate: $('#startDate option:selected').val(),
-            description: $('#description').val(),
-            accessRuleCode: $('#accessRuleCode').val(),
-            retentionRuleCode: $('#code').val(),
-            acceptUserIndex: $('#allowUserIndexes').prop("checked"),
-            archiveDescription: []
-        }
-
-        if(serializedObject.retentionStartDate ==''){
-            serializedObject.retentionStartDate = null;
-        }
-        if(serializedObject.accessRuleCode ==''){
-            serializedObject.accessRuleCode = null;
-        }
-        if(serializedObject.retentionRuleCode ==''){
-            serializedObject.retentionRuleCode = null;
-        }
-        
-        serializedObject.archiveDescription = PropertiesList.serialize();
-        
-        return serializedObject;
-    }
+    });
 
 </script>

@@ -1,18 +1,30 @@
 <div id="archiveContentTemplate" class="hide">
     <li>
         <span>
-            <i class='fa'/>
-            <span></span>
+            <span>
+                <i class='fa'/>
+                <span name="archiveOrDocument">&nbsp;</span>
+                <br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <small/>&nbsp;
+                <small/>&nbsp;
+                <small><i/></small>
+            </span>
         </span>
     </li>
 </div>
 
 <style>
     .archive h5 {
-        margin: 6px 0px 6px 0px;
+        margin: 5px 0px 5px 0px;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: crop;
+        overflow: hidden;
     }
     .archive small {
         font-size: 10px;
+        color: darkgrey;
     }
     .archive .tree-l {
         font-size: 12px;
@@ -20,8 +32,13 @@
     }
     .archive .tree-l li, .archive .tree-l li>span>span {
         padding: 0px;
+        text-overflow: crop;
+        width: 100%;
+        overflow: hidden;
     }
-
+    .dataList {
+        min-height: 300px;
+    }
     .dataList .archiveContentButton,
     .dataList a,
     .dataList .bg-success,
@@ -34,6 +51,22 @@
     .dataList .fa-caret-right, .dataList .fa-caret-down {
         font-size: 16px;
     }
+    .archive .archiveContent li>span {
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: crop;
+        line-height: normal;
+        padding: 0px 0px;
+    }
+    .childrenArchive {
+        padding: 0px 8px !important;
+    }
+    .archive  > h5 {
+        margin: 0px;
+    }
+    .archive > h4 {
+        margin-top: 3px;
+    }
 
 </style>
 
@@ -43,14 +76,17 @@
 
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
-            e.addClass('bg-success');
-
-            if (c) { c.addClass('selectedChild') }
+            if (!c) {
+                e.addClass('bg-info');
+            } else { 
+                e.removeClass('bg-info');
+                c.addClass('selectedChild').closest('li').addClass('bg-info'); 
+            }
         },
 
         unselect: function(dataList) {
             $('#rightColumn').html('');
-            dataList.find('.bg-success').removeClass('bg-success')
+            dataList.find('.bg-info').removeClass('bg-info')
                     .find('.selectedChild').removeClass('selectedChild');
         },
 
@@ -63,7 +99,15 @@
                 url         : "/archive/"+archiveId,
                 type        : "GET",
                 success     : function (response) {
-                    $('#rightColumn').html(response);
+                    $('#rightColumn').empty().html(response);
+                    var archiveToolbarBtn = $('#archiveToolbarBtn');
+
+                    if(FilePlan.selectedNode.data('closed')){
+                        archiveToolbarBtn.addClass('hide');
+                    }else {
+                        archiveToolbarBtn.removeClass('hide');
+                    }
+
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -106,8 +150,16 @@
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
                     template = this.archiveContentTemplate.clone();
+                    var smalls = template.find('small');
+
+                    if (childrenArchives[j].fileplanLevel == 'item') {
+                        var icon = $('<i class="fa fa-file">&nbsp;</i>');
+                    } else {
+                        var icon = $('<i class="fa fa-folder">&nbsp;</i>');
+                    }
 
                     template.children('span')
+                            .children('span')
                             .children('i')
                             .addClass('fa')
                             .data('closed-icon', 'fa-caret-right')
@@ -115,7 +167,20 @@
                             .siblings('span')
                             .addClass('childrenArchive')
                             .attr('id', childrenArchives[j].archiveId)
-                            .html(childrenArchives[j].archiveName);
+                            .append(icon)
+                            .append($('<span>').text(childrenArchives[j].archiveName))
+                            .append($('<a/>').attr('href','#').class);
+
+                    
+                    if (childrenArchives[j].depositDate) {
+                        $(smalls[0]).text(childrenArchives[j].depositDate.substring(0, 19));
+                    }
+                    if (childrenArchives[j].archivalProfileReference) {
+                        $(smalls[1]).text(childrenArchives[j].archivalProfileReference);
+                    }
+                    if (childrenArchives[j].originatorArchiveId) {
+                        $(smalls[2]).children('i').text(childrenArchives[j].originatorArchiveId);
+                    }
 
                     BootstrapTree.addNode(parent, template, hidden);
 
@@ -133,14 +198,16 @@
                     template = this.archiveContentTemplate.clone();
 
                     template.children('span')
+                            .children('span')
                             .children('i')
-                            .addClass('fa fa-file-o')
+                            .html('&nbsp;&nbsp;')
                             .siblings('span')
                             .addClass('document')
                             .data('json', digitalResources[i])
                             .attr('id', digitalResources[i].resId)
-                            .html(digitalResources[i].fileName);
-
+                            .append($('<i class="fa fa-file-o">&nbsp;</i>'))
+                            .append($('<span>').text(digitalResources[i].fileName));
+                    template.find('small, br').remove();
                     BootstrapTree.addNode(parent, template, hidden);
                 }
             }
@@ -191,6 +258,11 @@
         var parentArchive = doc.closest('.archive');
         Archive.select(parentArchive, doc);
         Archive.getResourceInfo(doc);
+    })
+
+    $('#middleColumn').on('datalist.pagechanging', function(e) {
+        $(e.target).find('.fa-caret-down').click();
+
     })
 
 </script>

@@ -37,7 +37,7 @@
 
 // view the document
 $("#archiveList").on('click', ".viewDocument", function() {
-    archiveDocumentViewer.load($(this).closest('tr').attr('id'));
+    archiveDocumentViewer.load($(this).closest('tr').attr('archiveid'), $(this).closest('tr').attr('resid'));
 });
 
 // view the archive description
@@ -60,7 +60,7 @@ $('.multipleActionMenu').on('click', 'li', function() {
 
 })
 
-$('.actionMenu').on('click', 'li', function() {
+$('#archiveList').on('click', '.actionMenu li', function() {
     var button = $(this);
     var type = button.data('type');
     var tr = button.closest('tr');
@@ -75,35 +75,45 @@ $('.actionMenu').on('click', 'li', function() {
 })
 
 var ArchivesAction = {
-    actions : {
+    actionsPossibility : {
         retentionRule      : ['preserved'],
         accessRule         : ['preserved'],
         freeze             : ['preserved', 'restituable', 'disposable'],
         unfreeze           : ['frozen'],
-        flagForDestruction : ['preserved', 'restituable'],
+        flagForDestruction : ['preserved'],
         cancelDestruction  : ['disposable'],
-        checkHash          : ''
+        checkHash          : ['preserved', 'frozen', 'restituable', 'disposable']
     },
 
     getSelectedArchives : function(type) {
-        var status = this.actions[type];
+        var status = this.actionsPossibility[type];
         var dataSelector = [];
         var selector = [];
         var relevant = null;
         var ids = [];
         var names = [];
+        var additionalSelector = "";
+
 
         if (status == '') {
             dataSelector.push('[data-archive-status]');
         } else {
             $.each(status, function (index, value) {
-                dataSelector.push('[data-archive-status="' + value + '"]');
+                if (type == "flagForDestruction") {
+                    let additionalSelector = "[data-disposable='1'][data-final-disposition='destruction']";
+                    let additionalSelector2 = "[data-noretention='1']";
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector2);
+                } else {
+                    dataSelector.push('[data-archive-status="' + value + '"]');
+                }
             })
         }
         
         $.each(dataSelector, function (index, value) {
             selector.push('input' + value + ':checked');
         })
+
         relevant = $(selector.join(', '));
 
         $.each(relevant, function () {

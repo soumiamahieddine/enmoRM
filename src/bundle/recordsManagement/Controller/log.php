@@ -239,13 +239,21 @@ class log implements archiveDescriptionInterface
 
     /**
      * Get the last usable journal
-     * @param string $type The type of journal
+     * @param string $type              The type of journal
+     * @param string $ownerOrgRegNumber The journal owner organization registration number 
      *
      * @return recordsManagement/log The journal object
      */
-    public function getLastJournal($type)
+    public function getLastJournal($type, $ownerOrgRegNumber = null)
     {
-        $journals = $this->sdoFactory->find('recordsManagement/log', "type='$type'", null, ">fromDate", 0, 1);
+        if ($ownerOrgRegNumber) {
+            $query = "type='$type' AND ownerOrgRegNumber = '$ownerOrgRegNumber'";
+        
+        } else {
+            $query = "type='$type' AND ownerOrgRegNumber = null";
+        }
+        
+        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">fromDate", 0, 1);
 
         if (empty($journals)) {
             return null;
@@ -309,6 +317,7 @@ class log implements archiveDescriptionInterface
         $archive->accessRuleDuration = 'P0D';
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
+        $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
 
          // Create resource
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
@@ -339,6 +348,12 @@ class log implements archiveDescriptionInterface
 
         $archive->serviceLevelReference = $archiveController->useServiceLevel("deposit")->reference;
 
-        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<Y>/<m>');
+        if (strpos($archiveController->useServiceLevel("deposit")->control, "fullTextIndexation")) {
+            $archive->fullTextIndexation = "requested";
+        } else {
+            $archive->fullTextIndexation = "none";
+        }
+
+        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
     }
 }

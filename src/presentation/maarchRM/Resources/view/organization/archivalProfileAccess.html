@@ -1,0 +1,165 @@
+<div class="panel-group" id="profile_accordion" role="tablist" aria-multiselectable="true">
+    <div class="row">
+        <br/>
+        <div class="col-md-12">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label">Accept archives without profile</label>
+                    <input type="checkbox" id="acceptArchviesWithoutProfile" name="acceptArchviesWithoutProfile" data-toggle="toggle"> 
+                </div>
+                <div class="form-group">
+                    <label>Archival profile</label>
+                    <div class="input-group">
+                        <select class="form-control" id="profileReference">
+                            <option value=""></option>
+                            <?merge archivalProfile ?>
+                            <option value="[?merge .reference ?]"><?merge .name ?></option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button class="btn btn-success" id="addAccessEntrie" type="button"><i class="fa fa-plus"/></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-md-offset-2">
+                <ul class="list-group" id="accessEntries">
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <button class="btn hide btn-success pull-right" id="saveArchivalProfileAccess" type="button"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script>
+
+var ArchivalProfileAccessForm = {
+    load: function(profileAccess) {
+        if (profileAccess) {
+            $.each(profileAccess, function() {
+                if (this.archivalProfileReference == '*') {
+                    $('#acceptArchviesWithoutProfile').bootstrapToggle('on');
+                } else {
+                    ArchivalProfileAccessForm.addToList(this);
+                }
+            })
+        }
+
+        $('#saveArchivalProfileAccess').addClass('hide');
+    },
+
+    add: function() {
+        var archivalProfileAccess = {
+            orgId                    : $("#modifyOrganization").data('organization').orgId,
+            archivalProfileReference : $('#profileReference').val(),
+            originatorAccess         : true
+        }
+
+        if (!archivalProfileAccess.archivalProfileReference) {
+            return;
+        }
+
+        $('#saveArchivalProfileAccess').removeClass('hide');
+        this.addToList(archivalProfileAccess);
+    },
+
+    addToList: function(profileAccess) {
+        var slectedOption = $('#profileReference').find('option[value="'+profileAccess.archivalProfileReference+'"]');
+
+        var li = $('<li/>').addClass('list-group-item clearfix')
+                           .data('json', profileAccess)
+                           .html(slectedOption.html());
+
+        var span = $('<span/>').addClass('pull-right').appendTo(li);
+
+        /*
+        if (profileAccess.originatorAccess) {
+            $('<a/>').addClass('btn btn-default btn-xs disabled')
+                     .attr('aria-label', "Originator")
+                     .attr('href','#')
+                     .html($("#originatorAccess").text())
+                     .appendTo(span);
+        }
+        */
+
+        $('<a/>').attr('href','#')
+                 .addClass('text-danger removeProfileAccess')
+                 .html(
+                    $('<i/>').addClass("fa fa-times fa-fw")
+                 )
+                 .appendTo(span);
+          
+        li.appendTo($("#accessEntries"));
+
+        slectedOption.addClass('hide');
+        $('#profileReference').val('');
+    },
+
+    removefromList: function(li) {
+        $('#saveArchivalProfileAccess').removeClass('hide');
+        $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
+        li.remove();
+    },
+
+    save: function() {
+        var archivalProfileAccess = [];
+
+        if ($('#acceptArchviesWithoutProfile').prop("checked")) {
+            var profileAccess = {
+                orgId                    : $("#modifyOrganization").data('organization').orgId,
+                archivalProfileReference : '*',
+                originatorAccess         : true
+            }
+
+            archivalProfileAccess.push(profileAccess);
+        }
+
+        $('#accessEntries').find('li').each(function() {
+            archivalProfileAccess.push($(this).data('json'));
+        })
+
+        ajax($('#saveArchivalProfileAccess'), {
+            type        : 'PUT',
+            url         : '/organization/'+$("#modifyOrganization").data('organization').orgId+'/archivalProfileAccess',
+            data        : {archivalProfileAccess: archivalProfileAccess},
+            dataType    : 'json',
+            contenttype : 'application/json',
+            async       : true,
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                $('#saveArchivalProfileAccess').addClass('hide');
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    },
+
+    close: function() {
+        $('#profileReference').val('').find('.hide').removeClass('hide');
+        $('#saveArchivalProfileAccess').addClass('hide');
+        $('#accessEntries').find('li').remove();
+        $('#acceptArchviesWithoutProfile').bootstrapToggle('off');
+    }
+}
+
+$('#addAccessEntrie').on('click', function() {
+    ArchivalProfileAccessForm.add();
+});
+
+$('#accessEntries').on('click', '.removeProfileAccess', function() {
+    ArchivalProfileAccessForm.removefromList($(this).closest('li'));
+});
+
+$('#saveArchivalProfileAccess').on('click', function() {
+    ArchivalProfileAccessForm.save();
+})
+
+$('#acceptArchviesWithoutProfile').on('change', function() {
+    $('#saveArchivalProfileAccess').removeClass('hide');
+
+})
+
+</script>

@@ -60,7 +60,7 @@ class authentication
             }
         }
 
-        if (\laabs::getPresentation()) {
+        if (!\laabs::isServiceClient()) {
             return true;
         }
 
@@ -117,6 +117,27 @@ class authentication
 
             if ($servicePosition != null) {
                 \laabs::setToken("ORGANIZATION", $servicePosition->organization);
+            }
+        } else {
+            $organization = \laabs::getToken("ORGANIZATION");
+
+            $userPositions = \laabs::newController("organization/userPosition")->getMyPositions();
+            
+            if (!empty($organization)) {
+                $isUserPosition = false;
+                
+                foreach ($userPositions as $position) {
+                    if ($position->orgId == $organization->orgId) {
+                        $isUserPosition = true;
+                    }
+                }
+
+                if (!$isUserPosition) {
+                    \laabs::clearTokens();
+                    \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+
+                    return false;
+                }
             }
         }
 

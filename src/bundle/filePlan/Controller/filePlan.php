@@ -80,10 +80,19 @@ class filePlan
      */
     public function create($folder)
     {
-        // Validate :
+        // Validation :
         // OwnerOrgRegNumber exists
-        // ParentFolderId exists if sent
-        // Couple parentFolderId + name is unique
+
+        if (!isset($folder->parentFolderId)) {
+            $folder->parentFolderId = null;
+
+        } elseif (!$this->sdoFactory->exists('filePlan/folder', array('folderId' => $folder->parentFolderId))) {
+            throw new \core\Exception\NotFoundException("The parent folder does not exist");
+        }
+
+        if ($this->sdoFactory->exists('filePlan/folder', array('name' => $folder->name, 'parentFolderId' =>$folder->parentFolderId))) {
+            throw new \core\Exception\ConflictException("The folder already exists");
+        }
 
         $folder->folderId = \laabs::newId();
 
@@ -104,7 +113,7 @@ class filePlan
             $folder = $this->sdoFactory->read("filePlan/folder", $folderId);
         
         } catch(\Exception $e) {
-            throw new \core\Exception\NotFoundException("The folder identified by '$folderId' can't be found.");
+            throw new \core\Exception\NotFoundException("The folder can't be found.");
         }
 
         return $folder;
@@ -130,7 +139,7 @@ class filePlan
         } catch(\Exception $e) {
             throw $e;
             
-            throw new \core\Exception\NotFoundException("The folder named '$folderName' can't be found.");
+            throw new \core\Exception\NotFoundException("The folder can't be found.");
         }
 
         return $folder;
@@ -146,6 +155,10 @@ class filePlan
     public function move($folderId, $parentFolderId=null)
     {
         $folder = $this->sdoFactory->read('filePlan/folder', $folderId);
+
+        if ($this->sdoFactory->exists('filePlan/folder', array('name' => $folder->name, 'parentFolderId' =>$parentFolderId))) {
+            throw new \core\Exception\ConflictException("The folder already exists");
+        }
 
         // Check 
         if ($parentFolderId) {

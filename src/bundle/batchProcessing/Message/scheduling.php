@@ -88,10 +88,4 @@ class scheduling
      */
     public $nextExecution;
 
-    /**
-     * The status
-     *
-     * @var string
-     */
-    public $status;
 }

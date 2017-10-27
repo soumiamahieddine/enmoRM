@@ -2,15 +2,13 @@
 
     <div class="modal fade" id="signInModal">
         <div class="modal-dialog">
-            <!--iframe src="useToSaveUsernameByBrowser.htm" id="temp" name="temp" style="display:none"></iframe-->
-            <!--form target="temp" method="POST" onsubmit="login();" id="loginForm"-->
             <form id="loginForm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" style="float:left;">
                             <i class="fa fa-fw fa-unlock">&nbsp;</i>Login
                         </h4>
-                        <span style="float:right;width:100px;height:30px;text-align:right;background:url('[?merge logo ?]');background-size:100% 100%;"></span>
+                        <img style="float:right;text-align:right;max-height:3em;" class="" style="max-height:50px;" src="[?merge logo ?]"/>
                         <div style="clear:both;"></div>
                     </div>
                     <div class="modal-body">
@@ -20,6 +18,8 @@
                         <div class="form-group">
                             <input type="password" placeholder="Password" class="form-control" name="password" id="password">
                         </div>
+                        <a href="#" class="pull-right" id="forgotAccount">Forgot password ?</a>
+                        <br>
                         <div class="form-group">
                             <p class="help-block" id="signInMessage"></p>
                         </div>
@@ -34,6 +34,8 @@
             </form>
         </div>
     </div>
+
+    <?hinclude auth/userAccount/login/forgotAccount.html ?>
 
     <div class="modal fade" id="changePasswordModal">
         <div class="modal-dialog">
@@ -226,7 +228,7 @@
             };
         $.ajax({
             type: "PUT",
-            url: "/user/"+ userName + "/password",
+            url: "/user/password",
             contentType : 'application/json',
             data: JSON.stringify(parameters),
             async: false,
@@ -239,6 +241,12 @@
                     $('#confirmPassword').val('');
                     $('#changePasswordMessage').text(response.message);
                 }
+            },
+            error : function (response) {
+                response = JSON.parse(response.responseText);
+                $('#newPassword').val('');
+                $('#confirmPassword').val('');
+                $('#changePasswordMessage').text(response.message);
             }
         });
     }

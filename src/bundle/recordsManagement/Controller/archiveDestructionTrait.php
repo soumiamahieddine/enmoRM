@@ -32,24 +32,34 @@ trait archiveDestructionTrait
      *
      * @return bool
      */
-    public function dispose($archiveIds)
+    public function dispose($archiveIds) 
     {
         $currentDate = \laabs::newTimestamp();
+        $archives = [];
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $this->checkRights($archive);
 
-            if ($archive->finalDisposition != "destruction") {
+            if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Archive not set for destruction.");
             }
 
-            if ($archive->disposalDate > $currentDate) {
+            if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
+
+            if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
+            }
+
+            $archives[] = $archive;
         }
 
         $archiveList = $this->setStatus($archiveIds, 'disposable');
+        foreach ($archives as $archive) {
+            $this->logDestructionRequest($archive);
+        }
 
         return $archiveList;
     }
@@ -71,25 +81,7 @@ trait archiveDestructionTrait
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
         );
 
-        $logged = false;
-        if (isset($archive->digitalResources) && count($archive->digitalResources)) {
-            foreach ($archive->digitalResources as $digitalResource) {
-                $eventInfo['resId'] = (string) $digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-
-                $logged = true;
-            }
-        }
-
-        if (!$logged) {
-            $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-            $eventInfo['address'] = $archive->storagePath;
-            $event = $this->lifeCycleJournalController->logEvent('recordsManagement/elimination', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-        }
+        $this->logElimination($archive);
 
         return $result;
     }
@@ -102,6 +94,11 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->logDestructionRequestCancel($archive);
+        }
+
         return $this->setStatus($archiveIds, 'preserved');
     }
 
@@ -144,31 +141,22 @@ trait archiveDestructionTrait
             $archiveIds = array($archiveIds);
         }
 
-        //$archives = array('success' => [], 'error' => []);
-
-        /*if (\laabs::hasDependency("fulltext")) {
-            $fulltextController = \laabs::newController("recordsManagement/fulltext");
-            $document = \laabs::newService('dependency/fulltext/Document');
-        }*/
-
         $archives = $this->verifyIntegrity($archiveIds);
         
-        foreach ($archiveIds as $archiveId) {
+        $destructArchives = [];
+        $destructArchives['error'] = $archives['error'];
+        $destructArchives['success'] = [];
+
+        foreach ($archives['success'] as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
             if ($archive->status != 'disposed') {
-                $archives['error'][] = $archive;
+                $destructArchives['error'][] = $archive;
                 continue;
             }
 
             try {
                 $this->destructArchive($archive);
-
-                /*if (\laabs::hasDependency("fulltext")) {
-                    $documentToRemove = clone($document);
-                    $documentToRemove->addField("archiveId", $archiveId, "name");
-                    $fulltextController->delete($archive->archivalProfileReference, $documentToRemove);
-                }*/
 
                 $destructionResult = true;
             } catch (\Exception $e) {
@@ -176,33 +164,12 @@ trait archiveDestructionTrait
                 continue;
             }
 
-            $eventInfo['archiverOrgRegNumber'] = $archive->archiverOrgRegNumber;
-            $eventInfo['originatorOrgRegNumber'] = $archive->originatorOrgRegNumber;
+            $this->logDestruction($archive);
 
-            $logged = false;
-            if (isset($archive->digitalResources) && count($archive->digitalResources)) {
-                foreach ($archive->digitalResources as $digitalResource) {
-                    $eventInfo['resId'] = (string) $digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $digitalResource->hash;
-                    $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                    $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
-
-                    $logged = true;
-                }
-            }
-
-            if (!$logged) {
-                $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = null;
-                $eventInfo['address'] = $archive->storagePath;
-                $event = $this->lifeCycleJournalController->logEvent('recordsManagement/destruction', 'recordsManagement/archive', $archive->archiveId, $eventInfo, $destructionResult);
-            }
-
-            $archives['success'][] = $archive;
+            $destructArchives['success'][] = $archive;
         }
 
-        return $archives;
+        return $destructArchives;
     }
 
     /**

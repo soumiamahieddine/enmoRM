@@ -57,7 +57,7 @@ trait archiveConversionTrait
                 $status = true;
             }
 
-            $this->loggingConversion($digitalResource, $convertedResource, $status);
+            $this->logConvertion($digitalResource, $convertedResource, $archive, $status);
         } catch (\Exception $e) {
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
@@ -96,7 +96,7 @@ trait archiveConversionTrait
             $status = true;
         }
 
-        $this->loggingConversion($digitalResource, $convertedResource, $status);
+        $this->logConvertion($digitalResource, $convertedResource, $archive, $status);
 
         return $convertedResource;
     }
@@ -140,7 +140,7 @@ trait archiveConversionTrait
 
             if (isset($convertedResource)) {
                 $this->digitalResourceController->rollbackStorage($convertedResource);
-                $archive->lifeCycleEvent[] = $this->loggingConversion($digitalResource, $convertedResource, false);
+                $this->logConvertion($digitalResource, $convertedResource, $archive, false);
             }
 
             throw $e;
@@ -156,50 +156,5 @@ trait archiveConversionTrait
 
         return $convertedResource;
     }
-    /**
-     * Logging of the conversion event
-     *
-     * @param digitalResource/digitalResource $originalResource  The original resource
-     * @param digitalResource/digitalResource $convertedResource The converted resource
-     * @param boolean                         $status            The status of the conversion event
-     *
-     * @return digitalResource
-     */
-    private function loggingConversion($originalResource, $convertedResource = null, $status = false)
-    {
-        if (empty($originalResource->archiveId)) {
-            $originalResource->archiveId = null;
-        }
-
-        $eventInfo = array(
-            'hashAlgorithm' => $originalResource->hashAlgorithm,
-            'hash' => $originalResource->hash,
-        );
-
-        if (!empty($originalResource->resId)) {
-            $eventInfo['resId'] = $originalResource->resId;
-        }
-
-        if (!empty($originalResource->address)) {
-            $eventInfo['address'] = $originalResource->address[0]->path;
-        }
-
-        if (!empty($convertedResource->address)) {
-            $eventInfo['convertedAddress'] = $originalResource->address[0]->path;
-        }
-
-        if (isset($convertedResource)) {
-            if (!empty($convertedResource->resId)) {
-                $eventInfo['convertedResId'] = $convertedResource->resId;
-            }
-
-            $eventInfo['convertedHashAlgorithm'] = $convertedResource->hashAlgorithm;
-            $eventInfo['convertedHash'] = $convertedResource->hash;
-            $eventInfo['software'] = $convertedResource->softwareName.' '.$convertedResource->softwareVersion;
-        }
-
-        $event = $this->lifeCycleJournalController->logEvent('recordsManagement/conversion', 'recordsManagement/archive', $originalResource->archiveId, $eventInfo, $status);
-
-        return $event;
-    }
+    
 }

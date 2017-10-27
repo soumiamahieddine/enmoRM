@@ -271,15 +271,15 @@ class Document
      * @param DOMNode $node
      */
     public function removeEmptyNodes($node=null)
-    {
+    {       
         if (!$node) {
             $node = $this->documentElement;
-        }
-
+        }       
+        
         switch($node->nodeType) {
             case \XML_ELEMENT_NODE:
                 $childNodeList = $node->childNodes;
-                for ($i=0, $l=$childNodeList->length; $i<$l; $i++) {
+                for ($i=$childNodeList->length-1; $i>=0; $i--) {
                     $this->removeEmptyNodes($childNodeList->item($i));
                 }
 
@@ -296,7 +296,8 @@ class Document
                 break;
 
             case \XML_TEXT_NODE:
-                if (ctype_space($node->nodeValue) && $node->previousSibling && $node->previousSibling->nodeType == \XML_TEXT_NODE) {
+                if (ctype_space($node->nodeValue)) { 
+                    //&& $node->previousSibling && $node->previousSibling->nodeType == \XML_TEXT_NODE) {
                     $node->nodeValue = trim($node->nodeValue);
                 }
                 break;

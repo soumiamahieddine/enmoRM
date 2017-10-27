@@ -7,7 +7,7 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-sm-3  control-label small">Name<span style="color: red">&nbsp;*</span></label>
+        <label class="col-sm-3 control-label small">Name</label>
         <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
@@ -18,10 +18,18 @@
             <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label small">Originating date</label>
+        <div class="col-md-6">
+            <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
+        </div>
+    </div>
+
     <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
+    <input type="hidden" class="archiveInput" name="fileplanLevel" value='file'/>
 </form>
 
 <?hinclude dashboard/mainScreen/descriptionForm.html ?>
@@ -34,7 +42,7 @@
 <div id="management" class="panel-collapse collapse in">
     <form id="managementMetadataForm" class="form-horizontal">
         <div class="form-group">
-            <label class="col-md-3 control-label small">Retention rule<span style="color: red">&nbsp;*</span></label>
+            <label class="col-md-3 control-label small">Retention rule</label>
             <div class="col-md-6">
                 <select class="input-sm form-control archiveInput" name="retentionRuleCode" id="retentionRule">
                     <option value=""></option>
@@ -53,6 +61,10 @@
             </div>
         </div>
     </form>
+</div>
+
+<div class="hide">
+    <span id="message_requiredFieldOnEmptyForm">You must define at least the name, the identifier, the date of the document or a document</span>
 </div>
 
 <script type="text/javascript">
@@ -77,12 +89,12 @@
             if (archive < 0) {
                 return;
             }
-            
+
             ajax($('#import'),
                 {
                     type        : 'POST',
                     url         : "/archive",
-                    data        : JSON.stringify({archive : archive}),
+                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
@@ -106,8 +118,14 @@
 
             var selectedProfile = "";
             if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
-                selectedProfile = JSON.parse(dataJson);
+                selectedProfile = dataJson;
             }
+
+            /*if (value == '' || value == null) {
+                $('#requireArchiveName').removeClass("hide");
+            } else {
+                $('#requireArchiveName').addClass("hide");
+            }*/
 
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
                 $('#retentionRule').val('').removeAttr("disabled").change();
@@ -115,7 +133,9 @@
                 $('#retentionRule').val(selectedProfile.retentionRuleCode).change().attr("disabled", "disabled");
             }
 
-            if (value == '' || selectedProfile.retentionStartDate == '' || selectedProfile.retentionStartDate == "definedLater" || selectedProfile.retentionStartDate == null) {
+            if (value == '' 
+                || selectedProfile.retentionStartDate == '' 
+                || selectedProfile.retentionStartDate == null) {
                 var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
                 retentionStartDate.data("datepicker").setDate(new Date())
                 retentionStartDate.closest(".form-group").removeClass("hide");
@@ -134,7 +154,7 @@
                 return;
             }
             
-            var selectedProfile = JSON.parse($('#archivalProfile').data('json'));
+            var selectedProfile = $('#archivalProfile').data('json');
             
             Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
             
@@ -182,8 +202,8 @@
                 case 'preservation' : finalDisposition = $("#preservation_text").text();
                            break;
             }
-            retentionRuleText = retentionRuleText.replace(/%s1/g, finalDisposition);
-            retentionRuleText = retentionRuleText.replace(/%s2/g, numeric+' '+unit);
+            retentionRuleText = retentionRuleText.replace(/%1\$s/g, finalDisposition);
+            retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
         serialize : function() {
@@ -191,7 +211,7 @@
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
-                descriptionObject : null
+                descriptionObject : {}
             }
 
             inputs.each(function() {
@@ -207,8 +227,10 @@
             var selectedProfile = $('#archivalProfile').data('json');
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
-                selectedProfile = JSON.parse(selectedProfile);
                 archive.descriptionClass = selectedProfile.descriptionClass;
+                if (selectedProfile.fileplanLevel != null) {
+                    archive.fileplanLevel = selectedProfile.fileplanLevel;
+                }
             }
 
             archive.descriptionObject = Metadata.serialize($('#allFields'));
@@ -216,20 +238,23 @@
                 return -1;
             }
 
-            if (archive["retentionRuleCode"] == "" || archive["retentionRuleCode"] == undefined) {
-                gritter.show($('#retentionRuleCodeMissing_error').text(), false);
-                return -2;
-            }
-
-            if (archive.archiveName == null || archive.archiveName == "") {
+            /*if (archive.archiveName == null || archive.archiveName == "") {
                 gritter.show($('#fieldLabel_error').text(), false);
                 return -2;
-            }
+            }*/
 
             archive.digitalResources = DocumentList.serialize();
-            if (archive.digitalResources == null) {
-                gritter.show($('#documentMissing_error').text(), false);
-                return -2;
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
+                    gritter.show($('#documentMissing_error').text(), false);
+                    return -2;
+                }
+            }
+
+            if (!selectedProfile && !archive.archiveName && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
+                gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
+                return -3;
             }
 
             return archive;

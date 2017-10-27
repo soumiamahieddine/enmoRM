@@ -41,6 +41,8 @@ class Exception
         $this->view = $view;
         $this->json = $json;
         $this->translator = $translator;
+
+        $this->translator->setCatalog('exceptions/messages');
     }
 
     /**
@@ -58,15 +60,29 @@ class Exception
         return $this->presentHtml($exception);
     }
 
+    /**
+     * Display error
+     * @param Exception $exception
+     *
+     * @return string
+     */
+    public function NotFoundException($exception)
+    {
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            return $this->presentJson($exception);
+        }
+
+        return $this->presentHtml($exception);
+    }
+
     protected function presentJson($exception)
     {
         $this->json->status = false;
         if (method_exists($exception, "setMessage")) {
             $exception->setMessage($this->translator->getText($exception->getFormat()));
             $this->json->message = $exception->getMessage();
-        } else if($message = $exception->getMessage()) {
+        } else if ($message = $exception->getMessage()) {
             $this->json->message = $message;
-
         } else {
             $this->json->message = $this->translator->getText(
                 "An error occured during the process of your request. Please contact the administrator of the application.");
@@ -101,6 +117,8 @@ class Exception
         $this->view->addContentFile("dashboard/error.html");
 
         if (method_exists($exception, "setMessage")) {
+            $exception->setMessage($this->translator->getText($exception->getFormat()));
+
             $this->view->setSource('error', $exception);
         } else {
             $newException = new \core\Exception(

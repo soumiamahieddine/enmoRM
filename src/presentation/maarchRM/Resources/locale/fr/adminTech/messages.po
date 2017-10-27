@@ -11,7 +11,7 @@ msgstr "Grappes de dépot"
 msgctxt "interface"
 
 msgid "repository"
-msgstr "Sites de dépôt"
+msgstr "Supports de stockage"
 msgctxt "interface"
 
 msgid "conversion"

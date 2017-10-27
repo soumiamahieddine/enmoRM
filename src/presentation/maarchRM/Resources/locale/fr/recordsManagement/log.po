@@ -3,10 +3,19 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Search logs"
-msgstr "Recherche de journaux"
+msgstr "Archives de journaux"
 
 msgid "Archive identifier"
 msgstr "Identifiant de l'archive"
+
+msgid "Lifecycle"
+msgstr "Cycle de vie"
+
+msgid "Application"
+msgstr "Application"
+
+msgid "System"
+msgstr "Système"
 
 msgid "Process identifier"
 msgstr "Identifiant du processus"

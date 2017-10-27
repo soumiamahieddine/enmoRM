@@ -32,11 +32,12 @@ interface archiveInterface
     /**
      * Create an archive
      *
-     * @param recordsManagement/archive $archive The archive object
+     * @param recordsManagement/archive $archive      The archive object
+     * @param bool                      $zipContainer The archive is a zip container
      *
      * @action recordsManagement/archive/receive
      */
-    public function create($archive);
+    public function create($archive, $zipContainer = false);
 
     /**
      * Receive an archive
@@ -62,9 +63,9 @@ interface archiveInterface
     /**
      * Retrieve an archive resource by its id
      *
-     * @action recordsManagement/archive/getDigitalResource
+     * @action recordsManagement/archive/consultation
      */
-    public function readDigitalresource_resId_();
+    public function readConsultation_archiveId_DigitalResource_resId_();
 
     /**
      * Retrieve an archive by its id
@@ -76,7 +77,7 @@ interface archiveInterface
     /**
      * Retrieve an archive content document (CDO)
      *
-     * @action recordsManagement/archive/getContents
+     * @action recordsManagement/archive/consultation
      */
     public function readContents_archiveId__resId_();
 

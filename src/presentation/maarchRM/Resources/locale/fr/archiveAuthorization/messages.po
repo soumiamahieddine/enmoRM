@@ -11,6 +11,6 @@ msgstr "Réception de message d'autorisation"
 msgctxt "interface"
 
 msgid "messageAuthorizationSending"
-msgstr "Envoie de message d'autorisation"
+msgstr "Envoi de message d'autorisation"
 msgctxt "interface"
 

@@ -59,6 +59,7 @@ interface AdminOrganizationInterface
      * Edit an organization
      * 
      * @uses organization/organization/read_orgId_
+     * @return organization/orgTree/readOrg
      */
     public function readOrganization_orgId_();
 
@@ -130,10 +131,10 @@ interface AdminOrganizationInterface
     public function updateOrganizationtype_code_($orgType);
 
     /**
-     * Get all contacts
+     * Export file plan
      *
-     * @return contact/contact/index
-     * @uses contact/contact/readIndex
+     * @return organization/orgTree/exportFilePlan
+     * @uses organization/organization/readTree
      */
-    public function readContactIndex();
+    public function readExportfileplan();
 }

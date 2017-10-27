@@ -22,8 +22,10 @@
 require_once('../core/laabs.php');
 
 laabs::init();
-
 switch (true) {
+    case ($_SERVER['SCRIPT_NAME'] == "/RegenerateCss"):
+        include("../web/RegenerateCss.php");
+        break;
     // Uri is a static resource
     case (strrpos($_SERVER['SCRIPT_NAME'], ".")):
         \core\Kernel\StaticKernel::start();
@@ -32,13 +34,14 @@ switch (true) {
         break;
 
     // Instance has a view
-    case \laabs::getPresentation(): 
+    case !\laabs::isServiceClient(): 
         \core\Kernel\PresentationKernel::start();
         \core\Kernel\PresentationKernel::run();
         \core\Kernel\PresentationKernel::end();
         break;
 
     // Instance is a service provider
+    case \laabs::isServiceClient(): 
     default:
         \core\Kernel\ServiceKernel::start();
         \core\Kernel\ServiceKernel::run();

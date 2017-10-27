@@ -51,32 +51,12 @@ class archivalProfile
 
     /**
      * List archival profiles
-     * @param boolean $withRightsChecking
      *
-     * @return recordManagement/archivalProfile[] The list of archival profiles
+     * @return recordsManagement/archivalProfile[] The list of archival profiles
      */
-    public function index($withRightsChecking = false)
+    public function index()
     {
-        $queryString = "";
-
-        if ($withRightsChecking) {
-            $currentOrgs = \laabs::callService('organization/userPosition/readDescendantservices');
-
-            if (!$currentOrgs) {
-                return array();
-            }
-            
-            $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', "orgRegNumber = ['".implode("', '", $currentOrgs)."']");
-
-            $accessRuleCodes = [];
-            foreach ($accessEntries as $accessEntry) {
-                $accessRuleCodes[(string) $accessEntry->accessRuleCode] = (string) $accessEntry->accessRuleCode;
-            }
-
-            $queryString = "accessRuleCode = ['".implode("', '", $accessRuleCodes)."'] or accessRuleCode = null ";
-        }
-        
-        return $this->sdoFactory->find('recordsManagement/archivalProfile', $queryString);
+        return $this->sdoFactory->find('recordsManagement/archivalProfile');
     }
 
     /**
@@ -93,15 +73,21 @@ class archivalProfile
 
     /**
      * Edit an archival profile
-     * @param string $archivalProfileId The archival profile's identifier
+     * @param string $archivalProfileId   The archival profile's identifier
+     * @param bool   $withRelatedProfiles Bring back the contents profiles
+     * @param bool   $recursively         Get contained archival profiles children
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function read($archivalProfileId)
+    public function read($archivalProfileId, $withRelatedProfiles=true, $recursively=false)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
         $this->readDetail($archivalProfile);
+
+        if ($withRelatedProfiles) {
+            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfileId, $recursively);
+        }
 
         return $archivalProfile;
     }
@@ -109,14 +95,19 @@ class archivalProfile
     /**
      * get an archival profile by reference
      * @param string $archivalProfileReference The archival profile reference
+     * @param bool   $withRelatedProfiles      Bring back the contents profiles
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function getByReference($archivalProfileReference)
+    public function getByReference($archivalProfileReference, $withRelatedProfiles=true)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', array('reference' => $archivalProfileReference));
 
         $this->readDetail($archivalProfile);
+
+        if ($withRelatedProfiles) {
+            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
+        }
 
         return $archivalProfile;
     }
@@ -155,7 +146,7 @@ class archivalProfile
         }
 
         // Read profile description
-        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile);
+        $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
         if ($archivalProfile->descriptionClass == '') {
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
@@ -186,6 +177,35 @@ class archivalProfile
                 }
             }
         }
+    }
+
+    /**
+     * Get the contents profiles list
+     * @param string $archivalProfileId The parent profile identifier
+     * @param bool   $recursively       Get contained archival profiles children
+     *
+     * @return array The list of contents archival profile
+     */
+    public function getContentsProfiles($archivalProfileId, $recursively = false)
+    {
+        $containedProfiles = [];
+        $contents = $this->sdoFactory->find('recordsManagement/archivalProfileContents', "parentProfileId ='$archivalProfileId'");
+
+        if (count($contents)) {
+            foreach ($contents as $content) {
+                $containedProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $content->containedProfileId);
+
+                $this->readDetail($containedProfile);
+
+                if ($recursively) {
+                    $containedProfile->containedProfiles = $this->getContentsProfiles($content->containedProfileId, $recursively);
+                }
+
+                $containedProfiles[] = $containedProfile;
+            }
+        }
+
+        return $containedProfiles;
     }
 
     /**
@@ -266,17 +286,36 @@ class archivalProfile
      */
     public function create($archivalProfile)
     {
-        $archivalProfile->archivalProfileId = \laabs::newId();
+        $transactionControl = !$this->sdoFactory->inTransaction();
 
-        $this->sdoFactory->create($archivalProfile, 'recordsManagement/archivalProfile');
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
 
-        $this->createDetail($archivalProfile);
+        try {
+            $archivalProfile->archivalProfileId = \laabs::newId();
 
-        // Life cycle journal
-        $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-        $this->lifeCycleJournalController->logEvent('recordsManagement/profileCreation', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+            $this->sdoFactory->create($archivalProfile, 'recordsManagement/archivalProfile');
 
-        return true;
+            $this->createDetail($archivalProfile);
+            
+            // Life cycle journal
+            $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/profileCreation', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return  $archivalProfile->archivalProfileId;
     }
 
     /**
@@ -287,20 +326,40 @@ class archivalProfile
      */
     public function update($archivalProfile)
     {
-        $archivalProfile = \laabs::cast($archivalProfile, 'recordsManagement/archivalProfile');
+        $transactionControl = !$this->sdoFactory->inTransaction();
 
-        $this->deleteDetail($archivalProfile);
-        $this->createDetail($archivalProfile);
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
 
-        // archival profile
-        $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
-        // Life cycle journal
-        $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
-        $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        try {
+            //$archivalProfile = \laabs::cast($archivalProfile, 'recordsManagement/archivalProfile');
+
+            $this->deleteDetail($archivalProfile);
+            $this->createDetail($archivalProfile);
+
+            // archival profile
+            $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
+
+            // Life cycle journal
+            $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
+            $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
+        
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
 
         return true;
     }
-
+ 
     /**
      * delete an archival profile
      * @param string $archivalProfileId The identifier of the archival profile
@@ -311,7 +370,19 @@ class archivalProfile
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
+        if ($this->isUsed($archivalProfile)) {
+            throw new \core\Exception\ForbiddenException("The archival profile %s currently in use.", 403, null, [$archivalProfile->reference]);
+        }
+
         $this->deleteDetail($archivalProfile);
+
+        $archivalProfileContents = $this->sdoFactory->find('recordsManagement/archivalProfileContents', "parentProfileId='$archivalProfileId' OR containedProfileId='$archivalProfileId'");
+        if($archivalProfileContents) {
+            $this->sdoFactory->deleteCollection($archivalProfileContents, 'recordsManagement/archivalProfileContents');
+        }
+        
+        $organizationController = \laabs::newController('organization/organization');
+        $organizationController->deleteArchivalProfileAccess($archivalProfile->reference);
 
         $this->sdoFactory->delete($archivalProfile);
 
@@ -337,6 +408,17 @@ class archivalProfile
         return $descriptionObject;
     }
 
+    /**
+     * Check if archival
+     * @param type $archivalProfileReference The reference of the archival profile
+     *
+     * @return bool The result of the operation
+     */
+    public function isUsed($archivalProfile)
+    {
+        return (bool) $this->sdoFactory->count('recordsManagement/archive', "archivalProfileReference = '$archivalProfile->reference'");
+    }
+
     protected function createDetail($archivalProfile)
     {
         if (!empty($archivalProfile->archiveDescription)) {
@@ -350,71 +432,36 @@ class archivalProfile
             }
         }
 
-        /*if (!empty($archivalProfile->documentProfile)) {
-            foreach ($archivalProfile->documentProfile as $documentProfile) {
-                if (empty($documentProfile->name)) {
-                    $documentProfile->name = $archivalProfile->name;
+        // Contents profiles
+
+        
+        if (!empty($archivalProfile->containedProfiles)) {
+
+            foreach ($archivalProfile->containedProfiles as $containedProfileId) {
+                try {
+                    $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $containedProfileId);
+
+                } catch (\Exception $e) {
+                    throw new \core\Exception\NotFoundException("%s can't be found.", 404, null, [$containedProfileId]);
                 }
+                
+                $archivalProfileContents = \laabs::newInstance('recordsManagement/archivalProfileContents');
+                $archivalProfileContents->parentProfileId = $archivalProfile->archivalProfileId; 
+                $archivalProfileContents->containedProfileId = $containedProfileId;
 
-                $documentProfile->archivalProfileId = $archivalProfile->archivalProfileId;
-                $documentProfile->documentProfileId = \laabs\uniqid();
-                $documentProfile->acceptUserIndex = $archivalProfile->acceptUserIndex;
-                $this->sdoFactory->create($documentProfile, 'recordsManagement/documentProfile');
-
-                if (!empty($documentProfile->documentDescription)) {
-                    $position = 0;
-                    foreach ($documentProfile->documentDescription as $description) {
-                        $description->position = $position;
-                        $description->documentProfileId = $documentProfile->documentProfileId;
-                        $this->sdoFactory->create($description, 'recordsManagement/documentDescription');
-                        $position++;
-                    }
-
-                }
+                $this->sdoFactory->create($archivalProfileContents, 'recordsManagement/archivalProfileContents');
             }
-        }*/
+        }
+
     }
 
     protected function deleteDetail($archivalProfile)
     {
-        $this->sdoFactory->deleteChildren('recordsManagement/archiveDescription', $archivalProfile);
+        $this->sdoFactory->deleteChildren('recordsManagement/archiveDescription', $archivalProfile, 'recordsManagement/archivalProfile');
 
-        /*$documentProfiles = $this->sdoFactory->readChildren('recordsManagement/documentProfile', $archivalProfile);
-        foreach ($documentProfiles as $documentProfile) {
-            $this->sdoFactory->deleteChildren('recordsManagement/documentDescription', $documentProfile);
-        }
-
-        $this->sdoFactory->deleteChildren('recordsManagement/documentProfile', $archivalProfile);*/
+        $this->sdoFactory->deleteChildren('recordsManagement/archivalProfileContents', $archivalProfile, 'recordsManagement/archivalProfile');
     }
 
-    /**
-     * Get the archival profile descriptions for the given org unit
-     * @param string $orgRegNumber
-     * @param string $originatorAccess
-     * 
-     * @return array
-     */
-    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
-    {
-        $orgUnitArchivalProfiles = [];
 
-        $orgUnitArchivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = null");
 
-        $assert = "orgRegNumber = '".(string) $orgRegNumber."'";
-        if ($originatorAccess) {
-            $assert .= "and originatorAccess = true";
-        }
-
-        $accessEntries = $this->sdoFactory->find('recordsManagement/accessEntry', $assert);
-
-        foreach ($accessEntries as $accessEntry) {
-            $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode = '".$accessEntry->accessRuleCode."'");
-            foreach ($archivalProfiles as $archivalProfile) {
-                $this->readDetail($archivalProfile);
-                $orgUnitArchivalProfiles[] = $archivalProfile;
-            }
-        }
-
-        return $orgUnitArchivalProfiles;
-    }
 }

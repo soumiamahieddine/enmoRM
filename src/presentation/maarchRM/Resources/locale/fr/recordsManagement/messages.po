@@ -7,7 +7,7 @@ msgstr "Archives"
 msgctxt "bundle"
 
 msgid "accessRule"
-msgstr "Gestion des codes d'accès"
+msgstr "Gestion des codes de communicabilité"
 msgctxt "interface"
 
 msgid "archivalAgreement"
@@ -47,7 +47,7 @@ msgstr "Gestion des niveaux de service"
 msgctxt "interface"
 
 msgid "retentionRule"
-msgstr "Gestion des règles de rétention"
+msgstr "Gestion des règles de conservation"
 msgctxt "interface"
 
 msgid "message"
@@ -59,7 +59,7 @@ msgstr "Document"
 msgctxt "model"
 
 msgid "accessRule"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 msgctxt "model"
 
 msgid "archivalAgreement"
@@ -99,7 +99,7 @@ msgstr "Description de profil"
 msgctxt "model"
 
 msgid "retentionRule"
-msgstr "Règles de rétention"
+msgstr "Règles de conservation"
 msgctxt "model"
 
 msgid "serviceLevel"
@@ -107,7 +107,7 @@ msgstr "Niveaux de service"
 msgctxt "model"
 
 msgid "archiveRetentionRule"
-msgstr "Règle de rétention de l'archive"
+msgstr "Règle de conservation de l'archive"
 msgctxt "model"
 
 msgid "message"
@@ -224,7 +224,7 @@ msgid "Depositor"
 msgstr "Service Versant"
 
 msgid "Access rule code"
-msgstr "Code d'accès"
+msgstr "Code de communicabilité"
 
 msgid "Communication date"
 msgstr "Date de communicabilité"
@@ -252,6 +252,9 @@ msgstr "Lecture seule"
 
 msgid "Deposit date"
 msgstr "Date de dépôt"
+
+msgid "Last check date"
+msgstr "Date du dernier contrôle"
 
 msgid "Date of deposit from"
 msgstr "Date de dépôt du"
@@ -317,8 +320,14 @@ msgstr "Identifiant service producteur"
 msgid "Frozen"
 msgstr "Suspendu"
 
+msgid "Disposed"
+msgstr "Détruite"
+
 msgid "Preserved"
 msgstr "Conservé"
+
+msgid "error"
+msgstr "Erreur"
 
 msgid "Waiting for restitution"
 msgstr "Restituable"
@@ -351,7 +360,7 @@ msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
 
 msgid "Edit access rule"
-msgstr "Modifier la règle d'accès"
+msgstr "Modifier la règle de communicabilité"
 
 msgid "You not have the permission to view the documents of archive"
 msgstr "Vous n'avez pas la permission de visualiser les documents de cette archive"
@@ -360,7 +369,7 @@ msgid "You not have the permission to view the informations of archive"
 msgstr "Vous n'avez pas la permission de visualiser les informations de cette archive"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Retention start date"
 msgstr "Date de référence"
@@ -381,7 +390,7 @@ msgid "Archival agreement"
 msgstr "Accord de versement"
 
 msgid "Search archives"
-msgstr "Recherche d'archives"
+msgstr "Gestion"
 
 msgid "Archive identifier of originator"
 msgstr "Identifiant d'archive producteur"
@@ -429,10 +438,10 @@ msgid "preserved"
 msgstr "Conservée"
 
 msgid "destruction"
-msgstr "Détruire"
+msgstr "Destruction"
 
 msgid "preservation"
-msgstr "Conserver"
+msgstr "Conservation"
 
 msgid "Disposable archives"
 msgstr "Archives à terme"
@@ -567,7 +576,7 @@ msgid "Archive created"
 msgstr "Archive créé"
 
 msgid "Access Code modification"
-msgstr "Règle d'accès modifié"
+msgstr "Règle de communicabilité modifié"
 
 msgid "Retention rule updated"
 msgstr "Règle de conservation modifiée"
@@ -655,13 +664,13 @@ msgid "Modify retention rule"
 msgstr "Modifier règle de conservation"
 
 msgid "Modify access rule"
-msgstr "Modifier règle d'accès"
+msgstr "Modifier règle de communicabilité"
 
 msgid "Access rule"
 msgstr "Règle de communicabilité"
 
 msgid "The modification will be applied on"
-msgstr "La modification portera sur"
+msgstr "L'action portera sur"
 msgctxt "validationModal"
 
 msgid "%1$s archive(s) flagged for restitution."
@@ -731,7 +740,7 @@ msgid "Permission denied: You have to choose a working organization unit to proc
 msgstr "Permission non accordée: Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
-msgstr "La classe description ne correspond pas aux profil d'archivage."
+msgstr "La classe description ne correspond pas aux profil d'archive."
 
 msgid "Archive not set for destruction."
 msgstr "Archive non prévue pour destruction."
@@ -775,9 +784,6 @@ msgstr "Objets contenus"
 msgid "A keyword label is missing."
 msgstr "Un libellé de mot clé n'a pas été renseigné."
 
-msgid "The document is missing."
-msgstr "Aucun document n'a été sélectionné."
-
 msgid "The indexes of the archive have been modified"
 msgstr "Les index de l'archive ont été modifiés"
 
@@ -795,7 +801,7 @@ msgstr "Modification de l'index"
 msgid "Reference"
 msgstr "Cote"
 
-msgid "Select an access rule code"
+msgid "Select a rule"
 msgstr "Selectionnez une règle"
 
 
@@ -838,8 +844,8 @@ msgstr "Position"
 msgid "Empty folder"
 msgstr "Le dossier est vide"
 
-msgid "%s1 after %s2"
-msgstr "%s1 après %s2"
+msgid "%1$s after %2$s"
+msgstr "%1$s après %2$s"
 
 msgid "bytes"
 msgstr "octets"
@@ -851,10 +857,10 @@ msgid "Archive updated"
 msgstr "Archive modifée"
 
 msgid "Add field"
-msgstr "Ajouter un champs"
+msgstr "Ajouter un champ"
 
-msgid "A label is missing."
-msgstr "Un libellé n'a pas été renseigné"
+msgid "Metadatas are incomplete."
+msgstr "Les metadonnées sont imcomplètes."
 
 msgid "Label"
 msgstr "Libellé"
@@ -863,10 +869,28 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "Select a retention rule"
-msgstr "Selectionner une règle de retention"
+msgstr "Selectionner une règle de conservation"
 
 msgid "No result"
 msgstr "Aucun résultat"
 
 msgid "Sub-archive of"
 msgstr "Sous-archive de"
+
+msgid "Zip container"
+msgstr "Fichier conteneur"
+
+msgid "Originating date"
+msgstr "Date du document"
+
+msgid "Text indexation"
+msgstr "Indexation du text"
+
+msgid "Profiles"
+msgstr "Profils"
+
+msgid "Partial retention rule"
+msgstr "Règle de conservation partielle"
+
+msgid "Fulltext"
+msgstr "Texte intégral"

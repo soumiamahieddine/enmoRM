@@ -61,3 +61,6 @@ msgstr "Ouvert"
 
 msgid "Closed"
 msgstr "Fermé"
+
+msgid "The folder already exists"
+msgstr "Un dossier du même nom existe déjà."

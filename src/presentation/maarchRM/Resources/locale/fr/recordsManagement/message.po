@@ -5,9 +5,6 @@
 msgid "Search messages"
 msgstr "Recherche de messages"
 
-msgid "Message reference"
-msgstr "Référence du message"
-
 msgid "Message type"
 msgstr "Type de message"
 
@@ -154,9 +151,6 @@ msgstr "Message approuvé"
 msgid "Message rejected"
 msgstr "Message rejeté"
 
-msgid "The document is missing."
-msgstr "Le document est manquant."
-
 msgid "You must define all required fields."
 msgstr "Vous devez remplir tous les champs obligatoires."
 
@@ -167,5 +161,7 @@ msgid "A keyword label is missing."
 msgstr "Le label mot clé est manquant."
 
 msgid "The retention rule is missing."
-msgstr "La règle de conservation est manquante"
+msgstr "La règle de conservation est manquante."
 
+msgid "You must deposit at least one document."
+msgstr "Vous devez téléverser au moins un document."

@@ -30,7 +30,7 @@ file that was distributed with this source code.
                     <table class="table dataTable" id="tableListConversionRules">
                         <thead>
                             <tr>
-                                <th>Puid</th>
+                                <th>Format</th>
                                 <th>Conversion service</th>
                                 <th>Target Puid</th>
                                 <th style="width: 1%;"></th>
@@ -40,7 +40,7 @@ file that was distributed with this source code.
                             <?merge conversionRules ?>
                             <tr>
                                 <td><?merge .puidName ?></td>
-                                <td><?merge .conversionService ?></td>
+                                <td><?merge .conversionServiceName ?></td>
                                 <td><?merge .targetPuidName ?></td>
                                 <td>
                                     <button type="button" class="btn btn-danger" data-conversionRule-delete='[?merge .conversionRuleId ?]' title="Delete"><span class="fa fa-trash-o">&nbsp;</span></button>

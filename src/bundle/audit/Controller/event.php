@@ -29,17 +29,19 @@ class event
 
     protected $sdoFactory;
     protected $separateInstance;
+    protected $notifications;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory
      * @param string                  $separateInstance Read only instance events
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $notifications = null)
     {
         $this->sdoFactory = $sdoFactory;
 
         $this->separateInstance = $separateInstance;
+        $this->notifications = $notifications;
     }
 
     /**
@@ -99,6 +101,13 @@ class event
             $event->orgUnitRegNumber = $currentOrganization->registrationNumber;
         }
         $event->instanceName = \laabs::getInstanceName();
+
+        if (!empty($this->notifications) && isset($this->notifications[$path])) {
+            $rule = $this->notifications[$path];
+            if (($rule["onResult"]) == $status) {
+                \laabs::callService("batchProcessing/notification/create", $rule["title"], $rule["message"], $rule["receivers"]);
+            }
+        }
         
         $this->sdoFactory->create($event);
 
@@ -203,8 +212,6 @@ class event
      */
     public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
     {
-
-        $events = array();
         $queryParts = array();
         $queryParams = array();
         if ($fromDate) {

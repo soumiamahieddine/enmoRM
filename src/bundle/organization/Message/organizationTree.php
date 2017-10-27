@@ -40,6 +40,14 @@ class organizationTree
      * @notempty
      */
     public $displayName;
+    
+    /**
+     * The registration number
+     *
+     * @var string
+     * @notempty
+     */
+    public $registrationNumber;
 
     /**
      * The organization's parent orgId

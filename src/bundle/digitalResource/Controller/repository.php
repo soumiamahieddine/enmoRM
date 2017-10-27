@@ -168,7 +168,7 @@ class repository
         $repository->currentContainer = $uri;
 
         if (!$uri) {
-            throw \laabs::newException("digitalResource/repositoryException", "No address return for creation of container in repository ".$repository->repositoryId);
+            throw \laabs::newException("digitalResource/repositoryException", "No address return for creation of container in repository %s.", 404, null, [$repository->repositoryId]);
         }
 
         return $uri;
@@ -188,7 +188,7 @@ class repository
         $uri = $repositoryService->createObject($resource->getContents(), $repository->currentContainer.'/'.$resource->resId);
         
         if (!$uri) {
-            throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository ".$repository->repositoryId);
+            throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository %s.", 404, null, [$repository->repositoryId]);
         }
 
         $address = \laabs::newInstance("digitalResource/address");
@@ -232,7 +232,11 @@ class repository
             $repositoryService = $repository->getService();
             $contents = $repositoryService->readObject($address->path);
         } catch (\Exception $e) {
-            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address ".$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path);
+            $address->lastIntegrityCheck = \laabs::newTimestamp();
+            $address->integrityCheckResult = false;
+
+            $this->sdoFactory->update($address);
+            throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address %s.", 404, null, [$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
         }
 
         return $contents;
@@ -256,7 +260,7 @@ class repository
         $repository = $this->sdoFactory->find('digitalResource/repository', "repositoryReference = '$repositoryReference'");
 
         if (count($repository) == 0) {
-            throw \laabs::newException("digitalResource/repositoryException", "No repository found with reference ".$repositoryReference);
+            throw \laabs::newException("digitalResource/repositoryException", "No repository found with reference %s", 404, null, [$repositoryReference]);
 
             return -1;
         }
@@ -344,10 +348,10 @@ class repository
             }
 
         } catch (\Exception $exception) {
-
             $address->integrityCheckResult = false;
         }
 
+            var_dump('ok');
         $this->sdoFactory->update($address, 'digitalResource/address');
 
         return $address->integrityCheckResult;

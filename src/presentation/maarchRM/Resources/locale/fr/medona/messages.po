@@ -54,16 +54,16 @@ msgid "Transfer incoming list"
 msgstr "Transferts à traiter"
 
 msgid "Transfer outgoing list"
-msgstr "Transferts à traiter"
+msgstr "Transferts en attente de traitement"
 
 msgid "Delivery incoming list"
-msgstr "Demande de communication"
+msgstr "Demandes de communication"
 
 msgid "Destruction incoming list"
-msgstr "Demande d'éliminatiion"
+msgstr "Demandes d'élimination"
 
 msgid "Transfer history"
-msgstr "Historique des transferts entrants"
+msgstr "Historique de transfert"
 
 msgid "Sent transfers"
 msgstr "Transferts envoyés"
@@ -75,7 +75,7 @@ msgid "Received notifications"
 msgstr "Notifications reçues"
 
 msgid "Notifications history"
-msgstr "Historique de Notifications"
+msgstr "Historique de notification"
 
 msgid "Sent delivery request"
 msgstr "Demandes de communication émises"
@@ -84,7 +84,7 @@ msgid "Received delivery request"
 msgstr "Demandes de communication reçues"
 
 msgid "Delivery request history"
-msgstr "Historique des demandes de communication"
+msgstr "Historique de communication"
 
 msgid "Communication authorization"
 msgstr "Autorisation de communication"
@@ -111,7 +111,7 @@ msgid "Received restitution request"
 msgstr "Demandes de restitution reçues"
 
 msgid "Restitution history"
-msgstr "Historique des demandes de restitution"
+msgstr "Historique de restitution"
 
 msgid "Transfer request"
 msgstr "Demande de transfert"
@@ -123,7 +123,7 @@ msgid "Received transfers request"
 msgstr "Demandes de transfert reçues"
 
 msgid "Transfers history request"
-msgstr "Historique des demandes de transfert"
+msgstr "Historique de demande de transfert"
 
 msgid "Destruction"
 msgstr "Destruction"
@@ -138,7 +138,7 @@ msgid "Received destruction request"
 msgstr "Demandes d'élimination reçues"
 
 msgid "Destruction history"
-msgstr "Historique des demandes d'élimination"
+msgstr "Historique d'élimination"
 
 msgid "ArchiveConversionRequest"
 msgstr "Demande de conversion"
@@ -174,10 +174,10 @@ msgid "To date"
 msgstr "Date de fin"
 
 msgid "Message identifier"
-msgstr "Référence du bordereau"
+msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
-msgstr "Demande de communication"
+msgstr "Demandes d'autorisation"
 
 msgid "ArchiveDeliveryRequest"
 msgstr "Demande de communication d'archive"
@@ -270,7 +270,7 @@ msgid "Sender organization"
 msgstr "Émetteur"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Service level"
 msgstr "Niveau de service"
@@ -333,7 +333,7 @@ msgid "Profile modification"
 msgstr "Modification de profil"
 
 msgid "Message import"
-msgstr "Import de bordereau"
+msgstr "Importer un bordereau"
 
 msgid "Click or drop a message file"
 msgstr "Cliquer ou déposer un bordereau"
@@ -407,8 +407,11 @@ msgstr "Brouillon"
 msgid "Download"
 msgstr "Télécharger"
 
-msgid "authorization_wait"
-msgstr "En attente d'autorisation"
+msgid "originator_authorization_wait"
+msgstr "En attente d'autorisation du producteur"
+
+msgid "control_authorization_wait"
+msgstr "En attente d'autorisation du service de contrôle"
 
 msgid "Appraisal rule"
 msgstr "Règle de conservation"
@@ -543,7 +546,7 @@ msgid "Relation not deleted."
 msgstr "Relation non-supprimée"
 
 msgid "Notification history"
-msgstr "Historique des notifications"
+msgstr "Historique de notification"
 
 msgid "Type of message"
 msgstr "Type de message"
@@ -559,3 +562,6 @@ msgstr "Destruction d'une archive"
 
 msgid "destroy elimination warning"
 msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimination (ce processus de restitution) ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
+
+msgid "Indexing / keyword"
+msgstr "Indexation / mot-clé"

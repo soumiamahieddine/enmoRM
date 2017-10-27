@@ -2,8 +2,6 @@ TRUNCATE TABLE `lifeCycle.eventFormat`;
 
 # FR #
 INSERT INTO `lifeCycle.eventFormat` (`type`, `format`, `notification`, `message`) VALUES
-    ('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber', FALSE, 'Réception de l''archive %6$s'),
-    ('recordsManagement/validation', 'hashAlgorithm hash', FALSE, 'Validation de l''archive %6$s'),
     ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dépôt de l''archive %6$s'),
     ('recordsManagement/integrityCheck', 'resId hashAlgorithm hash address requesterOrgRegNumber', FALSE, 'Validation de l''intégrité de l''archive %6$s.'),
     ('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', FALSE, 'Relation avec l''archive %6$s supprimée'),
@@ -17,16 +15,13 @@ INSERT INTO `lifeCycle.eventFormat` (`type`, `format`, `notification`, `message`
     ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Élimination de l''archive %6$s'),
     ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de l''archive %6$s'),
     ('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Création du profil %6$s'),
-    ('recordsManagement/ArchivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
+    ('recordsManagement/archivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
     ('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction du profil %6$s'),
-    ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId', FALSE, 'Conversion du document %18$s'),
-    ('recordsManagement/descriptionModification','property', FALSE, 'Modification des méta-données de l''archive %6$s.');
+    ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId', FALSE, 'Conversion du document %18$s');
 
 
 # EN #
 # INSERT INTO `lifeCycle.eventFormat` (`type`, `format`, `notification`, `message`) VALUES #
-    # ('recordsManagement/reception', 'hashAlgorithm hash depositorOrgRegNumber', FALSE, 'Reception of archive %5$s'), #
-    # ('recordsManagement/validation', 'hashAlgorithm hash', FALSE, 'Validation of archive %5$s'), #
     # ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber', FALSE, 'Deposit of archive %5$s'), #
     # ('recordsManagement/integrityLifeCycle', 'resId hashAlgorithm hash address requesterOrgRegNumber', FALSE, 'Validate integrity of archive %65$s' by the life cycle journal.'), #
     # ('recordsManagement/integrityDataSystem', 'resId hashAlgorithm hash address requesterOrgRegNumber', FALSE, 'Validate integrity of archive %5$s by data system.'), #
@@ -40,7 +35,7 @@ INSERT INTO `lifeCycle.eventFormat` (`type`, `format`, `notification`, `message`
     # ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Restitution of archive %5$s'), #
     # ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction of archive %5$s'), #
     # ('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Creation of profile %5$s'), #
-    # ('recordsManagement/ArchivalProfileModification', 'archivalProfileReference', FALSE, 'Modification of profile %5$s'), #
+    # ('recordsManagement/archivalProfileModification', 'archivalProfileReference', FALSE, 'Modification of profile %5$s'), #
     # ('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction of profile %5$s'), #
     # ('recordsManagement/integrityCheck', 'startEventDate endEventDate endEventId', FALSE, 'Periodic validation of integrity'), #
     # ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId', FALSE, 'Conversion of document %17$s'); #

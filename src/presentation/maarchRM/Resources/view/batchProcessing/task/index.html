@@ -73,7 +73,7 @@ $("#contain").on('click', '.deleteTask', function () {
                 if (response.status) {
                     var itemsNumber = $('#tableItemNumber');
                     var number = itemsNumber.html();
-                    itemsNumber.html(number - 1);
+                    itemsNumber.text(number - 1);
                     button.closest('tr').remove();
                 }
             },

@@ -18,6 +18,7 @@
  * along with bundle organization.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\organization\Controller;
+use core\Exception;
 
 /**
  * Control of the organization
@@ -31,15 +32,13 @@ class organization
 
     /**
      * Constructor
-     * @param object $sdoFactory The model for organization
+     * @param object $sdoFactory The dependency sdo factory service
      *
      * @return void
      */
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
-        
         $this->sdoFactory = $sdoFactory;
-
     }
 
     /**
@@ -48,9 +47,9 @@ class organization
      *
      * @return array An array of organization
      */
-    public function index($query=null)
+    public function index($query = null)
     {
-        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber"), $query);
+        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "ownerOrgId"), $query);
     }
 
     /**
@@ -73,7 +72,7 @@ class organization
             }
         }
 
-        $organizationList = $this->sdoFactory->find("organization/organization");
+        $organizationList = $this->sdoFactory->find("organization/organization", null, null, 'orgName');
         $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationTree");
 
         // sort organization by parentOrgId
@@ -101,9 +100,10 @@ class organization
 
     /**
      * Set positions for the organization tree
-     * @param object $roots               The organization tree roots
-     * @param array  $organizationList    The list of organization sorted by parent organization
-     *
+     * @param object $roots            The organization tree roots
+     * @param array  $organizationList The list of organization sorted by parent organization
+     * 
+     * @return array
      */
     protected function buildTree($roots, $organizationList)
     {
@@ -130,7 +130,7 @@ class organization
      *
      * @return organization/organization[] An array of organizations
      */
-    public function search($name=null, $businessType=null, $orgRoleCode=null, $orgTypeCode=null, $registrationNumber=null, $taxIdentifier=null)
+    public function search($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null)
     {
         $queryParts = array();
         $variables = array();
@@ -208,6 +208,7 @@ class organization
         $organization->users = $this->readUserPositions($orgId);
         $organization->services = $this->readServicePositions($orgId);
         $organization->contacts = $this->getContacts($orgId);
+        $organization->archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='$orgId'");
 
         return \laabs::castMessage($organization, "organization/organization");
     }
@@ -295,6 +296,24 @@ class organization
     }
 
     /**
+     * Get user positions
+     * @param string $accountId The user identifier
+     *
+     * @return organization/userPositionTree[] The list of user position
+     */
+    public function readUserOrgs($accountId)
+    {
+        $users = $this->sdoFactory->find("organization/userPosition", "userAccountId = '$accountId'");
+        $users = \laabs::castMessageCollection($users, 'organization/userPositionTree');
+
+        foreach ($users as $user) {
+            $user->displayName = $this->sdoFactory->read("organization/organization", $user->orgId)->displayName;
+        }
+
+        return $users;
+    }
+
+    /**
      * Get organization's service positions
      * @param string $orgId The organization's identifier
      *
@@ -326,20 +345,6 @@ class organization
     }
 
     /**
-     * Check if an organization has a given role
-     * @param string $registrationNumber The organization identifier
-     * @param string $role               The role
-     *
-     * @return boolean The result of the operation
-     */
-    public function hasRole($registrationNumber, $role)
-    {
-        $organization = $this->sdoFactory->find('organization/organization', "registrationNumber = '$registrationNumber' AND orgRoleCodes = '*$role*'");
-
-        return (bool) count($organization);
-    }
-
-    /**
      * Update an organization
      * @param string                    $orgId        The organization identifier
      * @param organization/organization $organization The organization object to update
@@ -350,11 +355,32 @@ class organization
     {
         $organization->orgId = $orgId;
 
-        if (empty($organization->displayName)) {
-            $organization->displayName = $organization->orgName;
+        if ($organization->beginDate>$organization->endDate) {
+            throw new \core\Exception("The end date is lower than the begin date.");
         }
 
-        return $this->sdoFactory->update($organization, 'organization/organization');
+
+        if (isset($organization->orgRoleCodes) && $organization->orgRoleCodes->contains("owner")) {
+            if($this->sdoFactory->count("organization/organization", "registrationNumber!='$organization->registrationNumber' AND orgRoleCodes='*owner*'")) {
+                throw new \core\Exception("An owner is already defined.");
+            }
+        }
+
+        try {
+            if ($this->isUsed($organization->registrationNumber)) {
+                $originalOrganization = $this->read($orgId);
+                $organization->registrationNumber = $originalOrganization->registrationNumber;
+            }
+
+            if (empty($organization->displayName)) {
+                $organization->displayName = $organization->orgName;
+            }
+            $res = $this->sdoFactory->update($organization, 'organization/organization');
+        } catch (\Exception $e) {
+            throw new \core\Exception("Key already exists");
+        }
+
+        return $res;
     }
 
     /**
@@ -392,7 +418,7 @@ class organization
             }
 
             foreach ($descendants as $descendantOrg) {
-                if((string) $descendantOrg->orgId == $organization->orgId) {
+                if ((string) $descendantOrg->orgId == $organization->orgId) {
                     throw new \bunble\organization\Exception\orgMoveException("Organization can't be moved to a descendent organization");
                 }
 
@@ -423,10 +449,17 @@ class organization
     public function delete($orgId)
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
+        
+        if ($this->isUsed($organization->registrationNumber)) {
+            throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
+        }
+
         $children = $this->sdoFactory->readChildren("organization/organization", $organization);
         $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
         $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
         $contacts = $this->sdoFactory->readChildren("organization/orgContact", $organization);
+        $archivalProfilesAccess = $this->sdoFactory->readChildren("organization/archivalProfileAccess", $organization);
+        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
 
         foreach ($children as $child) {
             $this->delete($child);
@@ -472,8 +505,8 @@ class organization
 
     /**
      * Add a service position to an organization
-     * @param string $serviceAccountId The service account identifier
      * @param string $orgId            The organization identifier
+     * @param string $serviceAccountId The service account identifier
      *
      * @return boolean The result of the operation
      */
@@ -577,7 +610,7 @@ class organization
 
         $contacts = array();
         foreach ($orgContacts as $orgContact) {
-            try{
+            try {
                 $contact = \laabs::callService('contact/contact/read_contactId_', $orgContact->contactId);
                 $contacts[] = (object) array_merge((array) $contact, (array) $orgContact);
             } catch (\Exception $e) {
@@ -689,7 +722,7 @@ class organization
         $i = false;
         while ($i == false) {
             if ($org->parentOrgId) {
-                $org = $this->sdoFactory->find('organization/organization',"orgId = '$org->parentOrgId'")[0];
+                $org = $this->sdoFactory->find('organization/organization', "orgId = '$org->parentOrgId'")[0];
                 $parentsOrg[] = $org;
             } else {
                 $i = true;
@@ -697,5 +730,120 @@ class organization
         }
         
         return $parentsOrg;
+    }
+
+    /**
+     * Read parent orgs recursively
+     * @param string $orgId                 Organisation identifier
+     * @param array  $archivalProfileAccess The archival profile access array
+     *
+     * @return bool The result of the operation
+     */
+    public function updateArchivalProfileAccess($orgId, $archivalProfileAccess)
+    {
+        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
+
+        $org = $this->sdoFactory->read('organization/organization', $orgId);
+        
+        try {
+            if (!$org->isOrgUnit) {
+                throw new \core\Exception("Organization Archival Profile Access can't be update ");
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        foreach ($archivalProfileAccess as $access) {
+            $access = (object) $access;
+            $access->orgId = $orgId;
+
+            $this->sdoFactory->create($access, "organization/archivalProfileAccess");
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete an archival pofile accesss from every organization
+     * @param array  $archivalProfileReference The archival profile reference
+     *
+     * @return bool The result of the operation
+     */
+    public function deleteArchivalProfileAccess($archivalProfileReference)
+    {
+        $archivalProfileAccess = $this->sdoFactory->find("organization/archivalProfileAccess", "archivalProfileReference='$archivalProfileReference'");
+
+        if($archivalProfileAccess) {
+            return $this->sdoFactory->deleteCollection($archivalProfileAccess, "organization/archivalProfileAccess");
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the archival profile descriptions for the given org unit
+     * @param string $orgRegNumber
+     * @param string $originatorAccess
+     * 
+     * @return array
+     */
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
+    {
+        $archivalProfileAccesses = [];
+        $orgUnitArchivalProfiles = [];
+
+        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
+        
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='".$organization->orgId."'");
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            if ($archivalProfileAccess->archivalProfileReference == "*") {
+                $orgUnitArchivalProfiles[]  ='*';
+                continue;
+            }
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $withRelatedProfile = true);
+        }
+
+        return $orgUnitArchivalProfiles;
+    }
+
+    /**
+     * Check if profile is in an organization access list
+     * @param string $archivalProfileReference
+     * @param string $registrationNumber
+     * 
+     * @return bool the result of the operation
+     */
+    public function checkProfileInOrgAccess($archivalProfileReference, $registrationNumber)
+    {
+        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $registrationNumber));
+
+        if (!$archivalProfileReference) {
+            $archivalProfileReference = "*";
+        }
+
+        try {
+            $this->sdoFactory->read("organization/archivalProfileAccess", array('orgId' => $organization->orgId ,'archivalProfileReference' => $archivalProfileReference));
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the registration number is use to edit it or not
+     * @param string $registrationNumber The registration number
+     *
+     * @return boolean Boolean to define if the registration number is editable
+     */
+    public function isUsed($registrationNumber)
+    {
+        $recordsManagementController = \laabs::newController("recordsManagement/archive");
+        $count = $recordsManagementController->countByOrg($registrationNumber);
+
+        return $count > 0 ? true : false;
     }
 }

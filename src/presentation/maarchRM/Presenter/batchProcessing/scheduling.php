@@ -102,6 +102,16 @@ class scheduling
             $scheduledTask->endMinutes = $frequency[7];
             $scheduledTask->endHours = $frequency[8];
 
+            if($scheduledTask->lastExecution) {
+                $scheduledTask->lastExecution = \laabs::newDateTime($scheduledTask->lastExecution)->setTimezone(timezone_open(date_default_timezone_get()));
+                $scheduledTask->lastExecution = $scheduledTask->lastExecution->format("Y-m-d H:i:s P");
+            }
+
+            if($scheduledTask->nextExecution) {
+                $scheduledTask->nextExecution = \laabs::newDateTime($scheduledTask->nextExecution)->setTimezone(timezone_open(date_default_timezone_get()));
+                $scheduledTask->nextExecution = $scheduledTask->nextExecution->format("Y-m-d H:i:s P");
+            }
+            
             $scheduledTask->json = json_encode($scheduledTask);
         }
 
@@ -109,6 +119,7 @@ class scheduling
         $this->view->setSource("serviceAccount", $serviceAccount);
         $this->view->setSource("tasks", $tasks);
         $this->view->setSource("scheduledTasks", $scheduledTasks);
+        $this->view->setSource("timezone", date_default_timezone_get());
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -174,6 +185,11 @@ class scheduling
 
         $this->json->message = "Task execution triggered";
         $this->json->message = $this->translator->getText($this->json->message);
+        $result->lastExecution = \laabs::newDateTime($result->lastExecution)->setTimezone(timezone_open(date_default_timezone_get()));
+        $result->lastExecution = $result->lastExecution->format("Y-m-d H:i:s P");
+
+        $result->nextExecution = \laabs::newDateTime($result->nextExecution)->setTimezone(timezone_open(date_default_timezone_get()));
+        $result->nextExecution = $result->nextExecution->format("Y-m-d H:i:s P");
         $this->json->object = $result;
 
         return $this->json->save();

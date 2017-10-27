@@ -21,7 +21,7 @@
                 <div id="taskList" class="list-group">
                     <?merge scheduledTasks ?>
                     <a href="#" class="list-group-item clearfix" data-json="[?merge .json ?]">
-                        <span class="col-xs-8">
+                        <span class="col-xs-9">
                             <h4 class="list-group-item-heading schedulingName"><?merge .name ?></h4>
                             <h4 class="text-danger [?merge .status.ifeq('error').then('', 'hide') ?]"><code><i class="fa fa-warning">&nbsp;</i>Execution error</code></h4>
                             <p class="list-group-item-text">
@@ -82,10 +82,11 @@
                             </p>
                         </span>
                         <span class="col-xs-2 text-right">
-                            <h4>
+                            <input type="checkbox" class="status" name="status" data-toggle="toggle" checked="[?merge .status.ifeq('scheduled').then('checked') ?]">
+                            <!--h4>
                             	<span class="playTask [?merge .status.ifeq('paused').then('text-muted', 'text-success') ?]" title="Play"><i class="fa fa-play"/></span>
                             	<span class="pauseTask [?merge .status.ifeq('paused').then('text-success', 'text-muted') ?]" title="Pause"><i class="fa fa-pause"/></span>
-                            </h4>
+                            </h4-->
                         </span>
                         <span class="col-xs-1 text-right">
                             <div class="deleteTask" title="Remove"><i class="fa fa-times"></i></div>
@@ -97,7 +98,7 @@
 
             <div id="scheduleTemplate" class="hide">
                 <a href="#" class="list-group-item clearfix" data-json="">
-                    <span class="col-xs-8">
+                    <span class="col-xs-9">
                         <h4 class="list-group-item-heading schedulingName"></h4>
                         <h4 class="text-danger hide"><code><i class="fa fa-warning">&nbsp;</i>Execution error</code></h4>
                         <p class="list-group-item-text">
@@ -144,10 +145,12 @@
                         </p>
                     </span>
                     <span class="col-xs-2 text-right">
-                        <h4>
+                        <input type="checkbox" class="status" name="status" data-toggle="toggle" checked="[?merge .status.ifeq('paused').then('Off', 'On') ?]">
+
+                        <!--h4>
 	                    	<span class="playTask text-success" title="Play"><i class="fa fa-play"/></span>
 	                    	<span class="pauseTask text-muted" title="Pause"><i class="fa fa-pause"/></span>
-	                    </h4>
+	                    </h4-->
                     </span>
                     <span class="col-xs-1 text-right">
                         <div class="deleteTask" title="delete"><i class="fa fa-times"></i></div>
@@ -214,24 +217,9 @@
     </div>
 
 </div>
+<script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <script type="text/javascript">
-    // Task list play bunton
-    $('#taskList').on('mouseenter', '.playTask, .pauseTask', function() {
-        btn = $(this);
-        if(btn.closest('a').hasClass('active')) {
-            btn.css('color', 'white');
-        } else {
-            btn.css('color', 'green');
-        }
-    })
-
-    $('#taskList').on('mouseleave', '.playTask, .pauseTask', function() {
-        btn = $(this);
-        if(!btn.hasClass('text-success')) {
-            btn.css('color', '');
-        }
-    })
 
     // Task list delete button
     $('#taskList').on('mouseenter', '.deleteTask', function() {
@@ -287,16 +275,21 @@
     });
 
     // play task
-    $('#taskList').on('click', '.playTask', function(e) {
-        TaskList.play($(this).closest('a'));
-        e.stopPropagation();
+    $('#taskList .status').on('click', function(e) {
+        var task = $(this).closest('a');
+
+        if ($(this).is(':checked')) {
+            TaskList.enable(task);
+        } else {
+            TaskList.disable(task);
+        }
     });
 
     // pause task
-    $('#taskList').on('click', '.pauseTask', function(e) {
-        TaskList.pause($(this).closest('a'));
+    /*$('#taskList').on('click', '[name=status]', function(e) {
+        TaskList.disable($(this).closest('a'));
         e.stopPropagation();
-    });
+    });*/
 
     // task history
     $('#taskList').on('click', '.showHistory', function(e) {
@@ -341,28 +334,28 @@
             a.find('.startTime')
              .html('')
              .append(task.startHours)
-             .append($('<b/>').html(':'))
+             .append($('<b/>').text(':'))
              .append(task.startMinutes);
             a.find('.lastExecution')
-             .html(task.lastExecution);
+             .text(task.lastExecution);
             a.find('.nextExecution')
-             .html(task.nextExecution);
+             .text(task.nextExecution);
             a.find('.executeNow').prop('disabled', false);
 
             // Repetition 
             if (task.frequencyNumber) {
                 repetition = a.find('.repetition'); 
                 if (task.frequencyUnit == "M") {
-                    repetition.html(task.frequencyNumber +' '+$('#minutes_text').html());
+                    repetition.text(task.frequencyNumber +' '+$('#minutes_text').html());
                 } else {
-                    repetition.html(task.frequencyNumber +' '+$('#hours_text').html());
+                    repetition.text(task.frequencyNumber +' '+$('#hours_text').html());
                 }
 
                 if(task.endMinutes) {
                     a.find('.endTime')
                      .html('')
                      .append(task.endHours)
-                     .append($('<b/>').html(':'))
+                     .append($('<b/>').text(':'))
                      .append(task.endMinutes);
 
                 } else {
@@ -387,11 +380,11 @@
             if (task.monthDays.length) {
                 var monthDays = a.find('.monthDays small');
                 if (task.month.length) {
-                    b = $('<b/>').html(task.month.join(', '));
+                    b = $('<b/>').text(task.month.join(', '));
                     monthDays.append(b).append($('<br/>'));
                 }
 
-                span = $('<span/>').html(task.monthDays.join(', '));
+                span = $('<span/>').text(task.monthDays.join(', '));
                 monthDays.append(span);
                 a.find('.monthDays').css('display', '');
 
@@ -402,7 +395,7 @@
 
             if (task.parameters) {
             	a.find('.taskParameters').removeClass('hide');
-            	a.find('.parametersList').html(task.parameters.join(' '));
+            	a.find('.parametersList').text(task.parameters.join(' '));
             }
 
             return a;
@@ -439,6 +432,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
                         a.find('.nextExecution').html(response.object.nextExecution);
+                        a.find('.lastExecution').html(response.object.lastExecution);
                     }
                 },
                 error       : function(response) {
@@ -447,7 +441,7 @@
             });
         },
 
-        pause : function(a) {
+        disable : function(a) {
             $.ajax({
                 type        : 'PUT',
                 url         : '/batchProcessing/changeStatus',
@@ -457,14 +451,7 @@
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
-                        a.find('.pauseTask').removeClass('text-muted').addClass('text-success');
-                        a.find('.playTask').removeClass('text-success').addClass('text-muted');
-
-                        if (a.hasClass('active')) {
-                        	a.find('.pauseTask').css('color', 'white');
-                        	a.find('.playTask').css('color', '');
-                        }
-                        a.find('.nextExecution').html("");
+                          a.find('.nextExecution').html("");
                     }
                 },
                 error       : function(response) {
@@ -473,7 +460,7 @@
             });
         },
 
-        play : function(a) {
+        enable : function(a) {
             $.ajax({
                 type        : 'PUT',
                 url         : '/batchProcessing/changeStatus',
@@ -482,15 +469,6 @@
                 contentType : 'application/json',
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
-                    if (response.status == true) {
-                        a.find('.pauseTask').removeClass('text-success').addClass('text-muted');
-                        a.find('.playTask').removeClass('text-muted').addClass('text-success');
-
-                        if (a.hasClass('active')) {
-                        	a.find('.pauseTask').css('color', '');
-                        	a.find('.playTask').css('color', 'white');
-                        }
-                    }
                 },
                 error       : function(response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);

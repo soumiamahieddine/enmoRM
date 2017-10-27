@@ -477,7 +477,7 @@ trait laabsModelTrait
 
             case 'boolean':
             case 'bool':
-                return (boolean) $sourceValue;
+                return filter_var($sourceValue, FILTER_VALIDATE_BOOLEAN);
 
             case 'float':
             case 'double':
@@ -1366,6 +1366,35 @@ trait laabsModelTrait
         if ($minValue && $propertyValue < $minValue) {
             self::triggerValidationError('Numeric value exceeds is under minimal value', array_merge($context, array('minValue' => $minValue)));
         }
+    }
+
+    /**
+     * Alphabetical sort method to use like a callable function
+     *
+     * @param mixte   $a       The first value
+     * @param mixte   $b       The second value
+     * @param string  $param   The optional param name to compare if values are objects
+     * @param boolean $inverse The boolean to define the order
+     *
+     * @return int The order
+     */
+    public static function alphabeticalSort($a, $b, $param = null, $inverse = false)
+    {
+        $inverseOperator = $inverse ? -1 : 1;
+
+        if ($param) {
+            $a = \laabs::normalize(trim($a->$param));
+            $b = \laabs::normalize(trim($b->$param));
+        } else {
+            $a = \laabs::normalize(trim($a));
+            $b = \laabs::normalize(trim($b));
+        }
+
+        if ($a == $b) {
+            return 0;
+        }
+
+        return $inverseOperator * (($a < $b) ? -1 : 1);
     }
 
     /**

@@ -34,6 +34,10 @@ trait exceptionTrait
      */
     public function exception($exception)
     {
+        if (isset($this->translator) && method_exists($exception, "setMessage")) {
+            $exception->setMessage($this->translator->getText($exception->getFormat()));
+        }
+        
         $exceptionPresenter = \laabs::newPresenter('Exception', $this->view, $this->json, $this->view->translator);
 
         return $exceptionPresenter->Exception($exception);

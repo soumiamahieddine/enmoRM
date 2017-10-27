@@ -21,22 +21,6 @@ WITH (
 );
 
 
--- Table: "recordsManagement"."accessEntry"
-
--- DROP TABLE "recordsManagement"."accessEntry";
-
-CREATE TABLE "recordsManagement"."accessEntry"
-(
-  "accessRuleCode" text NOT NULL,
-  "orgRegNumber" text NOT NULL,
-  "originatorAccess" boolean default true,
-
-  UNIQUE ("accessRuleCode", "orgRegNumber")
-)
-WITH (
-  OIDS=FALSE
-);
-
 -- Table: "recordsManagement"."retentionRule"
 
 -- DROP TABLE "recordsManagement"."retentionRule";
@@ -44,7 +28,7 @@ WITH (
 CREATE TABLE "recordsManagement"."retentionRule"
 (
   "code" text NOT NULL,
-  "duration" text,
+  "duration" text NOT NULL,
   "finalDisposition" text,
   "description" text,
   "label" text,
@@ -72,7 +56,8 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "description" text,
   "accessRuleCode" text,
   "acceptUserIndex" boolean default false,
-  "acceptMultipleDocuments" boolean default false,
+  "acceptArchiveWithoutProfile" boolean default true,
+  "fileplanLevel" text,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -84,6 +69,19 @@ CREATE TABLE "recordsManagement"."archivalProfile"
 )
 WITH (
   OIDS=FALSE
+);
+
+CREATE TABLE "recordsManagement"."archivalProfileContents"
+(
+	"parentProfileId" text NOT NULL,
+	"containedProfileId" text NOT NULL,
+	PRIMARY KEY ("parentProfileId", "containedProfileId"),
+	FOREIGN KEY ("parentProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION,
+  FOREIGN KEY ("containedProfileId")
+    REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 
@@ -136,6 +134,8 @@ CREATE TABLE "recordsManagement"."serviceLevel"
   "digitalResourceClusterId" text NOT NULL,
   "control" text,
   "default" boolean,
+  "samplingFrequency" integer,
+  "samplingRate" integer,
   PRIMARY KEY ("serviceLevelId"),
   UNIQUE ("reference")
 )
@@ -158,6 +158,8 @@ CREATE TABLE "recordsManagement"."archive"
   "archiveName" text,
   "storagePath" text,
   "filePlanPosition" text,
+  "fileplanLevel" text,
+  "originatingDate" date,
   
   "descriptionClass" text,
   "description" jsonb,
@@ -165,6 +167,7 @@ CREATE TABLE "recordsManagement"."archive"
 
   "originatorOrgRegNumber" text NOT NULL,
   "originatorOwnerOrgId" text,
+  "originatorOwnerOrgRegNumber" text,
   "depositorOrgRegNumber" text,
   "archiverOrgRegNumber" text,
 
@@ -174,8 +177,8 @@ CREATE TABLE "recordsManagement"."archive"
   
   "retentionRuleCode" text,
   "retentionStartDate" date,
-  "retentionDuration" text NOT NULL,
-  "finalDisposition" text NOT NULL,
+  "retentionDuration" text,
+  "finalDisposition" text,
   "disposalDate" date,
 
   "accessRuleCode" text,
@@ -198,7 +201,8 @@ CREATE TABLE "recordsManagement"."archive"
   "status" text NOT NULL,
 
   "parentArchiveId" text,
-  "parentOriginatorOrgRegNumber" text,
+
+  "fullTextIndexation" text default 'none',
 
   PRIMARY KEY ("archiveId"),
   FOREIGN KEY ("parentArchiveId")
@@ -277,6 +281,7 @@ CREATE TABLE "recordsManagement"."log"
   "processId" text,
   "processName" text,
   "type" text NOT NULL,
+  "ownerOrgRegNumber" text,
 
   PRIMARY KEY ("archiveId")
 )

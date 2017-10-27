@@ -43,7 +43,7 @@ class retentionRule
     }
 
     /**
-     *  List the retention rules
+     * List the retention rules
      *
      * @return recordManagement/retentionRule[] The list of retention rules
      */
@@ -64,8 +64,8 @@ class retentionRule
     }
 
     /**
-     *  Create an access rule
-     * @param recordsManagement/retentionRule $retentionRule The access rule
+     * Create a retention rule
+     * @param recordsManagement/retentionRule $retentionRule The retention rule
      *
      * @return boolean The request result
      */
@@ -73,15 +73,13 @@ class retentionRule
     {
         try {
             return $this->sdoFactory->create($retentionRule, 'recordsManagement/retentionRule');
-            
         } catch (\Exception $e) {
-            throw $e;
             throw new \bundle\recordsManagement\Exception\retentionRuleException("Retention rule not created.");
         }
     }
 
     /**
-     *  Read an access rule
+     * Read a retention rule
      * @param string $code The retention rule code
      *
      * @return recordManagement/retentionRule The retention rule
@@ -92,8 +90,8 @@ class retentionRule
     }
 
     /**
-     *  Update an access rule
-     * @param recordsManagement/retentionRule $retentionRule The access rule
+     * Update a retention rule
+     * @param recordsManagement/retentionRule $retentionRule The retention rule
      *
      * @return boolean The request result
      */
@@ -103,12 +101,9 @@ class retentionRule
             $res = $this->sdoFactory->update($retentionRule, 'recordsManagement/retentionRule');
 
             $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "retentionRuleCode='$retentionRule->code'");
-            if ($archivalProfiles) {
-                foreach ($archivalProfiles as $archivalProfile) {
-                    // Life cycle journal
-                    $eventItems = array('archivalProfileId' => $archivalProfile->archivalProfileId);
-                    $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/retentionRule', $retentionRule->code, $eventItems);
-                }
+            for ($i = 0; $i < count($archivalProfiles); $i++) {
+                $eventItems = array('archivalProfileId' => $archivalProfiles[$i]->archivalProfileId);
+                $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/retentionRule', $retentionRule->code, $eventItems);
             }
         } catch (\core\Exception $e) {
             throw new \bundle\recordsManagement\Exception\retentionRuleException("Retention rule not updated.");
@@ -118,8 +113,8 @@ class retentionRule
     }
 
     /**
-     *  Delete an access rule
-     * @param string $code The access rule code
+     * Delete a retention rule
+     * @param string $code The retention rule code
      *
      * @return boolean The request result
      */
@@ -140,8 +135,8 @@ class retentionRule
     }
 
     /**
-     * get retentionRule by code
-     * @param string $code
+     * Get retentionRule by code
+     * @param string $code The retention rule code
      *
      * @return recordsManagement/retentionRule
      */

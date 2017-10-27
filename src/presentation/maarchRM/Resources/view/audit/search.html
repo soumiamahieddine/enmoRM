@@ -248,14 +248,13 @@
             skipCache: true
         }
         ).on('typeahead:selected', function ($event, suggestion, source) {
-            $("#event_userAccountTypeahead").data('accountId', suggestion.accountId);
+            $("#event_userAccountTypeahead").attr('data-accountId', suggestion.accountId);
         });
 
-       $("#event_userAccountTypeahead").on('change', function () {
-           if ($("#event_userAccountTypeahead").val() !=  $("#event_userAccountTypeahead").data('accountId')) {
-               $("#event_userAccountTypeahead").data('accountId', "");
-           }
+       $("#event_userAccountTypeahead").on('keypress', function () {
+            $("#event_userAccountTypeahead").attr('data-accountId', "");
        });
+
         // checkBox button
         $("#event_form").on('click', '.eventType', function () {
 
@@ -323,7 +322,7 @@
         // checkBox button
         $("#event_form").on('click', '.wording', function () {
 
-             wording = $(this).find('input').val();
+            wording = $(this).find('input').val();
             if ($(this).attr('class').indexOf('btn-default') != -1) {
 
                 $('#event_form ').find('.wordingAll').removeClass('btn-info active').addClass('btn-default');
@@ -390,21 +389,21 @@
                 }
             });
             
-            
             serializedObject = {
                 fromDate: $('#fromDate').val(),
                 toDate: $('#toDate').val(),
                 status: status,
                 event: $('#event').val(),
-                accountId: "",
+                accountId: $.trim($('#event_userAccountTypeahead').val()),
                 term: $('#term').val(),
                 wording : wording
             };
             
-            if ($('#event_userAccountTypeahead').data('accountId')) {
-                serializedObject.accountId = $('#event_userAccountTypeahead').data('accountId') ;
+            if ($('#event_userAccountTypeahead').attr('data-accountId')) {
+                serializedObject.accountId = $('#event_userAccountTypeahead').attr('data-accountId') ;
             }
-        return serializedObject;
+
+            return serializedObject;
         }
     </script>
 

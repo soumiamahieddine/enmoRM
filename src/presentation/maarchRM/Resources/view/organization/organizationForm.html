@@ -1,6 +1,6 @@
 <div class="panel panel-default" id="organization_organizationForm">
     <div class="panel-heading">
-        <h4><span class="orgFormTitle">Organization</span> <small class="displayName"></small></h4>
+        <h4><span class="orgFormTitle" data-translate-context="org">Organization</span> <small class="displayName"></small></h4>
     </div>
     <div class="panel-body">
         <form>
@@ -51,49 +51,51 @@
                     <div id="organization_orgRoleList" class="btn-toolbar"></div>
                     <br/>
                 </div>
-                <?merge publicArchives.not() ?>
-                <div class="form-group">
-                    <label>Organization type</label>
-                    <select class="form-control" name="orgTypeCode">
-                        <option value=""></option>
-                        <?merge orgType ?>
-                        <option value="[?merge .code ?]"><?merge .name?></option>
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-6">
-                        <label>Begin date</label>
-                        <input type="text" class="form-control datePicker" name="beginDate" placeholder="Begin date">
+                <h4><a role="button" id="organizationMetadatasBtn" data-toggle="collapse" href="#organizationMetadatas" aria-expanded="false"><i class="fa fa-plus">&nbsp;</i>Metadatas</a></h4>
+                <div class="collapse" id="organizationMetadatas">
+                    <div class="form-group">
+                        <label>Organization type</label>
+                        <select class="form-control" name="orgTypeCode">
+                            <option value=""></option>
+                            <?merge orgType ?>
+                            <option value="[?merge .code ?]"><?merge .name?></option>
+                        </select>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label>End date</label>
-                        <input type="text" class="form-control datePicker" name="endDate" placeholder="End date">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Begin date</label>
+                            <input type="text" class="form-control datePicker" name="beginDate" placeholder="Begin date">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>End date</label>
+                            <input type="text" class="form-control datePicker" name="endDate" placeholder="End date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" placeholder="Description" style="resize: none; resize: vertical"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Legal classification</label>
+                        <input type="text" class="form-control" name="legalClassification" placeholder="Legal classification">
+                    </div>
+                    <div class="form-group">
+                        <label>Business type</label>
+                        <input type="text" class="form-control" name="businessType" placeholder="Business type">
+                    </div>
+                    <div class="form-group">
+                        <label>Tax identifier</label>
+                        <input type="text" class="form-control" name="taxIdentifier" placeholder="Tax identifier">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea class="form-control" name="description" placeholder="Description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Legal classification</label>
-                    <input type="text" class="form-control" name="legalClassification" placeholder="Legal classification">
-                </div>
-                <div class="form-group">
-                    <label>Business type</label>
-                    <input type="text" class="form-control" name="businessType" placeholder="Business type">
-                </div>
-            </div>
-            <?merge publicArchives.not() ?>
-            <div class="form-group">
-                <label>Tax identifier</label>
-                <input type="text" class="form-control" name="taxIdentifier" placeholder="Tax identifier">
             </div>
         </form>
+        <br/>
         <button type="button" class="btn btn-warning" id="organization_cancel" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
         <button type="button" class="btn btn-success" id="organization_submit" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
     </div>
     <span id="parent_text" class='hide'>Parent</span>
-    <span id="organization_text" class='hide'>Organization</span>
+    <span id="organization_text" data-translate-context="org" class='hide'>Organization</span>
     <span id="orgUnit_text" class='hide'>Organization unit</span>
 
     <div class="modal fade" id="organization_closingConfimationForModification">
@@ -118,7 +120,7 @@
 
 </div>
 <div style="display:none">
-    <span id="empty_text">The fields with a star are compulsory.</span>
+    <span id="empty_text">The fields with a star are required.</span>
 </div>
 <script>
 
@@ -177,6 +179,10 @@
         OrganizationForm.closeForm();
     })
 
+    $('#organizationMetadatasBtn').on('click', function() {
+        $(this).find('i').toggleClass('fa-plus fa-minus');
+    })
+
     var OrganizationForm = {
         hasModification: false,
 
@@ -185,33 +191,39 @@
 
             orgForm.css('display', '');
             if (parentName != undefined) {
-                orgForm.find('small.displayName').html($('#parent_text').html() + ' : ' + parentName);
+                orgForm.find('small.displayName').text($('#parent_text').html() + ' : ' + parentName);
                 orgForm.find('input[name="parentOrgId"]').val(parentId);
             }
 
             if (ownerOrgId != undefined) {
                 orgForm.find('[name="isOrgUnit"]').prop('checked', true);
                 orgForm.find('[name="ownerOrgId"]').val(ownerOrgId);
-                orgForm.find('.orgFormTitle').html($('#orgUnit_text').html());
+                orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
             } else {
                 $('#organization_orgUnitInfo').css('display', 'none');
-                orgForm.find('.orgFormTitle').html($('#organization_text').html());
+                orgForm.find('.orgFormTitle').text($('#organization_text').html());
             }
         },
 
         load: function(organization) {
             var orgForm = $('#organization_organizationForm');
+            orgForm.find('[name="registrationNumber"]').removeProp('readonly', false); 
 
-            orgForm.find('small.displayName').html(organization.displayName);
+            orgForm.find('small.displayName').text(organization.displayName);
             $.each(organization, function(key, value) {
                 orgForm.find('[name="'+ key +'"]').val(value);
             })
             if (organization.isOrgUnit) {
                 orgForm.find('[name="isOrgUnit"]').prop('checked', true); 
-                orgForm.find('.orgFormTitle').html($('#orgUnit_text').html());
+                orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
             } else {
                 $('#organization_orgUnitInfo').css('display', 'none');
-                orgForm.find('.orgFormTitle').html($('#organization_text').html());
+                orgForm.find('.orgFormTitle').text($('#organization_text').html());
+            }
+
+            if (organization.isUsed) {
+                orgForm.find('[name="registrationNumber"]').prop('readonly', true); 
+                orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
             }
 
             if (organization.orgRoleCodes) {

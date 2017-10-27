@@ -37,10 +37,18 @@ trait archiveCommunicationTrait
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
      * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
      * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @return recordsManagement/archive[]
      */
@@ -53,10 +61,18 @@ trait archiveCommunicationTrait
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     ) {
         $archives = [];
 
@@ -69,20 +85,25 @@ trait archiveCommunicationTrait
             'archiveExpired' => $archiveExpired,
             'finalDisposition' => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
+            'originatorArchiveId' => $originatorArchiveId,
+            'originatingDate' => $originatingDate,
             'filePlanPosition' => $filePlanPosition,
             'hasParent' => $hasParent,
+            'partialRetentionRule' => $partialRetentionRule,
+            'retentionRuleCode' => $retentionRuleCode,
+            'depositStartDate' => $depositStartDate,
+            'depositEndDate' => $depositEndDate,
+            'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
         ];
-
         if (!empty($description) || !empty($text)) {
             $searchClasses = [];
             if (!$profileReference) {
-                $archivalProfiles = $this->archivalProfileController->index(true);
-                foreach ($archivalProfiles as $archivalProfile) {
-                    if ($archivalProfile->descriptionClass != '' && !isset($searchClasses[$archivalProfile->descriptionClass])) {
-                        $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
-                    } elseif (!isset($searchClasses['recordsManagement/description'])) {
-                        $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
-                    }
+                 $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+
+                $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+
+                foreach ($descriptionClassController->index() as $descriptionClass) {
+                    $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
                 }
             } else {
                 $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
@@ -92,7 +113,6 @@ trait archiveCommunicationTrait
                     $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
                 }
             }
-
             foreach ($searchClasses as $descriptionClass => $descriptionController) {
                 $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
             }
@@ -115,7 +135,7 @@ trait archiveCommunicationTrait
                 }
             }
         }
-
+        
         return $archives;
     }
 
@@ -131,28 +151,7 @@ trait archiveCommunicationTrait
 
         $archive = $this->retrieve($archiveId);
 
-        // Life cycle journal
-        $eventItems = array(
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-        );
-
-        $eventItems['resId'] = null;
-        $eventItems['hashAlgorithm'] = null;
-        $eventItems['hash'] = null;
-        $eventItems['address'] = $archive->storagePath;
-        $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'recordsManagement/archive', $archive->archiveId, $eventItems);
-
-        if (!empty($archive->digitalResources)) {
-            foreach ((array) $archive->digitalResources as $digitalResource) {
-                $eventItems['resId'] = $digitalResource->resId;
-                $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventItems['hash'] = $digitalResource->hash;
-                $eventItems['address'] = $archive->storagePath;
-
-                $this->lifeCycleJournalController->logEvent('recordsManagement/delivery', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
-            }
-        }
+        $this->logDelivery($archive);
 
         return $archive;
     }
@@ -164,34 +163,16 @@ trait archiveCommunicationTrait
      *
      * @return digitalResource/digitalResource
      */
-    public function getContents($archiveId, $resId)
+    public function consultation($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        if (!$this->accessVerification($archive)) {
+        if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
-
-        return $digitalResource;
-    }
-
-    /**
-     * Retrieve an archive resource contents
-     * @param string $resId The resource identifier
-     *
-     * @return digitalResource/digitalResource
-     */
-    public function getDigitalResource($resId)
-    {
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
-
-        //$archive = $this->getDescription($digitalResource->archiveId);
-
-        //if (!$this->accessVerification($archive)) {
-        //    throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        //}
+        $this->logConsultation($archive, $digitalResource);
 
         return $digitalResource;
     }
@@ -211,4 +192,5 @@ trait archiveCommunicationTrait
 
         return $digitalResources;
     }
+
 }

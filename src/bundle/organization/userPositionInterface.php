@@ -75,4 +75,11 @@ interface userPositionInterface
      */
     public function readDescendantorgs();
 
+    /**
+     * Get descendant profiles
+     * 
+     * @action organization/userPosition/getdescendantArchivalProfiles
+     */
+    public function readDescendantprofiles();
+
 }

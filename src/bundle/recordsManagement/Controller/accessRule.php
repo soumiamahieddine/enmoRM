@@ -74,8 +74,6 @@ class accessRule
     {
         $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
 
-        $accessRule->accessEntry = $this->sdoFactory->readChildren('recordsManagement/accessEntry', $accessRule);
-
         return $accessRule;
     }
 
@@ -92,13 +90,6 @@ class accessRule
         }
         try {
             $this->sdoFactory->create($accessRule, 'recordsManagement/accessRule');
-
-            if (!empty($accessRule->accessEntry)) {
-                foreach ($accessRule->accessEntry as $accessEntry) {
-                    $accessEntry->accessRuleCode = $accessRule->code;
-                    $this->sdoFactory->create($accessEntry, 'recordsManagement/accessEntry');
-                }
-            }
         } catch (\Exception $e) {
             throw new \Exception("Access Code not created.");
         }
@@ -121,25 +112,7 @@ class accessRule
 
         try {
             $this->sdoFactory->update($accessRule, 'recordsManagement/accessRule');
-
-            $this->sdoFactory->deleteChildren('recordsManagement/accessEntry', $accessRule, 'recordsManagement/accessRule');
-            if (!empty($accessRule->accessEntry)) {
-                foreach ($accessRule->accessEntry as $accessEntry) {
-                    $accessEntry->accessRuleCode = $accessRule->code;
-                    $this->sdoFactory->create($accessEntry, 'recordsManagement/accessEntry');
-                }
-            }
-
-            $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "accessRuleCode='$accessRule->code'");
-            if ($archivalProfiles) {
-                foreach ($archivalProfiles as $archivalProfile) {
-                    $eventItems = array('archivalProfileId' => $archivalProfile->archivalProfileId, 'archivalProfileReference' => $archivalProfile->reference);
-                    $this->lifeCycleJournalController->logEvent('recordsManagement/ArchivalProfileModification', 'recordsManagement/accessRule', $accessRule->code, $eventItems);
-                }
-            }
-
         } catch (\Exception $e) {
-            throw $e;
             throw new \Exception("Access Code not updated.");
         }
 
@@ -156,8 +129,6 @@ class accessRule
     {
         try {
             $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
-
-            $this->sdoFactory->deleteChildren('recordsManagement/accessEntry', $code, 'recordsManagement/accessRule');
         } catch (\Exception $e) {
             throw new \Exception("Access Code not deleted.");
         }

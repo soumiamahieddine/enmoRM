@@ -51,10 +51,10 @@ class archiveFilePlanPosition
     public function getFolderContents($orgRegNumber, $folderId=null)
     {
         if (empty($folderId)) {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null and (parentArchiveId = null or parentOriginatorOrgRegNumber != null)';
+            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null and (parentArchiveId = null)';
             $queryArgs = ['orgRegNumber'=>$orgRegNumber];
         } else {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId and (parentArchiveId = null or parentOriginatorOrgRegNumber != null)';
+            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId and (parentArchiveId = null)';
             $queryArgs = ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId];
         }
 
@@ -125,15 +125,15 @@ class archiveFilePlanPosition
 
                 // Validation
                 if (!$archive) {
-                    throw new \core\Exception\NotFoundException("The archive identifier '$archiveId' does not exist.");
+                    throw new \core\Exception\NotFoundException("The archive identifier %s does not exist.", 404, null, [$archiveId]);
                 }
 
                 if ($fromFolderId != $archive->filePlanPosition) {
-                    throw new \core\Exception\ForbiddenException("The archive '$archiveId' is not from the folder '$fromFolderId'.");
+                    throw new \core\Exception\ForbiddenException("The archive %s is not from the folder %s2.", 404, null, [$archiveId, $fromFolderId]);
                 }
 
                 if ($toFolder && $toFolder->ownerOrgRegNumber != $archive->originatorOrgRegNumber) {
-                    throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from '$folder->ownerOrgRegNumber'.");
+                    throw new \core\Exception\ForbiddenException("The folder only accepts archives originated from %s.", 404, null, [$folder->ownerOrgRegNumber]);
                 }
 
                 // Update
@@ -178,8 +178,18 @@ class archiveFilePlanPosition
         $digitalResourceController = \laabs::newController("digitalResource/digitalResource");
         $archive->digitalResources = $digitalResourceController->getResourcesByArchiveId($archive->archiveId);
 
+        foreach ($archive->digitalResources as $digitalResource) {
+            $convertedResources = $digitalResourceController->getRelatedResources($digitalResource->resId, "isConversionOf");
+
+            if (is_array($convertedResources)) {
+                $archive->digitalResources = array_merge($archive->digitalResources, $convertedResources);
+            } else {
+                $archive->digitalResources[] = $convertedResources;
+            }
+        }
+
         // ChildrenArchives
-        $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'");
+        $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'", null, '< archiveName');
         foreach ($childrenArchives as $childArchive) {
             $archive->childrenArchives[] = $this->listArchiveContents($childArchive);
         }

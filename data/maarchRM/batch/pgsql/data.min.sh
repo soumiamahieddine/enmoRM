@@ -63,5 +63,9 @@ esac
 done
 
 cat \
+$DATA_MAARCHRM_SQL_PATH/pgsql/deleteAllData.sql \
+| psql --host=$input_pgsql_host --port=$input_pgsql_port --username="$input_pgsql_user" --dbname="$input_pgsql_database" -f -
+
+cat \
 $DATA_MAARCHRM_SQL_PATH/pgsql/default.sql \
 | psql --host=$input_pgsql_host --port=$input_pgsql_port --username="$input_pgsql_user" --dbname="$input_pgsql_database" -f -

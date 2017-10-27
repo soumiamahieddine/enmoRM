@@ -17,9 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Model;
+
 /**
- * Class model that represents a retentionRule applied to an archive
+ * Class model that represents a disposal date
  *
  * @package RecordsManagement
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>

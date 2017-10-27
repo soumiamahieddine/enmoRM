@@ -60,6 +60,10 @@ class descriptionField
      */
     public function create($descriptionField)
     {
+        if ($this->sdoFactory->exists("recordsManagement/descriptionField", $descriptionField->name)){
+            throw new \core\Exception\ConflictException("The description field already exists.");
+        }
+
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }
@@ -115,7 +119,7 @@ class descriptionField
     }
 
     /**
-     *  Delete a description field
+     * Delete a description field
      * @param string $name The description field name
      *
      * @return boolean The request result
@@ -130,7 +134,7 @@ class descriptionField
         try {
             $this->sdoFactory->delete($descriptionField);
         } catch (\core\Exception $e) {
-            throw new \bundle\recordsManagement\Exception\descriptionFieldException("Retention rule not deleted.");
+            throw new \bundle\recordsManagement\Exception\descriptionFieldException("Description field not deleted.");
         }
 
         return true;

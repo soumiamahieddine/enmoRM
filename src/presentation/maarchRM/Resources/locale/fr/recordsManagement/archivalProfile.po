@@ -8,8 +8,8 @@ msgstr "Profils"
 msgid "profile(s)"
 msgstr "profil(s)"
 
-msgid "Profile reference"
-msgstr "Référence du profil"
+msgid "Identifier"
+msgstr "Identifiant"
 
 msgid "Add a profile"
 msgstr "Ajouter un profil"
@@ -18,7 +18,7 @@ msgid "New profile"
 msgstr "Nouveau profil"
 
 msgid "Archival profile"
-msgstr "Profil d'archivage"
+msgstr "Profil d'archive"
 
 msgid "Description class"
 msgstr "Modèle de description"
@@ -86,8 +86,8 @@ msgstr "Jours"
 msgid "Months"
 msgstr "Mois"
 
-msgid "Access rules"
-msgstr "Règle d'accès"
+msgid "Access rule"
+msgstr "Règle de communicabilité"
 
 msgid "Group"
 msgstr "Groupe"
@@ -95,8 +95,8 @@ msgstr "Groupe"
 msgid "Read"
 msgstr "Lecture"
 
-msgid "Access rule"
-msgstr "Règles d'accès"
+msgid "Access rules"
+msgstr "Règles de communicabilité"
 
 msgid "Retention rule"
 msgstr "Règle de conservation"
@@ -112,6 +112,9 @@ msgstr "Durée de non-communicabilité"
 
 msgid "To be defined later"
 msgstr "À définir plus tard"
+
+msgid "Originating date"
+msgstr "Date de production"
 
 msgid "Created date"
 msgstr "Date de création"
@@ -189,7 +192,7 @@ msgid "Archival profile uploaded"
 msgstr "Profil d'archive téléversé"
 
 msgid "Select a access rule code"
-msgstr "Selectionnez une règles d'accès"
+msgstr "Selectionnez une règles de communicabilité"
 
 msgid "Select a retention start date"
 msgstr "Selectionnez une date de référence"
@@ -220,3 +223,36 @@ msgstr "Le champ ne doit pas être vide"
 
 msgid "Originator"
 msgstr "Producteur"
+
+msgid "Archive structure"
+msgstr "Structure d'archive"
+
+msgid "Accept archives without profile"
+msgstr "Autoriser les archives sans profil"
+
+msgid "Accept the profile :"
+msgstr "Autoriser le profil :"
+
+msgid "Select a profile"
+msgstr "Choisir un profil"
+
+msgid "Do you want to save the changes before leaving this screen ?"
+msgstr "Voulez vous enregistrer les modifications avant de quitter cet écran ?"
+
+msgid "Go to"
+msgstr "Aller vers"
+
+msgid "Accept any profiles"
+msgstr "Accepter tous les profils"
+
+msgid "Generate bar code"
+msgstr "Générer un code à barres"
+
+msgid "Fileplan level"
+msgstr "Niveau dans le plan"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "File"
+msgstr "Dossier"

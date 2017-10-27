@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Message;
+
 /**
  * Class model that represents an archive
  *
@@ -76,7 +78,7 @@ class archive
     public $serviceLevelReference;
 
     /**
-     * The restriction rule code
+     * The retention rule code
      *
      * @var string
      */
@@ -109,6 +111,13 @@ class archive
      * @var date
      */
     public $disposalDate;
+
+    /**
+     * The originating date of the archive
+     *
+     * @var timestamp
+     */
+    public $originatingDate;
 
     /**
      * The access restriction rule code
@@ -202,6 +211,14 @@ class archive
     public $descriptionObject;
 
     /**
+     * The status of fulltext indaxation
+     *
+     * @var string
+     * @enumeration [requested, indexed, failed, none]
+     */
+    public $fullTextIndexation;
+
+    /**
      * The life cycle events
      *
      * @var recordsManagement/lifeCycleEvent[]
@@ -243,6 +260,13 @@ class archive
      * @var string
      */
     public $archiverOrgRegNumber;
+
+    /**
+     * The archive description level
+     *
+     * @var string
+     */
+    public $fileplanLevel;
 
     /**
      * The contained archives list

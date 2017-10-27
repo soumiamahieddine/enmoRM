@@ -39,7 +39,7 @@ msgid "Service level"
 msgstr "Niveau de service"
 
 msgid "Cluster"
-msgstr "Grappe de dépôt"
+msgstr "Grappe de stocakge"
 
 msgid "Select a service level"
 msgstr "Sélectionnez un niveau de service"
@@ -111,7 +111,7 @@ msgid "Archival agreement deleted"
 msgstr "Accord de versement supprimé"
 
 msgid "The reference is empty."
-msgstr "La référence est vide."
+msgstr "L'identifiant est vide."
 
 msgid "The name is empty."
 msgstr "Le nom est vide."

@@ -11,7 +11,7 @@ msgstr "Gérer le stockage"
 msgctxt "userStory"
 
 msgid "adminFormat"
-msgstr "Gérer les formats"
+msgstr "Gérer le format des documents"
 msgctxt "userStory"
 
 msgid "adminEventFormat"
@@ -23,7 +23,7 @@ msgstr "Gérer les tâches"
 msgctxt "userStory"
 
 msgid "destruction"
-msgstr "Destruction"
+msgstr "Eliminer des archives"
 msgctxt "userStory"
 
 msgid "adminFunc"
@@ -34,16 +34,20 @@ msgid "adminOrganization"
 msgstr "Gérer l'organisation fonctionnelle"
 msgctxt "userStory"
 
+msgid "AdminArchivalProfileAccess"
+msgstr "Gérer les profils d'archive des producteurs"
+msgctxt "userStory"
+
 msgid "adminAuthorization"
 msgstr "Gérer les rôles"
 msgctxt "userStory"
 
 msgid "adminOrgContact"
-msgstr "Gérer les contacts dans l'organisation"
+msgstr "Gérer les contacts de l'organisation"
 msgctxt "userStory"
 
 msgid "adminOrgUser"
-msgstr "Gérer les utilisateurs dans l'organisation"
+msgstr "Gérer les utilisateurs de l'organisation"
 msgctxt "userStory"
 
 msgid "adminServiceaccount"
@@ -55,7 +59,7 @@ msgstr "Gérer les utilisateurs"
 msgctxt "userStory"
 
 msgid "batchScheduling"
-msgstr "Gérer les tâches planifiées"
+msgstr "Planifier les tâches"
 msgctxt "userStory"
 
 msgid "contact"
@@ -67,11 +71,11 @@ msgstr "Administration archivistique"
 msgctxt "userStoryGroup"
 
 msgid "adminAccessRule"
-msgstr "Gérer les règles d'accès"
+msgstr "Gérer les règles de communicabilité"
 msgctxt "userStory"
 
 msgid "adminRetentionRule"
-msgstr "Gérer le tableau de gestion"
+msgstr "Gérer les règles de conservation"
 msgctxt "userStory"
 
 msgid "archivalAgreement"
@@ -91,11 +95,11 @@ msgstr "Gérer les champs de description"
 msgctxt "userStory"
 
 msgid "filePlan"
-msgstr "Gérer le plan de classement"
+msgstr "Gérer les dossiers de classement"
 msgctxt "userStory"
 
 msgid "serviceLevel"
-msgstr "Gérer les niveau de service"
+msgstr "Gérer les niveaux de service"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -123,19 +127,23 @@ msgstr "Rechercher les journaux archivés"
 msgctxt "userStory"
 
 msgid "archiveManagement"
-msgstr "Gérer l'archive"
+msgstr "Gestion de l'archive"
 msgctxt "userStoryGroup"
 
 msgid "modify"
-msgstr "Modifier les règles de gestion d'une archive"
+msgstr "Modifier les règles de gestion des archives"
+msgctxt "userStory"
+
+msgid "modifyDescription"
+msgstr "Modifier la description des archives"
 msgctxt "userStory"
 
 msgid "migration"
-msgstr "Gérer les migrations de format"
+msgstr "Convertir le format des documents"
 msgctxt "userStory"
 
 msgid "checkIntegrity"
-msgstr "Contrôler la conformité et l'intégrité"
+msgstr "Contrôler l'intégrité des archives"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -216,7 +224,7 @@ msgid "restitutionValidation"
 msgstr "Récupérer les restitutions"
 msgctxt "userStory"
 
-# 
+#
 # Commit restitution destruction
 msgid "restitutionProcess"
 msgstr "Traiter les restitutions acquittées"
@@ -246,25 +254,25 @@ msgctxt "userStory"
 msgid "transferSend"
 msgstr "Mes bordereaux à traiter"
 msgctxt "userStory"
- 
+
 # ---------------------------------------------------------
 # Search/retrieve
 # ---------------------------------------------------------
 
 msgid "archiveRetrieval"
-msgstr "Rechercher et consulter"
+msgstr "Accès à l'Archive"
 msgctxt "userStoryGroup"
 
 msgid "searchPublicArchive"
 msgstr "Accéder au registre des entrées"
 msgctxt "userStory"
 
-msgid "searchAdminArchive"
-msgstr "Recherche d'archives admnistratives"
+msgid "IndexCourrier"
+msgstr "Accéder au registre des courriers"
 msgctxt "userStory"
 
 msgid "retrieve"
-msgstr "Consulter données et métadonnées"
+msgstr "Accéder au registre"
 msgctxt "userStory"
 
 msgid "originatorAccess"
@@ -284,8 +292,12 @@ msgstr "Consulter les notifications"
 msgctxt "userStory"
 
 msgid "archiveDeposit"
-msgstr "Dépôt unitaire"
+msgstr "Versement"
 msgctxt "userStoryGroup"
+
+msgid "deposit"
+msgstr "Déposer une archive"
+msgctxt "userStory"
 
 msgid "messageComposer"
 msgstr "Génerer un bordereau"
@@ -296,7 +308,7 @@ msgctxt "userStory"
 # ---------------------------------------------------------
 
 msgid "Authorization roles"
-msgstr "Rôles utilisateur"
+msgstr "Rôles"
 
 msgid "authorization role(s)"
 msgstr "rôle(s) d'autorisation"
@@ -332,7 +344,7 @@ msgid "Role privileges"
 msgstr "Privilèges du rôle"
 
 msgid "Access rules"
-msgstr "Règles d'accès"
+msgstr "Règles de communicabilité"
 
 msgid "Privileges"
 msgstr "Privilèges"
@@ -353,7 +365,7 @@ msgid "New role created."
 msgstr "Nouveau rôle crée"
 
 msgid "Role updated."
-msgstr "Role modifié"
+msgstr "Rôle modifié"
 
 msgid "Status changed."
 msgstr "Statuts modifié"
@@ -475,6 +487,9 @@ msgstr "Rôles"
 msgid "Organization"
 msgstr "Organisation"
 
+msgid "Organization units"
+msgstr "Services"
+
 msgid "Profils"
 msgstr "Profil"
 
@@ -535,6 +550,21 @@ msgstr "Confirmer le mot de passe"
 msgid "Username not registered or wrong password."
 msgstr "Nom d'utilisateur ou mot de passe incorrect."
 
+msgid "A new password has been generated"
+msgstr "Un nouveau mot de passe a été généré"
+
+msgid "User %1$s is disabled"
+msgstr "L'utilisateur %1$s est désactivé"
+
+msgid "User %1$s is locked"
+msgstr "L'utilisateur %1$s est verrouillé"
+
+msgid "Invalid username or email."
+msgstr "Nom d'utilisateur ou courriel incorrect."
+
+msgid "Forgot password ?"
+msgstr "Mot de passe oublié ?"
+
 msgid "User connected"
 msgstr "Utilisateur connecté"
 
@@ -544,8 +574,23 @@ msgstr "L'utilisateur est désactivé"
 msgid "The password is the same as the precedent."
 msgstr "Le mot de passe est le même que le précédent."
 
+msgid "The password is too short."
+msgstr "Le mot de passe est trop court"
+
+msgid "The password must contain special characters."
+msgstr "Le mot de passe doit contenir des caractères spéciaux."
+
+msgid "The password must contain digits."
+msgstr "Le mot de passe doit contenir des chiffres."
+
+msgid "The password must contain upper and lower case."
+msgstr "Le mot de passe doit contenir des majuscules et minuscules"
+
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
+
+msgid "Generate a new password"
+msgstr "Générer un nouveau mot de passe"
 
 msgid "User added"
 msgstr "Utilisateur ajouté"
@@ -622,7 +667,7 @@ msgid "Service account(s)"
 msgstr "Compte(s) de service"
 
 msgid "Manage service account"
-msgstr "Gestion des comptes de service"
+msgstr "Comptes de service"
 
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"
@@ -650,3 +695,6 @@ msgstr "Le champs est vide"
 
 msgid "Passwords are not the same"
 msgstr "Les mots de passe sont pas identiques"
+
+msgid "Display only activated users"
+msgstr "Afficher uniquement les utilisateurs actifs"

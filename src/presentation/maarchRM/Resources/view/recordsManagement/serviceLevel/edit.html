@@ -15,7 +15,7 @@ file that was distributed with this source code.
                 <span>New service level</span>
                 <?merge serviceLevel.serviceLevelId.bool() ?>
                 <span>Edit a service level</span>
-                <small><?merge serviceLevel.reference ?><small>
+                <small><?merge serviceLevel.reference ?></small>
             </h1>
         </div>
     </div>
@@ -33,6 +33,18 @@ file that was distributed with this source code.
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-md-4 control-label">Sampling frequency (in days)</label>
+                        <div class="col-md-8">
+                            <input type="number" min="0" class="form-control" id="samplingFrequency" name="samplingFrequency" placeholder="Sampling frequency (in days)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Sampling rate (in %)</label>
+                        <div class="col-md-8">
+                            <input type="number" min="0" max="100" class="form-control" id="samplingRate" name="samplingRate" placeholder="Sampling rate (in %)">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-xs-5 control-label"><span class="col-md-10">Detect format</span></label>
                         <input type="checkbox" name="formatDetection" id="detectFormat" data-toggle="toggle"> 
                     </div>
@@ -47,6 +59,14 @@ file that was distributed with this source code.
                     <div class="form-group">
                         <label class="col-xs-5 control-label"><span class="col-md-10">Convert on deposit</span></label>
                         <input type="checkbox" name="convertOnDeposit" id="convertOnDeposit" data-toggle="toggle"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Log the consultations</span></label>
+                        <input type="checkbox" name="logConsultation" id="logConsultation" data-toggle="toggle"> 
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Full text indexation</span></label>
+                        <input type="checkbox" name="fullTextIndexation" id="fullTextIndexation" data-toggle="toggle"> 
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -74,11 +94,13 @@ file that was distributed with this source code.
                     </button>
                     </div>
             </div>
-            <span class="hide" id="empty_text">The fields with a star are compulsory.</span> 
+            <span class="hide" id="empty_text">The fields with a star are compulsory.</span>
+            <span class="hide" id="samplingRate_badValue">The rate must be between 0 and 100</span>
+            <span class="hide" id="samplingFrequency_badValue">The frequency must be positive</span>
         </form>
     </div>
 </div>
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 </div>
 <script>
     $("#cancelServiceLevelBtn").on('click', function(){
@@ -89,10 +111,20 @@ file that was distributed with this source code.
 $("#save").on('click', function(){
 
     if ($('#reference').val() == '') {
-        gritter.show($('#empty_text').html(), false);
+        gritter.show($('#empty_text').text(), false);
         return;
     }
-    
+
+    if ($('#samplingRate').val() < 0 || $('#samplingRate').val() > 100) {
+        gritter.show($('#samplingRate_badValue').text(), false);
+        return;
+    }
+
+    if ($('#samplingFrequency').val() < 0) {
+        gritter.show($('#samplingFrequency_badValue').text(), false);
+        return;
+    }
+
     if($("#contain").data('servicelevelid')) {
         type= 'PUT';
         url= '/serviceLevel/'+$("#contain").data('servicelevelid');
@@ -126,7 +158,7 @@ function serialize() {
     serializedObject = {};
     serializedObject['default'] = $('#serviceLevelId').attr('data-default') != undefined;
 
-    $('input[type="text"], input[type="hidden"], select').each(function(){
+    $('input[type="text"], input[type="number"], input[type="hidden"], select').each(function(){
         serializedObject[$(this).attr('name')] = $(this).val();
     })
 

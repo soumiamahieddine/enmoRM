@@ -25,7 +25,7 @@ namespace bundle\recordsManagement\Controller;
  * @package RecordsManagement
  * @author  Cyril VAZQUEZ <cyril.vazquez@maarch.org> 
  */
-class description
+class description implements \bundle\recordsManagement\Controller\archiveDescriptionInterface
 {
     protected $sdoFactory;
 
@@ -42,11 +42,12 @@ class description
 
     /**
      * Create the description
-     * @param obejct $archive The described archive
+     * @param obejct $archive  The described archive
+     * @param string $fullText The archive fullText
      * 
      * @return bool
      */
-    public function create($archive)
+    public function create($archive, $fullText=false)
     {
         $descriptionObject = \laabs::newInstance('recordsManagement/description');
         $descriptionObject->archiveId = $archive->archiveId;
@@ -57,8 +58,16 @@ class description
         if (!empty($archive->originatorArchiveId)) {
             $descriptionObject->text .= $archive->originatorArchiveId.' ';
         }
+        if (!empty($archive->originatingDate)) {
+            $descriptionObject->text .= $archive->originatingDate.' ';
+        }
 
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
+        
+        if ($fullText ) {
+            $descriptionObject->text .= ' '.$fullText;
+        }
+
         $descriptionObject->description = json_encode($archive->descriptionObject);
         
         $this->sdoFactory->update($descriptionObject);
@@ -70,7 +79,10 @@ class description
             case 'string' :
             case 'integer' :
             case 'double' :
-                return (string) $data;
+                if (strlen((string) $data) > 2) {
+                    return (string) $data;
+                }
+                break;
                 
             case 'object':
                 if (method_exists($data, '__toString')) {
@@ -132,7 +144,6 @@ class description
 
             $queryParts[] = '<?SQL '.$this->getAssertExpression($assert).' ?>';
         }
-
         // Fulltext
         if (!empty($text)) {
             /*$lexer = new \core\Language\lexer();
@@ -155,7 +166,7 @@ class description
             $queryParts[] = "<?SQL text @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
         }
 
-        $queryString = implode(' and ', $queryParts);
+        $queryString = \laabs\implode(' and ', $queryParts);
 
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
 
@@ -173,14 +184,23 @@ class description
      * 
      * @return bool
      */
-    public function update($description, $archiveId)
+    public function update($archive)
     {
-        $archiveController = \laabs::newController('recordsManagement/archive');
-        $archive = $archiveController->read($archiveId);
-        
-        $archive->descriptionObject = $description;
+        if ($archive->fullTextIndexation == "indexed") {
+            $archive->fullTextIndexation == "requested";
+        }
         
         $this->create($archive);
+    }
+
+     /**
+     * Delete the description object
+     * @param id   $archiveId
+     * @param bool $deleteDescription
+     */
+    public function delete($archiveId, $deleteDescription = true)
+    {
+
     }
 
     /**
@@ -209,6 +229,15 @@ class description
     protected function getComparisonExpression($comparison)
     {
         $left = "description->>'".$comparison->left."'";
+
+        switch (true) {
+            case $comparison->right instanceof \core\Language\NumberOperand :
+            case $comparison->right instanceof \core\Language\RangeOperand 
+                && ( $comparison->right->from instanceof \core\Language\NumberOperand 
+                || $comparison->right->to instanceof \core\Language\NumberOperand ) :
+                $left = '('. $left.')::numeric';
+                break;
+        }
         
         $right = $this->getOperandExpression($comparison->right);
 
@@ -321,8 +350,8 @@ class description
                 return $this->getTimestampExpression($operand->value);*/
 
             case $operand instanceof \core\Language\RangeOperand:
-                $fromExpression = $this->getOperandExpression($operand->from, $cast);
-                $toExpression = $this->getOperandExpression($operand->to, $cast);
+                $fromExpression = $this->getOperandExpression($operand->from);
+                $toExpression = $this->getOperandExpression($operand->to);
 
                 return $fromExpression . ' AND ' . $toExpression;
 

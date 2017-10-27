@@ -74,13 +74,6 @@ class archiveFilePlanPosition
     public $parentArchiveId;
 
     /**
-     * The parent archive originator
-     *
-     * @var string
-     */
-    public $parentOriginatorOrgRegNumber;
-
-    /**
      * Originator organisation identifier
      *
      * @var string
@@ -93,6 +86,13 @@ class archiveFilePlanPosition
      * @var string
      */
     public $filePlanPosition;
+
+    /**
+     * The file plan level
+     *
+     * @var string
+     */
+    public $fileplanLevel;
 
     /**
      * The folder status

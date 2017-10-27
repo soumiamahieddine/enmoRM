@@ -201,16 +201,16 @@
                               .appendTo(a);
 
             $('<p/>').addClass('list-group-item-text')
-                     .html(communication.comMeanName)
+                     .text(communication.comMeanName)
                      .appendTo(a);
 
             $('<p/>').addClass('list-group-item-text')
-                     .html(communication.value)
+                     .text(communication.value)
                      .appendTo(a);
 
             if (communication.info) {
                 $('<p/>').addClass('list-group-item-text')
-                         .html(communication.info)
+                         .text(communication.info)
                          .appendTo(a);
             }
         },

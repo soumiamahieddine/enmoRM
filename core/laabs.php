@@ -927,6 +927,27 @@ class laabs
      */
     public static function encrypt($string, $key)
     {
+        $mcrypt2ssl = [
+            MCRYPT_BLOWFISH => "CAST5",
+        ];
+        $cipher = \laabs::getCryptCipher();
+
+        if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
+            if (!empty($mcrypt2ssl[$cipher])) {
+                $method = $mcrypt2ssl[$cipher] . "-CBC";
+            } else {
+                $method = $cipher;
+            }
+            
+            $message_padded = $string;
+            if (strlen($message_padded) % 8) {
+                $message_padded = str_pad($message_padded,
+                    strlen($message_padded) + 8 - strlen($message_padded) % 8, "\0");
+            }
+
+            return openssl_encrypt($message_padded, $method, $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, "12345678");
+        }
+        
         if (extension_loaded('mcrypt')) {
             $cipher = \laabs::getCryptCipher();
 
@@ -947,6 +968,23 @@ class laabs
      */
     public static function decrypt($string, $key)
     {
+        $mcrypt2ssl = [
+            MCRYPT_BLOWFISH => "CAST5",
+        ];
+
+        $cipher = \laabs::getCryptCipher();
+
+        if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
+
+            if (!empty($mcrypt2ssl[$cipher])) {
+                $method = $mcrypt2ssl[$cipher] . "-CBC";
+            } else {
+                $method = $cipher;
+            }
+
+            return openssl_decrypt($string, $method, $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, "12345678");
+        }
+
         if (extension_loaded('mcrypt')) {
             $cipher = \laabs::getCryptCipher();
 
@@ -1001,6 +1039,39 @@ class laabs
         }
 
         return $RC4;
+    }
+
+    /**
+     * Test if a string starts with the specified prefix
+     *
+     * @param string $haystack The string
+     * @param string $needle   The prefix to test
+     *
+     * @return boolean
+     */
+    public static function strStartsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    /**
+     * Test if a string ends with the specified suffix
+     *
+     * @param string $haystack The string
+     * @param string $needle   The suffix to test
+     *
+     * @return boolean
+     */
+    public static function strEndsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 
     /**

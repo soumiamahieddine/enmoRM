@@ -45,7 +45,7 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-10">
                                     <label class="control-label">Label</label>
-                                    <textarea id="label" name="label" class="form-control"></textarea>
+                                    <textarea id="label" name="label" class="form-control" style="resize: none; resize: vertical"></textarea>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
@@ -74,7 +74,7 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-10">
                                     <label class="control-label">Description</label>
-                                    <textarea id="description" name="description" class="form-control"></textarea>
+                                    <textarea id="description" name="description" class="form-control" style="resize: none; resize: vertical"></textarea>
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
 </div>
 
 <div style="display:none">
-    <span id="empty_text">The fields with a star are compulsory.</span>
+    <span id="empty_text">The fields with a star are required.</span>
 </div>
 <script>
 
@@ -147,7 +147,7 @@
     });
 
     //New retention rule
-    $("#new-retentionRule").on('click', function () {
+    $("#retentionRuleList").on('click', "#new-retentionRule", function () {
 
         $('#code').prop('disabled', false);
         $('#delete').css('display', 'none');
@@ -162,7 +162,7 @@
 
     /********************************************** Edition modal ************************************************/
     $("#contain").on('keyup change', '.form-control', function () {
-        if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() != '*')) {
+        if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
             $("#add, #update").removeClass('hide');
         }
         else {
@@ -250,7 +250,7 @@
 
                 $.ajax({
                     type        : "PUT",
-                    url         : '/retentionRule',
+                    url         : '/retentionRule/' +  $(this).data('code'),
                     data        : JSON.stringify(parameters),
                     contentType : 'application/json',
                     async       : false,

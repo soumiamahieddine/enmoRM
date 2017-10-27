@@ -47,12 +47,4 @@ class accessRule
      * @var string
      */
     public $description;
-
-    /**
-     * The access rule entries
-     *
-     * @var recordsManagement/accessEntry[]
-     */
-    public $accessEntry;
-
 }

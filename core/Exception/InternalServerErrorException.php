@@ -13,8 +13,8 @@ class InternalServerErrorException
      * @param integer   $code
      * @param Exception $previous
      */
-    public function __construct($message="Internal server error", $code=500, $previous=null)
+    public function __construct($message="Internal server error", $code=500, $previous=null, $variables=array())
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $previous, $variables);
     }
 }

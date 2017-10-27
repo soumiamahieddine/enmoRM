@@ -9,6 +9,9 @@
         <li id="organizationInfo_usersTab">
             <a href="#usersTab" data-toggle="tab">Users</a>
         </li>
+        <li id="organizationInfo_profileTab">
+            <a href="#profileTab" data-toggle="tab">Archival profile</a>
+        </li>
     </ul>
     <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
         <div class="tab-pane active" id="informationTab" style="padding:14px">
@@ -52,7 +55,7 @@
                             <dd id="orgInfo_taxIdentifier"></dd>
                         </dl>
                     </div>
-                    <?merge adminOrg ?>
+                    <?merge adminOrg.not().then('hide') @class ?>
                     <button title="Modify" class="btn btn-warning pull-right" id="modifyOrganization"><i class="fa fa-edit">&nbsp;</i>Modify</button>
                 </div>
             </div>
@@ -62,6 +65,9 @@
         </div>
         <div class="tab-pane" id="usersTab" style="padding:14px">
             <?hinclude organization/userPositionForm.html ?>
+        </div>
+        <div class="tab-pane" id="profileTab" style="padding:14px">
+            <?hinclude organization/archivalProfileAccess.html ?>
         </div>
     </div>
 
@@ -86,11 +92,14 @@
             // Is orgUnit ?
             if(organization.isOrgUnit) {
                 $('#organizationInfo_usersTab').css('display', '');
+                $('#organizationInfo_profileTab').css('display','');
             } else {
                 if ($('#organizationInfo_usersTab').hasClass('active')) {
                     $('#organizationInfo_informationTab').find('a').click();
                 }
                 $('#organizationInfo_usersTab').css('display', 'none');
+                $('#organizationInfo_profileTab').css('display','none');
+
             }
 
             // Roles
@@ -108,18 +117,21 @@
             $('#informationTab').find('dt, dd').css('display', 'none');
             $.each(organization, function(key, value) {
                 if (value !=null) {
-                    $('#orgInfo_' + key).css('display', '').html(value).prev().css('display', '');
+                    $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
             });
 
-            // Users, contact
+            // Users, contact, profile
             UsersForm.load(organization.users, organization.services);
             ContactForm.load(organization.contacts);
+            ArchivalProfileAccessForm.load(organization.archivalProfileAccess);
             $("#organization_organizationInfo").css('display', '');
         },
 
         close: function() {
             $('#organization_organizationInfo').css('display', 'none');
+            ArchivalProfileAccessForm.close();
         }
     }
+
 </script>

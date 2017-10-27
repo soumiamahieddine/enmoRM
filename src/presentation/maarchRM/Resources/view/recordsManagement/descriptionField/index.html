@@ -184,9 +184,7 @@ file that was distributed with this source code.
             <div class="col-xs-11">
                 <strong class="keywordEnumLabel"></strong>
             </div>
-            <div class="col-xs-1 text-right">
-                <span class="deleteKeywordEnum" title="delete"><i class="fa fa-times"></i></span>
-            </div>
+            <span class="deleteKeywordEnum pull-right" title="Delete"><i class="fa fa-times"></i></span>
         </div>
     </div>
 </div>
@@ -396,7 +394,6 @@ file that was distributed with this source code.
     }
 
     function mergeForm(descriptionField) {
-        console.log(descriptionField);
         $('#documentDescriptionPropertiesType').find('input[type=radio][name=type][value='+descriptionField.type+']').parent().addClass("active");
         $('#propertyLabel').find('input').val(descriptionField.label);
         $('#fieldName').find('input').val(descriptionField.name).attr("disabled",true);
@@ -408,13 +405,15 @@ file that was distributed with this source code.
                 break;
 
             case "name" :
+                $("#keywordEnumForm").removeClass("hide");
+                $('#keywordEnumList').removeClass('hide');
+
                 if (descriptionField.enumeration !== "" && descriptionField.enumeration !== null && descriptionField.enumeration !== undefined) {
                     $.each(descriptionField.enumeration, function (key, item) {
                         $("#inputAddEnumField").val(item);
                         $("#btnAddEnumField").click();
                     });
                     $("#nameSelectPropertyDefaultValue").find("select").val(descriptionField.default);
-                    $("#keywordEnumForm").removeClass("hide");
                     $("#keywordEnumList").removeClass("hide");
                 } else {
                     $('#namePropertyDefaultValue').removeClass('hide');

@@ -52,7 +52,32 @@
     // Show document
     $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
         var resId = $(this).data('res-id');
-        archiveDocumentViewer.loadResource(resId);
+        var archiveId = $(this).data('archive-id');
+        archiveDocumentViewer.loadResource(archiveId, resId);
+    })
+
+    // Show document
+    $("#modalArchiveInfo").on('click', '[data-convertresource]', function () {
+        var resId = $(this).data('convertresource');
+        var archiveId = $(this).data('archive-id');
+
+        $.ajax({
+            type        : "PUT",
+            url         : "/recordsManagement/InteractiveConversion/" + resId,
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status && response.result != false) {
+                    archiveInfoModal.close();
+                    $('#modalArchiveInfo').one('hidden.bs.modal', function () {
+                        archiveInfoModal.load(archiveId);
+                    });
+                    $('#modalArchiveInfo').one('shown.bs.modal', function () {
+                        $("#modalArchiveInfo").find('[href=#digitalResourcesTab]').tab("show");
+                    });
+                }
+            }
+        });
     })
 
     archiveInfoModal = {
@@ -93,16 +118,16 @@
     }
 
     archiveDocumentViewer = {
-        load: function(archiveIdResId, action) {
-            var url = "/recordsManagement/contents/" + archiveIdResId;
+        load: function(archiveId, resId, action) {
+            var url = "/recordsManagement/" + archiveId + "/digitalResource/" + resId;
             if (action) {
-                url = action + archiveIdResId;
+                url = action + archiveId + "/" + resId;
             }
             window.open(url, 'document');
         },
 
-        loadResource: function(resId) {
-            var url = "/recordsManagement/digitalResource/" + resId;
+        loadResource: function(archiveId, resId) {
+            var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
             window.open(url, 'document');
         }
     }

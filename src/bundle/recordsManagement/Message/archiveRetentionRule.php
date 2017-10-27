@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace bundle\recordsManagement\Message;
+
 /**
  * Class model that represents a retentionRule applied to an archive
  *
  * @package RecordsManagement
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
- * 
- *
  */
 class archiveRetentionRule
 {
@@ -34,6 +34,13 @@ class archiveRetentionRule
      * @var id
      */
     public $archiveId;
+
+    /**
+     * The code of retention rules
+     *
+     * @var string
+     */
+    public $retentionRuleCode;
 
     /**
      * The status

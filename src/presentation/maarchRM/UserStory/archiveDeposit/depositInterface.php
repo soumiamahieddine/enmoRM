@@ -26,13 +26,6 @@ namespace presentation\maarchRM\UserStory\archiveDeposit;
 interface depositInterface
 {
     /**
-     * Form to constitute an archive 
-     *
-     * @return recordsManagement/archiveImport/form
-     */
-    public function readArchiveImportform();
-
-    /**
      * Import a constituted archive 
      *
      * @uses recordsManagement/archive/create

@@ -97,8 +97,6 @@ class user
     {
         $user->roles = empty($user->roles) ? false : json_encode($user->roles);
 
-        $publicArchive = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-
         $roles = $this->sdoFactory->find('auth/role');
 
         $view = $this->view;
@@ -107,8 +105,11 @@ class user
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
-        $view->setSource('publicArchive', $publicArchive);
         $view->setSource('user', $user);
+        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
+        $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_",$user->accountId);
+
+        $view->setSource('userPositions', $userPositions);
 
         $view->merge();
         $view->translate();
@@ -164,6 +165,7 @@ class user
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
+        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $view->setSource('user', $user);
 
         $view->merge();
@@ -289,6 +291,19 @@ class user
     {
         $json = $this->json;
         $json->message = "Password has been changed";
+        $json->message = $this->translator->getText($json->message);
+
+        return $json->save();
+    }
+
+    /**
+     * Generate a new password
+     * @return type
+     */
+    public function generatePassword()
+    {
+        $json = $this->json;
+        $json->message = "A new password has been generated";
         $json->message = $this->translator->getText($json->message);
 
         return $json->save();

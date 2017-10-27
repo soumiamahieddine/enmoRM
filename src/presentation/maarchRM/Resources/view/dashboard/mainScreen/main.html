@@ -16,7 +16,7 @@
                         </li>
                         <li style="display: none">
                             <a href="#searchPanel" id="searchTab" data-toggle="tab">
-                                Search
+                                <span class="tabTitle">Search</span>
                                 <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
                             </a>
                         </li>
@@ -38,85 +38,15 @@
     </div>
 </div>
 
-<script>
-    var SearchTab = {
-        run : function (orgRegNumber = null, folderId = null) {
-            var uniqId = new Date().getUTCMilliseconds();
-
-            this.tabCreation(uniqId);
-            this.panelCreation(uniqId);
-            this.replaceIds(uniqId);
-            this.replaceDatepicker(uniqId);
-
-            if (orgRegNumber !== null) {
-                this.searchContext(uniqId, orgRegNumber, folderId);
-            }
-
-            $("#" + uniqId + "Tab").click();
-        },
-
-        tabCreation : function(uniqId) {
-            var tab = $("#searchTab").clone(true).attr("href", "#" + uniqId + "Panel").attr("id", uniqId + "Tab").addClass('searchTab');
-            tab.find('#resultTemplate, #fulltextTraductions').remove();
-            
-            var li = $("<li/>").append(tab);
-            
-            var ul = $("#middleColumn ul:first");
-            ul.append(li);
-            $("#newSearchTabBtn").parent().appendTo(ul);
-        },
-
-        panelCreation : function(uniqId) {
-            var newPanel = $("#searchPanel").clone(true, true);
-            newPanel.appendTo($("#middleColumn #tab-content:first")).attr("id", uniqId + "Panel");
-            FulltextSearch.initForm(newPanel);
-        },
-
-        replaceIds : function(uniqId) {
-            $("#" + uniqId + "Panel").find("[data-search-tab] a").each(function() {
-                var oldHref = $(this).attr('href').substring(1);
-                var href = '#' + uniqId + oldHref;
-                $(this).attr("href", href);
-            });
-
-            $("#" + uniqId + "Panel").find("[data-search-tabContent] [id]").each(function() {
-                var id = uniqId + $(this).attr('id');
-                $(this).attr("id", id);
-            });
-        },
-
-        replaceDatepicker : function(uniqId) {
-            $("#searchPanel").find("[data-search-tabContent] .datePicker").each(function() {
-                var baseDatepicker = $(this);
-                $("#" + uniqId + "Panel").find("[data-search-tabContent] .datePicker").each(function() {
-                    var cloneDatepicker = $(this);
-                    if (baseDatepicker.attr('data-datepicker-id') == cloneDatepicker.attr('data-datepicker-id')) {
-                        cloneDatepicker.replaceWith(baseDatepicker.clone(false).datepicker({language:$('#wrapper').attr('lang'), autoclose: true}).appendTo(cloneDatepicker.parent()));
-                    }
-                });
-            });
-        },
-
-        searchContext : function(uniqId, orgRegNumber, folderId) {
-            var path = $('#folderPath').text();
-            var description = $('#folderDescription').text();
-            var panel = $("#" + uniqId + "Panel");
-
-            panel.find("[data-context-path]:first").text(path);
-            panel.find("[data-context-description]:first").text(description);
-            panel.data("context-folderid", folderId);
-            panel.data("context-orgregnumber", orgRegNumber);
-        },
-
-        close : function(liElement) {
-            var id = $(liElement).find("a:first").attr("href").substring(1);
-            $("#tab-content").find("#"+id).remove();
-            $(liElement).remove();
-            $("#middleColumn").find("li > a:first").click();
-            FulltextSearch.currentForm = null;
-        }
+<style>
+    #middleColumn .dropdown-menu {
+        max-height: 300px;
+        overflow-y: auto; 
     }
+</style>
 
+
+<script>
     $('#newSearchTabBtn').on("click", function() {
         SearchTab.run();
     });
@@ -126,22 +56,32 @@
 
     $('#toggleLeftColumn').on('click', function() {
         var leftColumn = $('#leftColumn');
+        var rightColumn = $('#rightColumn');
 
         if (leftColumn.hasClass('col-md-3')) {
             leftColumn.hide("slide", { direction: "left" }, 200, function() {
                 leftColumn.removeClass("col-md-3");
                 $("#middleColumn").removeClass("col-md-6")
-                                  .addClass("col-md-9");
+                                  .addClass("col-md-7");
+                rightColumn.removeClass("col-md-3")
+                            .addClass("col-md-5");
             });
+            
             $(this).children('i').addClass('fa-rotate-180');
 
         } else {
-            $("#middleColumn").removeClass("col-md-9")
+            $("#middleColumn").removeClass("col-md-7")
                               .addClass("col-md-6");
+            rightColumn.removeClass("col-md-5")
+                            .addClass("col-md-3");
             leftColumn.addClass("col-md-3")
                       .show("slide", { direction: "left" }, 200);
             $(this).children('i').removeClass('fa-rotate-180');
         }
     });
+
+    $('#app_maarchRM_main').ready(function() {
+        $('#rightColumn').initSmoothScrolling();
+    })
 
 </script>

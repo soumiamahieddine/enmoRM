@@ -34,7 +34,8 @@ class archive
         archiveRestitutionTrait,
         archiveComplianceTrait,
         archiveConversionTrait,
-        archiveDestructionTrait;
+        archiveDestructionTrait,
+        archiveLifeCycleTrait;
 
     /**
      * Sdo Factory for management of archive persistance
@@ -47,6 +48,12 @@ class archive
      * @var digitalResource/Controller/digitalResource
      */
     protected $digitalResourceController;
+
+    /**
+     * Controller for format
+     * @var digitalResource/Controller/digitalResource
+     */
+    protected $formatController;
 
     /**
      * Controller for access rules
@@ -157,6 +164,13 @@ class archive
     protected $storePath;
 
     /**
+     * The compression utility
+     * @var object
+     */
+    protected $zip;
+
+
+    /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory        The dependency sdo factory service
      * @param string                  $hashAlgorithm     The hash algorithm for digital archives
@@ -175,6 +189,8 @@ class archive
 
         $this->digitalResourceController = \laabs::newController("digitalResource/digitalResource");
 
+        $this->formatController = \laabs::newController("digitalResource/format");
+
         $this->archiveRelationshipController = \laabs::newController("recordsManagement/archiveRelationship");
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
@@ -192,6 +208,8 @@ class archive
         $this->servicePositionController = \laabs::newController('organization/servicePosition');
 
         $this->retentionRuleController = \laabs::newController("recordsManagement/retentionRule");
+
+        $this->zip = \laabs::newService("dependency/fileSystem/plugins/zip");
 
         $this->conversionError = (bool) $conversionError;
 
@@ -390,7 +408,7 @@ class archive
     public function getDescription($archiveId)
     {
         if (!$this->sdoFactory->exists('recordsManagement/archive', $archiveId)) {
-            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier '$archiveId' does not exist.");
+            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier %s does not exist.", 404, null, [$archiveId]);
         }
 
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -649,84 +667,19 @@ class archive
     }
 
     /**
-     * Find archives
-     * @param string $q       The query string
-     * @param string $profile The index
-     * @param int    $limit   The result limit
+     * Count the archives for an organization
+     * @param string $orgRegNumber The organization registration number
      *
-     * @return array The fulltext result
+     * @return int The number of archives with this organization
      */
-    public function find($q = null, $profile = false, $limit = null)
+    public function countByOrg($orgRegNumber)
     {
-        $q = trim($q);
-        if ($q == null || empty($q)) {
-            throw new \bundle\recordsManagement\Exception\invalidParameterException("The query string is empty");
-        }
+        $queryString = [];
+        $queryString[] = "archiverOrgRegNumber='$orgRegNumber'";
+        $queryString[] = "originatorOrgRegNumber='$orgRegNumber'";
 
-        if ($limit < 1) {
-            $limit = null;
-        }
+        $count = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" OR ", $queryString));
 
-        $archivalProfiles = \laabs::newController("recordsManagement/archivalProfile")->index(true);
-
-        $indexList = $descriptionClassList = [];
-        foreach ($archivalProfiles as $archivalProfile) {
-            if ($archivalProfile->descriptionClass == '') {
-                $indexList[] = $archivalProfile->reference;
-            } else {
-                $descriptionClassList[] = $archivalProfile->descriptionClass;
-            }
-        }
-
-        if ($profile) {
-            if (in_array($profile, $indexList)) {
-                $index = [$profile];
-            } elseif (in_array($profile, $descriptionClassList)) {
-                $descriptionClass = [$profile];
-            } else {
-                return [];
-            }
-        } else {
-            $index = $indexList;
-            $descriptionClass = $descriptionClassList;
-        }
-
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-
-        if (!$currentOrg) {
-            return array();
-        }
-
-        $ftresults = [];
-
-        if (isset($currentOrg->orgRoleCodes) && is_array($currentOrg->orgRoleCodes)) {
-            $currentOrg->orgRoleCodes = \laabs\implode(" ", $currentOrg->orgRoleCodes);
-        }
-
-        if (count($index)) {
-            $fulltextQueryString = [];
-            $fulltextQueryString[] = $q;
-
-            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
-                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
-
-                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
-            }
-
-            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
-            $ftresults = $ft->find(\laabs\implode(" ", $fulltextQueryString), $index, $limit);
-        }
-
-        if (count($descriptionClassList)) {
-            $descriptionClassArgs = preg_split("# and #", $q);
-
-            if (isset($currentOrg->orgRoleCodes) && strpos($currentOrg->orgRoleCodes, "owner") == false) {
-                $orgRegNumbers = \laabs::newController("organization/userPosition")->listMyCurrentDescendantServices();
-
-                $fulltextQueryString[] = " and originatorOrgRegNumber:(".\laabs\implode(" || ", $orgRegNumbers).")";
-            }
-        }
-
-        return $ftresults;
+        return $count;
     }
 }

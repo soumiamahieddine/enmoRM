@@ -25,7 +25,7 @@ class Timestamp
             $value = str_replace(",", ".", $value);
         }
 
-        $timezone = null;
+        $timezone = 'UTC';
 
         // Default format for timestamp is given by server directive
         if (!$format) {

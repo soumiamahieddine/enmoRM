@@ -81,4 +81,46 @@ interface adminFormatInterface
      * @return  digitalResource/conversionRule/update
      */
     public function updateDigitalresourceConversionrule($conversionRule);
+
+    /* ***************************************
+     * Content types management (families)
+     * ************************************* */
+    /**
+     * Index of content types
+     *
+     * @uses digitalResource/contentType/read
+     * @return digitalResource/contentType/index
+     */
+    public function readDigitalresourceContenttypes();
+
+    /**
+     * New content type
+     *
+     * @return digitalResource/contentType/edit
+     */
+    public function readDigitalresourceContenttypeNew();
+
+    /**
+     * Edit content type
+     *
+     * @uses digitalResource/contentType/read_name_
+     * @return digitalResource/contentType/edit
+     */
+    public function readDigitalresourceContenttypeEdit_name_();
+
+    /**
+     * Create content type
+     *
+     * @uses digitalResource/contentType/create
+     * @return digitalResource/contentType/create
+     */
+    public function createDigitalresourceContenttype();
+
+    /**
+     * Update content type
+     *
+     * @uses digitalResource/contentType/update_name_
+     * @return digitalResource/contentType/update
+     */
+    public function updateDigitalresourceContenttype($contentType);
 }

@@ -60,8 +60,6 @@ trait archiveAccessTrait
 
         $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
 
-        $this->logging($archive);
-
         return $archive;
     }
 
@@ -128,8 +126,6 @@ trait archiveAccessTrait
             $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($archive->digitalResources[$i]->resId);
         }
 
-        $this->logging($archive);
-
         return $archive;
     }
 
@@ -138,7 +134,7 @@ trait archiveAccessTrait
      *
      * @param string $archiveId The archive identifier
      */
-    public function getConmmunicationPackage($archiveId)
+    public function getCommunicationPackage($archiveId)
     {
         // Constituer les paquets à communiquer avec aip
 
@@ -168,31 +164,6 @@ trait archiveAccessTrait
         //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         // }
 
-        // $this->logging($archive);
-    }
-
-    /**
-     * Log the archive access
-     *
-     * @param recordsManagement/archive $archive The archive logged
-     */
-    public function logging($archive)
-    {
-        // Journaliser la consultation
-        $eventItems['resId'] = null;
-        $eventItems['hashAlgorithm'] = null;
-        $eventItems['hash'] = null;
-        $eventItems['address'] = $archive->storagePath;
-        $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'recordsManagement/archive', $archive->archiveId, $eventItems);
-
-        foreach ($archive->digitalResources as $digitalResource) {
-            $eventItems['resId'] = $digitalResource->resId;
-            $eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-            $eventItems['hash'] = $digitalResource->hash;
-            $eventItems['address'] = $archive->storagePath;
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/consultation', 'digitalResource/digitalResource', $digitalResource->resId, $eventItems);
-        }
     }
 
     /**
@@ -226,6 +197,7 @@ trait archiveAccessTrait
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
+        $queryParts = [];
         if (!empty($args['archiveName'])) {
             $queryParts[] = "archiveName='*".$args['archiveName']."*'";
         }
@@ -240,8 +212,9 @@ trait archiveAccessTrait
         }
         if (!empty($args['status'])) {
             $queryParts[] = "status='".$args['status']."'";
-        } else {
-            $queryParts[] = "status!='disposed'";
+        }
+        if (!empty($args['retentionRuleCode'])) {
+            $queryParts[] = "retentionRuleCode='".$args['retentionRuleCode']."'";
         }
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
             $queryParts[] = "disposalDate<='".$currentDateString."'";
@@ -249,12 +222,56 @@ trait archiveAccessTrait
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "false") {
             $queryParts[] = "disposalDate>='".$currentDateString."'";
         }
+        if (!empty($args['partialRetentionRule']) && $args['partialRetentionRule'] == "true") {
+            $queryParts[] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+        }
         if (!empty($args['finalDisposition'])) {
             $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
         }
         if (!empty($args['originatorOrgRegNumber'])) {
             $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
         }
+        if (!empty($args['originatorArchiveId'])) {
+            $queryParts[] = "originatorArchiveId='".$args['originatorArchiveId']."'";
+        }
+        if (!empty($args['originatingDate'])) {
+            if (!empty($args['originatingDate'][0]) && is_string($args['originatingDate'][0])) {
+                $args['originatingDate'][0] = \laabs::newDate($args['originatingDate'][0]);
+            }
+            if (!empty($args['originatingDate'][1]) && is_string($args['originatingDate'][1])) {
+                $args['originatingDate'][1] = \laabs::newDate($args['originatingDate'][1]);
+            }
+
+            if (!empty($args['originatingDate'][0])) { // originatingStartDate
+                $args['originatingDate'][0] = $args['originatingDate'][0]->format('Y-m-d');
+                $queryParts[] = "originatingDate>='".$args['originatingDate'][0]."'";
+            }
+            if (!empty($args['originatingDate'][1])) { // originatingEndDate
+                $args['originatingDate'][1] = $args['originatingDate'][1]->format('Y-m-d');
+                $queryParts[] = "originatingDate<='".$args['originatingDate'][1]."'";
+            }
+        }
+
+        if (!empty($args['depositStartDate']) && is_string($args['depositStartDate'])) {
+            $args['depositStartDate'] = \laabs::newDate($args['depositStartDate']);
+        }
+        if (!empty($args['depositEndDate']) && is_string($args['depositEndDate'])) {
+            $args['depositEndDate'] = \laabs::newDate($args['depositEndDate']);
+        }
+
+        if (!empty($args['depositStartDate']) && !empty($args['depositEndDate'])) {
+            $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
+            $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
+            $queryParts[] = "depositDate <= '".$args['depositEndDate']."' AND depositDate >= '".$args['depositStartDate']."'";
+        } elseif (!empty($args['depositStartDate'])) {
+            $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
+            $queryParts[] = "depositDate >= '".$args['depositStartDate']."'";
+
+        } elseif (!empty($args['depositEndDate'])) {
+            $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
+            $queryParts[] = "depositDate <= '".$args['depositEndDate']."'";
+        }
+
         if (!empty($args['depositorOrgRegNumber'])) {
             $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
         }
@@ -303,7 +320,7 @@ trait archiveAccessTrait
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
-        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString' OR accessRuleComDate = NULL))";
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString'))";
 
         return "(".implode(" OR ", $queryParts).")";
     }

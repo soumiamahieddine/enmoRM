@@ -26,14 +26,6 @@ namespace bundle\auth;
  */
 interface userAccountInterface
 {
-
-     /**
-     * TEST !!!!!!
-     *
-     * @action auth/test/testFunction
-     */
-    public function readTest();
-
     /**
      * List the user account information
      * @param string $query
@@ -44,10 +36,11 @@ interface userAccountInterface
 
     /**
      * List the user account
+     * @param string $query
      *
      * @action auth/userAccount/userList
      */
-    public function readUserlist();
+    public function readUserlist($query = null);
 
     /**
      * List the user account detail
@@ -193,6 +186,15 @@ interface userAccountInterface
      * @action auth/userAccount/setPassword
      */
     public function updatePassword_userAccountId_($newPassword);
+
+    /**
+     * Generate a new password
+     * @param string $username The username
+     * @param string $email    The email of the user
+     *
+     * @action auth/userAccount/generatePassword
+     */
+    public function updateGeneratePassword($username, $email);
 
     /**
      * Required password change

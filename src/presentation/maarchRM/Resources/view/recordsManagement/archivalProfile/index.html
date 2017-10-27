@@ -30,7 +30,7 @@ file that was distributed with this source code.
                         <table class="table dataTable" id="tableListArchivalprofile">
                             <thead>
                                 <tr>
-                                    <th>Profile reference</th>
+                                    <th>Identifier</th>
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th style="min-width:100px;"></th>
@@ -49,6 +49,9 @@ file that was distributed with this source code.
                                             </button>
                                             <button type="button" data-profileid="[?merge .archivalProfileId ?]" class="deleteProfile btn btn-danger" title="Delete">
                                                 <span class="fa fa-fw fa-trash"></span>
+                                            </button>
+                                            <button type="button" data-reference="[?merge .reference ?]" class="generateBarCode btn btn-warning" title="Generate bar code" data-label="[?merge .name ?]">
+                                                <span class="fa fa-fw fa-barcode"></span>
                                             </button>
                                         </div>
                                     </td>
@@ -84,7 +87,7 @@ file that was distributed with this source code.
                 if (response.status) {
                     var itemsNumber = $('#tableItemNumber');
                     var number = itemsNumber.html();
-                    itemsNumber.html(number - 1);
+                    itemsNumber.text(number - 1);
                     button.closest('tr').remove();
                 }
             },
@@ -92,6 +95,16 @@ file that was distributed with this source code.
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         })
+    })
+
+    $("#contain").on('click', '.generateBarCode', function () {
+
+        var button = $(this);
+        var reference = button.data('reference');
+        var label = button.data('label');
+
+        var url = '/archivalProfilebarcode?data=' + reference + '&label=' + label;
+        window.open(url, 'document');
     })
     
 </script>

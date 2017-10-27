@@ -19,6 +19,8 @@
         <div class="row">
             <div class="col-xs-12 col-md-5 col-lg-5" >
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
+                <?merge adminOrg.bool() ?>
+                <button id="exportFilePlan" class="btn btn-default" title="Export the file plan"><i class="fa fa-upload">&nbsp;</i>Export the file plan</button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
                 <div id="organization_orgTree">
@@ -49,7 +51,7 @@
 }
 </style>
 
-<script src="/public/dependency/html/js/bootstrap-tree/bootstrap-tree.js"></script>
+<script src="/public/js/bootstrap-tree/bootstrap-tree.js"></script>
 
 <script>
     // New organization
@@ -103,6 +105,10 @@
         Forms.clear();
         Tree.select(span);
         Tree.showDetails(span.attr('id'));
+    });
+
+    $('#exportFilePlan').on('click', function() {
+        Tree.exportFilePlan();
     });
     
     var Tree = {
@@ -166,7 +172,7 @@
                 .data('orgname', org.orgName)
                 .data('ownerorgid', org.ownerOrgId); 
 
-            template.find('.showDetails').html(org.displayName);
+            template.find('.showDetails').text(org.displayName);
             template.removeAttr('id').removeClass('hide');
 
             if (!parentId) {
@@ -182,12 +188,15 @@
         updateNode: function(org) {
             $('#'+org.orgId).data('orgname', org.orgName)
                             .data('ownerorgid', org.ownerOrgId)
-                            .find('.showDetails').html(org.displayName);
+                            .find('.showDetails').text(org.displayName);
         },
 
         removeNode: function(node) {
             BootstrapTree.removeNode(node);
-        }
+        },
+
+        exportFilePlan: function() {
+            fileplanWindows = window.open("/exportFilePlan", 'export.xml');        }
     }
 
     var Forms = {
@@ -204,6 +213,7 @@
         $('#organization_organizationInfo').css('display', 'none');
         $('#organization_moveForm').css('display', 'none');
         
+        $('#forms').initSmoothScrolling();
         Tree.loadTree();
         window.localStorage.clear();
     });

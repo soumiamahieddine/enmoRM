@@ -9,7 +9,7 @@
         </div>
         <div class="form-group">
             <label class="control-label">Description</label>
-            <textarea class="form-control" name="description" placeholder="Description"></textarea>
+            <textarea class="form-control" name="description" placeholder="Description" style="resize: none; resize: vertical"></textarea>
         </div>
         <div class="form-group">
             <div class="btn-group" data-toggle="buttons">
@@ -22,8 +22,8 @@
             </div>
         </div>
         <div class="pull-right">
-            <button type="button" class="btn btn-success" id="saveFolder"><i class="fa fa-save">&nbsp;</i>Save</button>
             <button type="button" class="btn btn-warning" id="cancelFolder"><i class="fa fa-save">&nbsp;</i>Cancel</button>
+            <button type="button" class="btn btn-success" id="saveFolder"><i class="fa fa-save">&nbsp;</i>Save</button>
         </div>
     </form>
     <div id ="folderNodeTemplate" class="">
@@ -76,7 +76,8 @@
                 type = "PUT";
             }
 
-            $.ajax({
+            ajax($('#saveFolder'),
+            {
                 url         : '/filePlan/folder',
                 type        : type,
                 data        : JSON.stringify({folder:folder}),
@@ -95,7 +96,8 @@
                     }
                 },
                 error       : function (response) {
-                    gritter.show(response.responseText, false);
+                    error = JSON.parse(response.responseText);
+                    gritter.show(error.message, false);
                 }
             })
         },

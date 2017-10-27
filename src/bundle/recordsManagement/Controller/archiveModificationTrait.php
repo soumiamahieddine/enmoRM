@@ -31,7 +31,7 @@ trait archiveModificationTrait
      * Read the retention rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archiveRetentionRule
      */
     public function editArchiveRetentionRule($archiveId)
     {
@@ -47,7 +47,7 @@ trait archiveModificationTrait
      * Read the access rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archiveAccessRule
      */
     public function editArchiveAccessRule($archiveId)
     {
@@ -59,7 +59,7 @@ trait archiveModificationTrait
     }
 
     /**
-     * Modify the archive retention
+     * Modify the archive retention rule
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param mixed                                  $archiveIds    The archives ids
      *
@@ -74,7 +74,6 @@ trait archiveModificationTrait
         $res = array('success' => array(), 'error' => array());
 
         $archives = array();
-        $events = array();
 
         if (!$currentOrg = \laabs::getToken("ORGANIZATION")) {
             throw \laabs::newException('recordsManagement/noOrgUnitException', "Permission denied: You have to choose a working organization unit to proceed this action.");
@@ -91,7 +90,13 @@ trait archiveModificationTrait
 
             } else {
                 $retentionRule->archiveId = $archiveId;
-                $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+
+                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                } else {
+                    $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
+                }
+                
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
@@ -111,43 +116,7 @@ trait archiveModificationTrait
                 $archives[] = $archive;
 
                 // Life cycle journal
-                // Certificate of modication
-                $eventInfo = array(
-                    'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                    'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                    'retentionStartDate' => (string) $retentionRule->retentionStartDate,
-                    'retentionDuration' => (string) $retentionRule->retentionDuration,
-                    'finalDisposition' => (string) $retentionRule->finalDisposition,
-                    'previousStartDate' => (string) $retentionRule->previousStartDate,
-                    'previousDuration' => (string) $retentionRule->previousDuration,
-                    'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
-                );
-
-                if (empty($archive->digitalResources)) {
-                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
-                    $event = $this->lifeCycleJournalController->logEvent(
-                        'recordsManagement/retentionRuleModification',
-                        'recordsManagement/archive',
-                        $archive->archiveId,
-                        $eventInfo,
-                        $operationResult
-                    );
-                }
-                foreach ($archive->digitalResources as $digitalResource) {
-                        $eventInfo['resId'] = $digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $digitalResource->hash;
-                        $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                        $event = $this->lifeCycleJournalController->logEvent(
-                            'recordsManagement/retentionRuleModification',
-                            'recordsManagement/archive',
-                            $archive->archiveId,
-                            $eventInfo,
-                            $operationResult
-                        );
-                        $archive->lifeCycleEvent = array($event);
-                }
+                $this->logRetentionRuleModification($archive, $retentionRule, $operationResult);
             }
         }
 
@@ -204,43 +173,7 @@ trait archiveModificationTrait
                 $archives[] = $archive;
 
                 // Life cycle journal
-                // Certificate of modication
-                $eventInfo = array(
-                    'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                    'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-                    'accessRuleStartDate' => (string) $accessRule->accessRuleStartDate,
-                    'accessRuleDuration' => (string) $accessRule->accessRuleDuration,
-                    'previousAccessRuleStartDate' => (string) $accessRule->previousAccessRuleStartDate,
-                    'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
-                );
-
-                if (empty($archive->digitalResources)) {
-                    $eventInfo['resId'] = $eventInfo['hashAlgorithm'] = $eventInfo['hash'] = $eventInfo['address'] = null;
-                    $event = $this->lifeCycleJournalController->logEvent(
-                        'recordsManagement/accessRuleModification',
-                        'recordsManagement/archive',
-                        $archive->archiveId,
-                        $eventInfo,
-                        $operationResult
-                    );
-                }
-
-                foreach ($archive->digitalResources as $digitalResource) {
-                        $eventInfo['resId'] = $digitalResource->resId;
-                        $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                        $eventInfo['hash'] = $digitalResource->hash;
-                        $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                        $event = $this->lifeCycleJournalController->logEvent(
-                            'recordsManagement/accessRuleModification',
-                            'recordsManagement/archive',
-                            $archive->archiveId,
-                            $eventInfo,
-                            $operationResult
-                        );
-
-                        $archive->lifeCycleEvent = array($event);
-                }
+                $this->logAccessRuleModification($archive, $accessRule, $operationResult);
             }
         }
 
@@ -271,28 +204,7 @@ trait archiveModificationTrait
             $archives[] = $archive;
 
             // Life cycle journal
-            // Certificate of modication
-            $eventInfo = array(
-                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            );
-
-            foreach ($archive->digitalResources as $digitalResource) {
-                $eventInfo['resId'] = $digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                $event = $this->lifeCycleJournalController->logEvent(
-                    'recordsManagement/freeze',
-                    'recordsManagement/archive',
-                    $archive->archiveId,
-                    $eventInfo,
-                    $operationResult
-                );
-
-                $archive->lifeCycleEvent = array($event);
-            }
+            $this->logFreeze($archive, $operationResult);
         }
 
         return $res;
@@ -321,34 +233,23 @@ trait archiveModificationTrait
             $archives[] = $archive;
 
             // Life cycle journal
-            // Certificate of modication
-            $eventInfo = array(
-                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            );
-
-            foreach ($archive->digitalResources as $digitalResource) {
-                    $eventInfo['resId'] = $digitalResource->resId;
-                    $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                    $eventInfo['hash'] = $digitalResource->hash;
-                    $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                    $event = $this->lifeCycleJournalController->logEvent(
-                        'recordsManagement/unfreeze',
-                        'recordsManagement/archive',
-                        $archive->archiveId,
-                        $eventInfo,
-                        $operationResult
-                    );
-
-                    $archive->lifeCycleEvent = array($event);
-            }
+            $this->logUnfreeze($archive, $operationResult);
         }
 
         return $res;
     }
     
-    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null,$description = null)
+    /**
+     * Update metadata of archive
+     * @param string $archiveId
+     * @param string $originatorArchiveId
+     * @param string $archiveName
+     * @param string $description
+     * @param date   $originatingDate
+     * 
+     * @return boolean The result of the operation
+     */
+    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
         $archive = $this->getDescription($archiveId);
         $this->checkRights($archive);
@@ -360,42 +261,39 @@ trait archiveModificationTrait
         if ($originatorArchiveId) {
             $archive->originatorArchiveId = $originatorArchiveId;
         }
+
+        if ($originatingDate) {
+            $archive->originatingDate = $originatingDate;
+        }
         
         if ($description) {
+            $descriptionObject = json_decode($description);
+            if (!empty($archive->archivalProfileReference)) {
+                $this->useArchivalProfile($archive->archivalProfileReference);
+                
+                if (!empty($this->currentArchivalProfile->descriptionClass)) {
+                    $this->validateDescriptionClass($descriptionObject, $this->currentArchivalProfile);
+                } else {
+                    $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
+                }
+            }
+
             if (!empty($archive->descriptionClass)) {
                 $descriptionController = $this->useDescriptionController($archive->descriptionClass);
             } else {
                 $descriptionController = $this->useDescriptionController('recordsManagement/description');
             }
+            $archive->descriptionObject = $descriptionObject;
             
-            $descriptionController->update(json_decode($description),$archiveId);
+            $descriptionController->update($archive);
         }
         
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
         
         $operationResult = true;
         $res = true;
-        $eventInfo = array(
-                'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-                'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            );
-
-            foreach ($archive->digitalResources as $digitalResource) {
-                $eventInfo['resId'] = $digitalResource->resId;
-                $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                $eventInfo['hash'] = $digitalResource->hash;
-                $eventInfo['address'] = $digitalResource->address[0]->path;
-
-                $event = $this->lifeCycleJournalController->logEvent(
-                    'recordsManagement/metadata',
-                    'recordsManagement/archive',
-                    $archive->archiveId,
-                    $eventInfo,
-                    $operationResult
-                );
-
-                $archive->lifeCycleEvent = array($event);
-            }
+        
+        $this->logMetadataModification($archive, $operationResult);
             
         return $res;
     }
@@ -412,22 +310,8 @@ trait archiveModificationTrait
         $archive = $this->getDescription($archiveRelationship->archiveId);
 
         // Life cycle journal
-        // Certificate of modication
-        $eventInfo = array(
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-        );
-
-        foreach ($archive->digitalResources as $digitalResource) {
-            $eventInfo['resId'] = $digitalResource->resId;
-            $eventInfo['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-            $eventInfo['hash'] = $digitalResource->hash;
-            $eventInfo['address'] = $digitalResource->address[0]->path;
-            $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
-
-            $this->lifeCycleJournalController->logEvent('recordsManagement/addRelationship', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
-        }
-
+        $this->logRelationshipAdding($archive, $archiveRelationship);
+       
         return true;
     }
 
@@ -444,14 +328,72 @@ trait archiveModificationTrait
         $archive = $this->getDescription($archiveRelationship->archiveId);
 
         // Life cycle journal
-        // Certificate of modication
-        $eventInfo = array('resId' => null, 'hashAlgorithm' => null, 'hash' => null, 'address' => null);
-
-        $eventInfo['address'] = $archive->storagePath;
-        $eventInfo['relatedArchiveId'] = $archiveRelationship->relatedArchiveId;
-
-        $this->lifeCycleJournalController->logEvent('recordsManagement/deleteRelationship', 'recordsManagement/archive', $archive->archiveId, $eventInfo);
+        $this->logRelationshipDeleting($archive, $archiveRelationship);
 
         return true;
+    }
+
+
+    /**
+     * Index full text 
+     * @param int $limit The maximum number of archive to index
+     *
+     * @return array The result of the operation
+     */
+    public function indexFullText($limit=200)
+    {
+        $res = [];
+        $res['success'] = [];
+        $res['fail'] = [];
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
+            $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
+            $stopWords = utf8_encode(file_get_contents($stopWords));
+            $stopWords = preg_replace('/[\r\n]/', " ",$stopWords);
+            $stopWords = explode(" ", $stopWords);
+        }
+
+        if (count($archivesToIndex)) {
+            $descriptionController = $this->useDescriptionController('recordsManagement/description');
+
+            foreach ($archivesToIndex as $archive) {
+                $archive = $this->getDescription($archive->archiveId);
+
+                try {
+                    $fullText = $this->digitalResourceController->getFullTextByArchiveId($archive->archiveId);
+                    $fullText = strtolower($fullText);
+                    $fullText = preg_replace('/[.,\/#!?$%\^&\*;:{}=\-_\'`~()\r\n]|\s+/'," ", $fullText);
+
+                    if (isset($stopWords)) {
+                        $fullTextArray = explode(" ", $fullText);
+                        $fullTextArray = array_diff($fullTextArray, $stopWords);
+                        $fullText = implode(" ", $fullTextArray);
+                    } else {
+                        $fullText = preg_replace('/\b[a-z]{1,2}\b/', "",  $fullText);
+                    }
+
+                    $descriptionController->create($archive, $fullText);
+                    $archive->fullTextIndexation = "indexed";
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+
+                    $operationResult = true;
+
+                } catch(\Exception $e) {
+                    $operationResult = false;
+                    $archive->fullTextIndexation = "failed";
+                    $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+                }
+
+                $this->logMetadataModification($archive, $operationResult);
+
+                if ($operationResult) {
+                    $res['success'][] = (string)$archive->archiveId;
+                } else {
+                    $res['error'][] = (string)$archive->archiveId;
+                }
+            }
+        }
+
+        return $res;
     }
 }

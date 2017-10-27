@@ -23,7 +23,7 @@
                         <th>Profile</th>
                         <th>Disposal date</th>
                         <th>Status</th>
-                        <th style="min-width:150px;"/>
+                        <th style="min-width:150px;"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,12 +34,13 @@
                                 data-archive-status="[?merge .status ?]" 
                                 data-final-disposition='[?merge .finalDisposition ?]' 
                                 data-disposable="[?merge .disposable ?]" 
+                                data-noretention="[?merge .noRetention ?]"
                                 value="[?merge .archiveId ?]"/>
                         </td>
                         <td class="archiveName"><?merge .archiveName ?></td>
                         <td><?merge .archiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
-                        <td class="profile"><?merge .archivalProfileReference ?>
+                        <td class="profile"><?merge .archivalProfileReference ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td>

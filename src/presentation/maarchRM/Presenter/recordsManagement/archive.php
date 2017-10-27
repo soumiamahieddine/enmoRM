@@ -78,164 +78,31 @@ class archive
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
 
+        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $retentionRules = $retentionRuleController->index();
+
         $this->view->addContentFile("recordsManagement/archive/search.html");
 
         $this->view->translate();
+        
+        usort($profiles, create_function('$a, $b', 'return \laabs::alphabeticalSort($a, $b, "name");'));
 
+        $deleteDescription = true;
+        if (isset(\laabs::configuration("recordsManagement")['deleteDescription'])) {
+            $deleteDescription = (bool) \laabs::configuration("recordsManagement")['deleteDescription'];
+        }
+
+        $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
+        $this->view->setSource("deleteDescription", $deleteDescription);
 
         $this->view->merge();
 
         return $this->view->saveHtml();
     }
 
-    /**
-     * Get fulltext search result
-     * @param array $results Results search
-     *
-     * @return string The HTML result
-     */
-    public function fulltextSearchResult($results)
-    {
-        $this->view->addContentFile("recordsManagement/archive/fulltextSearchResult.html");
-
-        $this->view->translate();
-
-        $orgController = \laabs::newController('organization/organization');
-        $orgsByRegNumber = $orgController->orgList();
-
-        $descriptionFieldController = \laabs::newController('recordsManagement/descriptionField');
-        $descriptionFields = [];
-        foreach ($descriptionFieldController->index() as $descriptionField) {
-            $descriptionFields[$descriptionField->name] = $descriptionField;
-        }
-
-        foreach ($results as $result) {
-            // Set title
-            if ($result->hasField('archiveName')) {
-                $result->title = $result->getValue('archiveName');
-                $result->unsetField('archiveName');
-            } elseif ($result->hasField('title')) {
-                $result->title = $result->getValue('title');
-                $result->unsetField('title');
-            } elseif ($result->hasField('originatorArchiveId')) {
-                $result->title = $result->getValue('originatorArchiveId');
-            } else {
-                $result->title = $result->getValue('archiveId');
-            }
-
-            $result->archiveId = $result->getValue('archiveId');
-            $result->unsetField('archiveId');
-            $result->docId = $result->getValue('docId');
-            $result->unsetField('docId');
-
-            // Category will be used only when archive is a container of several docs
-            if ($result->getValue('category') == $result->index) {
-                $result->unsetField('category');
-            }
-
-            $result->originatorOrgRegNumber = $result->getValue('originatorOrgRegNumber');
-            $result->originatorOrgName = $orgsByRegNumber[$result->originatorOrgRegNumber]->displayName;
-            $result->unsetField('originatorOrgRegNumber');
-
-            if (!isset($archivalProfiles[$result->index])) {
-                try {
-                    $archivalProfiles[$result->index] = $this->archivalProfileController->getByReference($result->index);
-                } catch (\Exception $e) {
-                    continue;
-                }
-            }
-
-            $archivalProfile = $archivalProfiles[$result->index];
-
-            // Get profile name instead of reference
-            $result->index = $archivalProfile->name;
-            foreach ($result->fields as $field) {
-                if (strlen($field->value) > 30) {
-                    $field->value = substr($field->value, 0, 30).'...';
-                }
-
-                if (isset($descriptionFields[$field->name])) {
-                    $field->label = $descriptionFields[$field->name]->label;
-                }
-            }
-        }
-
-        $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
-        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/destruction");
-
-        $this->view->setSource("hasModificationPrivilege", $hasModificationPrivilege);
-        $this->view->setSource("hasDestructionPrivilege", $hasDestructionPrivilege);
-
-        $this->view->setSource("results", $results);
-        $this->view->merge();
-
-        return $this->view->saveHtml();
-    }
-
-    /**
-     * fulltextModificationForm
-     *
-     * @return string The html result string
-     */
-    public function fulltextModificationResult()
-    {
-
-        $this->json->message = 'The indexes of the archive have been modified';
-        $this->json->message = $this->translator->getText($this->json->message);
-
-        return $this->json->save();
-    }
-
-    /**
-     * fulltextModificationForm
-     * @param string $archiveId The archive identifier
-     *
-     * @return string The html result string
-     */
-    public function fulltextModificationForm($archiveId)
-    {
-        $this->view->addContentFile("recordsManagement/archive/fulltextModification.html");
-
-        $this->view->translate();
-
-        $archive = \laabs::callService("recordsManagement/archive/read_archiveId_", $archiveId);
-        $archivalProfile = \laabs::callService("recordsManagement/archivalProfile/readByReference_reference_", $archive->archivalProfileReference);
-        $index = \laabs::callService("recordsManagement/archives/readFind", 'archiveId:"'.$archiveId.'"', $archive->archivalProfileReference, 1)[0];
-
-        $fields = [];
-        foreach ($index->fields as $field) {
-            $fields[$field->name] = $field;
-        }
-
-        $index->fields = $fields;
-
-        $archivalProfileFields = [];
-        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            if (isset($fields[$archiveDescription->descriptionField->name])) {
-                unset($fields[$archiveDescription->descriptionField->name]);
-            }
-
-            $archivalProfileFields = $archiveDescription;
-            break;
-        }
-
-        unset($fields["archiveId"]);
-        unset($fields["originatorOrgRegNumber"]);
-        unset($fields["originatorArchiveId"]);
-        unset($fields["archiveName"]);
-        unset($fields["depositDate"]);
-
-        $this->view->setSource("existingIndexes", json_encode($index));
-        $this->view->setSource("customFields", $fields);
-        $this->view->setSource("archivalProfileFields", $archivalProfileFields);
-        $this->view->setSource("acceptUserIndex", $archivalProfile->acceptUserIndex);
-        $this->view->merge();
-
-        return $this->view->saveHtml();
-    }
     /**
      * get archives with information
      * @param array $archives Array of archive object
@@ -259,6 +126,17 @@ class archive
             }
         }
 
+         //retention code selector
+        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $retentionRules = $retentionRuleController->index();
+        foreach ($retentionRules as $retentionRule) {
+            $retentionRule->json = json_encode($retentionRule);
+            if ($retentionRule->duration != null) {
+                $retentionRule->retentionRuleDurationUnit = substr($retentionRule->duration, -1);
+                $retentionRule->retentionRuleDuration = substr($retentionRule->duration, 1, -1);
+            }
+        }
+
         $orgController = \laabs::newController('organization/organization');
         $orgsByRegNumber = $orgController->orgList();
 
@@ -269,6 +147,10 @@ class archive
 
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
+            }
+
+            if (empty($archive->disposalDate) && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))) {
+                $archive->noRetention = true;
             }
 
             if (isset($orgsByRegNumber[$archive->originatorOrgRegNumber])) {
@@ -289,6 +171,7 @@ class archive
         $this->readPrivilegesOnArchives();
 
         $this->view->setSource("accessRules", $accessRules);
+        $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
         $this->view->merge();
 
@@ -391,31 +274,20 @@ class archive
             !empty($archive->parentRelationships)
             || !empty($archive->childrenRelationships)
         );
-        //var_dump($archive->childrenRelationships);
-        //var_dump($archive->parentRelationships);
+
         if ($archive->status == "disposed") {
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {
-                /*if (isset($digitalResource->format)) {
-                    foreach ((array) $format->mimetypes as $mimetype) {
 
-                        if (!strpos($mimetype, "/")) {
-                            continue;
-                        } 
-                        $mediatype = strtok($mimetype, "/");
+                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
 
-                        if (in_array($mediatype, ['application', 'message', 'audio', 'video', 'text', 'multipart', 'model', 'image'])) {
-                            $format->mediatype = $mediatype;
-                            break;
-                        }
-                    }
-                }*/
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                     continue;
                 }
                 foreach ($digitalResource->relatedResource as $relatedResource) {
+                    $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
                     $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
                 }
             }
@@ -697,9 +569,15 @@ class archive
      */
     public function convert($result)
     {
+        if ($result == false) {
+            $count = 0;
+        } else {
+            $count = count($result);
+        }
         $this->json->message = '%1$s document(s) converted.';
         $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, count($result));
+        $this->json->message = sprintf($this->json->message, $count);
+        $this->json->result = $result;
 
         return $this->json->save();
     }
@@ -970,7 +848,8 @@ class archive
      */
     protected function getOwnerOriginatorsOrgs($currentService)
     {
-        $originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
+        //$originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
+        $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
@@ -979,6 +858,7 @@ class archive
         $userServices = [];
         $ownerOriginatorOrgs = [];
 
+        // Get all user services,  and check OWNER role on one of them
         $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
             $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
@@ -987,6 +867,8 @@ class archive
                 foreach ($userService->orgRoleCodes as $orgRoleCode) {
                     if ($orgRoleCode == 'owner') {
                         $owner = true;
+
+                        break;
                     }
                 }
             }

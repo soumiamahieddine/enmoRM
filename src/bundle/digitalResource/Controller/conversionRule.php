@@ -73,7 +73,7 @@ class conversionRule
         // pre_load values
         if ($conversionRuleId) {
             if (!$this->sdoFactory->exists("digitalResource/conversionRule", $conversionRuleId)) {
-                throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule $conversionRuleId not found.");
+                throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule %s not found.", 404, null, [$conversionRuleId]);
             }
             $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", $conversionRuleId);
         } else {
@@ -104,7 +104,7 @@ class conversionRule
         }
 
         if ($this->sdoFactory->exists("digitalResource/conversionRule", array("puid" => $conversionRule->puid))) {
-            throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule with Puid '$conversionRule->puid' already exist.");
+            throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule with Puid %s already exist.", 404, null, [$conversionRule->puid]);
         }
 
         $this->sdoFactory->create($conversionRule, "digitalResource/conversionRule");
@@ -138,7 +138,7 @@ class conversionRule
         }
 
         if (!$this->sdoFactory->exists("digitalResource/conversionRule", $conversionRuleId)) {
-            throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule $conversionRuleId not found.");
+            throw \laabs::newException("digitalResource/conversionRuleException", "Conversion rule %s not found.", 404, null, [$conversionRuleId]);
         }
 
         $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", $conversionRuleId);

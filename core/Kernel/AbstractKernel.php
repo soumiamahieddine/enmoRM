@@ -353,17 +353,37 @@ abstract class AbstractKernel
      */
     protected function attachObservers()
     {
-        foreach (\laabs::observers() as $observer) {
-
-            $observerObject = $observer->newInstance();
+        if (!\laabs::isServiceClient()) {
+            $presentation = \laabs::presentation();
             
-            foreach ($observer->getHandlers() as $handler) {
-                \core\Observer\Dispatcher::attach(
-                    $observerObject,
-                    $handler->name,
-                    $handler->subject
-                );
+            foreach ($presentation->getObservers() as $observer) {
+                self::attachObserver($observer);
             }
+        }
+
+        foreach (\laabs::bundles() as $bundle) {
+            foreach ($bundle->getObservers() as $observer) {
+                self::attachObserver($observer);
+            }
+        }
+    }
+
+    /**
+     * Attach an observet to event dispatcher
+     * @param object $observer
+     * 
+     * @access protected
+     */
+    protected function attachObserver($observer)
+    {
+        $observerObject = $observer->newInstance();
+            
+        foreach ($observer->getHandlers() as $handler) {
+            \core\Observer\Dispatcher::attach(
+                $observerObject,
+                $handler->name,
+                $handler->subject
+            );
         }
     }
 

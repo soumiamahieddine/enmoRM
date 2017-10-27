@@ -9,12 +9,24 @@
             </button>
             <a class="navbar-brand" style="cursor: pointer; padding: 10px" onclick="load('/', 'HTML_NO_LAYOUT')">
                 <img class="img-responsive pull-left" style="max-height:32px;" src="[?merge .logo ?]"/>
+                <span style=''>&nbsp;</span>
+                <span style='font-family:electrolize;'>
+                    <?merge .navbarTitle ?>
+                    <span style='[?merge .["style"] ?]'><?merge .["value"] ?></span>
+                </span>
+
             </a>
         </div>
         
         <div class="collapse navbar-collapse" id='leMenu'>
             <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
             
+                <?merge .menu.bool() ?>
+                <li>
+                    <a class="" onclick="load('/', 'HTML_NO_LAYOUT')">
+                        <i class="fa fa-home fa-fw" ></i>
+                    </a>
+                </li>
                 <?merge .menu ?>
                 <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]">
                     <a class="dropdown-toggle" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -195,7 +207,6 @@
 
 
     function ajax(button, request, timeout) {
-        
         var icon = null;
         var activeButtons = $('.btn').not('[disabled]');
 
@@ -223,11 +234,27 @@
             if (ajaxComplete) {
                 ajaxComplete();
             }
-                
+
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
             })
+
         }
+
+        var errorFunction = request.error;
+        request.error = function(response) {
+            try {
+                errorFunction(response);
+            } catch (err) {
+                gritter.show($('#executionError').text(), false);
+            }
+        }
+
+        request.statusCode = {
+            500: function() {
+                gritter.show($('#executionError').text(), false);
+            }
+      }
 
         return $.ajax(request);
     }
@@ -237,6 +264,41 @@
         if (icon) {
             button.find('.fa').removeClass('fa-spinner fa-spin').addClass(icon);
         }
+    }
+
+$.fn.initSmoothScrolling = function() {
+        element = $(this);
+        originalY = element.offset().top;
+        element.css('position', 'relative');
+        lock = false;
+
+        // Space between element and top of screen (when scrolling)
+        var topMargin = 60;
+
+        $(window).on('resize', function(event) {
+            lock = true;
+            element.stop(false, false).css('top', 0);
+        })
+
+        $(window).on('scroll', function(event) {
+
+            if (lock && $(window).scrollTop() == 0) {
+                originalY = element.offset().top;
+                lock = false;
+            }
+
+
+            if ($(window).height() > element.outerHeight() && $(window).width() >= 1200 && !lock) {
+                var scrollTop = $(window).scrollTop();
+                
+                element.stop(false, false).animate({
+                    top: scrollTop < originalY
+                            ? 0
+                            : scrollTop - originalY + topMargin
+                }, 300);
+            }
+        });
+
     }
 
     window.onpopstate = function (e) {

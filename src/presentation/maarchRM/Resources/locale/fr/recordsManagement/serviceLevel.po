@@ -14,6 +14,18 @@ msgstr "Ajouter un niveau de service"
 msgid "New service level"
 msgstr "Nouveau niveau de service"
 
+msgid "Sampling frequency (in days)"
+msgstr "Fréquence d'échantillonnage (en jours)"
+
+msgid "Sampling rate (in %)"
+msgstr "Taux d'échantillonnage (en %)"
+
+msgid "The rate must be between 0 and 100"
+msgstr "Le taux doit être compris entre 0 et 100"
+
+msgid "The frequency must be positive"
+msgstr "La fréquence doit être positive"
+
 msgid "Detect format"
 msgstr "Détection de format"
 
@@ -23,6 +35,9 @@ msgstr "Validation de format"
 msgid "Convert on deposit"
 msgstr "Convertir au dépôt"
 
+msgid "Log the consultations"
+msgstr "Journaliser les consultations"
+
 msgid "default"
 msgstr "par défaut"
 
@@ -30,7 +45,7 @@ msgid "set default"
 msgstr "utiliser par défaut"
 
 msgid "Cluster"
-msgstr "Grappe"
+msgstr "Grappe de stockage"
 
 msgid "Check for virus"
 msgstr "Contrôle antivirus"
@@ -67,3 +82,6 @@ msgstr "Référence"
 
 msgid "reference"
 msgstr "Référence"
+
+msgid "Full text indexation"
+msgstr "Indexation plein texte"

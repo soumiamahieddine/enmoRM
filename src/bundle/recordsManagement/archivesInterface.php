@@ -40,10 +40,18 @@ interface archivesInterface
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
      * @param string $filePlanPosition
      * @param bool   $hasParent
      * @param string $description
      * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @action recordsManagement/archive/search
      *
@@ -57,10 +65,18 @@ interface archivesInterface
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
         $filePlanPosition = null,
         $hasParent = null,
         $description = null,
-        $text = null
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     );
 
     /*
@@ -89,7 +105,7 @@ interface archivesInterface
 
     /**
      * Read the retention rule of multiple archives
-     * @param array $archiveIds Array of archive identifier or sigle archive identifier
+     * @param mixte $archiveIds Array of archive identifier or sigle archive identifier
      *
      * @action recordsManagement/archive/editArchiveRetentionRule
      *
@@ -129,7 +145,7 @@ interface archivesInterface
 
     /**
      * Update a access rule
-     * @param recordsManagement/archiveAccessRule $accessRule  The retention rule object
+     * @param recordsManagement/archiveAccessRule $accessRule  The access rule object
      * @param array                               $archiveIds  The archives ids
      * @param string                              $comment     The comment of modification
      * @param string                              $identifiant Message identifiant
@@ -242,14 +258,15 @@ interface archivesInterface
      */
     /**
      * Update metadata of archive
-     * @param string    $archiveId
-     * @param string    $originatorArchiveId
-     * @param string    $archiveName
-     * @param string    $description     
+     * @param string $archiveId
+     * @param string $originatorArchiveId
+     * @param string $archiveName
+     * @param date   $originatingDate
+     * @param string $description
      * 
      * @action recordsManagement/archive/modifyMetadata
      */
-    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$description = null);
+    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
 
     /**
      * List an archive resources and children archives
@@ -262,7 +279,7 @@ interface archivesInterface
     /**
      * Move an archive into a folder
      * @param string $archiveId the archive identifier
-     * @param string $folderId The folder identifier
+     * @param string $folderId  The folder identifier
      * 
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
@@ -277,4 +294,12 @@ interface archivesInterface
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
     public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
+
+    /**
+     * Index full text 
+     * @param int $limit The maximum number of archive to index
+     *
+     * @action recordsManagement/archive/indexFullText
+     */
+    public function updateIndexfulltext($limit=200);
 }

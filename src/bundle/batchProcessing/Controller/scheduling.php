@@ -157,9 +157,10 @@ class scheduling
             $this->changeStatus($schedulingId, "error");
             $status = false;
             $info = $e;
+            throw \laabs::newException("batchProcessing/schedulingException", "Execution error : %s", 500, $e, [$e->getMessage()]);
         }
 
-        $scheduling->lastExecution = \laabs::newDateTime();
+        $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
         $scheduling->status = "scheduled";
 
         $frequency = explode(";", $scheduling->frequency);
@@ -179,7 +180,7 @@ class scheduling
     public function process()
     {
         $schedulings = $this->sdoFactory->find("batchProcessing/scheduling");
-        $currentDate = \laabs::newDateTime();
+        $currentDate = \laabs::newDateTime(null, 'UTC');
 
         $res = [];
         /**
@@ -196,7 +197,6 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
-
         foreach ($schedulings as $scheduling) {
             if ($scheduling->status == "scheduled") {
                 $frequency = explode(";", $scheduling->frequency);
@@ -208,17 +208,17 @@ class scheduling
 
                         if ($interval->invert == 1) {
                             if ($frequency[2] == "" && $frequency[3] == "" && $frequency[8] == "") {
-                                $this->launch($scheduling, $frequency);
+                                $this->execute($scheduling->schedulingId);
 
                             } elseif ($frequency[7] != "" && $frequency[8] != "") {
                                 $scheduling->nextExecution->setTime($frequency[8], $frequency[7], "0");
                                 $interval = $currentDate->diff($scheduling->nextExecution, false);
                                 if ($interval->invert == 0) {
                                     if ($frequency[2] == "" && $frequency[3] == "") {
-                                        $this->launch($scheduling, $frequency);
+                                        $this->execute($scheduling->schedulingId);
 
                                     } elseif ($frequency[2] != "") {
-                                        strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->launch($scheduling, $frequency) : false;
+                                        strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->execute($scheduling->schedulingId) : false;
 
                                     } else {
                                         if ($frequency[4] != "") {
@@ -232,14 +232,14 @@ class scheduling
 
                                         foreach ($daysMonth as $day) {
                                             if ($day == $currentDay) {
-                                                $this->launch($scheduling, $frequency);
+                                                $this->execute($scheduling->schedulingId);
                                             }
                                         }
                                     }
                                 }
                             } else {
                                 if ($frequency[2] != "") {
-                                    strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->launch($scheduling, $frequency) : false;
+                                    strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->execute($scheduling->schedulingId) : false;
                                 } else {
                                     if ($frequency[4] != "") {
                                         if (strpos($frequency[4], strtoupper(date("M"))) == false) {
@@ -251,7 +251,7 @@ class scheduling
 
                                     foreach ($daysMonth as $day) {
                                         if ($day == $currentDay) {
-                                            $this->launch($scheduling, $frequency);
+                                            $this->execute($scheduling->schedulingId);
                                         }
                                     }
                                 }
@@ -262,7 +262,7 @@ class scheduling
                         $interval = $currentDate->diff($scheduling->nextExecution, false);
                         
                         if ($interval->invert == 1) {
-                            $this->launch($scheduling, $frequency);
+                            $this->execute($scheduling->schedulingId);
                         }
                     } else {
                         $scheduling->nextExecution = $this->nextExecution($frequency);
@@ -308,8 +308,12 @@ class scheduling
      */
     private function nextExecution($frequency)
     {
-        $currentDate = \laabs::newDateTime();
-        $endDate = \laabs::newDateTime();
+        $currentDate = \laabs::newDateTime(null, 'UTC');
+        $endDate = \laabs::newDateTime(null, 'UTC');
+        $UTC_Offset = date('Z');
+
+        $H_Offset = $UTC_Offset/3600;
+        $M_Offset = ($UTC_Offset - $H_Offset*3600)/60;
 
         /**
          * [0] start Minutes
@@ -325,8 +329,20 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
+        if(!empty($frequency[0])) {
+            $frequency[0] -= $M_Offset; 
+        }
+        if(!empty($frequency[1])) {
+            $frequency[1] -= $H_Offset; 
+        }
+        if(!empty($frequency[7])) {
+            $frequency[7] -= $M_Offset; 
+        }
+        if(!empty($frequency[8])) {
+            $frequency[8] -= $H_Offset; 
+        }
+        
         if ($frequency[6] != "") {
-            var_dump($frequency[6]);
             if ($frequency[2] == "" && $frequency[3] == "") {
                 $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                 $currentDate->add(new \DateInterval($timeAdd));
@@ -453,41 +469,6 @@ class scheduling
     }
 
     /**
-     * Execute Route and update
-     *
-     * @param batchProcessing/scheduling $scheduling
-     */
-    private function launch($scheduling, $frequency)
-    {
-        $info = "";
-        $status = true;
-
-        $task = $this->sdoFactory->read("batchProcessing/task", (string) $scheduling->taskId);
-        $this->changeStatus($scheduling->schedulingId, "running");
-
-        try {
-            if ($scheduling->parameters) {
-                $info = \laabs::callServiceArgs($task->route, $scheduling->parameters);
-            } else {
-                $info = \laabs::callService($task->route);
-            }
-        } catch (\Exception $e) {
-            $this->changeStatus($scheduling->schedulingId, "error");
-            $status = false;
-            $info = $e;
-            throw \laabs::newException("batchProcessing/schedulingException", "Execution error.");
-        }
-
-        $scheduling->lastExecution = \laabs::newDateTime();
-        $scheduling->nextExecution = $this->nextExecution($frequency);
-        $scheduling->status = "scheduled";
-
-        $this->update($scheduling);
-
-        $this->logSchedulingController->add($scheduling->schedulingId, $scheduling->executedBy, "__system__", $status, $info);
-    }
-
-    /**
      * Next day of execution (Week)
      *
      * @param array    $daysWeek
@@ -507,7 +488,7 @@ class scheduling
                 }
             }
         }
-        $nextDate = \laabs::newDateTime();
+        $nextDate = \laabs::newDateTime('UTC');
         $nextDate->setTimestamp($nextDayTime);
 
         return $nextDate;
@@ -523,7 +504,7 @@ class scheduling
     {
         $lastDayOfMonth = date('t', strtotime('today'));
         $currentDayNum = strtoupper(date("d"));
-        $endDate = \laabs::newDateTime();
+        $endDate = \laabs::newDateTime('UTC');
         $totalMore = 0;
         $totalLess = 0;
 

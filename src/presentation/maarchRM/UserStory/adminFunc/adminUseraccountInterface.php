@@ -29,17 +29,9 @@ interface adminUseraccountInterface
      * List all users for administration
      *
      * @return auth/user/indexHtml
-     * @uses auth/userAccount/readIndex
-     */
-    public function readUseraccountIndex();
-
-    /**
-     * List all users for administration
-     *
-     * @return auth/user/indexHtml
      * @uses auth/userAccount/readUserlist
      */
-    public function readUseraccounts();
+    public function readUseraccounts($query = null);
 
     /**
      * Prepare an empty user object
@@ -112,15 +104,6 @@ interface adminUseraccountInterface
     public function updateUseraccount_userAccountId_Unlock();
 
     /**
-     * Change a user password
-     * @param string $newPassword The new password
-     *
-     * @uses auth/userAccount/updatePassword_userAccountId_
-     * @return auth/user/setPassword
-     */
-    public function updateUseraccount_userAccountId_Password($newPassword);
-
-    /**
      * Required password change
      *
      * @uses auth/userAccount/updatePasswordchangerequest_userAccountId_
@@ -128,12 +111,6 @@ interface adminUseraccountInterface
      */
     public function updateUseraccount_userAccountId_Requirepasswordchange();
 
-    /**
-     * Get the list of available roles
-     *
-     * @uses auth/role/readRoles_query_
-     */
-    public function readRoles_query_();
 
     /**
      * Get the list of available users

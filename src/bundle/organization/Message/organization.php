@@ -94,7 +94,6 @@ class organization
     /**
      * The registration number
      *
-     * @pattern #^[A-Za-z0-9_]*$#
      * @var string
      * @notempty
      */
@@ -162,6 +161,13 @@ class organization
      * @var array
      */
     public $contacts = array();
+
+    /**
+     * The archival profile access list
+     *
+     * @var array
+     */
+    public $archivalProfileAccess = array();
 
 
     /**
