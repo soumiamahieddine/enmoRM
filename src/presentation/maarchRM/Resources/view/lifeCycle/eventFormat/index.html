@@ -179,6 +179,7 @@ $("#saveEventFormat").on("click", function() {
     var position = $("#formMessage").val().match(/%\d+\$/g);
 
     if (position != null) {
+        error = "";
          $.each(position, function(index,value) {
             length = value.length;
             positionChamp = value.substring(1, length-1);
