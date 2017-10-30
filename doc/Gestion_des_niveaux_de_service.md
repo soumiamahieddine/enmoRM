@@ -19,7 +19,7 @@ L'administrateur accède à la liste des niveaux de service par le menu
 
 ![Niveaux de service](media/niveaux_service.png)
 
-Un bouton en haut à droite <code>+ Nouveau</code> permet d'afficher le formulaire de saisie des 
+Un bouton en haut à droite `+ Nouveau` permet d'afficher le formulaire de saisie des 
 informations d'un nouveau niveau de service.
 
 Dans la liste des niveaux existants, des boutons en fin de ligne à droite permettent d'afficher 
@@ -29,7 +29,7 @@ le formulaire de modification des informations du niveau ou de supprimer celui-c
 L'un des niveaux de service de la liste est défini comme niveau par défaut. 
 Lorsque l'information de niveau de service est omise dans les données de gestion transmises au versement, 
 ce niveau sera utilisé par défaut. 
-Pour changer le niveau par défaut, il faut cliquer sur le bouton <code>Defaut</code> qui apparaît dans la 
+Pour changer le niveau par défaut, il faut cliquer sur le bouton `Defaut` qui apparaît dans la 
 colonne lorsque le curseur de souris est placée sur la ligne souhaitée.
 
 ## Détail d'un niveau de service

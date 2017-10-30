@@ -22,7 +22,7 @@ d'information binaires. Il existe de nombreux types de support pour les document
   * base de données (stockage BLOB)
   * etc.
 
-Maarch RM est livré en standard un connecteur pour les systèmes de fichiers réinscriptibles <code>fileSystem</code>, 
+Maarch RM est livré en standard un connecteur pour les systèmes de fichiers réinscriptibles `fileSystem`, 
 et propose une interface de programmation pour le branchement d'autres technologies.
  
 L'administrateur accède à la liste des supports de stockage par le menu 
@@ -33,7 +33,7 @@ L'administrateur accède à la liste des supports de stockage par le menu
 Ce panneau d'administration permet de déclarer les supports de stockage des documents numériques utilisant 
 une technologie de stockage parmi celles implémentées.
 
-Le bouton <code>+ Nouveau</code> en haut à droite de la liste permet d'afficher le formulaire de saisie 
+Le bouton `+ Nouveau` en haut à droite de la liste permet d'afficher le formulaire de saisie 
 des informations d'un nouveau support de stockage. 
 A droite de chacune des lignes représentant un support de stockage existant, 
 un bouton permet d'afficher le formulaire de modification des informations du support.
@@ -72,7 +72,7 @@ L'administrateur accède à la liste des grappes de stockage par le menu
 
 ![Grappes de stockage](media/grappes_stockage.png)
 
-Le bouton <code>+ Nouveau</code> en haut à droite de la liste permet d'afficher le formulaire de saisie 
+Le bouton `+ Nouveau` en haut à droite de la liste permet d'afficher le formulaire de saisie 
 des informations d'une nouvelle grappe de stockage.
 A droite de chacune des lignes représentant une grappe de stockage existante, 
 un bouton permet d'afficher le formulaire de modification des informations de la grappe.
@@ -89,7 +89,7 @@ de la grappe pour chacune de ces opérations.
 Pour ajouter un support de stockage à la grappe, choisir un support existant dans la liste proposée. 
 Chaque support ne peut être utilisé qu'une seule fois par grappe; 
 définir ensuite la priorité pour chacune des opérations, 1 étant la priorité la plus élevée, puis 2, 3, etc,
- puis utiliser le bouton <code>+ Ajouter</code>.
+ puis utiliser le bouton `+ Ajouter`.
 
 La liste des supports déjà utilisés à droite de l'écran permet de connaître leur nom et les priorités définies. 
 Un bouton représentant un poubelle permet de supprimer le rattachement du support. 

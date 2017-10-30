@@ -46,7 +46,7 @@ Le début du contenu est le suivant :
     ...
 
 ## Déclaration de l'hôte virtuel
-La déclaration de l'hôte est faite par la directive <code>VirtualHost</code>. 
+La déclaration de l'hôte est faite par la directive `VirtualHost`. 
 Chaque serveur virtuel doit correspondre à une adresse IP, un port ou un nom d'hôte. 
 Pour Maarch RM, il est fortement recommandé d'utiliser un hôte virtuel basé sur le nom. 
 
@@ -66,9 +66,9 @@ la documentation officielle est disponible sur le site de l'éditeur à l'adress
 https://httpd.apache.org/docs/current/mod/core.html#include
 
 ## Répertoire racine
-La directive <code>DocumentRoot</code> définit le répertoire racine de l'hôte virtuel. 
+La directive `DocumentRoot` définit le répertoire racine de l'hôte virtuel. 
 Elle DOIT être modifiée pour correspondre au répertoire frontal de l'application, 
-qui se trouve dans le répertoire d'installation et qui est nommé <code>web</code> :
+qui se trouve dans le répertoire d'installation et qui est nommé `web` :
 
     # Set document root in Laabs public web directory
     DocumentRoot /var/www/laabs/web/
@@ -78,11 +78,11 @@ la documentation officielle est disponible sur le site de l'éditeur à l'adress
 https://httpd.apache.org/docs/current/mod/core.html#documentroot
 
 ## Nom de l'hôte
-La directive <code>ServerName</code> définit le nom de l'hôte virtuel, qui sera utilisé dans les URL 
+La directive `ServerName` définit le nom de l'hôte virtuel, qui sera utilisé dans les URL 
 d'appel aux fonctionnalités du logiciel. 
 Elle DOIT être modifiée pour identifier l'hôte publié pour les clients internet et les clients de service.
 Le nom ainsi défini doit potentiellement être pris en compte dans les services DNS 
-ou les fichiers de configuration locale des postes clients (fichiers <code>host</code>).
+ou les fichiers de configuration locale des postes clients (fichiers `host`).
 
     # Set server name
     ServerName maarchrm
@@ -111,7 +111,7 @@ Les directives suivantes NE DOIVENT PAS être modifiées par l'opérateur:
 ## Configurer l'application
 Cette étape adapte la configuration pour définir le comportement de l'application 
 sous la forme de définition de variables d'environnement de l'hôte virtuel par la 
-directive <code>SetEnv</code>, par exemple :
+directive `SetEnv`, par exemple :
 
     SetEnv LAABS_INSTANCE_NAME maarchRM
 

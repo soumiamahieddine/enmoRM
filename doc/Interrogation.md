@@ -167,6 +167,6 @@ Le contenu numérique est accessible en deux points :
   * une prévisualisation peut être activée pour certains formats, 
   en fonction de la configuration du système et des capacités du navigateur 
   (PDF, image, audi, video, multimedia)
-  * un lien <code>Afficher</code> ouvre une nouvelle page pour télécharger 
+  * un lien `Afficher` ouvre une nouvelle page pour télécharger 
   ou afficher le contenu numérique en fonction des capacités du navigateur 
 

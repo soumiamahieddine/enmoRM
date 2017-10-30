@@ -37,7 +37,7 @@ Deux fichiers sont livrés :
   * le référentiel des formats et des signatures internes,
   * le référentiel des formats conteneurs (zip, OLE et dérivés)
 
-Le référentiel principal est nommé <code>DROID_SignatureFile_Vx.xml</code>, 
+Le référentiel principal est nommé `DROID_SignatureFile_Vx.xml`, 
 où x représente le numéro de version. 
 Il est aussi possible de connaître la version et la date du référentiel en affichant les données XML 
 ou dans l'écran de consultation des formats de l'application, 
@@ -52,7 +52,7 @@ En-tête du référentiel principal :
           <ByteSequence Reference="BOFoffset">
     ...
 
-Le référentiel des formats conteneurs est nommé <code>container-signature-20170330.xml</code>, 
+Le référentiel des formats conteneurs est nommé `container-signature-20170330.xml`, 
 où YYYYMMDD est la date de production au format année, mois et jours.
 
 En-tête du référentiel des formats conteneurs:

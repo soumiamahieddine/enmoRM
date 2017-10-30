@@ -28,7 +28,7 @@ Les tâches livrées de base et habituellement planifiées sont détaillées ci-
 ### Chaînage du journal de l'application
 Ce service réalise une extraction des événements du journal de l'application survenus depuis la dernière exécution, constitue un fichier de journal chaîné avec le précédent, le scelle optionnellement par un horodatage auprès d'un tiers de confiance et le verse dans l'archive.
 
-  * Route : <code>audit/event/createChainjournal</code>
+  * Route : `audit/event/createChainjournal`
   * Paramètres : néant
   * Origine : Maarch RM
 
@@ -37,63 +37,63 @@ Ce service réalise une extraction des événements du journal du cycle de vie d
 constitue un fichier de journal chaîné avec le précédent, le scelle optionnellement par un horodatage 
 auprès d'un tiers de confiance et le verse dans l'archive.
 
-  * Route : <code>lifeCycle/journal/createChainjournal</code>
+  * Route : `lifeCycle/journal/createChainjournal`
   * Paramètres : néant
   * Origine : Maarch RM
 
 ### Contrôle d'intégrité périodique
 Ce service prend en compte les niveaux de service applicables aux données d'archives pour sélectionner les populations devant faire l'objet d'un contrôle d'intégrité, réalise le contrôle et émet une alerte fatale en cas d'erreur.
 
-  * Route : <code>recordsManagement/archiveCompliance/readPeriodic</code>
+  * Route : `recordsManagement/archiveCompliance/readPeriodic`
   * Paramètres : néant
   * Origine : Maarch RM
 
 ### Envoi des notifications
 Ce service prend en compte les notifications enregistrées par les différents modules fonctionnels et techniques, utilise le service de notification (voir Configuration des notifications) pour envoyer les courriels aux administrateurs et utilisateurs.
 
-  * Route : <code>batchProcessing/notification/updateProcess</code>
+  * Route : `batchProcessing/notification/updateProcess`
   * Paramètres : néant
   * Origine : Maarch RM
 
 ### Traitement des demandes de communication
 Ce service prend en compte les demandes de communication acceptées, constitue un message de réponse à la communication incluant les données et métadonnées d'archive demandées et stocke le paquet compressé dans l'espace d'échange.
 
-  * Route : <code>medona/ArchiveDelivery/updateProcessBatch</code>
+  * Route : `medona/ArchiveDelivery/updateProcessBatch`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
 ### Traitement des éliminations
 Ce service prend en compte les demandes d'élimination acceptées, détruit les données et optionnellement les métadonnées correspondantes, constitue un message de notification d'élimination à destination du producteur.
 
-  * Route : <code>medona/ArchiveDestruction/updateProcessAll</code>
+  * Route : `medona/ArchiveDestruction/updateProcessAll`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
 ### Traitement des demandes de restitution
 Ce service prend en compte les demandes de restitution acceptées, constitue un message de restitution incluant les données et métadonnées d'archive demandées et stocke le paquet compressé dans l'espace d'échange.
 
-  * Route : <code>medona/ArchiveRestitution/updateProcessBatch</code>
+  * Route : `medona/ArchiveRestitution/updateProcessBatch`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
 ### Traitement des transferts
 Ce service prend en compte les transferts d'archive acceptés, procède au dépôt des données et à l'enregistrement des métadonnées, constitue un message de réponse incluant les données et métadonnées d'archive versées.
 
-  * Route : <code>medona/ArchiveTransfer/updateProcessBatch</code>
+  * Route : `medona/ArchiveTransfer/updateProcessBatch`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
 ### Validation des transferts
 Ce service prend en compte les transferts d'archive reçus, procède à la validation des données et des métadonnées, dans le cas d'une non conformité constitue un message de réponse incluant les données et métadonnées d'archive rejetées, dans le cas d'une conformité place le bordereau dans le statut "accepté" ou "valide" selon le paramétrage du circuit.
 
-  * Route : <code>medona/ArchiveTransfer/updateValidateBatch</code>
+  * Route : `medona/ArchiveTransfer/updateValidateBatch`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
 ### Purge de l'espace d'échange
 Ce service prend en compte les messages d'échange correspondant aux règles de sélection définies dans la configuration (voir Gestion de l'espace d'échange) et détruit les données de l'espace d'échange devenues obsolètes.
 
-  * Route : <code>medona/message/DeleteMessageDirectoryPurge</code>
+  * Route : `medona/message/DeleteMessageDirectoryPurge`
   * Paramètres : néant
   * Origine : Extension Third Party Archiving
 
@@ -109,13 +109,13 @@ qui va tenir compte de la planification des tâches dans l'application et les ex
 
 La tâche à planifier est la suivante :
 
-  * Route : <code>batchProcessing/scheduling/updateProcess</code>
+  * Route : `batchProcessing/scheduling/updateProcess`
   * Paramètres : Néant
   * Origine : Maarch RM
   * URI HTTP : PUT batchProcessing/scheduling/process
 
 Pour l'appel en mode ligne de commande, se reporter à la documentation "Publication ligne de commande". 
-Un exemple est fourni dans le script shell Linux <code>data/maarchRM/batch/scheduling.sh</code>
+Un exemple est fourni dans le script shell Linux `data/maarchRM/batch/scheduling.sh`
 
 ### Avec le planificateur du système hôte
 L'opérateur du système d'archivage DOIT alors paramétrer le planificateur de son choix pour exécuter les différentes tâches 
@@ -123,4 +123,4 @@ planifiées, en définissant la fréquence et les paramètres de lancement dans 
 
 Chaque tâche exécute un script shell Linux pour chaque tâche telle que décrite ci-avant.
 Pour l'appel en mode ligne de commande, se reporter à la documentation "Publication ligne de commande". 
-Un exemple est fourni dans le script shell Linux <code>data/maarchRM/batch/chainJournal.sh</code>
+Un exemple est fourni dans le script shell Linux `data/maarchRM/batch/chainJournal.sh`
