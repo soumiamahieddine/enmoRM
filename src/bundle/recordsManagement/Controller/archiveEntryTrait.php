@@ -445,9 +445,16 @@ trait archiveEntryTrait
      */
     public function completeServiceLevel($archive)
     {
-        if (empty($this->currentServiceLevel)) {
-            $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+        if (!empty($archive->archivalProfileReference) && empty($archive->serviceLevelReference)) {
+            $currentOrg = \laabs::getToken("ORGANIZATION"); //->registrationNumber
+            $archivalProfileAccess = $this->organizationController->getOrgUnitArchivalProfile($currentOrg->orgId, $archive->serviceLevelReference);
+
+            if (!empty($archivalProfileAccess)) {
+                $archive->serviceLevelReference = $archivalProfileAccess->serviceLevelReference;
+            }
         }
+
+        $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
 
