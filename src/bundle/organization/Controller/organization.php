@@ -809,17 +809,17 @@ class organization
 
     /**
      * Get an archival profile access or null value if doesn't exists
-     * @param $orgId                 The organization identifier
-     * @param $serviceLevelReference The service level reference
+     * @param $orgId                    The organization identifier
+     * @param $archivalProfileReference The archival profile reference
      *
      * @return The archival profile access object or null value
      */
-    public function getOrgUnitArchivalProfile($orgId, $serviceLevelReference)
+    public function getOrgUnitArchivalProfile($orgId, $archivalProfileReference)
     {
-        $queryString = "orgId=:orgId AND serviceLevelReference=:serviceLevelReference";
+        $queryString = "orgId=:orgId AND archivalProfileReference=:archivalProfileReference";
         $queryParam = [];
         $queryParam["orgId"] = $orgId;
-        $queryParam["serviceLevelReference"] = $serviceLevelReference;
+        $queryParam["archivalProfileReference"] = $archivalProfileReference;
 
         $archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', $queryString, $queryParam);
 
