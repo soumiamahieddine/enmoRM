@@ -5,13 +5,14 @@ SET CLIENT_ENCODING TO 'UTF8';
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES
 ('user', 'superadmin', 'Super', 'Admin', 'M.', 'super admin', 'superadmin', 'info@maarch.org', '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae',true,false,null,false,0,null,null,null);
 
+
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
     ('ADMIN', 'Administrateur', 'Groupe administrateur', true),
     ('CORRESPONDANT_ARCHIVES', 'Archiviste', 'Correspondant d''archives', true),
     ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true); 
 
-    -- privilege
+-- PRIVILEGE
 INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('ADMIN', 'adminTech/*'),
     ('ADMIN', 'adminFunc/AdminArchivalProfileAccess'),
@@ -238,7 +239,6 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "c
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '23');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '24');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '18');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '25');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '26');
 
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '29');
@@ -251,30 +251,17 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "c
 
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '30');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '31');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '32');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '33');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '34');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '36');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '37');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '38');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '40');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '77');
 
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '42');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '43');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '25');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '44');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '45');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '46');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '47');
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '48');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '49');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '50');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '51');
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '52');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '53');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '54');
 

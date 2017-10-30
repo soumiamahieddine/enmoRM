@@ -72,6 +72,7 @@ interface archivesInterface
         $description = null,
         $text = null,
         $partialRetentionRule = null,
+        $retentionRuleCode = null,
         $depositStartDate = null,
         $depositEndDate = null,
         $originatingStartDate = null,

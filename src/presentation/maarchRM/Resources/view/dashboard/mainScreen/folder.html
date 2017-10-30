@@ -358,6 +358,14 @@
         });
     });
 
+    $("#folderContentList").on('click', ".dataList-sorting", function() {
+        ArchiveFolderList.initDragNDrop();
+    });
+
+    $("#folderContentList").on('keyup', "input", function() {
+        ArchiveFolderList.initDragNDrop();
+    });
+
     $("#folderContentList").on('click','.pagination li', function() {
         ArchiveFolderList.initDragNDrop();
     });

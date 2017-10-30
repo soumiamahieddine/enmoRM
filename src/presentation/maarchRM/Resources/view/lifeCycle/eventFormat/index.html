@@ -126,7 +126,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </div>
-<script src="/public/dependency/html/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
 $("#btnAddEventTypeForm").on("click", function() {
     $("#modalAddEventFormat").modal();
@@ -179,6 +179,7 @@ $("#saveEventFormat").on("click", function() {
     var position = $("#formMessage").val().match(/%\d+\$/g);
 
     if (position != null) {
+        error = "";
          $.each(position, function(index,value) {
             length = value.length;
             positionChamp = value.substring(1, length-1);

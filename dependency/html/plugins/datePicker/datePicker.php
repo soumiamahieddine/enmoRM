@@ -90,7 +90,7 @@ class datePicker
         $format = str_replace('l', 'DD', $format);   // Full day name
         $this->parameters->format = $format;
 
-        $this->element->ownerDocument->addScript('/public/dependency/html/js/datePicker/bootstrap-datepicker.js');
+        $this->element->ownerDocument->addScript('/public/js/datePicker/bootstrap-datepicker.js');
     }
     /*
     {
@@ -108,8 +108,8 @@ class datePicker
         $translator = $view->translator;
 
         $this->parameters->language = $translator->lang;
-        if (\laabs::hasPublicResource('public/dependency/html/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
-            $view->addScript('/public/dependency/html/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
+        if (\laabs::hasPublicResource('public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
+            $view->addScript('/public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
         } 
     }
 

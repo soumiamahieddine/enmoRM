@@ -477,7 +477,7 @@ trait laabsModelTrait
 
             case 'boolean':
             case 'bool':
-                return (boolean) $sourceValue;
+                return filter_var($sourceValue, FILTER_VALIDATE_BOOLEAN);
 
             case 'float':
             case 'double':

@@ -784,13 +784,11 @@ class organization
     /**
      * Get the archival profile descriptions for the given org unit
      * @param string $orgRegNumber
-     * @param string $originatorAccess
-     * 
+     *
      * @return array
      */
-    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess=false)
+    public function getOrgUnitArchivalProfiles($orgRegNumber)
     {
-        $archivalProfileAccesses = [];
         $orgUnitArchivalProfiles = [];
 
         $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
@@ -807,6 +805,29 @@ class organization
         }
 
         return $orgUnitArchivalProfiles;
+    }
+
+    /**
+     * Get an archival profile access or null value if doesn't exists
+     * @param $orgId                 The organization identifier
+     * @param $serviceLevelReference The service level reference
+     *
+     * @return The archival profile access object or null value
+     */
+    public function getOrgUnitArchivalProfile($orgId, $serviceLevelReference)
+    {
+        $queryString = "orgId=:orgId AND serviceLevelReference=:serviceLevelReference";
+        $queryParam = [];
+        $queryParam["orgId"] = $orgId;
+        $queryParam["serviceLevelReference"] = $serviceLevelReference;
+
+        $archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', $queryString, $queryParam);
+
+        if (empty($archivalProfileAccess)) {
+            return null;
+        }
+
+        return $archivalProfileAccess[0];
     }
 
     /**
