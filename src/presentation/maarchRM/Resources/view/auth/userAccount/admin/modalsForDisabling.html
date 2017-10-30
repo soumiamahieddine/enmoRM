@@ -120,6 +120,12 @@ $('#app_maarchRM_main').ready(function(){
                 var tr = $('#'+userAccountId);
                 gritter.show(response.message, response.status, response.errors);
                 $('#disableUserModal').modal('hide');
+
+                if ($('#activatedUsers').prop('checked')) {
+                    window.location.reload();
+                    return;
+                }
+
                 tr.find('.userStatus > i').removeClass('fa-check').addClass('fa-ban');
                 tr.find('.disableUser').css('display', 'none');
                 tr.find('.enableUser').css('display', '');
