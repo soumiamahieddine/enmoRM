@@ -72,6 +72,7 @@ class orgTree
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+        $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
 
         // Sort archival profile by reference
         usort($archivalProfile, function($a, $b){
@@ -90,6 +91,7 @@ class orgTree
         $this->view->setSource("orgRole", $orgRole);
         $this->view->setSource("communicationMeans", $communicationMeans);
         $this->view->setSource("archivalProfile", $archivalProfile);
+        $this->view->setSource("serviceLevel", $serviceLevel);
         $this->view->merge();
         $this->view->translate();
 

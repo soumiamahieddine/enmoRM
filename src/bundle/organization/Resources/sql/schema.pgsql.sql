@@ -143,6 +143,7 @@ CREATE TABLE "organization"."archivalProfileAccess"
   "orgId" text NOT NULL,
   "archivalProfileReference" text NOT NULL,
   "originatorAccess" boolean default true,
+  "serviceLevelReference" text,
 
   UNIQUE ("orgId", "archivalProfileReference"),
   FOREIGN KEY ("orgId")
