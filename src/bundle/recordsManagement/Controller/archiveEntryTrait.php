@@ -409,7 +409,10 @@ trait archiveEntryTrait
             $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
 
             $archive->retentionDuration =  $retentionRule->duration;
-            $archive->finalDisposition =  $retentionRule->finalDisposition;
+
+            if (!$archive->finalDisposition) {
+                $archive->finalDisposition =  $retentionRule->finalDisposition;
+            }
         }
 
         if (is_string($archive->retentionStartDate)) {
@@ -445,9 +448,16 @@ trait archiveEntryTrait
      */
     public function completeServiceLevel($archive)
     {
-        if (empty($this->currentServiceLevel)) {
-            $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+        if (!empty($archive->archivalProfileReference) && empty($archive->serviceLevelReference)) {
+            $currentOrg = \laabs::getToken("ORGANIZATION");
+            $archivalProfileAccess = $this->organizationController->getOrgUnitArchivalProfile($currentOrg->orgId, $archive->archivalProfileReference);
+
+            if (!empty($archivalProfileAccess)) {
+                $archive->serviceLevelReference = $archivalProfileAccess->serviceLevelReference;
+            }
         }
+
+        $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
 
