@@ -158,7 +158,7 @@
                     }
 
                      if( ModificationModal.modalType === "retentionRule") {
-                        ModificationModal.loadRetentionCode();
+                       ModificationModal.loadRetentionCode();
                     }
 
                     // Set datepicker Date
@@ -302,12 +302,12 @@
                     var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
                     $('#retentionRule').css("display", '');
                     $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                    $('#retentionRuleFinalDisposition').text( $('#text_' + retentionRuleFinalDisposition).html());
+                    $('#retentionRuleFinalDisposition').val(retentionRuleFinalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
                     $('#retentionRuleDuration').text(retentionRuleCode.durationUnit);
-                    $('#retentionRuleFinalDisposition').text($('#text_' + retentionRuleFinalDisposition).html());
+                    $('#retentionRuleFinalDisposition').val(retentionRuleFinalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }
 
