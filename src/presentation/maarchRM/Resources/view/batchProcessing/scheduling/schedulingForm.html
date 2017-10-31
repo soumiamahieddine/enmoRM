@@ -496,9 +496,14 @@
                     this.form.find("[name='endHours']").val(scheduling.endHours);
                 }
             }
-            
+
             var liste = this.form.find(".parametersList");
             liste.empty();
+
+            if (!scheduling.parameters) {
+                scheduling.parameters = [];
+            }
+
             $.each(scheduling.parameters, function(key,value){
                 var li = $('<li/>')
                         .attr('parameters', value)
