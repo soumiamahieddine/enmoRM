@@ -227,3 +227,6 @@ msgstr "Historique"
 
 msgid "Logs scheduling list"
 msgstr "Liste d'évènement de planification"
+
+msgid "An error occurred during execution"
+msgstr "Une erreur s'est produite lors de l'exécution"

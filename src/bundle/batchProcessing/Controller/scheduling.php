@@ -119,22 +119,21 @@ class scheduling
     }
 
     /**
-     * Execute a scheduling
+     * Execute a scheduling task
      *
-     * @param string $schedulingId Scheduling identifiant
+     * @param string $schedulingId The Scheduling identifier
      *
      * @return batchProcessing/scheduling
      */
     public function execute($schedulingId)
     {
-        $info = "";
         $status = true;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
         $task = $this->sdoFactory->read("batchProcessing/task", (string) $scheduling->taskId);
 
         if (!$scheduling) {
-            throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifiant.");
+            throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifier.");
         }
 
         if ($accountToken = \laabs::getToken('AUTH')) {
@@ -157,14 +156,18 @@ class scheduling
             $this->changeStatus($schedulingId, "error");
             $status = false;
             $info = $e;
-            throw \laabs::newException("batchProcessing/schedulingException", "Execution error : %s", 500, $e, [$e->getMessage()]);
         }
 
-        $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
-        $scheduling->status = "scheduled";
+        if ($status) {
+            $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
+            $scheduling->status = "scheduled";
 
-        $frequency = explode(";", $scheduling->frequency);
-        $scheduling->nextExecution = $this->nextExecution($frequency);
+            $frequency = explode(";", $scheduling->frequency);
+            $scheduling->nextExecution = $this->nextExecution($frequency);
+        } else {
+            $scheduling->status = "error";
+        }
+
         $this->update($scheduling);
 
         $this->logSchedulingController->add($schedulingId, $scheduling->executedBy, $launchedBy, $status, $info);
@@ -183,94 +186,31 @@ class scheduling
         $currentDate = \laabs::newDateTime(null, 'UTC');
 
         $res = [];
-        /**
-         * [0] start Minutes
-         * [1] start Hours
-         * [2] Day week ex : Fri
-         * [3] Day month ex : 1,2,3
-         * [4] month ex : apr, may, jun
-         * [5] number of case 7
-         * [6] Frequence unity minute (m) or hour (h)
-         * [7] end Minutes
-         * [8] end Hours
-         * Exemple frequency = [0;18;"Thu";"";"";"5";"m";"0";"20"];
-         * Thursday 18h -> 20h every 5 Minutes
-         */
 
         foreach ($schedulings as $scheduling) {
-            if ($scheduling->status == "scheduled") {
+            $executedTask = null;
+
+            if ($scheduling->status != "scheduled") {
+                continue;
+            }
+
+            if (empty($scheduling->nextExecution)) {
                 $frequency = explode(";", $scheduling->frequency);
-                if ($scheduling->lastExecution && $scheduling->nextExecution) {
-                        /*$firstExecution =  \laabs::newDateTime();
-                        $firstExecution->setTime($frequency[1], $frequency[0], "0");*/
+                $scheduling->nextExecution = $this->nextExecution($frequency);
+                $this->sdoFactory->update($scheduling,"batchProcessing/scheduling");
+            }
 
-                        $interval = $currentDate->diff($scheduling->nextExecution, false);
+            $interval = $scheduling->nextExecution->getTimestamp() - $currentDate->getTimestamp();
 
-                        if ($interval->invert == 1) {
-                            if ($frequency[2] == "" && $frequency[3] == "" && $frequency[8] == "") {
-                                $this->execute($scheduling->schedulingId);
+            if ($interval <= 0) {
+                $executedTask = $this->execute($scheduling->schedulingId);
+            }
 
-                            } elseif ($frequency[7] != "" && $frequency[8] != "") {
-                                $scheduling->nextExecution->setTime($frequency[8], $frequency[7], "0");
-                                $interval = $currentDate->diff($scheduling->nextExecution, false);
-                                if ($interval->invert == 0) {
-                                    if ($frequency[2] == "" && $frequency[3] == "") {
-                                        $this->execute($scheduling->schedulingId);
-
-                                    } elseif ($frequency[2] != "") {
-                                        strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->execute($scheduling->schedulingId) : false;
-
-                                    } else {
-                                        if ($frequency[4] != "") {
-                                            if (strpos($frequency[4], date("M")) == false) {
-                                                continue;
-                                            }
-                                        }
-
-                                        $daysMonth = explode(",", $frequency[3]);
-                                        $currentDay = date("j");
-
-                                        foreach ($daysMonth as $day) {
-                                            if ($day == $currentDay) {
-                                                $this->execute($scheduling->schedulingId);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                if ($frequency[2] != "") {
-                                    strpos($frequency[2], strtoupper(date("D"))) > -1 ? $this->execute($scheduling->schedulingId) : false;
-                                } else {
-                                    if ($frequency[4] != "") {
-                                        if (strpos($frequency[4], strtoupper(date("M"))) == false) {
-                                            continue;
-                                        }
-                                    }
-                                    $daysMonth = explode(",", $scheduling->frequency[3]);
-                                    $currentDay = date("j");
-
-                                    foreach ($daysMonth as $day) {
-                                        if ($day == $currentDay) {
-                                            $this->execute($scheduling->schedulingId);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                } else {
-                    if ($scheduling->nextExecution) {
-                        $interval = $currentDate->diff($scheduling->nextExecution, false);
-                        
-                        if ($interval->invert == 1) {
-                            $this->execute($scheduling->schedulingId);
-                        }
-                    } else {
-                        $scheduling->nextExecution = $this->nextExecution($frequency);
-                        $this->sdoFactory->update($scheduling,"batchProcessing/scheduling");
-                    }
-                }
+            if (!empty($executedTask)) {
+                $res[$executedTask->schedulingId] = $executedTask->status;
             }
         }
+
         return $res; 
     }
 
@@ -291,7 +231,7 @@ class scheduling
         }
         
         if (!$scheduling) {
-            throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifiant.");
+            throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifier.");
         }
 
         $scheduling->status = $status;

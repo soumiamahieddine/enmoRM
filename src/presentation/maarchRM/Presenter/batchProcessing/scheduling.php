@@ -62,8 +62,6 @@ class scheduling
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
         $serviceAccount = \laabs::callService('auth/serviceAccount/readIndex');
-        // $bundle = \laabs::newController('batchProcessing/scheduling');
-        // $bundle->process();
 
         foreach ($scheduledTasks as $scheduledTask) {
             $scheduledTask->taskName = $tasks[$scheduledTask->taskId]->description;
@@ -181,9 +179,14 @@ class scheduling
      */
     public function execute($result)
     {
-        $this->json->status = true;
+        if ($result->status == "error") {
+            $this->json->status = false;
+            $this->json->message = "An error occurred during execution";
+        } else {
+            $this->json->status = true;
+            $this->json->message = "Task execution triggered";
+        }
 
-        $this->json->message = "Task execution triggered";
         $this->json->message = $this->translator->getText($this->json->message);
         $result->lastExecution = \laabs::newDateTime($result->lastExecution)->setTimezone(timezone_open(date_default_timezone_get()));
         $result->lastExecution = $result->lastExecution->format("Y-m-d H:i:s P");
