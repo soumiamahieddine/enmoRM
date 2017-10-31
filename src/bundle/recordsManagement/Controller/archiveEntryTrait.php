@@ -409,10 +409,7 @@ trait archiveEntryTrait
             $retentionRule = $this->retentionRuleController->read($archive->retentionRuleCode);
 
             $archive->retentionDuration =  $retentionRule->duration;
-
-            if (!$archive->finalDisposition) {
-                $archive->finalDisposition =  $retentionRule->finalDisposition;
-            }
+            $archive->finalDisposition =  $retentionRule->finalDisposition;
         }
 
         if (is_string($archive->retentionStartDate)) {
