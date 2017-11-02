@@ -78,7 +78,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 id="m_title-delete">Delete the role</h4>
                 </div>
                 <div class="modal-body">
@@ -109,7 +108,7 @@
             $("#contain").on('click', ".deleteRole", function(){
                 $('#messagesModal').modal();
 
-                var id = $(this).data('roleid')
+                var id = $(this).data('roleid');
                 $("#m_yes").click(function() {
                     $.ajax({
                         url:  '/auth/' +id,
@@ -118,9 +117,11 @@
                         dataType: 'json',
                         success: function(response) {
                             gritter.show(response.message, response.status, response.errors);
+
                             if (response.status) {
-                                load("/auth/roles");
-                                $('#messagesModal').modal('hide');
+                                $('#messagesModal').one('hidden.bs.modal', function () {
+                                    load("/auth/roles");
+                                });
                             }
                         },
                         error    : function(response) {

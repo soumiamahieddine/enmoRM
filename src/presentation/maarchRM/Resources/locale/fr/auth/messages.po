@@ -364,11 +364,11 @@ msgstr "Débloquer"
 msgid "New role created."
 msgstr "Nouveau rôle crée"
 
-msgid "Role updated."
-msgstr "Rôle modifié"
+msgid "Role deleted."
+msgstr "Rôle supprimé"
 
 msgid "Status changed."
-msgstr "Statuts modifié"
+msgstr "Statut modifié"
 
 msgid "The name is empty."
 msgstr "Le nom est vide."
