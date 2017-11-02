@@ -48,11 +48,11 @@
                                         <a class="btn btn-info editRole" data-roleid="[?merge .roleId?]"  title="Show">
                                             <span class="fa fa-fw fa-edit"></span>
                                         </a>
-                                        <?merge .enbled.ifeq('Lock') ?>
-                                        <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Lock">
+                                        <?merge .enabled.bool() ?>
+                                        <a class="btn btn-warning changeStatus " data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Lock">
                                             <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
                                         </a>
-                                        <?merge .enbled.ifeq('Lock').not() ?>
+                                        <?merge .enabled.bool().not() ?>
                                         <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Unlock">
                                             <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
                                         </a>
@@ -147,11 +147,11 @@
                         button.data('status', !status);
                         if(status) {
                             icon.removeClass('fa-unlock').addClass('fa-lock');
-                            button.attr('title', $('#lock_text').html());
+                            button.prop('title', $('#lock_text').text());
                             button.find('span:first').removeClass('fa-lock').addClass('fa-unlock');
                         } else {
                             icon.removeClass('fa-lock').addClass('fa-unlock');
-                            button.attr('title', $('#unlock_text').html());
+                            button.prop('title', $('#unlock_text').text());
                             button.find('span:first').removeClass('fa-unlock').addClass('fa-lock');
                         }
                         gritter.show(response.message, response.status, response.errors);
