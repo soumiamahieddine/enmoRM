@@ -196,7 +196,7 @@ class role
 
     /**
      * Delete an auth role
-     * @param auth/role $roleId The role identifier to delete
+     * @param string $roleId The role identifier to delete
      *
      * @return boolean The status of the query
      */

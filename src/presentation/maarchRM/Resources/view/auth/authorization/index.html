@@ -57,9 +57,9 @@
                                             <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
                                         </a>
  
-                                        <!--a class="btn btn-danger deleteRole" data-roleid="[?merge .roleId?]"  title="Delete">
+                                        <a class="btn btn-danger deleteRole" data-roleid="[?merge .roleId?]"  title="Delete">
                                             <span class="fa fa-fw fa-trash"></span>
-                                        </a-->
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -74,52 +74,93 @@
 <span id="lock_text">Lock</span>
 <span id="unlock_text">Unlock</span>
 </div>
+    <div class="modal fade" id="messagesModal" lang="en" data-translate-catalog="auth/messages">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="m_title-delete">Delete the role</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="m_text-delete">
+                        Users could have this role , are you sure to delete this role ?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="m_no" data-dismiss="modal" title="No">No</button>
+                    <button type="button" class="btn btn-primary" id="m_yes" data-dismiss="modal" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript">
+
+            //add a new role
+            $("#contain").on('click', "#createRole", function(){
+                load("/auth/role");
+            });
+
+            //edit a role
+            $("#contain").on('click', ".editRole", function(){
+                load("/auth/role/"+$(this).data('roleid'));
+            });
+
+            //delete a role
+            $("#contain").on('click', ".deleteRole", function(){
+                $('#messagesModal').modal();
+
+                var id = $(this).data('roleid')
+                $("#m_yes").click(function() {
+                    $.ajax({
+                        url:  '/auth/' +id,
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function(response) {
+                            gritter.show(response.message, response.status, response.errors);
+                            if (response.status) {
+                                load("/auth/roles");
+                                $('#messagesModal').modal('hide');
+                            }
+                        },
+                        error    : function(response) {
+                            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        }
+                    });
+                });
+            });
+
+
+
+            //change the status of the role
+            $("#contain").on('click', ".changeStatus", function(){
+                var roleId = $(this).data('roleid');
+                var status = $(this).data('status');
+                var button = $(this);
+                $.ajax({
+                    url         : "/auth/role/"+roleId+"/status/"+!status,
+                    type        : "PUT",
+                    dataType  : 'json',
+                    success     : function(response) {
+                        var icon = button.closest('tr').find('td > i:first');
+                        button.data('status', !status);
+                        if(status) {
+                            icon.removeClass('fa-unlock').addClass('fa-lock');
+                            button.attr('title', $('#lock_text').html());
+                            button.find('span:first').removeClass('fa-lock').addClass('fa-unlock');
+                        } else {
+                            icon.removeClass('fa-lock').addClass('fa-unlock');
+                            button.attr('title', $('#unlock_text').html());
+                            button.find('span:first').removeClass('fa-unlock').addClass('fa-lock');
+                        }
+                        gritter.show(response.message, response.status, response.errors);
+                    },
+                    error    : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                })
+            });
+
+        </script>
+    </div>
 </div>
-<script type="text/javascript">
-    
-    //add a new role
-    $("#contain").on('click', "#createRole", function(){
-        load("/auth/role");
-    });
-
-    //edit a role
-    $("#contain").on('click', ".editRole", function(){
-        load("/auth/role/"+$(this).data('roleid'));
-    });
-
-    
-    //change the status of the role
-    $("#contain").on('click', ".changeStatus", function(){
-        var roleId = $(this).data('roleid');
-        var status = $(this).data('status');
-        var button = $(this);
-        $.ajax({
-            url         : "/auth/role/"+roleId+"/status/"+!status,
-            type        : "PUT",
-            dataType  : 'json',
-            success     : function(response) {
-                var icon = button.closest('tr').find('td > i:first');
-                button.data('status', !status);
-                if(status) {
-                    icon.removeClass('fa-unlock').addClass('fa-lock');
-                    button.attr('title', $('#lock_text').html());
-                    button.find('span:first').removeClass('fa-lock').addClass('fa-unlock');
-                } else {
-                    icon.removeClass('fa-lock').addClass('fa-unlock');
-                    button.attr('title', $('#unlock_text').html());
-                    button.find('span:first').removeClass('fa-unlock').addClass('fa-lock');
-                }
-                gritter.show(response.message, response.status, response.errors);
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        })
-    });
-
-    //delete a role
-    $("#contain").on('click', ".deleteRole", function(){
-        gritter.show('Not implemented... yet.', false)
-    });
-
-</script>
