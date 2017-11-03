@@ -702,8 +702,8 @@ msgstr "Les mots de passe sont pas identiques"
 msgid "Display only activated users"
 msgstr "Afficher uniquement les utilisateurs actifs"
 
-msgid "Users could have this role , are you sure to delete this role ?"
-msgstr "Des utilisateurs peuvent avoir ce rôle , etes-vous sûr de vouloir supprimer ce rôle ?"
+msgid "delete role warning"
+msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
 
 msgid "Delete the role"
 msgstr "Supprimer le rôle"
