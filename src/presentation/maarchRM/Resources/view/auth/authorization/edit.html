@@ -43,14 +43,10 @@
                             <textarea class="form-control" name="description"></textarea>
                         </div>
                         <div class="form-group">
-                            <div class="btn-group" data-toggle="buttons" id="roleStatus">
-                                <label class="btn btn-info [?merge role.enabled.then('active', '') ?]" title="Enabled">
-                                    <input type="radio" name="enabled" value="1"><i class="fa fa-unlock">&nbsp;</i> Enabled
-                                </label>
-                                <label class="btn btn-danger [?merge role.enabled.then('', 'active') ?]" title="Disabled">
-                                    <input type="radio" name="enabled" value="0"><i class="fa fa-lock">&nbsp;</i> Disabled
-                                </label>
-                            </div>
+                            <label class="control-label"><span>Enabled</span>&nbsp;
+                                <?merge role.enabled @checked ?>
+                                <input type="checkbox" name="enabled" id="enabled" data-toggle="toggle">
+                            </label>
                         </div>
                     </form>
                     <div class="clearfix" id="buttonInformation">
@@ -408,8 +404,10 @@
         $.each(properties, function(){
             jsonObject[$(this).attr('name')] = $(this).val();
         })
-        properties = $('#roleStatus').find('.active > input');
-        jsonObject[properties.attr('name')] = properties.val();
+
+        //Enabled
+        properties = $('#enabled').prop('checked')
+        jsonObject['enabled'] = properties;
 
         //roleMembers
         var roleMembers = $("#members").find('input');

@@ -367,6 +367,9 @@ msgstr "Nouveau rôle crée"
 msgid "Role deleted."
 msgstr "Rôle supprimé"
 
+msgid "Role updated."
+msgstr "Rôle modifié"
+
 msgid "Status changed."
 msgstr "Statut modifié"
 

@@ -49,11 +49,11 @@
                                             <span class="fa fa-fw fa-edit"></span>
                                         </a>
                                         <?merge .enabled.bool() ?>
-                                        <a class="btn btn-warning changeStatus " data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Lock">
+                                        <a class="btn btn-warning changeStatus " data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Unlock">
                                             <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
                                         </a>
                                         <?merge .enabled.bool().not() ?>
-                                        <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Unlock">
+                                        <a class="btn btn-warning changeStatus" data-roleid="[?merge .roleId?]" data-status="[?merge .enabled?]" title="Lock">
                                             <span class="fa fa-fw [?merge .enabled.then('fa-lock', 'fa-unlock') ?]"></span>
                                         </a>
  
