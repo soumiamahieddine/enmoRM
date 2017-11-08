@@ -39,7 +39,7 @@ class userAccountUpdate
 
     /**
      * @var string
-     * @pattern #^[A-Za-z_][A-Za-z0-9_]*$#
+     * @pattern #^[A-Za-z][A-Za-z0-9_.@]*[A-Za-z]$#
      * @notempty
      */
     public $accountName;
