@@ -1083,10 +1083,10 @@ abstract class AbstractCompiler
 
     protected function getFuncExpression($func)
     {
-        switch($func->code) {
+        //switch($func->code) {
             //case LAABS_T_IS_NULL:
             //    return $this->getOperandExpression($func->parameters[0]) . " IS NULL";
-        }
+        //}
     }
     
     protected function getOperandExpression($operand, $cast=false)
