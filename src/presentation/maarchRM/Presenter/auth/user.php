@@ -167,6 +167,7 @@ class user
         $view->setSource('roles', $roles);
         $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $view->setSource('user', $user);
+        $view->setSource('userPositions', false);
 
         $view->merge();
         $view->translate();

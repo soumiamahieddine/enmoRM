@@ -53,6 +53,34 @@ class organization
     }
 
     /**
+     * List of organizations
+     * @param string $query The query of the index
+     *
+     * @return array An array of organization whith service
+     */
+    public function todisplay($query = null)
+    {
+        $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "ownerOrgId"), $query);
+        $orgList = [];
+
+        foreach ($organizations as $org) {
+            if($org->ownerOrgId != null) {
+                $orgList[] = $org;
+            }
+        }
+        foreach ($orgList as $org) {
+
+            foreach ($organizations as $organization) {
+                if($organization->orgId == $org->ownerOrgId) {
+                    $org->ownerOrgName =  $organization->displayName;
+                }
+            }
+        }
+
+        return $orgList;
+    }
+
+    /**
      * Get organizations tree
      *
      * @return organization/organizationTree[] The tree of organization
@@ -305,9 +333,20 @@ class organization
     {
         $users = $this->sdoFactory->find("organization/userPosition", "userAccountId = '$accountId'");
         $users = \laabs::castMessageCollection($users, 'organization/userPositionTree');
+        $organizations = $this->sdoFactory->find("organization/organization");
 
         foreach ($users as $user) {
             $user->displayName = $this->sdoFactory->read("organization/organization", $user->orgId)->displayName;
+
+            foreach ($organizations as $org) {
+                if($user->orgId == $org->orgId) {
+                    foreach ($organizations as $orgName) {
+                        if($org->ownerOrgId == $orgName->orgId) {
+                            $user->ownerOrgName = $orgName->displayName;
+                        }
+                    }
+                }
+            }
         }
 
         return $users;
@@ -501,6 +540,51 @@ class organization
         }
         
         return $this->sdoFactory->create($userPosition, 'organization/userPosition');
+    }
+
+    /**
+     * Delete an archival pofile accesss from every organization
+     * @param array  $archivalProfileReference The archival profile reference
+     *
+     * @return bool The result of the operation
+     */
+    public function updateUserPosition($userAccountId, $orgId = null)
+    {
+        $userPositions = $this->sdoFactory->find("organization/userPosition", "userAccountId='$userAccountId'");
+        $default = null;
+
+        foreach ($userPositions as $userPosition) {
+            if ($userPosition->default) {
+                $default = $userPosition->orgId;
+            }
+        }
+
+        try {
+
+            if($userPositions) {
+                $this->sdoFactory->deleteCollection($userPositions, "organization/userPosition");
+            }
+
+            foreach ($orgId as $id){
+                $userPosition = \laabs::newInstance('organization/userPosition');
+                $userPosition->userAccountId = $userAccountId;
+                $userPosition->orgId = $id;
+
+                if($id== $default){
+                    $userPosition->default = true;
+                }
+                else {
+                    $userPosition->default = false;
+                }
+
+                $userPosition=$this->sdoFactory->create($userPosition, 'organization/userPosition');
+            }
+        } catch (Exception $e) {
+            $this->sdoFactory->rollback();
+            throw $e;
+        }
+
+        return $userPosition;
     }
 
     /**

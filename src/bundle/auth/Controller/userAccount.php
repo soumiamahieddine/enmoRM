@@ -163,6 +163,8 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
+
+        $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
@@ -190,6 +192,11 @@ class userAccount
         $userAccount->lastIp = null;
 
         $this->sdoFactory->create($userAccount, 'auth/account');
+        $organizationController = \laabs::newController("organization/organization");
+
+        foreach ($organizations as $orgId){
+            $organizationController->addUserPosition($userAccount->accountId ,$orgId);
+        }
 
         return $userAccount->accountId;
     }
@@ -294,6 +301,12 @@ class userAccount
             $userAccount->title = $user->title;
             $userAccount->emailAddress = $user->emailAddress;
         }
+        if($userAccount->organizations == null) {
+            throw \laabs::newException("organization/EmptyOrganizationException");
+        }
+
+        $organizationController = \laabs::newController("organization/organization");
+        $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
 
         $this->sdoFactory->update($userAccount, "auth/account");
 
