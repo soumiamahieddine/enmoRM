@@ -447,6 +447,7 @@
             .addClass('form-control')
             .attr('type', 'text')
             .attr('readonly', 'true')
+            .attr('data-memberid',memberId)
             .val(memberName)
             .data('memberid', memberId)
             .appendTo(inputGroup);
@@ -456,7 +457,7 @@
             .appendTo(inputGroup);
 
         var btn = $('<button/>')
-            .addClass('btn btn-danger removeMembre')                   
+            .addClass('btn btn-danger removeMembre')
             .attr('type', 'button')
             .html("&nbsp;")
             .appendTo(inputGrpBtn);

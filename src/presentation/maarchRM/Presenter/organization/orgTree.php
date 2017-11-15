@@ -510,4 +510,13 @@ class orgTree
 
         return json_encode($organization);
     }
+
+    public function orgList($organizations){
+        $orgs = [];
+        foreach ($organizations as $org){
+            $orgs [] = $org;
+        }
+
+        return json_encode($orgs);
+    }
 }

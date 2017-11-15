@@ -117,7 +117,7 @@
             gritter.show($('#invalidEmail_text').html(), false);
             return false;
         }
-        
+
         var url = "/userAccount";
         var type = "POST";
 
@@ -161,12 +161,17 @@
 
     function serialize() {
         var userAccount = {
-            accountId: $('#user_saveUser').attr("data-useraccountid")
-            //roles: []
+            accountId: $('#user_saveUser').attr("data-useraccountid"),
+            organizations : []
         };
 
         var userAccountInfo = $('#user_userAccountForm').find('input');
         var inputs = $('#user_userInformationForm').find('input').add(userAccountInfo);
+
+        var userPositions = $("#orgs").find('input');
+        $.each(userPositions, function(){
+            userAccount.organizations.push($(this).data('orgid'));
+        })
 
         $.each(inputs, function () {
             userAccount[$(this).attr('name')] = jQuery.trim($(this).val());

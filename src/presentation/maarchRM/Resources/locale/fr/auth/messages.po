@@ -707,3 +707,6 @@ msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; l
 
 msgid "Delete the role"
 msgstr "Supprimer le rôle"
+
+msgid "No organizations found"
+msgstr "Acune organisation trouvée"

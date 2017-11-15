@@ -294,6 +294,12 @@ class userAccount
             $userAccount->title = $user->title;
             $userAccount->emailAddress = $user->emailAddress;
         }
+        if($userAccount->organizations == null) {
+            throw \laabs::newException("organization/EmptyOrganizationException");
+        }
+
+        $organizationController = \laabs::newController("organization/organization");
+        $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
 
         $this->sdoFactory->update($userAccount, "auth/account");
 
