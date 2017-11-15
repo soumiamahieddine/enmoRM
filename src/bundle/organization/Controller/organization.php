@@ -68,7 +68,6 @@ class organization
                 $orgList[] = $org;
             }
         }
-
         foreach ($orgList as $org) {
 
             foreach ($organizations as $organization) {
@@ -534,7 +533,7 @@ class organization
         $userPosition->orgId = $orgId;
         $userPosition->function = $function;
         $userPosition->default = false;
-        $userDefaultPosition = $this->sdoFactory->find('organization/userPosition', "archivalProfileReference = '$archivalProfileReference' AND default = true");
+        $userDefaultPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId = '$userAccountId' AND default = true");
 
         if (empty($userDefaultPosition)) {
             $userPosition->default = true;
@@ -571,7 +570,7 @@ class organization
                 $userPosition->userAccountId = $userAccountId;
                 $userPosition->orgId = $id;
 
-                if($id == $default){
+                if($id== $default){
                     $userPosition->default = true;
                 }
                 else {
