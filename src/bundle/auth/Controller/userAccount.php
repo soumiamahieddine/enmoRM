@@ -169,6 +169,10 @@ class userAccount
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
 
+        if(!$organizations) {
+            throw \laabs::newException("auth/noOrganizationException");
+        }
+        
         if ($this->sdoFactory->exists('auth/account', array('accountName' => $userAccount->accountName))) {
             throw \laabs::newException("auth/userAlreadyExistException");
         }
