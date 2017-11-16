@@ -15,36 +15,12 @@
         </div>
     </div>
     <div class="container-fluid">
-        <ul class="nav nav-tabs nav-justified">
-            <li class="active">
-                <a href="#informationsTab" data-toggle="tab">Information</a>
-            </li>
-            <?merge archive.descriptionObject.bool() ?>
-            <li>
-                <a href="#descriptionTab" data-toggle="tab">Description</a>
-            </li>
-            <?merge archive.digitalResources.count().bool() ?>
-            <li>
-                <a href="#digitalResourcesTab" data-toggle="tab">Document(s)</a>
-            </li>
-            <li>
-                <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
-            </li>
-            <?merge archive.relationships.bool() ?>
-            <li>
-                <a href="#relationshipTab" data-toggle="tab">Relationships</a>
-            </li>
-            <?merge archive.messages.bool() ?>
-            <li>
-                <a href="#MessageTab" data-toggle="tab">Message</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="informationsTab">
-                <?hinclude recordsManagement/archive/managementInfo.html ?>
-            </div>
-            <div class="tab-pane" id="descriptionTab" style="padding:14px">
-                <!-- Custom description object will be displayed here -->
+        <div class="col-sm-5">
+            <?hinclude recordsManagement/archive/archiveTree/tree.html ?>
+        </div>
+        <div class="col-sm-7" id ="archiveInformationDiv">
+        </div>
+    </div>
             </div>
             <div class="tab-pane" id="digitalResourcesTab" style="padding:14px">
                 <?hinclude recordsManagement/archive/documents.html ?>
@@ -64,3 +40,11 @@
 <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
     <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
 </div>
+
+<script type="text/javascript">
+    ArchiveDetails = {
+        showArchiveDetails: function() {
+            
+        }
+    }
+</script>

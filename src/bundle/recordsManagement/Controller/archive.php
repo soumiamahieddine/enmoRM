@@ -451,8 +451,8 @@ class archive
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
 
-        $this->getParentArchive($archive);
-        $this->getChildrenArchives($archive);
+        //$this->getParentArchive($archive);
+        //$this->getChildrenArchives($archive);
 
         $archive->childrenRelationships = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
         $archive->parentRelationships = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
@@ -486,11 +486,12 @@ class archive
      *
      * @return recordsManagement/archive Archive with children archives
      */
-    protected function getChildrenArchives($archive)
+    public function getChildrenArchives($archive)
     {
         $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
 
         foreach ($archive->childrenArchives as $child) {
+            $child->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($child->archiveId);
             $this->getChildrenArchives($child);
         }
 

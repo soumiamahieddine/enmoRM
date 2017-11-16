@@ -1,0 +1,67 @@
+<div class="panel-group" id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
+    <div class="panel-heading text-center" role="tab">
+        <h4>
+            <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#descriptiveMetadata" >
+                <span class="text-info">Descritpion</span>
+            </a>
+        </h4>
+    </div>
+    <div id="descriptiveMetadata" class="panel-collapse collapse in" role="tabpanel">
+        <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+    </div>
+    <hr/>
+
+    <div class="panel-heading text-center" role="tab">
+        <h4>
+            <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#managementInfo" >
+                <span class="text-info">Management information</span>
+            </a>
+        </h4>
+    </div>
+    <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
+        <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
+    </div>
+    <hr/>
+    <div class="panel-heading text-center" role="tab">
+        <h4>
+            <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#lifeCycle" >
+                <span class="text-info">Life cycle</span>
+            </a>
+        </h4>
+    </div>
+            
+    <div id="lifeCycle" class="panel-collapse collapse" role="tabpanel">
+        <div class="col-xs-12">
+            <?hinclude /recordsManagement/archive/lifeCycle.html ?>
+        </div>
+    </div>
+    <hr/>
+</div>
+
+
+<style type="text/css">
+    #archiveInfos {
+        border-left: solid 1px #DDD;
+    }
+    #archiveInfos .panel-heading {
+        padding:0px 15px !important;
+    }
+    #descriptiveMetadata table, #managementInfo table {
+        table-layout:fixed;
+        width:100%;
+    }
+    #descriptiveMetadata table th, #managementInfo table th {
+        width: 40%;
+        text-align: right;
+    }
+    #descriptiveMetadata table td, #descriptiveMetadata table th,
+    #managementInfo table td, #managementInfo table th {
+        padding: 0 5px 0 5px ;
+        text-overflow: crop;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    #descriptiveMetadata .archivalProfileName {
+        font-size: 16px !important;
+    }
+</style>

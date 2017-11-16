@@ -92,6 +92,14 @@ interface retrieveInterface
      */
     public function readRecordsmanagementArchivedescription_archiveId_();
 
+        /**
+     * View the archive
+     *
+     * @return recordsManagement/archive/getArchiveDetails
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readRecordsmanagementArchiveinfo_archiveId_();
+
     /**
      * Get metadata to edit
      *
