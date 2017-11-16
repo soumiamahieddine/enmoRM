@@ -170,11 +170,11 @@ class userAccount
         $userAccount->accountType = 'user';
 
         if(!$organizations) {
-            throw \laabs::newException("auth/noOrganizationException");
+            throw \laabs::newException('auth/noOrganizationException', "No organization chosen");
         }
-        
+
         if ($this->sdoFactory->exists('auth/account', array('accountName' => $userAccount->accountName))) {
-            throw \laabs::newException("auth/userAlreadyExistException");
+            throw \laabs::newException("auth/userAlreadyExistException","User already exist");
         }
 
         if (!\laabs::validate($userAccount, 'auth/account')) {

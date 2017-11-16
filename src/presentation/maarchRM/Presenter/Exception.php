@@ -121,12 +121,19 @@ class Exception
 
             $this->view->setSource('error', $exception);
         } else {
+            $previous = null;
+
+            if ($exception instanceof \core\Exception) {
+                $previous = $exception;
+            }
+
             $newException = new \core\Exception(
                 $this->translator->getText("An error occured during the process of your request. Please contact the administrator of the application."),
                 500,
-                $exception
+                $previous
             );
-            $this->view->setSource('error', $exception);
+
+            $this->view->setSource('error', $newException);
         }
         $this->view->merge();
 

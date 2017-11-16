@@ -150,6 +150,7 @@
 </div>
 <div style="display:none">
     <span id="empty_text">The fields with a star are required.</span>
+    <span class="hide" id="noUserFound">No user found</span>
 </div>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
@@ -280,7 +281,7 @@
                 displayKey: 'displayName',
                 templates: {
                     empty: function() {
-                        return "<span class='well well-sm'>No user found</span>";
+                        return "<span class='well well-sm'>"+$('#noUserFound').html()+"</span>";
                     },
                     suggestion: function(user) {
                         var display = 

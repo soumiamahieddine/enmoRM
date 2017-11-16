@@ -708,5 +708,14 @@ msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; l
 msgid "Delete the role"
 msgstr "Supprimer le rôle"
 
+msgid "No organization chosen"
+msgstr "Aucune organisation choisi"
+
 msgid "No organizations found"
-msgstr "Acune organisation trouvée"
+msgstr "Aucune organisation trouvée"
+
+msgid "No user found"
+msgstr "Aucun utilisateur trouvé"
+
+msgid "User already exist"
+msgstr "L'utilisateur existe déja"

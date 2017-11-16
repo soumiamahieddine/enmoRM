@@ -22,14 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <h1 class="modal-title" id="myModalLabel">Oops!...</h1>
             </div>
             <div class="modal-body">
-                <span>An error occured while processing your request.</span>
+                <span><?merge error.getMessage() ?></span>
+                <?merge error.getPrevious().bool() ?>
                 <button class="btn btn-default pull-right" type="button" data-toggle="collapse" data-target="#detail" aria-expanded="false" aria-controls="detail">
                   ?
                 </button>
+                <?merge error.getPrevious().bool() ?>
                 <div class="collapse " id="detail">
                     <br/>
-                    <code class="badge"><?merge error.getCode() ?></code>
-                    <code><?merge error.getMessage() ?></code>
+                    <code class="badge"><?merge error.getPrevious().getCode() ?></code>
+                    <code><?merge error.getPrevious().getMessage() ?></code>
                 </div>
             </div>
             <div class="modal-footer">
