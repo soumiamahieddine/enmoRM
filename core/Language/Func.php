@@ -8,11 +8,12 @@ class Func
 
     /* Properties */
     public $args;
+    public $name;
 
     /* Methods */
     public function __construct($name, $args)
     {
-        $this->code = $code;
+        $this->name = $name;
 
         $this->args = $args;
     }
