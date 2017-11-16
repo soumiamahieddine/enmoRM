@@ -23,6 +23,7 @@
         </div>
     </div>
 </div>
+<span class="hide" id="noOrganizationsFound">No organizations found</span>
 
 <script>
     var organizations = new Bloodhound({
@@ -47,7 +48,7 @@
             displayKey: 'displayName',
             templates: {
                 empty: function() {
-                    return "<span class='well well-sm'>No organizations found</span>";
+                    return "<span class='well well-sm'>"+$('#noOrganizationsFound').html()+"</span>";
                 },
                 suggestion: function(organization) {
                     var display =
