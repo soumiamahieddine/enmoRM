@@ -22,17 +22,5 @@ namespace bundle\auth\Exception;
 class noOrganizationException
     extends \Exception
 {
-    public $message = false;
-
-    /**
-     * undocumented function
-     *
-     * @return void
-     * @author
-     */
-    public function __construct()
-    {
-        $this->message = "No organization chosen";
-    }
 
 }

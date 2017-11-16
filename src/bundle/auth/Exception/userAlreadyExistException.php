@@ -22,17 +22,5 @@ namespace bundle\auth\Exception;
 class userAlreadyExistException
     extends \Exception
 {
-    public $message = false;
-
-    /**
-     * undocumented function
-     *
-     * @return void
-     * @author 
-     */
-    public function __construct()
-    {
-        $this->message = "User already exist";
-    }
 
 }
