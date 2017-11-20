@@ -487,9 +487,6 @@ msgstr "Information utilisateur"
 msgid "Roles"
 msgstr "Rôles"
 
-msgid "Organization"
-msgstr "Organisation"
-
 msgid "Organization units"
 msgstr "Services"
 
@@ -711,8 +708,8 @@ msgstr "Supprimer le rôle"
 msgid "No organization chosen"
 msgstr "Aucune organisation choisi"
 
-msgid "No organizations found"
-msgstr "Aucune organisation trouvée"
+msgid "No service found"
+msgstr "Aucun service trouvé"
 
 msgid "No user found"
 msgstr "Aucun utilisateur trouvé"

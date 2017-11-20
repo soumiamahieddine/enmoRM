@@ -96,15 +96,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Originator</label>
+                                    <label class="col-sm-4 control-label">Producer</label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" name="originatorOrgRegNumber">
+                                        <input type="text" class="form-control orgHide" placeholder="Service"  name="orgTypeahead" id="orgTypeahead"/>
+                                        <select class="form-control hide" name="originatorOwnerOrgId" id="originatorOwnerOrgId">
                                             <option value="">All</option>
                                             <?merge organizationsOriginator ?>
-                                            <optgroup label="[?merge .displayName ?]">
+                                            <option value="[?merge .orgId ?]"><?merge .displayName ?></option>
+                                        </select>
+                                        <select class="form-control hide" name="originatorOrgRegNumber" id="originatorOrgRegNumber">
+                                            <option value="">All</option>
+                                            <?merge organizationsOriginator ?>
+                                            <div>
                                                 <?merge .originators ?>
-                                                <option value="[?merge .registrationNumber ?]"><?merge .displayName ?></option>
-                                            </optgroup>
+                                                <option value="[?merge .registrationNumber ?]" orgId="[?merge .ownerOrgId ?]"><?merge .displayName ?></option>
+                                            </div>
                                         </select>
                                     </div>
                                 </div>
@@ -179,7 +185,7 @@
             </div>
         </div>
     </div>
-
+    <span class="hide" id="noServiceFound">No service found</span>
 </div>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
@@ -252,12 +258,15 @@
         $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
         $('#archive_searchResult').empty();
     });
-    
+
     function searchFormSerialize() {
         var parameters = new Object();
 
         $('#archive_searchForm').find('input[type="text"], input[type="number"], select').each(function(){
-            parameters[$(this).attr('name')] = $(this).val();
+
+            if(!$(this).hasClass('orgHide')) {
+                parameters[$(this).attr('name')] = $(this).val();
+            }
         });
         $('#archive_searchForm').find('input[type="checkbox"]').each(function(){
             parameters[$(this).attr('name')] = $(this).prop("checked");
@@ -280,5 +289,89 @@
 
     /* ----------------------------------------------------------------------------------------------------*/
     /* -- EDITION MODAL -- */
+
+    $( "#originatorOwnerOrgId" )
+        .change(function() {
+            var orgId = $( "#originatorOwnerOrgId option:selected" ).val();
+
+            $("#originatorOrgRegNumber option").each(function()
+                {
+                    if (!orgId){
+                        $(this).show();
+                    }
+                    else if(orgId == $(this).attr('orgId')) {
+                        $(this).show();
+                    }
+                    else {
+                        $(this).hide();
+                    }
+                });
+        })
+        .trigger( "change" );
+
+    var organizations = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        limit: 100
+    });
+
+    window.localStorage.clear();
+    organizations.initialize();
+
+    // initialize typeahead
+    $('#orgTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'organizations',
+            displayKey: 'displayName',
+            templates: {
+                empty: function() {
+                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                },
+                suggestion: function(organization) {
+                    var display =
+                        "<span>"
+                        + "<span class='fa fa-user' >&nbsp;</span>"
+                        + "<span style='font-family:Helvetica, sans-serif;'>";
+
+                    if(organization.ownerOrgName) {
+                        display += organization.ownerOrgName
+                                + " > ";
+                    }
+                       display += organization.displayName
+                        + "</span>"
+                        + "</span>";
+
+                    return display;
+                }
+            },
+            source: function(query, cb) {
+                organizations.get(query, function(suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }
+    ).on('typeahead:selected', function($event, suggestion, source) {
+
+        if(suggestion.ownerOrgId) {
+            $("#originatorOrgRegNumber").val(suggestion.registrationNumber);
+            $("#originatorOwnerOrgId").val('');
+        } else {
+            $("#originatorOwnerOrgId").val(suggestion.orgId);
+            $("#originatorOrgRegNumber").val('');
+        }
+
+    });
 
 </script>

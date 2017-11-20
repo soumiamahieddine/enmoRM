@@ -78,6 +78,7 @@ interface appInterface
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
         $description = null,
         $text = null
     );
@@ -100,4 +101,12 @@ interface appInterface
      * @return digitalResource/format/find
      */
     public function readDigitalresourceFormatFind_query_();
+
+    /**
+     * Get the organizations' list
+     *
+     * @return organization/orgTree/orgList
+     * @uses organization/organization/readTodisplay
+     */
+    public function readOrganizationsTodisplay();
 }

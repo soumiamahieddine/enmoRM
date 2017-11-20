@@ -138,12 +138,6 @@ interface AdminOrganizationInterface
      */
     public function readExportfileplan();
 
-    /**
-     * Get the organizations' list
-     *
-     * @return organization/orgTree/orgList
-     * @uses organization/organization/readTodisplay
-     */
-    public function readOrganizationsTodisplay();
+
 
 }

@@ -878,12 +878,12 @@ class archive
                 if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
                     if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
                         $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
-
                         $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->orgId = $orgObject->orgId;
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
                     }
-                    $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators[] = $originator;
+                    $ownerOriginatorOrgs[$originator->ownerOrgId]->originators[] = $originator;
                 }
             }
         }

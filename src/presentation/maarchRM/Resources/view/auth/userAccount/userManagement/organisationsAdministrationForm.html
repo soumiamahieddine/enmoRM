@@ -1,7 +1,7 @@
 <div class="form-group">
     <div class="form-group">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Organization" id="orgTypeahead"/>
+            <input type="text" class="form-control" placeholder="Service" id="orgTypeahead"/>
             <span class="input-group-btn">
                 <button class="btn btn-success" type="button" id="addOrg" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
             </span>
@@ -23,7 +23,7 @@
         </div>
     </div>
 </div>
-<span class="hide" id="noOrganizationsFound">No organizations found</span>
+<span class="hide" id="noServiceFound">No service found</span>
 
 <script>
     var organizations = new Bloodhound({
@@ -48,19 +48,24 @@
             displayKey: 'displayName',
             templates: {
                 empty: function() {
-                    return "<span class='well well-sm'>"+$('#noOrganizationsFound').html()+"</span>";
+                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
                 },
                 suggestion: function(organization) {
-                    var display =
-                        "<span>"
-                        + "<span class='fa fa-user' >&nbsp;</span>"
-                        + "<span style='font-family:Helvetica, sans-serif;'>"
-                        + organization.ownerOrgName
-                        + " > "
-                        + organization.displayName
-                        + "</span>"
-                        + "</span>";
-
+                    var display;
+                    if(organization.ownerOrgName) {
+                        display =
+                            "<span>"
+                            + "<span class='fa fa-user' >&nbsp;</span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + organization.ownerOrgName
+                            + " > "
+                            + organization.displayName
+                            + "</span>"
+                            + "</span>";
+                    }
+                    else {
+                        display = this.empty();
+                    }
                     return display;
                 }
             },

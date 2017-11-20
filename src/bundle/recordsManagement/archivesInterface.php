@@ -40,6 +40,7 @@ interface archivesInterface
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
      * @param string $originatorArchiveId
      * @param array  $originatingDate
      * @param string $filePlanPosition
@@ -65,6 +66,7 @@ interface archivesInterface
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
         $originatorArchiveId = null,
         $originatingDate = null,
         $filePlanPosition = null,
