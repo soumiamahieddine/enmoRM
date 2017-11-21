@@ -91,7 +91,9 @@ EOD
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
+        $dataTable->setUnsortableColumns(1);
         $dataTable->setUnsortableColumns(2);
+        $dataTable->setSorting(array(array(0, 'desc')));
 
         return $this->view->saveHtml();
     }
