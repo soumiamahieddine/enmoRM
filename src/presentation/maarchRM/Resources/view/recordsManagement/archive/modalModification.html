@@ -158,7 +158,7 @@
                     }
 
                      if( ModificationModal.modalType === "retentionRule") {
-                       ModificationModal.loadRetentionCode();
+                       ModificationModal.loadRetentionCode(rule);
                     }
 
                     // Set datepicker Date
@@ -288,13 +288,14 @@
             }
         },
         
-         loadRetentionCode: function() {
+         loadRetentionCode: function(rule) {
             var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
 
             if (retentionRuleCode) {
                 if (retentionRuleCode.duration) {
+
                     var retentionRules = retentionRuleCode.retentionRules;
                     var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                     var retentionRuleFinalDisposition= retentionRuleCode.finalDisposition;
@@ -302,12 +303,12 @@
                     var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
                     $('#retentionRule').css("display", '');
                     $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                    $('#retentionRuleFinalDisposition').val(retentionRuleFinalDisposition);
+                    $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
                     $('#retentionRuleDuration').text(retentionRuleCode.durationUnit);
-                    $('#retentionRuleFinalDisposition').val(retentionRuleFinalDisposition);
+                    $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }
 

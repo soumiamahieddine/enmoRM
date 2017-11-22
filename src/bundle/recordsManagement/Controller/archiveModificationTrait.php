@@ -37,8 +37,6 @@ trait archiveModificationTrait
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        $this->getAccessRule($archive);
-
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
 
     }
