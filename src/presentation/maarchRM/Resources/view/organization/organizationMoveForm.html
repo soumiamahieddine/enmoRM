@@ -102,8 +102,10 @@
                 dataType    : 'json',
                 success: function(response) {
                     gritter.show(response.message, response.status, response.errors);
-                    Tree.loadTree();
-                    OrganizationShifting.close();
+                    if (response.status) {
+                        Tree.loadTree();
+                        OrganizationShifting.close();
+                    }
                 },
                 error    : function(response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);

@@ -584,7 +584,7 @@ msgstr "3 - Date et heure à la microseconde de l'événement"
 msgid "4 - User or service identifier who have triggered the event"
 msgstr "4 - Identifiant du compte utilisateur ou du compte de service ayant déclenché l'événement"
 
-msgid "5 - Object type impacted by the event"na
+msgid "5 - Object type impacted by the event"
 msgstr "5 - Type d'objet impacté par l'événement"
 
 msgid "6 - Unique object identifier impacted by the event"
