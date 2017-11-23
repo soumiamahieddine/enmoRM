@@ -290,25 +290,6 @@
     /* ----------------------------------------------------------------------------------------------------*/
     /* -- EDITION MODAL -- */
 
-    $( "#originatorOwnerOrgId" )
-        .change(function() {
-            var orgId = $( "#originatorOwnerOrgId option:selected" ).val();
-
-            $("#originatorOrgRegNumber option").each(function()
-                {
-                    if (!orgId){
-                        $(this).show();
-                    }
-                    else if(orgId == $(this).attr('orgId')) {
-                        $(this).show();
-                    }
-                    else {
-                        $(this).hide();
-                    }
-                });
-        })
-        .trigger( "change" );
-
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
