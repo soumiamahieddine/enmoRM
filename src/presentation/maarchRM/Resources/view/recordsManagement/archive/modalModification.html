@@ -293,22 +293,20 @@
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
 
-            if (retentionRuleCode) {
-                if (retentionRuleCode.duration) {
+             if (retentionRuleCode) {
 
-                    var retentionRules = retentionRuleCode.retentionRules;
-                    var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
-                    var retentionRuleFinalDisposition= retentionRuleCode.finalDisposition;
+                 var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
+                 var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
-                    var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
+                 if (rule) {
                     $('#retentionRule').css("display", '');
                     $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
                     $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleCode.durationUnit);
-                    $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
+                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                    $('#retentionRuleFinalDisposition').val(retentionRuleCode.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }
 
