@@ -26,6 +26,12 @@ switch (true) {
     case ($_SERVER['SCRIPT_NAME'] == "/RegenerateCss"):
         include("../web/RegenerateCss.php");
         break;
+
+    case (strtolower(strtok($_SERVER['SCRIPT_NAME'], '/')) == "api") :
+        \core\Kernel\ApiDocKernel::start();
+        \core\Kernel\ApiDocKernel::run();
+        break;
+
     // Uri is a static resource
     case (strrpos($_SERVER['SCRIPT_NAME'], ".")):
         \core\Kernel\StaticKernel::start();
