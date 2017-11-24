@@ -308,7 +308,7 @@ class userAccount
 
         if(isset($userAccount->modificationRight)) {
             if($userAccount->organizations == null) {
-                throw \laabs::newException("organization/EmptyOrganizationException");
+                throw new \core\Exception\BadRequestException('No service chosen', 400);
             }
 
             $organizationController = \laabs::newController("organization/organization");

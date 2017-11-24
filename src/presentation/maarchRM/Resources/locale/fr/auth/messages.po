@@ -716,3 +716,7 @@ msgstr "Aucun utilisateur trouvé"
 
 msgid "User already exist"
 msgstr "L'utilisateur existe déja"
+
+
+msgid "No service chosen"
+msgstr "Aucun service choisi"
