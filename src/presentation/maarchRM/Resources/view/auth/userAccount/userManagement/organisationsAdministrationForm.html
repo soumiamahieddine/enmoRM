@@ -24,8 +24,10 @@
     </div>
 </div>
 <span class="hide" id="noServiceFound">No service found</span>
+<span class="hide" id="editMyProfile">true</span>
 
 <script>
+
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,

@@ -89,4 +89,12 @@ class userAccountUpdate
      */
     public $title;
 
+
+    /**
+     * The permisions to modify other profiles
+     *
+     * @var string
+     */
+    public $modificationRight;
+
 }

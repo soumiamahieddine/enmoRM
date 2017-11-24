@@ -67,8 +67,11 @@ class organization
         if (isset($currentOrg)) {
             $organizations = $this->getOwnerOriginatorsOrgs($currentOrg);
         } else {
-            $organizations = [] ;
+            $owner = $this->getOrgsByRole('owner')[0];
+            $organizations = $this->getOwnerOriginatorsOrgs($owner);
+
         }
+
 
         foreach ($organizations as $org) {
             $organization = \laabs::newInstance('organization/organization');

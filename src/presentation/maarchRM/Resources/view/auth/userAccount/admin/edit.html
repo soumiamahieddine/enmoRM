@@ -97,7 +97,7 @@
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
         <span class="hide" id="invalidEmail_text">Email malformed</span>
         <span class="hide" id="empty_text">The fields with a star are required.</span>
-        
+
     </div>
 </div>
 
@@ -138,7 +138,6 @@
             return;
         }
 
-
         ajax($(this),{
             async       : false,
             url         : url,
@@ -161,7 +160,8 @@
     function serialize() {
         var userAccount = {
             accountId: $('#user_saveUser').attr("data-useraccountid"),
-            organizations : []
+            organizations : [],
+            modificationRight : $('#editMyProfile').html()
         };
 
         var userAccountInfo = $('#user_userAccountForm').find('input');
