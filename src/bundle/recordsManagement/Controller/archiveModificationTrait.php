@@ -92,25 +92,24 @@ trait archiveModificationTrait
                 if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
                     $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
                 } else {
-                    $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
+                    $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
                 }
 
-
                 // Update current object for caller
-                if (!$retentionRule->retentionStartDate) {
+                if ($retentionRule->retentionStartDate === '') {
                     $retentionRule->retentionStartDate = null;
                 }
 
-                if ($retentionRule->retentionDuration) {
+                if ($retentionRule->retentionDuration === '') {
                     $retentionRule->retentionDuration = null;
                 }
 
-                if ($retentionRule->disposalDate) {
-                    $retentionRule->disposalDate = null;
+                if ($retentionRule->finalDisposition === '') {
+                    $retentionRule->finalDisposition = null;
                 }
 
-                if ($retentionRule->finalDisposition) {
-                    $retentionRule->finalDisposition = null;
+                if ($retentionRule->disposalDate === '') {
+                    $retentionRule->disposalDate = null;
                 }
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
