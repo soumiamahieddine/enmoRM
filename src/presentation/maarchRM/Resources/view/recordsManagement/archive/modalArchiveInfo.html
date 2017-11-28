@@ -39,14 +39,6 @@
 </style>
 
 <script>
-    $("#modalArchiveInfo").on('click', ".editMetadata", function () {
-       archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
-    });
-    // View relate archive
-    $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
-        archiveInfoModal.load($(this).data('archiveid'));
-    })
-
     // Show life cycle event 
     $("#modalArchiveInfo").on('click', '.showEvent', function () {
         eventInfo.load($(this).data('eventid'));

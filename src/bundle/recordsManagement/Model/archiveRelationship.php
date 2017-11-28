@@ -60,7 +60,7 @@ class archiveRelationship
     /**
      * The relationship information
      * 
-     * @var string
+     * @var json
      * @xpath .
      */
     public $description;

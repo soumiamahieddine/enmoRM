@@ -239,7 +239,10 @@ class archive
 
         // Life Cycle event
         $this->setArchiveLifeCycleEvents($archive);
-        
+
+        // Relationships
+        $this->setArchiveRelationships($archive);
+
         $descriptionFragment = $this->view->createDocumentFragment();
         $descriptionFragment->appendHtmlFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
 
@@ -266,6 +269,9 @@ class archive
 
         // Life Cycle event
         $this->setArchiveLifeCycleEvents($archive);
+
+        // Relationships
+        $this->setArchiveRelationships($archive);
         
         $this->view->setSource("archive", $archive);
 
@@ -461,12 +467,38 @@ class archive
         }
     }
 
+    protected function setArchiveRelationships($archive) {
+        $childrenRelationships = [];
+        $parentRelationships = [];
+        $relationshipTypes = [];
+
+        if ($archive->childrenRelationships) {
+            foreach ($archive->childrenRelationships as $relationship) {
+                $childrenRelationships[$relationship->typeCode] = $relationship;
+            }
+            $archive->childrenRelationships = $childrenRelationships;
+            
+            $relationshipTypes[$relationship->typeCode]=true;
+        }
+
+        if ($archive->parentRelationships) {
+            foreach ($archive->parentRelationships as $relationship) {
+                $parentRelationships[$relationship->typeCode] = $relationship;
+            }
+            $archive->parentRelationships = $parentRelationships;
+         
+            $relationshipTypes[$relationship->typeCode]=true;
+        }
+
+        $archive->relationshipTypes = array_keys($relationshipTypes);
+    }
+
     protected function loadArchivalProfile($reference) {
         if (!isset($this->archivalProfiles[$reference])) {
             try {
                 $this->archivalProfiles[$reference] = $this->archivalProfileController->getByReference($reference);
             } catch(\Exception $e) {
-                return null;                
+                return null;
             }
         }
         
