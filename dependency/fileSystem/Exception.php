@@ -25,17 +25,10 @@ class Exception
     extends \core\Exception
 {
     
-    protected $output;
-
     public function __construct($message="", $code=0, \Exception $previous=null, array $output=null) 
     {
         parent::__construct($message, $code, $previous);
         
-        $this->output = $output;
-    }
-
-    public function getOutput()
-    {
-        return $this->output;
+        $this->errors = $output;
     }
 }
