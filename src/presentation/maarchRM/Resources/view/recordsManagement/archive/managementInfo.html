@@ -42,41 +42,48 @@
                     <td><strong>Depositor</strong></td>
                     <td><?merge archive.depositorOrg.displayName ?></td>
                 </tr>
-                <?merge archive.retentionRuleCode.bool() ?>
+                <?merge archive.retentionDuration.bool() ?> 
                 <tr>
                     <td><strong>Disposal rule</strong></td>
                     <td>
-                        <b>Code </b>:&nbsp;<?merge archive.retentionRuleCode ?>
-                        <br/>
-                        <b>Start date</b>:&nbsp;<?merge archive.retentionStartDate ?>
-                        <br/>
+                        <?merge archive.retentionRuleCode.bool() ?>
+                        <span>
+                            <b>Code </b>:&nbsp;<?merge archive.retentionRuleCode ?>
+                            <br/>
+                        </span>
+
                         <b>Duration</b>:&nbsp;
                         <?merge archive.retentionDuration ?>&nbsp;
                         <?merge archive.retentionDurationUnit.ifeq('Y') ?><span>Year(s)</span>
                         <?merge archive.retentionDurationUnit.ifeq('M') ?><span>Month(s)</span>
                         <?merge archive.retentionDurationUnit.ifeq('D') ?><span>Day(s)</span>
                         <br/>
-                        <b>Disposal date</b>:&nbsp;<?merge archive.disposalDate ?><br/>
+
                         <?merge archive.finalDisposition.ifeq('destruction') ?>
                         <span>
-                            <b>Final disposition</b>:&nbsp;Destruction
+                            <b>Final disposition</b>:&nbsp;Destruction<br/>
                         </span>
+                        
                         <?merge archive.finalDisposition.ifeq('preservation') ?>
                         <span>
-                            <b>Final disposition</b>:&nbsp;Preservation
+                            <b>Final disposition</b>:&nbsp;Preservation<br/>
                         </span>
+
+                        <b>Start date</b>:&nbsp;<?merge archive.retentionStartDate ?>
+                        <br/>
+                        
+                        <span>
+                            <b>Disposal date</b>:&nbsp;<?merge archive.disposalDate ?><br/>
+                        </span>                        
                     </td>
                 </tr>
                 <?merge archive.accessRuleCode.bool() ?>
                 <tr>
                     <td><strong>Access rule</strong></td>
-                    <td>
-                        <b>Code </b>:&nbsp;<?merge archive.accessRuleCode ?>
+                    <td>                       
+                        <b>Code</b>:&nbsp;<?merge archive.accessRuleCode ?>
                         <br/>
-                        <b>Start date</b>:&nbsp;<?merge archive.accessRuleStartDate ?>
-                        <br/>
-                        <b>Access rule code</b>:&nbsp;<?merge archive.accessRuleCode ?>
-                        <br/>
+                        
                         <span>
                             <b>Duration</b>:&nbsp;
                             <?merge archive.accessRuleDuration ?>&nbsp;
@@ -85,7 +92,10 @@
                             <?merge archive.accessRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
                             <br/>
                         </span>
-                        <?merge archive.accessRuleComDate.bool() ?>
+                        
+                        <b>Start date</b>:&nbsp;<?merge archive.accessRuleStartDate ?>
+                        <br/>
+                        
                         <span>
                             <b>Communication date</b>:&nbsp;<?merge archive.accessRuleComDate ?>
                         </span>
