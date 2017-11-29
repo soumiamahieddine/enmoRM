@@ -275,7 +275,7 @@ class archive
             || !empty($archive->childrenRelationships)
         );
 
-        if ($archive->status == "disposed") {
+        if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {

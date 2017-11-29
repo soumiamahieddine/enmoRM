@@ -150,7 +150,7 @@ trait archiveDestructionTrait
         foreach ($archives['success'] as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
-            if ($archive->status != 'disposed') {
+            if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
                 $destructArchives['error'][] = $archive;
                 continue;
             }
