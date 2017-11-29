@@ -15,10 +15,10 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label">Task<span style="color:red">&nbsp;*</span></label>
                 <div class="col-lg-7">
-                    <select class="form-control" name="taskId" title="Task name">
+                    <select class="form-control" id="taskId" name="taskId" title="Task name">
                         <option value="" disabled selected>Select a task</option>
                         <?merge tasks ?>
-                        <option value="[?merge .taskId ?]"><?merge .description ?></option>
+                        <option value="[?merge .taskId ?]" data-route="[?merge .route ?]"><?merge .description ?></option>
                     </select>
                 </div>
             </div>
@@ -26,10 +26,10 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label">Executed by<span style="color:red">&nbsp;*</span></label>
                 <div class="col-lg-7">
-                    <select class="form-control" name="serviceAccountId" title="Executed by">
+                    <select class="form-control" id="serviceAccountId" name="serviceAccountId" title="Executed by">
                         <option value="" disabled selected>Select a service account</option>
                         <?merge serviceAccount ?>
-                        <option value="[?merge .accountId ?]"><?merge .displayName ?></option>
+                        <option value="[?merge .accountId ?]" data-privilege="[?merge .privileges ?]"><?merge .displayName ?></option>
                     </select>
                 </div>
             </div>
@@ -370,6 +370,10 @@
         }
     })
 
+    $('#taskId').on('change', function () {
+        TaskSchedulingForm.checkServiceAccount();
+    });
+
     // Week day selection color
     $('#schedulingForm').on('click', '.weekDay', function(event) {
         $(this).toggleClass('btn-info btn-default');
@@ -459,6 +463,8 @@
             this.form.find('[name="taskId"]').val(scheduling.taskId);
             this.form.find('[name="name"]').val(scheduling.name);
             this.form.find('[name="serviceAccountId"]').val(scheduling.executedBy);
+
+            TaskSchedulingForm.checkServiceAccount();
 
             // Freqency selector
             if (scheduling.monthDays.length) {
@@ -592,6 +598,20 @@
             return valid;
         },
 
+        checkServiceAccount: function() {
+            var route = $('#taskId').find('option:selected').data('route');
+
+            $('#serviceAccountId option').each(function(key, value) {
+                var privileges = $(this).data('privilege');
+
+                if (!privileges || $.inArray(route, privileges) === -1) {
+                    $(this).addClass('hide');
+                } else {
+                    $(this).removeClass('hide');
+                }
+            });
+        },
+
         addParameters: function() {
             var parameterInput = this.form.find('[name="parameters"]');
             var parameters = parameterInput.val();
@@ -696,6 +716,10 @@
             this.clearWeekDays();
             this.clearMonth();
             this.clearRepetition();
+
+            $('#serviceAccountId option').each(function() {
+                $(this).removeClass('hide');
+            });
         },
 
         clearWeekDays: function() {

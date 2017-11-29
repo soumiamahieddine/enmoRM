@@ -61,7 +61,17 @@ class scheduling
 
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
-        $serviceAccount = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccounts = \laabs::callService('auth/serviceAccount/readIndex');
+
+        foreach ($serviceAccounts as $serviceAccount) {
+            $serviceURI = [];
+            $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
+
+            foreach ($privileges as $privilege) {
+                $serviceURI[] = $privilege->serviceURI;
+            }
+            $serviceAccount->privileges = json_encode($serviceURI);
+        }
 
         foreach ($scheduledTasks as $scheduledTask) {
             $scheduledTask->taskName = $tasks[$scheduledTask->taskId]->description;
@@ -114,7 +124,7 @@ class scheduling
         }
 
         $this->view->translate();
-        $this->view->setSource("serviceAccount", $serviceAccount);
+        $this->view->setSource("serviceAccount", $serviceAccounts);
         $this->view->setSource("tasks", $tasks);
         $this->view->setSource("scheduledTasks", $scheduledTasks);
         $this->view->setSource("timezone", date_default_timezone_get());
