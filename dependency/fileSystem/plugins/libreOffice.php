@@ -42,7 +42,7 @@ class libreOffice implements \dependency\fileSystem\conversionInterface
         $tokens[] = implode(":", $options);
         $tokens[] = '--outdir '. dirname($srcfile);
 
-        $tokens[] = '"'.$srcfile.'"';       
+        $tokens[] = '"'.$srcfile.'" 2>&1';       
 
         $command = implode(' ', $tokens);
 
