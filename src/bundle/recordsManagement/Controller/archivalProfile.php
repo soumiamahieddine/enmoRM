@@ -116,7 +116,7 @@ class archivalProfile
      * get array of archival profile by description class
      * @param string $archivalProfileDescriptionClass The archival profile reference
      *
-     * @return Array $archivalProfiles Array of recordsManagement/archivalProfile object
+     * @return array $archivalProfiles Array of recordsManagement/archivalProfile object
      */
     public function getByDescriptionClass($archivalProfileDescriptionClass)
     {

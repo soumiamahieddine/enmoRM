@@ -60,7 +60,7 @@ class serviceAccount
     /**
      * List all service to display
      *
-     * @return Array The array of stdClass with dislpay name and service identifier
+     * @return array The array of stdClass with dislpay name and service identifier
      */
     public function search()
     {

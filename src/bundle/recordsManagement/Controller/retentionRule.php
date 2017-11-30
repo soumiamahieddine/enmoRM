@@ -45,7 +45,7 @@ class retentionRule
     /**
      * List the retention rules
      *
-     * @return recordManagement/retentionRule[] The list of retention rules
+     * @return recordsManagement/retentionRule[] The list of retention rules
      */
     public function index()
     {
@@ -82,7 +82,7 @@ class retentionRule
      * Read a retention rule
      * @param string $code The retention rule code
      *
-     * @return recordManagement/retentionRule The retention rule
+     * @return recordsManagement/retentionRule The retention rule
      */
     public function read($code)
     {
