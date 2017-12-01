@@ -37,6 +37,10 @@ trait archiveModificationTrait
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
+        if ($archive->status === 'frozen') {
+            throw new \bundle\recordsManagement\Exception\retentionRuleException('A frozen archive can\'t be modified.');
+        }
+
         $this->getAccessRule($archive);
 
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
@@ -52,6 +56,10 @@ trait archiveModificationTrait
     public function editArchiveAccessRule($archiveId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        if ($archive->status === 'frozen') {
+            throw new \bundle\recordsManagement\Exception\retentionRuleException('A frozen archive can\'t be modified.');
+        }
 
         $this->getAccessRule($archive);
 
