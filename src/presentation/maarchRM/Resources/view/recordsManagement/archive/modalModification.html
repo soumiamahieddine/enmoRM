@@ -121,8 +121,6 @@
             $('#save').data("archiveids", "");
             $('#archiveModificationForm').css('display', '');
             $('#modal_multipleSelection').css('display', 'none');
-
-            this.modal.modal();
         },
 
         loadRule: function(archiveId, archiveName) {
@@ -139,33 +137,39 @@
                 url      : url,
                 dataType : 'json',
                 success  : function (response) {
-                    if (ModificationModal.modalType === "accessRule") {
-                        rule = response.accessRule;
-                        if (rule.accessRuleDuration) {
-                            rule.accessRuleDurationUnit = rule.accessRuleDuration.substring(rule.accessRuleDuration.length-1);
-                            rule.accessRuleDuration = rule.accessRuleDuration.substring(1, rule.accessRuleDuration.length-1);
+                    if (response.status) {
+                        if (ModificationModal.modalType === "accessRule") {
+                            rule = response.accessRule;
+                            if (rule.accessRuleDuration) {
+                                rule.accessRuleDurationUnit = rule.accessRuleDuration.substring(rule.accessRuleDuration.length - 1);
+                                rule.accessRuleDuration = rule.accessRuleDuration.substring(1, rule.accessRuleDuration.length - 1);
+                            }
+                        } else {
+                            rule = response.retentionRule;
                         }
+
+                        $.each(rule, function (key, value) {
+                            ModificationModal.modal.find("[name='" + key + "']").val(value);
+                        });
+
+                        if (ModificationModal.modalType === "accessRule") {
+                            ModificationModal.loadAccessCode();
+                        }
+
+                        if (ModificationModal.modalType === "retentionRule") {
+                            ModificationModal.loadRetentionCode(rule);
+                        }
+
+                        // Set datepicker Date
+                        dateValue = rule.startDate.split('/');
+                        if (dateValue.length == 3) {
+                            date = new Date(parseInt(dateValue[2]), parseInt(dateValue[1]) - 1, parseInt(dateValue[0]));
+                            $('#startDate').find('input').datepicker('setDate', date);
+                        }
+
+                        $('#modificationModal').modal();
                     } else {
-                        rule = response.retentionRule;
-                    }
-
-                    $.each(rule, function(key, value) {
-                        ModificationModal.modal.find("[name='" +key+ "']").val(value);
-                    });
-
-                    if( ModificationModal.modalType === "accessRule") {
-                        ModificationModal.loadAccessCode();
-                    }
-
-                     if( ModificationModal.modalType === "retentionRule") {
-                        ModificationModal.loadRetentionCode();
-                    }
-
-                    // Set datepicker Date
-                    dateValue = rule.startDate.split('/');
-                    if (dateValue.length == 3) {
-                        date = new Date(parseInt(dateValue[2]), parseInt(dateValue[1])-1, parseInt(dateValue[0]));
-                        $('#startDate').find('input').datepicker('setDate', date);
+                        gritter.show(response.message, response.status);
                     }
                 },
                 error   : function(response) {
