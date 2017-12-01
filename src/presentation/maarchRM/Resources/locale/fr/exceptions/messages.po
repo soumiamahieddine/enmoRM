@@ -233,6 +233,9 @@ msgstr "Vous n'avez pas l'authorisation d'effectuer cette action."
 msgid "An organization is required to check an archive integrity"
 msgstr "Vous devez vous positionner dans un service pour verifier l'intégité d'une archive."
 
+msgid "A frozen archive can't be modified."
+msgstr "Une archive gelée ne peut pas être modifiée."
+
 msgid "Permission denied: You have to choose a working organization unit to proceed this action."
 msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
 
