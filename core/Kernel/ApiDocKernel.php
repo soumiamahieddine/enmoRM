@@ -37,6 +37,10 @@ class ApiDocKernel
      */
     public static function run()
     {
+        $parts = explode('/', $_SERVER['SCRIPT_NAME']);
+        array_shift($parts);
+        array_shift($parts);
+
         static::$api = new \StdClass();
 
         static::$api->openapi = "3.0.0";
@@ -47,11 +51,22 @@ class ApiDocKernel
         static::$api->paths = [];
         static::$api->definitions = [];
 
-        foreach (\laabs::bundles() as $reflectionBundle) {   
-            foreach ($reflectionBundle->getApis() as $reflectionApi) {
-                foreach ($reflectionApi->getPaths() as $reflectionPath) {
-                    static::getPath($reflectionPath);
-                }
+        if (empty($parts)) {
+            foreach (\laabs::bundles() as $reflectionBundle) {   
+                static::getBundlePaths($reflectionBundle);
+            }
+        } else {
+            $bundle = array_shift($parts);
+
+            $reflectionBundle = \laabs::bundle($bundle);
+            if (empty($parts)) {
+                static::getBundlePaths($reflectionBundle);
+            } else {
+                $api = array_shift($parts);
+
+                $reflectionApi = $reflectionBundle->getApi($api);
+
+                static::getApiPaths($reflectionApi);
             }
         }
 
@@ -60,6 +75,20 @@ class ApiDocKernel
         header('Content-Type: application/json');
 
         echo $body;
+    }
+
+    protected static function getBundlePaths($reflectionBundle)
+    {
+        foreach ($reflectionBundle->getApis() as $reflectionApi) {
+            static::getApiPaths($reflectionApi);
+        }
+    }
+
+    protected static function getApiPaths($reflectionApi)
+    {
+        foreach ($reflectionApi->getPaths() as $reflectionPath) {
+            static::getPath($reflectionPath);
+        }
     }
 
     protected static function getPath($reflectionPath)
