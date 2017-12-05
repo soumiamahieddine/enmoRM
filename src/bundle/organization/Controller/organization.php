@@ -1012,4 +1012,93 @@ class organization
 
         return $ownerOriginatorOrgs;
     }
+
+    /**
+     * Get originator
+     *
+     * @return array
+     */
+    public function getOriginator()
+    {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            $this->view->addContentFile("recordsManagement/welcome/noWorkingOrg.html");
+
+            return $this->view->saveHtml();
+        }
+        $ownerOriginatorOrgs = $this->getOwnerOrgsByRole($currentService,'originator');
+        $originators = [];
+        foreach ($ownerOriginatorOrgs as $org) {
+            foreach ($org->originator as $originator) {
+                $originator->ownerOrgName = $org->displayName;
+                $originators [] = $originator;
+            }
+        }
+
+        return $originators;
+
+
+    }
+
+    /**
+     * Get the list of user accessible oranizations
+     * @param object $currentService The user's current service
+     * @param string $role           The org unit role to select
+     *
+     * @return The list of user accessible  orgs
+     */
+    protected function getOwnerOrgsByRole($currentService, $role)
+    {
+        $orgUnits = \laabs::callService('organization/organization/readByrole_role_', $role);
+
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $orgController = \laabs::newController('organization/organization');
+
+        $owner = false;
+        $archiver = false;
+        $userOrgUnits = [];
+        $userOrgs = [];
+
+        $userOrgUnitOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
+        foreach ($userOrgUnitOrgRegNumbers as $userOrgUnitOrgRegNumber) {
+            $userOrgUnit = $orgController->getOrgByRegNumber($userOrgUnitOrgRegNumber);
+            $userOrgUnits[] = $userOrgUnit;
+            if (isset($userOrgUnit->orgRoleCodes)) {
+                foreach ($userOrgUnit->orgRoleCodes as $orgRoleCode) {
+                    if ($orgRoleCode == 'owner') {
+                        $owner = true;
+                    }
+                    if ($orgRoleCode == 'archiver') {
+                        $archiver = true;
+                    }
+                }
+            }
+        }
+
+        foreach ($userOrgUnits as $userOrgUnit) {
+            foreach ($orgUnits as $orgUnit) {
+                if (
+                    // Owner = all originators
+                    $owner
+                    // Archiver = all originators fo the same org
+                    || ($archiver && $orgUnit->ownerOrgId == $userOrgUnit->ownerOrgId)
+                    // Originator = all originators at position and sub-services
+                    || ($role == 'originator' && $orgUnit->registrationNumber == $userOrgUnit->registrationNumber)
+                    // Depositor = all
+                    || $role == 'depositor'
+                ) {
+                    if (!isset($userOrgs[(string) $orgUnit->ownerOrgId])) {
+                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $orgUnit->ownerOrgId);
+
+                        $userOrgs[(string) $orgObject->orgId] = new \stdClass();
+                        $userOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
+                        $userOrgs[(string) $orgObject->orgId]->{$role} = [];
+                    }
+                    $userOrgs[(string) $orgObject->orgId]->{$role}[] = $orgUnit;
+                }
+            }
+        }
+
+        return $userOrgs;
+    }
 }

@@ -294,4 +294,11 @@ interface organizationInterface
      * @action organization/organization/todisplay
      */
     public function readTodisplay();
+
+    /**
+     * Get originator
+     *
+     * @action organization/organization/getOriginator
+     */
+    public function readOriginator();
 }

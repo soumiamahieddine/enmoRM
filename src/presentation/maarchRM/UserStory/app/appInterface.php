@@ -109,4 +109,11 @@ interface appInterface
      * @uses organization/organization/readTodisplay
      */
     public function readOrganizationsTodisplay();
+
+    /**
+     * Get the producer' list
+     *
+     * @uses organization/organization/readOriginator
+     */
+    public function readOriginator();
 }

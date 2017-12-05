@@ -900,3 +900,9 @@ msgstr "À définir plus tard"
 
 msgid "Producer"
 msgstr "Producteur"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "No originator found"
+msgstr "Aucun producteur trouvé"
