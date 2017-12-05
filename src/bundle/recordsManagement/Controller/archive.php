@@ -457,6 +457,9 @@ class archive
 
         $archive->communicability = $this->accessVerification($archive);
 
+        if(\laabs::hasBundle('medona')) {
+            $archive->message = $this->getMessageByArchiveid($archiveId);
+        }
         return $archive;
     }
 
@@ -681,5 +684,25 @@ class archive
         $count = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" OR ", $queryString));
 
         return $count;
+    }
+
+    /**
+     * list archive message
+     * @param string $archiveId The archive identifier
+     *
+     * @return message[]
+     */
+    protected function getMessageByArchiveid($archiveId) {
+
+        $queryString = [];
+        $unitIdentifiers = $this->sdoFactory->find('medona/unitIdentifier', "objectId='$archiveId'");
+
+        foreach ($unitIdentifiers as $unitIdentifier) {
+            $queryString [] ="messageId='$unitIdentifier->messageId'";
+        }
+
+        $messages = $this->sdoFactory->find('medona/message', \laabs\implode(" OR ", $queryString));
+
+        return $messages;
     }
 }

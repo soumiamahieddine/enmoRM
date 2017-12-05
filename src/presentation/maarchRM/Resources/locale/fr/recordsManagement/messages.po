@@ -801,6 +801,10 @@ msgstr "Modification de l'index"
 msgid "Reference"
 msgstr "Cote"
 
+msgid "Reference"
+msgstr "Reference"
+msgctxt "message"
+
 msgid "Select a rule"
 msgstr "Selectionnez une règle"
 
@@ -906,3 +910,7 @@ msgstr "Organisation"
 
 msgid "No originator found"
 msgstr "Aucun producteur trouvé"
+
+
+msgid "Message"
+msgstr "Bordereau"

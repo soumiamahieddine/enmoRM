@@ -1,0 +1,24 @@
+<div class="table-responsive" >
+    <table class="table table-condensed dataTable" >
+        <thead>
+        <th data-translate-context="message">Reference</th>
+        <th>Type</th>
+        <th>Date</th>
+        </thead>
+        <tbody>
+            <?merge archive.message ?>
+            <tr>
+                <td >
+                    <?merge .reference ?>
+                </td>
+                <td>
+                    <?merge .type ?>
+                </td>
+                <td>
+                    <?merge .date ?>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
