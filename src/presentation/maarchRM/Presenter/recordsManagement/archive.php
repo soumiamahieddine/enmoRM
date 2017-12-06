@@ -648,17 +648,9 @@ class archive
             $echec = count($result['error']);
         }
 
-        $this->json->message = '%1$s archive(s) flagged for destruction.';
+        $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
         $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, $success);
-
-        if ($echec > 0) {
-            $message = '%1$s archive(s) can not be flagged.';
-            $message = $this->translator->getText($message);
-            $message = sprintf($message, $echec);
-
-            $this->json->message .= ' '.$message;
-        }
+        $this->json->message = sprintf($this->json->message, $success,($echec+$success));
 
         return $this->json->save();
     }
