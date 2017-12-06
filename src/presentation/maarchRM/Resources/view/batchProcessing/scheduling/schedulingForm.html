@@ -1,4 +1,4 @@
-<form id="schedulingForm" class="form-horizontal" style="display:none">
+<form id="schedulingForm" class="form-horizontal " style="display:none">
     <div class="panel panel-default">
         <div class="panel-body">
             <br/>
@@ -342,6 +342,9 @@
 </style>
 
 <script type="text/javascript">
+
+    $('#schedulingForm').initSmoothScrolling();
+
     // Frequency type selection
     $('#schedulingForm').on('click', '.frequencyType', function(event) {
         $('#schedulingForm').find('.frequencyType.btn-info').removeClass('btn-info').addClass('btn-default');
