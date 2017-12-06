@@ -114,7 +114,12 @@ var ArchivesAction = {
             selector.push('input' + value + ':checked');
         })
 
+
+
         relevant = $(selector.join(', '));
+        if(relevant.length == 0) {
+            relevant = $('input[data-archive-status]:checked');
+        }
 
         $.each(relevant, function () {
             ids.push($(this).val());
