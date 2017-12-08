@@ -29,7 +29,7 @@ CREATE TABLE "digitalResource"."digitalResource"
   "archiveId" text NOT NULL,
   "resId" text NOT NULL,
   "clusterId" text NOT NULL,
-  "size" integer NOT NULL,
+  "size" bigint NOT NULL,
   "puid" text,
   "mimetype" text,
   "hash" text,
