@@ -356,6 +356,9 @@ msgstr "Demander l'élimination"
 msgid "Cancel destruction request"
 msgstr "Annuler la demande d'élimination"
 
+msgid "Flag for transfer"
+msgstr "Demander le transfert"
+
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
 
@@ -424,6 +427,15 @@ msgstr "Gelée"
 
 msgid "disposable"
 msgstr "Elimination demandée"
+
+msgid "Select an archiver"
+msgstr "Sélectionnez un service d'Archives"
+
+msgid "transferable"
+msgstr "Transfert demandé"
+
+msgid "transfered"
+msgstr "Transferée"
 
 msgid "disposed"
 msgstr "Détruite"
@@ -676,8 +688,8 @@ msgctxt "validationModal"
 msgid "%1$s archive(s) flagged for restitution."
 msgstr "%1$s archive(s) marquée(s) pour restitution."
 
-msgid "%1$s / %2$s archive(s) flagged for destruction."
-msgstr "%1$s / %2$s  archive(s) marquée(s) pour destruction."
+msgid "%1$s archive(s) flagged for destruction."
+msgstr "%1$s archive(s) marquée(s) pour destruction."
 
 msgid "%1$s archive(s) flagged for conversion."
 msgstr "%1$s archive(s) marquée(s) pour conversion."
@@ -693,6 +705,12 @@ msgstr "%1$s archive(s) gelée(s)."
 
 msgid "%1$s archive(s) unfreezed."
 msgstr "%1$s archive(s) dégelée(s)."
+
+msgid "%1$s transfer(s) validated."
+msgstr "%1$s transfert(s) validé(s)."
+
+msgid "%1$s transfer(s) can not be validate(s)."
+msgstr "%1$s transfert(s) ne sont pas validé(s)."
 
 msgid "%1$s restitution(s) validated."
 msgstr "%1$s restitution(s) validée(s)."

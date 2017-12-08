@@ -236,6 +236,9 @@ msgstr "Vous devez vous positionner dans un service pour verifier l'intégité d
 msgid "A frozen archive can't be modified."
 msgstr "Une archive gelée ne peut pas être modifiée."
 
+msgid "An action is already in progress on this archive."
+msgstr "Une action est déjà en cours sur cette archive."
+
 msgid "Permission denied: You have to choose a working organization unit to proceed this action."
 msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
 
@@ -244,6 +247,9 @@ msgstr "La classe de description ne correspond pas au profil d'archive."
 
 msgid "Archive not set for destruction."
 msgstr "L'archive n'est pas prévu pour être détruite."
+
+msgid "Archive not set for preservation."
+msgstr "L'archive n'est pas prévu pour être transferé."
 
 msgid "Disposal date not reached."
 msgstr "La date de fin d'utilisation atteinte."

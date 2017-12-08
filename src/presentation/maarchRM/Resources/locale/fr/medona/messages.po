@@ -71,6 +71,15 @@ msgstr "Transferts envoyés"
 msgid "Transfers history"
 msgstr "Historique des transferts"
 
+msgid "Outgoing Transfer list"
+msgstr "Transferts sortants à traiter"
+
+msgid "Outgoing Transfer process list"
+msgstr "Transferts sortants en attente de destruction"
+
+msgid "Outgoing transfer history"
+msgstr "Historique des transferts sortants"
+
 msgid "Received notifications"
 msgstr "Notifications reçues"
 
@@ -389,6 +398,9 @@ msgstr "Rejeté"
 msgid "acknowledge"
 msgstr "Acquitté"
 
+msgid "downloaded"
+msgstr "Téléchargé"
+
 msgid "derogation"
 msgstr "Dérogation"
 
@@ -562,6 +574,10 @@ msgstr "Destruction d'une archive"
 
 msgid "destroy elimination warning"
 msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimination (ce processus de restitution) ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
+
+msgid "destroy transfer warning"
+msgstr "Attention : vous êtes sur le point de finaliser ce transfert sortant; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
+
 
 msgid "Indexing / keyword"
 msgstr "Indexation / mot-clé"
