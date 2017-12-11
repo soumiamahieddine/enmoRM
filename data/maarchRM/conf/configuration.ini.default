@@ -1,13 +1,19 @@
 ; Declare variables for database connection
 @include confvars.ini
 
+; Blacklist of user stories
+;blacklistUserStories = "[
+;    'adminFunc/contact'
+;]"
+
+
 [presentation.maarchRM]
 @include menu.ini
 
 ; Default max result in search screens
 maxResults = 200
 
-; Public archive mod
+; Public archive mode
 publicArchives = false
 
 ; Logos, title and favicon of the application
