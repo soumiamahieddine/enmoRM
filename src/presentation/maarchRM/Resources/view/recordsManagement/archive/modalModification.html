@@ -49,6 +49,7 @@
     <span id="mtext_freeze">Freeze</span>
     <span id="mtext_unfreeze">Unfreeze</span>
     <span id="empty_text">The fields with a star are required.</span>
+    <span id="empty_archivalAgency">No archival agency found</span>
 
     <span id="text_D">day(s)</span>
     <span id="text_M">month(s)</span>
@@ -145,6 +146,15 @@
                             text: value.displayName
                         }));
                     });
+
+                    var length = $('#archivalAgencySelect').children('option').length;
+                    if (length === 0) {
+                        $('#archivalAgencySelect').append($('<option>', {
+                            value: '',
+                            text: $('#empty_archivalAgency').html()
+                        }));
+                    }
+
                     $('#modificationModal').modal();
                 },
                 error   : function (response) {

@@ -929,6 +929,8 @@ msgstr "Organisation"
 msgid "No originator found"
 msgstr "Aucun producteur trouvé"
 
+msgid "No archival agency found"
+msgstr "Aucun service d'Archive trouvé"
 
 msgid "Message"
 msgstr "Bordereau"
