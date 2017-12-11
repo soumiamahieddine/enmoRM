@@ -720,3 +720,7 @@ msgstr "L'utilisateur existe déja"
 
 msgid "No service chosen"
 msgstr "Aucun service choisi"
+
+msgid "Organization"
+msgstr "Organisation"
+
