@@ -913,4 +913,10 @@ msgstr "Aucun producteur trouvé"
 
 
 msgid "Message"
-msgstr "Bordereau"
+msgstr "Bordereau(x)"
+
+msgid "ArchiveTransfer"
+msgstr "Transfert d'archive"
+
+msgid "ArchiveModificationNotification"
+msgstr "Notification de modification"
