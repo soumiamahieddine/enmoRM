@@ -298,6 +298,8 @@ class archive
         foreach ($archive->message as $message) {
             $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
         }
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable->setSorting(array(array(2, 'asc')));
 
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);

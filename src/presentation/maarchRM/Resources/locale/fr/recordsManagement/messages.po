@@ -940,3 +940,12 @@ msgstr "Transfert d'archive"
 
 msgid "ArchiveModificationNotification"
 msgstr "Notification de modification"
+
+msgid "ArchiveDeliveryRequest"
+msgstr "Demande de comunication "
+
+msgid "ArchiveRestitutionRequest"
+msgstr "Demande de restitution"
+
+msgid "ArchiveDestructionRequest"
+msgstr "Demande d'élimination"
