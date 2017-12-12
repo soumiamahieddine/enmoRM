@@ -256,6 +256,30 @@ msgstr "Mes bordereaux à traiter"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
+# Transfer (outgoing)
+# ---------------------------------------------------------
+
+msgid "definitiveTransfer"
+msgstr "Transfert définitif"
+msgctxt "userStoryGroup"
+
+msgid "outgoingTransferHistory"
+msgstr "Historique des transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferProcess"
+msgstr "Clôturer les transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferReceive"
+msgstr "Réceptionner les transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferSend"
+msgstr "Initier les transferts sortants"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
 # Search/retrieve
 # ---------------------------------------------------------
 
