@@ -62,9 +62,41 @@ class scheduling
      */
     public function readTaskList()
     {
-        $taskList = $this->sdoFactory->index("batchProcessing/task", array('taskId', 'route', 'description'), "");
+        $tasks= \laabs::configuration('batchProcessing')['tasks'];
+
+        $taskList = [];
+        foreach ($tasks as $value) {
+            $task = \laabs::newInstance('batchProcessing/task');
+            $task->taskId = $value['taskId'];
+            $task->route = $value['route'];
+            $task->description = $value['description'];
+
+            $taskList[] = $task;
+        }
 
         return $taskList;
+    }
+
+    /**
+     * Get task by id
+     *
+     * @return batchProcessing/task task
+     */
+    public function readTask($taskId)
+    {
+        $tasks= \laabs::configuration('batchProcessing')['tasks'];
+
+        foreach ($tasks as $value) {
+            if ($taskId === $value['taskId']) {
+                $task = \laabs::newInstance('batchProcessing/task');
+                $task->taskId = $value['taskId'];
+                $task->route = $value['route'];
+                $task->description = $value['description'];
+
+                return $task;
+            }
+        }
+        return false;
     }
 
     /**
@@ -130,9 +162,9 @@ class scheduling
         $status = true;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
-        $task = $this->sdoFactory->read("batchProcessing/task", (string) $scheduling->taskId);
+        $task = $this->readTask($scheduling->taskId);
 
-        if (!$scheduling) {
+        if (!$scheduling || !$task) {
             throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifier.");
         }
 

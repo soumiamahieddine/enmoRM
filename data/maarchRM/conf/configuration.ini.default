@@ -292,3 +292,37 @@ datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
 ; 2 = trace queries
 ; 3 = dump queries
 trace = 1
+
+[batchProcessing]
+tasks = "[
+            {
+                'taskId': '01',
+                'route' : 'audit/event/createChainjournal',
+                'description' : 'Chainer le journal de l\'application'
+            },
+            {
+                'taskId': '02',
+                'route' : 'lifeCycle/journal/createChainjournal',
+                'description' : 'Chainer le journal du cycle de vie'
+            },
+            {
+                'taskId': '03',
+                'route' : 'recordsManagement/archiveCompliance/readPeriodic',
+                'description' : 'Valider l'intégrité des archives'
+            },
+            {
+                'taskId': '04',
+                'route' : 'recordsManagement/archives/deleteDisposablearchives',
+                'description' : 'Détruire les archives'
+            },
+            {
+                'taskId': '05',
+                'route' : 'batchProcessing/notification/updateProcess',
+                'description' : 'Envoyer notification'
+            },
+            {
+                'taskId': '06',
+                'route' : 'recordsManagement/archives/updateIndexfulltext',
+                'description' : 'Extraction plein texte'
+            }
+        ]"
