@@ -942,7 +942,7 @@ msgid "ArchiveModificationNotification"
 msgstr "Notification de modification"
 
 msgid "ArchiveDeliveryRequest"
-msgstr "Demande de communication "
+msgstr "Demande de comunication "
 
 msgid "ArchiveRestitutionRequest"
 msgstr "Demande de restitution"

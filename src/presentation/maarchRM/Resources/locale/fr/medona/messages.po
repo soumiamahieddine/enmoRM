@@ -72,13 +72,13 @@ msgid "Transfers history"
 msgstr "Historique des transferts"
 
 msgid "Outgoing Transfer list"
-msgstr "Transferts sortants à traiter"
+msgstr "Transferts à acquitter"
 
 msgid "Outgoing Transfer process list"
-msgstr "Transferts sortants en attente de destruction"
+msgstr "Transferts à finaliser"
 
 msgid "Outgoing transfer history"
-msgstr "Historique des transferts sortants"
+msgstr "Historique de transferts"
 
 msgid "Received notifications"
 msgstr "Notifications reçues"
@@ -187,6 +187,9 @@ msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
 msgstr "Demandes d'autorisation"
+
+msgid "Communication to recover"
+msgstr "Communications à récupérer"
 
 msgid "ArchiveDeliveryRequest"
 msgstr "Demande de communication d'archive"
@@ -328,6 +331,12 @@ msgstr "Restitution"
 
 msgid "ArchiveRestitutionRequest"
 msgstr "Demande de restitution"
+
+msgid "Request validation"
+msgstr "Demande à valider"
+
+msgid "Restitution process"
+msgstr "Restitution à acquitter"
 
 msgid "ArchiveRestitutionRequestReply"
 msgstr "Réponse à la demande de restitution"
@@ -529,6 +538,9 @@ msgstr "jusqu'au"
 
 msgid "Associate the control authority to originator"
 msgstr "Associer une autorité de contrôle à un producteur"
+
+msgid "Control authority management"
+msgstr "Gestion des autorités de contrôle"
 
 msgid "Control authority"
 msgstr "Autorité de contrôle"
