@@ -71,7 +71,7 @@ class scheduling
             $task->route = $value['route'];
             $task->description = $value['description'];
 
-            $taskList[] = $task;
+            $taskList[$task->taskId] = $task;
         }
 
         return $taskList;
