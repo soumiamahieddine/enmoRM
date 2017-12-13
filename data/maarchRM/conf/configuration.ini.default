@@ -124,6 +124,7 @@ securityPolicy = "{
     'lockDelay' : 30
 }"
 
+publicUserStory = "['app/*']"
 
 [lifeCycle]
 

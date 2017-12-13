@@ -36,7 +36,6 @@ class userAccount
     protected $adminUsers;
     protected $currentAccount;
     protected $accountPrivileges;
-    protected $publicUserStoriesController;
 
     /**
      * Constructor
@@ -51,9 +50,6 @@ class userAccount
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
         $this->currentAccount = \laabs::getToken('AUTH');
-
-        $this->publicUserStoriesController = \laabs::newController("auth/publicUserStory");
-
     }
 
     /**
@@ -508,7 +504,7 @@ class userAccount
             $roleMemberController = \laabs::newController("auth/roleMember");
             $roles = $roleMemberController->readByUseraccount($userAccountId);
 
-            $userStories = $this->publicUserStoriesController->index();
+            $userStories = \laabs::configuration('auth')['publicUserStory'];
 
             foreach ($roles as $role) {
                 $privileges = $this->sdoFactory->find("auth/privilege", "roleId='$role->roleId'");
@@ -535,7 +531,7 @@ class userAccount
         $accountToken = $this->currentAccount;
 
         if (!$accountToken) {
-            return $this->publicUserStoriesController->index();
+            return \laabs::configuration('auth')['publicUserStory'];
         }
 
         $userPrivileges = $this->getPrivilege($accountToken->accountId);

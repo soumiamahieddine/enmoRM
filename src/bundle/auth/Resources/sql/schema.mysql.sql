@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS `auth.roleMember`;
 DROP TABLE IF EXISTS `auth.privilege`;
 DROP TABLE IF EXISTS `auth.servicePrivilege`;
-DROP TABLE IF EXISTS `auth.publicUserStory`;
 DROP TABLE IF EXISTS `auth.role`;
 DROP TABLE IF EXISTS `auth.account`;
 
@@ -76,11 +75,4 @@ CREATE TABLE `auth.servicePrivilege`
       REFERENCES `auth.account` (`accountId`) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   UNIQUE (`accountId`, `serviceURI`)
-);
-
-CREATE TABLE `auth.publicUserStory`
-(
-  `userStory` VARCHAR(255) NOT NULL,
-
-  PRIMARY KEY (`userStory`)
 );

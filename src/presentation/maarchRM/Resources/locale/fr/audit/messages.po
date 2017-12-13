@@ -1098,12 +1098,6 @@ msgstr "Modification du mot de passe utilisateur"
 msgid "auth/publicUserStory/read"
 msgstr "Lecture de tous les utilisateurs publics"
 
-msgid "auth/publicUserStory/create"
-msgstr "Création d'un utilisateur public"
-
-msgid "auth/publicUserStory/delete"
-msgstr "Suppression d'un utilisateur public"
-
 msgid "auth/role/readNewrole"
 msgstr "Préparation à la création d'un nouveau rôle"
 
