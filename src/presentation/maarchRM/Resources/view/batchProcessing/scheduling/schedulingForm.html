@@ -450,18 +450,18 @@
         form : $('#schedulingForm'),
         newTask: function() {
             this.clear();
-            $('#schedulingForm').css('display', '');
+            $('#schedulingForm').removeClass('hide');
 
-            $('#modifyTask').css('display', 'none');
-            $('#addTask').css('display', '');
+            $('#modifyTask').addClass('hide');
+            $('#addTask').removeClass('hide');
         },
 
         showTask: function(scheduling) {
             this.clear();
             this.form.removeClass('hide');
 
-            $('#modifyTask').css('display', '');
-            $('#addTask').css('display', 'none');
+            $('#modifyTask').removeClass('hide');
+            $('#addTask').addClass('hide');
 
             this.form.find('[name="schedulingId"]').val(scheduling.schedulingId);
             this.form.find('[name="taskId"]').val(scheduling.taskId);
