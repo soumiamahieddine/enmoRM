@@ -241,6 +241,7 @@
 
     // New schedule
     $('#scheduleNewTask').on('click', function() {
+        TaskList.unselect();
         TaskSchedulingForm.newTask();
     })
 
