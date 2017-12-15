@@ -336,10 +336,10 @@ msgid "ArchiveRestitutionRequest"
 msgstr "Demande de restitution"
 
 msgid "Request validation"
-msgstr "Demande à valider"
+msgstr "Demandes à valider"
 
 msgid "Restitution process"
-msgstr "Restitution à acquitter"
+msgstr "Restitutions à acquitter"
 
 msgid "Authorization request"
 msgstr "Demandes d'autorisation"
