@@ -191,6 +191,9 @@ msgstr "Demandes d'autorisation"
 msgid "Communication to recover"
 msgstr "Communications à récupérer"
 
+msgid "Restitution to recover"
+msgstr "Restitutions à récupérer"
+
 msgid "ArchiveDeliveryRequest"
 msgstr "Demande de communication d'archive"
 
@@ -337,6 +340,9 @@ msgstr "Demande à valider"
 
 msgid "Restitution process"
 msgstr "Restitution à acquitter"
+
+msgid "Authorization request"
+msgstr "Demandes d'autorisation"
 
 msgid "ArchiveRestitutionRequestReply"
 msgstr "Réponse à la demande de restitution"
