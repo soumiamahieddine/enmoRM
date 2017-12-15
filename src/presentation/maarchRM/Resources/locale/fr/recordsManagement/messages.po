@@ -688,7 +688,7 @@ msgctxt "validationModal"
 msgid "%1$s archive(s) flagged for restitution."
 msgstr "%1$s archive(s) marquée(s) pour restitution."
 
-msgid "%1$s archive(s) flagged for destruction."
+msgid "%1$s / %2$s archive(s) flagged for destruction."
 msgstr "%1$s archive(s) marquée(s) pour destruction."
 
 msgid "%1$s archive(s) flagged for conversion."
