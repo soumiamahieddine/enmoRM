@@ -596,3 +596,9 @@ msgstr
 
 msgid "processing"
 msgstr "En cours"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "No originator found"
+msgstr "Aucun producteur trouvé"
