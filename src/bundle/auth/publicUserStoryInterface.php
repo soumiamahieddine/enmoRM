@@ -33,20 +33,4 @@ interface publicUserStoryInterface
      * @action auth/publicUserStory/index
      */
     public function read();
-
-    /**
-     * Create a new user story public
-     * @param auth/publicUserStory $publicUserStory user story public
-     *
-     * @action auth/publicUserStory/create
-     */
-    public function create($publicUserStory);
-
-    /**
-     * Delete an user story public
-     * @param string $publicUserStory The user story public
-     *
-     * @action auth/publicUserStory/delete
-     */
-    public function delete($publicUserStory);
 }

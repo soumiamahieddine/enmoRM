@@ -103,6 +103,8 @@ class adminRole
     public function edit($role = null, $publicUserStories = array())
     {
         $publicArchive = \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $blacklistUserStories = \laabs::configuration("blacklistUserStories");
+
         $this->view->addContentFile("auth/authorization/edit.html");
 
         if (count($role->roleMembers) > 0) {
@@ -119,7 +121,12 @@ class adminRole
         $userStoryDomains = array();
         $userStories = \laabs::presentation()->getUserStories();
         $userStoryNames = array();
+
         foreach ($userStories as $userStory) {
+            if (is_array($blacklistUserStories) && in_array($userStory->uri, $blacklistUserStories)) {
+                continue;
+            }
+
             $userStoryName = $userStory->getName();
             $userStoryNames[] = $userStoryName;
 

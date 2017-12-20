@@ -97,15 +97,3 @@ CREATE TABLE "auth"."servicePrivilege"
 WITH (
   OIDS=FALSE
 );
-
--- Table: "auth"."publicUserStory"
-DROP TABLE IF EXISTS "auth"."publicUserStory" CASCADE;
-CREATE TABLE "auth"."publicUserStory"
-(
-  "userStory" text NOT NULL,
-
-  PRIMARY KEY ("userStory")
-)
-WITH (
-  OIDS=FALSE
-);

@@ -41,7 +41,6 @@ class publicUserStory
         $this->sdoFactory = $sdoFactory;
     }
 
-
     /**
      * List all user story public
      *
@@ -51,38 +50,11 @@ class publicUserStory
     {
         $return = array();
 
-        $publicUserStories = $this->sdoFactory->find("auth/publicUserStory");
+        $publicUserStories = \laabs::configuration('auth')['publicUserStory'];
         foreach ($publicUserStories as $publicUserStories) {
-            $return[] = $publicUserStories->userStory;
+            $return[] = $publicUserStories;
         }
 
         return $return;
-    }
-
-    /**
-     * Recorde a new user story public
-     * @param auth/publicUserStory $publicUserStory The user story public object to create
-     *
-     * @return boolean The status of the query
-     */
-    public function create($publicUserStory)
-    {
-        $publicUserStory = \laabs::cast("auth/publicUserStory", $publicUserStory);
-
-        return $this->sdoFactory->create($publicUserStory);
-    }
-
-
-    /**
-     * Delete an user story public
-     * @param auth/publicUserStory $publicUserStory The user story public object to delete
-     *
-     * @return boolean The status of the query
-     */
-    public function delete($publicUserStory)
-    {
-        $publicUserStory = \laabs::cast("auth/publicUserStory", $publicUserStory);
-
-        return $this->sdoFactory->delete($publicUserStory);
     }
 }

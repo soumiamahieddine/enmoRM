@@ -449,11 +449,14 @@ class organization
             $newOwnerOrgId = null;
         }
 
-        $oldParentOrg = end($this->readParentOrg($orgId));
-        $newParentOrg = end($this->readParentOrg($newParentOrgId));
+        if ($newParentOrgId) {
+            $oldParentOrg = end($this->readParentOrg($orgId));
+            $newParentOrg = end($this->readParentOrg($newParentOrgId));
 
-        if ($oldParentOrg->orgId != $newParentOrg->orgId && $oldParentOrg->orgId != $newParentOrgId) {
-            throw new \core\Exception("Organization can''t be moved to an other organization");
+            if ($oldParentOrg->orgId === NULL ||
+                ($oldParentOrg->orgId !== NULL && $oldParentOrg->orgId != $newParentOrg->orgId && $oldParentOrg->orgId != $newParentOrgId)) {
+                throw new \core\Exception("Organization can''t be moved to an other organization");
+            }
         }
 
         $organization = $this->sdoFactory->read("organization/organization", $orgId);

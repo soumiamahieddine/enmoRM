@@ -71,6 +71,15 @@ msgstr "Transferts envoyés"
 msgid "Transfers history"
 msgstr "Historique des transferts"
 
+msgid "Outgoing Transfer list"
+msgstr "Transferts à acquitter"
+
+msgid "Outgoing Transfer process list"
+msgstr "Transferts à finaliser"
+
+msgid "Outgoing transfer history"
+msgstr "Historique de transferts"
+
 msgid "Received notifications"
 msgstr "Notifications reçues"
 
@@ -178,6 +187,12 @@ msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
 msgstr "Demandes d'autorisation"
+
+msgid "Communication to recover"
+msgstr "Communications à récupérer"
+
+msgid "Restitution to recover"
+msgstr "Restitutions à récupérer"
 
 msgid "ArchiveDeliveryRequest"
 msgstr "Demande de communication d'archive"
@@ -320,6 +335,15 @@ msgstr "Restitution"
 msgid "ArchiveRestitutionRequest"
 msgstr "Demande de restitution"
 
+msgid "Request validation"
+msgstr "Demandes à valider"
+
+msgid "Restitution process"
+msgstr "Restitutions à acquitter"
+
+msgid "Authorization request"
+msgstr "Demandes d'autorisation"
+
 msgid "ArchiveRestitutionRequestReply"
 msgstr "Réponse à la demande de restitution"
 
@@ -388,6 +412,9 @@ msgstr "Rejeté"
 
 msgid "acknowledge"
 msgstr "Acquitté"
+
+msgid "downloaded"
+msgstr "Téléchargé"
 
 msgid "derogation"
 msgstr "Dérogation"
@@ -518,6 +545,9 @@ msgstr "jusqu'au"
 msgid "Associate the control authority to originator"
 msgstr "Associer une autorité de contrôle à un producteur"
 
+msgid "Control authority management"
+msgstr "Gestion des autorités de contrôle"
+
 msgid "Control authority"
 msgstr "Autorité de contrôle"
 
@@ -563,5 +593,18 @@ msgstr "Destruction d'une archive"
 msgid "destroy elimination warning"
 msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimination (ce processus de restitution) ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
 
+msgid "destroy transfer warning"
+msgstr "Attention : vous êtes sur le point de finaliser ce transfert sortant; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
+
+
 msgid "Indexing / keyword"
-msgstr "Indexation / mot-clé"
+msgstr
+
+msgid "processing"
+msgstr "En cours"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "No originator found"
+msgstr "Aucun producteur trouvé"

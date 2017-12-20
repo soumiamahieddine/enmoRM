@@ -295,6 +295,10 @@ class archive
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
 
+        foreach ($archive->message as $message) {
+            $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
+        }
+      
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
 

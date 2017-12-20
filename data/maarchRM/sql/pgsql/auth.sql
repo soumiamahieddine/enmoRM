@@ -104,8 +104,3 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('UTILISATEUR', 'archiveDeposit/*'),
     ('UTILISATEUR', 'archiveManagement/modify'),
     ('UTILISATEUR', 'adminArchive/filePlan');
-
-
-    -- publicUserStory
-INSERT INTO "auth"."publicUserStory"("userStory") VALUES 
-    ('app/*');

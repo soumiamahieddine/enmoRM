@@ -4,18 +4,6 @@ DROP SCHEMA IF EXISTS "batchProcessing" CASCADE;
 CREATE SCHEMA "batchProcessing"
   AUTHORIZATION postgres;
 
--- Table: "batchProcessing"."task"
-
--- DROP TABLE "batchProcessing"."task";
-
-CREATE TABLE "batchProcessing"."task"
-(
-  "taskId" text NOT NULL,
-  "route" text,
-  "description" text,
-  PRIMARY KEY ("taskId")
-);
-
 -- Table: "batchProcessing"."scheduling"
 
 -- DROP TABLE "batchProcessing"."scheduling";
@@ -31,10 +19,7 @@ CREATE TABLE "batchProcessing"."scheduling"
   "lastExecution" timestamp,
   "nextExecution" timestamp,
   "status" text,
-  PRIMARY KEY ("schedulingId"),
-  FOREIGN KEY ("taskId")
-    REFERENCES "batchProcessing"."task" ("taskId") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION
+  PRIMARY KEY ("schedulingId")
 )
 WITH (
   OIDS=FALSE
