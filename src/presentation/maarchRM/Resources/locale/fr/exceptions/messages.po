@@ -248,11 +248,17 @@ msgstr "La classe de description ne correspond pas au profil d'archive."
 msgid "Archive not set for destruction."
 msgstr "L'archive n'est pas prévu pour être détruite."
 
+msgid "Children archives : Archive not set for destruction."
+msgstr "Une archive enfant n'est pas prévu pour être détruite."
+
 msgid "Archive not set for preservation."
 msgstr "L'archive n'est pas prévu pour être transferé."
 
 msgid "Disposal date not reached."
-msgstr "La date de fin d'utilisation atteinte."
+msgstr "Date de fin d'utilisation non-atteinte."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "Archives enfants : Date de fin d'utilisation non-atteinte."
 
 msgid "The batch folder does not exist."
 msgstr "Le dossier de traitement par lot n'existe pas."

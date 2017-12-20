@@ -763,6 +763,12 @@ msgstr "La classe description ne correspond pas aux profil d'archive."
 msgid "Archive not set for destruction."
 msgstr "Archive non prévue pour destruction."
 
+msgid "Children archives : Archive not set for destruction."
+msgstr "Une archive enfant n'est pas prévu pour être détruite."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "Archives enfants : Date de fin d'utilisation non-atteinte."
+
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
