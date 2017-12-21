@@ -133,6 +133,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      */
     public function search($description=null, $text=null, array $archiveArgs=[])
     {
+        $queryParams = [];
         $queryParts = ['description!=null and text!=null'];
 
         $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs);
@@ -159,6 +160,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             }
 
             $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';*/
+            $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
             $tokens = \laabs\explode(' ', $text);
             foreach ($tokens as $i => $token) {
                 $tokens[$i] = $token.':*';
