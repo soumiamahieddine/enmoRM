@@ -450,8 +450,17 @@ class organization
         }
 
         if ($newParentOrgId) {
-            $oldParentOrg = end($this->readParentOrg($orgId));
-            $newParentOrg = end($this->readParentOrg($newParentOrgId));
+
+            $oldParentOrg = $this->readParentOrg($orgId);
+            $newParentOrg = $this->readParentOrg($newParentOrgId);
+
+            if (is_array($oldParentOrg)) {
+                $oldParentOrg = end($oldParentOrg);
+            }
+
+            if (is_array($newParentOrg)) {
+                $newParentOrg = end($newParentOrg);
+            }
 
             if ($oldParentOrg->orgId === NULL ||
                 ($oldParentOrg->orgId !== NULL && $oldParentOrg->orgId != $newParentOrg->orgId && $oldParentOrg->orgId != $newParentOrgId)) {
