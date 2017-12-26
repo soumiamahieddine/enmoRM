@@ -96,6 +96,9 @@ msgstr "Editer une tâche"
 msgid "Batch scheduling"
 msgstr "Planificateur"
 
+msgid "Batch processing"
+msgstr "Gestion du planificateur"
+
 msgid "New scheduling"
 msgstr "Nouvelle planification"
 
