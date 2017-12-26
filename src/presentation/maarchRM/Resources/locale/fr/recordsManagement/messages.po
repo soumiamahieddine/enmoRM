@@ -452,7 +452,7 @@ msgstr "Conservée"
 msgid "destruction"
 msgstr "Destruction"
 
-msgid "preservation"
+msgid "Preservation"
 msgstr "Conservation"
 
 msgid "Disposable archives"
