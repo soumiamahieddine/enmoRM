@@ -139,7 +139,7 @@ class userAccount
     {
         $userAccountId = $this->addUserAccount($userAccount);
 
-        if (is_array($userAccount->roles) && !empty($userAccount->roles)) {
+        if (is_array($userAccount->roles) && !empty($userAccount->roles[0])) {
             foreach ($userAccount->roles as $roleId) {
                 \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
             }
