@@ -74,7 +74,7 @@ abstract class abstractPosition
             $organizations[] = $organization;
         }
 
-        if (!$setToken && !$currentOrg) {
+        if (!$setToken && !$currentOrg && $organizations) {
             \laabs::setToken("ORGANIZATION", $organizations[0], 86400);
         }
         return $positions;
