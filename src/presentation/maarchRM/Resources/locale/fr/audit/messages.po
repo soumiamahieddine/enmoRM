@@ -1505,3 +1505,9 @@ msgstr "Variable(s)"
 
 msgid "Info"
 msgstr "Informations"
+
+msgid "User already exist"
+msgstr "L'utilisateur existe déja."
+
+msgid "Username not registered or wrong password."
+msgstr "Nom d'utilisateur ou mot de passe incorrect."
