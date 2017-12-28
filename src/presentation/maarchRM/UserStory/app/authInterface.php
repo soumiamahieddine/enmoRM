@@ -55,9 +55,10 @@ interface authInterface
     /**
      * Change a user password
      * @param string $newPassword The new password
+     * @param string $oldPassword The old password
      *
      * @uses auth/userAccount/updatePassword_userAccountId_
      * @return auth/user/setPassword
      */
-    public function updateUseraccountSetpassword_userAccountId_($newPassword);
+    public function updateUseraccountSetpassword_userAccountId_($newPassword, $oldPassword);
 }

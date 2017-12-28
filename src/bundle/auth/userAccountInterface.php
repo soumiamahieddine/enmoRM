@@ -182,10 +182,11 @@ interface userAccountInterface
     /**
      * Change a user Account password
      * @param string $newPassword
+     * @param string $oldPassword
      *
      * @action auth/userAccount/setPassword
      */
-    public function updatePassword_userAccountId_($newPassword);
+    public function updatePassword_userAccountId_($newPassword, $oldPassword);
 
     /**
      * Generate a new password

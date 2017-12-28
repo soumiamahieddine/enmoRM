@@ -33,8 +33,16 @@
                 </div>
                 <div class="collapse well" id="user_password">
                     <div class="form-group">
+                        <label>Old password</label>
+                        <input type="text" class="form-control" name="oldPassword" placeholder="Old password" autocomplete="off">
+                    </div>
+                    <div class="form-group">
                         <label>New password</label>
-                        <input type="text" class="form-control" name="newPassword" placeholder="New password" autocomplete="off">
+                        <input type="text" class="form-control" name="newPassword" placeholder="New password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input type="text" class="form-control" name="confirmPassword" placeholder="Confirm password">
                     </div>
                     <button class="btn btn-success" id="user_newPassword" type="button" data-useraccountid="[?merge user.accountId ?]" title="Ok"><i class="fa fa-check">&nbsp;</i>OK</button>
                 </div>
@@ -69,6 +77,7 @@
             </dl>
         </div>
     </div>
+    <span class="hide" id="passwordConfirmation_Error">Passwords are not the same</span>
 </form>
 
 <script>
@@ -156,16 +165,23 @@
 
 // New password
     $('#user_newPassword').on('click', function() {
-        var password = $('#user_password').find('input');
+        var oldPassword = $('#user_password').find('input[name="oldPassword"]');
+        var password = $('#user_password').find('input[name="newPassword"]');
+        var passwordConfirmation = $('#user_password').find('input[name="confirmPassword"]');
 
         if (password.val() == "") {
+            return;
+        }
+
+        if (password.val() != passwordConfirmation.val()) {
+            gritter.show($('#passwordConfirmation_Error').text(), false);
             return;
         }
 
         ajax($(this), {
             url         : '/userAccount/setPassword/' + $(this).data('useraccountid'),
             type        : "PUT",
-            data        : JSON.stringify({newPassword : password.val()}),
+            data        : JSON.stringify({newPassword : password.val(), oldPassword : oldPassword.val()}),
             contentType : 'application/json',
             dataType    : 'json',
             success: function (response) {

@@ -334,12 +334,18 @@ class userAccount
      * Change a user password
      * @param string $userAccountId The identifier of the user
      * @param string $newPassword   The new password
+     * @param string $oldPassword          The old password
      *
      * @return boolean The result of the request
      */
-    public function setPassword($userAccountId, $newPassword)
+    public function setPassword($userAccountId, $newPassword,$oldPassword)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+        $oldPassword = hash($this->passwordEncryption, $oldPassword);
+
+        if($userAccount->password != $oldPassword) {
+            throw new \core\Exception\UnauthorizedException("User password error.");
+        }
 
         $userAuthenticationController = \laabs::newController("auth/userAuthentication");
         $userAuthenticationController->checkPasswordPolicies($newPassword);
