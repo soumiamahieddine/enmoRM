@@ -653,7 +653,8 @@ class archive
         if (array_key_exists('error', $result)) {
             $echec = count($result['error']);
         }
-
+        
+        $this->translator->setCatalog('recordsManagement/messages');
         $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
         $this->json->message = $this->translator->getText($this->json->message);
         $this->json->message = sprintf($this->json->message, $success,($echec+$success));
