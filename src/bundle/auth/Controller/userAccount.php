@@ -347,19 +347,7 @@ class userAccount
             throw new \core\Exception\UnauthorizedException("User password error.");
         }
 
-        $userAuthenticationController = \laabs::newController("auth/userAuthentication");
-        $userAuthenticationController->checkPasswordPolicies($newPassword);
-
-        $encryptedPassword = $newPassword;
-        if ($this->passwordEncryption != null) {
-            $encryptedPassword = hash($this->passwordEncryption, $newPassword);
-        }
-
-        $userAccount->password = $encryptedPassword;
-        $userAccount->accountId = $userAccountId;
-        $userAccount->passwordLastChange = \laabs::newDateTime();
-
-        return $this->sdoFactory->update($userAccount);
+        return $this->updatePassword($userAccount, $newPassword);
     }
 
     /**
@@ -398,7 +386,7 @@ class userAccount
         }
 
         $newPassword = \laabs::newId();
-        $this->setPassword($userAccount->accountId, $newPassword);
+        $this->updatePassword($userAccount, $newPassword);
         $this->requirePasswordChange($userAccount->accountId);
 
         $title = "Maarch RM - user information";
@@ -415,6 +403,23 @@ class userAccount
         $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
 
         return $result;
+    }
+
+    protected function updatePassword($userAccount, $newPassword)
+    {
+        $userAuthenticationController = \laabs::newController("auth/userAuthentication");
+        $userAuthenticationController->checkPasswordPolicies($newPassword);
+
+        $encryptedPassword = $newPassword;
+        if ($this->passwordEncryption != null) {
+            $encryptedPassword = hash($this->passwordEncryption, $newPassword);
+        }
+
+        $userAccount->password = $encryptedPassword;
+        $userAccount->accountId = $userAccountId;
+        $userAccount->passwordLastChange = \laabs::newDateTime();
+
+        return $this->sdoFactory->update($userAccount);
     }
 
     /**
