@@ -259,3 +259,6 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Profile already exist"
+msgstr "Le profil éxiste déja"

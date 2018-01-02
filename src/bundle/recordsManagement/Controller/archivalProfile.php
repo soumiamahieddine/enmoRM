@@ -308,7 +308,7 @@ class archivalProfile
                 $this->sdoFactory->rollback();
             }
 
-            throw $exception;
+            throw new \core\Exception("Profile already exist");
         }
 
         if ($transactionControl) {
@@ -349,8 +349,8 @@ class archivalProfile
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
+            throw new \core\Exception("Profile already exist");
 
-            throw $exception;
         }
 
         if ($transactionControl) {
