@@ -333,11 +333,13 @@ class cluster
                     return $contents;
 
                 } catch (\Exception $e) {
+                    $address->integrityCheckResult = false;
+                    $this->sdoFactory->update($address);
                     // No content retrieved : send error as audit event
                     \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
                 }
             } else {
-                throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "No address found for ressource %s", 404, null, [$resource->resId]);
                 \laabs::notify(LAABS_BUSINESS_EXCEPTION, \laabs::newException("digitalResource/clusterException", "No address found for ressource %s", 404, null, [$resource->resId]));
             }
         }
