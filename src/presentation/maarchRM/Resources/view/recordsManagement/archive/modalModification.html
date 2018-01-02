@@ -227,12 +227,14 @@
             if( type === "accessRule") {
                 $('#startDate, #accessCode').css('display', '');
                 $('#retentionCode').css('display', 'none');
-                $('#archiveModificationForm').css('display', '')
+                $('#archiveModificationForm').css('display', '');
+                $('#archivalAgency').css('display', 'none');
 
             } else if ( type === "retentionRule") {
                 $('#startDate,#retentionCode').css('display', '');
                 $('#accessCode').css('display', 'none');
-                $('#archiveModificationForm').css('display', '')
+                $('#archiveModificationForm').css('display', '');
+                $('#archivalAgency').css('display', 'none');
 
             } else if (type == "flagForTransfer") {
                 $('#archivalAgency').css('display', '');
