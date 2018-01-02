@@ -416,7 +416,6 @@ class userAccount
         }
 
         $userAccount->password = $encryptedPassword;
-        $userAccount->accountId = $userAccountId;
         $userAccount->passwordLastChange = \laabs::newDateTime();
 
         return $this->sdoFactory->update($userAccount);
