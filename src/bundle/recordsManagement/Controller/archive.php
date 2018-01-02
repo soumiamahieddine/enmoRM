@@ -458,7 +458,7 @@ class archive
         $archive->communicability = $this->accessVerification($archive);
 
         if(\laabs::hasBundle('medona')) {
-            $archive->message = $this->getMessageByArchiveid($archiveId);
+            $archive->messages = $this->getMessageByArchiveid($archiveId);
         }
         return $archive;
     }
