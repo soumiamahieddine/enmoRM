@@ -324,7 +324,7 @@ msgstr "Déposer une archive"
 msgctxt "userStory"
 
 msgid "messageComposer"
-msgstr "Génerer un bordereau"
+msgstr "Générer un bordereau"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
