@@ -261,4 +261,4 @@ msgid "File"
 msgstr "Dossier"
 
 msgid "Profile already exist"
-msgstr "Le profil éxiste déja"
+msgstr "Le profil existe déjà"
