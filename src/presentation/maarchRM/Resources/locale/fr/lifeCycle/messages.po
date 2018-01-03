@@ -465,7 +465,7 @@ msgid "recordsManagement/validation"
 msgstr "Validation d'une archive"
 
 msgid "recordsManagement/descriptionModification"
-msgstr "Modification des méta-données de l'archive"
+msgstr "Modification de la description d'archive"
 
 msgid "medona/sending"
 msgstr "Envoi d'un message"
