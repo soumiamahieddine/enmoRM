@@ -830,7 +830,7 @@ msgstr "Reference"
 msgctxt "message"
 
 msgid "Select a rule"
-msgstr "Selectionnez une règle"
+msgstr "Sélectionnez une règle"
 
 
 msgid "Acces rule duration"
