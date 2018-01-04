@@ -67,13 +67,14 @@ class jing
                 $sep = strpos($line, ": ");
                 $position = substr($line, 0, $sep);
                 $message = substr($line, $sep+2);
+                $messageparts = explode(':', $message);
                 
                 $posparts = explode(':', $position);
-                $offset = array_pop($posparts);
+                $col = array_pop($posparts);
                 $line = array_pop($posparts);
                 $filename = implode(':', $posparts);
                 
-                $this->errors[] = $message;
+                $this->errors[] = $messageparts[1].' ('.$line.', '.$col.')';
             }
 
             return false;
