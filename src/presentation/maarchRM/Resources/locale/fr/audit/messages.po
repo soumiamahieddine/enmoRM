@@ -1511,3 +1511,21 @@ msgstr "L'utilisateur existe déja."
 
 msgid "Username not registered or wrong password."
 msgstr "Nom d'utilisateur ou mot de passe incorrect."
+
+msgid "organization/organization/readTodisplay"
+msgstr "Liste des organisations"
+
+msgid "organization/organization/readOriginator"
+msgstr "Lecture du producteur"
+
+msgid "seda/ArchiveTransferComposition/updateSenddraft_messageId_"
+msgstr "Envoie du message à travers le générateur de bordereau"
+
+msgid "seda/ArchiveTransferComposition/update_messageId_"
+msgstr "Modification du bordereau"
+
+msgid "seda/ArchiveTransferComposition/create_messageId_document"
+msgstr "Création d'un document à travers le bordereau"
+
+msgid "seda/ArchiveTransferComposition/create"
+msgstr "Creation d'un bordereau"
