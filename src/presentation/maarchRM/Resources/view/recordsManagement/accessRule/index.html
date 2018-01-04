@@ -71,7 +71,7 @@ $("#addNewAccessCode").on('click', function(){
      $('#accessRuleModal').modal();
 })
 
-$(".editAccessRule").on('click', function(){
+$(".dataTable").on('click',".editAccessRule", function(){
      $.ajax({
         type        : 'GET',
         url         : '/accessRule/'+$(this).data('code'),
