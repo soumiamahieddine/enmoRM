@@ -99,8 +99,6 @@ trait archiveModificationTrait
 
                 if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
                     $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                } else {
-                    $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
                 }
 
                 // Update current object for caller
