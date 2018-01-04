@@ -1440,8 +1440,8 @@ msgstr "Mise à jour des profils d'archive d'un service producteur"
 msgid "organization/organization/readOrgunitprofiles"
 msgstr "Lecture des profils d'archive d'un service producteur"
 
-
-
+msgid "medona/archiveTransfer/updateValidatedraft_messageId_"
+msgstr "Validation d'un projet de bordereau"
 
 msgid "seda2/ArchiveTransferComposition/create"
 msgstr "Création d'un bordereau de transfert"
