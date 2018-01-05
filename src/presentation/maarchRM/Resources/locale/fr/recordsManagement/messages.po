@@ -959,5 +959,5 @@ msgstr "Demande d'élimination"
 msgid "Rule name"
 msgstr "Nom de la règle"
 
-msgid "DUA"
-msgstr "DUA"
+msgid "DUA Due date"
+msgstr "Date d'échéance de la DUA"
