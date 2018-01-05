@@ -253,7 +253,7 @@ class log implements archiveDescriptionInterface
             $query = "type='$type' AND ownerOrgRegNumber = null";
         }
         
-        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">fromDate", 0, 1);
+        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">toDate", 0, 1);
 
         if (empty($journals)) {
             return null;
