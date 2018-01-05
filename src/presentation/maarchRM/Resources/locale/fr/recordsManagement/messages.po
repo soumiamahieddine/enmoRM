@@ -955,3 +955,9 @@ msgstr "Demande de restitution"
 
 msgid "ArchiveDestructionRequest"
 msgstr "Demande d'élimination"
+
+msgid "Rule name"
+msgstr "Nom de la règle"
+
+msgid "DUA"
+msgstr "DUA"
