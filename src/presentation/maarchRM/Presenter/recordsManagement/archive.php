@@ -296,18 +296,20 @@ class archive
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
 
         if(\laabs::hasBundle('medona')) {
-            foreach ($archive->messages as $message) {
-                $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
+            if (isset($archive->messages)) {
+                foreach ($archive->messages as $message) {
+                    $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
 
-                $currentService = \laabs::getToken("ORGANIZATION");
+                    $currentService = \laabs::getToken("ORGANIZATION");
 
-                $message->isVisible = false;
-                if (!in_array('owner',$currentService->orgRoleCodes)) {
-                    if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
+                    $message->isVisible = false;
+                    if (!in_array('owner', $currentService->orgRoleCodes)) {
+                        if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
+                            $message->isVisible = true;
+                        }
+                    } else {
                         $message->isVisible = true;
                     }
-                } else {
-                    $message->isVisible = true;
                 }
             }
         }

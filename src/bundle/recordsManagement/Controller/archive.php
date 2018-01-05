@@ -701,7 +701,11 @@ class archive
             $queryString [] ="messageId='$unitIdentifier->messageId'";
         }
 
-        $messages = $this->sdoFactory->find('medona/message', \laabs\implode(" OR ", $queryString));
+        if (count($unitIdentifiers) != 0) {
+            $messages = $this->sdoFactory->find('medona/message', \laabs\implode(" OR ", $queryString));
+        } else {
+            $messages = null;
+        }
 
         return $messages;
     }
