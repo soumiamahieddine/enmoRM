@@ -78,7 +78,7 @@
             </div>
 
             <div id="monthSelector" class="form-group">
-                <label class="col-lg-3 control-label">Month</label>
+                <label class="col-lg-3 control-label">Month <span style="color:red">*</span></label>
                 <div class="col-lg-9">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-default btn-sm month" title="January" data-translate-context="january">
@@ -167,7 +167,7 @@
                         </tr>
                     </table>
                     <small id="lastDayInfo" class="hide text-muted">
-                        <i class="fa fa-info-circle"/> The task will be executed the last day of months with less than selected days.
+                        <i class="fa fa-info-circle"></i> The task will be executed the last day of months with less than selected days.
                     </small>
                 </div>
             </div>
@@ -372,7 +372,7 @@
                 break;
             default :
         }
-    })
+    });
 
     $('#taskId').on('change', function () {
         TaskSchedulingForm.checkServiceAccount();
@@ -381,7 +381,7 @@
     // Week day selection color
     $('#schedulingForm').on('click', '.weekDay', function(event) {
         $(this).toggleClass('btn-info btn-default');
-    })
+    });
 
     // Month day selection color
     $('#calendar').on('click', '.date', function(event) {
@@ -397,23 +397,23 @@
                 $('#lastDayInfo').addClass('hide');
             }            
         }
-    })
+    });
 
     // Month selection color
     $('#schedulingForm').on('click', '.month', function(event) {
         $(this).toggleClass('btn-info btn-default');
-    })
+    });
 
     // Repetition
     $('#repetitionOn').on('click', function() {
         $('#repetitionOn').addClass('btn-warning').removeClass('btn-default');
         $('#repetitionForm').removeClass('hide');
-    })
+    });
 
     $('#repetitionOff').on('click', function() {
         $('#repetitionOn').removeClass('btn-warning').addClass('btn-default');
         $('#repetitionForm').addClass('hide');
-    })
+    });
 
     // Repetition unit selection
     $('#schedulingForm').on('click', '.frequencyUnit', function() {
@@ -424,7 +424,7 @@
         } else {
             $('#frequencyUnit').text($('#hours_text').html()).data('value', value);
         }
-    })
+    });
 
     $("#addParameters").on("click", function() {
         TaskSchedulingForm.addParameters();
@@ -433,7 +433,7 @@
     // Save task
     $('#addTask, #modifyTask').on('click', function() {
         TaskSchedulingForm.saveTask($(this));
-    })
+    });
 
     //remove a user
     $("#schedulingForm").on('click', '.removeParameters', function() {
@@ -444,7 +444,7 @@
     $('#cancelSchedule').on('click', function(event) {
         event.preventDefault();
         TaskSchedulingForm.cancel();
-    })
+    });
 
     var TaskSchedulingForm = {
         form : $('#schedulingForm'),
@@ -481,16 +481,16 @@
 
             // Week days
             $.each(scheduling.weekDays, function(key, value) {
-                TaskSchedulingForm.form.find("[name='weekDays'][value='"+value+"']").click();
-            })
+                TaskSchedulingForm.form.find("[name='weekDays'][value='"+value+"']").parent().click();
+            });
             // Month
             $.each(scheduling.month, function(key, value) {
-                TaskSchedulingForm.form.find("[name='month'][value='"+value+"']").click();
-            })
+                TaskSchedulingForm.form.find("[name='month'][value='"+value+"']").parent().click();
+            });
             // Month days
             $.each(scheduling.monthDays, function(key, value) {
-                TaskSchedulingForm.form.find("#calendar [data-value='"+value+"']").click();
-            })
+                TaskSchedulingForm.form.find("#calendar [data-value='"+value+"']").parent().click();
+            });
 
             this.form.find('[name="startHours"]').val(scheduling.startHours);
             this.form.find('[name="startMinutes"]').val(scheduling.startMinutes);
@@ -507,7 +507,7 @@
                 }
             }
 
-            var liste = this.form.find(".parametersList");
+            let liste = this.form.find(".parametersList");
             liste.empty();
 
             if (!scheduling.parameters) {
@@ -515,23 +515,23 @@
             }
 
             $.each(scheduling.parameters, function(key,value){
-                var li = $('<li/>')
+                let li = $('<li/>')
                         .attr('parameters', value)
                         .addClass('list-group-item clearfix')
                         .appendTo(liste)
                         .text(value);
 
-                var span = $('<span/>')
+                let span = $('<span/>')
                     .addClass('pull-right')
                     .appendTo(li);
 
-                var a = $('<a/>')
+                let a = $('<a/>')
                     .addClass('text-danger removeParameters')
                     .attr('href', '#')
                     .css('padding-left', '16px')
                     .appendTo(span);
 
-                var i = $('<i/>')
+                let i = $('<i/>')
                     .addClass('fa fa-times fa-fw')
                     .html("&nbsp;")
                     .appendTo(a);
@@ -539,9 +539,9 @@
         },
 
         saveTask: function(button) {
-            var scheduling = this.serialize();
-            var type = 'POST';
-            var url = '/batchProcessing/scheduling';
+            let scheduling = this.serialize();
+            let type = 'POST';
+            let url = '/batchProcessing/scheduling';
             
             if( !this.checkSchedulingValues(scheduling)) {
                gritter.show($('#empty_text').html(),false);
@@ -579,7 +579,7 @@
         },
 
         checkSchedulingValues: function(scheduling) {
-            var valid = false;
+            let valid = false;
 
             if (scheduling.taskId && scheduling.name && scheduling.executedBy) {
                 switch (this.form.find('[name="frequencyType"]:checked').val()) {
@@ -603,10 +603,10 @@
         },
 
         checkServiceAccount: function() {
-            var route = $('#taskId').find('option:selected').data('route');
+            let route = $('#taskId').find('option:selected').data('route');
 
             $('#serviceAccountId option').each(function(key, value) {
-                var privileges = $(this).data('privilege');
+                let privileges = $(this).data('privilege');
 
                 if (!privileges || $.inArray(route, privileges) === -1) {
                     $(this).addClass('hide');
@@ -617,26 +617,26 @@
         },
 
         addParameters: function() {
-            var parameterInput = this.form.find('[name="parameters"]');
-            var parameters = parameterInput.val();
+            let parameterInput = this.form.find('[name="parameters"]');
+            let parameters = parameterInput.val();
             
             if( parameters == "") {
                 return;
             }
 
-            var liste = this.form.find(".parametersList");
+            let liste = this.form.find(".parametersList");
 
-            var li = $('<li/>')
+            let li = $('<li/>')
                 .attr('parameters', parameters)
                 .addClass('list-group-item clearfix')
                 .appendTo(liste)
                 .text(parameters);
 
-            var span = $('<span/>')
+            let span = $('<span/>')
                 .addClass('pull-right')
                 .appendTo(li);
 
-            var a = $('<a/>')
+            let a = $('<a/>')
                 .addClass('text-danger removeParameters')
                 .attr('href', '#')
                 .css('padding-left', '16px')
@@ -651,7 +651,7 @@
         },
 
         serialize: function() {
-            var scheduling = {};
+            let scheduling = {};
 
             scheduling.schedulingId = this.form.find('[name="schedulingId"]').val();
             scheduling.name = this.form.find('[name="name"]').val();
@@ -672,17 +672,17 @@
             scheduling.weekDays = [];
             this.form.find('.weekDay.active').find('input').each(function() {
                 scheduling.weekDays.push($(this).val());
-            })
+            });
 
             scheduling.month = [];
             this.form.find('.month.active').find('input').each(function() {
                 scheduling.month.push($(this).val());
-            })
+            });
 
             scheduling.monthDays = [];
             $('#calendar').find('.active').each(function() {
-                scheduling.monthDays.push($(this).html());
-            })
+                scheduling.monthDays.push($(this).text());
+            });
 
             // Repetition
             if (this.form.find('[name="repetition"]:checked').val() == "1") {
@@ -728,11 +728,19 @@
         },
 
         clearWeekDays: function() {
-            this.form.find('.weekDay.active').click();
+            this.form.find('.weekDay.active').each(function () {
+                $(this).removeClass("active");
+                $(this).removeClass("btn-info");
+                $(this).addClass("btn-default");
+            });
         },
 
         clearMonth: function() {
-            this.form.find('.month.active').click();
+            this.form.find('.month.active').each(function () {
+                $(this).removeClass("active");
+                $(this).removeClass("btn-info");
+                $(this).addClass("btn-default");
+            });
             $("#calendar").find('.active').click();
         },
 
