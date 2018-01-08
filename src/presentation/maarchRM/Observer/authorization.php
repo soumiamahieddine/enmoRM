@@ -37,7 +37,7 @@ class authorization
     public function __construct()
     {
         $this->userAccountController = \laabs::newController('auth/userAccount');
-        $this->blacklistUserStories = \laabs::configuration("blacklistUserStories");
+        $this->blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
     }
 
     /**

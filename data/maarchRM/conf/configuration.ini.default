@@ -1,12 +1,6 @@
 ; Declare variables for database connection
 @include confvars.ini
 
-; Blacklist of user stories
-;blacklistUserStories = "[
-;    'adminFunc/contact'
-;]"
-
-
 [presentation.maarchRM]
 @include menu.ini
 
@@ -131,6 +125,11 @@ securityPolicy = "{
 }"
 
 publicUserStory = "['app/*']"
+
+; Blacklist of user stories
+;blacklistUserStories = "[
+;    'adminFunc/contact'
+;]"
 
 [lifeCycle]
 
