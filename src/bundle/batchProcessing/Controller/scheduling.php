@@ -285,8 +285,6 @@ class scheduling
         $UTC_Offset = date('Z');
 
         $H_Offset = $UTC_Offset/3600;
-        $M_Offset = ($UTC_Offset - $H_Offset*3600)/60;
-
         /**
          * [0] start Minutes
          * [1] start Hours
@@ -301,14 +299,8 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
-        if(!empty($frequency[0])) {
-            $frequency[0] -= $M_Offset; 
-        }
         if(!empty($frequency[1])) {
             $frequency[1] -= $H_Offset; 
-        }
-        if(!empty($frequency[7])) {
-            $frequency[7] -= $M_Offset; 
         }
         if(!empty($frequency[8])) {
             $frequency[8] -= $H_Offset; 
