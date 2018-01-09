@@ -49,6 +49,7 @@
     SetEnv LAABS_DEFAULT_URI recordsManagement/welcome/welcomePage
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
+    SetEnv LAABS_CSRF_PROTECTION On
     SetEnv LAABS_CRYPT_KEY mySecretKey
     SetEnv LAABS_CRYPT_CIPHER MCRYPT_BLOWFISH
 </VirtualHost>
@@ -102,6 +103,7 @@
     SetEnv LAABS_DEFAULT_URI recordsManagement/welcome/welcomePage
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
+    SetEnv LAABS_CSRF_PROTECTION On
     SetEnv LAABS_CRYPT_KEY mySecretKey
     SetEnv LAABS_CRYPT_CIPHER MCRYPT_BLOWFISH
 </VirtualHost>
