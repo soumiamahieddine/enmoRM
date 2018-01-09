@@ -780,6 +780,15 @@ trait laabsAppTrait
     }
 
     /**
+     * Checks if the CSRF protection is enabled or not
+     * @return bool
+     */
+    public static function hasCSRFProtection()
+    {
+        return isset($_SERVER['LAABS_CSRF_PROTECTION']);
+    }
+
+    /**
      * Checks if a presentation layer is enabled or not
      *
      * @return bool
