@@ -63,6 +63,11 @@ abstract class AbstractKernel
         $class = get_called_class();
         self::$instance = new $class($requestMode, $requestType, $responseType, $responseLanguage);
 
+        if (\laabs::hasCSRFProtection()) {
+            require_once "../dependency/csrf/libs/csrf/csrfprotector.php";
+            \csrfProtector::init();
+        }
+
         self::$instance->initPackages();
 
         return self::$instance;
