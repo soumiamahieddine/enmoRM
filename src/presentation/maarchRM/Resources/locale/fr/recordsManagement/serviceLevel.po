@@ -14,8 +14,8 @@ msgstr "Ajouter un niveau de service"
 msgid "New service level"
 msgstr "Nouveau niveau de service"
 
-msgid "Sampling frequency (in days)"
-msgstr "Fréquence d'échantillonnage (en jours)"
+msgid "Control frequency (in days)"
+msgstr "Fréquence de Contrôle (en jours)"
 
 msgid "Sampling rate (in %)"
 msgstr "Taux d'échantillonnage (en %)"

@@ -33,8 +33,12 @@ trait archiveComplianceTrait
 
     /**
      * Check the integrity of archives by a process of sampling
+     * @param string $serviceLevelReference The service level reference
+     * @return boolean
+     *
+     * @throws \Exception
      */
-    public function sampling()
+    public function sampling($serviceLevelReference = null)
     {
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
@@ -42,7 +46,12 @@ trait archiveComplianceTrait
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
 
-        $serviceLevels = $this->serviceLevelController->index();
+        if (!empty($serviceLevelReference)) {
+            $serviceLevels = [];
+            $serviceLevels[] = $this->serviceLevelController->getByReference($serviceLevelReference);
+        } else {
+            $serviceLevels = $this->serviceLevelController->index();
+        }
 
         $queryPart = [];
         $queryPart["status"] = "status!='error' AND status!='disposed'";
