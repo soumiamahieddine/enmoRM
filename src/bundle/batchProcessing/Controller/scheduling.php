@@ -33,6 +33,8 @@ class scheduling
 
     public $sdoFactory;
 
+    public $logSchedulingController;
+
     /**
      * Constructor of access control class
      * @param \dependency\sdo\Factory $sdoFactory The factory
@@ -179,8 +181,9 @@ class scheduling
         $this->changeStatus($schedulingId, "running");
 
         try {
-            if ($scheduling->parameters) {
-                $info = \laabs::callServiceArgs($task->route, $scheduling->parameters);
+            if (!empty($scheduling->parameters)) {
+                $info = \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
+
             } else {
                 $info = \laabs::callService($task->route);
             }

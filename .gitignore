@@ -8,6 +8,7 @@ data/maarchRM/conf/vhost.conf
 web/tmp
 web/public/dependency/
 dependency/fileSystem/plugins/fid/cache/*
+dependency/csrf/log/*
 nbproject/
 src/ext/*
 data/maarchRM/conf/configuration.ini
