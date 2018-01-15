@@ -219,7 +219,7 @@ msgstr "Données descriptives"
 msgctxt "layout"
 
 msgid "Batch processing"
-msgstr "Gestion du planificateur"
+msgstr "Planificateur"
 msgctxt "layout"
 
 msgid "Scheduling"

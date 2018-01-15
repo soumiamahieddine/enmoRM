@@ -97,7 +97,7 @@ msgid "Batch scheduling"
 msgstr "Planificateur"
 
 msgid "Batch processing"
-msgstr "Gestion du planificateur"
+msgstr "Planificateur"
 
 msgid "New scheduling"
 msgstr "Nouvelle planification"
