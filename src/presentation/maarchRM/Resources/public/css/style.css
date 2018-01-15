@@ -9152,7 +9152,8 @@ fieldset[disabled] .datepicker td span.active.active {
   top: 20px;
   right: 20px;
   width: 301px;
-  z-index: 9999;
+  margin-top: 40px;
+  z-index: 990;
 }
 #gritter-notice-wrapper.top-left {
   left: 20px;
@@ -9199,8 +9200,8 @@ fieldset[disabled] .datepicker td span.active.active {
   background: #0d8eff;
   color: #eee;
   padding: 2px 11px 8px 11px;
-  font-size: 11px;
-  font-family: verdana;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .hover .gritter-item {
   background-position: right -40px;
@@ -9213,9 +9214,9 @@ fieldset[disabled] .datepicker td span.active.active {
 .gritter-close {
   display: none;
   position: absolute;
-  top: 5px;
-  left: 3px;
-  background: url('../../img/gritter_1.7.4/gritter.png') no-repeat left top;
+  top: -11px;
+  left: -14px;
+  background: url('/public/img/gritter_1.7.4/gritter.png') no-repeat left top;
   cursor: pointer;
   width: 30px;
   height: 30px;
@@ -9247,7 +9248,7 @@ fieldset[disabled] .datepicker td span.active.active {
 .gritter-light .gritter-bottom,
 .gritter-light .gritter-top,
 .gritter-light .gritter-close {
-  background-image: url('../../img/gritter_1.7.4/gritter-light.png');
+  background-image: url('/public/img/gritter_1.7.4/gritter-light.png');
   color: #222;
 }
 .gritter-light .gritter-title {
