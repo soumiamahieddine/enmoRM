@@ -85,7 +85,32 @@ class serviceAccount
     public function edit($serviceAccount)
     {
 
-        $organizations = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true");
+        $tabOrganizations = \laabs::callService('organization/organization/readIndex');
+        $ownerOrganizations = [];
+        $organizations = [];
+
+        foreach ($tabOrganizations as $org) {
+            if($org->isOrgUnit){
+                $organizations[] = $org;
+            } else {
+                $ownerOrganizations []= $org;
+            }
+        }
+
+        if($serviceAccount){
+            foreach ( $organizations as $org) {
+                if($org->orgId == $serviceAccount->orgId) {
+                    $serviceAccount->orgName = $org->displayName;
+                    $ownerOrgid = $org->ownerOrgId;
+                }
+            }
+            foreach ( $ownerOrganizations as $org) {
+                if($ownerOrgid == $org->orgId) {
+                    $serviceAccount->ownerOrgName = $org->displayName;
+
+                }
+            }
+        }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
         $this->view->setSource("organizations", $organizations);
