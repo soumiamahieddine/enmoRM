@@ -231,7 +231,7 @@ msgstr "Tâches"
 msgctxt "layout"
 
 msgid "Logs schedulings"
-msgstr "Evénement planificateur"
+msgstr "Événement planificateur"
 msgctxt "layout"
 
 msgid "Control authority management"

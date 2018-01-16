@@ -170,7 +170,7 @@ msgid "File extension"
 msgstr "Extension du fichier"
 
 msgid "Life cycle events"
-msgstr "Evénements du cycle de vie"
+msgstr "Événements du cycle de vie"
 
 msgid "Archive identifier"
 msgstr "Cote"
