@@ -252,8 +252,12 @@ class cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
     {
+        if (count($cluster->clusterRepository) < 2) {
+            throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
+        }
+
         foreach ($cluster->clusterRepository as $index => $clusterRepository) {
-            if ($clusterRepository->repository == null) {
+            if ($clusterRepository->repository == null || !is_readable($clusterRepository->repository->repositoryUri)) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
 
