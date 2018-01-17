@@ -221,7 +221,7 @@ class archive
     /**
      * The life cycle events
      *
-     * @var recordsManagement/lifeCycleEvent[]
+     * @var lifeCycle/event[]
      */
     public $lifeCycleEvent;
 
