@@ -21,7 +21,7 @@ msgid "The relation control authority and orignator already exists."
 msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
 
 msgid "None control authority parameters."
-msgstr "Aucune autorité de contrôle parametré."
+msgstr "Aucune autorité de contrôle paramétrée."
 
 msgid "String value does not match pattern"
 msgstr "La valeur ne respecte pas le format"
