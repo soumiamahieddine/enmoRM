@@ -10,6 +10,9 @@ msgid "adminStorage"
 msgstr "Gérer le stockage"
 msgctxt "userStory"
 
+msgid "Role"
+msgstr "Rôle"
+
 msgid "adminFormat"
 msgstr "Gérer le format des documents"
 msgctxt "userStory"
@@ -741,10 +744,8 @@ msgstr "Aucun utilisateur trouvé"
 msgid "User already exist"
 msgstr "L'utilisateur existe déja"
 
-
 msgid "No service chosen"
 msgstr "Aucun service choisi"
 
 msgid "Organization"
 msgstr "Organisation"
-

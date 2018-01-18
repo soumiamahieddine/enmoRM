@@ -28,8 +28,10 @@ namespace bundle\lifeCycle\Controller;
  */
 class journal
 {
+    protected $sdoFactory;
     protected $separateInstance;
     protected $interval;
+    protected $currentOffset;
 
     // Journal files reading
     protected $currentJournalFile;
@@ -43,18 +45,10 @@ class journal
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
-     * @param string                  $separateInstance Read only instance events
-     * @param string                  $interval         The time bewteen 2 journal changes
-     * @param string                  $mailHost         The mail host
-     * @param string                  $mailUsername     The mail user name
-     * @param string                  $mailPassword     The mail user password
-     * @param string                  $mailPort         The mail port
-     * @param string                  $mailSender       The mail sender
-     * @param string                  $mailReceiver     The mail receiver
-     * @param bool                    $mailSMTPAuth     The mail SMTP auth
-     * @param string                  $mailSMTPSecure   The mail SMTP secure
+     * @param boolean                 $separateInstance Read only instance events
+     * @param integer                 $interval         The time bewteen 2 journal changes
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400, $signatureScript = null)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $separateInstance = false, $interval = 86400)
     {
         $this->separateInstance = $separateInstance;
         $this->interval = $interval;
@@ -70,7 +64,6 @@ class journal
         }
 
         $this->journals = [];
-
     }
 
     /**
@@ -90,6 +83,8 @@ class journal
      * @param string $objectId        The aimed object id
      * @param mixed  $context         The description of the event
      * @param bool   $operationResult The operation result
+     *
+     * @throws \Exception
      *
      * @return lifeCycle/event The new event
      */
@@ -175,7 +170,7 @@ class journal
      * @param mixed  $date   The journal date
      * @param string $needle The string to search in the journal
      *
-     * @return lifeCycle/event[]
+     * @return array Array of life cycle event
      */
     public function matchEvent($date, $needle)
     {
@@ -190,7 +185,7 @@ class journal
 
         if (!isset($this->journals[(string) $journal->archiveId])) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
             $this->journals[(string) $journal->archiveId] = $journalResource->getContents();
         }
 
@@ -220,7 +215,9 @@ class journal
      * @param string $objectClass The class of the object
      * @param mixed  $eventType   An event type or an array of event types to retrieve
      *
-     * @return lifeCycle/event[]
+     * @throws \Exception
+     *
+     * @return array Array of life cycle event
      */
     public function getObjectEvents($objectId, $objectClass, $eventType = null)
     {
@@ -236,12 +233,18 @@ class journal
 
         $events = $this->sdoFactory->find('lifeCycle/event', $query, null, 'timestamp');
 
+        foreach ($events as $key => $event) {
+            $events[$key] = $this->decodeEventFormat($event);
+        }
+
         return $events;
     }
 
     /**
      * Get an events by id from journal file
      * @param mixed $eventId The event or the identifier of the event
+     *
+     * @throws \Exception
      *
      * @return string
      */
@@ -296,9 +299,11 @@ class journal
      * @param sring     $sortBy         The event sorting request
      * @param int       $numberOfResult The number of result
      *
+     * @throws \Exception
+     *
      * @return array The result of the request
      */
-    public function searchEvent($eventType = false, $objectClass = false, $objectId = false, $minDate = false, $maxDate = false, $sortBy = null, $numberOfResult = 300)
+    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = null, $numberOfResult = 300)
     {
         $query = array();
         $queryParams = array();
@@ -366,6 +371,8 @@ class journal
      * Load a journal
      * @param string $journalReference The id of the journal or the journal object
      *
+     * @throws \Exception
+     *
      * @return boolean The result of the operation
      */
     public function openJournal($journalReference)
@@ -399,8 +406,10 @@ class journal
 
     /**
      * Get the next event or get the next event which contain a given item
-     * @param string $eventType The event type
-     * @param bool   $chain     Chain to the next journal
+     * @param string  $eventType The event type
+     * @param boolean $chain     Chain to the next journal
+     *
+     * @throws \Exception
      *
      * @return string
      */
@@ -486,14 +495,13 @@ class journal
      * @param id   $archiveId          The archive identifier
      * @param date $searchingStartDate The searching start date
      *
-     * @return lifeCycle/event
+     * @throws \Exception
+     *
+     * @return array Array of live cycle event
      */
     public function getEvents($archiveId, $searchingStartDate = null)
     {
         // Open the journal to start with
-        $query = "type='lifeCycle'";
-        $events = [];
-
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
         if (!count($journal)) {
@@ -554,10 +562,12 @@ class journal
 
     /**
      * Get the previous event or get the previous event whitch contain a givven item
-     * @param string $eventItem The event item to search
-     * @param bool   $chain     Chain to the previous journal
+     * @param string  $eventItem The event item to search
+     * @param boolean $chain     Chain to the previous journal
      *
-     * @return string
+     * @throws \Exception
+     *
+     * @return mixed The event or null
      */
     public function getPreviousEvent($eventItem = null, $chain = true)
     {
@@ -630,7 +640,9 @@ class journal
     /**
      * Load the previous journal
      *
-     * @return string The opened journalId
+     * @throws \Exception
+     *
+     * @return string The opened journal identifier
      */
     public function openPreviousJournal()
     {
@@ -649,7 +661,7 @@ class journal
                     $hash = $journalArray[5];
                     $this->openJournal($journalId);
 
-                    $currentHash = hash($hashAlgorithm, $currentJournalFile);
+                    $currentHash = hash($hashAlgorithm, $this->currentJournalFile);
                     if ($currentHash != $hash) {
                         throw \laabs::newException("lifeCycle/journalException", "Journal hash is incorrect.");
                     }
@@ -664,7 +676,7 @@ class journal
                     $hash = $journalArray[10];
                     $this->openJournal($journalId);
 
-                    $currentHash = hash($hashAlgorithm, $currentJournalFile);
+                    $currentHash = hash($hashAlgorithm, $this->currentJournalFile);
                     if ($currentHash != $hash) {
                         throw \laabs::newException("lifeCycle/journalException", "Journal hash is incorrect.");
                     }
@@ -681,7 +693,9 @@ class journal
     /**
      * Load the next journal
      *
-     * @return string The opened jounalId
+     * @throws \Exception
+     *
+     * @return string The opened journal identifier
      */
     public function openNextJournal()
     {
@@ -689,11 +703,6 @@ class journal
 
         if ($this->currentJournalId) {
             $this->currentOffset = strpos($this->currentJournalFile, "\n");
-            // Last event
-            //$eventLine = substr($this->currentJournalFile, 0, -2);
-            $eventLines = \laabs\explode("\n", $this->currentJournalFile);
-            $journalArray = str_getcsv(end($eventLines));
-            $journalTimestamp = $journalArray[2];
 
             $logController = \laabs::newController('recordsManagement/log');
 
@@ -714,7 +723,9 @@ class journal
      * @param integer $offset    The reading offset
      * @param integer $limit     The maximum number of event to load
      *
-     * @return lifeCycle/event[]
+     * @throws \Exception
+     *
+     * @return array Array of life cycle event
      */
     public function readJournal($journalId, $offset = 0, $limit = 300)
     {
@@ -733,6 +744,8 @@ class journal
     /**
      * Check integrity
      * @param string $archiveId
+     *
+     * @throws \Exception
      *
      * @return bool
      */
@@ -909,7 +922,6 @@ class journal
         $format['journalChainingEvent'] = ['journalId', 'eventType', 'journalStartingTimestamp', 'journalClosureTimestamp', '', '', '', '', 'previousJournalId', 'hashAlgorithm', 'previousJournalHash'];
         $format['events'] = ['journalId', 'eventType', 'timestamp', 'orgRegNumber', 'orgUnitRegNumber', 'accountId', 'objectClass', 'objectId', 'operationResult', 'description', 'eventInfo'];
         $format['eventInfo'] = $this->eventFormats;
-        $format = json_encode($format);
 
         // First event : chain with previous journal
         $eventLine = array();
@@ -972,6 +984,10 @@ class journal
     /**
      * Decode events format object from an event
      * @param lifeCycle/event $event The event to decode
+     *
+     * @throws \Exception
+     *
+     * @return object The life cycle event object
      */
     protected function decodeEventFormat($event)
     {
@@ -1002,7 +1018,7 @@ class journal
      * Get an event from a csv line
      * @param string $eventLine The scv line from the journal
      *
-     * @return lifeCycle/event The event
+     * @return object The life cycle event object
      */
     private function getEventFromLine($eventLine)
     {

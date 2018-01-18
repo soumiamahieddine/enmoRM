@@ -405,7 +405,7 @@ msgid "No repository found with reference %s"
 msgstr "Aucune repertoire de stockage trouvé avec l'identifiant %s."
 
 msgid "Unknown event type: %s"
-msgstr "Evénement de type %s non trouvé"
+msgstr "Événement de type %s non trouvé"
 
 msgid "%s can''t be found."
 msgstr "%s n'a pas été trouvé."

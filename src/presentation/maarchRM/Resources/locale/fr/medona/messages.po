@@ -389,6 +389,9 @@ msgstr "Traiter"
 msgid "Acknowledge"
 msgstr "Acquitter"
 
+msgid "Retry"
+msgstr "Reprendre"
+
 msgid "Destroy"
 msgstr "Détruire"
 
@@ -424,6 +427,9 @@ msgstr "Traité"
 
 msgid "invalid"
 msgstr "Invalide"
+
+msgid "error"
+msgstr "Erreur"
 
 msgid "validated"
 msgstr "Validé"
@@ -469,6 +475,9 @@ msgstr "Message rejeté"
 
 msgid "Message validated"
 msgstr "Message validé"
+
+msgid "Message restarted"
+msgstr "Reprise du message"
 
 msgid "Authorization request send to originator agency"
 msgstr "Demande d'autorisation envoyée au service producteur"
@@ -596,9 +605,8 @@ msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimin
 msgid "destroy transfer warning"
 msgstr "Attention : vous êtes sur le point de finaliser ce transfert sortant; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
 
-
-msgid "Indexing / keyword"
-msgstr
+msgid "Retry the process"
+msgstr "Reprendre le traitement"
 
 msgid "processing"
 msgstr "En cours"

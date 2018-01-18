@@ -231,7 +231,7 @@ msgstr "Tâches"
 msgctxt "layout"
 
 msgid "Logs schedulings"
-msgstr "Evénement planificateur"
+msgstr "Événement planificateur"
 msgctxt "layout"
 
 msgid "Control authority management"
@@ -445,7 +445,7 @@ msgstr "trouvées"
 msgctxt "female"
 
 msgid "User role"
-msgstr "Rôles utilisateur"
+msgstr "Rôle utilisateur"
 
 msgid "Null value not allowed for property %1$s"
 msgstr "Valeur nulle non permis pour la propriété %1$s"

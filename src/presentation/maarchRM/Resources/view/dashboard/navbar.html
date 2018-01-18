@@ -90,7 +90,7 @@
                         <?merge .user.displayName.ifeq('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.userName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
                         <?merge .user.displayName.ifne('')?><div><i class="fa fa-user fa-fw">&nbsp;</i><?merge .user.displayName ?>&nbsp;&nbsp;<i class="fa fa-caret-down"></i></div>
                     </a>
-                    <ul class="dropdown-menu dropdown-user">
+                    <ul class="dropdown-menu dropdown-user" style="z-index: 999;">
                         <li>
                             <a data-currentuserid="[?merge .user.accountId?]" translate="yes">
                                 <i class="fa fa-user fa-fw"></i> Profile

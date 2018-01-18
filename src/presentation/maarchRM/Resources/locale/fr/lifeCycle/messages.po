@@ -11,7 +11,7 @@ msgstr "Consultation du journal de cycle de vie"
 msgctxt "interface"
 
 msgid "event"
-msgstr "Evénements du cycle de vie"
+msgstr "Événements du cycle de vie"
 msgctxt "model"
 
 msgid "journal"
@@ -97,7 +97,7 @@ msgid "Failure"
 msgstr "Echec"
 
 msgid "Event"
-msgstr "Evénement"
+msgstr "Événement"
 
 msgid "Certificate"
 msgstr "Attestation"
@@ -567,7 +567,7 @@ msgid "Show the event"
 msgstr "Visualiser l'évenement"
 
 msgid "To insert the value of a field in this format, use ' %{field position}${type} '"
-msgstr "Pour inserer la valeur d'un des champs présent dans le format, utiliser ' %{position du champs}${type} '"
+msgstr "Pour insérer la valeur d'un des champs présents dans le format, utiliser ' %{position du champs}${type} '"
 
 msgid "The type can be 's' for string, 'd' for number, 'f' for float"
 msgstr "Le type peut être 's' pour une chaîne de caractères, 'd' pour un nombre, 'f' pour un nombre à virgule"
@@ -594,7 +594,7 @@ msgid "7 - Result of operation"
 msgstr "7 - Résultat de l'opération"
 
 msgid "9 and more - Value of fields defined in format field"
-msgstr "9 et plus - Valeur des champs définis dans le champs format"
+msgstr "9 et plus - Valeur des champs définis dans le champ format"
 
 msgid "Ex : %6$s for use the unique object identifier impacted by the event"
 msgstr "Ex : %6$s pour utiliser l'identifiant unique de l'objet impacté"
