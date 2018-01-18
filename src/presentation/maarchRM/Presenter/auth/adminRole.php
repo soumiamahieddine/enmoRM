@@ -103,7 +103,12 @@ class adminRole
     public function edit($role = null, $publicUserStories = array())
     {
         $publicArchive = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-        $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
+
+        if(isset(\laabs::configuration('auth')['blacklistUserStories'])) {
+            $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
+        } else {
+            $blacklistUserStories = null;
+        }
 
         $this->view->addContentFile("auth/authorization/edit.html");
 
