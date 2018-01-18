@@ -22,13 +22,13 @@ namespace bundle\digitalResource\Message;
 /**
  * Class message that represents a stored digital resource
  *
- * @package Digitalresource
+ * @package DigitalResource
  * @author Alexis Ragot <alexis.ragot@maarch.org>
  */
 class digitalResource
 {
     /**
-     * The universal identifier
+     * The resource identifier
      *
      * @var id
      */
@@ -126,7 +126,7 @@ class digitalResource
     public $address;
 
     /**
-     * The handler to ressource
+     * The handler to resource
      *
      * @var resource
      */
