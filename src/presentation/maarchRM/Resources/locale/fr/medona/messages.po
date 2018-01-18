@@ -78,7 +78,7 @@ msgid "Outgoing Transfer process list"
 msgstr "Transferts à finaliser"
 
 msgid "Outgoing transfer history"
-msgstr "Historique de transferts"
+msgstr "Historique de transfert"
 
 msgid "Received notifications"
 msgstr "Notifications reçues"
