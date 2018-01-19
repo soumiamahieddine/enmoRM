@@ -845,7 +845,7 @@ class archive
     {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
-        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
+        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
@@ -856,11 +856,10 @@ class archive
      * Get the list of owner originators oranizations
      * @param object $currentService The user's current service
      *
-     * @return The list of owner originators orgs
+     * @return array The list of owner originators orgs
      */
     protected function getOwnerOriginatorsOrgs($currentService)
     {
-        //$originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
         $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
 
         $userPositionController = \laabs::newController('organization/userPosition');
