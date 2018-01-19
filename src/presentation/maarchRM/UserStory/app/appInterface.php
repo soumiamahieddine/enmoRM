@@ -1,5 +1,6 @@
 <?php
 namespace presentation\maarchRM\UserStory\app;
+use bundle\organization\Controller\organization;
 
 /**
  * Interface for user administration
@@ -109,6 +110,14 @@ interface appInterface
      * @uses organization/organization/readTodisplay
      */
     public function readOrganizationsTodisplay();
+
+    /**
+     * Get the organizations' list
+     *
+     * @return organization/orgTree/orgList
+     * @uses organization/organization/readTodisplayOrgUnit
+     */
+    public function readOrganizationsTodisplayorgunit();
 
     /**
      * Get the producer' list

@@ -90,6 +90,41 @@ class organization
         return $orgList;
     }
 
+
+    /**
+     * List of orgUnit
+     * @param string $query The query of the index
+     *
+     * @return array An array of orgUnit
+     */
+    public function todisplayOrgUnit($query = null)
+    {
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+        $owner = true;
+        $orgList = [];
+
+        if (isset($currentOrg)) {
+            $organizations = $this->getOwnerOriginatorsOrgs($currentOrg);
+        } else {
+            $owner = $this->getOrgsByRole('owner')[0];
+            $organizations = $this->getOwnerOriginatorsOrgs($owner);
+
+        }
+
+
+        foreach ($organizations as $org) {
+
+            foreach ($org->originators as $orgUnit) {
+                if($org->orgId == $orgUnit->ownerOrgId) {
+                    $orgUnit->ownerOrgName =  $org->displayName;
+                    $orgList[] = $orgUnit;
+                }
+            }
+        }
+
+        return $orgList;
+    }
+
     /**
      * Get organizations tree
      *
