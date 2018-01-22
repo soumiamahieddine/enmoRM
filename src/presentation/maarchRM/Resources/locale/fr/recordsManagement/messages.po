@@ -426,7 +426,7 @@ msgid "frozen"
 msgstr "Gelée"
 
 msgid "disposable"
-msgstr "Elimination demandée"
+msgstr "Élimination demandée"
 
 msgid "Select an archiver"
 msgstr "Sélectionnez un service d'Archives"
@@ -435,7 +435,7 @@ msgid "transferable"
 msgstr "Transfert en cours"
 
 msgid "transfered"
-msgstr "Transferée"
+msgstr "Transférée"
 
 msgid "disposed"
 msgstr "Détruite"
