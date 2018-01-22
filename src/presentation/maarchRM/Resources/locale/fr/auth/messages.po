@@ -721,7 +721,10 @@ msgid "The fields is empty."
 msgstr "Le champs est vide"
 
 msgid "Passwords are not the same"
-msgstr "Les mots de passe sont pas identiques"
+msgstr "Les mots de passe ne sont pas identiques"
+
+msgid "User password error."
+msgstr "L'ancien mot de passe est incorrect"
 
 msgid "Display only activated users"
 msgstr "Afficher uniquement les utilisateurs actifs"
