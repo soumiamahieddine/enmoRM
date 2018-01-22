@@ -538,13 +538,22 @@ class userAccount
      */
     public function hasPrivilege($userStory)
     {
+        if (!\laabs::presentation()->hasUserStory($userStory)) {
+            return false;
+        }
+
         $accountToken = $this->currentAccount;
 
         if (!$accountToken) {
-            return \laabs::configuration('auth')['publicUserStory'];
+            $userPrivileges = \laabs::configuration('auth')['publicUserStory'];
+        } else {
+            $userPrivileges = $this->getPrivilege($accountToken->accountId);
         }
 
-        $userPrivileges = $this->getPrivilege($accountToken->accountId);
+        if (empty($userPrivileges)) {
+            return false;
+        }
+
         foreach ($userPrivileges as $userPrivilege) {
             if (fnmatch($userPrivilege, $userStory)) {
                 return true;
