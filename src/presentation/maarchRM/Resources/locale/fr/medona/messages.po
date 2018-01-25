@@ -339,7 +339,7 @@ msgid "Request validation"
 msgstr "Demandes à valider"
 
 msgid "Restitution process"
-msgstr "Restitutions à acquitter"
+msgstr "Restitutions à finaliser"
 
 msgid "Authorization request"
 msgstr "Demandes d'autorisation"

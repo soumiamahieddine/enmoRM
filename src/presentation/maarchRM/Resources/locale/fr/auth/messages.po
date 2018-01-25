@@ -752,3 +752,6 @@ msgstr "Aucun service choisi"
 
 msgid "Organization"
 msgstr "Organisation"
+
+msgid "All privileges"
+msgstr "Tous les privilèges"
