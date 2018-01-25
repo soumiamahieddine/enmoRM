@@ -557,6 +557,14 @@ class organization
             throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
         }
 
+        if(\laabs::hasBundle('medona')) {
+            $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'");
+            if (count($controlAuthorities) > 0) {
+                throw new \core\Exception\ForbiddenException("The organization %s is used in control authority.", 403, null, [$organization->registrationNumber]);
+            }
+        }
+
+
         $children = $this->sdoFactory->readChildren("organization/organization", $organization);
         $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
         $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
@@ -565,8 +573,15 @@ class organization
         $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
 
         foreach ($children as $child) {
+            if(\laabs::hasBundle('medona')) {
+                $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
+                if (count($controlAuthorities) > 0) {
+                    throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
+                }
+            }
             $this->delete($child);
         }
+
         foreach ($users as $user) {
             $result = $this->sdoFactory->delete($user);
         }
