@@ -576,6 +576,9 @@ msgstr "Suppression automatique des bordereaux de demande de communication dans 
 msgid "medona/archiveDelivery/readIncominglist"
 msgstr "Liste des bordereaux de demande de communication reçus"
 
+msgid "medona/archiveDelivery/readSearch"
+msgstr "Recherche de bordereaux de communication"
+
 msgid "medona/archiveDestruction/readIncominglist"
 msgstr "Liste des bordereaux de demande de destruction reçus"
 
@@ -665,6 +668,9 @@ msgstr "Archivage des bordereaux de notification"
 
 msgid "medona/archiveNotification/update_messageId_Archive"
 msgstr "Archivage d'un bordereau de notification"
+
+msgid "medona/archiveNotification/readHistory"
+msgstr "Lecture de l'historique de notification"
 
 msgid "medona/archiveRestitution/readIncominglist"
 msgstr "Liste des bordereaux de demande de restitution reçus"
@@ -1392,8 +1398,8 @@ msgstr "Modification d'une archive publique"
 msgid "archivesPubliques/content/delete_contentId_"
 msgstr "Suppression d'une archive publique"
 
-msgid "archivesPubliques/thesaurus/read_query_"
-msgstr "Recherche thesaurus"
+msgid "archivesPubliques/thesaurus/read_name__query_"
+msgstr "Recherche thesaurus dans le registre"
 
 msgid "recordsManagement/descriptionField/create"
 msgstr "Création d'un champ de description"
@@ -1444,22 +1450,22 @@ msgid "seda2/ArchiveTransferComposition/create"
 msgstr "Création d'un bordereau de transfert"
 
 msgid "seda2/ArchiveTransferComposition/read_messageId_"
-msgstr "Lecture d'un brouillon de bordereau de transfert"
+msgstr "Lecture d'un brouillon de bordereau de transfert seda 2.0"
 
 msgid "seda2/ArchiveTransferComposition/update_messageId_"
 msgstr "Modification d'un brouillon de bordereau de transfert"
 
 msgid "seda2/ArchiveTransferComposition/delete_messageId_"
-msgstr "Suppression d'un brouillon de bordereau de tranfert"
+msgstr "Suppression d'un brouillon de bordereau de tranfert seda 2.0"
 
 msgid "seda2/ArchiveTransferComposition/readDraft"
-msgstr "Lecture de tous les brouillons de bordereau de transfert"
+msgstr "Lecture de tous les brouillons de bordereau de transfert seda 2.0"
 
 msgid "seda2/ArchiveTransferComposition/create_messageId_document"
 msgstr "Création d'un document sur un brouillon de bordereau de transfert"
 
 msgid "seda2/ArchiveTransferComposition/delete_messageId_document"
-msgstr "Suppression d'un document sur un brouillon de bordereau de transfert"
+msgstr "Suppression d'un document sur un brouillon de bordereau de transfert seda 2.0"
 
 msgid "seda2/ArchiveTransferComposition/updateSenddraft_messageId_"
 msgstr "Envoi du brouillon de bordereau de transfert"
@@ -1533,8 +1539,29 @@ msgstr "Lecture des privilèges d'un service"
 msgid "medona/archiveAuthorization/readReference"
 msgstr "Lecture d'un message d'autorisation d'une archive"
 
+msgid "medona/archiveAuthorization/read_messageId_Retry"
+msgstr "Reprise d'une message d'autorisation"
+
+msgid "medona/archiveDelivery/read_messageId_Retry"
+msgstr "Reprise d'une message de communication"
+
+msgid "medona/archiveDestruction/read_messageId_Retry"
+msgstr "Reprise d'une message de destruction"
+
+msgid "medona/archiveNotification/read_messageId_Retry"
+msgstr "Reprise d'une message de notification"
+
+msgid "medona/archiveRestitution/read_messageId_Retry"
+msgstr "Reprise d'une message de restitution"
+
+msgid "medona/archiveTransfer/read_messageId_Retry"
+msgstr "Reprise d'une message de transfert"
+
+msgid "medona/message/read_messageId_Retry"
+msgstr "Reprise d'une message"
+
 msgid "medona/archiveDelivery/readReference"
-msgstr "Lecture d'un message d'envoi d'une archive"
+msgstr "Lecture d'un message de communication d'une archive"
 
 msgid "medona/archiveDestruction/readReference"
 msgstr "Lecture d'un message de destruction d'une archive"
@@ -1547,3 +1574,55 @@ msgstr "Lecture d'un message de restitution d'une archive"
 
 msgid "medona/archiveTransfer/readReference"
 msgstr "Lecture d'un message de transfert d'une archive"
+
+msgid "medona/message/readReference"
+msgstr "Lecture d'un message d'une archive"
+
+msgid "seda/ArchiveTransferComposition/readLanguageCodes"
+msgstr "Lecture des codes langues pour la génération de bordereau"
+
+msgid "seda/ArchiveTransferComposition/read_messageId_"
+msgstr "Lecture d'un brouillon de bordereau de transfert seda 1.0"
+
+msgid "seda/ArchiveTransferComposition/delete_messageId_"
+msgstr "Suppression d'un brouillon de bordereau de tranfert seda 1.0"
+
+msgid "seda/ArchiveTransferComposition/readDraft"
+msgstr "Lecture de tous les brouillons de bordereau de transfert seda 1.0"
+
+msgid "seda/ArchiveTransferComposition/delete_messageId_document"
+msgstr "Suppression d'un document sur un brouillon de bordereau de transfert seda 1.0"
+
+msgid "seda/ArchiveTransferComposition/updateGeneratedraft_messageId_"
+msgstr "Validation d'un brouillon de bordereau de tranfert seda 1.0"
+
+msgid "medona/archiveTransfer/readOutgoingtransferHistory"
+msgstr "Lecture de l'historique de transfert sortant"
+
+msgid "medona/archiveTransfer/readOutgoingtransferProcessList"
+msgstr "Lecture des transferts sortants à finaliser"
+
+msgid "medona/archiveTransfer/readOutgoingtransferReception"
+msgstr "Lecture des transferts sortants à acquitter"
+
+msgid "medona/archiveTransfer/readOutgoingtransfer_messageId_exportArchive"
+msgstr "Export du transfert sortant"
+
+msgid "medona/archiveTransfer/updateOutgoingtransferSending"
+msgstr "Demande de transfert sortant"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_Process"
+msgstr "Traitement du transfert sortant"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_acknowledge"
+msgstr "Acquittement du transfert sortant"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_reject"
+msgstr "Rejet du transfert sortant"
+
+msgid "organization/orgContact/createOrgcontact"
+msgstr "Création d'un contact sur une organisation"
+
+msgid "organization/organization/readTodisplayorgunit"
+msgstr "Lecture de l'organisation de l'utilisateur"
+
