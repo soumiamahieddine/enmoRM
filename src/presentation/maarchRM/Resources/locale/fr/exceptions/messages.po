@@ -39,10 +39,10 @@ msgid "The organization %s is used in archives."
 msgstr "L'organisation %s est utilisée sur des archives."
 
 msgid "The organization %s is used in control authority."
-msgstr "L'organisation %s est utilisée sur des autorités de contrôle."
+msgstr "L'organiation %s est engagée dans une association d'autorité de contrôle"
 
 msgid "The child organization is used in control authority."
-msgstr "Une organisation enfant est utilisé sur des autorités de contrôle."
+msgstr "Une organisation enfant est engagée dans une association d'autorité de contrôle"
 
 msgid "Invalid contained archive profile %s"
 msgstr "Le profil d'archive contenu %s n'est pas autorisé."
