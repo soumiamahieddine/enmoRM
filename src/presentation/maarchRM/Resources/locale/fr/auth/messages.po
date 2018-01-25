@@ -255,7 +255,7 @@ msgstr "Traiter les versements"
 msgctxt "userStory"
 
 msgid "transferSend"
-msgstr "Mes bordereaux à traiter"
+msgstr "Transferts en attente de traitement"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
