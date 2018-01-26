@@ -37,13 +37,16 @@ class servicePosition extends abstractPosition
     protected function listPositions()
     {
         $accountToken = \laabs::getToken('AUTH');
-        $currentOrg = \laabs::getToken('ORGANIZATION');
 
-        if (!$accountToken) {
+        if (empty($accountToken)) {
             return array();
         }
 
-        return $this->sdoFactory->find('organization/servicePosition', "userAccountId = '".$accountToken->accountId."'");
+        $positions =  $this->sdoFactory->find('organization/servicePosition', "serviceAccountId = '".$accountToken->accountId."'");
+
+        \laabs::setToken("ORGANIZATION", $positions[0], 86400);
+
+        return $positions;
     }
 
     /**
@@ -71,5 +74,15 @@ class servicePosition extends abstractPosition
 
 
         return $servicePosition;
+    }
+
+    /**
+     * Get my all positions
+     *
+     * @return array The list of my position's
+     */
+    public function getMyPositions()
+    {
+        return $this->listPositions();
     }
 }
