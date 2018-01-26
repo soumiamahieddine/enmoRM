@@ -442,10 +442,11 @@ class archive
         }
 
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-        if (isset($archive->archiverOrgRegNumber)) {
+
+        if (!empty($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
         }
-        if (isset($archive->depositorOrgRegNumber)) {
+        if (!empty($archive->depositorOrgRegNumber)) {
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
 
@@ -609,7 +610,7 @@ class archive
             return false;
         }
 
-        if ($currentOrganization->orgRoleCodes && in_array("owner", $currentOrganization->orgRoleCodes)) {
+        if (is_array($currentOrganization->orgRoleCodes) && in_array("owner", $currentOrganization->orgRoleCodes)) {
             return true;
         }
 
