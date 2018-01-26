@@ -51,7 +51,7 @@ interface appInterface
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
      */
     public function readRecordsmanagement_archiveId_Digitalresource_resId_();
 
@@ -59,7 +59,7 @@ interface appInterface
      * Display a preview of the contents
      *
      * @return digitalResource/digitalResource/retrieve
-     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
      */
     public function read_archiveId_Digitalresource_resId_();
 

@@ -230,7 +230,7 @@ msgstr "Création par batch d'archive(s)"
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'un document"
 
-msgid "recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_"
+msgid "recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_"
 msgstr "Lecture d'une ressource"
 
 msgid "recordsManagement/archive/read_archiveId_"

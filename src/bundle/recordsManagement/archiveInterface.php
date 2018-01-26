@@ -65,7 +65,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/consultation
      */
-    public function readConsultation_archiveId_DigitalResource_resId_();
+    public function readConsultation_archiveId_Digitalresource_resId_();
 
     /**
      * Retrieve an archive by its id
