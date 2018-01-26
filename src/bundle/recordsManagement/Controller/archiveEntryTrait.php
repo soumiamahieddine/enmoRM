@@ -111,6 +111,8 @@ trait archiveEntryTrait
 
         // Send certificate
         $this->sendResponse($archive);
+
+        return $archive->archiveId;
     }
 
     /**
