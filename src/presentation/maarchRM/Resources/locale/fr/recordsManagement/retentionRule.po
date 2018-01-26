@@ -39,7 +39,7 @@ msgid "Final disposition"
 msgstr "Sort final"
 
 msgid "Label"
-msgstr "Titre"
+msgstr "Intitulé"
 
 msgid "Days"
 msgstr "Jours"
