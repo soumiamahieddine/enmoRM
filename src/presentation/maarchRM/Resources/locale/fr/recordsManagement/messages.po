@@ -961,3 +961,9 @@ msgstr "Nom de la règle"
 
 msgid "DUA Due date"
 msgstr "Date d'échéance de la DUA"
+
+msgid "No working organization"
+msgstr "Aucune organisation sélectionnée"
+
+msgid "You have to choose a working organization unit to proceed this action."
+msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
