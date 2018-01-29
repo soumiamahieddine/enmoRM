@@ -99,6 +99,13 @@
             var objectClass = $('#eventType option:selected').closest('optgroup').data('objecttype');
             $("#objectClass").val(objectClass);
         });
+
+        $("#objectClass").on('change', function(e) {
+            var objectClass = $('#eventType option:selected').closest('optgroup').data('objecttype');
+            if ($("#objectClass").val() != objectClass) {
+                $('#eventType').val('');
+            }
+        });
     });
 
     $('#app_maarchRM_main').keypress(function(e){
