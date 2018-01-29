@@ -93,19 +93,12 @@
 
     $('#app_maarchRM_main').ready(function() {
         var eventType = $('#eventType');
-        /*eventType.append($("#eventType option").remove().sort(function(a, b) {
-            var at = $(a).text(), bt = $(b).text();
-            return (at > bt)?1:((at < bt)?-1:0);
-        }));*/
-
         var option = $('<option/>').val('').text($('#eventType_text').html()).prependTo(eventType);
         eventType.val('');
-    });
-
-    $('#eventType').on('change', function(e) {
-        console.log($('#eventType option:selected').closest('optgroup').data('objecttype'));
-
-        $("#objectClass").val($('#eventType option:selected').closest('optgroup').data('objecttype'));
+        eventType.on('change', function(e) {
+            var objectClass = $('#eventType option:selected').closest('optgroup').data('objecttype');
+            $("#objectClass").val(objectClass);
+        });
     });
 
     $('#app_maarchRM_main').keypress(function(e){
