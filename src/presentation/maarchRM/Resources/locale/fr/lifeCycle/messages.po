@@ -622,3 +622,9 @@ msgstr "Annuler la demande de d'élimination de l'archive"
 
 msgid "Account name"
 msgstr "Nom du compte"
+
+msgid "medona"
+msgstr "Echanges de données d'Archive"
+
+msgid "recordsManagement"
+msgstr "Gestion de l'Archive"

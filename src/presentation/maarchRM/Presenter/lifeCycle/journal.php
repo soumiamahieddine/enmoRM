@@ -72,9 +72,37 @@ class journal
     {
         $this->view->addContentFile('lifeCycle/searchForm.html');
 
-        $eventType = \laabs::callService('lifeCycle/event/readEventtypelist');
+        $eventTypes = \laabs::callService('lifeCycle/event/readEventtypelist');
 
-        $this->view->setSource("eventType", $eventType);
+        $this->view->translator->setCatalog("lifeCycle/messages");
+        
+        $eventDomains = [];
+        foreach ($eventTypes as $eventType) {
+            $domain = strtok($eventType, '/');
+            $domain = $this->view->translator->getText($domain);
+            if (!isset($eventDomains[$domain])) {
+                $eventDomains[$domain] = [];
+            }
+            $eventType = $this->view->translator->getText($eventType);
+            $eventDomains[$domain][] = $eventType;
+        }
+
+        foreach ($eventDomains as $name => $eventTypes) {
+            // Sort by translated event type using locale and normalized string
+            usort($eventTypes, function ($a, $b) {
+                return strcoll(\laabs::normalize($a), \laabs::normalize($b));
+            });
+
+            $eventDomains[$name] = $eventTypes;
+        }
+
+        if (!\laabs::hasBundle('medona')) {
+            $messageObjectType = $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
+        }
+
+
+        $this->view->setSource("eventType", $eventDomains);
+
         $this->view->merge();
         $this->view->translate();
 
