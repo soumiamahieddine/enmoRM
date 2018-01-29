@@ -186,12 +186,12 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {url: '/user/todisplay', ttl: '0'},
-            limit: 100
+            limit: 500
         });
         users.initialize();
 
         var services = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('serviceName'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {url: '/service/todisplay', ttl: '0'},
             limit: 100
