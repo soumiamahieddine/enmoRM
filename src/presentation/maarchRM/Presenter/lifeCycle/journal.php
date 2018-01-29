@@ -78,28 +78,60 @@ class journal
         
         $eventDomains = [];
         foreach ($eventTypes as $eventType) {
-            $domain = strtok($eventType, '/');
-            $domain = $this->view->translator->getText($domain);
-            if (!isset($eventDomains[$domain])) {
-                $eventDomains[$domain] = [];
+            $bundle = strtok($eventType, '/');
+            $name = strtok('');
+
+            switch ($bundle) {
+                case 'recordsManagement' :
+                    $domainLabel = 'Archive';
+                    $objectType = 'recordsManagement/archive';
+                    switch ($name) {
+                        case 'profileCreation':
+                        case 'profileDestruction':
+                        case 'archivalProfileModification':
+                            $objectType = 'recordsManagement/archivalProfile';
+                            $domainLabel = 'Archival profile';
+                            break;
+                    }
+                    break;
+
+                case 'medona' : 
+                    $objectType = 'medona/message';
+                    $domainLabel = 'Message';
             }
-            $eventType = $this->view->translator->getText($eventType);
-            $eventDomains[$domain][] = $eventType;
+
+            $domainLabel = $this->view->translator->getText($domainLabel);
+            if (!isset($eventDomains[$objectType])) {
+                $eventDomain = new \StdClass();
+                $eventDomain->objectType = $objectType;
+                $eventDomain->label = $domainLabel;
+                $eventDomain->eventTypes = [];
+
+                $eventDomains[$objectType] = $eventDomain;
+            }
+
+            $eventTypeLabel = $this->view->translator->getText($eventType);
+            $eventOption = new \StdClass();
+            $eventOption->value = $eventType;
+            $eventOption->label = $eventTypeLabel;
+
+            $eventDomains[$objectType]->eventTypes[] = $eventOption;
         }
 
-        foreach ($eventDomains as $name => $eventTypes) {
+        foreach ($eventDomains as $domain => $eventDomain) {
             // Sort by translated event type using locale and normalized string
-            usort($eventTypes, function ($a, $b) {
-                return strcoll(\laabs::normalize($a), \laabs::normalize($b));
+            uasort($eventDomain->eventTypes, function ($eventType1, $eventType2) {
+                return strcoll(\laabs::normalize($eventType1->label), \laabs::normalize($eventType2->label));
             });
 
-            $eventDomains[$name] = $eventTypes;
+            //$eventDomains[$domain] = $eventTypes;
         }
+
+
 
         if (!\laabs::hasBundle('medona')) {
             $messageObjectType = $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
         }
-
 
         $this->view->setSource("eventType", $eventDomains);
 

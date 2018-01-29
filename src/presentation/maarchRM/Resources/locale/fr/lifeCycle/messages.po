@@ -627,4 +627,4 @@ msgid "medona"
 msgstr "Echanges de données d'Archive"
 
 msgid "recordsManagement"
-msgstr "Gestion de l'Archive"
+msgstr "Données d'Archive"
