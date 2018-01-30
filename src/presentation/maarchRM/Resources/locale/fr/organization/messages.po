@@ -205,19 +205,19 @@ msgid "Archival agency"
 msgstr "Service d'Archives"
 
 msgid "Archive control authority"
-msgstr "Service de contrôle"
+msgstr "Service de Contrôle"
 
 msgid "Archive originating agency"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 
 msgid "Archive depositor agency"
-msgstr "Service versant"
+msgstr "Service Versant"
 
 msgid "Archive requester"
 msgstr "Demandeur d'archive"
 
 msgid "The system owner"
-msgstr "Opérateur d'archivage"
+msgstr "Opérateur d'Archivage"
 
 msgid "Linked to organization"
 msgstr "Contact lié à l'organisation"

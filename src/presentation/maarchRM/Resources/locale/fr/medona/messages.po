@@ -168,7 +168,7 @@ msgid "Recipient"
 msgstr "Destinataire"
 
 msgid "Impacted archive"
-msgstr "Archive impacté"
+msgstr "Archive impactée"
 
 msgid "Size (bytes)"
 msgstr "Taille (octets)"
@@ -207,7 +207,7 @@ msgid "ArchiveDestructionRequestReply"
 msgstr "Réponse à la demande d'élimination d'archive"
 
 msgid "Send request"
-msgstr "Envoyer demande"
+msgstr "Envoyer une demande"
 
 msgid "Comment"
 msgstr "Commentaire"
@@ -234,22 +234,22 @@ msgid "Archival agency"
 msgstr "Service d'Archives"
 
 msgid "Transferring agency"
-msgstr "Service versant"
+msgstr "Service Versant"
 
 msgid "Originating agency"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 
 msgid "Requester"
 msgstr "Demandeur"
 
 msgid "Originator"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 
 msgid "Control authority"
-msgstr "Autorité de contrôle"
+msgstr "Autorité de Contrôle"
 
 msgid "AuthorizationOriginatingAgencyRequest"
-msgstr "Demande d'autorisation au service producteur"
+msgstr "Demande d'autorisation au Service Producteur"
 
 msgid "AuthorizationOriginatingAgencyRequestReply"
 msgstr "Réponse à la demande d'autorisation"
@@ -264,7 +264,7 @@ msgid "ArchivalProfileModificationNotification"
 msgstr "Notification de modification de profil"
 
 msgid "AuthorizationControlAuthorityRequest"
-msgstr "Demande d'autorisation au service de contrôle"
+msgstr "Demande d'autorisation au Service de Contrôle"
 
 msgid "AuthorizationControlAuthorityRequestReply"
 msgstr "Réponse à la demande d'autorisation"
@@ -303,7 +303,7 @@ msgid "The message has already been received ('%s' Ref. '%s' from '%s')"
 msgstr "Le message est déjà enregistré ('%s' Ref. '%s' par '%s')"
 
 msgid "The attachment of binary data object"
-msgstr "Les pièces joints n'ont pas été trouvées"
+msgstr "Les pièces jointes n'ont pas été trouvées"
 
 msgid "The reply message was not found."
 msgstr "Le message de réponse n'a pas été trouvé."
@@ -444,7 +444,7 @@ msgid "originator_authorization_wait"
 msgstr "En attente d'autorisation du producteur"
 
 msgid "control_authorization_wait"
-msgstr "En attente d'autorisation du service de contrôle"
+msgstr "En attente d'autorisation du Service de Contrôle"
 
 msgid "Appraisal rule"
 msgstr "Règle de conservation"
@@ -480,10 +480,10 @@ msgid "Message restarted"
 msgstr "Reprise du message"
 
 msgid "Authorization request send to originator agency"
-msgstr "Demande d'autorisation envoyée au service producteur"
+msgstr "Demande d'autorisation envoyée au Service Producteur"
 
 msgid "Authorization request send to control authority"
-msgstr "Demande d'autorisation envoyée à l'autorité de contrôle"
+msgstr "Demande d'autorisation envoyée à l'Autorité de Contrôle"
 
 msgid "Authorization accepted"
 msgstr "Autorisation acceptée"
@@ -510,7 +510,7 @@ msgid "conversion request(s)"
 msgstr "demande(s) de conversion"
 
 msgid "Select a type of message"
-msgstr "Sélectionnez un type de messageal"
+msgstr "Sélectionnez un type de message"
 
 msgid "Transfer"
 msgstr "Transfert"
@@ -552,19 +552,19 @@ msgid "To"
 msgstr "jusqu'au"
 
 msgid "Associate the control authority to originator"
-msgstr "Associer une autorité de contrôle à un producteur"
+msgstr "Associer une Autorité de Contrôle à un producteur"
 
 msgid "Control authority management"
-msgstr "Gestion des autorités de contrôle"
+msgstr "Gestion des Autorités de Contrôle"
 
 msgid "Control authority"
-msgstr "Autorité de contrôle"
+msgstr "Autorité de Contrôle"
 
 msgid "Select a control authority"
-msgstr "Selectionner une autorité de contrôle"
+msgstr "Sélectionner une Autorité de Contrôle"
 
 msgid "Select a originator"
-msgstr "Selectionner un producteur"
+msgstr "Sélectionner un producteur"
 
 msgid "Default"
 msgstr "Défaut"
@@ -579,7 +579,7 @@ msgid "Relation deleted"
 msgstr "Relation supprimée"
 
 msgid "The relation control authority and orignator already exists."
-msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà."
+msgstr "La relation entre l'Autorité de Contrôle et le producteur existe déjà."
 
 msgid "Relation not deleted."
 msgstr "Relation non-supprimée"
@@ -591,10 +591,10 @@ msgid "Type of message"
 msgstr "Type de message"
 
 msgid "validation warning"
-msgstr "Attention : vous êtes sur le point de finaliser votre demande de restitution d'archives ; votre accord entraînera la restitution immédiate au service producteur et les archives concernées seront dès lors détruites chez l’opérateur d’archivage, après acquittement par le service producteur de la bonne fin de la restitution. Ce processus de restitution est irréversible !"
+msgstr "Attention : vous êtes sur le point de finaliser votre demande de restitution d'archives ; votre accord entraînera la restitution immédiate au Service Producteur et les archives concernées seront dès lors détruites chez l’Opérateur d’Archivage, après acquittement par le Service Producteur de la bonne fin de la restitution. Ce processus de restitution est irréversible !"
 
 msgid "acknowledge warning"
-msgstr "Attention : votre accord implique que vous reconnaissiez avoir récupéré, vérifié et intégré l'ensemble des archives restituées sur votre système d'information, quel qu'il soit (PC, GED, tablettes...), et libère dès lors l’opérateur d’archivage de tout engagement sur ces archives sachant qu’il se doit de les détruire dès réception de votre accord."
+msgstr "Attention : votre accord implique que vous reconnaissiez avoir récupéré, vérifié et intégré l'ensemble des archives restituées sur votre système d'information, quel qu'il soit (PC, GED, tablettes...), et libère dès lors l’Opérateur d’Archivage de tout engagement sur ces archives, sachant qu’il se doit de les détruire dès réception de votre accord."
 
 msgid "Destroy an archive"
 msgstr "Destruction d'une archive"
@@ -603,7 +603,7 @@ msgid "destroy elimination warning"
 msgstr "Attention : vous êtes sur le point de finaliser cette demande d'élimination (ce processus de restitution) ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
 
 msgid "destroy transfer warning"
-msgstr "Attention : vous êtes sur le point de finaliser ce transfert sortant; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
+msgstr "Attention : vous êtes sur le point de finaliser ce transfert sortant ; votre accord entraînera la destruction immédiate des données concernées sur l'ensemble des volumes homologues de conservation sécurisée, ainsi que sur l'ensemble des volumes temporaires de communication, de restitution et/ou de transferts sortants."
 
 msgid "Retry the process"
 msgstr "Reprendre le traitement"

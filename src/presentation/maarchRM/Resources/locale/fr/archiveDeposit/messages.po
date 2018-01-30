@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "archiveDeposit"
-msgstr "Dépot d'archive"
+msgstr "Dépôt d'archive"
 msgctxt "bundle"
 
 msgid "archiveTransferSending"
@@ -19,6 +19,6 @@ msgstr "Message de transfert reçu"
 msgctxt "interface"
 
 msgid "deposit"
-msgstr "Faire un dépot"
+msgstr "Faire un dépôt"
 msgctxt "interface"
 

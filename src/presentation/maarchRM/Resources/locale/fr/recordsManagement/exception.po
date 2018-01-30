@@ -24,10 +24,10 @@ msgid "Archive relationship already exists"
 msgstr "La relation d'archive existe déjà"
 
 msgid "Permission denied: Your organization can't proceed to this action. She isn't an depositors organization."
-msgstr "Permission non accordée: Votre organisation ne peut pas effectuer cette action. Elle n'est pas une organisation déposante."
+msgstr "Permission non accordée : votre organisation ne peut pas effectuer cette action. Elle n'est pas une organisation déposante."
 
 msgid "Error with the Data system"
-msgstr "so the operation could not be completed. Erreur avec le système de donnée"
+msgstr "Erreur avec le système de données"
 
 msgid "You must chose an archive name"
 msgstr "Vous devez choisir un nom d'archive"
@@ -45,7 +45,7 @@ msgid "You must define all mandatory values of archive description"
 msgstr "Vous devez définir tous les champs obligatoires de la description d'archives"
 
 msgid "You must define top of mind"
-msgstr "Vous devez définir l'entête du message"
+msgstr "Vous devez définir l'en-tête du message"
 
 msgid "You must define a data object package"
 msgstr "Vous devez définir les données de gestion"
@@ -60,5 +60,5 @@ msgid "Document read error"
 msgstr "Erreur de lecture du document"
 
 msgid "An error occurend while attempting to read the document!"
-msgstr "Une erreur s'est produite à la lecture du document!"
+msgstr "Une erreur s'est produite à la lecture du document !"
 

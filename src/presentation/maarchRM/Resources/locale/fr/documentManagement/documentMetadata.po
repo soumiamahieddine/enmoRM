@@ -21,7 +21,7 @@ msgid "Description"
 msgstr "Description"
 
 msgid "Publisher"
-msgstr "Editeur"
+msgstr "Éditeur"
 
 msgid "Contributor"
 msgstr "Contributeur"
@@ -60,10 +60,10 @@ msgid "Temporal coverage"
 msgstr "Couverture temporelle"
 
 msgid "Custom text"
-msgstr "Text libre"
+msgstr "Texte libre"
 
 msgid "Custom keyword"
-msgstr "Mots clés libres"
+msgstr "Mots-clés libres"
 
 msgid "Custom date"
 msgstr "Date libre"

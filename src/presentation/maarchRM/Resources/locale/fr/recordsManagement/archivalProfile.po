@@ -240,7 +240,7 @@ msgid "Select a profile"
 msgstr "Choisir un profil"
 
 msgid "Do you want to save the changes before leaving this screen ?"
-msgstr "Voulez vous enregistrer les modifications avant de quitter cet écran ?"
+msgstr "Voulez-vous enregistrer les modifications avant de quitter cet écran ?"
 
 msgid "Go to"
 msgstr "Aller vers"

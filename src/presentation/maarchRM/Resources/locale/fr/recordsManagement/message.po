@@ -26,7 +26,7 @@ msgid "Archiver"
 msgstr "Service d'Archives"
 
 msgid "Control authority"
-msgstr "Autorité de contrôle"
+msgstr "Autorité de Contrôle"
 
 msgid "Derogation"
 msgstr "Dérogation"
@@ -77,13 +77,13 @@ msgid "Archive identifier"
 msgstr "Identifiant de l'archive"
 
 msgid "Orginiator archive identifier"
-msgstr "Identifiant du service producteur"
+msgstr "Identifiant du Service Producteur"
 
 msgid "Archiver archive identifier"
-msgstr "Identifiant du service d'Archives"
+msgstr "Identifiant du Service d'Archives"
 
 msgid "Depositor archive identifier"
-msgstr "Identifiant du service versant"
+msgstr "Identifiant du Service Versant"
 
 msgid "Approve"
 msgstr "Approuver"
@@ -128,10 +128,10 @@ msgid "Pending"
 msgstr "En attente"
 
 msgid "failed"
-msgstr "Echoué"
+msgstr "Échoué"
 
 msgid "Failed"
-msgstr "Echoué"
+msgstr "Échoué"
 
 msgid "Reject message"
 msgstr "Rejeter le message"
@@ -158,7 +158,7 @@ msgid "You must define or remove all custom blank fields."
 msgstr "Vous devez remplir ou supprimer les champs ajoutés."
 
 msgid "A keyword label is missing."
-msgstr "Le label mot clé est manquant."
+msgstr "Le label mot-clé est manquant."
 
 msgid "The retention rule is missing."
 msgstr "La règle de conservation est manquante."

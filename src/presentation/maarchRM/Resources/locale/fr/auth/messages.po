@@ -18,7 +18,7 @@ msgstr "Gérer le format des documents"
 msgctxt "userStory"
 
 msgid "adminEventFormat"
-msgstr "Gérer les formats d'évenement du cycle de vie"
+msgstr "Gérer les formats d'événement du cycle de vie"
 msgctxt "userStory"
 
 msgid "task"
@@ -26,7 +26,7 @@ msgstr "Gérer les tâches"
 msgctxt "userStory"
 
 msgid "destruction"
-msgstr "Eliminer des archives"
+msgstr "Éliminer des archives"
 msgctxt "userStory"
 
 msgid "adminFunc"
@@ -90,7 +90,7 @@ msgstr "Gérer les profils d'archive"
 msgctxt "userStory"
 
 msgid "controlAuthority"
-msgstr "Gérer les autorités de contrôle"
+msgstr "Gérer les Autorités de Contrôle"
 msgctxt "userStory"
 
 msgid "descriptionField"
@@ -122,7 +122,7 @@ msgstr "Consulter le journal de l'application"
 msgctxt "userStory"
 
 msgid "logBatchScheduling"
-msgstr "Historique de  plannification"
+msgstr "Historique de planification"
 msgctxt "userStory"
 
 msgid "searchLogArchive"
@@ -350,7 +350,7 @@ msgid "Administrator"
 msgstr "Administrateur"
 
 msgid "Select a role"
-msgstr "Selectionner un rôle"
+msgstr "Sélectionner un rôle"
 
 msgid "Add a role"
 msgstr "Ajouter un rôle"
@@ -389,7 +389,7 @@ msgid "Unlock"
 msgstr "Débloquer"
 
 msgid "New role created."
-msgstr "Nouveau rôle crée"
+msgstr "Nouveau rôle créé"
 
 msgid "Role deleted."
 msgstr "Rôle supprimé"
@@ -551,10 +551,10 @@ msgid "Delete a user"
 msgstr "Supprimer un utilisateur"
 
 msgid "Do you really want to delete this user ?"
-msgstr "Etes-vous sûr de vouloir supprimer cet utilisateur ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cet utilisateur ?"
 
 msgid "Are you sure to reactive this user ?"
-msgstr "Etes-vous sûr de vouloir réactiver cet utilisateur ?"
+msgstr "Êtes-vous sûr de vouloir réactiver cet utilisateur ?"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -654,7 +654,7 @@ msgstr "Authentification réussie"
 msgctxt "audit"
 
 msgid "authenticationFailure"
-msgstr "Authentification échouée"
+msgstr "Authentification a échoué"
 msgctxt "audit"
 
 msgid "userAdd"
@@ -715,10 +715,10 @@ msgid "Service account updated"
 msgstr "Compte de service modifié"
 
 msgid "The fields contain white spaces."
-msgstr "Le champs contient des espaces"
+msgstr "Le champ contient des espaces"
 
 msgid "The fields is empty."
-msgstr "Le champs est vide"
+msgstr "Le champ est vide"
 
 msgid "Passwords are not the same"
 msgstr "Les mots de passe ne sont pas identiques"
@@ -730,13 +730,13 @@ msgid "Display only activated users"
 msgstr "Afficher uniquement les utilisateurs actifs"
 
 msgid "delete role warning"
-msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
+msgstr "Attention : vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
 
 msgid "Delete the role"
 msgstr "Supprimer le rôle"
 
 msgid "No organization chosen"
-msgstr "Aucune organisation choisi"
+msgstr "Aucune organisation choisie"
 
 msgid "No service found"
 msgstr "Aucun service trouvé"

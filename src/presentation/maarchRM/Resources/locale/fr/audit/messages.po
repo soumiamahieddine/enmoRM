@@ -279,7 +279,7 @@ msgid "recordsManagement/archives/readRetentionrule"
 msgstr "Lecture de la règle de conservation d'une ou de plusieurs archives"
 
 msgid "recordsManagement/archives/updateRetentionrule"
-msgstr "Modification d'une règle de conservation d'une ou plusieurs archives"
+msgstr "Modification d'une règle de conservation d'une ou de plusieurs archives"
 
 msgid "recordsManagement/archives/readAccessrule"
 msgstr "Lecture de toutes les règles de communicabilité"
@@ -324,7 +324,7 @@ msgid "recordsManagement/archives/readIntegritycheck"
 msgstr "Vérification de l'intégrité des archives"
 
 msgid "recordsManagement/archives/readFolder"
-msgstr "Lecture des archives par sa position dans le plan de classement"
+msgstr "Lecture des archives par leur position dans le plan de classement"
 
 msgid "recordsManagement/archives/updateMetadata"
 msgstr "Modification des métadonnées d'archive"
@@ -409,7 +409,7 @@ msgid "recordsManagement/archivalProfile/readArchivalprofileExport_profileRefere
 msgstr "Export du profil"
 
 msgid "documentManagement/fulltext/read"
-msgstr "Lecture fulltext"
+msgstr "Lecture plein texte"
 
 msgid "lifeCycle/event/read_eventId_"
 msgstr "Lecture d'un événement du cycle de vie"
@@ -427,7 +427,7 @@ msgid "lifeCycle/journal/read_journalId_"
 msgstr "Lecture d'un journal du cycle de vie"
 
 msgid "lifeCycle/journal/createChainjournal"
-msgstr "Chainage des journaux du cycle de vie"
+msgstr "Chaînage des journaux du cycle de vie"
 
 msgid "lifeCycle/journal/checkIntegrity"
 msgstr "Vérification de l'intégrité des journaux du cycle de vie"
@@ -454,7 +454,7 @@ msgid "medona/archiveAuthorization/readIncominglist"
 msgstr "Liste des bordereaux d'autorisation envoyées"
 
 msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
-msgstr "Liste des bordereaux d'autorisation de communication envoyées"
+msgstr "Liste des bordereaux d'autorisation de communication envoyés"
 
 msgid "medona/archiveAuthorization/readCommunicationincominglist"
 msgstr "Liste des bordereaux d'autorisation de communication reçus"
@@ -463,7 +463,7 @@ msgid "medona/archiveAuthorization/readCommunicationcount"
 msgstr "Nombre de bordereaux d'autorisation de communication"
 
 msgid "medona/archiveAuthorization/readDestructionoutgoinglist"
-msgstr "Liste des bordereaux d'autorisation de destruction envoyées"
+msgstr "Liste des bordereaux d'autorisation de destruction envoyés"
 
 msgid "medona/archiveAuthorization/readDestructionincominglist"
 msgstr "Liste des bordereaux d'autorisation de destruction reçus"
@@ -478,10 +478,10 @@ msgid "medona/archiveAuthorization/updateOriginatingagencyrequestrejection"
 msgstr "Rejet d'une autorisation par le producteur"
 
 msgid "medona/archiveAuthorization/updateControlauthorityrequestacceptance_messageId_"
-msgstr "Validation d'une autorisation par l'autorité de contrôle"
+msgstr "Validation d'une autorisation par l'Autorité de Contrôle"
 
 msgid "medona/archiveAuthorization/updateControlauthorityrequestrejection"
-msgstr "Rejet d'une autorisation par l'autorité de contrôle"
+msgstr "Rejet d'une autorisation par l'Autorité de Contrôle"
 
 msgid "medona/archiveAuthorization/read_messageId_"
 msgstr "Lecture d'une demande d'autorisation"
@@ -568,7 +568,7 @@ msgid "medona/archiveDelivery/readReplies"
 msgstr "Lecture des réponses de demande de communication"
 
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
-msgstr "Export de l''archive demandée (communicationsupport de stockage"
+msgstr "Téléchargement de l'archive communiquée"
 
 msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
 msgstr "Suppression automatique des bordereaux de demande de communication dans le support de stockage temporaire"
@@ -583,7 +583,7 @@ msgid "medona/archiveDestruction/readIncominglist"
 msgstr "Liste des bordereaux de demande de destruction reçus"
 
 msgid "medona/archiveDestruction/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de destruction envoyées"
+msgstr "Liste des bordereaux de demande de destruction envoyés"
 
 msgid "medona/archiveDestruction/readCount"
 msgstr "Nombre de bordereaux de demande de destruction"
@@ -679,7 +679,7 @@ msgid "medona/archiveRestitution/readRestitutionlist"
 msgstr "Liste des bordereaux de demande de restitution"
 
 msgid "medona/archiveRestitution/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de restitution envoyées"
+msgstr "Liste des bordereaux de demande de restitution envoyés"
 
 msgid "medona/archiveRestitution/readCount"
 msgstr "Nombre de bordereaux de demande de restitution"
@@ -769,7 +769,7 @@ msgid "medona/archiveTransfer/readIncominglist"
 msgstr "Liste des bordereaux de demande de transfert reçus"
 
 msgid "medona/archiveTransfer/readOutgoinglist"
-msgstr "Liste des bordereaux de demande de transfert envoyées"
+msgstr "Liste des bordereaux de demande de transfert envoyés"
 
 msgid "medona/archiveTransfer/readCount"
 msgstr "Nombre de bordereaux de demande de transfert"
@@ -862,16 +862,16 @@ msgid "medona/message/deleteMessagedirectorypurge"
 msgstr "Suppression automatique des bordereaux dans le support de stockage temporaire"
 
 msgid "medona/controlAuthority/readList"
-msgstr "Lecture des autorités de contrôle"
+msgstr "Lecture des Autorités de Contrôle"
 
 msgid "medona/controlAuthority/create"
-msgstr "Création d'une autorité de contrôle"
+msgstr "Création d'une Autorité de Contrôle"
 
 msgid "medona/controlAuthority/update"
-msgstr "Modification d'une autorité de contrôle"
+msgstr "Modification d'une Autorité de Contrôle"
 
 msgid "medona/controlAuthority/delete"
-msgstr "Suppression d'une autorité de contrôle"
+msgstr "Suppression d'une Autorité de Contrôle"
 
 msgid "digitalResource/cluster/readList"
 msgstr "Lecture de toutes les grappes de stockage"
@@ -919,7 +919,7 @@ msgid "digitalResource/format/readFind_query_"
 msgstr "Recherche de formats"
 
 msgid "digitalResource/format/readGet"
-msgstr "Lecture d'un format en fonction du PUID"
+msgstr "Lecture d'un format en fonction du PuID"
 
 msgid "digitalResource/format/createFileformatinformation"
 msgstr "Informations sur le format d'un document"
@@ -1018,7 +1018,7 @@ msgid "organization/organization/createServiceposition_orgId__userAccountId_"
 msgstr "Création d'une position d'un utilisateur dans une organisation"
 
 msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"
-msgstr "Mettre par défaut d'une position d'un utilisateur"
+msgstr "Mettre par défaut une position d'un utilisateur"
 
 msgid "organization/organization/deleteUserposition_orgId__userAccountId_"
 msgstr "Suppression d'une position d'un utilisateur"
@@ -1474,25 +1474,25 @@ msgid "archivesCourrier/Content/readSearch"
 msgstr "Recherche courrier"
 
 msgid "medona/archiveTransfer/readReference_reference_"
-msgstr "Recherche un message de transfert par sa reference"
+msgstr "Recherche un message de transfert par sa référence"
 
 msgid "medona/archiveDelivery/readReference_reference_"
-msgstr "Recherche d'un message de communication par sa reference"
+msgstr "Recherche d'un message de communication par sa référence"
 
 msgid "medona/archiveRestitution/readReference_reference_"
-msgstr "Recherche d'un message de restitution par sa reference"
+msgstr "Recherche d'un message de restitution par sa référence"
 
 msgid "medona/archiveNotification/readReference_reference_"
-msgstr "Recherche d'un message de notification par sa reference"
+msgstr "Recherche d'un message de notification par sa référence"
 
 msgid "medona/archiveAuthorization/readReference_reference_"
-msgstr "Recherche d'un message d'autorisation par sa reference"
+msgstr "Recherche d'un message d'autorisation par sa référence"
 
 msgid "medona/archiveDestruction/readReference_reference_"
-msgstr "Recherche d'un message d'élimination par sa reference"
+msgstr "Recherche d'un message d'élimination par sa référence"
 
 msgid "medona/message/readReference_reference_"
-msgstr "Recherche un message par sa reference"
+msgstr "Recherche un message par sa référence"
 
 msgid "organization/organization/readUserpositions_accountId_"
 msgstr "Lister les services d'un utilisateur"
@@ -1558,7 +1558,7 @@ msgid "medona/archiveTransfer/read_messageId_Retry"
 msgstr "Reprise d'une message de transfert"
 
 msgid "medona/message/read_messageId_Retry"
-msgstr "Reprise d'une message"
+msgstr "Reprise d'un message"
 
 msgid "medona/archiveDelivery/readReference"
 msgstr "Lecture d'un message de communication d'une archive"

@@ -96,7 +96,7 @@ msgid "Cluster name is empty"
 msgstr "Le nom de la grappe stockage est vide"
 
 msgid "Cluster repository is empty"
-msgstr "Les sites de stockage sont vide"
+msgstr "Les sites de stockage sont vides"
 
 msgid "The name should not contain spaces"
 msgstr "Le nom ne doit pas contenir d'espace"

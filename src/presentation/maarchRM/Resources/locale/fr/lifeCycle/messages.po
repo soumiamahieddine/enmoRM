@@ -73,10 +73,10 @@ msgid "Archive identifier :"
 msgstr "Identifiant de l'archive :"
 
 msgid "Archiver name :"
-msgstr "Nom du service archiveur :"
+msgstr "Nom du Service d'Archives :"
 
 msgid "Originator name :"
-msgstr "Nom du service producteur :"
+msgstr "Nom du Service Producteur :"
 
 msgid "Hash :"
 msgstr "Empreinte numérique :"
@@ -94,7 +94,7 @@ msgid "Success"
 msgstr "Succès"
 
 msgid "Failure"
-msgstr "Echec"
+msgstr "Échec"
 
 msgid "Event"
 msgstr "Événement"
@@ -103,7 +103,7 @@ msgid "Certificate"
 msgstr "Attestation"
 
 msgid "Show the certificate"
-msgstr "Voir l'attestattion"
+msgstr "Voir l'attestation"
 
 msgid "Deposit"
 msgstr "Dépôt"
@@ -124,7 +124,7 @@ msgid "eventId"
 msgstr "identifiant d'évènement"
 
 msgid "eventType"
-msgstr "Type d'évènement"
+msgstr "Type d'événement"
 
 msgid "Type"
 msgstr "Type"
@@ -195,7 +195,7 @@ msgstr "Identifiant d'organisation"
 msgctxt "eventInfo"
 
 msgid "orgUnitRegNumber"
-msgstr "Identifiant du service demandeur"
+msgstr "Identifiant du Service demandeur"
 msgctxt "eventInfo"
 
 msgid "requesterOrgRegNumber"
@@ -207,23 +207,23 @@ msgctxt "eventInfo"
 # msgctxt "eventInfo"
 
 msgid "depositorOrgRegNumber"
-msgstr "Identifiant du service versant"
+msgstr "Identifiant du Service Versant"
 msgctxt "eventInfo"
 
 msgid "archiverOrgRegNumber"
-msgstr "Identifiant du service d'Archives"
+msgstr "Identifiant du Service d'Archives"
 msgctxt "eventInfo"
 
 msgid "originatorOrgRegNumber"
-msgstr "Identifiant du service producteur"
+msgstr "Identifiant du Service Producteur"
 msgctxt "eventInfo"
 
 msgid "senderOrgName"
-msgstr "Nom du service producteur"
+msgstr "Nom du Service Producteur"
 msgctxt "eventInfo"
 
 msgid "recipientOrgName"
-msgstr "Nom du service destinataire"
+msgstr "Nom du Service destinataire"
 msgctxt "eventInfo"
 
 msgid "accessRuleStartDate"
@@ -287,11 +287,11 @@ msgstr "Identifiant du dernier événement traité"
 msgctxt "eventInfo"
 
 msgid "senderOrgRegNumber"
-msgstr "Identifiant du service émetteur"
+msgstr "Identifiant du Service émetteur"
 msgctxt "eventInfo"
 
 msgid "recipientOrgRegNumber"
-msgstr "Identifiant du service destinataire"
+msgstr "Identifiant du Service destinataire"
 msgctxt "eventInfo"
 
 msgid "reference"
@@ -331,7 +331,7 @@ msgstr "Format cible"
 msgctxt "eventInfo"
 
 msgid "linkedResId"
-msgstr "Identifiant de la resource liée"
+msgstr "Identifiant de la ressource liée"
 msgctxt "eventInfo"
 
 msgid "relationshipType"
@@ -564,7 +564,7 @@ msgid "The type must be qualified by the bundle name and separated by '/'"
 msgstr "Le type doit être qualifié par le nom du bundle et séparé par '/'"
 
 msgid "Show the event"
-msgstr "Visualiser l'évenement"
+msgstr "Visualiser l'événement"
 
 msgid "To insert the value of a field in this format, use ' %{field position}${type} '"
 msgstr "Pour insérer la valeur d'un des champs présents dans le format, utiliser ' %{position du champs}${type} '"
@@ -615,7 +615,7 @@ msgid "Archival profile"
 msgstr "Profil d'archive"
 
 msgid "recordsManagement/depositOfLinkedResource"
-msgstr " Déposer une ressource liée"
+msgstr "Déposer une ressource liée"
 
 msgid "recordsManagement/destructionRequestCancel"
 msgstr "Annuler la demande de d'élimination de l'archive"
@@ -624,7 +624,7 @@ msgid "Account name"
 msgstr "Nom du compte"
 
 msgid "medona"
-msgstr "Echanges de données d'Archive"
+msgstr "Échanges de données d'Archive"
 
 msgid "recordsManagement"
 msgstr "Données d'Archive"

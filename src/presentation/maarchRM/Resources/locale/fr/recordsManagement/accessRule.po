@@ -21,7 +21,7 @@ msgid "New access code"
 msgstr "Nouveau code de communicabilité"
 
 msgid "Edit an access code"
-msgstr "Edition d'un code de communicabilité"
+msgstr "Édition d'un code de communicabilité"
 
 msgid "Access rules"
 msgstr "Règles de communicabilité"
@@ -36,7 +36,7 @@ msgid "Retrieve"
 msgstr "Consulter"
 
 msgid "Destroy"
-msgstr "Eliminer"
+msgstr "Éliminer"
 
 msgid "Destrution"
 msgstr "Destruction"

@@ -24,7 +24,7 @@ msgid "Edit a new conversion rule"
 msgstr "Éditer une nouvelle règle de conversion"
 
 msgid "Puid is empty"
-msgstr "Le Puid est vide"
+msgstr "Le PuID est vide"
 
 msgid "Conversion service is emty"
 msgstr "Le service de conversion est vide"

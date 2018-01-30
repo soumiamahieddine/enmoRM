@@ -21,10 +21,10 @@ msgid "Archive identifier"
 msgstr "Identifiant de l'archive"
 
 msgid "Depositor document identifier"
-msgstr "Identifiant du document du service versant"
+msgstr "Identifiant du document du Service Versant"
 
 msgid "Originator document identifier"
-msgstr "Identifiant du document du service producteur"
+msgstr "Identifiant du document du Service Producteur"
 
 msgid "Search"
 msgstr "Rechercher"
@@ -36,7 +36,7 @@ msgid "Archive name"
 msgstr "Nom de l'archive"
 
 msgid "Archive status"
-msgstr "Status de l'archive"
+msgstr "Statut de l'archive"
 
 msgid "Last copy"
 msgstr "Dernière copie"

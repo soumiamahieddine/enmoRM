@@ -6,7 +6,7 @@ msgid "Add a new contact"
 msgstr "Ajouter un contact"
 
 msgid "Edit contact"
-msgstr "Editer un contact"
+msgstr "Éditer un contact"
 
 msgid "Add a contact"
 msgstr "Ajouter un contact"
@@ -75,7 +75,7 @@ msgid "Room"
 msgstr "Porte"
 
 msgid "Floor"
-msgstr "Etage"
+msgstr "Étage"
 
 msgid "Building"
 msgstr "Bâtiment"

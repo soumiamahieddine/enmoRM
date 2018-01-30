@@ -263,7 +263,7 @@ msgid "Suppress"
 msgstr "Supprimer"
 
 msgid "Edit"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Update"
 msgstr "Modifier"
@@ -375,7 +375,7 @@ msgid "Processing..."
 msgstr "Traitement..."
 
 msgid "Search:"
-msgstr "Filtre:"
+msgstr "Filtre :"
 
 msgid "Filters"
 msgstr "Filtres"
@@ -399,7 +399,7 @@ msgid "Loading..."
 msgstr "Chargement..."
 
 msgid "No matching records found"
-msgstr "Aucun enregistrements correspondants trouvés"
+msgstr "Aucun enregistrement correspondant trouvé"
 
 msgid "No data available in table"
 msgstr "Pas de données disponibles dans le tableau"
@@ -417,7 +417,7 @@ msgid "Last"
 msgstr "Dernier"
 
 msgid ": activate to sort column ascending"
-msgstr ": activer pour trier la colonne en ascendante"
+msgstr ": activer pour trier la colonne en ascendant"
 
 msgid ": activate to sort column descending"
 msgstr ": activer pour trier la colonne en descendant"
@@ -448,10 +448,10 @@ msgid "User role"
 msgstr "Rôle utilisateur"
 
 msgid "Null value not allowed for property %1$s"
-msgstr "Valeur nulle non permis pour la propriété %1$s"
+msgstr "Valeur nulle non permise pour la propriété %1$s"
 
 msgid "Empty value not allowed for property %1$s"
-msgstr "Valeur vide non permis pour la propriété %1$s"
+msgstr "Valeur vide non permise pour la propriété %1$s"
 
 msgid "Value for property %1$s is not a valid %2$s"
 msgstr "Valeur pour la propriété %1$s n'est pas un %2$s valide"
@@ -475,13 +475,13 @@ msgid "String value exceeds maximum length of %2$d for property %1$s"
 msgstr "La valeur de la chaîne dépasse la taille maximum de %2$d pour la propriété %1$s"
 
 msgid "Minimum string length of %2$d required for property %1$s"
-msgstr "La taille minimum requis de la chaîne est %2$d pour la propriété %1$s"
+msgstr "La taille minimum requise de la chaîne est %2$d pour la propriété %1$s"
 
 msgid "String value does not match required length of %2$d for property %1$s"
 msgstr "La valeur de la chaîne n'a pas la taille requise de %2$d pour la propriété %1$s"
 
 msgid "String value does not match pattern %2$d for property %1$s"
-msgstr "La valeur de la chaîne ne respecte pas le pattern %2$d pour la propriété %1$s"
+msgstr "La valeur de la chaîne ne respecte pas le format %2$d pour la propriété %1$s"
 
 msgid "Numeric value exceeds precision of %2$s.%3$s for property %1$s"
 msgstr "La valeur numérique dépasse la précision de %2$s.%3$s pour la propriété %1$s"
@@ -521,16 +521,16 @@ msgid "The value of '%1$s' not respect the type '%2$s'"
 msgstr "La valeur de '%1$s' ne respecte pas le type '%2$s'"
 
 msgid "The field '%1$s' is required"
-msgstr "Le champs '%1$s' est requis"
+msgstr "Le champ '%1$s' est requis"
 
 msgid "Conversion rule '%1$s' exist."
-msgstr "Le règle de conversation '%1$s' existe déjà"
+msgstr "Le règle de conversion '%1$s' existe déjà"
 
 msgid "The relation control authority and orignator already exists."
-msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
+msgstr "La relation entre l'Autorité de Contrôle et le producteur existe déjà"
 
 msgid "None control authority parameters."
-msgstr "Aucune autorité de contrôle paramétrée."
+msgstr "Aucune Autorité de Contrôle paramétrée."
 
 msgid "String value does not match pattern"
 msgstr "La valeur ne respecte pas le format"
@@ -539,7 +539,7 @@ msgid "An error occured during the process of your request. Please contact the a
 msgstr "Une erreur est survenue durant le traitement de votre requête. Veuillez contacter l'administrateur de l'application."
 
 msgid "Invalid id '%1$s': Ids must contain only alphanumeric, underscores and dashes"
-msgstr "Identifiant invalide '%1$s': Les identifiants doivent doivent contenir uniquement des lettres, chiffres, tirets bas et hauts."
+msgstr "Identifiant invalide '%1$s': les identifiants doivent doivent contenir uniquement des lettres, chiffres, tirets bas et hauts."
 
 msgid "Enabled"
 msgstr "Activé"
@@ -563,7 +563,7 @@ msgid "accountName"
 msgstr "Identifiant"
 
 msgid "displayName"
-msgstr "Nom Affiché"
+msgstr "Nom affiché"
 
 msgid "emailAddress"
 msgstr "Courriel"

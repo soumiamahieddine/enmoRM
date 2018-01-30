@@ -15,7 +15,7 @@ msgid "New service level"
 msgstr "Nouveau niveau de service"
 
 msgid "Control frequency (in days)"
-msgstr "Fréquence de Contrôle (en jours)"
+msgstr "Fréquence de contrôle (en jours)"
 
 msgid "Sampling rate (in %)"
 msgstr "Taux d'échantillonnage (en %)"
@@ -57,7 +57,7 @@ msgid "Redundancy"
 msgstr "Redondance"
 
 msgid "Edit a service level"
-msgstr "Editer un niveau de service"
+msgstr "Éditer un niveau de service"
 
 msgid "Service level created."
 msgstr "Niveau de service créé."

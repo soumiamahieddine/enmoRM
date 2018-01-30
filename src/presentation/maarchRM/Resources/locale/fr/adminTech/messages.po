@@ -7,7 +7,7 @@ msgstr "Administration technique"
 msgctxt "bundle"
 
 msgid "cluster"
-msgstr "Grappes de dépot"
+msgstr "Grappes de dépôt"
 msgctxt "interface"
 
 msgid "repository"

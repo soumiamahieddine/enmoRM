@@ -39,7 +39,7 @@ msgid "The organization %s is used in archives."
 msgstr "L'organisation %s est utilisée sur des archives."
 
 msgid "The organization %s is used in control authority."
-msgstr "L'organiation %s est engagée dans une association d'autorité de contrôle"
+msgstr "L'organisation %s est engagée dans une association d'autorité de contrôle"
 
 msgid "The child organization is used in control authority."
 msgstr "Une organisation enfant est engagée dans une association d'autorité de contrôle"
@@ -48,7 +48,7 @@ msgid "Invalid contained archive profile %s"
 msgstr "Le profil d'archive contenu %s n'est pas autorisé."
 
 msgid "The description field already exists."
-msgstr "Le champs de description existe déjà."
+msgstr "Le champ de description existe déjà."
 
 msgid "All repositories must be accessible"
 msgstr "Tous les supports de stockage doivent être accessibles"
@@ -57,7 +57,7 @@ msgid "The end date is lower than the begin date."
 msgstr "La date de fin est plus petite que la date de début."
 
 msgid "An owner is already defined."
-msgstr "Un opérateur d'archive est déjà défini."
+msgstr "Un Opérateur d'Archive est déjà défini."
 
 msgid "Role not created"
 msgstr "Rôle non créé"
@@ -75,7 +75,7 @@ msgid "The fields contain white spaces."
 msgstr "Les champs comportent des espaces vides"
 
 msgid "Invalid username or email."
-msgstr "Nome d'utilisateur ou courriel invalide"
+msgstr "Nom d'utilisateur ou courriel invalide"
 
 msgid "User %1$s is locked"
 msgstr "L'utilisateur %1$s est bloqué"
@@ -84,7 +84,7 @@ msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
 
 msgid "Username not registered or wrong password."
-msgstr "Utilisateur non enregistrer ou mot de passe invalide"
+msgstr "Utilisateur non enregistré ou mot de passe invalide"
 
 msgid "The password is too short."
 msgstr "Le mot de passe est trop court"
@@ -102,16 +102,16 @@ msgid "The password is the same as the precedent."
 msgstr "Le mot de passe est le même que le précédent"
 
 msgid "Scheduling not updated."
-msgstr "Plannification non mise à jour"
+msgstr "Planification non mise à jour"
 
 msgid "Scheduling not deleted."
-msgstr "Plannification non détruite"
+msgstr "Planification non détruite"
 
 msgid "Invalid identifiant."
 msgstr "Identifiant invalide"
 
 msgid "Execution error."
-msgstr "Erreur d'execution"
+msgstr "Erreur d'exécution"
 
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
@@ -120,10 +120,10 @@ msgid "Task already exists."
 msgstr "Une tâche avec la même route existe déjà."
 
 msgid "Task not created."
-msgstr "Tâche non créé"
+msgstr "Tâche non créée"
 
 msgid "Task not updated."
-msgstr "Tâche non mis à jour"
+msgstr "Tâche non mise à jour"
 
 msgid "Task not deleted."
 msgstr "Tâche non détruite"
@@ -147,7 +147,7 @@ msgid "Conversion service is empty"
 msgstr "Le service de conversion est vide."
 
 msgid "Target Puid is empty"
-msgstr "Le Puid cible est vide."
+msgstr "Le PuID cible est vide."
 
 msgid "Invalid hash."
 msgstr "Empreinte numérique invalide"
@@ -156,7 +156,7 @@ msgid "Resource unavailable"
 msgstr "Ressource indisponible"
 
 msgid "Resource not found"
-msgstr "Ressource non trouvé"
+msgstr "Ressource non trouvée"
 
 msgid "Repository URI already exist."
 msgstr "L'adresse du support de stockage existe déjà."
@@ -174,7 +174,7 @@ msgid "The folder can''t be found."
 msgstr "Le dossier n'existe pas"
 
 msgid "Can''t move to another service !"
-msgstr "Impossible de déplaccer dans un autre service !"
+msgstr "Impossible de déplacer dans un autre service !"
 
 msgid "The folder is closed."
 msgstr "Le dossier est fermé."
@@ -186,19 +186,19 @@ msgid "Journal hash is incorrect."
 msgstr "L'empreinte numérique du journal est incorrecte."
 
 msgid "Invalid journal: invalid hash integrity."
-msgstr "Journal invalide: empreinte numérique non valide."
+msgstr "Journal invalide : empreinte numérique non valide."
 
 msgid "Invalid journal date: latest date is in the future."
-msgstr "Journal invalide: La dernière date est dans le futur."
+msgstr "Journal invalide : la dernière date est dans le futur."
 
 msgid "Invalid journal: Next journal chaining event is incomplete."
-msgstr "Journal invalide: L'événement de chainage du journal suivant est incomplète."
+msgstr "Journal invalide: l'événement de chaînage du journal suivant est incomplet."
 
 msgid "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
-msgstr "Journal invalide: Le journal suivant est manquant ou l'événement de chainage a un identifiant de journal invalide"
+msgstr "Journal invalide : Le journal suivant est manquant ou l'événement de chaînage a un identifiant de journal invalide"
 
 msgid "Invalid journal: Chaining event has a different hash."
-msgstr "Journal invalid: L'événement de chainage a une empreinte différente."
+msgstr "Journal invalide : L'événement de chaînage a une empreinte différente."
 
 msgid "Unknown event type."
 msgstr "Type d'événement inconnu"

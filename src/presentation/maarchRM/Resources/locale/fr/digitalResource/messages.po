@@ -51,7 +51,7 @@ msgstr "Support de stockage"
 msgctxt "model"
 
 msgid "repositoryParam"
-msgstr "Paramètres des suport de stockage"
+msgstr "Paramètres des supports de stockage"
 msgctxt "model"
 
 msgid "digitalResourceRelationship"
