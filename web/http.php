@@ -23,15 +23,6 @@ require_once('../core/laabs.php');
 
 laabs::init();
 switch (true) {
-    case ($_SERVER['SCRIPT_NAME'] == "/RegenerateCss"):
-        include("../web/RegenerateCss.php");
-        break;
-
-    case (strtolower(strtok($_SERVER['SCRIPT_NAME'], '/')) == "api") :
-        \core\Kernel\ApiDocKernel::start();
-        \core\Kernel\ApiDocKernel::run();
-        break;
-
     // Uri is a static resource
     case (strrpos($_SERVER['SCRIPT_NAME'], ".")):
         \core\Kernel\StaticKernel::start();
@@ -47,7 +38,13 @@ switch (true) {
         break;
 
     // Instance is a service provider
-    case \laabs::isServiceClient(): 
+    case \laabs::isServiceClient() 
+        && (strtok($_SERVER['SCRIPT_NAME'], '/') == 'api' 
+        || $_SERVER['SCRIPT_NAME'] == '/') :
+        \core\Kernel\ApiDocKernel::start();
+        \core\Kernel\ApiDocKernel::run();
+        \core\Kernel\ApiDocKernel::end();
+        break;
     default:
         \core\Kernel\ServiceKernel::start();
         \core\Kernel\ServiceKernel::run();
