@@ -29,7 +29,15 @@
                         </select><br>
                         <dl class="dl dl-horizontal" id="retentionRule">
                         <dt><span>Duration</span> : </dt><dd id="retentionRuleDuration"></dd>
-                        <dt><span>Final disposition</span> : </dt><dd id="retentionRuleFinalDisposition"></dd>
+                        <div class="pull-left">
+                            <dt><span>Final disposition</span> : </dt>
+                            <div class="col-md-6">
+                                <select id="finalDisposition" name="finalDisposition" class="form-control">
+                                    <option value=''> To be defined later </option>
+                                    <option value='destruction'>Destruction</option>
+                                    <option value='preservation'>Preservation</option>
+                                </select>
+                            </div><br/>&nbsp;
                         <dt><span>Description</span> : </dt><dd id="retentionRuleDescription"></dd>
                     </dl>
 
@@ -46,7 +54,9 @@
         modal: $('#modificationModal'),
         serialize: function(type) {
             var parameter = {}
+
             if(type === "accessRule") {
+
                 var code = this.modal.find('[name="accessRuleCode"]').find('option:selected').data('json');
                 parameter.accessRule = {
                     accessRuleCode      : this.modal.find('[name="accessRuleCode"]').val(),
@@ -54,12 +64,14 @@
                     accessRuleDuration  : code.duration
                 }
             } else if (type === "retentionRule") {
+
                 var code = this.modal.find('[name="retentionRuleCode"]').find('option:selected').data('json');
+
                 parameter.retentionRule = {
                     retentionStartDate    : this.modal.find('[name="startDate"]').val(),
                     retentionRuleCode     : this.modal.find('[name="retentionRuleCode"]').val(),
                     retentionDuration : code.duration,
-                    finalDisposition      : code.finalDisposition
+                    finalDisposition      : $('#finalDisposition').val()
                 }
             }
 

@@ -104,18 +104,30 @@ trait archiveModificationTrait
                 } else {
                     $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
                 }
-                
+
+
+                // Update current object for caller
+                if (!$retentionRule->retentionStartDate) {
+                    $retentionRule->retentionStartDate = null;
+                }
+
+                if ($retentionRule->retentionDuration) {
+                    $retentionRule->retentionDuration = null;
+                }
+
+                if ($retentionRule->disposalDate) {
+                    $retentionRule->disposalDate = null;
+                }
+
+                if ($retentionRule->finalDisposition) {
+                    $retentionRule->finalDisposition = null;
+                }
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
                 $retentionRule->previousStartDate = $archive->retentionStartDate;
                 $retentionRule->previousDuration = $archive->retentionDuration;
                 $retentionRule->previousFinalDisposition = $archive->finalDisposition;
-
-                // Update current object for caller
-                $archive->retentionStartDate = $retentionRule->retentionStartDate;
-                $archive->retentionDuration = $retentionRule->retentionDuration;
-                $archive->disposalDate = $retentionRule->disposalDate;
 
                 array_push($res['success'], $archiveId);
 

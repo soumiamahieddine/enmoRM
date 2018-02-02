@@ -19,7 +19,7 @@
  */
 namespace bundle\auth\Exception;
 
-class userAlreadyExistException
+class noOrganizationException
     extends \Exception
 {
 

@@ -364,11 +364,14 @@ msgstr "Débloquer"
 msgid "New role created."
 msgstr "Nouveau rôle crée"
 
+msgid "Role deleted."
+msgstr "Rôle supprimé"
+
 msgid "Role updated."
 msgstr "Rôle modifié"
 
 msgid "Status changed."
-msgstr "Statuts modifié"
+msgstr "Statut modifié"
 
 msgid "The name is empty."
 msgstr "Le nom est vide."
@@ -483,9 +486,6 @@ msgstr "Information utilisateur"
 
 msgid "Roles"
 msgstr "Rôles"
-
-msgid "Organization"
-msgstr "Organisation"
 
 msgid "Organization units"
 msgstr "Services"
@@ -698,3 +698,21 @@ msgstr "Les mots de passe sont pas identiques"
 
 msgid "Display only activated users"
 msgstr "Afficher uniquement les utilisateurs actifs"
+
+msgid "delete role warning"
+msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
+
+msgid "Delete the role"
+msgstr "Supprimer le rôle"
+
+msgid "No organization chosen"
+msgstr "Aucune organisation choisi"
+
+msgid "No service found"
+msgstr "Aucun service trouvé"
+
+msgid "No user found"
+msgstr "Aucun utilisateur trouvé"
+
+msgid "User already exist"
+msgstr "L'utilisateur existe déja"

@@ -285,4 +285,13 @@ interface organizationInterface
      * @action organization/organization/readUserOrgs
      */
     public function readUserpositions_accountId_();
+
+    /**
+     * List of organizations
+     *
+     * @return array An array of organization and service
+     *
+     * @action organization/organization/todisplay
+     */
+    public function readTodisplay();
 }

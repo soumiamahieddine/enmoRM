@@ -39,15 +39,16 @@ class user
 
     /**
      * Constructor
-     * @param \dependency\html\Document $view       A new empty Html document
-     * @param \dependency\sdo\Factory   $sdoFactory The dependency Sdo Factory object
+     * @param \dependency\html\Document $view A new empty Html document
+     * @param \dependency\sdo\Factory $sdoFactory The dependency Sdo Factory object
      */
     public function __construct(
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
         \dependency\localisation\TranslatorInterface $translator,
         \dependency\sdo\Factory $sdoFactory = null
-    ) {
+    )
+    {
 
         $this->view = $view;
 
@@ -60,7 +61,7 @@ class user
 
     /**
      * View for the users admin index panel
-     * @param array  $users  An array of user objects to display
+     * @param array $users An array of user objects to display
      * @param string $offset The offset
      * @param string $length The length
      *
@@ -89,7 +90,7 @@ class user
 
     /**
      * View for the edit user form
-     * @param user/user $user The user object
+     * @param user /user $user The user object
      *
      * @return string The html view string
      */
@@ -107,7 +108,7 @@ class user
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
         $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
-        $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_",$user->accountId);
+        $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_", $user->accountId);
 
         $view->setSource('userPositions', $userPositions);
 
@@ -119,7 +120,7 @@ class user
 
     /**
      * View for the edit user profile form
-     * @param user/user $user The user object
+     * @param user /user $user The user object
      *
      * @return string The html view string
      */
@@ -135,7 +136,7 @@ class user
 
         $allowUserModification = true;
         if (isset(\laabs::configuration('auth')['allowUserModification'])) {
-            $allowUserModification = (bool) \laabs::configuration('auth')['allowUserModification'];
+            $allowUserModification = (bool)\laabs::configuration('auth')['allowUserModification'];
         }
 
         $view->setSource('allowUserModification', $allowUserModification);
@@ -167,6 +168,7 @@ class user
         $view->setSource('roles', $roles);
         $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
         $view->setSource('user', $user);
+        $view->setSource('userPositions', false);
 
         $view->merge();
         $view->translate();
@@ -237,6 +239,7 @@ class user
     }
 
     //JSON
+
     /**
      * undocumented function
      *
@@ -344,4 +347,29 @@ class user
 
         return $this->json->save();
     }
+
+    /**
+     * Serializer JSON for invalid status exception
+     * @param Exception $exception The exception
+     ** @return object JSON object with a status
+     */
+    public function noOrganizationException($exception)
+    {
+        $this->json->status = false;
+        $this->json->message = $this->translator->getText($exception->getMessage());
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for invalid status exception
+     * @param Exception $exception The exception
+     ** @return object JSON object with a status
+     */
+    public function userAlreadyExistException($exception)
+    {
+        $this->json->status = false;
+        $this->json->message = $this->translator->getText($exception->getMessage());
+        return $this->json->save();
+    }
+
 }

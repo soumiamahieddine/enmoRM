@@ -24,10 +24,10 @@ msgid "Update the retention rule"
 msgstr "Modifier la règle"
 
 msgid "Are you sure to modify this retention rule ?"
-msgstr "Etes-vous sure de vouloir modifier la règle de conservation ?"
+msgstr "Etes-vous sûr de vouloir modifier la règle de conservation ?"
 
 msgid "Are you sure to delete this retention rule ?"
-msgstr "Etes-vous sure de vouloir supprimer la règle de conservation ?"
+msgstr "Etes-vous sûr de vouloir supprimer la règle de conservation ?"
 
 msgid "Retention rule code"
 msgstr "Code de la règle"

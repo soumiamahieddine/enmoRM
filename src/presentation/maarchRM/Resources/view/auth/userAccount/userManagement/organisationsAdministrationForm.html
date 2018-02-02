@@ -1,8 +1,133 @@
 <div class="form-group">
     <div class="form-group">
-        <ul class="list-group col-md-8 col-md-offset-2" id="administration_OrgaPositionList">
-            <?merge userPositions ?>
-            <li id="[?merge .orgId ?]" class="list-group-item clearfix"><?merge .displayName ?></li>
-        </ul>
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Service" id="orgTypeahead"/>
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="button" id="addOrg" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+            </span>
+        </div>
+    </div>
+    <div id="orgs" class="col-xs-12" translate="no">
+        <div>
+            <div>
+                <?merge userPositions ?>
+                <div class="input-group">
+                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" readOnly="true">
+                    <span class="input-group-btn">
+                            <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
+                                <i class="fa fa-trash-o fa-fw"></i>&nbsp;
+                            </button>
+                        </span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<span class="hide" id="noServiceFound">No service found</span>
+
+<script>
+    var organizations = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        limit: 100
+    });
+
+    window.localStorage.clear();
+    organizations.initialize();
+
+    // initialize typeahead
+    $('#orgTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'organizations',
+            displayKey: 'displayName',
+            templates: {
+                empty: function() {
+                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                },
+                suggestion: function(organization) {
+                    var display;
+                    if(organization.ownerOrgName) {
+                        display =
+                            "<span>"
+                            + "<span class='fa fa-user' >&nbsp;</span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + organization.ownerOrgName
+                            + " > "
+                            + organization.displayName
+                            + "</span>"
+                            + "</span>";
+                    }
+                    else {
+                        display = this.empty();
+                    }
+                    return display;
+                }
+            },
+            source: function(query, cb) {
+                organizations.get(query, function(suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }
+    ).on('typeahead:selected', function($event, suggestion, source) {
+        $("#orgTypeahead").prop('org', suggestion);
+    });
+
+    //add Organizations
+    $("#addOrg").on('click', function() {
+        if(suggestion = $("#orgTypeahead").prop('org')) {
+            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName);
+            $("#orgTypeahead").val('');
+        }
+    });
+
+    //remove Organizations
+    $("#orgs").on('click', '.removeOrg', function() {
+        $(this).closest('.input-group').remove();
+    })
+
+    function addOrg(orgName, orgId, ownerOrgName) {
+
+        var userTypeahead = $('#userTypeahead');
+
+        var inputGroup = $('<div/>')
+            .addClass('input-group')
+            .data('orgId', orgId)
+            .appendTo($('#orgs'));
+
+        var input = $('<input/>')
+            .addClass('form-control')
+            .attr('type', 'text')
+            .attr('readonly', 'true')
+            .attr('data-orgid', orgId)
+            .val(ownerOrgName+' > '+orgName)
+            .data('orgId', orgId)
+            .appendTo(inputGroup);
+
+        var inputGrpBtn = $('<span/>')
+            .addClass('input-group-btn')
+            .appendTo(inputGroup);
+
+        var btn = $('<button/>')
+            .addClass('btn btn-danger removeOrg')
+            .attr('type', 'button')
+            .html("&nbsp;")
+            .appendTo(inputGrpBtn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-trash-o fa-fw')
+            .prependTo(btn);
+    }
+</script>

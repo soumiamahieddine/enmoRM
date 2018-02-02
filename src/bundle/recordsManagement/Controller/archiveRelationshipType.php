@@ -41,7 +41,7 @@ class archiveRelationshipType
     /**
      * New empty relationship
      *
-     * @return recordsManagement/archivalRelationship The archival relationship object
+     * @return recordsManagement/archiveRelationship The archival relationship object
      */
     public function index()
     {

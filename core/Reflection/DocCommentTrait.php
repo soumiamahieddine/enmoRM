@@ -27,8 +27,14 @@ namespace core\Reflection;
 trait DocCommentTrait
 {
     /**
+     * The summary
+     * @var string
+     */
+    public $summary;
+
+    /**
      * The description
-     * @var array
+     * @var string
      */
     public $description;
 
@@ -45,7 +51,23 @@ trait DocCommentTrait
     {
         $docComment = $this->getDocComment();
         $this->tags = null;
+        $docComment = preg_split('# *\n\s*\*(\/| *)?#m', substr($docComment, 3));
 
+        $summaryLines = [];
+        while (($line = next($docComment)) !== false && (!empty($line) && $line[0] != '@')) {
+            $summaryLines[] = $line;
+        }
+
+        $this->summary = implode (' ', $summaryLines);
+
+        $descriptionLines = [];
+        while (($line = next($docComment)) !== false && (!isset($line[0]) || $line[0] != '@')) {
+            $descriptionLines[] = $line;
+        }
+
+        $this->description = implode(" ", $descriptionLines);
+
+        $docComment = implode("\n", $docComment);
         preg_match_all('#@(?<name>\w+)(|\s+(?<value>.+))$#m', $docComment, $tagMatches, PREG_SET_ORDER);
         foreach ($tagMatches as $tagMatch) {
             $tagname = $tagMatch['name'];
@@ -55,6 +77,7 @@ trait DocCommentTrait
                 $this->tags[$tagname][] = true;
             }
         }
+
         return;
 
         $docLines = explode("\n", $docComment);

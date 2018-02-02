@@ -44,11 +44,11 @@ class archiveRelationship
     /**
      * New empty relationship
      *
-     * @return recordsManagement/archivalRelationship The archival relationship object
+     * @return recordsManagement/archiveRelationship The archival relationship object
      */
     public function newRelationship()
     {
-        return \laabs::newInstance("recordsManagement/archivalRelationship");
+        return \laabs::newInstance("recordsManagement/archiveRelationship");
     }
 
     /**

@@ -139,7 +139,14 @@ class Property
         foreach ((array) $this->tags as $tagname => $tagvalues) {
             switch($tagname) {
                 case 'var':
-                    $type = trim($tagvalues[0]);
+                    $type = trim(strtok($tagvalues[0], ' '));
+                    if (!empty($desc = trim(strtok('')))) {
+                        if (empty($this->summary)) {
+                            $this->summary = $desc;
+                        } elseif (empty($this->description)) {
+                            $this->description = $desc;
+                        }
+                    }
                     switch($type) {
                         case 'bool':
                             $type = 'boolean';

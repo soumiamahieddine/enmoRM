@@ -36,6 +36,11 @@ trait archiveRestitutionTrait
             $archiveIds = array($archiveIds);
         }
 
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->checkRights($archive);
+        }
+
         $canditates = $this->setStatus($archiveIds, 'restituable');
 
         return $canditates;

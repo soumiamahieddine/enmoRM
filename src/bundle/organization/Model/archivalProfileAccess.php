@@ -52,4 +52,11 @@ class archivalProfileAccess
      * @var boolean
      */
     public $originatorAccess;
+
+    /**
+     * The service level reference
+     *
+     * @var string
+     */
+    public $serviceLevelReference;
 }

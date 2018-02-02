@@ -37,6 +37,7 @@ trait archiveCommunicationTrait
      * @param string $archiveExpired
      * @param string $finalDisposition
      * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
      * @param string $originatorArchiveId
      * @param array  $originatingDate
      * @param string $filePlanPosition
@@ -61,6 +62,7 @@ trait archiveCommunicationTrait
         $archiveExpired = null,
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
         $originatorArchiveId = null,
         $originatingDate = null,
         $filePlanPosition = null,
@@ -85,6 +87,7 @@ trait archiveCommunicationTrait
             'archiveExpired' => $archiveExpired,
             'finalDisposition' => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
+            'originatorOwnerOrgId' => $originatorOwnerOrgId,
             'originatorArchiveId' => $originatorArchiveId,
             'originatingDate' => $originatingDate,
             'filePlanPosition' => $filePlanPosition,
@@ -135,7 +138,7 @@ trait archiveCommunicationTrait
                 }
             }
         }
-        
+
         return $archives;
     }
 

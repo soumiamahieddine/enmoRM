@@ -2532,7 +2532,7 @@ if (!class_exists('QRcode', false)) {
 		/**
 		 * Return a copy of initialized frame.
 		 * @param int $version version
-		 * @return Array of unsigned char.
+		 * @return array of unsigned char.
 		 */
 		protected function createFrame($version) {
 			$width = $this->capacity[$version][QRCAP_WIDTH];
@@ -2597,7 +2597,7 @@ if (!class_exists('QRcode', false)) {
 		/**
 		 * Set new frame for the specified version.
 		 * @param int $version version
-		 * @return Array of unsigned char.
+		 * @return array of unsigned char.
 		 */
 		protected function newFrame($version) {
 			if (($version < 1) OR ($version > QRSPEC_VERSION_MAX)) {

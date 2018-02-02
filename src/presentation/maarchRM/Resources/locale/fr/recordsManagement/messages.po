@@ -894,3 +894,9 @@ msgstr "Règle de conservation partielle"
 
 msgid "Fulltext"
 msgstr "Texte intégral"
+
+msgid "To be defined later"
+msgstr "À définir plus tard"
+
+msgid "Producer"
+msgstr "Producteur"

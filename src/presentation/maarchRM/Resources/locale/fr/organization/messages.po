@@ -339,3 +339,10 @@ msgctxt "org"
 
 msgid "Delete organization"
 msgstr "Supprimer l'organisation"
+
+msgid "Default service level"
+msgstr "Niveaux de service par défaut"
+
+msgid "Service level"
+msgstr "Niveaux de service "
+

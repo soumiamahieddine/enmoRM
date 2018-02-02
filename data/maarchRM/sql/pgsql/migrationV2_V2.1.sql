@@ -1,0 +1,1 @@
+ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "serviceLevelReference" text;
