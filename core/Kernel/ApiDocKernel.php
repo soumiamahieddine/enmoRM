@@ -33,44 +33,44 @@ class ApiDocKernel
     public static $api;
 
     /**
+     * @var array The stack of definitions
+     */
+    public static $complexTypes;
+
+    /**
      * Run
      */
     public static function run()
     {
         ini_set('max_execution_time', 120);
 
-        static::$api = $api = new \StdClass();
+        static::$api                        = new \StdClass();
+        static::$api->swagger               = "2.0";
+        static::$api->info                  = static::info();
+        static::$api->host                  = $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+        static::$api->basePath              = '/';
+        static::$api->schemes               = ['http', 'https'];
+        static::$api->consumes              = ['application/json'];
+        static::$api->produces              = ['application/json'];
+        
+        // Get Paths + definition requests
+        static::$api->paths                 = static::paths();
+        
+        //static::$api->definitions = [];
+        static::$api->definitions           = static::definitions();
 
-        $api->swagger = "2.0";
+        //static::$api->parameters = [];
         
-        $api->info = static::getInfo();
+        //static::$api->responses = [];
         
-        $api->host = $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+        static::$api->securityDefinitions   = static::securityDefinitions();
         
-        $api->basePath = '/';
+        //static::$api->security              = static::security();
         
-        $api->schemes = ['http', 'https'];
+        //static::$api->tags                  = static::tags();
         
-        $api->consumes = ['application/json'];
-        
-        $api->produces = ['application/json'];
-        
-        // Get Paths + definitions + parameters + responses
-        static::getPaths();
-        
-        //$api->definitions = [];
-        
-        //$api->parameters = [];
-        
-        //$api->responses = [];
-        
-        $api->securityDefinitions = static::getSecurityDefinitions();
-        
-        //$api->security = [];
-        
-        $api->tags = [];
-        
-        $api->externalDocs = static::getExternalDocs();       
+        static::externalDocs();
+
 
         $body = json_encode(static::$api, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
 
@@ -80,79 +80,131 @@ class ApiDocKernel
         echo $body;
     }
 
-    protected static function getInfo()
+    protected static function info()
     {
-        $info = new \StdClass();
-        $info->title = 'Maarch RM';
+        $info          = new \StdClass();
+        $info->title   = 'Maarch RM';
         $info->version = '2.1';
-        $info->contact = $contact = new \StdClass();
-            $contact->name = 'Cyril VAZQUEZ';
-            $contact->email = 'cyril.vazquez@maarch.org';
-            $contact->url = 'http://maarchrm.com';
-        $info->license = $license = new \StdClass();
-            $license->name = 'GNU Lesser General Public License V3';
-            $license->url = 'http://www.gnu.org/licenses/lgpl.txt';
+        $info->contact         = new \StdClass();
+        $info->contact->name   = 'Cyril VAZQUEZ';
+        $info->contact->email  = 'cyril.vazquez@maarch.org';
+        $info->contact->url    = 'http://maarchrm.com';
+        $info->license         =   new \StdClass();
+        $info->license->name   = 'GNU Lesser General Public License V3';
+        $info->license->url    = 'http://www.gnu.org/licenses/lgpl.txt';
 
         return $info;
     }
 
-    protected static function getSecurityDefinitions()
+    protected static function paths()
     {
-        $securityDefinitions = [];
+        $paths = [];
 
-        $securityDefinitions['laabs'] = $securityScheme = new \StdClass();
-        $securityScheme->type = 'apiKey';
-        $securityScheme->description = "A service token provided by the administrator and send as a cookie named 'LAABS-AUTH'";
-        $securityScheme->name = 'Cookie[LAABS-AUTH]';
-        $securityScheme->in = 'header';
-
-        return $securityDefinitions;
-    }
-
-    protected static function getExternalDocs()
-    {
-        $externalDocs = new \StdClass();
-        $externalDocs->description = 'The Maarch RM documentation Git repository';
-        $externalDocs->url = 'http://labs.maarch.org/maarch/maarchRM.doc/tree/2.1';
-
-        return $externalDocs;
-    }
-
-    protected static function getPaths()
-    {
         $parts = explode('/', $_SERVER['SCRIPT_NAME']);
         array_shift($parts);
         array_shift($parts);
 
         if (empty($parts)) {
             foreach (\laabs::bundles() as $reflectionBundle) {   
-                static::getBundlePaths($reflectionBundle);
+                $paths = array_merge($paths, static::getBundlePaths($reflectionBundle));
             }
         } else {
             $bundle = array_shift($parts);
 
             $reflectionBundle = \laabs::bundle($bundle);
             if (empty($parts)) {
-                static::getBundlePaths($reflectionBundle);
+                $paths = static::getBundlePaths($reflectionBundle);
             } else {
                 $api = array_shift($parts);
 
                 $reflectionApi = $reflectionBundle->getApi($api);
 
-                static::getApiPaths($reflectionApi);
+                $paths = static::getApiPaths($reflectionApi);
             }
         }
+
+        return $paths;
     }
 
+    protected static function definitions()
+    {
+        if (empty(static::$complexTypes)) {
+            return;
+        }
+
+        $definitions = [];
+
+        reset(static::$complexTypes);
+        while (current(static::$complexTypes) == false && $typename = key(static::$complexTypes)) {
+            try {
+                $definition = static::getDefinition($typename);
+
+                list ($bundle, $class) = explode('/', $typename);
+
+                if (!isset($definitions[$bundle])) {
+                    $definitions[$bundle] = new \StdClass();
+
+                    $definitions[$bundle]->type = 'object';
+                    $definitions[$bundle]->properties = [];
+                }
+
+                $definitions[$bundle]->properties[$class] = $definition;
+            } catch (\exception $e) {
+
+            }
+
+            next(static::$complexTypes);
+        }
+
+        return $definitions;
+
+    }
+
+    protected static function securityDefinitions()
+    {
+        $securityDefinitions = [];
+
+        $securityDefinitions['laabs']              = new \StdClass();
+        $securityDefinitions['laabs']->type        = 'apiKey';
+        $securityDefinitions['laabs']->description = "A service token provided by the administrator and send as a cookie named 'LAABS-AUTH'";
+        $securityDefinitions['laabs']->name        = 'Cookie[LAABS-AUTH]';
+        $securityDefinitions['laabs']->in          = 'header';
+
+        return $securityDefinitions;
+    }
+
+    protected static function security()
+    {
+        $security          = [];
+        $security[] = $laabs = new \StdClass;
+        $laabs->cookie = 'LAABS-AUTH';
+    }
+
+    protected static function externalDocs()
+    {
+        static::$api->externalDocs              = new \StdClass();
+        static::$api->externalDocs->description = 'The Maarch RM documentation Git repository';
+        static::$api->externalDocs->url         = 'http://labs.maarch.org/maarch/maarchRM.doc/tree/2.1';
+    }
+
+    /* ************************************************************************
+     *                                 Routines
+     * ***********************************************************************/
     protected static function getBundlePaths($reflectionBundle)
     {
+        $paths = [];
+
         foreach ($reflectionBundle->getApis() as $reflectionApi) {
-            static::getApiPaths($reflectionApi);
+            $paths = array_merge($paths, static::getApiPaths($reflectionApi));
         }
+
+        return $paths;
     }
 
     protected static function getApiPaths($reflectionApi)
     {
+        $paths = [];
+
         foreach ($reflectionApi->getPaths() as $reflectionPath) {
             
             $method = static::getMethod($reflectionPath);
@@ -161,12 +213,14 @@ class ApiDocKernel
                 continue;
             }
 
-            if (!isset(static::$api->paths['/'.$reflectionPath->path])) {
-                static::$api->paths['/'.$reflectionPath->path] = [];
+            if (!isset($paths['/'.$reflectionPath->path])) {
+                $paths['/'.$reflectionPath->path] = [];
             }
 
-            static::$api->paths['/'.$reflectionPath->path][$method] = static::getOperation($reflectionPath);
+            $paths['/'.$reflectionPath->path][$method] = static::getOperation($reflectionPath);
         }
+
+        return $paths;
     }
 
     protected static function getOperation($reflectionPath)
@@ -301,6 +355,7 @@ class ApiDocKernel
     protected static function getBodyParameter($reflectionParameter)
     {
         $property = new \StdClass();
+
         static::getDescription($reflectionParameter, $property);
         
         if (!empty($reflectionParameter->type)) {
@@ -351,8 +406,13 @@ class ApiDocKernel
         }
 
         if (strpos($typename, '/') !== false) {
-            $schema->{'$ref'} = '#/definitions/'.$typename;
-            static::getTypeRef($typename);
+            list ($bundle, $class) = explode('/', $typename);
+            $schema->{'$ref'} = '#/definitions/'.$bundle.'/properties/'.$class;
+
+            // Request complex type documentation
+            if (!isset(static::$complexTypes[$typename])) {
+                static::$complexTypes[$typename] = false;
+            }
 
             return;
         } 
@@ -420,39 +480,28 @@ class ApiDocKernel
         }
     }
 
-    protected static function getTypeRef($typename)
+    protected static function getDefinition($typename)
     {
-        list ($bundle, $localname) = explode('/', $typename);
+        $schema = new \StdClass();
 
-        if (!isset(static::$api->definitions)) {
-            static::$api->definitions = [];
+        $schema->type = 'object';
+
+        try {
+            $reflectionType = \laabs::getMessage($typename);
+        } catch (\Exception $e) {
+            $reflectionType = \laabs::getClass($typename);
         }
-
-        if (!isset(static::$api->definitions[$bundle])) {
-            static::$api->definitions[$bundle] = $dict = new \StdClass();
-
-            $dict->type = 'object';
-            $dict->properties = [];
-        }
-       
-        if (!isset(static::$api->definitions[$bundle]->properties[$localname])) {
-            try {
-                $reflectionType = \laabs::getMessage($typename);
-            } catch (\Exception $e) {
-                $reflectionType = \laabs::getClass($typename);
-            }
-
-            static::$api->definitions[$bundle]->properties[$localname] = $type = new \StdClass();
-
-            static::getDescription($reflectionType, $type);
         
-            foreach ($reflectionType->getProperties() as $reflectionProperty) {
-                if (!$reflectionProperty->isEmptyable() || !$reflectionProperty->isNullable()) {
-                    $type->required[] = $reflectionProperty->name;
-                }
-                $type->properties[$reflectionProperty->getName()] = static::getTypeProperty($reflectionProperty);
+        static::getDescription($reflectionType, $schema);
+    
+        foreach ($reflectionType->getProperties() as $reflectionProperty) {
+            if (!$reflectionProperty->isEmptyable() || !$reflectionProperty->isNullable()) {
+                $schema->required[] = $reflectionProperty->name;
             }
+            $schema->properties[$reflectionProperty->getName()] = static::getTypeProperty($reflectionProperty);
         }
+
+        return $schema;
     }
 
     protected static function getTypeProperty($reflectionProperty)
@@ -477,7 +526,7 @@ class ApiDocKernel
         if (isset($reflection->summary)) {
             $description = trim($reflection->summary);
         }
-        if (!isset($reflection->description)) {
+        if (isset($reflection->description)) {
             $description .= $reflection->description;
         }
 
