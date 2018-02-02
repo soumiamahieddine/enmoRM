@@ -38,13 +38,7 @@ switch (true) {
         break;
 
     // Instance is a service provider
-    case \laabs::isServiceClient() 
-        && (strtok($_SERVER['SCRIPT_NAME'], '/') == 'api' 
-        || $_SERVER['SCRIPT_NAME'] == '/') :
-        \core\Kernel\ApiDocKernel::start();
-        \core\Kernel\ApiDocKernel::run();
-        \core\Kernel\ApiDocKernel::end();
-        break;
+    case \laabs::isServiceClient() :
     default:
         \core\Kernel\ServiceKernel::start();
         \core\Kernel\ServiceKernel::run();

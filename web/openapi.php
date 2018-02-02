@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2018 Maarch
  *
  * This file is part of Laabs.
  *
@@ -17,228 +17,215 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Laabs.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Core\Kernel;
+// Require base script
+require_once('../core/laabs.php');
+
+laabs::init();
+
+$openapi = new Openapi();
+
+$body = json_encode($openapi, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
+
+header('Content-Type: application/json; charset=utf-8');
+header('Content-Length: '.strlen($body));
+
+echo $body;
+
 /**
- * Kernel for API discovery and documentation
+ * API discovery and documentation
  * 
  * @package Laabs
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
-class ApiDocKernel
-    extends AbstractKernel
+class Openapi
 {
-    /**
-     * @var array The open api description
-     */
-    public static $api;
-
-    /**
-     * @var array The stack of definitions
-     */
-    public static $complexTypes;
+    public $swagger;
+    public $info;
+    public $host;
+    public $basePath;
+    public $schemes;
+    public $consumes;
+    public $produces;
+    public $paths = [];
+    public $definitions = [];
+    //public $parameters = [];
+    //public $responses = [];
+    public $securityDefinitions = [];
+    //public $security = [];
 
     /**
      * Run
      */
-    public static function run()
+    public function __construct()
     {
-        ini_set('max_execution_time', 120);
-
-        static::$api                        = new \StdClass();
-        static::$api->swagger               = "2.0";
-        static::$api->info                  = static::info();
-        static::$api->host                  = $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
-        static::$api->basePath              = '/';
-        static::$api->schemes               = ['http', 'https'];
-        static::$api->consumes              = ['application/json'];
-        static::$api->produces              = ['application/json'];
+        $this->swagger               = "2.0";
+        $this->info();
+        $this->host                  = $_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'];
+        $this->basePath              = '/';
+        $this->schemes               = ['http', 'https'];
+        $this->consumes              = ['application/json'];
+        $this->produces              = ['application/json'];
         
         // Get Paths + definition requests
-        static::$api->paths                 = static::paths();
+        $this->paths();
         
-        //static::$api->definitions = [];
-        static::$api->definitions           = static::definitions();
+        //$this->definitions = [];
+        $this->definitions();
 
-        //static::$api->parameters = [];
+        //$this->parameters = [];
         
-        //static::$api->responses = [];
+        //$this->responses = [];
         
-        static::$api->securityDefinitions   = static::securityDefinitions();
+        $this->securityDefinitions();
         
-        //static::$api->security              = static::security();
+        //$this->security              = $this->security();
         
-        //static::$api->tags                  = static::tags();
+        //$this->tags                  = $this->tags();
         
-        static::externalDocs();
-
-
-        $body = json_encode(static::$api, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
-
-        header('Content-Type: application/json; charset=utf-8');
-        header('Content-Length: '.strlen($body));
-
-        echo $body;
+        $this->externalDocs();       
     }
 
-    protected static function info()
+    protected function info()
     {
-        $info          = new \StdClass();
-        $info->title   = 'Maarch RM';
-        $info->version = '2.1';
-        $info->contact         = new \StdClass();
-        $info->contact->name   = 'Cyril VAZQUEZ';
-        $info->contact->email  = 'cyril.vazquez@maarch.org';
-        $info->contact->url    = 'http://maarchrm.com';
-        $info->license         =   new \StdClass();
-        $info->license->name   = 'GNU Lesser General Public License V3';
-        $info->license->url    = 'http://www.gnu.org/licenses/lgpl.txt';
-
-        return $info;
+        $this->info          = new \StdClass();
+        $this->info->title   = 'Maarch RM';
+        $this->info->version = '2.1';
+        $this->info->contact         = new \StdClass();
+        $this->info->contact->name   = 'Cyril VAZQUEZ';
+        $this->info->contact->email  = 'cyril.vazquez@maarch.org';
+        $this->info->contact->url    = 'http://maarchrm.com';
+        $this->info->license         =   new \StdClass();
+        $this->info->license->name   = 'GNU Lesser General Public License V3';
+        $this->info->license->url    = 'http://www.gnu.org/licenses/lgpl.txt';
     }
 
-    protected static function paths()
+    protected function paths()
     {
-        $paths = [];
-
-        $parts = explode('/', $_SERVER['SCRIPT_NAME']);
-        array_shift($parts);
-        array_shift($parts);
-
-        if (empty($parts)) {
-            foreach (\laabs::bundles() as $reflectionBundle) {   
-                $paths = array_merge($paths, static::getBundlePaths($reflectionBundle));
-            }
-        } else {
-            $bundle = array_shift($parts);
-
+        if (isset($_GET['path'])) {
+            $steps = explode('/', $_GET['path']);
+            
+            $bundle = array_shift($steps);
             $reflectionBundle = \laabs::bundle($bundle);
-            if (empty($parts)) {
-                $paths = static::getBundlePaths($reflectionBundle);
+            
+            if (empty($steps)) {
+                $this->getBundlePaths($reflectionBundle);
             } else {
-                $api = array_shift($parts);
+                $api = array_shift($steps);
 
                 $reflectionApi = $reflectionBundle->getApi($api);
 
-                $paths = static::getApiPaths($reflectionApi);
+                $this->getApiPaths($reflectionApi);
+            }
+        } else {
+            foreach (\laabs::bundles() as $reflectionBundle) {   
+                $this->getBundlePaths($reflectionBundle);
             }
         }
-
-        return $paths;
     }
 
-    protected static function definitions()
+    protected function definitions()
     {
-        if (empty(static::$complexTypes)) {
+        if (empty($this->definitions)) {
+            unset($this->definitions);
+
             return;
         }
 
-        $definitions = [];
-
-        reset(static::$complexTypes);
-        while (current(static::$complexTypes) == false && $typename = key(static::$complexTypes)) {
+        reset($this->definitions);
+        while (current($this->definitions) == false && $typename = key($this->definitions)) {
             try {
-                $definition = static::getDefinition($typename);
+                $definition = $this->getDefinition($typename);
 
                 list ($bundle, $class) = explode('/', $typename);
 
-                if (!isset($definitions[$bundle])) {
-                    $definitions[$bundle] = new \StdClass();
+                if (!isset($this->definitions[$bundle])) {
+                    $this->definitions[$bundle] = new \StdClass();
 
-                    $definitions[$bundle]->type = 'object';
-                    $definitions[$bundle]->properties = [];
+                    $this->definitions[$bundle]->type = 'object';
+                    $this->definitions[$bundle]->properties = [];
                 }
 
-                $definitions[$bundle]->properties[$class] = $definition;
+                $this->definitions[$bundle]->properties[$class] = $definition;
             } catch (\exception $e) {
 
             }
 
-            next(static::$complexTypes);
+            next($this->definitions);
         }
 
-        return $definitions;
-
+        foreach ($this->definitions as $typename => $definition) {
+            if (!$definition) {
+                unset($this->definitions[$typename]);
+            }
+        }
     }
 
-    protected static function securityDefinitions()
+    protected function securityDefinitions()
     {
-        $securityDefinitions = [];
-
-        $securityDefinitions['laabs']              = new \StdClass();
-        $securityDefinitions['laabs']->type        = 'apiKey';
-        $securityDefinitions['laabs']->description = "A service token provided by the administrator and send as a cookie named 'LAABS-AUTH'";
-        $securityDefinitions['laabs']->name        = 'Cookie[LAABS-AUTH]';
-        $securityDefinitions['laabs']->in          = 'header';
-
-        return $securityDefinitions;
+        $this->securityDefinitions['laabs']              = new \StdClass();
+        $this->securityDefinitions['laabs']->type        = 'apiKey';
+        $this->securityDefinitions['laabs']->description = "A service token provided by the administrator and send as a cookie named 'LAABS-AUTH'";
+        $this->securityDefinitions['laabs']->name        = 'Cookie[LAABS-AUTH]';
+        $this->securityDefinitions['laabs']->in          = 'header';
     }
 
-    protected static function security()
+    protected function security()
     {
-        $security          = [];
+        $security   = [];
         $security[] = $laabs = new \StdClass;
         $laabs->cookie = 'LAABS-AUTH';
     }
 
-    protected static function externalDocs()
+    protected function externalDocs()
     {
-        static::$api->externalDocs              = new \StdClass();
-        static::$api->externalDocs->description = 'The Maarch RM documentation Git repository';
-        static::$api->externalDocs->url         = 'http://labs.maarch.org/maarch/maarchRM.doc/tree/2.1';
+        $this->externalDocs              = new \StdClass();
+        $this->externalDocs->description = 'The Maarch RM documentation Git repository';
+        $this->externalDocs->url         = 'http://labs.maarch.org/maarch/maarchRM.doc/tree/2.1';
     }
 
     /* ************************************************************************
      *                                 Routines
      * ***********************************************************************/
-    protected static function getBundlePaths($reflectionBundle)
+    protected function getBundlePaths($reflectionBundle)
     {
-        $paths = [];
-
         foreach ($reflectionBundle->getApis() as $reflectionApi) {
-            $paths = array_merge($paths, static::getApiPaths($reflectionApi));
+            $this->getApiPaths($reflectionApi);
         }
-
-        return $paths;
     }
 
-    protected static function getApiPaths($reflectionApi)
+    protected function getApiPaths($reflectionApi)
     {
-        $paths = [];
+        foreach ($reflectionApi->getPaths() as $reflectionPath) { 
+            $method = $this->getMethod($reflectionPath);
 
-        foreach ($reflectionApi->getPaths() as $reflectionPath) {
-            
-            $method = static::getMethod($reflectionPath);
-
-            if (!$method) {
+            if (!$method || (isset($_GET['method']) && strtolower($_GET['method']) != $method)) {
                 continue;
+            }           
+
+            if (!isset($this->paths['/'.$reflectionPath->path])) {
+                $this->paths['/'.$reflectionPath->path] = [];
             }
 
-            if (!isset($paths['/'.$reflectionPath->path])) {
-                $paths['/'.$reflectionPath->path] = [];
-            }
-
-            $paths['/'.$reflectionPath->path][$method] = static::getOperation($reflectionPath);
+            $this->paths['/'.$reflectionPath->path][$method] = $this->getOperation($reflectionPath);
         }
-
-        return $paths;
     }
 
-    protected static function getOperation($reflectionPath)
+    protected function getOperation($reflectionPath)
     {
         $operation = new \StdClass();
         
         //$operation->tags = [];
         
-        static::getDescription($reflectionPath, $operation);
+        $this->getDescription($reflectionPath, $operation);
         
         //$operation->externalDocs = [];
         
         $operation->operationId = $reflectionPath->domain.'/'.$reflectionPath->interface.'/'.$reflectionPath->name;
         
-        $operation->parameters = static::getOperationParameters($reflectionPath);
+        $operation->parameters = $this->getOperationParameters($reflectionPath);
 
         $operation->responses = [];
-        if ($response = static::getOperationResponse($reflectionPath)) {
+        if ($response = $this->getOperationResponse($reflectionPath)) {
             $operation->responses['200'] = $response;
         } else {
             $operation->responses['default'] = $response = new \StdClass();
@@ -248,7 +235,7 @@ class ApiDocKernel
         return $operation;
     }
 
-    protected static function getMethod($reflectionPath)
+    protected function getMethod($reflectionPath)
     {
         $method = strtolower($reflectionPath->method);
         switch ($method) {
@@ -266,14 +253,14 @@ class ApiDocKernel
         }
     }
 
-    protected static function getOperationParameters($reflectionPath)
+    protected function getOperationParameters($reflectionPath)
     {
         $parameters = [];
 
-        $method = static::getMethod($reflectionPath);
+        $method = $this->getMethod($reflectionPath);
 
         if (!empty($reflectionPath->variables)) {
-            $parameters = static::getPathParameters($reflectionPath);
+            $parameters = $this->getPathParameters($reflectionPath);
         }
 
         if (!empty($reflectionParameters = $reflectionPath->getParameters())) {
@@ -281,21 +268,21 @@ class ApiDocKernel
                 case 'get':
                 case 'delete':
                     foreach ($reflectionParameters as $reflectionParameter) {
-                        $parameters[] = static::getParameter($reflectionParameter);
+                        $parameters[] = $this->getParameter($reflectionParameter);
                     }
                     break;
             
                 case 'post':
                 case 'put':
                 default:
-                    $parameters[] = static::getBodyDefinition($reflectionParameters);
+                    $parameters[] = $this->getBodyDefinition($reflectionParameters);
             }
         }
 
         return $parameters;
     }
 
-    protected static function getPathParameters($reflectionPath)
+    protected function getPathParameters($reflectionPath)
     {
         $parameters = [];
 
@@ -312,7 +299,7 @@ class ApiDocKernel
         return $parameters;
     }
 
-    protected static function getParameter($reflectionParameter)
+    protected function getParameter($reflectionParameter)
     {
         $parameter = new \StdClass();
         
@@ -320,18 +307,18 @@ class ApiDocKernel
         
         $parameter->in = 'query';
 
-        static::getDescription($reflectionParameter, $parameter);
+        $this->getDescription($reflectionParameter, $parameter);
         
         if (!$reflectionParameter->isDefaultValueAvailable() || !$reflectionParameter->allowsNull()) {
             $parameter->required = true;
         }
 
-        static::getSimpleType($reflectionParameter->type, $parameter);
+        $this->getSimpleType($reflectionParameter->type, $parameter);
 
         return $parameter;
     }
 
-    protected static function getBodyDefinition($reflectionParameters)
+    protected function getBodyDefinition($reflectionParameters)
     {
         $parameter = new \StdClass();
         $parameter->name = 'entity';
@@ -346,27 +333,27 @@ class ApiDocKernel
             if (!$reflectionParameter->isOptional() && !$reflectionParameter->isDefaultValueAvailable()) {
                 $schema->required[] = $reflectionParameter->name;
             }
-            $schema->properties[$reflectionParameter->getName()] = static::getBodyParameter($reflectionParameter);
+            $schema->properties[$reflectionParameter->getName()] = $this->getBodyParameter($reflectionParameter);
         }
     
         return $parameter;
     }
 
-    protected static function getBodyParameter($reflectionParameter)
+    protected function getBodyParameter($reflectionParameter)
     {
         $property = new \StdClass();
 
-        static::getDescription($reflectionParameter, $property);
+        $this->getDescription($reflectionParameter, $property);
         
         if (!empty($reflectionParameter->type)) {
-            static::getDataType($reflectionParameter->type, $property);
+            $this->getDataType($reflectionParameter->type, $property);
         }
 
         return $property;
     }
 
 
-    protected static function getOperationResponse($reflectionPath)
+    protected function getOperationResponse($reflectionPath)
     {
         try {
             if (isset($reflectionPath->action)) {
@@ -384,7 +371,7 @@ class ApiDocKernel
                 
                 $response->schema = new \StdClass();
 
-                static::getDataType($returnType, $response->schema);
+                $this->getDataType($returnType, $response->schema);
 
                 if (count(get_object_vars($response->schema))) {
                     return $response;
@@ -395,12 +382,12 @@ class ApiDocKernel
         }
     }
 
-    protected static function getDataType($typename, $schema)
+    protected function getDataType($typename, $schema)
     {
         if (substr($typename, -2) == '[]') {
             $schema->type = 'array';
             $schema->items = new \StdClass();
-            static::getDataType(substr($typename, 0, -2), $schema->items);
+            $this->getDataType(substr($typename, 0, -2), $schema->items);
 
             return;
         }
@@ -410,17 +397,17 @@ class ApiDocKernel
             $schema->{'$ref'} = '#/definitions/'.$bundle.'/properties/'.$class;
 
             // Request complex type documentation
-            if (!isset(static::$complexTypes[$typename])) {
-                static::$complexTypes[$typename] = false;
+            if (!isset($this->definitions[$typename])) {
+                $this->definitions[$typename] = false;
             }
 
             return;
         } 
 
-        static::getSimpleType($typename, $schema);
+        $this->getSimpleType($typename, $schema);
     }
 
-    protected static function getSimpleType($typename, $schema)
+    protected function getSimpleType($typename, $schema)
     {
         switch ($typename) {
             case 'integer':
@@ -480,7 +467,7 @@ class ApiDocKernel
         }
     }
 
-    protected static function getDefinition($typename)
+    protected function getDefinition($typename)
     {
         $schema = new \StdClass();
 
@@ -492,25 +479,25 @@ class ApiDocKernel
             $reflectionType = \laabs::getClass($typename);
         }
         
-        static::getDescription($reflectionType, $schema);
+        $this->getDescription($reflectionType, $schema);
     
         foreach ($reflectionType->getProperties() as $reflectionProperty) {
             if (!$reflectionProperty->isEmptyable() || !$reflectionProperty->isNullable()) {
                 $schema->required[] = $reflectionProperty->name;
             }
-            $schema->properties[$reflectionProperty->getName()] = static::getTypeProperty($reflectionProperty);
+            $schema->properties[$reflectionProperty->getName()] = $this->getTypeProperty($reflectionProperty);
         }
 
         return $schema;
     }
 
-    protected static function getTypeProperty($reflectionProperty)
+    protected function getTypeProperty($reflectionProperty)
     {
         $property = new \StdClass();
-        static::getDescription($reflectionProperty, $property);
+        $this->getDescription($reflectionProperty, $property);
         
         if (!empty($reflectionProperty->type)) {
-            static::getDataType($reflectionProperty->type, $property);
+            $this->getDataType($reflectionProperty->type, $property);
         }
 
         if (!empty($reflectionProperty->enumeration)) {
@@ -520,7 +507,7 @@ class ApiDocKernel
         return $property;
     }
 
-    protected static function getDescription($reflection, $component)
+    protected function getDescription($reflection, $component)
     {
         $description ='';
         if (isset($reflection->summary)) {
