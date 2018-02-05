@@ -85,7 +85,7 @@ msgid "Legal classification"
 msgstr "Forme juridique"
 
 msgid "Business type"
-msgstr "Code APE"
+msgstr "Nature de l'activité"
 
 msgid "Position set to default"
 msgstr "Position mise par défaut"
