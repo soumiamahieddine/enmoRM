@@ -198,9 +198,11 @@ class welcome
                 }
 
                 $acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+                $fileplanLevel = $archivalProfile->fileplanLevel;
                 $acceptUserIndex = $archivalProfile->acceptUserIndex;
             } else {
                 $acceptArchiveWithoutProfile = true;
+                $fileplanLevel = true;
             }
         }
 
@@ -216,6 +218,7 @@ class welcome
         $this->view->setSource("archive", $archive);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("archivalProfileList", $archivalProfileList);
+        $this->view->setSource("fileplanLevel", $fileplanLevel);
         $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $acceptUserIndex);
         $this->view->setSource('managementPrivilege', \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify"));
