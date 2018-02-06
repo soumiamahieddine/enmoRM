@@ -5,14 +5,29 @@
 msgid "Keyword"
 msgstr "Mot-clé"
 
+msgid "name"
+msgstr "Mot-clé"
+
 msgid "Text"
+msgstr "Texte"
+
+msgid "text"
 msgstr "Texte"
 
 msgid "Number"
 msgstr "Nombre"
 
+msgid "number"
+msgstr "Nombre"
+
 msgid "Boolean"
 msgstr "Booléen"
+
+msgid "boolean"
+msgstr "Booléen"
+
+msgid "date"
+msgstr "Date"
 
 msgid "Description field"
 msgstr "Champ de description"

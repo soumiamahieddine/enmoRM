@@ -38,6 +38,9 @@ file that was distributed with this source code.
                                 <tr>
                                     <td><?merge .name ?></td>
                                     <td><?merge .label ?></td>
+                                    <?merge .translateType.bool() ?>
+                                    <td><?merge .translateType ?></td>
+                                    <?merge .translateType.bool().not() ?>
                                     <td><?merge .type ?></td>
                                     <td class="action_btn">
                                         <div class="btn-group pull-right">
