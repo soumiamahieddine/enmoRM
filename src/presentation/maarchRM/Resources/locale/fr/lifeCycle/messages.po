@@ -488,6 +488,9 @@ msgstr "Accusé de réception"
 msgid "medona/rejection"
 msgstr "Rejet d'un message"
 
+msgid "medona/retry"
+msgstr "Reprise d'un message"
+
 msgid "Result"
 msgstr "Résultat"
 
