@@ -342,8 +342,6 @@
 
 <script type="text/javascript">
     $('#app_maarchRM_main').ready(function(){
-
-        $('#schedulingForm').initSmoothScrolling();
     });
 
     // Frequency type selection
@@ -454,11 +452,14 @@
 
             $('#modifyTask').addClass('hide');
             $('#addTask').removeClass('hide');
+
+            this.changeFormPosition();
         },
 
         showTask: function(scheduling) {
             this.clear();
             this.form.removeClass('hide');
+            this.changeFormPosition();
 
             $('#modifyTask').removeClass('hide');
             $('#addTask').addClass('hide');
@@ -536,6 +537,11 @@
                     .html("&nbsp;")
                     .appendTo(a);
                 });
+        },
+
+        changeFormPosition: function() {
+            var scrollTop = $(window).scrollTop();
+            this.form.css("margin-top", scrollTop == 0 ? 0 : scrollTop - 50);
         },
 
         saveTask: function(button) {
