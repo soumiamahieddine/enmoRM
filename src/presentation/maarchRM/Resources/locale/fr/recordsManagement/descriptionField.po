@@ -53,3 +53,9 @@ msgstr "Champ de description modifié"
 msgid "Description field deleted"
 msgstr "Champ de description supprimé"
 
+msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
+msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
+
+msgid "You must define all required fields"
+msgstr "Vous devez remplir tous les champs obligatoires."
+

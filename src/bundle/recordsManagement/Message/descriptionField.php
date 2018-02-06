@@ -32,6 +32,7 @@ class descriptionField
      * The name of the property
      *
      * @var string
+     * @pattern #^[A-Za-z0-9_]*[A-Za-z0-9]$#
      * @notempty
      */
     public $name;
