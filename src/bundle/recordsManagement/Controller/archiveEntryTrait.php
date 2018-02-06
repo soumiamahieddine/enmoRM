@@ -494,11 +494,9 @@ trait archiveEntryTrait
             return;
         }
 
-        if (empty($archive->descriptionObject)) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
         if (!empty($this->currentArchivalProfile->descriptionClass)) {
+            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
+
             $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
         } else {
             $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
