@@ -33,10 +33,10 @@ msgid "Validate format"
 msgstr "Validation de format"
 
 msgid "Convert on deposit"
-msgstr "Convertir au dépôt"
+msgstr "Conversion au dépôt"
 
 msgid "Log the consultations"
-msgstr "Journaliser les consultations"
+msgstr "Journalisation des consultations"
 
 msgid "default"
 msgstr "par défaut"

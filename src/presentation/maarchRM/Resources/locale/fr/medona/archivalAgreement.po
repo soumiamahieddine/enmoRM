@@ -141,10 +141,16 @@ msgid "Format validation"
 msgstr "Validation de format"
 
 msgid "Virus check"
-msgstr "Détection de virus"
+msgstr "Contrôle antivirus"
 
 msgid "Convert on deposit"
-msgstr "Conversion au versement"
+msgstr "Conversion au dépôt"
+
+msgid "Log the consultations"
+msgstr "Journalisation des consultations"
+
+msgid "Full text indexation"
+msgstr "Indexation plein texte"
 
 msgid "Media info"
 msgstr "Information média"
