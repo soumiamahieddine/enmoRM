@@ -206,6 +206,9 @@ msgstr "Type d'événement inconnu"
 msgid "Key already exists"
 msgstr "La clé existe déjà"
 
+msgid "The organization type is used."
+msgstr "Le type d'ogranisation est utilisé"
+
 msgid "Organization can''t be moved to an other organization"
 msgstr "L'organisation ne peux être déplacé sous une autre organisation."
 

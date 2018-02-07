@@ -31,23 +31,28 @@
                     <div class="panel-body" style="padding: 0;">
                         <table class="table dataTable" id="orgType_list">
                             <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Name</th>
-                                    <th width="1%"></th>
-                                </tr>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th width="1%"></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <?merge orgTypes ?>
-                                <tr>
-                                    <td class="code"><?merge .code ?></td>  
-                                    <td class="name"><?merge .name ?></td>
-                                    <td>
-                                        <button type="button" class="btn btn-info" title="Edit">
+                            <?merge orgTypes ?>
+                            <tr>
+                                <td class="code"><?merge .code ?></td>
+                                <td class="name"><?merge .name ?></td>
+                                <td class="action_btn">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btnEdit btn-info" title="Edit">
                                             <span class="fa fa-fw fa-edit"></span>
                                         </button>
-                                    </td>
-                                </tr>
+                                        <button type="button" data-orgtypecode="[?merge .code ?]" class="deleteOrgType btn btn-danger" title="Delete">
+                                            <span class="fa fa-fw fa-trash"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -67,7 +72,7 @@
         disableIndex();
     });
 
-    $('#orgType_list').on('click', '.btn', function() {
+    $('#orgType_list').on('click', '.btnEdit', function() {
         var tr = $(this).closest("tr");
         var code = tr.find('.code').html();
         var name = tr.find('.name').html();
@@ -87,6 +92,25 @@
     function enableIndex() {
         $('#orgType_index').find('.btn').removeClass('disabled');
     }
+
+    $('#orgType_list').on('click','.deleteOrgType', function() {
+
+        var code = $(this).data('orgtypecode');
+
+        ajax($(this), {
+            type        : "DELETE",
+            url         : "/organizationType/"+code,
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+                load('/organizationType/index');
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
 
 
 </script>

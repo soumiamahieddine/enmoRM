@@ -89,4 +89,22 @@ class orgType
 
         return $this->sdoFactory->update($orgType, 'organization/orgType');
     }
+
+
+    /**
+     * Delete an organization type
+     * @param string $code The id of the orgType to delete
+     *
+     * @return bool The resut of the operaiton
+     */
+    public function delete($code)
+    {
+        if(!empty($this->sdoFactory->find('organization/organization', "orgTypeCode='$code'"))){
+            throw new \core\Exception( "The organization type is used.");
+        }
+
+        $orgType  =  $this->sdoFactory->read('organization/orgType', $code);
+
+        return $this->sdoFactory->delete($orgType);
+    }
 }

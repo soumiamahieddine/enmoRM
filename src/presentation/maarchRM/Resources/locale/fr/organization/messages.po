@@ -312,6 +312,9 @@ msgstr "type(s) d'organisation"
 msgid "Organization type created"
 msgstr "Type d'organisation créé"
 
+msgid "Organization type deleted"
+msgstr "Type d'organisation supprimé"
+
 msgid "Organization type updated"
 msgstr "Type d'organisation mis à jour"
 

@@ -53,4 +53,13 @@ interface orgTypeInterface
      * @action organization/orgType/update
      */
     public function update_code_($orgType);
+
+    /**
+     * Delete an org type
+     *
+     * @return boolean The result of the operation
+     *
+     * @action organization/orgType/delete
+     */
+    public function delete_code_();
 }
