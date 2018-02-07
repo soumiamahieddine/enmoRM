@@ -307,6 +307,14 @@
                  .removeClass('btn-danger btn-success active')
                  .find('input')
                  .prop('checked', false);
+
+            var btn = $('#privilegesTab').find('.superAdminAll');
+            btn.addClass('btn-default')
+                .removeClass('btn-success active')
+                .closest('.btn-group')
+                .find('.superAdminNone')
+                .addClass('btn-default')
+                .removeClass('btn-danger active');
         }
     }
 
