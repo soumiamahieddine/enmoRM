@@ -186,6 +186,9 @@ msgstr "Utilisateurs de l'organisation"
 msgid "User"
 msgstr "Utilisateur"
 
+msgid "Service account"
+msgstr "Compte de service"
+
 msgid "Submit"
 msgstr "Valider"
 
