@@ -92,8 +92,16 @@
                             <h3>Privileges</h3>
                             <div class="form-group">
                                 <label class="control-label"><span>All privileges</span>&nbsp;
-                                    <?merge role.superadmin @checked ?>
-                                    <input type="checkbox" name="superadmin" id="superadmin" data-toggle="toggle">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <label class="btn btn-xs btn-default superAdminAll" title="All">
+                                            <input type="radio" name="superAdminAll" value='*'/> All
+                                        </label>
+                                        <label class="btn btn-xs btn-default superAdminNone" title="None">
+                                            <input type="radio" name="superAdminNone" value="false"> None
+                                        </label>
+                                    </div>
+                                    <--?merge role.superadmin @checked ?>
+                                    <--input type="checkbox" name="superadmin" id="superadmin" data-toggle="toggle">
                                 </label>
                             </div>
                             <div class="panel-group" id="privileges" role="tablist" aria-multiselectable="true">
@@ -165,7 +173,7 @@
             return;
         }
         selectAllPrivileges($(this), false);
-    })
+    });
 
     $('#privileges').on('click', '.selectNone', function() {
         if ($(this).hasClass('.active')) {
@@ -173,22 +181,43 @@
         }
         unselectAllPrivileges($(this), false);
         
-    })
+    });
 
-    //superadmin
-    $("#superadmin").on('click', function() {
-        if ($(this).is(':checked')) {
-            $('#privileges').find('.selectAll').click();
-            
-        } else {
-            //alert($('#privileges').find('.selectNone.active').length);
-            if ($('#privileges').find('.selectNone.active').length <1) {
-                $('#privileges').find('.selectNone').click();
-            }
+    $('#privilegesTab').on('click', '.superAdminAll', function() {
+        if ($(this).hasClass('active')) {
+            return;
         }
-    })
+
+        $(this).addClass('btn-success active')
+            .removeClass('btn-default')
+            .closest('.btn-group')
+            .find('.superAdminNone')
+            .addClass('btn-default')
+            .removeClass('btn-danger active');
+
+        $('#privileges').find('.selectAll').click();
+    });
+
+    $('#privilegesTab').on('click', '.superAdminNone', function() {
+        if ($(this).hasClass('.active')) {
+            return;
+        }
+
+
+        $(this).addClass('btn-danger active')
+            .removeClass('btn-default')
+            .closest('.btn-group')
+            .find('.superAdminAll')
+            .addClass('btn-default')
+            .removeClass('btn-success active');
+
+        $('#privileges').find('.selectNone').click();
+    });
 
     function selectAllPrivileges(btn, btnOnly) {
+        var privilegesAll = $('#privileges').find('.selectAll').length;
+        var privilegesActive = ($('#privileges').find('.selectAll.active').length) + 1;
+
         btn.addClass('btn-success active')
            .removeClass('btn-default')
            .closest('.btn-group')
@@ -203,18 +232,34 @@
                .click();
         }
 
-        if ($('#privileges').find('.selectNone').not('.active').length == 0 && !$("#superadmin").is(':checked')) {
-            $('#superadmin').closest('.toggle').click();
+        btn = $('#privilegesTab').find('.superAdminAll');
+        if (privilegesAll === privilegesActive) {
+            btn.addClass('btn-success active')
+                .removeClass('btn-default')
+                .closest('.btn-group')
+                .find('.superAdminNone')
+                .addClass('btn-default')
+                .removeClass('btn-danger active');
+        } else {
+            btn.addClass('btn-default')
+                .removeClass('btn-success active')
+                .closest('.btn-group')
+                .find('.superAdminNone')
+                .addClass('btn-default')
+                .removeClass('btn-danger active');
         }
     }
 
     function unselectAllPrivileges(btn, btnOnly) {
+        var privilegesNone = $('#privileges').find('.selectNone').length;
+        var privilegesActive = ($('#privileges').find('.selectNone.active').length) + 1;
+
         btn.addClass('btn-danger active')
            .removeClass('btn-default')
            .closest('.btn-group')
            .find('.selectAll')
            .addClass('btn-default')
-           .removeClass('btn-success active')
+           .removeClass('btn-success active');
 
         if (btnOnly === false) {
             btn.closest('.panel')
@@ -222,8 +267,21 @@
                .click();
         }
 
-        if ($("#superadmin").is(':checked')) {
-            $('#superadmin').closest('.toggle').click();
+        btn = $('#privilegesTab').find('.superAdminNone');
+        if (privilegesNone === privilegesActive) {
+            btn.addClass('btn-danger active')
+                .removeClass('btn-default')
+                .closest('.btn-group')
+                .find('.superAdminAll')
+                .addClass('btn-default')
+                .removeClass('btn-success active');
+        } else {
+            btn.addClass('btn-default')
+                .removeClass('btn-danger active')
+                .closest('.btn-group')
+                .find('.superAdminAll')
+                .addClass('btn-default')
+                .removeClass('btn-success active');;
         }
     }
 
@@ -256,7 +314,7 @@
 
         $('#privileges').find('.panel').each(function(){
             selectPrivileges($(this))
-        })
+        });
 
         //$('.userStoryGroup.active').closest('.panel').find('.objectRadio').addClass('disabled').addClass('btn-success').removeClass('btn-danger').find('.label').html('On ');
 
@@ -397,14 +455,14 @@
     function serialize() {
         var jsonObject = {
             roleMembers : [],
-            privileges : [],
+            privileges : []
         };
 
         //role
         var properties = $('#roleInformation').find('input[type="text"], input[type="hidden"], textarea');
         $.each(properties, function(){
             jsonObject[$(this).attr('name')] = $(this).val();
-        })
+        });
 
         //Enabled
         properties = $('#enabled').prop('checked')
@@ -414,9 +472,9 @@
         var roleMembers = $("#members").find('input');
         $.each(roleMembers, function(){
             jsonObject.roleMembers.push($(this).data('memberid'));
-        })
+        });
 
-        if($('#superadmin').prop('checked')){
+        if ($("#privilegesTab").find('.superAdminAll.active').length !== 0) {
             jsonObject.privileges.push('*');
         }
         else{
