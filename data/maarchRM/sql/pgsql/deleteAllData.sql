@@ -2,7 +2,6 @@
 DELETE FROM "audit"."event";
 
 -- Auth
-DELETE FROM "auth"."publicUserStory";
 DELETE FROM "auth"."roleMember";
 DELETE FROM "auth"."privilege";
 DELETE FROM "auth"."servicePrivilege";
