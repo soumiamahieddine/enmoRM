@@ -28,15 +28,23 @@
     </div>
     <div class="form-group">
         <label for="comMeanCode">Communication mean<span style="color : red"> *</span></label>
-        <select class="form-control" id="contact_comMeanCode" name="comMeanCode">
-            <option></option>
-            <?merge communicationMeans ?>
-            <option value="[?merge .code ?]"><?merge .name ?></option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="value">Value<span style="color : red"> *</span></label>
-        <input type="text" class="form-control" name="value" placeholder="Value">
+        <div class="row " >
+            <div class=" col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="contact_comMeanCode"  name="comMeanName">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">&nbsp;<span class="caret"></span></button>
+                        <ul id="contact_comMeanCodeList" class="dropdown-menu dropdown-menu-right" role="menu">
+                            <?merge communicationMeans ?>
+                            <li><a data-code="[?merge .code ?]" class="titleSelection"><?merge .name ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class=" col-xs-6">
+                <input class="form-control" type="text"  name="value" placeholder="Value">
+            </div>
+        </div>
     </div>
     <div class="form-group">
         <label for="info">Information</label>
@@ -61,6 +69,11 @@
 <span class="hide" id="contact_Fax">Fax</span>
 
 <script type="text/javascript">
+
+    //
+    $("#contact_comMeanCodeList").on('click', ".titleSelection", function(){
+        $('#contact_comMeanCode').val($(this).text());
+    });
 
     // Read
     $("#contact_communicationList").on('click', 'a', function () {
@@ -103,7 +116,7 @@
             var communication = selection.data('communication');
 
             $.each(communication, function (key, value) {
-                $('#contact_communication-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
+                    $('#contact_communication-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
             });
         },
 
@@ -166,6 +179,14 @@
                 communication[$(this).attr('name')] = $(this).val();
             });
 
+            $('#contact_comMeanCodeList').find('a').each(function(){
+
+                if($('#contact_comMeanCode').val() == $(this).html()) {
+                    communication['comMeanCode'] =  $(this).data('code');
+                }
+            })
+
+
             return communication;
         },
 
@@ -174,7 +195,7 @@
             var a = $('#contact_communicationList').find('a');
 
             $.each(a, function(){
-                communicationList.push($(this).data('communication'));
+
             })
 
             return communicationList;
@@ -203,6 +224,7 @@
         },
 
         addCommunicationToScreen: function(communication) {
+
             var communicationList = $('#contact_communicationList');
             communicationList.find('.active').remove();
 
@@ -215,10 +237,16 @@
 
             var a = $('<a/>').data('communication', communication).attr('href', '#').addClass('list-group-item').appendTo(communicationList);
 
+            $('#contact_comMeanCodeList').find('a').each(function(){
+
+                if($(this).data('code') == communication.comMeanCode) {
+                    comMeanCode = $(this).text();
+                }
+            })
             $('<b/>').addClass('list-item-heading')
                      .text(communication.purpose)
                      .appendTo(a);
-            $('<p/>').addClass('list-group-item-text').text($('#contact_comMeanCode').find('[value="'+communication.comMeanCode+'"]').html()).appendTo(a);
+            $('<p/>').addClass('list-group-item-text').text(comMeanCode).appendTo(a);
             $('<p/>').addClass('list-group-item-text').text(communication.value).appendTo(a);
             $('<p/>').addClass('list-group-item-text').text(communication.info).appendTo(a);
         },
