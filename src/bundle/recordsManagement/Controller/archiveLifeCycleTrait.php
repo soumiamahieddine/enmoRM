@@ -47,12 +47,7 @@ trait archiveLifeCycleTrait
 
         if ($digitalResource) {
             $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-
-            //$eventItems['resId'] = $resource->resId;
-            //$eventItems['hashAlgorithm'] = $resource->hashAlgorithm;
-            //$eventItems['hash'] = $resource->hash;
             $eventItems['address'] = $digitalResource->address[0]->path;
-            //$eventItems['size'] = $resource->size;
 
             $res = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
 
@@ -61,12 +56,7 @@ trait archiveLifeCycleTrait
 
             foreach ($archive->digitalResources as $digitalResource) {
                 $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-
-                //$eventItems['resId'] = $digitalResource->resId;
-                //$eventItems['hashAlgorithm'] = $digitalResource->hashAlgorithm;
-                //$eventItems['hash'] = $digitalResource->hash;
                 $eventItems['address'] = $digitalResource->address[0]->path;
-                //$eventItems['size'] = $digitalResource->size;
 
                 $res[] = $this->lifeCycleJournalController->logEvent($type, 'recordsManagement/archive', $archive->archiveId, $eventItems, $operationResult);
             }
