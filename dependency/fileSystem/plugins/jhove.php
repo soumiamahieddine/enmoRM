@@ -81,6 +81,10 @@ class jhove
 
         $command = implode(' ', $tokens);
 
+        $locale = 'fr_FR.UTF-8';
+        setlocale(LC_ALL, $locale);
+        putenv('LC_ALL='.$locale);
+
         $output = array();
         $return = null;
 
