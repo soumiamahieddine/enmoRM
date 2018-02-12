@@ -341,10 +341,14 @@ class userAccount
     public function setPassword($userAccountId, $newPassword,$oldPassword)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
-        $oldPassword = hash($this->passwordEncryption, $oldPassword);
+        $oldPasswordHash = hash($this->passwordEncryption, $oldPassword);
 
-        if($userAccount->password != $oldPassword) {
+        if($userAccount->password != $oldPasswordHash) {
             throw new \core\Exception\UnauthorizedException("User password error.");
+        }
+
+        if ($oldPassword == $newPassword) {
+            throw new \core\Exception\ForbiddenException("The password is the same as the precedent.", 403);
         }
 
         return $this->updatePassword($userAccount, $newPassword);
