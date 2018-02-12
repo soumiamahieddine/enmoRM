@@ -10,7 +10,7 @@
 ### Échéancier d'élimination
 - `Added` Sort final non défini au versement ou à la modification désormais interprété comme *A définir ultérieurement*
 - `Changed` Modification du statut final des unités d'archive en fonction de l'opération qui mène à leur ressortie : *Détruite*, *Restituée* et *Transférée*
-- `Fixed` Interdiction de  toute demande sur les unités d'archive gelées  toute : élimination, restitution, modification, transfert
+- `Fixed` Interdiction de  toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
 
 ### Élimination
 - `Changed` La demande n'est valide que si l'unité d'archive et toutes ses unités contenues sont éliminables (à terme de la DUA ou sans règle de conservation, sort final *Détuire* ou sans sort final
