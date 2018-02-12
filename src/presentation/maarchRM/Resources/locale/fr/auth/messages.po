@@ -577,8 +577,11 @@ msgstr "Confirmer le mot de passe"
 msgid "Username not registered or wrong password."
 msgstr "Nom d'utilisateur ou mot de passe incorrect."
 
-msgid "A new password has been generated"
-msgstr "Un nouveau mot de passe a été généré"
+msgid "A mail has been send to reset your password"
+msgstr "Un mail a été envoyé pour réinitialiser votre mot de passe"
+
+msgid "Password has been updated"
+msgstr "Le mot de passe a été mis à jour"
 
 msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
