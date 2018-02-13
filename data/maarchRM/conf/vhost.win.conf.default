@@ -30,7 +30,7 @@
     SetEnv LAABS_APP maarchRM
 
     SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan
-    SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem
+    SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf
 
     SetEnv LAABS_PRESENTATION maarchRM
 	
@@ -54,6 +54,7 @@
     # SetEnv LAABS_MEMCACHE_SERVER "localhost:11211"
     # SetEnv LAABS_MEMCACHE_EXPIRE 3600
 
+    SetEnv LAABS_CSRF_PROTECTION
     SetEnv LAABS_CRYPT_KEY mySecretKey
     SetEnv LAABS_CRYPT_CIPHER MCRYPT_BLOWFISH
 </VirtualHost>
