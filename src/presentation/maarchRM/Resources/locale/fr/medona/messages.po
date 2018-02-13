@@ -616,3 +616,8 @@ msgstr "Organisation"
 
 msgid "No originator found"
 msgstr "Aucun producteur trouvé"
+
+msgid "Code"
+msgstr "Nom de la règle"
+msgctxt "meta-data"
+
