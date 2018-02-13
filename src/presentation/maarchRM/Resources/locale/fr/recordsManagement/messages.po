@@ -438,7 +438,7 @@ msgid "transfered"
 msgstr "Transférée"
 
 msgid "disposed"
-msgstr "&Eacute;liminée"
+msgstr "Éliminée"
 
 msgid "restituted"
 msgstr "Restituée"
