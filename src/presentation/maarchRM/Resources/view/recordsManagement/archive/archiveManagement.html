@@ -92,7 +92,6 @@ var ArchivesAction = {
         var relevant = null;
         var ids = [];
         var names = [];
-        var additionalSelector = "";
 
 
         if (status == '') {
@@ -107,32 +106,30 @@ var ArchivesAction = {
                 } else {
                     dataSelector.push('[data-archive-status="' + value + '"]');
                 }
-            })
+            });
         }
-        
+
         $.each(dataSelector, function (index, value) {
             selector.push('input' + value + ':checked');
-        })
-
-
+        });
 
         relevant = $(selector.join(', '));
-        if(relevant.length == 0) {
-            relevant = $('input[data-archive-status]:checked');
+        if(!relevant) {
+            relevant = [];
         }
 
         $.each(relevant, function () {
             ids.push($(this).val());
             id = '#'+ $(this).val();
             names.push($(id).attr('name'));
-        })
+        });
 
         selectedArchives = {
             selected: $('input[data-archive-status]:checked').length,
             relevant: relevant.length,
             ids: ids,
             names: names
-        }
+        };
 
         if (selectedArchives.selected == 0) {
             gritter.show($('#errorEmptyNode').html(), false);
