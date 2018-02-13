@@ -146,7 +146,7 @@ if (!defined('__CSRF_PROTECTOR__')) {
 		 *											file are not available
 		 *
 		 */
-		public static function init($length = null, $action = null)
+		public static function init($length = null, $action = null, $config = null)
 		{
 			/*
 			 * Check if init has already been called.
@@ -175,7 +175,9 @@ if (!defined('__CSRF_PROTECTOR__')) {
 			$standard_config_location = __DIR__ ."/../config.php";
 			$composer_config_location = __DIR__ ."/../../../../../config/csrf_config.php";
 
-			if (file_exists($standard_config_location)) {
+			if (!empty($config)) {
+                self::$config = $config;
+            } elseif (file_exists($standard_config_location)) {
 				self::$config = include($standard_config_location);
 			} elseif(file_exists($composer_config_location)) {
 				self::$config = include($composer_config_location);
@@ -356,8 +358,9 @@ if (!defined('__CSRF_PROTECTOR__')) {
 		 */
 		private static function failedValidationAction()
 		{
-			if (!file_exists(__DIR__ ."/../" .self::$config['logDirectory']))
+		    if (!file_exists(self::$config['logDirectory']) && !file_exists(__DIR__ ."/../" .self::$config['logDirectory'])) {
 				throw new logDirectoryNotFoundException("OWASP CSRFProtector: Log Directory Not Found!");
+		    }
 		
 			//call the logging function
 			static::logCSRFattack();
@@ -552,9 +555,18 @@ if (!defined('__CSRF_PROTECTOR__')) {
 		 */
 		protected static function logCSRFattack()
 		{
+            if (file_exists(self::$config['logDirectory'])) {
+                $logFile = fopen(self::$config['logDirectory']
+                    ."/" .date("m-20y") .".log", "a+");
+            }elseif (file_exists(__DIR__ ."/../" .self::$config['logDirectory'])) {
+                $logFile = fopen(__DIR__ ."/../" .self::$config['logDirectory']
+                    ."/" .date("m-20y") .".log", "a+");
+            } else {
+                throw new logDirectoryNotFoundException("OWASP CSRFProtector: Log Directory Not Found!");
+            }
 			//if file doesnot exist for, create it
-			$logFile = fopen(__DIR__ ."/../" .self::$config['logDirectory']
-			."/" .date("m-20y") .".log", "a+");
+			//$logFile = fopen(__DIR__ ."/../" .self::$config['logDirectory']
+			//."/" .date("m-20y") .".log", "a+");
 			
 			//throw exception if above fopen fails
 			if (!$logFile)
