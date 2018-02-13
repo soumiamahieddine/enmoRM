@@ -80,14 +80,14 @@ class organizationTree
     /**
      * The users list attached to the organization
      *
-     * @var organization/userPositionList[]
+     * @var organization/userPosition[]
      */
     public $userPosition;
 
     /**
      * The service list attached to the organization
      *
-     * @var organization/servicePositionList[]
+     * @var organization/servicePosition[]
      */
     public $servicePosition;
 

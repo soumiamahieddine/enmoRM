@@ -107,7 +107,7 @@ interface archivesInterface
 
     /**
      * Read the retention rule of multiple archives
-     * @param mixte $archiveIds Array of archive identifier or sigle archive identifier
+     * @param mixed $archiveIds Array of archive identifier or sigle archive identifier
      *
      * @action recordsManagement/archive/editArchiveRetentionRule
      *

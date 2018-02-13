@@ -21,7 +21,7 @@ class Parameter
     /**
      * @var string The documentation
      */
-    public $doc;    
+    public $description;  
 
     /* Methods */
     /**
@@ -36,7 +36,7 @@ class Parameter
     {
         parent::__construct(array($class, $method), $name);
 
-        $this->doc = $doc;
+        $this->description = $doc;
 
         $this->type = $type;
 

@@ -61,7 +61,7 @@ class serviceLevel
     /**
      * Add a new service level
      *
-     * @return recordsManagement The new service level object
+     * @return recordsManagement/serviceLevel The new service level object
      */
     public function newServiceLevel()
     {
