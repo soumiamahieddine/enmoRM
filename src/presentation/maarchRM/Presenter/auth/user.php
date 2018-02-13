@@ -95,7 +95,7 @@ class user
      * @return string The html view string
      */
     public function edit($user)
-    {https://www.messenger.com/t/1631567313732075
+    {
         $user->roles = empty($user->roles) ? false : json_encode($user->roles);
 
         $roles = $this->sdoFactory->find('auth/role');
