@@ -88,13 +88,13 @@ trait ForgotAccountTrait
         $token = $this->decodeToken($token);
 
         if (empty($token)) {
-            throw new \core\Exception\ForbiddenException("Unauthorized modification");
+            throw new \core\Exception\ForbiddenException("Invalid link");
         }
 
         $token->data->tokenDate = \laabs::newTimestamp($token->data->tokenDate);
 
         if (!$this->sdoFactory->exists("auth/account", array("accountId" => $token->data->accountId))) {
-            throw new \core\Exception\ForbiddenException("Unauthorized modification");
+            throw new \core\Exception\ForbiddenException("Invalid link");
         }
 
         $userAccount = $this->sdoFactory->read("auth/account", $token->data->accountId);
@@ -170,7 +170,7 @@ trait ForgotAccountTrait
     private function checkOldToken($userAccount, $token)
     {
         if (empty($userAccount->tokenDate) || $userAccount->tokenDate != $token->data->tokenDate) {
-            throw new \core\Exception\ForbiddenException("Unauthorized modification");
+            throw new \core\Exception\ForbiddenException("Expired link");
         }
     }
 
@@ -190,7 +190,7 @@ trait ForgotAccountTrait
         $diffWithLastChange = $userAccount->passwordLastChange->getTimestamp() - $token->data->tokenDate->getTimestamp();
 
         if ($diffWithLastChange > 0) {
-            throw new \core\Exception\ForbiddenException("Unauthorized modification");
+            throw new \core\Exception\ForbiddenException("Invalid link");
         }
     }
 
@@ -209,7 +209,7 @@ trait ForgotAccountTrait
         $diffWithSecurityPolicy = ($token->data->tokenDate->getTimestamp() + $this->securityPolicy["newPasswordValidity"] * 3600) - \laabs::newTimestamp()->getTimestamp();
 
         if ($diffWithSecurityPolicy <= 0) {
-            throw new \core\Exception\ForbiddenException("Unauthorized modification");
+            throw new \core\Exception\ForbiddenException("Expired link");
         }
     }
 }

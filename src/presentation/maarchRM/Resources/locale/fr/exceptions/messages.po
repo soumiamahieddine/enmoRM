@@ -428,6 +428,9 @@ msgstr "L'archive %1$s n'est pas dans le dossier %2$s."
 msgid "The folder only accepts archives originated from %s."
 msgstr "Le dossier n'accepte que des archives du service producteur %s."
 
-msgid "Unauthorized modification"
-msgstr "Modification non autorisée"
+msgid "Expired link"
+msgstr "Lien expiré"
+
+msgid "Invalid link"
+msgstr "Lien non valide"
 
