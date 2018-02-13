@@ -52,6 +52,10 @@ $('.multipleActionMenu').on('click', 'li', function() {
     var type = button.data('type');    
     var selection = ArchivesAction.getSelectedArchives(type);
 
+    if (selection === false) {
+        return;
+    }
+
     if(type == "checkHash") {
         ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
     } else {
@@ -76,13 +80,16 @@ $('#archiveList').on('click', '.actionMenu li', function() {
 
 var ArchivesAction = {
     actionsPossibility : {
-        retentionRule      : ['preserved'],
-        accessRule         : ['preserved'],
-        freeze             : ['preserved', 'restituable', 'disposable'],
-        unfreeze           : ['frozen'],
-        flagForDestruction : ['preserved'],
-        cancelDestruction  : ['disposable'],
-        checkHash          : ['preserved', 'frozen', 'restituable', 'disposable']
+        retentionRule        : ['preserved'],
+        accessRule           : ['preserved'],
+        freeze               : ['preserved', 'restituable', 'disposable', 'transferable'],
+        unfreeze             : ['frozen'],
+        flagForDestruction   : ['preserved'],
+        cancelDestruction    : ['disposable'],
+        checkHash            : ['preserved', 'frozen', 'restituable', 'disposable'],
+        requestCommunication : ['preserved', 'frozen'],
+        flagForRestitution   : ['preserved'],
+        flagForTransfer      : ['preserved']
     },
 
     getSelectedArchives : function(type) {
@@ -92,7 +99,6 @@ var ArchivesAction = {
         var relevant = null;
         var ids = [];
         var names = [];
-
 
         if (status == '') {
             dataSelector.push('[data-archive-status]');
