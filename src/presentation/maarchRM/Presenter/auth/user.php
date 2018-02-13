@@ -306,7 +306,7 @@ class user
     public function forgotAccount()
     {
         $json = $this->json;
-        $json->message = "A mail has been send to reset your password";
+        $json->message = "A reset email has been send";
         $json->message = $this->translator->getText($json->message);
 
         return $json->save();
