@@ -1626,3 +1626,9 @@ msgstr "Création d'un contact sur une organisation"
 msgid "organization/organization/readTodisplayorgunit"
 msgstr "Lecture de l'organisation de l'utilisateur"
 
+msgid "organization/orgType/delete_code_"
+msgstr "Suppression d'un type d'organisation"
+
+msgid "organization/organization/readOrgList"
+msgstr "Lecture des organisations"
+
