@@ -619,9 +619,6 @@ msgstr "Le mot de passe doit contenir des majuscules et minuscules"
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
 
-msgid "Generate a new password"
-msgstr "Générer un nouveau mot de passe"
-
 msgid "User added"
 msgstr "Utilisateur ajouté"
 
