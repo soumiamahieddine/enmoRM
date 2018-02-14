@@ -210,7 +210,7 @@ class archivalProfile
 
     /**
      * Get the standard archive field
-     * @return array
+     * @return array The standard archive field
      */
     public function getArchiveDescriptionFields()
     {
@@ -238,7 +238,7 @@ class archivalProfile
 
     /**
      * Get the standard document fields
-     * @return array
+     * @return array The standard document fields
      */
     public function getDocumentDescriptionFields()
     {
@@ -395,9 +395,9 @@ class archivalProfile
 
     /**
      * Get form of teh description class
-     * @param type $archivalProfileReference The reference of the archival profile
+     * @param string $archivalProfileReference The reference of the archival profile
      *
-     * @return object The description class object parsed with the profile descriptions
+     * @return recordsManagement/descriptionClass Object The description class object parsed with the profile descriptions
      */
     public function descriptionForm($archivalProfileReference)
     {
@@ -410,7 +410,7 @@ class archivalProfile
 
     /**
      * Check if archival
-     * @param type $archivalProfileReference The reference of the archival profile
+     * @param recordsManagement/archivalProfile $archivalProfile The archival profile object
      *
      * @return bool The result of the operation
      */
@@ -419,6 +419,11 @@ class archivalProfile
         return (bool) $this->sdoFactory->count('recordsManagement/archive', "archivalProfileReference = '$archivalProfile->reference'");
     }
 
+    /**
+     * Create a detail
+     * @param recordsManagement/archivalProfile $archivalProfile The archival profile object
+     *
+     */
     protected function createDetail($archivalProfile)
     {
         if (!empty($archivalProfile->archiveDescription)) {
@@ -455,6 +460,11 @@ class archivalProfile
 
     }
 
+    /**
+     * Delete a detail
+     * @param recordsManagement/archivalProfile $archivalProfile The archival profile object
+     *
+     */
     protected function deleteDetail($archivalProfile)
     {
         $this->sdoFactory->deleteChildren('recordsManagement/archiveDescription', $archivalProfile, 'recordsManagement/archivalProfile');

@@ -100,7 +100,6 @@ class fulltext
      * @param array                         $descriptionObject The document management object to index
      * @param \dependency\fulltext\Document $baseIndex         The document index
      *
-     * @return bool
      */
     public function mergeIndex($descriptionObject, $baseIndex)
     {
@@ -138,7 +137,7 @@ class fulltext
      * @param string                        $index    The fulltext index
      * @param \dependency\fulltext\Document $document The fulltext document
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function addDocument($index, $document)
     {
@@ -259,7 +258,7 @@ class fulltext
      * Validate a fulltext description of type name
      * @param string $field The value to validate
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     private function validateName($field)
     {
@@ -273,7 +272,7 @@ class fulltext
      * Validate a fulltext description of type boolean
      * @param string $field The value to validate
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     private function validateBoolean($field)
     {
@@ -299,7 +298,7 @@ class fulltext
      * Validate a fulltext description of type number
      * @param string $field The value to validate
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     private function validateNumber($field)
     {
@@ -312,7 +311,7 @@ class fulltext
      * Validate a fulltext description of type date
      * @param string $field The value to validate
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     private function validateDate($field)
     {

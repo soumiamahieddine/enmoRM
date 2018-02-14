@@ -108,7 +108,7 @@ class log implements archiveDescriptionInterface
      * @param string $text        The search args on text
      * @param array  $args        The search args on archive std properties
      *
-     * @return array
+     * @return object Array of description objects
      */
     public function search($description = null, $text = null, array $args = [])
     {
@@ -175,7 +175,7 @@ class log implements archiveDescriptionInterface
      * Read an log with its archive identifier
      * @param id $archiveId
      *
-     * @return recordsManagement/log
+     * @return recordsManagement/log Log with its archive identifier
      */
     public function read($archiveId)
     {

@@ -31,7 +31,7 @@ trait archiveModificationTrait
      * Read the retention rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archiveRetentionRule
+     * @return recordsManagement/archiveRetentionRule The retention rule object
      */
     public function editArchiveRetentionRule($archiveId)
     {
@@ -49,7 +49,7 @@ trait archiveModificationTrait
      * Read the access rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archiveAccessRule
+     * @return recordsManagement/archiveAccessRule The access rule updated
      */
     public function editArchiveAccessRule($archiveId)
     {
@@ -69,7 +69,7 @@ trait archiveModificationTrait
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param mixed                                  $archiveIds    The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modifyRetentionRule($retentionRule, $archiveIds)
     {
@@ -143,7 +143,7 @@ trait archiveModificationTrait
      * @param recordsManagement/archiveAccessCode $accessRule The access rule object
      * @param array                               $archiveIds The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modifyAccessRule($accessRule, $archiveIds)
     {

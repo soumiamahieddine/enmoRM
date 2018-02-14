@@ -32,7 +32,7 @@ trait archiveEntryTrait
     /**
      * Instanciate a new archive
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive An archive
      */
     public function newArchive()
     {
@@ -120,7 +120,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive
      * 
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive An archive
      */
     public function processZipContainer($archive)
     {

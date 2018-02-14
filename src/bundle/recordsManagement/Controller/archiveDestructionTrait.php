@@ -30,7 +30,7 @@ trait archiveDestructionTrait
      * Flag for disposal
      * @param array $archiveIds The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function dispose($archiveIds) 
     {
@@ -75,7 +75,7 @@ trait archiveDestructionTrait
      * Eliminate archive
      * @param string $archiveId The archive identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function eliminate($archiveId)
     {
@@ -97,7 +97,7 @@ trait archiveDestructionTrait
      * Cancel destruction
      * @param array $archiveIds Array of archive identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function cancelDestruction($archiveIds)
     {

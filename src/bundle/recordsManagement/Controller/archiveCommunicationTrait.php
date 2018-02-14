@@ -51,7 +51,7 @@ trait archiveCommunicationTrait
      * @param string $originatingStartDate
      * @param string $originatingEndDate
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
     public function search(
         $archiveId = null,
@@ -164,7 +164,7 @@ trait archiveCommunicationTrait
      * @param string $archiveId The archive identifier
      * @param string $resId     The resource identifier
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource Archive resource contents
      */
     public function consultation($archiveId, $resId)
     {
@@ -202,7 +202,7 @@ trait archiveCommunicationTrait
      * Retrieve an archive resource contents
      * @param string $archiveId The archive identifier
      *
-     * @return digitalResource/digitalResource[]
+     * @return digitalResource/digitalResource[] Array of digitalResource/digitalResource object
      */
     public function getDigitalResources($archiveId)
     {

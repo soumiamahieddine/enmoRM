@@ -46,7 +46,7 @@ class archiveFilePlanPosition
      * @param string $orgRegNumber
      * @param string $folderId
      * 
-     * @return array
+     * @return recordsManagement/archiveFilePlanPosition[] Array of archive
      */
     public function getFolderContents($orgRegNumber, $folderId=null)
     {

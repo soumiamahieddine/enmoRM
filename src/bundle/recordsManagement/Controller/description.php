@@ -45,7 +45,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * @param obejct $archive  The described archive
      * @param string $fullText The archive fullText
      * 
-     * @return bool
+     * @return bool The result of the operation
      */
     public function create($archive, $fullText=false)
     {
@@ -110,7 +110,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * Read the description
      * @param string $archiveId The archive identifier
      * 
-     * @return object
+     * @return mixed The description
      */
     public function read($archiveId)
     {
@@ -129,7 +129,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * @param string $text        The search args on text
      * @param array  $archiveArgs The search args on archive std properties
      * 
-     * @return array
+     * @return array The result of the research
      */
     public function search($description=null, $text=null, array $archiveArgs=[])
     {
@@ -184,7 +184,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * @param mixed  $description The description object
      * @param string $archiveId   The archive identifier
      * 
-     * @return bool
+     * @return bool The result of the operation
      */
     public function update($archive)
     {
