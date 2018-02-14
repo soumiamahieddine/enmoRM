@@ -122,7 +122,7 @@ class scheduling
      * Update a scheduling
      * @param batchProcessing/scheduling $scheduling
      *
-     * @return bool
+     * @return bool True if the operation succeed
      */
     public function update($scheduling)
     {
@@ -139,7 +139,7 @@ class scheduling
      * Delete a scheduling
      * @param id $schedulingId Scheduling identifier
      *
-     * @return boolean
+     * @return boolean True if the operation succeed
      */
     public function delete($schedulingId)
     {
@@ -157,7 +157,7 @@ class scheduling
      *
      * @param string $schedulingId The Scheduling identifier
      *
-     * @return batchProcessing/scheduling
+     * @return batchProcessing/scheduling The scheduling object
      */
     public function execute($schedulingId)
     {
@@ -213,7 +213,7 @@ class scheduling
     /**
      * Process all scheduling
      *
-     * @return boolean
+     * @return array The list of executedTask status
      */
     public function process()
     {
@@ -255,7 +255,7 @@ class scheduling
      * @param type $schedulingId
      * @param type $status
      *
-     * @return batchProcessing/scheduling
+     * @return batchProcessing/scheduling The scheduling object
      */
     public function changeStatus($schedulingId, $status)
     {

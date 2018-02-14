@@ -141,7 +141,7 @@ class logScheduling
      * Get event
      * @param string $schedulingId the scheduling identifier
      *
-     * @return batchProcessing/logScheduling Object
+     * @return array The list of log shceduling object
      */
     public function getLogBySchedulingId($schedulingId)
     {
