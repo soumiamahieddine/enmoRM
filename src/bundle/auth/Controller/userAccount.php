@@ -486,7 +486,7 @@ class userAccount
      * Check the user account has a privilege
      * @param string $userStory The user story name
      *
-     * @return boolean
+     * @return boolean True if the user has the privilege, false if he doesn't
      */
     public function hasPrivilege($userStory)
     {
@@ -537,7 +537,7 @@ class userAccount
      * Search user account
      * @param string $query The query
      *
-     * @return array The list of founded users
+     * @return array The list of found users
      */
     public function queryUserAccounts($query = "")
     {

@@ -61,7 +61,7 @@ class userAuthentication
      *
      * @throws \bundle\auth\Exception\authenticationException
      *
-     * @return bool
+     * @return auth/account The user account object
      */
     public function login($userName, $password)
     {
@@ -161,7 +161,7 @@ class userAuthentication
      * @param string $newPassword The user's new password
      * @param string $requestPath The requested path
      *
-     * @return boolean
+     * @return mixed The requested path if the account exists, false if it doesn't
      */
     public function definePassword($userName, $oldPassword, $newPassword, $requestPath)
     {
@@ -214,8 +214,6 @@ class userAuthentication
 
     /**
      * Log out a user
-     *
-     * @return bool
      */
     public function logout()
     {

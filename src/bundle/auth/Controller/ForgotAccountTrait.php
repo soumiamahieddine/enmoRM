@@ -81,7 +81,7 @@ trait ForgotAccountTrait
      *
      * @throws \core\Exception\ForbiddenException
      *
-     * @return boolean
+     * @return boolean True if the password has been reset
      */
     public function resetPassword($newPassword, $token)
     {
