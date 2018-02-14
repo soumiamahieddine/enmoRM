@@ -89,6 +89,14 @@ class serviceAccount
         $ownerOrganizations = [];
         $organizations = [];
 
+        foreach ($serviceAccount->servicePrivilege as $servicePrivilege ) {
+            foreach ($serviceAccount->servicePrivilegeOptions as $option) {
+                if($servicePrivilege->serviceURI == $option->serviceURI ) {
+                    $servicePrivilege->description = $option->description;
+                }
+            }
+        }
+
         foreach ($tabOrganizations as $org) {
             if($org->isOrgUnit){
                 $organizations[] = $org;
