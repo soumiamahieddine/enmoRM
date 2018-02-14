@@ -54,7 +54,7 @@ msgid "All repositories must be accessible"
 msgstr "Tous les supports de stockage doivent être accessibles"
 
 msgid "The end date is lower than the begin date."
-msgstr "La date de fin est plus petite que la date de début."
+msgstr "La date de fin est antérieure à la date de début."
 
 msgid "An owner is already defined."
 msgstr "Un Opérateur d'Archive est déjà défini."
@@ -213,10 +213,10 @@ msgid "Organization can''t be moved to an other organization"
 msgstr "L'organisation ne peux être déplacé sous une autre organisation."
 
 msgid "Organization can''t be moved to a descendent organization"
-msgstr "L'organisation' ne peux être déplacé sous une organisation descendant."
+msgstr "L'organisation' ne peut être déplacée sous une organisation descendante."
 
 msgid "Organization Archival Profile Access can''t be update "
-msgstr "Les acces aux profils d'archives ne peut pas être mis à jour."
+msgstr "Les accès aux profils d'archives ne peuvent pas être mis à jour."
 
 msgid "Access Code not created."
 msgstr "Règle de communicabilité non créé"
@@ -225,22 +225,22 @@ msgid "Access Code not updated."
 msgstr "Règle de communicabilité non mis à jour"
 
 msgid "Access Code not deleted."
-msgstr "Règle de communicabilité non détruite"
+msgstr "Règle de communicabilité non supprimée"
 
 msgid "The archival profile %s currently in use."
 msgstr "Le profil d'archive %s est utilisé."
 
 msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
-msgstr "Le niveau de service à besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
+msgstr "Le niveau de service a besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
 
 msgid "The Service level requires a redundant storage, but the selected cluster does not have sufficiant repositories."
-msgstr "Le niveau de service à besoin de plus d'un espace de stockage. La grappe de stockage sélectionnée n'en possède qu'un."
+msgstr "Le niveau de service a besoin de plus d'un espace de stockage. La grappe de stockage sélectionnée n'en possède qu'un."
 
 msgid "Permission denied"
-msgstr "Vous n'avez pas l'authorisation d'effectuer cette action."
+msgstr "Vous n'avez pas l'autorisation d'effectuer cette action."
 
 msgid "An organization is required to check an archive integrity"
-msgstr "Vous devez vous positionner dans un service pour verifier l'intégité d'une archive."
+msgstr "Vous devez vous positionner dans un service pour vérifier l'intégité d'une archive."
 
 msgid "A frozen archive can't be modified."
 msgstr "Une archive gelée ne peut pas être modifiée."
@@ -249,25 +249,25 @@ msgid "An action is already in progress on this archive."
 msgstr "Une action est déjà en cours sur cette archive."
 
 msgid "Permission denied: You have to choose a working organization unit to proceed this action."
-msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
+msgstr "Non autorisé : Vous devez vous positionner dans un service pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
 msgstr "La classe de description ne correspond pas au profil d'archive."
 
 msgid "Archive not set for destruction."
-msgstr "L'archive n'est pas prévu pour être détruite."
+msgstr "L'archive n'est pas prévue pour être détruite."
 
 msgid "Children archives : Archive not set for destruction."
-msgstr "Une archive enfant n'est pas prévu pour être détruite."
+msgstr "Une archive enfant n'est pas prévue pour être détruite."
 
 msgid "Archive not set for preservation."
-msgstr "L'archive n'est pas prévu pour être transferé."
+msgstr "L'archive n'est pas prévue pour être transférée."
 
 msgid "Disposal date not reached."
 msgstr "Date de fin d'utilisation non-atteinte."
 
 msgid "Children archives : Disposal date not reached."
-msgstr "Archives enfants : Date de fin d'utilisation non-atteinte."
+msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 
 msgid "The batch folder does not exist."
 msgstr "Le dossier de traitement par lot n'existe pas."
@@ -303,10 +303,10 @@ msgid "The archive can not be moved in a different organization unit."
 msgstr "L'archive ne peut pas être déplacée vers un autre service producteur."
 
 msgid "Description field not deleted."
-msgstr "Le champs de description n'a pas été détruit."
+msgstr "Le champ de description n'a pas été détruit."
 
 msgid "The field \"%1$s\" is required"
-msgstr "Le champs \"%1$s\" est obligatoire."
+msgstr "Le champ \"%1$s\" est obligatoire."
 
 msgid "The value of \"%1$s\" not respect the type \"%2$s\""
 msgstr "La valeur de \"%1$s\" ne respecte pas le type \"%2$s\""
@@ -327,7 +327,7 @@ msgid "Retention rule not updated."
 msgstr "Règle de conservation non mise à jour"
 
 msgid "Retention rule not deleted."
-msgstr "Règle de conservation non détruite"
+msgstr "Règle de conservation non supprimée"
 
 msgid "Service level not created."
 msgstr "Niveau de service non créé"
@@ -339,7 +339,7 @@ msgid "Service level not updated."
 msgstr "Niveau de service non mis à jour"
 
 msgid "Service level not deleted."
-msgstr "Niveau de service non détruit"
+msgstr "Niveau de service non supprimé"
 
 msgid "Content not created"
 msgstr "Contenu non créé"
@@ -348,19 +348,19 @@ msgid "Content description not updated"
 msgstr "Contenu de description non mis à jour"
 
 msgid "Content description not deleted"
-msgstr "Contenu de description non détruit"
+msgstr "Contenu de description non supprimé"
 
 msgid "Unable to detect format"
 msgstr "Impossible de détecter le format"
 
 msgid "No current organization choosen"
-msgstr "Aucune organisation de travail selectionné"
+msgstr "Aucune organisation de travail selectionnée"
 
 msgid "Error of conversion process"
 msgstr "Erreur lors de la conversion"
 
 msgid "Relation not deleted."
-msgstr "La relation n'a pas pu être détruite."
+msgstr "La relation n'a pas pu être supprimée."
 
 msgid "The message does not exist"
 msgstr "Le bordereau n'existe pas."
@@ -369,7 +369,7 @@ msgid "Cluster %s not found."
 msgstr "La grappe de stockage %s est introuvable."
 
 msgid "Cluster %s not created."
-msgstr "La grappe de stockage %s n'a pas été créé."
+msgstr "La grappe de stockage %s n'a pas été créée."
 
 msgid "Cluster %s not updated."
 msgstr "La grappe de stockage %s n'a pas été mise à jour."
@@ -384,22 +384,22 @@ msgid "%s not found"
 msgstr "%s n'a pas été trouvé."
 
 msgid "Invalid hash for resource %1$s at address %2$s"
-msgstr "Empreinte numérique invalide pour la resource %1$s à l'adresse %2$s."
+msgstr "Empreinte numérique invalide pour la ressource %1$s à l'adresse %2$s."
 
 msgid "Conversion rule %s not found."
-msgstr "Règle de conversion %s non trouvé"
+msgstr "Règle de conversion %s non trouvée"
 
 msgid "Conversion rule with Puid %s already exist."
-msgstr "La règle de conversion avec le Puid %s existe déjà."
+msgstr "La règle de conversion avec le PuID %s existe déjà."
 
 msgid "Resource %1$s not created: %2$s"
-msgstr "La resource %s n'a pas été créé : %2$s"
+msgstr "La ressource %s n'a pas été créée : %2$s"
 
 msgid "Resource %s could not be retrieved."
-msgstr "Le resource %s n'a pas été retrouvé."
+msgstr "La ressource %s n'a pas été retrouvée."
 
 msgid "Resource not deleted at address %1$s : %2$s"
-msgstr "La resource n'a pas pu être supprimée à l'adresse %1$s : %2$s"
+msgstr "La ressource n'a pas pu être supprimée à l'adresse %1$s : %2$s"
 
 msgid "No address return for creation of container in repository %s."
 msgstr "Aucune adresse pour la création du conteneur dans le support de stockage %s."
@@ -408,10 +408,10 @@ msgid "No address return for storage of resource in repository %s."
 msgstr "Aucune adresse pour le stockage de resource dans le support de stockage %s."
 
 msgid "Resource contents not available at address %s."
-msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s."
+msgstr "Le contenu de la ressource n'est pas disponible à l'adresse %s."
 
 msgid "No repository found with reference %s"
-msgstr "Aucune repertoire de stockage trouvé avec l'identifiant %s."
+msgstr "Aucun répertoire de stockage trouvé avec l'identifiant %s."
 
 msgid "Unknown event type: %s"
 msgstr "Événement de type %s non trouvé"
