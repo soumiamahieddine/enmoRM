@@ -577,8 +577,11 @@ msgstr "Confirmer le mot de passe"
 msgid "Username not registered or wrong password."
 msgstr "Nom d'utilisateur ou mot de passe incorrect."
 
-msgid "A new password has been generated"
-msgstr "Un nouveau mot de passe a été généré"
+msgid "A reset email has been send"
+msgstr "Un courriel de réinitialisation a été envoyé"
+
+msgid "Password has been updated"
+msgstr "Le mot de passe a été mis à jour"
 
 msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
@@ -615,9 +618,6 @@ msgstr "Le mot de passe doit contenir des majuscules et minuscules"
 
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
-
-msgid "Generate a new password"
-msgstr "Générer un nouveau mot de passe"
 
 msgid "User added"
 msgstr "Utilisateur ajouté"

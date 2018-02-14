@@ -29,7 +29,7 @@ interface orgContactInterface
 
     /**
      * Add contact to the organization
-     * @param organisation/orgContact $orgContact The organisation contact to record
+     * @param organization/orgContact $orgContact The organisation contact to record
      *
      * @action organization/orgContact/create
      */
@@ -51,7 +51,7 @@ interface orgContactInterface
 
     /**
      * Delete organization contact
-     * @param organisation/orgContact $orgContact The organisation contact to record
+     * @param organization/orgContact $orgContact The organisation contact to record
      *
      * @action organization/orgContact/create
      */

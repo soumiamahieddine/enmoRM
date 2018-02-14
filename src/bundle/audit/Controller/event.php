@@ -208,7 +208,7 @@ class event
      * @param string    $term      Term to search
      * @param string    $wording   Wording to search
      *
-     * @return Array Array of audit/event object
+     * @return audit/event[] Array of audit/event object
      */
     public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
     {

@@ -53,14 +53,32 @@ interface authenticationInterface
     public function readUserLogout();
 
      /**
-     * Generate a new password
+     * Generate reset token
      * @param string $username The username
      * @param string $email    The email of the user
      *
-     * @uses auth/userAccount/updateGeneratepassword
-     * @return auth/user/generatePassword
+     * @uses auth/userAccount/updateForgotaccount
+     * @return auth/user/forgotaccount
      */
-    public function updateUserGeneratepassword($username, $email);
+    public function updateUserGenerateresettoken($username, $email);
+
+     /**
+     * Get form to reset the password
+     * @param string $token The token
+     *
+     * @return auth/user/formChangePassword
+     */
+    public function readUserChangepassword($token);
+
+     /**
+     * Reset the password
+     * @param string $newPassword The new password
+     * @param string $token       The token
+     *
+     * @uses auth/userAccount/updateResetpassword
+     * @return auth/user/resetPassword
+     */
+    public function updateUserResetpassword($newPassword, $token);
 
     /**
      * Get form to edit user information

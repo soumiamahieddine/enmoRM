@@ -289,7 +289,7 @@ interface organizationInterface
     /**
      * List of organizations
      *
-     * @return An array of organization and service
+     * @return array An array of organization and service
      *
      * @action organization/organization/todisplay
      */

@@ -30,7 +30,7 @@
     SetEnv LAABS_APP maarchRM
 
     SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan
-    SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem
+    SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf
 
     SetEnv LAABS_PRESENTATION maarchRM
 	

@@ -46,7 +46,7 @@ class accessRule
     /**
      * List the access rule's code
      *
-     * @return recordManagement/accessRule The list of access code
+     * @return recordsManagement/accessRule The list of access code
      */
     public function index()
     {

@@ -28,8 +28,8 @@
                 </div>
                 <?merge profile.bool().not() ?>
                 <div class="form-group">
-                    <button class="btn btn-default" id="user_generatePassword" type="button" data-useraccountid="[?merge user.accountId ?]" title="Generate a new password">
-                        <span class="fa fa-random">&nbsp;</span>Generate a new password</button>
+                    <button class="btn btn-default" id="user_resetPassword" type="button" data-useraccountid="[?merge user.accountId ?]" title="Generate a new password">
+                        <span class="fa fa-random">&nbsp;</span>Reset password</button>
                 </div>
                 <div class="collapse well" id="user_password">
                     <div class="form-group">
@@ -140,7 +140,7 @@
     });
 
     // generate a new password
-    $("#user_generatePassword").on('click', function () {
+    $("#user_resetPassword").on('click', function () {
         let username = $.trim($('#accountName').val());
         let email = $.trim($('#emailAddress').val());
 
@@ -149,7 +149,7 @@
         }
 
         ajax($(this), {
-            url         : "/user/generatePassword",
+            url         : "/user/generateResetToken",
             data        : JSON.stringify({username : username, email : email}),
             contentType : 'application/json',
             type        : "PUT",

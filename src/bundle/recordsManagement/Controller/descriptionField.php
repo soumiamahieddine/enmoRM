@@ -43,7 +43,7 @@ class descriptionField
     /**
      *  List
      *
-     * @return recordManagement/descriptionField[] The list of retention rules
+     * @return recordsManagement/descriptionField[] The list of retention rules
      */
     public function index()
     {
@@ -80,7 +80,7 @@ class descriptionField
      *  Read a field
      * @param string $name The field name
      *
-     * @return recordManagement/descriptionField The description field
+     * @return recordsManagement/descriptionField The description field
      */
     public function read($name)
     {

@@ -675,7 +675,7 @@ class digitalResource
      * Check if the resource can be convertible
      * @param $digitalResource/digitalResource $digitalResource The resource object
      *
-     * @return mixte The convertion rule or false if it's no possible
+     * @return mixed The convertion rule or false if it's no possible
      */
     public function isConvertible($digitalResource) {
         if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {

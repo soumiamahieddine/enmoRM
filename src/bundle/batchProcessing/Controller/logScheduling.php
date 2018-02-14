@@ -82,7 +82,7 @@ class logScheduling
      * @param timestamp     $fromDate
      * @param timestamp     $toDate
      *
-     * @return Array Array of batchScheduling/logScheduling object
+     * @return array Array of batchScheduling/logScheduling object
      */
     /*public function search($name = null, $task = null, $executedBy = null, $launchedBy = null, $status = null, $fromDate =null, $toDate =  null)
     {

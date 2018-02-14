@@ -430,25 +430,25 @@ msgid "frozen"
 msgstr "Gelée"
 
 msgid "disposable"
-msgstr "Élimination demandée"
+msgstr "En cours d'élimination"
 
 msgid "Select an archiver"
 msgstr "Sélectionnez un Service d'Archives"
 
 msgid "transferable"
-msgstr "Transfert en cours"
+msgstr "En cours de transfert"
 
 msgid "transfered"
 msgstr "Transférée"
 
 msgid "disposed"
-msgstr "Détruite"
+msgstr "Éliminée"
 
 msgid "restituted"
 msgstr "Restituée"
 
 msgid "restituable"
-msgstr "Restitution demandée"
+msgstr "En cours de restitution"
 
 msgid "preserved"
 msgstr "Conservée"

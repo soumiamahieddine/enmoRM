@@ -47,7 +47,7 @@ interface archiveRelationshipInterface
     /**
      * New empty relationship
      *
-     * @return recordsManagement/archivalRelationship The archival relationship object
+     * @return recordsManagement/archiveRelationship The archival relationship object
      *
      * @request READ recordsManagement/relationship
      * @view recordsManagement/relationship/edit

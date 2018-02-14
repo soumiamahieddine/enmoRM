@@ -271,7 +271,7 @@ class archive
     /**
      * The contained archives list
      *
-     * @var recordManagement/archive[]
+     * @var recordsManagement/archive[]
      */
     public $contents;
 }

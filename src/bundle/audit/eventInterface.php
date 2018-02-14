@@ -39,13 +39,13 @@ interface eventInterface
 
     /**
      * Get search form for entries
-     *@param string    $eventType Type of event
-     *@param timestamp $fromDate  Start date
-     *@param timestamp $toDate    End date
-     *@param string    $accountId Id of account
-     *@param string    $event     Variables
-     *@param string    $term      Term to search
-     *@param string    $wording   Wording to search
+     * @param string    $eventType Type of event
+     * @param timestamp $fromDate  Start date
+     * @param timestamp $toDate    End date
+     * @param string    $accountId Id of account
+     * @param string    $event     Variables
+     * @param string    $term      Term to search
+     * @param string    $wording   Wording to search
      * 
      * @action audit/event/search
      */

@@ -119,20 +119,11 @@ class userAuthentication
             throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
         }
 
-        if (!empty($userAccount->lastLogin) && $userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
-            $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
-            $limitToChange = $userAccount->passwordLastChange->shift($interval)->getTimestamp();
-            $diff = $limitToChange - \laabs::newDateTime()->getTimestamp();
-
-            if ($diff < 0) {
-                throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
-            }
-        }
-
         // Login success, update user account values
         $userLogin->badPasswordCount = 0;
         $userLogin->locked = false;
         $userLogin->lockDate = null;
+        $userLogin->tokenDate = null;
         $userLogin->lastLogin = $currentDate;
 
         $this->sdoFactory->update($userLogin, 'auth/account');

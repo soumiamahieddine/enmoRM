@@ -89,7 +89,7 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            if (!in_array($archive->status, array("preserved", "frozen"))) {
+            if (!in_array($archive->status, array("preserved"))) {
                 array_push($res['error'], $archiveId);
 
                 $operationResult = false;
@@ -161,7 +161,7 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            if (!in_array($archive->status, array("preserved", "frozen"))) {
+            if (!in_array($archive->status, array("preserved"))) {
                 array_push($res['error'], $archiveId);
 
                 $operationResult = false;
