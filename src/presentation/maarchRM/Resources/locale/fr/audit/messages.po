@@ -1632,3 +1632,9 @@ msgstr "Suppression d'un type d'organisation"
 msgid "organization/organization/readOrgList"
 msgstr "Lecture des organisations"
 
+msgid "auth/userAccount/updateForgotaccount"
+msgstr "Réinitialisation du compte oublié"
+
+msgid "auth/userAccount/updateResetpassword"
+msgstr "Réinitialisation du mot de passe"
+
