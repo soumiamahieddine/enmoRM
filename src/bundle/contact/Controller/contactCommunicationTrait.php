@@ -113,7 +113,7 @@ trait contactCommunicationTrait
      * Delete a communication
      * @param id $communicationId The Id of the communication
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function deleteCommunication($communicationId)
     {
