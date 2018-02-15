@@ -1,4 +1,4 @@
-j<?php
+<?php
 
 /*
  * Copyright (C) 2015 Maarch
