@@ -179,7 +179,7 @@ class repository
      * @param digitalResource/repository      $repository The repository id
      * @param digitalResource/digitalResource $resource   The digital resource to store
      *
-     * @return digitalResource/address
+     * @return digitalResource/address adress object
      */
     public function storeResource($repository, $resource)
     {
@@ -224,7 +224,7 @@ class repository
      * @param digitalResource/repository $repository
      * @param digitalResource/address    $address
      *
-     * @return string
+     * @return string Resource contents
      */
     public function retrieveContents($repository, $address)
     {

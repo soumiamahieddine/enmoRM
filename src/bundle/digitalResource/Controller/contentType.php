@@ -44,7 +44,7 @@ class contentType
     /**
      * Allow to display all repositories
      *
-     * @return bool
+     * @return digitalResource/contentType[] Array of digitalResource/contentType object
      */
     public function index()
     {
@@ -55,7 +55,7 @@ class contentType
      * Edit a repository
      * @param string $name
      *
-     * @return object contentType object
+     * @return digitalResource/contentType contentType object
      */
     public function get($name)
     {
@@ -66,7 +66,7 @@ class contentType
      * create a repository
      * @param digitalResource/contentType $contentType The contentType object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function create($contentType)
     {
@@ -79,7 +79,7 @@ class contentType
      * update a repository
      * @param digitalResource/contentType $contentType The contentType object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function update($contentType)
     {

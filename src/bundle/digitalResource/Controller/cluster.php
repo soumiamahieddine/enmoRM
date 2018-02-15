@@ -1,4 +1,4 @@
-<?php
+j<?php
 
 /*
  * Copyright (C) 2015 Maarch
@@ -46,7 +46,7 @@ class cluster
     /**
      * Allow to display all clusters
      *
-     * @return digitalResource/cluster[]
+     * @return digitalResource/cluster[] Array of digitalResource/cluster object
      */
     public function index()
     {
@@ -112,7 +112,7 @@ class cluster
      * create a cluster
      * @param digitalResource/cluster $cluster The cluster object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function create($cluster)
     {
@@ -147,7 +147,7 @@ class cluster
      * update a repository
      * @param digitalResource/cluster $cluster The cluster object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function update($cluster)
     {
@@ -248,7 +248,7 @@ class cluster
      * @param string $path
      * @param mixed  $metadata
      * 
-     * @return array
+     * @return String[] Array of ressource container on the cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
     {
@@ -311,7 +311,7 @@ class cluster
      * @param digitalResource/cluster         $cluster
      * @param digitalResource/digitalResource $resource
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function retrieveResource($cluster, $resource)
     {
@@ -358,7 +358,7 @@ class cluster
      * @param type $cluster  The cluster object where the resource is store
      * @param type $resource The digitalResource object to verify
      *
-     * @return digitalResource/digitalResource The digitalResouce verify
+     * @return digitalResource/digitalResource The digitalResource verify
      */
     public function verifyResource($cluster, $resource)
     {

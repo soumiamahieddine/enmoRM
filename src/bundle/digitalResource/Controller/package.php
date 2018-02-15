@@ -55,7 +55,7 @@ class package {
      * @param string                            $clusterId The cluster to apply for store procedure
      * @param integer                           $size      The size of packages to create. If ignored all resources are packed into one unique package
      *
-     * @return digitalResource/package[]
+     * @return digitalResource/package[] Array of digitalResource/package object
      */
     public function packResources(array $resources, $metadata = null, $clusterId, $size = false) {
         if ($size) {
@@ -80,7 +80,7 @@ class package {
      * @param object                            $metadata  An object that contains the package metadata
      * @param string                            $clusterId The cluster to apply for store procedure
      *
-     * @return digitalResource/package[]
+     * @return digitalResource/package[] Array of digitalResource/package object
      */
     protected function createPackage($resources, $metadata = null, $clusterId) {
         $package = \laabs::newInstance('digitalResource/package');

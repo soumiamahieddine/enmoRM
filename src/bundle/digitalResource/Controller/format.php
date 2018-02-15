@@ -47,7 +47,7 @@ class format
 
     /**
      * Get all the formats
-     * @return digitalResource/format[]
+     * @return digitalResource/format[] Array of digitalResource/format object
      */
     public function index()
     {
@@ -69,7 +69,7 @@ class format
      * Get a format by id
      * @param string $puid The puid of format to retrieve
      *
-     * @return digitalResource/format
+     * @return digitalResource/format Format object
      */
     public function get($puid)
     {
@@ -88,7 +88,7 @@ class format
      * Get all formats matching mimetype
      * @param string $mimetype The mimetype of formats to retrieve
      *
-     * @return digitalResource/format[]
+     * @return digitalResource/format[] Array of digitalResource/format object
      */
     public function mimetype($mimetype)
     {
@@ -109,7 +109,7 @@ class format
      * Get all formats matching extension
      * @param string $extension The extension of formats to retrieve
      *
-     * @return digitalResource/format[]
+     * @return digitalResource/format[] Array of digitalResource/format object
      */
     public function extension($extension)
     {
@@ -130,7 +130,7 @@ class format
      * Get the list of type
      * @param string $query
      *
-     * @return array The list of type found
+     * @return digitalResource/format[] The list of type found
      */
     public function find($query = false)
     {
@@ -163,7 +163,7 @@ class format
 
     /**
      * Get the signature file info
-     * @return string
+     * @return string The signature file info
      */
     public function formatDescription()
     {
@@ -221,7 +221,7 @@ class format
      * Get format from file
      * @param string $filename
      *
-     * @return format
+     * @return format The format from file
      */
     public function identifyFormat($filename)
     {
@@ -237,7 +237,7 @@ class format
      * Get format from file
      * @param string $filename
      *
-     * @return format
+     * @return format The format from file
      */
     public function validateFormat($filename)
     {
@@ -257,7 +257,7 @@ class format
      * Parse a format element from Xml into a digitalResource/format object
      * @param \DOMElement $formatElement
      *
-     * @return digitalResource/format
+     * @return digitalResource/format format object
      */
     protected function parseFormatElement($formatElement)
     {

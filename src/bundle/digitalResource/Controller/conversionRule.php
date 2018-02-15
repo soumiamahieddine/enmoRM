@@ -43,7 +43,7 @@ class conversionRule
     /**
      * Allow to display all conversion rules
      *
-     * @return digitalResource/$conversionRule[]
+     * @return digitalResource/conversionRule[] Array of digitalResource/conversionRule object
      */
     public function index()
     {
@@ -116,7 +116,7 @@ class conversionRule
      * Update a conversion rule
      * @param digitalResource/conversionRule $conversionRule The conversion rule object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function update($conversionRule)
     {
@@ -129,7 +129,7 @@ class conversionRule
      * Delete a conversion rule
      * @param digitalResource/conversionRule $conversionRuleId The conversion rule identifier
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function delete($conversionRuleId)
     {
