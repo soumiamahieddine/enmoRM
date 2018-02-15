@@ -69,7 +69,7 @@ class journal
     /**
      * Get event type list
      *
-     * @return array The eventType list
+     * @return lifeCycle/eventFormat[] The eventType list
      */
     public function listEventType()
     {
@@ -170,7 +170,7 @@ class journal
      * @param mixed  $date   The journal date
      * @param string $needle The string to search in the journal
      *
-     * @return array Array of life cycle event
+     * @return object[] Array of life cycle event
      */
     public function matchEvent($date, $needle)
     {
@@ -217,7 +217,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return array Array of life cycle event
+     * @return object[] Array of life cycle event
      */
     public function getObjectEvents($objectId, $objectClass, $eventType = null)
     {
@@ -246,7 +246,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return string
+     * @return string An event
      */
     public function getEventFromJournal($eventId)
     {
@@ -301,7 +301,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return array The result of the request
+     * @return object[] The result of the request
      */
     public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = null, $numberOfResult = 300)
     {
@@ -411,7 +411,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return string
+     * @return string The event
      */
     public function getNextEvent($eventType = null, $chain = true)
     {
@@ -497,7 +497,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return array Array of live cycle event
+     * @return object[] Array of live cycle event
      */
     public function getEvents($archiveId, $searchingStartDate = null)
     {
@@ -725,7 +725,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return array Array of life cycle event
+     * @return object[] Array of life cycle event
      */
     public function readJournal($journalId, $offset = 0, $limit = 300)
     {
@@ -747,7 +747,7 @@ class journal
      *
      * @throws \Exception
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function checkIntegrity($archiveId)
     {
