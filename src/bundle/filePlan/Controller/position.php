@@ -48,7 +48,7 @@ class position
      * @param string $archiveId
      * @param string $folderId
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function add($archiveId, $folderId)
     {
@@ -71,7 +71,7 @@ class position
      * @param string $fromFolderId
      * @param string $toFolderId
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function move($archiveId, $fromFolderId=null, $toFolderId=null)
     {
@@ -98,7 +98,7 @@ class position
      * @param string $ownerOrgRegNumber
      * @param string $folderId
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function index($ownerOrgRegNumber, $folderId=null)
     {
@@ -116,7 +116,7 @@ class position
      * @param string $ownerOrgRegNumber
      * @param string $folderId
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function count($ownerOrgRegNumber, $folderId=null)
     {

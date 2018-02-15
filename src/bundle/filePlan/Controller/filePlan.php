@@ -42,7 +42,7 @@ class filePlan
     /**
      * Get the file plan's tree
      *
-     * @return array The list of file plan folder with their position
+     * @return object[] The list of file plan folder with their position
      */
     public function getTree()
     {
@@ -150,7 +150,7 @@ class filePlan
      * @param string $folderId
      * @param string $parentFolderId
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function move($folderId, $parentFolderId=null)
     {
@@ -182,7 +182,7 @@ class filePlan
      * Update a folder
      * @param filePlan/folder $folder The new folder
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function update($folder)
     {
@@ -198,7 +198,7 @@ class filePlan
      * Delete a folder
      * @param mixed $folder The folder identifier or the folder itself 
      * 
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function delete($folder)
     {
@@ -233,7 +233,7 @@ class filePlan
      * Get organization identifier from tree
      * @param object $tree   The organization tree
      * 
-     * @return array the organization identifier list
+     * @return object[] the organization identifier list
      */
     protected function getOrgIdsFromTree($tree)
     {
