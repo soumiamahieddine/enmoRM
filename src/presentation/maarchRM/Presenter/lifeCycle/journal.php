@@ -92,6 +92,11 @@ class journal
                             $objectType = 'recordsManagement/archivalProfile';
                             $domainLabel = 'Archival profile';
                             break;
+
+                        case 'periodicIntegrityCheck':
+                            $objectType = 'recordsManagement/serviceLevel';
+                            $domainLabel = 'Service level';
+                            break;
                     }
                     break;
 

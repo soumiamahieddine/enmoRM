@@ -631,3 +631,6 @@ msgstr "Échanges de données d'Archive"
 
 msgid "recordsManagement"
 msgstr "Données d'Archive"
+
+msgid "Service level"
+msgstr "Niveau de service"
