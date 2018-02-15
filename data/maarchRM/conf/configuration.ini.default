@@ -310,7 +310,7 @@ config = '{
               },
               "errorRedirectionPage" : "",
               "customErrorMessage" : "",
-              "jsUrl" : "public/js/csrf/csrfprotector.js",
+              "jsUrl" : "/public/js/csrf/csrfprotector.js",
               "tokenLength" : 10,
               "cookieConfig" : {
                   "path" : "",
