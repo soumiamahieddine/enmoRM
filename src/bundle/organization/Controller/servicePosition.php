@@ -32,7 +32,7 @@ class servicePosition extends abstractPosition
     /**
      * Get service postions list
      *
-     * @return array The list of positions
+     * @return organization/servicePosition[] The list of positions
      */
     protected function listPositions()
     {
@@ -53,7 +53,7 @@ class servicePosition extends abstractPosition
      * Get service position
      * @param string $serviceAccountId The service account identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function getPosition($serviceAccountId)
     {
@@ -79,7 +79,7 @@ class servicePosition extends abstractPosition
     /**
      * Get my all positions
      *
-     * @return array The list of my position's
+     * @return organization/servicePosition[] The list of my position's
      */
     public function getMyPositions()
     {

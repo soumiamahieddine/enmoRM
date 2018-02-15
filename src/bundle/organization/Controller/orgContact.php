@@ -46,7 +46,7 @@ class orgContact
      * Create a organization contact
      * @param organization/contact $orgContact The organization contact to record
      *
-     * @return organization/orgContact
+     * @return organization/orgContact The organization contact
      */
     public function create($orgContact)
     {
@@ -59,7 +59,7 @@ class orgContact
      * Get all organization contact by organization identifier
      * @param id $orgId The organization identifier
      *
-     * @return organization/orgContact[]
+     * @return organization/orgContact[] List of organization contact
      */
     public function getbyOrg($orgId)
     {
@@ -74,7 +74,7 @@ class orgContact
      * Get all organization contact by contact identifier
      * @param id $contactId The contact identifier
      *
-     * @return organization/orgContact[]
+     * @return organization/orgContact[] List of organization contact identified
      */
     public function getbyContact($contactId)
     {
@@ -89,7 +89,7 @@ class orgContact
      * Delete an organization contact
      * @param organization/contact $orgContact The organization contact to delete
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function delete($orgContact)
     {

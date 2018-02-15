@@ -45,7 +45,7 @@ class organization
      * Index of organizations
      * @param string $query The query of the index
      *
-     * @return array An array of organization
+     * @return organization/organization[] An array of organization
      */
     public function index($query = null)
     {
@@ -56,7 +56,7 @@ class organization
      * List of organizations
      * @param string $query The query of the index
      *
-     * @return array An array of organization whith service
+     * @return organization/organization[] An array of organization whith service
      */
     public function todisplay($query = null)
     {
@@ -95,7 +95,7 @@ class organization
      * List of orgUnit
      * @param string $query The query of the index
      *
-     * @return array An array of orgUnit
+     * @return object[] An array of orgUnit
      */
     public function todisplayOrgUnit($query = null)
     {
@@ -176,7 +176,7 @@ class organization
      * @param object $roots            The organization tree roots
      * @param array  $organizationList The list of organization sorted by parent organization
      * 
-     * @return array
+     * @return object[]
      */
     protected function buildTree($roots, $organizationList)
     {
@@ -316,7 +316,7 @@ class organization
      * List organisations
      * @param string $role The role of organizations
      *
-     * @return array The organizations list
+     * @return organization/organization[] The organizations list
      */
     public function orgList($role = null)
     {
@@ -333,7 +333,7 @@ class organization
      * List organisations
      * @param string $role The role of organizations
      *
-     * @return array The organizations list
+     * @return organization/organization[] The organizations list
      */
     public function orgUnitList($role = null)
     {
@@ -623,7 +623,8 @@ class organization
 
     /**
      * Delete an archival pofile accesss from every organization
-     * @param array  $archivalProfileReference The archival profile reference
+     * @param string $userAccountId The user account identifier
+     * @param string $orgId         The organization identifier
      *
      * @return bool The result of the operation
      */
@@ -710,7 +711,7 @@ class organization
      * @param string $userAccountId The user account identifier
      * @param string $orgId         The organization account identifier
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function deleteUserPosition($userAccountId, $orgId)
     {
@@ -735,7 +736,7 @@ class organization
      * @param string $contactId The user account identifier
      * @param string $orgId     The organization account identifier
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function deleteContactPosition($contactId, $orgId)
     {
@@ -752,7 +753,7 @@ class organization
      * @param string $orgId            The organization account identifier
      * @param string $serviceAccountId The service account identifier
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function deleteServicePosition($orgId, $serviceAccountId)
     {
@@ -765,7 +766,7 @@ class organization
      * Get organization contacts
      * @param id $orgId
      *
-     * @return contact/contact[]
+     * @return contact/contact[] Array of  contact/contact object
      */
     public function getContacts($orgId)
     {
@@ -790,7 +791,7 @@ class organization
      * @param object $contact
      * @param bool   $isSelf
      *
-     * @return bool
+     * @return bool  The result of the operation
      */
     public function addContact($orgId, $contact, $isSelf = false)
     {
@@ -830,7 +831,7 @@ class organization
      * Get organization adresses
      * @param id $orgId
      *
-     * @return contact/address[]
+     * @return contact/address[] Array of contact/address object
      */
     public function getAddresses($orgId)
     {
@@ -857,7 +858,7 @@ class organization
      * Get organization communications
      * @param id $orgId
      *
-     * @return contact/communication[]
+     * @return contact/communication[] Array of contact/communication object
      */
     public function getCommunications($orgId)
     {
@@ -875,7 +876,7 @@ class organization
      * Read parent orgs recursively
      * @param string $orgId Organisation identifier
      *
-     * @return array The list of organization
+     * @return organization/organization[] The list of organization
      */
     public function readParentOrg($orgId)
     {
@@ -948,7 +949,7 @@ class organization
      * Get the archival profile descriptions for the given org unit
      * @param string $orgRegNumber
      *
-     * @return array
+     * @return recordsManagement/archivalProfile[] Array of recordsManagement/archivalProfile object
      */
     public function getOrgUnitArchivalProfiles($orgRegNumber)
     {
@@ -1078,7 +1079,7 @@ class organization
     /**
      * Get originator
      *
-     * @return array
+     * @return object[] List of originator
      */
     public function getOriginator()
     {
