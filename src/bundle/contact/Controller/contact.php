@@ -18,6 +18,7 @@
  * along with bundle contact.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\contact\Controller;
+use bundle\organization\Model\organization;
 
 /**
  * Contact controller
@@ -153,6 +154,12 @@ class contact
             $this->sdoFactory->deleteChildren("contact/address", array('contactId' => $contactId), 'contact/contact');
 
             $this->sdoFactory->deleteChildren("contact/communication", array('contactId' => $contactId), 'contact/contact');
+
+            $orgContacts = $this->sdoFactory->find("organization/orgContact", "contactId ='$contactId'");
+
+            foreach ($orgContacts as $orgContact) {
+                $this->sdoFactory->delete($orgContact, "organization/orgContact");
+            }
 
             $result = $this->sdoFactory->delete($contactId, "contact/contact");
 
