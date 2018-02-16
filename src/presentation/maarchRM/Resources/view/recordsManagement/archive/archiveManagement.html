@@ -105,7 +105,7 @@ var ArchivesAction = {
         } else {
             $.each(status, function (index, value) {
                 if (type == "flagForDestruction") {
-                    let additionalSelector = "[data-disposable='1'][data-final-disposition='destruction']";
+                    let additionalSelector = "[data-final-disposition='destruction']";
                     let additionalSelector2 = "[data-noretention='1']";
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector2);
