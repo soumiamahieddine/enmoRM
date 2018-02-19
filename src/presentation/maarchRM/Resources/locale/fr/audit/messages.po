@@ -1512,8 +1512,8 @@ msgstr "Informations"
 msgid "User already exist"
 msgstr "L'utilisateur existe déja."
 
-msgid "Username not registered or wrong password."
-msgstr "Nom d'utilisateur ou mot de passe incorrect."
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "organization/organization/readTodisplay"
 msgstr "Liste des organisations"

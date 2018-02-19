@@ -574,8 +574,8 @@ msgstr "Nouveau mot de passe"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-msgid "Username not registered or wrong password."
-msgstr "Nom d'utilisateur ou mot de passe incorrect."
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "A reset email has been send"
 msgstr "Un courriel de réinitialisation a été envoyé"

@@ -83,8 +83,8 @@ msgstr "L'utilisateur %1$s est bloqué"
 msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
 
-msgid "Username not registered or wrong password."
-msgstr "Utilisateur non enregistré ou mot de passe invalide"
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "The password is too short."
 msgstr "Le mot de passe est trop court"

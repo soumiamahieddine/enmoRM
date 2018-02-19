@@ -71,7 +71,7 @@ class userAuthentication
         $exists = $this->sdoFactory->exists('auth/account', array('accountName' => $userName));
 
         if (!$exists) {
-            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 401);
+            throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
         }
 
         $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
@@ -93,17 +93,6 @@ class userAuthentication
             throw $e;
         }
 
-        // Check locked
-        if ($userAccount->locked == true) {
-            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
-                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
-                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
-                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay']) // Date + delay upper than current date
-            ) {
-                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
-            }
-        }
-
         // Check password
         if ($userAccount->password !== $encryptedPassword) {
             // Update bad password count
@@ -116,7 +105,18 @@ class userAuthentication
                 \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
             }
 
-            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
+            throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
+        }
+
+        // Check locked
+        if ($userAccount->locked == true) {
+            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
+                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
+                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
+                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay']) // Date + delay upper than current date
+            ) {
+                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
+            }
         }
 
         // Login success, update user account values
