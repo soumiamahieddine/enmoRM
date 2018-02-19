@@ -22,7 +22,6 @@ namespace presentation\maarchRM\UserStory\app;
 /**
  * Interface for service
  *
- * @access public
  */
 interface serviceInterface
 {
