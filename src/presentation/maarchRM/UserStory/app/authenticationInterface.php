@@ -82,10 +82,13 @@ interface authenticationInterface
 
     /**
      * Get form to edit user information
-     * @param object $passwordInformation
-     * 
+     * @param object $userName    The user name
+     * @param object $oldPassword The old password
+     * @param string $newPassword The new password
+     * @param object $requestPath The request path
+     *
      * @return auth/authentication/definePassword
      * @uses auth/authentication/updatePassword
      */
-    public function updateUserPassword($passwordInformation);
+    public function updateUserPassword($userName, $oldPassword, $newPassword, $requestPath);
 }
