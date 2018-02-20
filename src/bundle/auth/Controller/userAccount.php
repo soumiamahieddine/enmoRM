@@ -29,6 +29,7 @@ namespace bundle\auth\Controller;
  */
 class userAccount
 {
+    use ForgotAccountTrait;
 
     protected $sdoFactory;
     protected $passwordEncryption;
@@ -36,7 +37,6 @@ class userAccount
     protected $adminUsers;
     protected $currentAccount;
     protected $accountPrivileges;
-    protected $publicUserStoriesController;
 
     /**
      * Constructor
@@ -51,9 +51,6 @@ class userAccount
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
         $this->currentAccount = \laabs::getToken('AUTH');
-
-        $this->publicUserStoriesController = \laabs::newController("auth/publicUserStory");
-
     }
 
     /**
@@ -143,7 +140,7 @@ class userAccount
     {
         $userAccountId = $this->addUserAccount($userAccount);
 
-        if (is_array($userAccount->roles) && !empty($userAccount->roles)) {
+        if (is_array($userAccount->roles) && !empty($userAccount->roles[0])) {
             foreach ($userAccount->roles as $roleId) {
                 \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
             }
@@ -305,12 +302,16 @@ class userAccount
             $userAccount->title = $user->title;
             $userAccount->emailAddress = $user->emailAddress;
         }
-        if($userAccount->organizations == null) {
-            throw \laabs::newException("organization/EmptyOrganizationException");
+
+        if(isset($userAccount->modificationRight)) {
+            if($userAccount->organizations == null) {
+                throw new \core\Exception\BadRequestException('No service chosen', 400);
+            }
+
+            $organizationController = \laabs::newController("organization/organization");
+            $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
         }
 
-        $organizationController = \laabs::newController("organization/organization");
-        $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
 
         $this->sdoFactory->update($userAccount, "auth/account");
 
@@ -334,13 +335,28 @@ class userAccount
      * Change a user password
      * @param string $userAccountId The identifier of the user
      * @param string $newPassword   The new password
+     * @param string $oldPassword          The old password
      *
      * @return boolean The result of the request
      */
-    public function setPassword($userAccountId, $newPassword)
+    public function setPassword($userAccountId, $newPassword,$oldPassword)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+        $oldPasswordHash = hash($this->passwordEncryption, $oldPassword);
 
+        if($userAccount->password != $oldPasswordHash) {
+            throw new \core\Exception\UnauthorizedException("User password error.");
+        }
+
+        if ($oldPassword == $newPassword) {
+            throw new \core\Exception\ForbiddenException("The password is the same as the precedent.", 403);
+        }
+
+        return $this->updatePassword($userAccount, $newPassword);
+    }
+
+    protected function updatePassword($userAccount, $newPassword)
+    {
         $userAuthenticationController = \laabs::newController("auth/userAuthentication");
         $userAuthenticationController->checkPasswordPolicies($newPassword);
 
@@ -350,65 +366,11 @@ class userAccount
         }
 
         $userAccount->password = $encryptedPassword;
-        $userAccount->accountId = $userAccountId;
-        $userAccount->passwordLastChange = \laabs::newDateTime();
+        $userAccount->passwordLastChange = \laabs::newTimestamp();
+        $userAccount->badPasswordCount = 0;
+        $userAccount->passwordChangeRequired = false;
 
         return $this->sdoFactory->update($userAccount);
-    }
-
-    /**
-     * Genrate a new password
-     * @param string $username The username
-     * @param string $email    The email of the user
-     *
-     * @throws \bundle\auth\Exception\authenticationException
-     *
-     * @return boolean The result of the request
-     */
-    public function generatePassword($username, $email)
-    {
-        if (!$this->sdoFactory->exists("auth/account", array("accountName" => $username))) {
-             throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
-        }
-
-        $userAccount = $this->sdoFactory->read("auth/account", array("accountName" => $username));
-
-        /*if ($userAccount->locked == true) {
-            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
-                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
-                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
-                || \laabs::newTimestamp()->diff($userAccount->lockDate)->s < $this->securityPolicy['lockDelay'] // Date + delay upper than current date
-            ) {
-                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($username));
-            }
-        }
-
-        if ($userAccount->enabled != true) {
-            throw \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($userName));
-        }*/
-
-        if ($email != $userAccount->emailAddress) {
-            throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
-        }
-
-        $newPassword = \laabs::newId();
-        $this->setPassword($userAccount->accountId, $newPassword);
-        $this->requirePasswordChange($userAccount->accountId);
-
-        $title = "Maarch RM - user information";
-        $message = 'Your password has been reset. Your new password is  %1$s';
-        
-        if (!empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
-            $message .= '  and you have %2$d hour to change it';
-            $message = sprintf($message, $newPassword, $this->securityPolicy["newPasswordValidity"]);
-        } else {
-            $message = sprintf($message, $newPassword);
-        }
-
-        $notificationDependency = \laabs::newService("dependency/notification/Notification");
-        $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
-
-        return $result;
     }
 
     /**
@@ -504,7 +466,7 @@ class userAccount
             $roleMemberController = \laabs::newController("auth/roleMember");
             $roles = $roleMemberController->readByUseraccount($userAccountId);
 
-            $userStories = $this->publicUserStoriesController->index();
+            $userStories = \laabs::configuration('auth')['publicUserStory'];
 
             foreach ($roles as $role) {
                 $privileges = $this->sdoFactory->find("auth/privilege", "roleId='$role->roleId'");
@@ -524,17 +486,26 @@ class userAccount
      * Check the user account has a privilege
      * @param string $userStory The user story name
      *
-     * @return boolean
+     * @return boolean True if the user has the privilege, false if he doesn't
      */
     public function hasPrivilege($userStory)
     {
+        if (!\laabs::presentation()->hasUserStory($userStory)) {
+            return false;
+        }
+
         $accountToken = $this->currentAccount;
 
         if (!$accountToken) {
-            return $this->publicUserStoriesController->index();
+            $userPrivileges = \laabs::configuration('auth')['publicUserStory'];
+        } else {
+            $userPrivileges = $this->getPrivilege($accountToken->accountId);
         }
 
-        $userPrivileges = $this->getPrivilege($accountToken->accountId);
+        if (empty($userPrivileges)) {
+            return false;
+        }
+
         foreach ($userPrivileges as $userPrivilege) {
             if (fnmatch($userPrivilege, $userStory)) {
                 return true;
@@ -566,7 +537,7 @@ class userAccount
      * Search user account
      * @param string $query The query
      *
-     * @return array The list of founded users
+     * @return array The list of found users
      */
     public function queryUserAccounts($query = "")
     {

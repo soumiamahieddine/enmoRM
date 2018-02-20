@@ -15,7 +15,7 @@ msgid "rule(s)"
 msgstr "règle(s)"
 
 msgid "Edit retention rule"
-msgstr "Edition de la règle de conservation"
+msgstr "Édition de la règle de conservation"
 
 msgid "Delete the retention rule"
 msgstr "Supprimer la règle"
@@ -24,10 +24,10 @@ msgid "Update the retention rule"
 msgstr "Modifier la règle"
 
 msgid "Are you sure to modify this retention rule ?"
-msgstr "Etes-vous sûr de vouloir modifier la règle de conservation ?"
+msgstr "Êtes-vous sûr de vouloir modifier la règle de conservation ?"
 
 msgid "Are you sure to delete this retention rule ?"
-msgstr "Etes-vous sûr de vouloir supprimer la règle de conservation ?"
+msgstr "Êtes-vous sûr de vouloir supprimer la règle de conservation ?"
 
 msgid "Retention rule code"
 msgstr "Code de la règle"
@@ -39,7 +39,7 @@ msgid "Final disposition"
 msgstr "Sort final"
 
 msgid "Label"
-msgstr "Titre"
+msgstr "Intitulé"
 
 msgid "Days"
 msgstr "Jours"
@@ -69,7 +69,7 @@ msgid "Retention rule not deleted."
 msgstr "Règle non supprimée."
 
 msgid "The operation could not be completed because the retention rule doesn't exist."
-msgstr "Suppression impossible! La règle n'existe pas."
+msgstr "Suppression impossible ! La règle n'existe pas."
 
 msgid "Y"
 msgstr "an(s)"

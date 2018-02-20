@@ -56,4 +56,8 @@ final class userLogin
      */
     public $lastIp;
 
+    /**
+     * @var timestamp
+     */
+    public $tokenDate;
 }

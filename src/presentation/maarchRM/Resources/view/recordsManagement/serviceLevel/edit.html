@@ -10,7 +10,7 @@ file that was distributed with this source code.
     <div class="container-fluid">
         <div class="page-header">
             <h1>
-                <i class="fa fa-briefcase"></i>
+                <i class="fa fa-dashboard"></i>
                 <?merge serviceLevel.serviceLevelId.bool().not() ?>
                 <span>New service level</span>
                 <?merge serviceLevel.serviceLevelId.bool() ?>
@@ -25,65 +25,66 @@ file that was distributed with this source code.
             <div class="row">
                 <?merge serviceLevel.default @data-default ?>
                 <input type="hidden" name="serviceLevelId" id="serviceLevelId">
-                <div class="col-md-7">
+                <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="col-md-4 control-label">Reference <span style="color:red">*</span></label>
+                        <label class="col-lg-3 col-md-4 control-label">Reference <span style="color:red">*</span></label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 control-label">Sampling frequency (in days)</label>
+                        <label class="col-lg-3 col-md-4 control-label">Cluster</label>
                         <div class="col-md-8">
-                            <input type="number" min="0" class="form-control" id="samplingFrequency" name="samplingFrequency" placeholder="Sampling frequency (in days)">
+                            <select class="form-control" name="digitalResourceClusterId" id="digitalResourceClusterId">
+                                <?merge clusters ?>
+                                <option value="[?merge .clusterId ?]"><?merge .clusterName ?></option>
+                            </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label">Sampling rate (in %)</label>
-                        <div class="col-md-8">
-                            <input type="number" min="0" max="100" class="form-control" id="samplingRate" name="samplingRate" placeholder="Sampling rate (in %)">
+                    <div class="well">
+                        <div class="form-group">
+                            <label class="col-lg-3 col-md-4 control-label">Control frequency (in days)</label>
+                            <div class="col-md-8">
+                                <input type="number" min="0" class="form-control" id="samplingFrequency" name="samplingFrequency" placeholder="Sampling frequency (in days)">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Detect format</span></label>
-                        <input type="checkbox" name="formatDetection" id="detectFormat" data-toggle="toggle"> 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Validate format</span></label>
-                        <input type="checkbox" name="formatValidation" id="formatValidation" data-toggle="toggle"> 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Check for virus</span></label>
-                        <input type="checkbox" name="virusCheck" id="virusCheck" data-toggle="toggle"> 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Convert on deposit</span></label>
-                        <input type="checkbox" name="convertOnDeposit" id="convertOnDeposit" data-toggle="toggle"> 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Log the consultations</span></label>
-                        <input type="checkbox" name="logConsultation" id="logConsultation" data-toggle="toggle"> 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Full text indexation</span></label>
-                        <input type="checkbox" name="fullTextIndexation" id="fullTextIndexation" data-toggle="toggle"> 
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">Cluster</label>
-                                <div class="col-md-10">
-                                    <select class="form-control" name="digitalResourceClusterId" id="digitalResourceClusterId">
-                                        <?merge clusters ?>
-                                        <option value="[?merge .clusterId ?]"><?merge .clusterName ?></option>
-                                    </select>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 col-md-4 control-label">Sampling rate (in %)</label>
+                            <div class="col-md-8">
+                                <input type="number" min="0" max="100" class="form-control" id="samplingRate" name="samplingRate" placeholder="Sampling rate (in %)">
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Detect format</span></label>
+                        <input type="checkbox" name="formatDetection" id="detectFormat" data-toggle="toggle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Validate format</span></label>
+                        <input type="checkbox" name="formatValidation" id="formatValidation" data-toggle="toggle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Check for virus</span></label>
+                        <input type="checkbox" name="virusCheck" id="virusCheck" data-toggle="toggle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Convert on deposit</span></label>
+                        <input type="checkbox" name="convertOnDeposit" id="convertOnDeposit" data-toggle="toggle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Log the consultations</span></label>
+                        <input type="checkbox" name="logConsultation" id="logConsultation" data-toggle="toggle">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label"><span class="col-md-10">Full text indexation</span></label>
+                        <input type="checkbox" name="fullTextIndexation" id="fullTextIndexation" data-toggle="toggle">
+                    </div>
+                </div>
             </div>
-            <div class="panel-footer clearfix">
+            <br/>
+            <div class="col-lg-11">
                 <div class="pull-right">
                     <button type="button" class="btn btn-warning" id="cancelServiceLevelBtn" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
                     <button type="button" id="save" class="btn btn-success" title="Save">
@@ -92,7 +93,7 @@ file that was distributed with this source code.
                         <?merge serviceLevel.serviceLevelId.bool().not() ?>
                         <span><i class="fa fa-plus">&nbsp;</i>Add</span>
                     </button>
-                    </div>
+                </div>
             </div>
             <span class="hide" id="empty_text">The fields with a star are compulsory.</span>
             <span class="hide" id="samplingRate_badValue">The rate must be between 0 and 100</span>

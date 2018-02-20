@@ -29,7 +29,10 @@
                                 <div class="col-md-7">
                                     <select class="form-control" id="eventType" name="eventType">
                                         <?merge eventType ?>
-                                        <option value="[?merge . ?]"><?merge . ?></option>
+                                        <optgroup data-objectType="[?merge .objectType ?]" label="[?merge .label ?]">
+                                            <?merge .eventTypes ?>
+                                            <option value="[?merge .value ?]"><?merge .label ?></option>
+                                        </optgroup>
                                     </select>
                                 </div>
                             </div>
@@ -40,6 +43,8 @@
                                         <option value="">Select an object type</option>
                                         <option value="recordsManagement/archivalProfile">Archival profile</option>
                                         <option value="recordsManagement/archive">Archive</option>
+                                        <option value="medona/message">Message</option>
+                                        <option value="recordsManagement/serviceLevel">Service level</option>
                                     </select>
                                 </div>
                             </div>
@@ -89,13 +94,19 @@
 
     $('#app_maarchRM_main').ready(function() {
         var eventType = $('#eventType');
-        eventType.append($("#eventType option").remove().sort(function(a, b) {
-            var at = $(a).text(), bt = $(b).text();
-            return (at > bt)?1:((at < bt)?-1:0);
-        }));
-
         var option = $('<option/>').val('').text($('#eventType_text').html()).prependTo(eventType);
         eventType.val('');
+        eventType.on('change', function(e) {
+            var objectClass = $('#eventType option:selected').closest('optgroup').data('objecttype');
+            $("#objectClass").val(objectClass);
+        });
+
+        $("#objectClass").on('change', function(e) {
+            var objectClass = $('#eventType option:selected').closest('optgroup').data('objecttype');
+            if ($("#objectClass").val() != objectClass) {
+                $('#eventType').val('');
+            }
+        });
     });
 
     $('#app_maarchRM_main').keypress(function(e){

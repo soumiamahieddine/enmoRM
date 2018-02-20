@@ -18,6 +18,7 @@
  * along with bundle contact.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\contact\Controller;
+use bundle\organization\Model\organization;
 
 /**
  * Contact controller
@@ -50,9 +51,7 @@ class contact
      */
     public function index()
     {
-        $contacts = $this->sdoFactory->find('contact/contact');
-
-        return $contacts;
+        return $this->sdoFactory->find('contact/contact');
     }
 
     /**
@@ -126,7 +125,7 @@ class contact
      * @param id              $contactId The contact identifier
      * @param contact/contact $contact   The the contact to modify
      *
-     * @return boolean
+     * @return object The contact object
      */
     public function modify($contactId, $contact)
     {
@@ -141,7 +140,7 @@ class contact
      * Delete a contact
      * @param id $contactId The the contact id to delete
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function delete($contactId)
     {
@@ -155,6 +154,12 @@ class contact
             $this->sdoFactory->deleteChildren("contact/address", array('contactId' => $contactId), 'contact/contact');
 
             $this->sdoFactory->deleteChildren("contact/communication", array('contactId' => $contactId), 'contact/contact');
+
+            $orgContacts = $this->sdoFactory->find("organization/orgContact", "contactId ='$contactId'");
+
+            foreach ($orgContacts as $orgContact) {
+                $this->sdoFactory->delete($orgContact, "organization/orgContact");
+            }
 
             $result = $this->sdoFactory->delete($contactId, "contact/contact");
 

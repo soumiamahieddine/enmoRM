@@ -275,7 +275,7 @@ class archive
             || !empty($archive->childrenRelationships)
         );
 
-        if ($archive->status == "disposed") {
+        if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
             $archive->digitalResources = null;
         } else {
             foreach ($archive->digitalResources as $digitalResource) {
@@ -294,6 +294,25 @@ class archive
         }
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+
+        if(\laabs::hasBundle('medona')) {
+            if (isset($archive->messages)) {
+                foreach ($archive->messages as $message) {
+                    $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
+
+                    $currentService = \laabs::getToken("ORGANIZATION");
+
+                    $message->isVisible = false;
+                    if (!in_array('owner', $currentService->orgRoleCodes)) {
+                        if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
+                            $message->isVisible = true;
+                        }
+                    } else {
+                        $message->isVisible = true;
+                    }
+                }
+            }
+        }
 
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
@@ -647,18 +666,11 @@ class archive
         if (array_key_exists('error', $result)) {
             $echec = count($result['error']);
         }
-
-        $this->json->message = '%1$s archive(s) flagged for destruction.';
+        
+        $this->translator->setCatalog('recordsManagement/messages');
+        $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
         $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, $success);
-
-        if ($echec > 0) {
-            $message = '%1$s archive(s) can not be flagged.';
-            $message = $this->translator->getText($message);
-            $message = sprintf($message, $echec);
-
-            $this->json->message .= ' '.$message;
-        }
+        $this->json->message = sprintf($this->json->message, $success,($echec+$success));
 
         return $this->json->save();
     }
@@ -833,7 +845,7 @@ class archive
     {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
-        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/processDestruction");
+        $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
@@ -844,11 +856,10 @@ class archive
      * Get the list of owner originators oranizations
      * @param object $currentService The user's current service
      *
-     * @return The list of owner originators orgs
+     * @return array The list of owner originators orgs
      */
     protected function getOwnerOriginatorsOrgs($currentService)
     {
-        //$originators = \laabs::callService('organization/organization/readByrole_role_', 'originator');
         $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
 
         $userPositionController = \laabs::newController('organization/userPosition');

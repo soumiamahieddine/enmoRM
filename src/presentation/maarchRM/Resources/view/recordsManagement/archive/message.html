@@ -1,0 +1,48 @@
+<div id="messages" class="table-responsive" >
+    <table class="table table-condensed dataTable" >
+        <thead>
+        <th data-translate-context="message">Reference</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th/>
+        </thead>
+        <tbody>
+            <?merge archive.messages ?>
+            <tr>
+                <td >
+                    <?merge .reference ?>
+                </td>
+                <td>
+                    <?merge .type ?>
+                </td>
+                <td>
+                    <?merge .date ?>
+                </td>
+                <td>
+
+                    <div class="btn-group pull-right">
+                        <?merge .isVisible.not().then('true') @disabled?>
+                        <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
+                            <span class="fa fa-eye">&nbsp;</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $("#messages").on('click', '.viewMessage', function() {
+        $.ajax({
+            url      : "/medona/message/" + $(this).data('message-id'),
+            type     : "GET",
+            dataType : "html",
+            success  : function (response) {
+
+                $('#modalArchiveInfo_content').html(response);
+                $('#modalArchiveInfo').modal();
+            }
+        });
+    });
+</script>

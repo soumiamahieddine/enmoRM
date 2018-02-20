@@ -27,15 +27,15 @@ msgstr "Document"
 msgctxt "interface"
 
 msgid "log"
-msgstr "Historique d'évenement"
+msgstr "Historique d'événement"
 msgctxt "interface"
 
 msgid "messageDeliveryHistory"
-msgstr "Historique des messages de communications"
+msgstr "Historique des messages de communication"
 msgctxt "interface"
 
 msgid "messageDeliveryReception"
-msgstr "Messages de communication reçu"
+msgstr "Messages de communication reçus"
 msgctxt "interface"
 
 msgid "messageDeliveSending"

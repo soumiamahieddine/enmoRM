@@ -9,7 +9,7 @@
     <div class="page-header">
         <h1>
             <i class="fa fa-calendar-o"></i>
-            Batch scheduling
+            Batch processing
         </h1>
     </div>
 </div>
@@ -18,9 +18,15 @@
     <div class="col-md-6">
         <div class="row">
             <div class="col-xs-12">
+                <button id="scheduleNewTask" class="btn btn-success" title="Schedule a new task"><i class="fa fa-clock-o">&nbsp;</i>New scheduling</button>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-xs-12">
                 <div id="taskList" class="list-group">
                     <?merge scheduledTasks ?>
-                    <a href="#" class="list-group-item clearfix" data-json="[?merge .json ?]">
+                    <a class="list-group-item clearfix" data-json="[?merge .json ?]">
                         <span class="col-xs-9">
                             <h4 class="list-group-item-heading schedulingName"><?merge .name ?></h4>
                             <h4 class="text-danger [?merge .status.ifeq('error').then('', 'hide') ?]" name="displayError"><code><i class="fa fa-warning">&nbsp;</i>Execution error</code></h4>
@@ -89,7 +95,6 @@
                         </span>
                     </a>
                 </div>
-                <button id="scheduleNewTask" class="btn btn-success" title="Schedule a new task"><i class="fa fa-clock-o">&nbsp;</i>New scheduling</button>
             </div>
 
             <div id="scheduleTemplate" class="hide">
@@ -230,6 +235,9 @@
     $('#taskList').on('mouseenter', '.showHistory', function() {
         $(this).css('color', 'orange');
     })
+    $('#taskList').on('mouseenter', function() {
+        $(this).css( 'cursor', 'pointer' );
+    })
 
     $('#taskList').on('mouseleave', '.showHistory', function() {
         $(this).css('color', '');
@@ -238,6 +246,7 @@
 
     // New schedule
     $('#scheduleNewTask').on('click', function() {
+        TaskList.unselect();
         TaskSchedulingForm.newTask();
     })
 

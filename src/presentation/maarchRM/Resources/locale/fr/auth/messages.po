@@ -10,12 +10,15 @@ msgid "adminStorage"
 msgstr "Gérer le stockage"
 msgctxt "userStory"
 
+msgid "Role"
+msgstr "Rôle"
+
 msgid "adminFormat"
 msgstr "Gérer le format des documents"
 msgctxt "userStory"
 
 msgid "adminEventFormat"
-msgstr "Gérer les formats d'évenement du cycle de vie"
+msgstr "Gérer les formats d'événement du cycle de vie"
 msgctxt "userStory"
 
 msgid "task"
@@ -23,7 +26,7 @@ msgstr "Gérer les tâches"
 msgctxt "userStory"
 
 msgid "destruction"
-msgstr "Eliminer des archives"
+msgstr "Éliminer des archives"
 msgctxt "userStory"
 
 msgid "adminFunc"
@@ -87,7 +90,7 @@ msgstr "Gérer les profils d'archive"
 msgctxt "userStory"
 
 msgid "controlAuthority"
-msgstr "Gérer les autorités de contrôle"
+msgstr "Gérer les Autorités de Contrôle"
 msgctxt "userStory"
 
 msgid "descriptionField"
@@ -119,7 +122,7 @@ msgstr "Consulter le journal de l'application"
 msgctxt "userStory"
 
 msgid "logBatchScheduling"
-msgstr "Historique de  plannification"
+msgstr "Historique de planification"
 msgctxt "userStory"
 
 msgid "searchLogArchive"
@@ -252,7 +255,31 @@ msgstr "Traiter les versements"
 msgctxt "userStory"
 
 msgid "transferSend"
-msgstr "Mes bordereaux à traiter"
+msgstr "Transferts en attente de traitement"
+msgctxt "userStory"
+
+# ---------------------------------------------------------
+# Transfer (outgoing)
+# ---------------------------------------------------------
+
+msgid "definitiveTransfer"
+msgstr "Transfert définitif"
+msgctxt "userStoryGroup"
+
+msgid "outgoingTransferHistory"
+msgstr "Historique des transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferProcess"
+msgstr "Clôturer les transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferReceive"
+msgstr "Réceptionner les transferts sortants"
+msgctxt "userStory"
+
+msgid "outgoingTransferSend"
+msgstr "Initier les transferts sortants"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -300,7 +327,7 @@ msgstr "Déposer une archive"
 msgctxt "userStory"
 
 msgid "messageComposer"
-msgstr "Génerer un bordereau"
+msgstr "Générer un bordereau"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -323,7 +350,7 @@ msgid "Administrator"
 msgstr "Administrateur"
 
 msgid "Select a role"
-msgstr "Selectionner un rôle"
+msgstr "Sélectionner un rôle"
 
 msgid "Add a role"
 msgstr "Ajouter un rôle"
@@ -362,7 +389,7 @@ msgid "Unlock"
 msgstr "Débloquer"
 
 msgid "New role created."
-msgstr "Nouveau rôle crée"
+msgstr "Nouveau rôle créé"
 
 msgid "Role deleted."
 msgstr "Rôle supprimé"
@@ -449,7 +476,7 @@ msgid "Service account created"
 msgstr "Compte de service créé"
 
 msgid "Service already exist"
-msgstr "Le service n'existe déjà."
+msgstr "Le service existe déjà."
 
 msgid "Last login date"
 msgstr "Date de la dernière connexion"
@@ -524,10 +551,10 @@ msgid "Delete a user"
 msgstr "Supprimer un utilisateur"
 
 msgid "Do you really want to delete this user ?"
-msgstr "Etes-vous sûr de vouloir supprimer cet utilisateur ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cet utilisateur ?"
 
 msgid "Are you sure to reactive this user ?"
-msgstr "Etes-vous sûr de vouloir réactiver cet utilisateur ?"
+msgstr "Êtes-vous sûr de vouloir réactiver cet utilisateur ?"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -547,11 +574,14 @@ msgstr "Nouveau mot de passe"
 msgid "Confirm password"
 msgstr "Confirmer le mot de passe"
 
-msgid "Username not registered or wrong password."
-msgstr "Nom d'utilisateur ou mot de passe incorrect."
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
-msgid "A new password has been generated"
-msgstr "Un nouveau mot de passe a été généré"
+msgid "A reset email has been send"
+msgstr "Un courriel de réinitialisation a été envoyé"
+
+msgid "Password has been updated"
+msgstr "Le mot de passe a été mis à jour"
 
 msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
@@ -589,9 +619,6 @@ msgstr "Le mot de passe doit contenir des majuscules et minuscules"
 msgid "Request a password change"
 msgstr "Demander un nouveau mot de passe"
 
-msgid "Generate a new password"
-msgstr "Générer un nouveau mot de passe"
-
 msgid "User added"
 msgstr "Utilisateur ajouté"
 
@@ -627,7 +654,7 @@ msgstr "Authentification réussie"
 msgctxt "audit"
 
 msgid "authenticationFailure"
-msgstr "Authentification échouée"
+msgstr "Authentification a échoué"
 msgctxt "audit"
 
 msgid "userAdd"
@@ -688,25 +715,28 @@ msgid "Service account updated"
 msgstr "Compte de service modifié"
 
 msgid "The fields contain white spaces."
-msgstr "Le champs contient des espaces"
+msgstr "Le champ contient des espaces"
 
 msgid "The fields is empty."
-msgstr "Le champs est vide"
+msgstr "Le champ est vide"
 
 msgid "Passwords are not the same"
-msgstr "Les mots de passe sont pas identiques"
+msgstr "Les mots de passe ne sont pas identiques"
+
+msgid "User password error."
+msgstr "L'ancien mot de passe est incorrect"
 
 msgid "Display only activated users"
 msgstr "Afficher uniquement les utilisateurs actifs"
 
 msgid "delete role warning"
-msgstr "Attention: Vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
+msgstr "Attention : vous êtes sur le point de supprimer un rôle fonctionnel ; les privilèges correspondants seront ôtés aux utilisateurs auxquels ce rôle avait été attribué."
 
 msgid "Delete the role"
 msgstr "Supprimer le rôle"
 
 msgid "No organization chosen"
-msgstr "Aucune organisation choisi"
+msgstr "Aucune organisation choisie"
 
 msgid "No service found"
 msgstr "Aucun service trouvé"
@@ -716,3 +746,12 @@ msgstr "Aucun utilisateur trouvé"
 
 msgid "User already exist"
 msgstr "L'utilisateur existe déja"
+
+msgid "No service chosen"
+msgstr "Aucun service choisi"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "All privileges"
+msgstr "Tous les privilèges"

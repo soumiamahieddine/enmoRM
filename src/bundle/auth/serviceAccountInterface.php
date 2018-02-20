@@ -56,6 +56,13 @@ interface serviceAccountInterface
     public function read_serviceAccountId_();
 
     /**
+     * List service account privilege
+     *
+     * @action auth/serviceAccount/getPrivileges
+     */
+    public function readPrivilege_serviceAccountId_();
+
+    /**
      * Create a new service Account
      * @param auth/serviceAccount $serviceAccount
      * @param string              $orgId

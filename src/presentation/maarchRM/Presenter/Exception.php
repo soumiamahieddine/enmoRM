@@ -53,6 +53,8 @@ class Exception
      */
     public function Exception($exception)
     {
+        $exception->setMessage($this->translator->getText($exception->getFormat()));
+
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
             return $this->presentJson($exception);
         }
@@ -95,10 +97,14 @@ class Exception
                 $error->setMessage($this->translator->getText($error->getFormat()));
 
                 $variables = [];
-                foreach ($error->getVariables() as $name => $value) {
-                    $name = $this->translator->getText($name);
-                    $value = $this->translator->getText($value);
-                    $variables[$name] = $value;
+
+                $errorVariables = $error->getVariables();
+                if (is_array($errorVariables)) {
+                    foreach ($errorVariables as $name => $value) {
+                        $name = $this->translator->getText($name);
+                        $value = $this->translator->getText($value);
+                        $variables[$name] = $value;
+                    }
                 }
                 $error->setVariables($variables);
                 

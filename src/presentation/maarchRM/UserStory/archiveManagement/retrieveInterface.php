@@ -116,7 +116,7 @@ interface retrieveInterface
      *
      * @return recordsManagement/archive/getContents
      *
-     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
      */
     public function readRecordsmanagementContents_archiveId__resId_();
 

@@ -1,4 +1,3 @@
-DELETE FROM "auth"."publicUserStory";
 DELETE FROM "auth"."roleMember";
 DELETE FROM "auth"."privilege";
 DELETE FROM "auth"."servicePrivilege";
@@ -104,8 +103,3 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('UTILISATEUR', 'archiveDeposit/*'),
     ('UTILISATEUR', 'archiveManagement/modify'),
     ('UTILISATEUR', 'adminArchive/filePlan');
-
-
-    -- publicUserStory
-INSERT INTO "auth"."publicUserStory"("userStory") VALUES 
-    ('app/*');

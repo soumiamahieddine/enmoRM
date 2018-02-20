@@ -386,7 +386,9 @@ trait TemplateDataTrait
                 break;
             case 'format':
             case 'fmt':
-                $value = @sprintf($params[0], $source);
+                if (!empty($source)) {
+                    $value = @sprintf($params[0], $source);
+                }
                 break;
             case 'match':
                 $value = (bool) @preg_match($params[0], $source);

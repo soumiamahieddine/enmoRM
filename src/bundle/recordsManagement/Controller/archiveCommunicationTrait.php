@@ -51,7 +51,7 @@ trait archiveCommunicationTrait
      * @param string $originatingStartDate
      * @param string $originatingEndDate
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
     public function search(
         $archiveId = null,
@@ -164,18 +164,36 @@ trait archiveCommunicationTrait
      * @param string $archiveId The archive identifier
      * @param string $resId     The resource identifier
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource Archive resource contents
      */
     public function consultation($archiveId, $resId)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        $digitalResource = $this->digitalResourceController->retrieve($resId);
+        try {
+            $digitalResource = $this->digitalResourceController->retrieve($resId);
 
-        if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+            $resourceIntegrity = true;
+            foreach ($digitalResource->address as $address) {
+                if (!$address->integrityCheckResult) {
+                    $resourceIntegrity = false;
+                }
+            }
+
+            if (!$resourceIntegrity) {
+                $this->logIntegrityCheck($archive, "Invalid resource", $digitalResource, false);
+            }
+
+            if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
+                throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+            }
+
+            $this->logConsultation($archive, $digitalResource);
+            
+        } catch (\Exception $e) {
+            $this->logConsultation($archive, $digitalResource, false);
+
+            throw $e;
         }
-
-        $this->logConsultation($archive, $digitalResource);
 
         return $digitalResource;
     }
@@ -184,7 +202,7 @@ trait archiveCommunicationTrait
      * Retrieve an archive resource contents
      * @param string $archiveId The archive identifier
      *
-     * @return digitalResource/digitalResource[]
+     * @return digitalResource/digitalResource[] Array of digitalResource/digitalResource object
      */
     public function getDigitalResources($archiveId)
     {

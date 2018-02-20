@@ -95,7 +95,7 @@ class zip
      * @return boolean
      * @throws \dependency\fileSystem\Exception
      */
-    public function extract($archive, $outdir, $filename=false, array $options=null, $command = "e")
+    public function extract($archive, $outdir, $filename=false, array $options=null, $command = "x")
     {
         $tokens = array('"' . $this->executable . '"');
         $tokens[] = $command;

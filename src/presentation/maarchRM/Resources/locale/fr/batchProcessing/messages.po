@@ -91,22 +91,25 @@ msgid "New task"
 msgstr "Nouvelle tâche"
 
 msgid "Edit a task"
-msgstr "Editer une tâche"
+msgstr "Éditer une tâche"
 
 msgid "Batch scheduling"
+msgstr "Planificateur"
+
+msgid "Batch processing"
 msgstr "Planificateur"
 
 msgid "New scheduling"
 msgstr "Nouvelle planification"
 
 msgid "Select a task"
-msgstr "Selectionner une tâche"
+msgstr "Sélectionner une tâche"
 
 msgid "Select a scheduling name"
-msgstr "Selectionner une planification"
+msgstr "Sélectionner une planification"
 
 msgid "Select a service account"
-msgstr "Selectionner un compte de service"
+msgstr "Sélectionner un compte de service"
 
 msgid "Daily"
 msgstr "Quotidien"
@@ -154,10 +157,10 @@ msgid "Scheduling deleted"
 msgstr "Planification supprimée"
 
 msgid "Task execution triggered"
-msgstr "Planification executée"
+msgstr "Planification exécutée"
 
 msgid "Status updated"
-msgstr "Status modifié"
+msgstr "Statut modifié"
 
 msgid "Start date"
 msgstr "Date de début"
@@ -175,13 +178,13 @@ msgid "Delete a scheduled task"
 msgstr "Supprimer une tâche planifiée"
 
 msgid "Are you sur to delete this scheduled task ?"
-msgstr "Etes vous sûr de vouloir supprimer cette tâche planifiée ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette tâche planifiée ?"
 
 msgid "The task will be executed the last day of months with less than selected days."
 msgstr "La tâche sera exécutée le dernier jour du mois si les jours sélectionnés n'existent pas"
 
 msgid "Last execution"
-msgstr "Derniere exécution"
+msgstr "Dernière exécution"
 
 msgid "Next execution"
 msgstr "Prochaine exécution"
@@ -199,7 +202,7 @@ msgid "Scheduling name"
 msgstr "Nom de la planification"
 
 msgid "Log scheduling"
-msgstr "Evenement d'une planification"
+msgstr "Événement d'une planification"
 
 msgid "Search logs scheduling"
 msgstr "Recherche d'événement de planification"
@@ -226,7 +229,7 @@ msgid "History"
 msgstr "Historique"
 
 msgid "Logs scheduling list"
-msgstr "Liste d'évènement de planification"
+msgstr "Liste d'événement de planification"
 
 msgid "An error occurred during execution"
 msgstr "Une erreur s'est produite lors de l'exécution"

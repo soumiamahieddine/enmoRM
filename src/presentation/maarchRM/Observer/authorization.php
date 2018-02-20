@@ -29,6 +29,7 @@ class authorization
 {
     
     protected $userAccountController;
+    protected $blacklistUserStories;
 
     /**
      * Constructor
@@ -36,6 +37,13 @@ class authorization
     public function __construct()
     {
         $this->userAccountController = \laabs::newController('auth/userAccount');
+
+        if(isset(\laabs::configuration('auth')['blacklistUserStories'])) {
+            $this->blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
+        } else {
+            $this->blacklistUserStories = null;
+        }
+
     }
 
     /**
@@ -49,7 +57,12 @@ class authorization
      */
     public function filterPrivilege(&$userStories, array &$args=null)
     {
+
         foreach ($userStories as $i => $userStory) {
+            if (is_array($this->blacklistUserStories) && in_array($userStory->uri, $this->blacklistUserStories)) {
+                unset($userStories[$i]);
+            }
+
             if ($userStory->isPublic()) {
                 continue;
             }

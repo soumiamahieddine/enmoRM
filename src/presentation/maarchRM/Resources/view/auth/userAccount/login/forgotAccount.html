@@ -78,7 +78,7 @@
             ajax($('#forgotAccountSendButton'),
                 {
                     type        : 'PUT',
-                    url         : "/user/generatePassword",
+                    url         : "/user/generateResetToken",
                     data        : JSON.stringify({username : username, email : email}),
                     contentType : 'application/json',
                     dataType    : 'json',

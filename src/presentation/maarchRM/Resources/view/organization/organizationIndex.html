@@ -105,6 +105,17 @@
         Forms.clear();
         Tree.select(span);
         Tree.showDetails(span.attr('id'));
+
+        $.each($('#organization_organizationInfo').find('li'), function() {
+            $(this).removeClass('active');
+        });
+
+        $.each($('#organization_organizationInfo').find('div'), function() {
+            $(this).removeClass('active');
+        });
+
+        $('#organizationInfo_informationTab').addClass('active');
+        $('#informationTab').addClass('active');
     });
 
     $('#exportFilePlan').on('click', function() {

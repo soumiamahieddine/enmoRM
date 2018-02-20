@@ -7,7 +7,7 @@
 ; Default max result in search screens
 maxResults = 200
 
-; Public archive mod
+; Public archive mode
 publicArchives = false
 
 ; Logos, title and favicon of the application
@@ -124,6 +124,12 @@ securityPolicy = "{
     'lockDelay' : 30
 }"
 
+publicUserStory = "['app/*']"
+
+; Blacklist of user stories
+;blacklistUserStories = "[
+;    'adminFunc/contact'
+;]"
 
 [lifeCycle]
 
@@ -292,3 +298,59 @@ datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
 ; 2 = trace queries
 ; 3 = dump queries
 trace = 1
+
+[dependency.csrf]
+whiteList = "['user/login']"
+config = '{
+              "CSRFP_TOKEN" : "",
+              "logDirectory" : "/tmp",
+              "failedAuthAction" : {
+                  "GET" : 0,
+                  "POST" : 0
+              },
+              "errorRedirectionPage" : "",
+              "customErrorMessage" : "",
+              "jsUrl" : "/public/js/csrf/csrfprotector.js",
+              "tokenLength" : 10,
+              "cookieConfig" : {
+                  "path" : "",
+                  "domain" : "",
+                  "secure" : false
+              },
+              "disabledJavascriptMessage" : "This site attempts to protect users against <a href='https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29'> Cross-Site Request Forgeries </a> attacks. In order to do so, you must have JavaScript enabled in your web browser otherwise this site will fail to work correctly for you. See details of your web browser for how to enable JavaScript.",
+              "verifyGetFor": {}
+          }'
+
+[batchProcessing]
+tasks = "[
+            {
+                'taskId': '01',
+                'route' : 'audit/event/createChainjournal',
+                'description' : 'Chainer le journal de l\'application'
+            },
+            {
+                'taskId': '02',
+                'route' : 'lifeCycle/journal/createChainjournal',
+                'description' : 'Chainer le journal du cycle de vie'
+            },
+            {
+                'taskId': '03',
+                'route' : 'recordsManagement/archiveCompliance/readPeriodic',
+                'description' : 'Valider l\'intégrité des archives'
+            },
+            {
+                'taskId': '04',
+                'route' : 'recordsManagement/archives/deleteDisposablearchives',
+                'description' : 'Détruire les archives'
+            },
+            {
+                'taskId': '05',
+                'route' : 'batchProcessing/notification/updateProcess',
+                'description' : 'Envoyer notification'
+            },
+            {
+                'taskId': '06',
+                'route' : 'recordsManagement/archives/updateIndexfulltext',
+                'description' : 'Extraction plein texte'
+            }
+        ]"

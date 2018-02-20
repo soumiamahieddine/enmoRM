@@ -182,19 +182,29 @@ interface userAccountInterface
     /**
      * Change a user Account password
      * @param string $newPassword
+     * @param string $oldPassword
      *
      * @action auth/userAccount/setPassword
      */
-    public function updatePassword_userAccountId_($newPassword);
+    public function updatePassword_userAccountId_($newPassword, $oldPassword);
 
     /**
-     * Generate a new password
+     * Generate reset token
      * @param string $username The username
      * @param string $email    The email of the user
      *
-     * @action auth/userAccount/generatePassword
+     * @action auth/userAccount/forgotAccount
      */
-    public function updateGeneratePassword($username, $email);
+    public function updateForgotaccount($username, $email);
+
+    /**
+     * Reset password
+     * @param string $newPassword The new password
+     * @param string $token       The token
+     *
+     * @action auth/userAccount/resetPassword
+     */
+    public function updateResetpassword($newPassword, $token);
 
     /**
      * Required password change

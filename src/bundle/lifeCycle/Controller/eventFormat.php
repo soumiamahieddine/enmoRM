@@ -42,7 +42,7 @@ class eventFormat
     /**
      * Get event format list
      *
-     * @return array The event format list
+     * @return lifeCycle/eventFormat[] The event format list
      */
     public function index()
     {

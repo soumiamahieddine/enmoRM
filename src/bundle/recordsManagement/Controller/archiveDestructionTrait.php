@@ -30,7 +30,7 @@ trait archiveDestructionTrait
      * Flag for disposal
      * @param array $archiveIds The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function dispose($archiveIds) 
     {
@@ -53,6 +53,13 @@ trait archiveDestructionTrait
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
 
+            $this->getChildrenArchives($archive);
+
+            if ($archive->childrenArchives) {
+                $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
+
+                $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
+            }
             $archives[] = $archive;
         }
 
@@ -68,7 +75,7 @@ trait archiveDestructionTrait
      * Eliminate archive
      * @param string $archiveId The archive identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function eliminate($archiveId)
     {
@@ -90,7 +97,7 @@ trait archiveDestructionTrait
      * Cancel destruction
      * @param array $archiveIds Array of archive identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function cancelDestruction($archiveIds)
     {
@@ -150,7 +157,7 @@ trait archiveDestructionTrait
         foreach ($archives['success'] as $archiveId) {
             $archive = $this->getDescription($archiveId);
 
-            if ($archive->status != 'disposed') {
+            if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
                 $destructArchives['error'][] = $archive;
                 continue;
             }
@@ -236,5 +243,34 @@ trait archiveDestructionTrait
         }
 
         return $destroyedArchiveId;
+    }
+
+    protected function checkChildren($archivesChildren) {
+        $currentDate = \laabs::newTimestamp();
+        $archiveIds = [];
+        foreach ($archivesChildren as $archive) {
+            $this->checkRights($archive);
+
+            if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Archive not set for destruction.");
+            }
+
+            if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Disposal date not reached.");
+            }
+
+            if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Disposal date not reached.");
+            }
+
+            if ($archive->childrenArchives) {
+                $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
+                $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
+            }
+
+            $archiveIds[] = (string) $archive->archiveId;
+        }
+
+        return $archiveIds;
     }
 }

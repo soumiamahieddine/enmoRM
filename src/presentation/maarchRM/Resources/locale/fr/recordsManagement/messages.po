@@ -170,7 +170,7 @@ msgid "File extension"
 msgstr "Extension du fichier"
 
 msgid "Life cycle events"
-msgstr "Evénements du cycle de vie"
+msgstr "Événements du cycle de vie"
 
 msgid "Archive identifier"
 msgstr "Cote"
@@ -200,7 +200,7 @@ msgid "Description level"
 msgstr "Niveau de description"
 
 msgid "digitalResourceId"
-msgstr "Id de ressource électronique"
+msgstr "ID de ressource électronique"
 
 msgid "archiver"
 msgstr "Service d'Archives"
@@ -211,7 +211,7 @@ msgstr "Service Versant"
 msgctxt "org"
 
 msgid "originator"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 msgctxt "org"
 
 msgid "Originator"
@@ -305,6 +305,10 @@ msgstr "Date de départ du calcul"
 msgid "Duration"
 msgstr "Durée"
 
+msgid "Code"
+msgstr "Nom de la règle"
+msgctxt "archiveInformation"
+
 msgid "Final disposition"
 msgstr "Sort final"
 
@@ -315,7 +319,7 @@ msgid "Originator identifier"
 msgstr "Identifiant producteur"
 
 msgid "Originator req number"
-msgstr "Identifiant service producteur"
+msgstr "Identifiant Service Producteur"
 
 msgid "Frozen"
 msgstr "Suspendu"
@@ -333,7 +337,7 @@ msgid "Waiting for restitution"
 msgstr "Restituable"
 
 msgid "Waiting for destruction"
-msgstr "Eliminable"
+msgstr "Éliminable"
 
 msgid "Restituted"
 msgstr "Restitué"
@@ -355,6 +359,9 @@ msgstr "Demander l'élimination"
 
 msgid "Cancel destruction request"
 msgstr "Annuler la demande d'élimination"
+
+msgid "Flag for transfer"
+msgstr "Demander le transfert"
 
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
@@ -396,7 +403,7 @@ msgid "Archive identifier of originator"
 msgstr "Identifiant d'archive producteur"
 
 msgid "Expired"
-msgstr "Echue"
+msgstr "Échue"
 
 msgid "Not expired"
 msgstr "Non échue"
@@ -423,16 +430,25 @@ msgid "frozen"
 msgstr "Gelée"
 
 msgid "disposable"
-msgstr "Elimination demandée"
+msgstr "En cours d'élimination"
+
+msgid "Select an archiver"
+msgstr "Sélectionnez un Service d'Archives"
+
+msgid "transferable"
+msgstr "En cours de transfert"
+
+msgid "transfered"
+msgstr "Transférée"
 
 msgid "disposed"
-msgstr "Détruite"
+msgstr "Éliminée"
 
 msgid "restituted"
 msgstr "Restituée"
 
 msgid "restituable"
-msgstr "Restitution demandée"
+msgstr "En cours de restitution"
 
 msgid "preserved"
 msgstr "Conservée"
@@ -440,7 +456,7 @@ msgstr "Conservée"
 msgid "destruction"
 msgstr "Destruction"
 
-msgid "preservation"
+msgid "Preservation"
 msgstr "Conservation"
 
 msgid "Disposable archives"
@@ -489,10 +505,10 @@ msgid "Requesting agency :"
 msgstr "Service demandeur :"
 
 msgid "Depositor agency :"
-msgstr "Service versant :"
+msgstr "Service Versant :"
 
 msgid "Event type :"
-msgstr "Type d'évènement :"
+msgstr "Type d'événement :"
 
 msgid "User :"
 msgstr "Utilisateur :"
@@ -552,7 +568,7 @@ msgid "Disposal rule origin"
 msgstr "Règle appliquée"
 
 msgid "Archive Retention rule updated"
-msgstr "Règle de conservation de l'archive modifié"
+msgstr "Règle de conservation de l'archive modifiée"
 
 msgid "Certificate of reception created"
 msgstr "Certificat de réception créé"
@@ -570,13 +586,13 @@ msgid "Archive received"
 msgstr "Archive reçue"
 
 msgid "Archive validation succeeded"
-msgstr "Archive validé avec succès"
+msgstr "Archive validée avec succès"
 
 msgid "Archive created"
-msgstr "Archive créé"
+msgstr "Archive créée"
 
 msgid "Access Code modification"
-msgstr "Règle de communicabilité modifié"
+msgstr "Règle de communicabilité modifiée"
 
 msgid "Retention rule updated"
 msgstr "Règle de conservation modifiée"
@@ -612,16 +628,16 @@ msgid "Addresses"
 msgstr "Adresses"
 
 msgid "Show the archive info"
-msgstr "Afficher les infos de l'archive"
+msgstr "Afficher les informations de l'archive"
 
 msgid "Archiver Name"
 msgstr "Service d'Archives"
 
 msgid "Depositor Name"
-msgstr "Service versant"
+msgstr "Service Versant"
 
 msgid "Originator Name"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 
 msgid "bits"
 msgstr "octets"
@@ -652,7 +668,7 @@ msgid "Relationships"
 msgstr "Relations"
 
 msgid "Related archive"
-msgstr "Archive lié"
+msgstr "Archive liée"
 
 msgid "Information"
 msgstr "Informations"
@@ -661,10 +677,10 @@ msgid "History"
 msgstr "Historique"
 
 msgid "Modify retention rule"
-msgstr "Modifier règle de conservation"
+msgstr "Modifier la règle de conservation"
 
 msgid "Modify access rule"
-msgstr "Modifier règle de communicabilité"
+msgstr "Modifier la règle de communicabilité"
 
 msgid "Access rule"
 msgstr "Règle de communicabilité"
@@ -676,7 +692,7 @@ msgctxt "validationModal"
 msgid "%1$s archive(s) flagged for restitution."
 msgstr "%1$s archive(s) marquée(s) pour restitution."
 
-msgid "%1$s archive(s) flagged for destruction."
+msgid "%1$s / %2$s archive(s) flagged for destruction."
 msgstr "%1$s archive(s) marquée(s) pour destruction."
 
 msgid "%1$s archive(s) flagged for conversion."
@@ -693,6 +709,12 @@ msgstr "%1$s archive(s) gelée(s)."
 
 msgid "%1$s archive(s) unfreezed."
 msgstr "%1$s archive(s) dégelée(s)."
+
+msgid "%1$s transfer(s) validated."
+msgstr "%1$s transfert(s) validé(s)."
+
+msgid "%1$s transfer(s) can not be validate(s)."
+msgstr "%1$s transfert(s) ne sont pas validé(s)."
 
 msgid "%1$s restitution(s) validated."
 msgstr "%1$s restitution(s) validée(s)."
@@ -728,7 +750,7 @@ msgid "Restitution message created"
 msgstr "Message de restitution créé."
 
 msgid "The archive has been deposited"
-msgstr "L'archive a été déposé"
+msgstr "L'archive a été déposée"
 
 msgid "No organization unit"
 msgstr "Pas d'unité organisationnelle"
@@ -737,19 +759,25 @@ msgid "You have to choose a working organization unit to proceed this action."
 msgstr "Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
 
 msgid "Permission denied: You have to choose a working organization unit to proceed this action."
-msgstr "Permission non accordée: Vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
+msgstr "Permission non accordée : vous devez choisir une unité organisationnelle de travail pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
-msgstr "La classe description ne correspond pas aux profil d'archive."
+msgstr "La classe description ne correspond pas aux profils d'archive."
 
 msgid "Archive not set for destruction."
 msgstr "Archive non prévue pour destruction."
+
+msgid "Children archives : Archive not set for destruction."
+msgstr "Une archive enfant n'est pas prévue pour être détruite."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
 msgid "Profil and data management not found"
-msgstr "Profil et données de gestion non-trouvé"
+msgstr "Profil et données de gestion non trouvés"
 
 msgid "Representation information"
 msgstr "Information de représentation"
@@ -782,7 +810,7 @@ msgid "Children archives"
 msgstr "Objets contenus"
 
 msgid "A keyword label is missing."
-msgstr "Un libellé de mot clé n'a pas été renseigné."
+msgstr "Un libellé de mot-clé n'a pas été renseigné."
 
 msgid "The indexes of the archive have been modified"
 msgstr "Les index de l'archive ont été modifiés"
@@ -801,8 +829,12 @@ msgstr "Modification de l'index"
 msgid "Reference"
 msgstr "Cote"
 
+msgid "Reference"
+msgstr "Référence"
+msgctxt "message"
+
 msgid "Select a rule"
-msgstr "Selectionnez une règle"
+msgstr "Sélectionnez une règle"
 
 
 msgid "Acces rule duration"
@@ -854,13 +886,13 @@ msgid "New archive"
 msgstr "Nouvelle archive"
 
 msgid "Archive updated"
-msgstr "Archive modifée"
+msgstr "Archive modifiée"
 
 msgid "Add field"
 msgstr "Ajouter un champ"
 
 msgid "Metadatas are incomplete."
-msgstr "Les metadonnées sont imcomplètes."
+msgstr "Les métadonnées sont imcomplètes."
 
 msgid "Label"
 msgstr "Libellé"
@@ -869,7 +901,7 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "Select a retention rule"
-msgstr "Selectionner une règle de conservation"
+msgstr "Sélectionner une règle de conservation"
 
 msgid "No result"
 msgstr "Aucun résultat"
@@ -884,7 +916,7 @@ msgid "Originating date"
 msgstr "Date du document"
 
 msgid "Text indexation"
-msgstr "Indexation du text"
+msgstr "Indexation du texte"
 
 msgid "Profiles"
 msgstr "Profils"
@@ -900,3 +932,46 @@ msgstr "À définir plus tard"
 
 msgid "Producer"
 msgstr "Producteur"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "No originator found"
+msgstr "Aucun producteur trouvé"
+
+msgid "No archival agency found"
+msgstr "Aucun Service d'Archives trouvé"
+
+msgid "Message"
+msgstr "Bordereau(x)"
+
+msgid "ArchiveTransfer"
+msgstr "Transfert d'archive"
+
+msgid "ArchiveModificationNotification"
+msgstr "Notification de modification"
+
+msgid "ArchiveDeliveryRequest"
+msgstr "Demande de communication "
+
+msgid "ArchiveRestitutionRequest"
+msgstr "Demande de restitution"
+
+msgid "ArchiveDestructionRequest"
+msgstr "Demande d'élimination"
+
+msgid "Rule name"
+msgstr "Nom de la règle"
+
+msgid "DUA Due date"
+msgstr "Date d'échéance de la DUA"
+
+msgid "No working organization"
+msgstr "Aucune organisation sélectionnée"
+
+msgid "You have to choose a working organization unit to proceed this action."
+msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
+
+msgid "Code"
+msgstr "Nom de la règle"
+msgctxt "archiveInformation"

@@ -91,7 +91,7 @@ class accessRule
         try {
             $this->sdoFactory->create($accessRule, 'recordsManagement/accessRule');
         } catch (\Exception $e) {
-            throw new \Exception("Access Code not created.");
+            throw new \core\Exception\ConflictException("Access Code not created.");
         }
 
         return true;

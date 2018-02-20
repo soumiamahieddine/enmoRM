@@ -189,7 +189,7 @@ trait archiveAccessTrait
      * Get archive assert
      * @param array $args
      * 
-     * @return string
+     * @return string Query
      */
     public function getArchiveAssert($args)
     {
@@ -297,7 +297,7 @@ trait archiveAccessTrait
      * Get the query assert for access rule
      * @param string $currentDateString the date
      * 
-     * @return string
+     * @return string Query
      */
     public function getAccessRuleAssert($currentDateString)
     {

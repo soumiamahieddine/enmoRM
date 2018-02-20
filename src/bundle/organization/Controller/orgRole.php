@@ -43,7 +43,7 @@ class orgRole
     /**
      * Get the organization's role
      *
-     * @return array The list of organization's roles
+     * @return object[] The list of organization's roles
      */
     public function index()
     {
@@ -64,7 +64,7 @@ class orgRole
      * Add an organization role
      * @param object $orgRole the orgRole to add
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function addOrgRole($orgRole)
     {
@@ -90,7 +90,7 @@ class orgRole
      * Update an organization role
      * @param object $orgRole The orgRole to update
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modifyOrgRole($orgRole)
     {

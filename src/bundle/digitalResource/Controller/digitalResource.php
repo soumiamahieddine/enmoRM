@@ -77,7 +77,7 @@ class digitalResource
      * Get file information about one file
      * @param string $filename The file name
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource The digitalResource
      */
     public function createFromFile($filename, $withDateTime = true)
     {
@@ -121,7 +121,7 @@ class digitalResource
      * @param string $contents The contents to store
      * @param string $filename The original filename
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource The digitalResource
      */
     public function createFromContents($contents, $filename = false)
     {
@@ -148,7 +148,7 @@ class digitalResource
      * Get information about resource stream contents
      * @param string $stream The data stream to store
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource The digitalResource
      */
     public function createFromStream($stream)
     {
@@ -190,7 +190,7 @@ class digitalResource
      * @param string $mode
      * @param bool   $limit
      *
-     * @return digitalResource/cluster
+     * @return digitalResource/cluster The cluster
      */
     public function useCluster($clusterId, $mode, $limit)
     {
@@ -210,7 +210,7 @@ class digitalResource
      * @param string $path
      * @param mixed  $metadata
      * 
-     * @return string
+     * @return string Ressource container on the cluster
      */
     public function openContainers($clusterId, $path, $metadata=null)
     {
@@ -224,7 +224,7 @@ class digitalResource
      * Store a given resource
      * @param digitalResource/digitalResource $resource The ressource object
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource digitalResource object
      */
     public function store($resource)
     {
@@ -239,7 +239,7 @@ class digitalResource
      * @param array  $resources An array of resources to store
      * @param string $clusterId The cluster to apply for store procedure
      *
-     * @return bool
+     * @return mixed Collection of resources
      */
     public function storeCollection($resources, $clusterId)
     {
@@ -328,7 +328,7 @@ class digitalResource
      * @param string $resId            The identifier of the converted or the original resource
      * @param string $relationshipType The relationship type with the resource identified by the second parameter
      *
-     * @return digitalResource/digialResource[]
+     * @return digitalResource/digialResource[] Array of digitalResource/digialResource object
      */
     public function getRelatedResources($resId, $relationshipType = null)
     {
@@ -348,7 +348,7 @@ class digitalResource
      * Retrieve a resource
      * @param string $resId The resource identifier
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource digitalResource object
      */
     public function retrieve($resId)
     {
@@ -405,7 +405,7 @@ class digitalResource
      * Get the contents of a given resource
      * @param string $resId
      *
-     * @return string
+     * @return string The contents of a given resource
      */
     public function contents($resId)
     {
@@ -451,7 +451,7 @@ class digitalResource
      * Retrieve a resource metadata
      * @param string $resId
      *
-     * @return mixed
+     * @return mixed Resource metadata
      */
     public function metadata($resId)
     {
@@ -483,7 +483,7 @@ class digitalResource
      * Get all information about one digital resource
      * @param string $resId The identifier of digital resource
      *
-     * @return digitalResource/digitalResource
+     * @return digitalResource/digitalResource digitalResource object whith all information
      */
     public function info($resId)
     {
@@ -520,7 +520,7 @@ class digitalResource
      * Delete entire resource and all addresses
      * @param string $resId The resource identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function delete($resId)
     {
@@ -606,7 +606,7 @@ class digitalResource
      * Convert resource to another format
      * @param object $digitalResource
      *
-     * @return object
+     * @return object The resource converted
      */
     public function convert($digitalResource)
     {

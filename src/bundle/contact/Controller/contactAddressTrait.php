@@ -83,7 +83,7 @@ trait contactAddressTrait
      * @param id              $addressId The address id
      * @param contact/address $address   The address data
      *
-     * @return bool
+     * @return object The address object
      */
     public function modifyAddress($addressId, $address)
     {
@@ -98,14 +98,12 @@ trait contactAddressTrait
      * Delete an address
      * @param id $addressId The address id
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function deleteAddress($addressId)
     {
         $key = array('addressId' => $addressId);
 
-        $result =  $this->sdoFactory->delete($key, "contact/address");
-
-        return $result;
+        return $this->sdoFactory->delete($key, "contact/address");
     }
 }

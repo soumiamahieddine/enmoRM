@@ -32,7 +32,7 @@ trait archiveEntryTrait
     /**
      * Instanciate a new archive
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive An archive
      */
     public function newArchive()
     {
@@ -111,6 +111,8 @@ trait archiveEntryTrait
 
         // Send certificate
         $this->sendResponse($archive);
+
+        return $archive->archiveId;
     }
 
     /**
@@ -118,7 +120,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive
      * 
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive An archive
      */
     public function processZipContainer($archive)
     {
@@ -492,11 +494,9 @@ trait archiveEntryTrait
             return;
         }
 
-        if (empty($archive->descriptionObject)) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
         if (!empty($this->currentArchivalProfile->descriptionClass)) {
+            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
+
             $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
         } else {
             $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);

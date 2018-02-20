@@ -2,7 +2,7 @@
     <div class="container-fluid" data-translate-catalog="audit/messages">
         <div class="page-header">
             <h1>
-                <i class="fa fa-search"></i>
+                <i class="fa fa-desktop"></i>
                 Audit search
             </h1>
         </div>
@@ -33,9 +33,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="event_userAccountTypeahead">Account</label>
+                                <label class="col-sm-3 control-label" for="event_accountTypeahead">Account</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Account" id="event_userAccountTypeahead" data-accountId=""/>
+                                    <input type="text" class="form-control" placeholder="Account" id="event_accountTypeahead" data-accountId=""/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -186,19 +186,19 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {url: '/user/todisplay', ttl: '0'},
-            limit: 100
+            limit: 500
         });
         users.initialize();
 
         var services = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('serviceName'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {url: '/service/todisplay', ttl: '0'},
             limit: 100
         });
         services.initialize();
 
-        $('#event_userAccountTypeahead').typeahead(
+        $('#event_accountTypeahead').typeahead(
                 {
                     hint: true,
                     highlight: true,
@@ -206,29 +206,25 @@
                 },
         {
             name: 'users',
-            displayKey: function (user) {
-                var name = user.displayName;
-                if (name == undefined) {
-                    name = user.serviceName;
-                }
-                return name;
+            displayKey: function (account) {
+                return account.displayName;
             },
             templates: {
                 empty: function () {
                     return "<span class='well well-sm'>No user found</span>";
                 },
-                suggestion: function (user) {
-                    var name = user.displayName;
-                    var icone = "<span class='fa fa-user' >&nbsp;</span>";
-                    if (name == undefined) {
-                        name = user.serviceName;
-                        icone = "<span class='fa fa-laptop' >&nbsp;</span>";
+                suggestion: function (account) {
+                    var name = account.displayName;
+                    if (account.accountType == 'service') {
+                        var icone = "<span class='fa fa-laptop' >&nbsp;</span>";
+                    } else {
+                        var icone = "<span class='fa fa-user' >&nbsp;</span>";
                     }
                     var display =
                             "<span>"
                             + icone
                             + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + name
+                            + account.displayName
                             + "</span>"
                             + "</span>";
                     
@@ -248,11 +244,11 @@
             skipCache: true
         }
         ).on('typeahead:selected', function ($event, suggestion, source) {
-            $("#event_userAccountTypeahead").attr('data-accountId', suggestion.accountId);
+            $("#event_accountTypeahead").attr('data-accountId', suggestion.accountId);
         });
 
-       $("#event_userAccountTypeahead").on('keypress', function () {
-            $("#event_userAccountTypeahead").attr('data-accountId', "");
+       $("#event_accountTypeahead").on('keypress', function () {
+            $("#event_accountTypeahead").attr('data-accountId', "");
        });
 
         // checkBox button
@@ -394,13 +390,13 @@
                 toDate: $('#toDate').val(),
                 status: status,
                 event: $('#event').val(),
-                accountId: $.trim($('#event_userAccountTypeahead').val()),
+                accountId: $.trim($('#event_accountTypeahead').val()),
                 term: $('#term').val(),
                 wording : wording
             };
             
-            if ($('#event_userAccountTypeahead').attr('data-accountId')) {
-                serializedObject.accountId = $('#event_userAccountTypeahead').attr('data-accountId') ;
+            if ($('#event_accountTypeahead').attr('data-accountId')) {
+                serializedObject.accountId = $('#event_accountTypeahead').attr('data-accountId') ;
             }
 
             return serializedObject;

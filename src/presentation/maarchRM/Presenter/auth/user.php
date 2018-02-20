@@ -300,13 +300,41 @@ class user
     }
 
     /**
-     * Generate a new password
-     * @return type
+     * Generate reset token
+     * @return string
      */
-    public function generatePassword()
+    public function forgotAccount()
     {
         $json = $this->json;
-        $json->message = "A new password has been generated";
+        $json->message = "A reset email has been send";
+        $json->message = $this->translator->getText($json->message);
+
+        return $json->save();
+    }
+
+    /**
+     * Form to change the password
+     * @return string
+     */
+    public function formChangePassword()
+    {
+        $view = $this->view;
+
+        $view->addContentFile("auth/userAccount/login/changePassword.html");
+
+        $view->translate();
+
+        return $view->saveHtml();
+    }
+
+    /**
+     * Reset password
+     * @return string
+     */
+    public function resetPassword()
+    {
+        $json = $this->json;
+        $json->message = "Password has been updated";
         $json->message = $this->translator->getText($json->message);
 
         return $json->save();

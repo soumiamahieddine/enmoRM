@@ -294,4 +294,20 @@ interface organizationInterface
      * @action organization/organization/todisplay
      */
     public function readTodisplay();
+
+    /**
+     * List of organizations
+     *
+     * @return An array of organization and service
+     *
+     * @action organization/organization/todisplayOrgUnit
+     */
+    public function readTodisplayorgunit();
+
+    /**
+     * Get originator
+     *
+     * @action organization/organization/getOriginator
+     */
+    public function readOriginator();
 }

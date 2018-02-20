@@ -2,7 +2,7 @@
     <div class="container-fluid" data-translate-catalog="auth/messages">
         <div class="page-header">
             <h1>
-                <i class="fa fa-users"></i>
+                <i class="fa fa-laptop"></i>
                 Edit service account
             </h1>
         </div>
@@ -19,14 +19,23 @@
                             <input type="text" class="form-control" placeholder="Name" name="accountName" id="accountName" value=""/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="serviceOrgId">Organization<span style="color : red">*</span></label>
-                        <div>
-                            <select class="form-control" name="orgId" id="serviceOrgId">
-                                <option></option>
-                                <?merge organizations ?>
-                                <option value="[?merge .orgId ?]" name="orgId"><?merge .displayName ?></option>
-                            </select>
+                    <div class="well">
+                        <div class="form-group">
+                            <label class="control-label" for="serviceOrgId">Service<span style="color : red">*</span></label>
+                            <div>
+                                <input type="text" class="form-control" name="orgName" placeholder="Service" id="orgTypeahead"/>
+                                <select class="form-control hide" name="orgId" id="serviceOrgId">
+                                    <option></option>
+                                    <?merge organizations ?>
+                                    <option value="[?merge .orgId ?]" name="orgId"><?merge .displayName ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <?merge serviceAccount ?>
+                        <div id="orgGroup" class="form-group hide">
+                            <label class="control-label" for="serviceOrgId">Organization<span> : </span></label>
+                            <input name="ownerOrgName" id="originatorOwnerOrgName" disabled class="form-control">
+                           <!--<span name="ownerOrgName" id="originatorOwnerOrgName"></span>-->
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,7 +91,12 @@
                                         </div>
                                     </div>
                                     <div class="form-horizontal" id="listPrivilege">
-                                        <div class="input-group"> 
+                                        <div class="input-group">
+                                            <!--<select class="form-control">-->
+                                                <!--<option value="" >Select a profile</option>-->
+                                                <!--<?merge serviceAccount.servicePrivileges.print() ?>-->
+                                                <!--<option data-serviceURI="[?merge .serviceURI ?]"><?merge .description ?></option>-->
+                                            <!--</select>-->
                                             <input type="text" class="form-control" id="inputPrivilegeURI">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
@@ -113,6 +127,7 @@
     <span id="empty_text">The fields with a star are required.</span>
     <span id="whiteSpace_text">The fields contain white spaces.</span>
     <span id="nullValue_text">The fields is empty.</span>
+    <span id="noServiceFound">No service found</span>
 </div>
 <script type="application/javascript">
     //save
@@ -126,7 +141,7 @@
 
         var param = new Object();
         var serviceAccount = new Object();
-        
+
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
@@ -134,27 +149,27 @@
         //serviceAccount.orgId = $("#serviceOrgId").val();
         serviceAccount.enabled = false;
         orgId = $("#serviceOrgId").val();
-        
+
         var servicesURI = new Array();
         $("#listPrivilege").find("[name=privilegeURI]").each(function(){
             servicesURI.push($(this).find("input").val());
         });
-        
+
         if(serviceAccount.displayName == "" || orgId == "") {
-             gritter.show($('#empty_text').html(),false);
-             return false;
+            gritter.show($('#empty_text').html(),false);
+            return false;
         }
-        
+
         var param = {
             serviceAccount : serviceAccount,
             orgId : orgId,
             servicesURI : servicesURI
         };
-        
+
         if ($("#serviceEnabled").prop("checked")) {
             serviceAccount.enabled = true;
         }
-        
+
         ajax($(this), {
             url         : url,
             type        : type,
@@ -172,7 +187,7 @@
             }
         });
     });
-    
+
     //Add privilege
     $("#btnAddPrvilege").on("click", function(){
         var value = $("#inputPrivilegeURI").val();
@@ -181,7 +196,7 @@
             gritter.show($('#nullValue_text').text(),false);
             return;
         }
-        
+
         if (/\s/g.test(value)) {
             gritter.show($('#whiteSpace_text').text(),false);
             return;
@@ -190,17 +205,17 @@
         $("#privilegeExemple").find("[name=privilegeURI]:first").clone().appendTo($("#listPrivilege")).find("input").val($("#inputPrivilegeURI").val());
         $("#inputPrivilegeURI").val("");
     });
-    
+
     //Delete privilege
     $("#privilegesTab").on("click","[name=btnDeletePrvilege]", function(){
         $(this).closest("[name=privilegeURI").remove();
     });
-    
+
     //Cancel
     $("#cancelServiceAccount").on("click", function(){
         load("/serviceAccounts");
     });
-    
+
     //Cancel
     $("#tokenRegenerate").on("click", function(){
         ajax($(this), {
@@ -215,6 +230,79 @@
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         });
+    });
+
+    var organizations = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        limit: 100
+    });
+    window.localStorage.clear();
+    organizations.initialize();
+
+
+    // initialize typeahead
+    $('#orgTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'organizations',
+            displayKey: 'displayName',
+            templates: {
+                empty: function() {
+                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                },
+                suggestion: function(organization) {
+                    var display;
+                    if(organization.ownerOrgName) {
+                        display =
+                            "<span>"
+                            + "<span class='fa fa-user' >&nbsp;</span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + organization.ownerOrgName
+                            + " > "
+                            + organization.displayName
+                            + "</span>"
+                            + "</span>";
+                    }
+                    else {
+                        display = this.empty();
+                    }
+                    return display;
+                }
+            },
+            source: function(query, cb) {
+                organizations.get(query, function(suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }
+    ).on('typeahead:selected', function($event, suggestion, source) {
+        $("#orgTypeahead").prop('org', suggestion);
+        $("#serviceOrgId").val(suggestion.orgId)
+        $("#originatorOwnerOrgName").val(suggestion.ownerOrgName)
+    });
+
+    $('#orgTypeahead').keyup(function () {
+
+        if(!$(this).val()){
+            $("#originatorOwnerOrgName").val('');
+            $("#serviceOrgId").val('');
+            $("#orgGroup").addClass('hide');
+        }
+        else {
+            $("#orgGroup").removeClass('hide');
+        }
     });
 
 </script>

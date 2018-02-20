@@ -131,6 +131,14 @@ interface AdminOrganizationInterface
     public function updateOrganizationtype_code_($orgType);
 
     /**
+     * Update an org type
+     *
+     * @return organization/orgType/deleteOrganizationtype
+     * @uses organization/orgType/delete_code_
+     */
+    public function deleteOrganizationtype_code_();
+
+    /**
      * Export file plan
      *
      * @return organization/orgTree/exportFilePlan

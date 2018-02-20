@@ -38,6 +38,9 @@ file that was distributed with this source code.
                                 <tr>
                                     <td><?merge .name ?></td>
                                     <td><?merge .label ?></td>
+                                    <?merge .translateType.bool() ?>
+                                    <td><?merge .translateType ?></td>
+                                    <?merge .translateType.bool().not() ?>
                                     <td><?merge .type ?></td>
                                     <td class="action_btn">
                                         <div class="btn-group pull-right">
@@ -85,26 +88,27 @@ file that was distributed with this source code.
                         </div>
                         <div class="form-group" id="fieldName">
                             <label class="col-md-2 control-label">Name<span style="color:red">&nbsp;*</span></label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type="text" class="form-control" name="fieldName" placeholder="Name"/>
+                                <small class="help-block">The first and last character must be a letter. You must use only letters and the special character '_'</small>
                             </div>
                         </div>
                         <div class="form-group" id="propertyLabel">
                             <label class="col-md-2 control-label">Label<span style="color:red">&nbsp;*</span></label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type="text" class="form-control" name="label" placeholder="Label"/>
                             </div>
                         </div>
                         <div class="form-group hide" id="namePropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
                             </div>
                         </div>
                         
                         <div class="form-group hide" id="nameSelectPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <select class="form-control" name="defaultValue">
                                     <option value=""></option>
                                 </select>
@@ -113,25 +117,25 @@ file that was distributed with this source code.
                         
                         <div class="form-group hide" id="textPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
                             </div>
                         </div>
                         <div class="form-group hide" id="datePropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type="text" class="form-control datePicker" name="defaultValue" placeholder="Default value"/>
                             </div>
                         </div>
                         <div class="form-group hide" id="numberPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <input type='number' class="form-control" name="defaultValue" placeholder="Default value"/>
                             </div>
                         </div>
                         <div class="form-group hide" id="booleanPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <div class="btn-group" data-toggle="buttons">
                                     <label class="btn btn-default">
                                         <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
@@ -147,7 +151,7 @@ file that was distributed with this source code.
                         </div>
                         <div class="form-group hide" id="keywordEnumForm">
                             <label class="col-md-2 control-label">Enumeration</label>
-                            <div class="col-md-7">
+                            <div class="col-md-8">
                                 <div class="input-group">
                                     <input type='text' id="inputAddEnumField" class="form-control" name="keywordEnumField"/>
                                     <div class="input-group-btn">
@@ -190,7 +194,7 @@ file that was distributed with this source code.
 </div>
 
 <script type="text/javascript">
-    
+
     $("#descriptionField_formBtn").on('click', "#descriptionField_formCancelBtn", function () {
         clearForm();
     });
@@ -252,6 +256,12 @@ file that was distributed with this source code.
         var data = new Object();
         data.descriptionField = serialize();
 
+        var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+
+        if(!pattern.test(data.descriptionField.name)) {
+            return;
+        }
+
         if (!checkRequiredFields(data.descriptionField)) {
             gritter.show($("#message_requiredFields").text(), false);
             return;
@@ -278,6 +288,12 @@ file that was distributed with this source code.
     $("#descriptionField_formBtn").on('click', "#descriptionField_formModifyBtn", function () {
         var data = new Object();
         data.descriptionField = serialize();
+
+        var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+
+        if(!pattern.test(data.descriptionField.name)) {
+            return;
+        }
 
         if (!checkRequiredFields(data.descriptionField)) {
             gritter.show($("#message_requiredFields").text(), false);
@@ -373,6 +389,10 @@ file that was distributed with this source code.
         
         $('#fieldName').find('input').removeAttr("disabled");
 
+        let formGroup = $('#fieldName').closest('.form-group');
+        formGroup.removeClass('has-error');
+        formGroup.removeClass('has-success');
+
         $('#documentDescriptionPropertiesType').find('.active').removeClass("active");
         
         $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
@@ -391,12 +411,16 @@ file that was distributed with this source code.
         $('#keywordEnumList').empty();
         $('#keywordEnumForm').addClass('hide');
         $('#keywordEnumList').addClass('hide');
+
     }
 
     function mergeForm(descriptionField) {
         $('#documentDescriptionPropertiesType').find('input[type=radio][name=type][value='+descriptionField.type+']').parent().addClass("active");
         $('#propertyLabel').find('input').val(descriptionField.label);
         $('#fieldName').find('input').val(descriptionField.name).attr("disabled",true);
+        let formGroup = $('#fieldName').closest('.form-group');
+        formGroup.removeClass('has-error');
+        formGroup.removeClass('has-success');
         
         switch (descriptionField.type) {
             case "text" :
@@ -518,4 +542,21 @@ file that was distributed with this source code.
          
         return property;
     }
+
+    $("#descriptionField_formContent").on("keyup","[name='fieldName']", function(){
+        var input = $(this);
+        var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+        var formGroup = input.closest('.form-group');
+
+        if(!input.val()) {
+            formGroup.removeClass('has-error');
+            formGroup.removeClass('has-success');
+        } else if (pattern.test(input.val())) {
+            formGroup.removeClass('has-error').addClass('has-success');
+        } else {
+            formGroup.removeClass('has-success').addClass('has-error');
+        }
+    });
+
+
 </script>

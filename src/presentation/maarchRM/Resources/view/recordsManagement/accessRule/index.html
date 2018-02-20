@@ -68,15 +68,19 @@ file that was distributed with this source code.
 
 <script type="application/javascript">
 $("#addNewAccessCode").on('click', function(){
+    $('#newAccessRuleTitle').show();
+    $('#editAccessRuleTitle').hide();
      $('#accessRuleModal').modal();
 })
 
-$(".editAccessRule").on('click', function(){
+$(".dataTable").on('click',".editAccessRule", function(){
      $.ajax({
         type        : 'GET',
         url         : '/accessRule/'+$(this).data('code'),
         dataType    : 'json',
         success     : function (response) {
+            $('#newAccessRuleTitle').hide();
+            $('#editAccessRuleTitle').show();
             AccessRuleModal.load(response);
         },
         error       : function(response) {

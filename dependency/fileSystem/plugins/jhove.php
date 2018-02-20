@@ -44,7 +44,7 @@ class jhove
     public function __construct($javaHome, array $jhoveModules=array())
     {
         //putenv('JHOVE_HOME='.__DIR__.'');
-        putenv('JAVA_HOME="C:\Program Files (x86)\Java\jre7\bin"');
+        putenv('JAVA_HOME="'.$javaHome.'"');
         //putenv('CLASSPATH=' . __DIR__ . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'JhoveApp.jar');
         $classpath = 
             __DIR__ . DIRECTORY_SEPARATOR . 'jhove' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'JhoveApp.jar' 
@@ -77,18 +77,21 @@ class jhove
             $tokens[] = '"' . $filename . '"';
         }
 
+        $tokens[] = '2>&1';
+
         $command = implode(' ', $tokens);
+
+        $locale = 'fr_FR.UTF-8';
+        setlocale(LC_ALL, $locale);
+        putenv('LC_ALL='.$locale);
 
         $output = array();
         $return = null;
 
         exec($command, $output, $return);
-        //var_dump($command);
-        //var_dump($output);
-        //var_dump($return);
-
+        
         if ($return !== 0) {
-            throw new \dependency\fileSystem\Exception("Failed to validate file format: execution error.");
+            throw new \dependency\fileSystem\Exception("Failed to validate file format: execution error.", null, null, $output);
         }
 
         $this->errors = array();

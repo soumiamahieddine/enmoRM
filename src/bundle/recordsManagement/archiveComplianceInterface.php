@@ -30,8 +30,8 @@ interface archiveComplianceInterface
 {
     /**
      * Archive compliance
-     *
+     * @param string $serviceLevelReference The service level reference
      * @action recordsManagement/archive/sampling
      */
-    public function readPeriodic();
+    public function readPeriodic($serviceLevelReference = null);
 }

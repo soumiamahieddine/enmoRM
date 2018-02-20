@@ -103,4 +103,17 @@ class orgType
         return $this->json->save();
     }
 
+    /*
+     * Serializer JSON for seting updateOrganizationtype method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function deleteOrganizationtype()
+    {
+        $this->json->message = "Organization type deleted";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
 }

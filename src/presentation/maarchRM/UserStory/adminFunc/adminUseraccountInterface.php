@@ -118,4 +118,11 @@ interface adminUseraccountInterface
      * @uses auth/userAccount/readQuery_query_
      */
     public function readUseraccounts_query_();
+
+    /**
+     * List all users to display
+     *
+     * @uses auth/userAccount/readIndex
+     */
+    public function readUserTodisplay();
 }

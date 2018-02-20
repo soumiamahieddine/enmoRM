@@ -54,7 +54,7 @@ class role
     /**
      * Prepare an empty role object
      *
-     * @return auth/role THe empty role object
+     * @return auth/role The empty role object
      */
     public function newRole()
     {
@@ -89,7 +89,7 @@ class role
      * Recorde a new role
      * @param auth/role $role The role object to create
      *
-     * @return boolean The status of the query
+     * @return string The new role id
      */
     public function create($role)
     {
@@ -225,7 +225,7 @@ class role
      * Get the list of available authorization groups
      * @param string $query A query string of tokens
      *
-     * @return array THe list of groups
+     * @return array The list of groups
      */
     public function queryRoles($query)
     {
@@ -269,7 +269,7 @@ class role
      * @param id     $roleId    The roel to add privilege
      * @param string $userStory Privilege userStory
      *
-     * @return boolean
+     * @return boolean The operation result
      */
     public function addPrivilege($roleId, $userStory)
     {
@@ -286,7 +286,7 @@ class role
      *
      * @throws Exception
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function deletePrivilege($privilege)
     {

@@ -14,8 +14,8 @@ msgstr "Ajouter un niveau de service"
 msgid "New service level"
 msgstr "Nouveau niveau de service"
 
-msgid "Sampling frequency (in days)"
-msgstr "Fréquence d'échantillonnage (en jours)"
+msgid "Control frequency (in days)"
+msgstr "Fréquence de contrôle (en jours)"
 
 msgid "Sampling rate (in %)"
 msgstr "Taux d'échantillonnage (en %)"
@@ -33,10 +33,10 @@ msgid "Validate format"
 msgstr "Validation de format"
 
 msgid "Convert on deposit"
-msgstr "Convertir au dépôt"
+msgstr "Conversion au dépôt"
 
 msgid "Log the consultations"
-msgstr "Journaliser les consultations"
+msgstr "Journalisation des consultations"
 
 msgid "default"
 msgstr "par défaut"
@@ -57,7 +57,7 @@ msgid "Redundancy"
 msgstr "Redondance"
 
 msgid "Edit a service level"
-msgstr "Editer un niveau de service"
+msgstr "Éditer un niveau de service"
 
 msgid "Service level created."
 msgstr "Niveau de service créé."

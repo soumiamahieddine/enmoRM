@@ -32,7 +32,7 @@ class userPosition extends abstractPosition
     /**
      * Get user postions list
      *
-     * @return array The list of positions
+     * @return organization/userPosition[] The list of positions
      */
     protected function listPositions($accountUserId = null)
     {

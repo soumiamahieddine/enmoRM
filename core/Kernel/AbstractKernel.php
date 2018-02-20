@@ -168,7 +168,7 @@ abstract class AbstractKernel
     {       
         foreach (\laabs::getDependencies() as $dependency) {
             $dependencyFile = ".." . DIRECTORY_SEPARATOR . LAABS_DEPENDENCY . DIRECTORY_SEPARATOR . $dependency . DIRECTORY_SEPARATOR . 'init.php';
-            if (is_file($dependencyFile)) {
+            if (is_file($dependencyFile)) {           
                 require_once($dependencyFile);
             }
         }

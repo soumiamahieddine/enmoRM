@@ -33,8 +33,12 @@ trait archiveComplianceTrait
 
     /**
      * Check the integrity of archives by a process of sampling
+     * @param string $serviceLevelReference The service level reference
+     * @return boolean
+     *
+     * @throws \Exception
      */
-    public function sampling()
+    public function sampling($serviceLevelReference = null)
     {
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
@@ -42,7 +46,12 @@ trait archiveComplianceTrait
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
 
-        $serviceLevels = $this->serviceLevelController->index();
+        if (!empty($serviceLevelReference)) {
+            $serviceLevels = [];
+            $serviceLevels[] = $this->serviceLevelController->getByReference($serviceLevelReference);
+        } else {
+            $serviceLevels = $this->serviceLevelController->index();
+        }
 
         $queryPart = [];
         $queryPart["status"] = "status!='error' AND status!='disposed'";
@@ -139,7 +148,7 @@ trait archiveComplianceTrait
      * Check integrity of one or several archives giving their identifiers
      * @param object  $archiveIds         An array of archive identifier or an archive identifier
      *
-     * @return array Array of archive object
+     * @return recordsManagement/archive[] Array of archive object
      */
     public function verifyIntegrity($archiveIds)
     {
@@ -221,6 +230,13 @@ trait archiveComplianceTrait
         return $valid;
     }
 
+    /**
+     * Verify resource integrity
+     * @param archive $archive The archive object
+     * @param object $resource The resource object
+     *
+     * @return bool The result of the integrity check
+     */
     protected function checkResourceIntegrity($archive, $resource)
     {
         $valid = false;

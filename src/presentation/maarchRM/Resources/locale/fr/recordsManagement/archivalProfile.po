@@ -5,6 +5,9 @@
 msgid "Profiles"
 msgstr "Profils"
 
+msgid "Archives profile"
+msgstr "Profils d'archive"
+
 msgid "profile(s)"
 msgstr "profil(s)"
 
@@ -192,13 +195,13 @@ msgid "Archival profile uploaded"
 msgstr "Profil d'archive téléversé"
 
 msgid "Select a access rule code"
-msgstr "Selectionnez une règles de communicabilité"
+msgstr "Sélectionnez une règle de communicabilité"
 
 msgid "Select a retention start date"
-msgstr "Selectionnez une date de référence"
+msgstr "Sélectionnez une date de référence"
 
 msgid "Select a retention rule code"
-msgstr "Selectionnez une règle de conservation"
+msgstr "Sélectionnez une règle de conservation"
 
 msgid "The profile can't be deleted. It's used in an archival agreement"
 msgstr "Un profil utilisé ne peut être supprimé."
@@ -237,7 +240,7 @@ msgid "Select a profile"
 msgstr "Choisir un profil"
 
 msgid "Do you want to save the changes before leaving this screen ?"
-msgstr "Voulez vous enregistrer les modifications avant de quitter cet écran ?"
+msgstr "Voulez-vous enregistrer les modifications avant de quitter cet écran ?"
 
 msgid "Go to"
 msgstr "Aller vers"
@@ -256,3 +259,6 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Profile already exist"
+msgstr "Le profil existe déjà"

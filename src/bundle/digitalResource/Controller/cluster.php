@@ -46,7 +46,7 @@ class cluster
     /**
      * Allow to display all clusters
      *
-     * @return digitalResource/cluster[]
+     * @return digitalResource/cluster[] Array of digitalResource/cluster object
      */
     public function index()
     {
@@ -112,7 +112,7 @@ class cluster
      * create a cluster
      * @param digitalResource/cluster $cluster The cluster object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function create($cluster)
     {
@@ -147,7 +147,7 @@ class cluster
      * update a repository
      * @param digitalResource/cluster $cluster The cluster object
      *
-     * @return boolean
+     * @return boolean The result of the operation
      */
     public function update($cluster)
     {
@@ -248,12 +248,16 @@ class cluster
      * @param string $path
      * @param mixed  $metadata
      * 
-     * @return array
+     * @return String[] Array of ressource container on the cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
     {
+        if (count($cluster->clusterRepository) < 2) {
+            throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
+        }
+
         foreach ($cluster->clusterRepository as $index => $clusterRepository) {
-            if ($clusterRepository->repository == null) {
+            if ($clusterRepository->repository == null || !is_readable($clusterRepository->repository->repositoryUri)) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
 
@@ -307,7 +311,7 @@ class cluster
      * @param digitalResource/cluster         $cluster
      * @param digitalResource/digitalResource $resource
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function retrieveResource($cluster, $resource)
     {
@@ -333,11 +337,13 @@ class cluster
                     return $contents;
 
                 } catch (\Exception $e) {
+                    $address->integrityCheckResult = false;
+                    $this->sdoFactory->update($address);
                     // No content retrieved : send error as audit event
                     \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
                 }
             } else {
-                throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "No address found for ressource %s", 404, null, [$resource->resId]);
                 \laabs::notify(LAABS_BUSINESS_EXCEPTION, \laabs::newException("digitalResource/clusterException", "No address found for ressource %s", 404, null, [$resource->resId]));
             }
         }
@@ -352,7 +358,7 @@ class cluster
      * @param type $cluster  The cluster object where the resource is store
      * @param type $resource The digitalResource object to verify
      *
-     * @return digitalResource/digitalResource The digitalResouce verify
+     * @return digitalResource/digitalResource The digitalResource verify
      */
     public function verifyResource($cluster, $resource)
     {

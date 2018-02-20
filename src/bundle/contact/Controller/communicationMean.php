@@ -52,13 +52,11 @@ class communicationMean
      * Record a new communication mean
      * @param object $communicationMean The comm mean to record
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function add($communicationMean)
     {
-        $result = $this->sdoFactory->create($communicationMean, "contact/communicationMean");
-        
-        return $result;
+        return $this->sdoFactory->create($communicationMean, "contact/communicationMean");
     }
 
     /**
@@ -78,7 +76,7 @@ class communicationMean
      * @param string $name    The commMean to name
      * @param bool   $enabled The status
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modify($code, $name, $enabled)
     {
@@ -87,16 +85,14 @@ class communicationMean
         $comMean->name = $name;
         $comMean->enabled = $enabled;
 
-        $result = $this->sdoFactory->update($comMean);
-        
-        return $result;
+        return $this->sdoFactory->update($comMean);
     }
 
     /**
      * Delete a communication mean
      * @param string $code The Id of the communicationMean to delete
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function delete($code)
     {
@@ -108,9 +104,7 @@ class communicationMean
             $this->sdoFactory->delete($childCommunication);
         }
         
-        $result = $this->sdoFactory->delete($code, "contact/communicationMean");
-        
-        return $result;
+        return $this->sdoFactory->delete($code, "contact/communicationMean");
     }
 
 }

@@ -86,4 +86,11 @@ interface adminAuthorizationInterface
      * @return auth/adminRole/delete
      */
     public function deleteAuth_roleId_();
+
+    /**
+     * List all users to display
+     *
+     * @uses auth/userAccount/readIndex
+     */
+    public function readUserTodisplay();
 }

@@ -71,6 +71,10 @@ class descriptionField
 
         $this->view->translate();
 
+        foreach ($descriptionFields as $descriptionField) {
+            $descriptionField->translateType = $this->translator->getText($descriptionField->type);
+        }
+
         $this->view->setSource("descriptionFields", $descriptionFields);
         $this->view->merge();
 

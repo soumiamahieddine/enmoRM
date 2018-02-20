@@ -22,7 +22,7 @@ INSERT INTO "auth"."publicUserStory"("userStory") VALUES
 	
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
-('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle d''accès de l''archive %6$s'),
+('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de communicabilité de l''archive %6$s'),
 ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', FALSE, 'Relation ajoutée avec l''archive %6$s'),
 ('recordsManagement/archivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
 ('recordsManagement/consultation', 'resId hash hashAlgorith address size', FALSE, 'Consultation de la resource %9$s'),
@@ -60,7 +60,7 @@ INSERT INTO "batchProcessing"."task"
 INSERT INTO "batchProcessing"."scheduling"
 ("schedulingId", "name", "executedBy", "taskId", "frequency","parameters","lastExecution","nextExecution","status") VALUES
 ('chainJournalAudit', 'Chaînage audit', 'System', '01', '00;00;;;;;;;',null,null,null,'paused'),
-('chainJournalLifeCycle', 'Chaînage journaux', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
+('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
 ('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
 ('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
 ('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');

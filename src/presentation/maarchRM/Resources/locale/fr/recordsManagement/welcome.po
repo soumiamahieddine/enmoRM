@@ -3,14 +3,14 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Electronic Records Management System"
-msgstr "Maarch RM - Archivage Electronique"
+msgstr "Maarch RM - Archivage Électronique"
 
 msgid "Welcome"
 msgstr "Bienvenue"
 
 msgid "Use menu to access to differents fonctionnalities"
-msgstr "Utilisez le menu pour à gauche de l'écran accéder aux différentes fonctionnalités"
+msgstr "Utilisez le menu à gauche de l'écran pour accéder aux différentes fonctionnalités"
 
 msgid "This application allows to store, find and display digital resources in compliance with international regulation ISO 14641-1."
-msgstr "Cette application permet l'enregistrement et la communication des ressources électroniques en conformité avec les normes AFNOR NF Z42-013, NF 461 et l'agrément SIAF pour l'hébergement des données publiques."
+msgstr "Cette application permet l'enregistrement et la communication des ressources électroniques, en conformité avec les normes AFNOR NF Z42-013, NF 461 et l'agrément SIAF pour l'hébergement des données publiques."
 

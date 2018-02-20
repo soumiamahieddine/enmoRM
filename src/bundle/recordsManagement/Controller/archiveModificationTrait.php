@@ -31,7 +31,7 @@ trait archiveModificationTrait
      * Read the retention rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archiveRetentionRule
+     * @return recordsManagement/archiveRetentionRule The retention rule object
      */
     public function editArchiveRetentionRule($archiveId)
     {
@@ -41,8 +41,6 @@ trait archiveModificationTrait
             throw new \bundle\recordsManagement\Exception\retentionRuleException('A frozen archive can\'t be modified.');
         }
 
-        $this->getAccessRule($archive);
-
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
 
     }
@@ -51,7 +49,7 @@ trait archiveModificationTrait
      * Read the access rule of an archive
      * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archiveAccessRule
+     * @return recordsManagement/archiveAccessRule The access rule updated
      */
     public function editArchiveAccessRule($archiveId)
     {
@@ -71,7 +69,7 @@ trait archiveModificationTrait
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param mixed                                  $archiveIds    The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modifyRetentionRule($retentionRule, $archiveIds)
     {
@@ -91,7 +89,7 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            if (!in_array($archive->status, array("preserved", "frozen"))) {
+            if (!in_array($archive->status, array("preserved"))) {
                 array_push($res['error'], $archiveId);
 
                 $operationResult = false;
@@ -101,26 +99,23 @@ trait archiveModificationTrait
 
                 if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
                     $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                } else {
-                    $retentionRule->finalDisposition = $retentionRule->retentionDuration = $retentionRule->retentionStartDate = "";
                 }
 
-
                 // Update current object for caller
-                if (!$retentionRule->retentionStartDate) {
+                if ($retentionRule->retentionStartDate === '') {
                     $retentionRule->retentionStartDate = null;
                 }
 
-                if ($retentionRule->retentionDuration) {
+                if ($retentionRule->retentionDuration === '') {
                     $retentionRule->retentionDuration = null;
                 }
 
-                if ($retentionRule->disposalDate) {
-                    $retentionRule->disposalDate = null;
+                if ($retentionRule->finalDisposition === '') {
+                    $retentionRule->finalDisposition = null;
                 }
 
-                if ($retentionRule->finalDisposition) {
-                    $retentionRule->finalDisposition = null;
+                if ($retentionRule->disposalDate === '') {
+                    $retentionRule->disposalDate = null;
                 }
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
@@ -148,7 +143,7 @@ trait archiveModificationTrait
      * @param recordsManagement/archiveAccessCode $accessRule The access rule object
      * @param array                               $archiveIds The archives ids
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function modifyAccessRule($accessRule, $archiveIds)
     {
@@ -166,7 +161,7 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            if (!in_array($archive->status, array("preserved", "frozen"))) {
+            if (!in_array($archive->status, array("preserved"))) {
                 array_push($res['error'], $archiveId);
 
                 $operationResult = false;

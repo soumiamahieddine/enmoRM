@@ -33,6 +33,8 @@ class scheduling
 
     public $sdoFactory;
 
+    public $logSchedulingController;
+
     /**
      * Constructor of access control class
      * @param \dependency\sdo\Factory $sdoFactory The factory
@@ -62,9 +64,41 @@ class scheduling
      */
     public function readTaskList()
     {
-        $taskList = $this->sdoFactory->index("batchProcessing/task", array('taskId', 'route', 'description'), "");
+        $tasks= \laabs::configuration('batchProcessing')['tasks'];
+
+        $taskList = [];
+        foreach ($tasks as $value) {
+            $task = \laabs::newInstance('batchProcessing/task');
+            $task->taskId = $value['taskId'];
+            $task->route = $value['route'];
+            $task->description = $value['description'];
+
+            $taskList[$task->taskId] = $task;
+        }
 
         return $taskList;
+    }
+
+    /**
+     * Get task by id
+     *
+     * @return batchProcessing/task task
+     */
+    public function readTask($taskId)
+    {
+        $tasks= \laabs::configuration('batchProcessing')['tasks'];
+
+        foreach ($tasks as $value) {
+            if ($taskId === $value['taskId']) {
+                $task = \laabs::newInstance('batchProcessing/task');
+                $task->taskId = $value['taskId'];
+                $task->route = $value['route'];
+                $task->description = $value['description'];
+
+                return $task;
+            }
+        }
+        return false;
     }
 
     /**
@@ -88,7 +122,7 @@ class scheduling
      * Update a scheduling
      * @param batchProcessing/scheduling $scheduling
      *
-     * @return bool
+     * @return bool True if the operation succeed
      */
     public function update($scheduling)
     {
@@ -105,7 +139,7 @@ class scheduling
      * Delete a scheduling
      * @param id $schedulingId Scheduling identifier
      *
-     * @return boolean
+     * @return boolean True if the operation succeed
      */
     public function delete($schedulingId)
     {
@@ -123,16 +157,16 @@ class scheduling
      *
      * @param string $schedulingId The Scheduling identifier
      *
-     * @return batchProcessing/scheduling
+     * @return batchProcessing/scheduling The scheduling object
      */
     public function execute($schedulingId)
     {
         $status = true;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
-        $task = $this->sdoFactory->read("batchProcessing/task", (string) $scheduling->taskId);
+        $task = $this->readTask($scheduling->taskId);
 
-        if (!$scheduling) {
+        if (!$scheduling || !$task) {
             throw \laabs::newException("batchProcessing/schedulingException", "Invalid identifier.");
         }
 
@@ -147,8 +181,9 @@ class scheduling
         $this->changeStatus($schedulingId, "running");
 
         try {
-            if ($scheduling->parameters) {
-                $info = \laabs::callServiceArgs($task->route, $scheduling->parameters);
+            if (!empty($scheduling->parameters)) {
+                $info = \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
+
             } else {
                 $info = \laabs::callService($task->route);
             }
@@ -178,7 +213,7 @@ class scheduling
     /**
      * Process all scheduling
      *
-     * @return boolean
+     * @return array The list of executedTask status
      */
     public function process()
     {
@@ -220,7 +255,7 @@ class scheduling
      * @param type $schedulingId
      * @param type $status
      *
-     * @return batchProcessing/scheduling
+     * @return batchProcessing/scheduling The scheduling object
      */
     public function changeStatus($schedulingId, $status)
     {
@@ -253,8 +288,6 @@ class scheduling
         $UTC_Offset = date('Z');
 
         $H_Offset = $UTC_Offset/3600;
-        $M_Offset = ($UTC_Offset - $H_Offset*3600)/60;
-
         /**
          * [0] start Minutes
          * [1] start Hours
@@ -269,14 +302,8 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
-        if(!empty($frequency[0])) {
-            $frequency[0] -= $M_Offset; 
-        }
         if(!empty($frequency[1])) {
             $frequency[1] -= $H_Offset; 
-        }
-        if(!empty($frequency[7])) {
-            $frequency[7] -= $M_Offset; 
         }
         if(!empty($frequency[8])) {
             $frequency[8] -= $H_Offset; 

@@ -244,7 +244,7 @@ class archive
      * Select an archival profile for use
      * @param string $archivalProfileReference
      *
-     * @return recordsManagement/archivalProfile
+     * @return recordsManagement/archivalProfile An archival profile
      */
     public function useArchivalProfile($archivalProfileReference)
     {
@@ -263,7 +263,7 @@ class archive
      * @param string $operation
      * @param string $serviceLevelReference
      *
-     * @return recordsManagement/serviceLevel
+     * @return recordsManagement/serviceLevel A service level
      */
     public function useServiceLevel($operation, $serviceLevelReference = null)
     {
@@ -319,7 +319,7 @@ class archive
      * Select a description controller
      * @param string $descriptionClass
      *
-     * @return object
+     * @return object descriptionClass controller
      */
     public function useDescriptionController($descriptionClass)
     {
@@ -336,9 +336,9 @@ class archive
 
     /**
      * Read an archive by its id
-     * @param string $archiveId
+     * @param string $archiveId The archive identifier
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive object
      */
     public function read($archiveId)
     {
@@ -349,7 +349,7 @@ class archive
      * Retrieve an archive by its id
      * @param string $archiveId
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive object
      */
     public function retrieve($archiveId)
     {
@@ -364,7 +364,7 @@ class archive
      * Get the archives by originator
      * @param string $originatorOrgRegNumber
      *
-     * @return array
+     * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
     public function getArchiveByOriginator($originatorOrgRegNumber)
     {
@@ -377,7 +377,7 @@ class archive
      * Get the archive originator
      * @param string $archiveId
      *
-     * @return string
+     * @return string The originatorOrgRegNumber
      */
     public function getArchiveOriginatorOrgRegNumber($archiveId)
     {
@@ -390,7 +390,7 @@ class archive
      * Get archives by status
      * @param string $status
      *
-     * @return recordsManagement/archive[]
+     * @return recordsManagement/archive[] Array of recordsManagement/archive oject
      */
     public function getByStatus($status)
     {
@@ -403,7 +403,7 @@ class archive
      * Retrieve an archive description by its archive id
      * @param string $archiveId The archive identifer
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive object
      */
     public function getDescription($archiveId)
     {
@@ -442,10 +442,11 @@ class archive
         }
 
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-        if (isset($archive->archiverOrgRegNumber)) {
+
+        if (!empty($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
         }
-        if (isset($archive->depositorOrgRegNumber)) {
+        if (!empty($archive->depositorOrgRegNumber)) {
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
 
@@ -457,6 +458,9 @@ class archive
 
         $archive->communicability = $this->accessVerification($archive);
 
+        if(\laabs::hasBundle('medona')) {
+            $archive->messages = $this->getMessageByArchiveid($archiveId);
+        }
         return $archive;
     }
 
@@ -464,7 +468,7 @@ class archive
      * Get the parent archive
      * @param recordsManagement/archive $archive The archive
      *
-     * @return recordsManagement/archive
+     * @return recordsManagement/archive Parent archive
      */
     protected function getParentArchive($archive)
     {
@@ -492,6 +496,13 @@ class archive
         return $archive;
     }
 
+    /**
+     * Get the archive components
+     * @param recordsManagement/archive $archive The parent archive
+     * @param boolean $withContents With contents
+     *
+     * @return recordsManagement/archive Archive with children archives
+     */
     protected function getArchiveComponents($archive, $withContents = false)
     {
         $this->getAccessRule($archive);
@@ -572,7 +583,7 @@ class archive
      * @param timestamp $startDate The start date
      * @param duration  $duration  The duration
      *
-     * @return date
+     * @return date The communication date of an archive
      */
     public function calculateDate($startDate, $duration)
     {
@@ -588,7 +599,7 @@ class archive
 
     /**
      * Check if the current user have the rights on an archive
-     * @param recordsManagement/archive $archive
+     * @param recordsManagement/archive $archive The archive object
      *
      * @return boolean THe result of the operation
      */
@@ -606,7 +617,7 @@ class archive
             return false;
         }
 
-        if ($currentOrganization->orgRoleCodes && in_array("owner", $currentOrganization->orgRoleCodes)) {
+        if (is_array($currentOrganization->orgRoleCodes) && in_array("owner", $currentOrganization->orgRoleCodes)) {
             return true;
         }
 
@@ -627,10 +638,10 @@ class archive
 
     /**
      * Calculate access rule from archive
-     * @param recordsManagement/archive         $archive
-     * @param recordsManagement/archivalProfile $archivalProfile
+     * @param recordsManagement/archive         $archive The archive object
+     * @param recordsManagement/archivalProfile $archivalProfile The archiveProfile object
      *
-     * @return recordsManagement/accessRule[]
+     * @return recordsManagement/accessRule[] Array of recordsManagement/accessRule object
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
@@ -681,5 +692,29 @@ class archive
         $count = $this->sdoFactory->count("recordsManagement/archive", \laabs\implode(" OR ", $queryString));
 
         return $count;
+    }
+
+    /**
+     * list archive message
+     * @param string $archiveId The archive identifier
+     *
+     * @return message[] Array of message object
+     */
+    protected function getMessageByArchiveid($archiveId) {
+
+        $queryString = [];
+        $unitIdentifiers = $this->sdoFactory->find('medona/unitIdentifier', "objectId='$archiveId'");
+
+        foreach ($unitIdentifiers as $unitIdentifier) {
+            $queryString [] ="messageId='$unitIdentifier->messageId'";
+        }
+
+        if (count($unitIdentifiers) != 0) {
+            $messages = $this->sdoFactory->find('medona/message', \laabs\implode(" OR ", $queryString));
+        } else {
+            $messages = null;
+        }
+
+        return $messages;
     }
 }

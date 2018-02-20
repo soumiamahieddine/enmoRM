@@ -58,7 +58,7 @@ class archiveRelationship
      * @throws unknownArchive
      * @throws sameArchivesException
      *
-     * @return recordsManagement/archiveRelationship
+     * @return recordsManagement/archiveRelationship The archiveRelationship
      */
     public function create($archiveRelationship)
     {
@@ -81,7 +81,7 @@ class archiveRelationship
      * Delete a relationship
      * @param recordsManagement/archiveRelationship $archiveRelationship The archive relationship object
      *
-     * @return recordsManagement/archiveRelationship
+     * @return recordsManagement/archiveRelationship The archiveRelationship
      */
     public function delete($archiveRelationship)
     {

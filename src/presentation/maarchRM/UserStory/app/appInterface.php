@@ -1,5 +1,6 @@
 <?php
 namespace presentation\maarchRM\UserStory\app;
+use bundle\organization\Controller\organization;
 
 /**
  * Interface for user administration
@@ -50,7 +51,7 @@ interface appInterface
      * Retrieve an archive resource by its id
      *
      * @return recordsManagement/archive/getContents
-     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
      */
     public function readRecordsmanagement_archiveId_Digitalresource_resId_();
 
@@ -58,7 +59,7 @@ interface appInterface
      * Display a preview of the contents
      *
      * @return digitalResource/digitalResource/retrieve
-     * @uses  recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
      */
     public function read_archiveId_Digitalresource_resId_();
 
@@ -109,4 +110,19 @@ interface appInterface
      * @uses organization/organization/readTodisplay
      */
     public function readOrganizationsTodisplay();
+
+    /**
+     * Get the organizations' list
+     *
+     * @return organization/orgTree/orgList
+     * @uses organization/organization/readTodisplayOrgUnit
+     */
+    public function readOrganizationsTodisplayorgunit();
+
+    /**
+     * Get the producer' list
+     *
+     * @uses organization/organization/readOriginator
+     */
+    public function readOriginator();
 }

@@ -39,7 +39,7 @@ msgid "Service level"
 msgstr "Niveau de service"
 
 msgid "Cluster"
-msgstr "Grappe de stocakge"
+msgstr "Grappe de stockage"
 
 msgid "Select a service level"
 msgstr "Sélectionnez un niveau de service"
@@ -48,13 +48,13 @@ msgid "Select an archival profile"
 msgstr "Sélectionnez un profil d'archive"
 
 msgid "Select an archiver"
-msgstr "Sélectionnez un service d'Archives"
+msgstr "Sélectionnez un Service d'Archives"
 
 msgid "Select an originator"
-msgstr "Sélectionnez un service producteur"
+msgstr "Sélectionnez un Service producteur"
 
 msgid "Select a depositor"
-msgstr "Sélectionnez un service versant"
+msgstr "Sélectionnez un Service Versant"
 
 msgid "Rules"
 msgstr "Règles"
@@ -117,13 +117,13 @@ msgid "The name is empty."
 msgstr "Le nom est vide."
 
 msgid "The archiver is not selected."
-msgstr "Le service d'Archives n'est pas sélectionné."
+msgstr "Le Service d'Archives n'est pas sélectionné."
 
 msgid "The depositor is not selected."
-msgstr "Le service versant n'est pas sélectionné."
+msgstr "Le Service Versant n'est pas sélectionné."
 
 msgid "No originator selected."
-msgstr "Il n'y a pas de services producteurs."
+msgstr "Il n'y a pas de Services Producteurs."
 
 msgid "The begin date is empty."
 msgstr "La date de début est vide."
@@ -141,13 +141,19 @@ msgid "Format validation"
 msgstr "Validation de format"
 
 msgid "Virus check"
-msgstr "Détection de virus"
+msgstr "Contrôle antivirus"
 
 msgid "Convert on deposit"
-msgstr "Conversion au versement"
+msgstr "Conversion au dépôt"
+
+msgid "Log the consultations"
+msgstr "Journalisation des consultations"
+
+msgid "Full text indexation"
+msgstr "Indexation plein texte"
 
 msgid "Media info"
-msgstr "Info média"
+msgstr "Information média"
 
 msgid "Mbytes"
 msgstr "Mo"

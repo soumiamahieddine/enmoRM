@@ -45,14 +45,14 @@ abstract class abstractPosition
     /**
      * Get user postions list
      *
-     * @return array The list of positions
+     * @return organization/servicePosition[] The list of positions
      */
     abstract protected function listPositions();
 
     /**
      * Get my all positions
      *
-     * @return array The list of my position's
+     * @return object[] The list of my position's
      */
     public function getMyPositions()
     {
@@ -103,7 +103,7 @@ abstract class abstractPosition
      * Set my working positions
      * @param organization/organization $orgId The organization identifier 
      * 
-     * @return bool The resutl of the operation
+     * @return bool The result of the operation
      */
     public function setCurrentPosition($orgId)
     {
@@ -121,7 +121,7 @@ abstract class abstractPosition
     /**
      * List user owner org and 
      *
-     * @return array The list of organization ids
+     * @return object[] The list of organization ids
      */
     public function listMyOrgs()
     {
@@ -147,7 +147,7 @@ abstract class abstractPosition
     /**
      * List user positions organization ids
      *
-     * @return array The list of organization ids
+     * @return object[] The list of organization ids
      */
     public function listMyServices()
     {
@@ -174,7 +174,7 @@ abstract class abstractPosition
     /**
      * List user descendents service ids of his current position
      *
-     * @return array The list of service orgRegNumber
+     * @return object[] The list of service orgRegNumber
      */
     public function listMyCurrentDescendantServices()
     {
@@ -205,7 +205,7 @@ abstract class abstractPosition
     /**
      * List user descendents orgs ids of his current position
      *
-     * @return array The list of organization orgRegNumber
+     * @return object[] The list of organization orgRegNumber
      */
     public function listMyCurrentDescendantOrgs()
     {
@@ -228,7 +228,7 @@ abstract class abstractPosition
      * Read children orgs recursively
      * @param array $orgs List of orgRegNumber with orgId as key
      *
-     * @return array The list of organization
+     * @return object[] The list of organization
      */
     protected function readDescandantOrg(array $orgs)
     {
@@ -251,7 +251,7 @@ abstract class abstractPosition
      * Read descandant services of an org
      * @param string $parentId The parent orgId
      *
-     * @return array The list of services
+     * @return object[] The list of services
      */
     public function readDescandantService($parentId)
     {
@@ -272,7 +272,7 @@ abstract class abstractPosition
     /**
      * Get descendant archival profiles
      * 
-     * @return array
+     * @return object[]
      */
     public function getdescendantArchivalProfiles()
     {

@@ -61,7 +61,7 @@ class userAuthentication
      *
      * @throws \bundle\auth\Exception\authenticationException
      *
-     * @return bool
+     * @return auth/account The user account object
      */
     public function login($userName, $password)
     {
@@ -71,7 +71,7 @@ class userAuthentication
         $exists = $this->sdoFactory->exists('auth/account', array('accountName' => $userName));
 
         if (!$exists) {
-            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 401);
+            throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
         }
 
         $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
@@ -93,17 +93,6 @@ class userAuthentication
             throw $e;
         }
 
-        // Check locked
-        if ($userAccount->locked == true) {
-            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
-                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
-                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
-                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay']) // Date + delay upper than current date
-            ) {
-                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
-            }
-        }
-
         // Check password
         if ($userAccount->password !== $encryptedPassword) {
             // Update bad password count
@@ -116,16 +105,17 @@ class userAuthentication
                 \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
             }
 
-            throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
+            throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
         }
 
-        if (!empty($userAccount->lastLogin) && $userAccount->passwordChangeRequired == true && !empty($this->securityPolicy["newPasswordValidity"]) && $this->securityPolicy["newPasswordValidity"] != 0) {
-            $interval = \laabs::newDuration("PT".$this->securityPolicy["newPasswordValidity"]."H");
-            $limitToChange = $userAccount->passwordLastChange->shift($interval)->getTimestamp();
-            $diff = $limitToChange - \laabs::newDateTime()->getTimestamp();
-
-            if ($diff < 0) {
-                throw \laabs::newException('auth/authenticationException', 'Username not registered or wrong password.', 403);
+        // Check locked
+        if ($userAccount->locked == true) {
+            if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
+                || $this->securityPolicy['lockDelay'] == 0 // Unlimited delay
+                || !isset($userAccount->lockDate)          // Delay but no date for lock so unlimited
+                || ($currentDate->getTimestamp() - $userAccount->lockDate->getTimestamp()) < ($this->securityPolicy['lockDelay']) // Date + delay upper than current date
+            ) {
+                throw \laabs::newException('auth/authenticationException', 'User %1$s is locked', 403, null, array($userName));
             }
         }
 
@@ -133,6 +123,7 @@ class userAuthentication
         $userLogin->badPasswordCount = 0;
         $userLogin->locked = false;
         $userLogin->lockDate = null;
+        $userLogin->tokenDate = null;
         $userLogin->lastLogin = $currentDate;
 
         $this->sdoFactory->update($userLogin, 'auth/account');
@@ -170,7 +161,7 @@ class userAuthentication
      * @param string $newPassword The user's new password
      * @param string $requestPath The requested path
      *
-     * @return boolean
+     * @return mixed The requested path if the account exists, false if it doesn't
      */
     public function definePassword($userName, $oldPassword, $newPassword, $requestPath)
     {
@@ -223,8 +214,6 @@ class userAuthentication
 
     /**
      * Log out a user
-     *
-     * @return bool
      */
     public function logout()
     {

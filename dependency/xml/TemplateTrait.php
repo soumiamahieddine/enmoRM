@@ -241,8 +241,11 @@ trait TemplateTrait
         foreach ($instructions as $pi => $instr) {
             $value = $this->getData($instr, $source);
             if (is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString'))) {
-                $mergedValue = str_replace($pi, (string) $value, $textNode->nodeValue);
-                $mergedValue = htmlentities($mergedValue);
+                $tmpTextNode = $this->createTextNode($value);
+                $mergedValue = str_replace($pi, (string) $tmpTextNode->wholeText, $textNode->nodeValue);
+
+                //$mergedValue = str_replace($pi, (string) $value, $textNode->nodeValue);
+                //$mergedValue = htmlentities($mergedValue);
                 $textNode->nodeValue = str_replace($pi, $value, $mergedValue);
             }
         }

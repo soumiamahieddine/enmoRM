@@ -24,12 +24,14 @@
     </div>
 </div>
 <span class="hide" id="noServiceFound">No service found</span>
+<span class="hide" id="editMyProfile">true</span>
 
 <script>
+
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        prefetch: {url: '/organizations/todisplayorgunit', ttl: '0'},
         limit: 100
     });
 

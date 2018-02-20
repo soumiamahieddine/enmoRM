@@ -203,7 +203,8 @@ EOD
                 }
             }
         }
-        
+
+        $event->output = $this->view->translator->getText($event->output, false, "audit/messages");
         $this->view->setSource("event", $event);
         $this->view->merge();
 

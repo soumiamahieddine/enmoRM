@@ -60,6 +60,10 @@ class jing
         $output = array();
         $return = null;
 
+        $locale = 'fr_FR.UTF-8';
+        setlocale(LC_ALL, $locale);
+        putenv('LC_ALL='.$locale);
+
         exec($command, $output, $return);
 
         if ($return !== 0) {
@@ -67,13 +71,14 @@ class jing
                 $sep = strpos($line, ": ");
                 $position = substr($line, 0, $sep);
                 $message = substr($line, $sep+2);
-                
+                $messageparts = explode(':', $message);
+
                 $posparts = explode(':', $position);
-                $offset = array_pop($posparts);
+                $col = array_pop($posparts);
                 $line = array_pop($posparts);
                 $filename = implode(':', $posparts);
-                
-                $this->errors[] = $message;
+
+                $this->errors[] = ucfirst(trim($messageparts[1])).' ('.$line.', '.$col.')';
             }
 
             return false;

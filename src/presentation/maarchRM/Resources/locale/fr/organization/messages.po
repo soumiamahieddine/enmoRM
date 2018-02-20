@@ -85,7 +85,7 @@ msgid "Legal classification"
 msgstr "Forme juridique"
 
 msgid "Business type"
-msgstr "Code APE"
+msgstr "Nature de l'activité"
 
 msgid "Position set to default"
 msgstr "Position mise par défaut"
@@ -186,6 +186,9 @@ msgstr "Utilisateurs de l'organisation"
 msgid "User"
 msgstr "Utilisateur"
 
+msgid "Service account"
+msgstr "Comptes de service"
+
 msgid "Submit"
 msgstr "Valider"
 
@@ -205,19 +208,19 @@ msgid "Archival agency"
 msgstr "Service d'Archives"
 
 msgid "Archive control authority"
-msgstr "Service de contrôle"
+msgstr "Service de Contrôle"
 
 msgid "Archive originating agency"
-msgstr "Service producteur"
+msgstr "Service Producteur"
 
 msgid "Archive depositor agency"
-msgstr "Service versant"
+msgstr "Service Versant"
 
 msgid "Archive requester"
 msgstr "Demandeur d'archive"
 
 msgid "The system owner"
-msgstr "Opérateur d'archivage"
+msgstr "Opérateur d'Archivage"
 
 msgid "Linked to organization"
 msgstr "Contact lié à l'organisation"
@@ -311,6 +314,9 @@ msgstr "type(s) d'organisation"
 
 msgid "Organization type created"
 msgstr "Type d'organisation créé"
+
+msgid "Organization type deleted"
+msgstr "Type d'organisation supprimé"
 
 msgid "Organization type updated"
 msgstr "Type d'organisation mis à jour"

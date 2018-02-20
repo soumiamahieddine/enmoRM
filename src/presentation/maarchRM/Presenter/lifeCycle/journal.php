@@ -72,9 +72,74 @@ class journal
     {
         $this->view->addContentFile('lifeCycle/searchForm.html');
 
-        $eventType = \laabs::callService('lifeCycle/event/readEventtypelist');
+        $eventTypes = \laabs::callService('lifeCycle/event/readEventtypelist');
 
-        $this->view->setSource("eventType", $eventType);
+        $this->view->translator->setCatalog("lifeCycle/messages");
+        
+        $eventDomains = [];
+        foreach ($eventTypes as $eventType) {
+            $bundle = strtok($eventType, '/');
+            $name = strtok('');
+
+            switch ($bundle) {
+                case 'recordsManagement' :
+                    $domainLabel = 'Archive';
+                    $objectType = 'recordsManagement/archive';
+                    switch ($name) {
+                        case 'profileCreation':
+                        case 'profileDestruction':
+                        case 'archivalProfileModification':
+                            $objectType = 'recordsManagement/archivalProfile';
+                            $domainLabel = 'Archival profile';
+                            break;
+
+                        case 'periodicIntegrityCheck':
+                            $objectType = 'recordsManagement/serviceLevel';
+                            $domainLabel = 'Service level';
+                            break;
+                    }
+                    break;
+
+                case 'medona' : 
+                    $objectType = 'medona/message';
+                    $domainLabel = 'Message';
+            }
+
+            $domainLabel = $this->view->translator->getText($domainLabel);
+            if (!isset($eventDomains[$objectType])) {
+                $eventDomain = new \StdClass();
+                $eventDomain->objectType = $objectType;
+                $eventDomain->label = $domainLabel;
+                $eventDomain->eventTypes = [];
+
+                $eventDomains[$objectType] = $eventDomain;
+            }
+
+            $eventTypeLabel = $this->view->translator->getText($eventType);
+            $eventOption = new \StdClass();
+            $eventOption->value = $eventType;
+            $eventOption->label = $eventTypeLabel;
+
+            $eventDomains[$objectType]->eventTypes[] = $eventOption;
+        }
+
+        foreach ($eventDomains as $domain => $eventDomain) {
+            // Sort by translated event type using locale and normalized string
+            uasort($eventDomain->eventTypes, function ($eventType1, $eventType2) {
+                return strcoll(\laabs::normalize($eventType1->label), \laabs::normalize($eventType2->label));
+            });
+
+            //$eventDomains[$domain] = $eventTypes;
+        }
+
+
+
+        if (!\laabs::hasBundle('medona')) {
+            $messageObjectType = $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
+        }
+
+        $this->view->setSource("eventType", $eventDomains);
+
         $this->view->merge();
         $this->view->translate();
 

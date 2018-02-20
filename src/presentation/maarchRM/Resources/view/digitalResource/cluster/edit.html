@@ -3,12 +3,12 @@
         <div class="page-header">
             <?merge cluster.clusterId.ifeq('') ?>
             <h1>
-                <i class="fa fa-tasks-open-o"></i>
+                <i class="fa fa-tasks"></i>
                 Edit a new cluster
             </h1>
             <?merge cluster.clusterId.ifne('') ?>
             <h1>
-                <i class="fa fa-tasks-open-o"></i>
+                <i class="fa fa-tasks"></i>
                 Edit a cluster
             </h1>
         </div>
@@ -17,7 +17,7 @@
         <?hinclude digitalResource/cluster/clusterForm.html ?>
         <?hinclude digitalResource/cluster/clusterRepositoryForm.html ?>
     </div>
-    <div class="panel-footer clearfix">
+    <div class="col-sm-12">
         <div class="pull-right" id="clusterButtonGroup">
             <button type="button" class="btn btn-warning" id="cancel" title="Cancel"><span class="fa fa-undo"></span> Cancel</button>
             <?merge cluster.clusterId.ifeq('') ?>

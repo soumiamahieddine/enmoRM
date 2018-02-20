@@ -80,4 +80,11 @@ interface AdminOrgUserInterface
      * @uses organization/organization/deleteUserposition_orgId__userAccountId_
      */
     public function deleteOrganization_orgId_Userposition_userAccountId_($positionId);
+
+    /**
+     * List all users to display
+     *
+     * @uses auth/userAccount/readIndex
+     */
+    public function readUserTodisplay();
 }

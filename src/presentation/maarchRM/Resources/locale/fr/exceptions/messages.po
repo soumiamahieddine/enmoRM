@@ -21,7 +21,7 @@ msgid "The relation control authority and orignator already exists."
 msgstr "La relation entre l'autorité de contrôle et le producteur existe déjà"
 
 msgid "None control authority parameters."
-msgstr "Aucune autorité de contrôle parametré."
+msgstr "Aucune autorité de contrôle paramétrée."
 
 msgid "String value does not match pattern"
 msgstr "La valeur ne respecte pas le format"
@@ -38,20 +38,26 @@ msgstr "Profil d'archive invalide"
 msgid "The organization %s is used in archives."
 msgstr "L'organisation %s est utilisée sur des archives."
 
+msgid "The organization %s is used in control authority."
+msgstr "L'organisation %s est engagée dans une association d'autorité de contrôle"
+
+msgid "The child organization is used in control authority."
+msgstr "Une organisation enfant est engagée dans une association d'autorité de contrôle"
+
 msgid "Invalid contained archive profile %s"
 msgstr "Le profil d'archive contenu %s n'est pas autorisé."
 
 msgid "The description field already exists."
-msgstr "Le champs de description existe déjà."
+msgstr "Le champ de description existe déjà."
 
 msgid "All repositories must be accessible"
 msgstr "Tous les supports de stockage doivent être accessibles"
 
 msgid "The end date is lower than the begin date."
-msgstr "La date de fin est plus petite que la date de début."
+msgstr "La date de fin est antérieure à la date de début."
 
 msgid "An owner is already defined."
-msgstr "Un opérateur d'archive est déjà défini."
+msgstr "Un Opérateur d'Archive est déjà défini."
 
 msgid "Role not created"
 msgstr "Rôle non créé"
@@ -69,7 +75,7 @@ msgid "The fields contain white spaces."
 msgstr "Les champs comportent des espaces vides"
 
 msgid "Invalid username or email."
-msgstr "Nome d'utilisateur ou courriel invalide"
+msgstr "Nom d'utilisateur ou courriel invalide"
 
 msgid "User %1$s is locked"
 msgstr "L'utilisateur %1$s est bloqué"
@@ -77,8 +83,8 @@ msgstr "L'utilisateur %1$s est bloqué"
 msgid "User %1$s is disabled"
 msgstr "L'utilisateur %1$s est désactivé"
 
-msgid "Username not registered or wrong password."
-msgstr "Utilisateur non enregistrer ou mot de passe invalide"
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "The password is too short."
 msgstr "Le mot de passe est trop court"
@@ -96,16 +102,16 @@ msgid "The password is the same as the precedent."
 msgstr "Le mot de passe est le même que le précédent"
 
 msgid "Scheduling not updated."
-msgstr "Plannification non mise à jour"
+msgstr "Planification non mise à jour"
 
 msgid "Scheduling not deleted."
-msgstr "Plannification non détruite"
+msgstr "Planification non détruite"
 
 msgid "Invalid identifiant."
 msgstr "Identifiant invalide"
 
 msgid "Execution error."
-msgstr "Erreur d'execution"
+msgstr "Erreur d'exécution"
 
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
@@ -114,10 +120,10 @@ msgid "Task already exists."
 msgstr "Une tâche avec la même route existe déjà."
 
 msgid "Task not created."
-msgstr "Tâche non créé"
+msgstr "Tâche non créée"
 
 msgid "Task not updated."
-msgstr "Tâche non mis à jour"
+msgstr "Tâche non mise à jour"
 
 msgid "Task not deleted."
 msgstr "Tâche non détruite"
@@ -141,7 +147,7 @@ msgid "Conversion service is empty"
 msgstr "Le service de conversion est vide."
 
 msgid "Target Puid is empty"
-msgstr "Le Puid cible est vide."
+msgstr "Le PuID cible est vide."
 
 msgid "Invalid hash."
 msgstr "Empreinte numérique invalide"
@@ -150,7 +156,7 @@ msgid "Resource unavailable"
 msgstr "Ressource indisponible"
 
 msgid "Resource not found"
-msgstr "Ressource non trouvé"
+msgstr "Ressource non trouvée"
 
 msgid "Repository URI already exist."
 msgstr "L'adresse du support de stockage existe déjà."
@@ -168,7 +174,7 @@ msgid "The folder can''t be found."
 msgstr "Le dossier n'existe pas"
 
 msgid "Can''t move to another service !"
-msgstr "Impossible de déplaccer dans un autre service !"
+msgstr "Impossible de déplacer dans un autre service !"
 
 msgid "The folder is closed."
 msgstr "Le dossier est fermé."
@@ -180,19 +186,19 @@ msgid "Journal hash is incorrect."
 msgstr "L'empreinte numérique du journal est incorrecte."
 
 msgid "Invalid journal: invalid hash integrity."
-msgstr "Journal invalide: empreinte numérique non valide."
+msgstr "Journal invalide : empreinte numérique non valide."
 
 msgid "Invalid journal date: latest date is in the future."
-msgstr "Journal invalide: La dernière date est dans le futur."
+msgstr "Journal invalide : la dernière date est dans le futur."
 
 msgid "Invalid journal: Next journal chaining event is incomplete."
-msgstr "Journal invalide: L'événement de chainage du journal suivant est incomplète."
+msgstr "Journal invalide: l'événement de chaînage du journal suivant est incomplet."
 
 msgid "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
-msgstr "Journal invalide: Le journal suivant est manquant ou l'événement de chainage a un identifiant de journal invalide"
+msgstr "Journal invalide : Le journal suivant est manquant ou l'événement de chaînage a un identifiant de journal invalide"
 
 msgid "Invalid journal: Chaining event has a different hash."
-msgstr "Journal invalid: L'événement de chainage a une empreinte différente."
+msgstr "Journal invalide : L'événement de chaînage a une empreinte différente."
 
 msgid "Unknown event type."
 msgstr "Type d'événement inconnu"
@@ -200,14 +206,17 @@ msgstr "Type d'événement inconnu"
 msgid "Key already exists"
 msgstr "La clé existe déjà"
 
+msgid "The organization type is used."
+msgstr "Le type d'ogranisation est utilisé"
+
 msgid "Organization can''t be moved to an other organization"
 msgstr "L'organisation ne peux être déplacé sous une autre organisation."
 
 msgid "Organization can''t be moved to a descendent organization"
-msgstr "L'organisation' ne peux être déplacé sous une organisation descendant."
+msgstr "L'organisation' ne peut être déplacée sous une organisation descendante."
 
 msgid "Organization Archival Profile Access can''t be update "
-msgstr "Les acces aux profils d'archives ne peut pas être mis à jour."
+msgstr "Les accès aux profils d'archives ne peuvent pas être mis à jour."
 
 msgid "Access Code not created."
 msgstr "Règle de communicabilité non créé"
@@ -216,37 +225,49 @@ msgid "Access Code not updated."
 msgstr "Règle de communicabilité non mis à jour"
 
 msgid "Access Code not deleted."
-msgstr "Règle de communicabilité non détruite"
+msgstr "Règle de communicabilité non supprimée"
 
 msgid "The archival profile %s currently in use."
 msgstr "Le profil d'archive %s est utilisé."
 
 msgid "The Service level requires the digital resource cluster to store metadata, but the selected cluster does not."
-msgstr "Le niveau de service à besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
+msgstr "Le niveau de service a besoin que la grappe de stockage puisse stocker les métadonnées. La grappe sélectionnée ne le permet pas."
 
 msgid "The Service level requires a redundant storage, but the selected cluster does not have sufficiant repositories."
-msgstr "Le niveau de service à besoin de plus d'un espace de stockage. La grappe de stockage sélectionnée n'en possède qu'un."
+msgstr "Le niveau de service a besoin de plus d'un espace de stockage. La grappe de stockage sélectionnée n'en possède qu'un."
 
 msgid "Permission denied"
-msgstr "Vous n'avez pas l'authorisation d'effectuer cette action."
+msgstr "Vous n'avez pas l'autorisation d'effectuer cette action."
 
 msgid "An organization is required to check an archive integrity"
-msgstr "Vous devez vous positionner dans un service pour verifier l'intégité d'une archive."
+msgstr "Vous devez vous positionner dans un service pour vérifier l'intégité d'une archive."
 
 msgid "A frozen archive can't be modified."
 msgstr "Une archive gelée ne peut pas être modifiée."
 
+msgid "An action is already in progress on this archive."
+msgstr "Une action est déjà en cours sur cette archive."
+
 msgid "Permission denied: You have to choose a working organization unit to proceed this action."
-msgstr "Non authorisé : Vous devez vous positionner dans un service pour effectuer cette action."
+msgstr "Non autorisé : Vous devez vous positionner dans un service pour effectuer cette action."
 
 msgid "The description class does not match with the archival profile."
 msgstr "La classe de description ne correspond pas au profil d'archive."
 
 msgid "Archive not set for destruction."
-msgstr "L'archive n'est pas prévu pour être détruite."
+msgstr "L'archive n'est pas prévue pour être détruite."
+
+msgid "Children archives : Archive not set for destruction."
+msgstr "Une archive enfant n'est pas prévue pour être détruite."
+
+msgid "Archive not set for preservation."
+msgstr "L'archive n'est pas prévue pour être transférée."
 
 msgid "Disposal date not reached."
-msgstr "La date de fin d'utilisation atteinte."
+msgstr "Date de fin d'utilisation non-atteinte."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 
 msgid "The batch folder does not exist."
 msgstr "Le dossier de traitement par lot n'existe pas."
@@ -282,10 +303,10 @@ msgid "The archive can not be moved in a different organization unit."
 msgstr "L'archive ne peut pas être déplacée vers un autre service producteur."
 
 msgid "Description field not deleted."
-msgstr "Le champs de description n'a pas été détruit."
+msgstr "Le champ de description n'a pas été détruit."
 
 msgid "The field \"%1$s\" is required"
-msgstr "Le champs \"%1$s\" est obligatoire."
+msgstr "Le champ \"%1$s\" est obligatoire."
 
 msgid "The value of \"%1$s\" not respect the type \"%2$s\""
 msgstr "La valeur de \"%1$s\" ne respecte pas le type \"%2$s\""
@@ -306,7 +327,7 @@ msgid "Retention rule not updated."
 msgstr "Règle de conservation non mise à jour"
 
 msgid "Retention rule not deleted."
-msgstr "Règle de conservation non détruite"
+msgstr "Règle de conservation non supprimée"
 
 msgid "Service level not created."
 msgstr "Niveau de service non créé"
@@ -318,7 +339,7 @@ msgid "Service level not updated."
 msgstr "Niveau de service non mis à jour"
 
 msgid "Service level not deleted."
-msgstr "Niveau de service non détruit"
+msgstr "Niveau de service non supprimé"
 
 msgid "Content not created"
 msgstr "Contenu non créé"
@@ -327,19 +348,19 @@ msgid "Content description not updated"
 msgstr "Contenu de description non mis à jour"
 
 msgid "Content description not deleted"
-msgstr "Contenu de description non détruit"
+msgstr "Contenu de description non supprimé"
 
 msgid "Unable to detect format"
 msgstr "Impossible de détecter le format"
 
 msgid "No current organization choosen"
-msgstr "Aucune organisation de travail selectionné"
+msgstr "Aucune organisation de travail selectionnée"
 
 msgid "Error of conversion process"
 msgstr "Erreur lors de la conversion"
 
 msgid "Relation not deleted."
-msgstr "La relation n'a pas pu être détruite."
+msgstr "La relation n'a pas pu être supprimée."
 
 msgid "The message does not exist"
 msgstr "Le bordereau n'existe pas."
@@ -348,7 +369,7 @@ msgid "Cluster %s not found."
 msgstr "La grappe de stockage %s est introuvable."
 
 msgid "Cluster %s not created."
-msgstr "La grappe de stockage %s n'a pas été créé."
+msgstr "La grappe de stockage %s n'a pas été créée."
 
 msgid "Cluster %s not updated."
 msgstr "La grappe de stockage %s n'a pas été mise à jour."
@@ -363,22 +384,22 @@ msgid "%s not found"
 msgstr "%s n'a pas été trouvé."
 
 msgid "Invalid hash for resource %1$s at address %2$s"
-msgstr "Empreinte numérique invalide pour la resource %1$s à l'adresse %2$s."
+msgstr "Empreinte numérique invalide pour la ressource %1$s à l'adresse %2$s."
 
 msgid "Conversion rule %s not found."
-msgstr "Règle de conversion %s non trouvé"
+msgstr "Règle de conversion %s non trouvée"
 
 msgid "Conversion rule with Puid %s already exist."
-msgstr "La règle de conversion avec le Puid %s existe déjà."
+msgstr "La règle de conversion avec le PuID %s existe déjà."
 
 msgid "Resource %1$s not created: %2$s"
-msgstr "La resource %s n'a pas été créé : %2$s"
+msgstr "La ressource %s n'a pas été créée : %2$s"
 
 msgid "Resource %s could not be retrieved."
-msgstr "Le resource %s n'a pas été retrouvé."
+msgstr "La ressource %s n'a pas été retrouvée."
 
 msgid "Resource not deleted at address %1$s : %2$s"
-msgstr "La resource n'a pas pu être supprimée à l'adresse %1$s : %2$s"
+msgstr "La ressource n'a pas pu être supprimée à l'adresse %1$s : %2$s"
 
 msgid "No address return for creation of container in repository %s."
 msgstr "Aucune adresse pour la création du conteneur dans le support de stockage %s."
@@ -387,13 +408,13 @@ msgid "No address return for storage of resource in repository %s."
 msgstr "Aucune adresse pour le stockage de resource dans le support de stockage %s."
 
 msgid "Resource contents not available at address %s."
-msgstr "Le contenu de la resource n'est pas disponible à l'adresse %s."
+msgstr "Le contenu de la ressource n'est pas disponible à l'adresse %s."
 
 msgid "No repository found with reference %s"
-msgstr "Aucune repertoire de stockage trouvé avec l'identifiant %s."
+msgstr "Aucun répertoire de stockage trouvé avec l'identifiant %s."
 
 msgid "Unknown event type: %s"
-msgstr "Evénement de type %s non trouvé"
+msgstr "Événement de type %s non trouvé"
 
 msgid "%s can''t be found."
 msgstr "%s n'a pas été trouvé."
@@ -409,4 +430,10 @@ msgstr "L'archive %1$s n'est pas dans le dossier %2$s."
 
 msgid "The folder only accepts archives originated from %s."
 msgstr "Le dossier n'accepte que des archives du service producteur %s."
+
+msgid "Expired link"
+msgstr "Lien expiré"
+
+msgid "Invalid link"
+msgstr "Lien non valide"
 

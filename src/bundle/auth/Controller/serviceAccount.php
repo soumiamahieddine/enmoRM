@@ -238,7 +238,7 @@ class serviceAccount
      * Generate a service account token
      * @param string $serviceAccountId The service account identifier
      *
-     * @return credential
+     * @return object The credential
      */
     public function generateToken($serviceAccountId)
     {
@@ -278,7 +278,7 @@ class serviceAccount
      * Search service account
      * @param string $query The query
      *
-     * @return array The list of fouded service
+     * @return array The list of found service
      */
     public function queryServiceAccounts($query = false)
     {
@@ -307,7 +307,7 @@ class serviceAccount
      * Get the account privileges
      * @param string $serviceAccountId The service account identifier
      *
-     * @return array
+     * @return array The list of privileges
      */
     public function getPrivileges($serviceAccountId)
     {
@@ -319,7 +319,7 @@ class serviceAccount
      * @param array  $servicesURI The service privilege
      * @param string $accountId   The service account identifier
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function createServicePrivilege(array $servicesURI, $accountId)
     {

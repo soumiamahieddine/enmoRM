@@ -28,6 +28,10 @@
             <li>
                 <a href="#relationshipTab" data-toggle="tab">Relationships</a>
             </li>
+            <?merge archive.messages.bool() ?>
+            <li>
+                <a href="#MessageTab" data-toggle="tab">Message</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="informationsTab">
@@ -44,6 +48,9 @@
             </div>
             <div class="tab-pane" id="relationshipTab" style="padding:14px">
                 <?hinclude recordsManagement/archive/relationships.html ?>
+            </div>
+            <div class="tab-pane" id="MessageTab" style="padding:14px">
+                <?hinclude recordsManagement/archive/message.html ?>
             </div>
         </div>
     </div>

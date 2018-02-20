@@ -43,7 +43,7 @@ class orgType
     /**
      * Get the organization's types
      *
-     * @return array The list of organization's types
+     * @return organization/orgType[] The list of organization's types
      */
     public function index()
     {
@@ -54,7 +54,7 @@ class orgType
      * Add an organization type
      * @param organization/orgType $orgType the orgType to create
      *
-     * @return bool
+     * @return bool The result of the operation
      */
     public function create($orgType)
     {
@@ -69,7 +69,7 @@ class orgType
      * Edit an organization type
      * @param string $code The id of the orgType to edit
      *
-     * @return object The orgType object to add
+     * @return organization/orgType The orgType object to add
      */
     public function read($code)
     {
@@ -81,12 +81,30 @@ class orgType
      * @param string               $code    The orgType code
      * @param organization/orgType $orgType The orgType to update
      *
-     * @return bool The resut of the operaiton
+     * @return bool The result of the operation
      */
     public function update($code, $orgType)
     {
         $orgType->code = $code;
 
         return $this->sdoFactory->update($orgType, 'organization/orgType');
+    }
+
+
+    /**
+     * Delete an organization type
+     * @param string $code The id of the orgType to delete
+     *
+     * @return bool The resumt of the operation
+     */
+    public function delete($code)
+    {
+        if(!empty($this->sdoFactory->find('organization/organization', "orgTypeCode='$code'"))){
+            throw new \core\Exception( "The organization type is used.");
+        }
+
+        $orgType  =  $this->sdoFactory->read('organization/orgType', $code);
+
+        return $this->sdoFactory->delete($orgType);
     }
 }

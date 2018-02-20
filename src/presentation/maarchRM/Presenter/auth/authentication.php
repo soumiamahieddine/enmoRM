@@ -89,7 +89,7 @@ class authentication
     public function logout()
     {
         $this->view->addHeaders();
-        $this->view->addContent("<script type='application/javascript'>$(location).attr('href', '/user/prompt');</script>");
+        $this->view->addContent("<script type='application/javascript'>$(location).attr('href', '/');</script>");
 
         return $this->view->saveHtml();
     }
