@@ -97,6 +97,9 @@ class UserCommand
         $this->returnType = null;
         $this->parameters = null;
         $this->tags = null;
+        $this->services = null;
+        $this->pattern = null;
+        $this->view = null;
 
         parent::__construct($name, $class, $domain);
 
@@ -130,7 +133,6 @@ class UserCommand
         }
         
         if (isset($this->tags['uses'])) {
-            $this->services = null;
             foreach ($this->tags['uses'] as $uses) {
                 preg_match('#(?<path>[^\s]+)\s*(?<name>\w+)?#', $uses, $service);
                 if (isset($service['name'])) {
