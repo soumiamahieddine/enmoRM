@@ -41,35 +41,40 @@ trait ForgotAccountTrait
      */
     public function forgotAccount($username, $email)
     {
-        if (!$this->sdoFactory->exists("auth/account", array("accountName" => $username))) {
-             throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
+        $result = null;
+
+        try {
+            if (!$this->sdoFactory->exists("auth/account", array("accountName" => $username))) {
+                 throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
+            }
+
+            $userAccount = $this->sdoFactory->read("auth/account", array("accountName" => $username));
+
+            if ($userAccount->enabled != true) {
+                throw \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($username));
+            }
+
+            if ($email != $userAccount->emailAddress) {
+                throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
+            }
+
+            $data = new \stdClass();
+            $data->accountId = $userAccount->accountId;
+            $data->tokenDate = \laabs::newTimestamp();
+
+            $userAccount->tokenDate = $data->tokenDate;
+            $this->sdoFactory->update($userAccount, "auth/account");
+
+            $token = $this->generateEncodedToken($data);
+
+            $message = $this->getForgotAccountMessage($token);
+
+            $notificationDependency = \laabs::newService("dependency/notification/Notification");
+
+            $title = "Maarch RM - user information";
+            $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
+        } catch (\bundle\auth\Exception\authenticationException $e) {
         }
-
-        $userAccount = $this->sdoFactory->read("auth/account", array("accountName" => $username));
-
-        if ($userAccount->enabled != true) {
-            throw \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($username));
-        }
-
-        if ($email != $userAccount->emailAddress) {
-            throw \laabs::newException('auth/authenticationException', 'Invalid username or email.', 401);
-        }
-
-        $data = new \stdClass();
-        $data->accountId = $userAccount->accountId;
-        $data->tokenDate = \laabs::newTimestamp();
-
-        $userAccount->tokenDate = $data->tokenDate;
-        $this->sdoFactory->update($userAccount, "auth/account");
-
-        $token = $this->generateEncodedToken($data);
-
-        $message = $this->getForgotAccountMessage($token);
-
-        $notificationDependency = \laabs::newService("dependency/notification/Notification");
-
-        $title = "Maarch RM - user information";
-        $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
 
         return $result;
     }
