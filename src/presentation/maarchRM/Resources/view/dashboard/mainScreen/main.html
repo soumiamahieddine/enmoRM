@@ -1,7 +1,11 @@
 <div class="container-fluid" style="padding-top: 10px">
     <div class="row">
-        <div class="col-md-3 col-xs-12" id="leftColumn">
+        <div class="col-md-3 col-xs-12 " id="leftColumn">
         <?hinclude /filePlan/tree.html ?>
+        </div>
+        <div class="pull-right pull-down hidden-xs" id="leftColumnSizeCtrl">
+            <button class="left btn btn-xs btn-default"><i class="fa fa-caret-left"/></button>
+            <button class="right btn btn-xs btn-default"><i class="fa fa-caret-right"/></button>
         </div>
         <div class="col-md-6 col-xs-12" id="middleColumn">
             <div class="row">
@@ -33,7 +37,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-xs-12" id="rightColumn">
+        <div class="col-md-3 col-xs-12 hidden-xs" id="rightColumn">
+        </div>
+        <div class="pull-down" id="rightColumnSizeCtrl">
+            <button class="left btn btn-xs btn-default"><i class="fa fa-caret-left"/></button>
+            <button class="right btn btn-xs btn-default"><i class="fa fa-caret-right"/></button>
         </div>
     </div>
 </div>
@@ -42,6 +50,17 @@
     #middleColumn .dropdown-menu {
         max-height: 300px;
         overflow-y: auto; 
+    }
+    .pull-down {
+        position: fixed;
+        bottom: 30px;
+        z-index: 10000;
+    }
+    #leftColumnSizeCtrl {
+        left: 24%;
+    }
+    #rightColumnSizeCtrl {
+        left: 74%;
     }
 </style>
 
@@ -54,34 +73,93 @@
         SearchTab.close($(this).closest("li"));
     });
 
-    $('#toggleLeftColumn').on('click', function() {
-        var leftColumn = $('#leftColumn');
-        var rightColumn = $('#rightColumn');
-
-        if (leftColumn.hasClass('col-md-3')) {
-            leftColumn.hide("slide", { direction: "left" }, 200, function() {
-                leftColumn.removeClass("col-md-3");
-                $("#middleColumn").removeClass("col-md-6")
-                                  .addClass("col-md-7");
-                rightColumn.removeClass("col-md-3")
-                            .addClass("col-md-5");
-            });
-            
-            $(this).children('i').addClass('fa-rotate-180');
-
-        } else {
-            $("#middleColumn").removeClass("col-md-7")
-                              .addClass("col-md-6");
-            rightColumn.removeClass("col-md-5")
-                            .addClass("col-md-3");
-            leftColumn.addClass("col-md-3")
-                      .show("slide", { direction: "left" }, 200);
-            $(this).children('i').removeClass('fa-rotate-180');
-        }
-    });
 
     $('#app_maarchRM_main').ready(function() {
         $('#rightColumn').initSmoothScrolling();
     })
+
+    $('#toggleLeftColumn').on('click', function() { ColumnResizer.toggleLeftColumn(); });
+
+    $('#leftColumnSizeCtrl').on('click', '.left', function() { ColumnResizer.leftSmaller(); });
+    $('#leftColumnSizeCtrl').on('click', '.right', function() { ColumnResizer.leftBigger(); });
+
+    $('#rightColumnSizeCtrl').on('click', '.left', function() { ColumnResizer.rightBigger(); });
+    $('#rightColumnSizeCtrl').on('click', '.right', function() { ColumnResizer.rightSmaller(); });
+
+    var ColumnResizer = {
+        left          : $('#leftColumn'),
+        middle        : $('#middleColumn'),
+        right         : $('#rightColumn'),
+        leftCtrl      : $('#leftColumnSizeCtrl'),
+        rightCtrl     : $('#rightColumnSizeCtrl'),
+        toogleLeftBtn : $('#toggleLeftColumn'),
+
+
+        leftSmaller : function() {
+            var leftClass = parseInt(this.left.attr('class').substring(7, 9));
+            if (leftClass == 1) {
+                return;
+            }
+            this.left.removeClass('col-md-'+leftClass+' col-xs-12').addClass('col-md-' + (leftClass-1).toString()+' col-xs-12')
+            this.middleBigger();
+        },
+        leftBigger : function() {
+            if (this.middleSmaller() === -1) {
+                return;
+            }
+            var leftClass = parseInt(this.left.attr('class').substring(7, 9));
+            this.left.removeClass('col-md-'+leftClass+' col-xs-12').addClass('col-md-' + (leftClass+1).toString()+' col-xs-12');
+        },
+        middleSmaller : function() {
+            var middleClass = parseInt(this.middle.attr('class').substring(7, 9));
+            if (middleClass == 1) {
+                return -1;
+            }
+            this.middle.removeClass('col-md-'+middleClass+' col-xs-12').addClass('col-md-' + (middleClass-1).toString()+' col-xs-12');
+        }, 
+        middleBigger : function() {
+            var middleClass = parseInt(this.middle.attr('class').substring(7, 9));
+            this.middle.removeClass('col-md-'+middleClass+' col-xs-12').addClass('col-md-' + (middleClass+1).toString()+' col-xs-12');
+        },
+        rightSmaller : function() {
+            var rightClass = parseInt(this.right.attr('class').substring(7, 9));
+            console.log(rightClass);
+            if (rightClass == 1) {
+                return;
+            }
+            this.right.removeClass('col-md-'+rightClass+' col-xs-12 hidden-xs').addClass('col-md-' + (rightClass-1).toString()+' col-xs-12 hidden-xs');
+            this.middleBigger();
+        },
+        rightBigger : function() {
+            if (this.middleSmaller() === -1) {
+                return;
+            }
+            var rightClass = parseInt(this.right.attr('class').substring(7, 9));
+            this.right.removeClass('col-md-'+rightClass+' col-xs-12 hidden-xs').addClass('col-md-' + (rightClass+1).toString()+' col-xs-12 hidden-xs');
+        },
+        toggleLeftColumn : function() {
+            var leftColumn = $('#leftColumn');
+            var rightColumn = $('#rightColumn');
+
+            if (this.left.is(':visible')) {
+                this.left.removeClass().addClass("col-md-3 col-xs-12")
+                this.left.hide("slide", { direction: "left" }, 200, function() {
+                    ColumnResizer.left.removeClass();
+                    ColumnResizer.middle.removeClass().addClass("col-md-7 col-xs-12");
+                    ColumnResizer.right.removeClass().addClass("col-md-5 col-xs-12 hidden-xs");
+                    ColumnResizer.leftCtrl.css('display', 'none');
+                });
+                
+                this.toogleLeftBtn.addClass('fa-rotate-180');
+
+            } else {
+                this.middle.removeClass().addClass("col-md-6 col-xs-12");
+                this.right.removeClass().addClass("col-md-3 col-xs-12 hidden-xs");
+                this.left.addClass("col-md-3 col-xs-12").show("slide", { direction: "left" }, 200);
+                this.toogleLeftBtn.removeClass('fa-rotate-180');
+                this.leftCtrl.css('display', '');
+            }
+        }
+    }
 
 </script>
