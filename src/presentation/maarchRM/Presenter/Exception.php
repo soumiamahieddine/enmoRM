@@ -94,20 +94,23 @@ class Exception
         if (isset($exception->errors)) {
             $errors = [];
             foreach ($exception->errors as $error) {
-                $error->setMessage($this->translator->getText($error->getFormat()));
+                if (is_object($error)) {
+                    $error->setMessage($this->translator->getText($error->getFormat()));
 
-                $variables = [];
+                    $variables = [];
 
-                $errorVariables = $error->getVariables();
-                if (is_array($errorVariables)) {
-                    foreach ($errorVariables as $name => $value) {
-                        $name = $this->translator->getText($name);
-                        $value = $this->translator->getText($value);
-                        $variables[$name] = $value;
+                    $errorVariables = $error->getVariables();
+                    if (is_array($errorVariables)) {
+                        foreach ($errorVariables as $name => $value) {
+                            $name = $this->translator->getText($name);
+                            $value = $this->translator->getText($value);
+                            $variables[$name] = $value;
+                        }
                     }
+                    $error->setVariables($variables);
+                } else {
+                    $error = new \core\Error($error);
                 }
-                $error->setVariables($variables);
-                
                 $errors[] = $error;
             }
             $this->json->errors = $errors;
