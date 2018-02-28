@@ -281,7 +281,7 @@ class Document extends \dependency\xml\Document
         $this->addScript("/public/js/gritter_1.7.4/gritter.js");
 
         //typeahead
-        $this->addScript("/public/js/typeahead_0.10.2/typeahead.js");
+        $this->addScript("/public/js/typeahead_0.11.1/typeahead.js");
 
         //$this->addScript("/public/js/bootstrap-daterangepicker/moment.min.js");
         //$this->addScript("/public/js/bootstrap-daterangepicker/daterangepicker.js");

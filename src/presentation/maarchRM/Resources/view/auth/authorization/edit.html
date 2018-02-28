@@ -350,20 +350,17 @@
                         return "<span class='well well-sm'>"+$('#noUserFound').html()+"</span>";
                     },
                     suggestion: function(user) {
-                        var display = 
+                        var display =
                             "<span>"
-                                + "<span class='fa fa-user' >&nbsp;</span>"
-                                + "<span style='font-family:Helvetica, sans-serif;'>" 
-                                + user.displayName
-                                + "</span>"
-                                + "</span>";
-
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + user.displayName
+                            + "</span></span><br>";
                         return display;
                     }
                 },
                 source: function(query, cb) {
-                    users.get(query, function(suggestions) {
-                        var i = suggestions.length
+                    users.search(query, function(suggestions) {
+                        var i = suggestions.length;
                         while (i--) {
                             // if ($.inArray(suggestions[i].puid, boundFormats()) > -1)
                             if ($('#members').find('[data-memberid="'+ suggestions[i].accountId +'"]').length)

@@ -98,12 +98,15 @@
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('puid'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
+                wildcard: '%QUERY',
                 url: '/digitalResource/format/find/%QUERY',
-                rateLimitWait: 500
+                rateLimitWait: 500,
+                transform: function(response) {
+                    return response;
+                }
             },
             limit: 100
         });
-        typesSource.initialize();
 
         // initialize typeahead
         $('#formatTypeahead').typeahead(
@@ -115,36 +118,24 @@
         // data source contacts
         {
             name: 'format',
-            displayKey: 'name',
             templates: {
                 empty: function () {
-                    return "<span class='well well-sm'>No format found</span>";
+                    return "<span class='well well-sm'>" + $('#noFormatFound').text() + "</span>";
                 },
                 suggestion: function (type) {
-                    var displayName = '[' + type['puid'] + '] ' + type['name'];
-                    if (type['version'] != undefined) {
-                        displayName += ' ' + type['version'];
+                    var displayName = '[' + type.puid + '] ' + type.name;
+                    if (type.version != undefined) {
+                        displayName += ' ' + type.version;
                     }
                     var display = "<span>"
-                            + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + displayName
-                            + "</span>"
-                            + "</span>";
-
+                        + "<span style='font-family:Helvetica, sans-serif;'>"
+                        + displayName
+                        + "</span></span><br><br>";
                     return display;
                 }
             },
-            source: function (query, cb) {
-                typesSource.get(query, function (suggestions) {
-                    var i = suggestions.length
-                    while (i--) {
-                        if ($.inArray(suggestions[i].puid, boundFormats()) > -1)
-                            suggestions.splice(i, 1);
-                    }
-                    cb(suggestions);
-                });
-            },
-            skipCache: true
+            display: 'name',
+            source: typesSource
         }).on('typeahead:selected', function ($event, suggestion, source) {
             $("#formatTypeahead").data('format', suggestion);
             $('#addFormat').removeClass('disabled');
