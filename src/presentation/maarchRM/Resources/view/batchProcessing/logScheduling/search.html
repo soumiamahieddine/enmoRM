@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Alexis Ragot <alexis.ragot@maarch.org>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div id="contain" >
+    <div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-history"></i>
+                Search logs scheduling
+            </h1>
+        </div>
+    </div>
+    <br/>
+    <div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+        <div class="col-md-12">
+            <form id="searchForm" class="form-horizontal">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <div class="btn-group col-md-12" data-toggle="buttons" >
+                                <label class="btn btn-info active typeSearch" title="Name">
+                                    <input type="checkbox" id="typeName" name="typeSearch" value="name" checked>Name
+                                </label>
+                                <label class="btn btn-default typeSearch" title="Task">
+                                    <input type="checkbox" id="typeTask" name="typeSearch" value="task">Task
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg">
+                                <select class="form-control selectName" name="name" id="name" >
+                                        <option value="">Select a scheduling name</option>
+                                        <?merge schedulings ?>
+                                        <option value="[?merge .name ?]"><?merge .name ?></option>
+                                </select>
+                                <select class="form-control selectTask" name="task" id="task" style="display: none;">
+                                        <option value="">Select a task</option>
+                                        <?merge tasks ?>
+                                        <option value="[?merge .description ?]"><?merge .description ?></option>
+                                </select>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-info" id="search" title="Search"><span class="fa fa-search">&nbsp;</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pull-right">
+                            <div class="col-sm-8">
+                                    <button type="button" id="more" class="btn btn-success plus" ><i class="fa fa-plus fa-fw"></i></button>
+                                    <button type="button" id="less" class="btn btn-danger minus" style="display: none;"><i class="fa fa-minus fa-fw"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="option" style="display: none;">
+                    <div class="col-md-6">
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="fromDate">Start date</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control datePicker" name="fromDate" id="fromDate" placeholder="Start date"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="executedBy">Executed by</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="executedBy" id="executedByTypehead" data-attributeid="" placeholder="Executed by"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="status">Status</label>
+                            <div class="btn-group col-sm-7" data-toggle="buttons" >
+                                <label class="btn btn-info active status" title="all">
+                                    <input type="checkbox" id="all" name="status" value="" checked>All
+                                </label>
+                                <label class="btn btn-default status" title="noErrors">
+                                    <input type="checkbox" id="true" name="status" value="1">Success
+                                </label>
+                                <label class="btn btn-default status" title="errors">
+                                    <input type="checkbox" id="false" name="status" value="0">Errors
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="toDate">End date</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control datePicker" name="toDate" id="toDate" placeholder="End date"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" for="launchedBy">Launched by</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="launchedBy" id="launchedByTypehead" data-attributeid="" placeholder="Launched by"/>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <br>
+    <div class="container-fluid" id="logList"></div>
+    <div class="modal fade" id="modalEvent" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="modalEvent_content">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    status = "";
+    $('#contain').keypress(function(e){
+        if (e.which != 13) {
+             return;
+        }
+        // Prevent form submit
+        e.preventDefault();
+        $("#search").click();
+    });
+    
+        
+    $('#search').on('click', function(){
+        $.ajax({
+            type        : 'GET',
+            url         : '/Batchprocessing/Logs',
+            data        : serializeLog(),
+            dataType    : 'html',
+            async       : true,
+            success     : function(response) {
+                $('#logList').html('');
+                $('#logList').append(response);
+            }
+        });
+    }); 
+    
+    $("#contain").on('click', '.viewEvent', function () {
+
+            var logId = $(this).data('logid');
+            ajax($(this), {
+                type: 'GET',
+                url: '/Batchprocessing/Log/' + logId,
+                dataType: 'html',
+                contentType: 'application/json',
+                async: true,
+                success: function (response) {
+                    $('#modalEvent_content').html(response);
+
+                    $('#modalEvent').modal();
+                }
+            });
+    });
+
+    $("#searchForm").on('click', '.typeSearch', function () {
+            
+        if ($(this).attr('class').indexOf('btn-default') != -1) {
+            $('#searchForm ').find('.typeSearch').removeClass('btn-info active').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-info');
+            
+            if ($(this).find('input').attr('id') == "typeTask") {
+                $(".selectTask").css('display','');
+                $(".selectName").css('display','none');
+                $(".selectName").val("");
+            } else {
+                $(".selectName").css('display','');
+                $(".selectTask").css('display','none');
+                $(".selectTask").val("");
+            }
+        }
+    });
+    
+    $("#searchForm").on('click', '.status', function () {
+        if ($(this).attr('class').indexOf('btn-default') != -1) {
+            status = $(this).find('input').val();
+            $('#searchForm ').find('.status').removeClass('btn-info active').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-info');
+
+        } else {
+            $('#searchForm ').find('.status').removeClass('btn-info active').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-info');
+
+            $(this).removeClass('btn-info').addClass('btn-default');
+        }
+    });
+    
+    $("#more").on('click',function(){
+        $('.option').css('display',''); 
+
+        $(".minus").css('display','');
+        $(".plus").css('display','none');
+        
+    });
+    
+    $("#less").on('click',function(){
+        
+        $('.option').css('display','none');
+        
+        $(".minus").css('display','none');
+        $(".plus").css('display','');
+        
+    });
+        
+    $("#contain").on("click",'[data-form-reset]', function () {
+        $("#searchForm").find('input').val('');
+        $("#type").prop('selectedIndex', 0);
+        $('#logList').html('');
+    });
+    
+    var personsSource = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/userAccounts/%QUERY',
+                ajax : {
+                    async: false
+                }
+            },
+            limit: 100
+        });
+        personsSource.initialize();
+
+        // initialize typeahead
+        $('#executedByTypehead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 3
+            }, 
+            // data source contacts
+            {
+                name: 'users',
+                displayKey: 'displayName',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>No user found</span>";
+                    },
+                    suggestion: function(person) {
+                        var display = 
+                            "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>" 
+                                + person.displayName;
+                        display += 
+                                "</span>";
+                        display += 
+                            "</span>";
+                        $("#replacingUser").attr('data-replacinguseraccountid', person.accountId);   
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    personsSource.get(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $("#executedByTypehead").data('user', suggestion.accountId);
+        });
+        
+        $('#launchedByTypehead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 3
+            }, 
+            // data source contacts
+            {
+                name: 'users',
+                displayKey: 'displayName',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>No user found</span>";
+                    },
+                    suggestion: function(person) {
+                        var display = 
+                            "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>" 
+                                + person.displayName;
+                        display += 
+                                "</span>";
+                        display += 
+                            "</span>";
+                        $("#replacingUser").attr('data-replacinguseraccountid', person.accountId);   
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    personsSource.get(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $("#launchedByTypehead").data('user', suggestion.accountId);
+        });
+    
+        function serializeLog() {
+            serializedObject = {
+                fromDate: $('#fromDate').val(),
+                toDate: $('#toDate').val()
+            };
+            
+            if ($('#name').val()) {
+                serializedObject.name = $('#name').val();
+            }
+            
+            if ($('#task').val()) {
+                serializedObject.task = $('#task').val();
+            }
+            
+            if (status) {
+                serializedObject.status = status;
+            }
+            
+            if ($('#executedByTypehead').data('user')) {
+                serializedObject.executedBy = $('#executedByTypehead').data('user');
+            }
+            
+            if ($('#launchedByTypehead').data('user')) {
+                serializedObject.launchedBy = $('#launchedByTypehead').data('user');
+            }
+        return serializedObject;
+    }
+</script>

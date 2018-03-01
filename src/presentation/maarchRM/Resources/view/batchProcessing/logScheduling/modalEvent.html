@@ -1,0 +1,39 @@
+
+<div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">
+                Log scheduling
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="batchProcessing/messages">
+    <div class="row">
+            <div class="panel">
+                <div class="row">
+                    <dl class="dl dl-horizontal">
+                        <dt><strong>Date</strong></dt> <dd ><?merge logScheduling.logDate ?></dd>
+                        <dt><strong>Name</strong></dt> <dd><?merge logScheduling.name ?></dd>
+                        <dt><strong>Executed by</strong></dt> <dd><?merge logScheduling.executedBy ?></dd>
+                        <dt><strong>Launched by</strong></dt> <dd><?merge logScheduling.launchedBy ?></dd>
+
+                    <dt><strong>Status</strong></dt>
+                    <dd>
+                        <?merge logScheduling.status.ifeq(1) ?><strong class="text-success fa fa-check" disabled="">&nbsp;</strong>
+                        <?merge logScheduling.status.ifne(1) ?><strong class="text-danger fa fa-times" disabled="">&nbsp;</strong>
+                    </dd>
+                    </dl>
+                    <div class="col-xs-12">
+                    <b>Info</b>
+                        <div class="panel well" id="audit_info">
+                            <?merge logScheduling.info ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>
