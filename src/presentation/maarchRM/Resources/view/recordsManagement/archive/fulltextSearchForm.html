@@ -6,131 +6,131 @@
     file that was distributed with this source code.
 #-->
 <!-- Search field -->
-<h4 class="pull-left">
-    <span data-context-path/>
-    <br/>
-    <small data-context-description/>
-</h4>
-<div class="form-horizontal col-md-12" data-search-searchForm>
-    <div class="form-group col-md-10">
+<div class="form-horizontal col-md-8" data-search-searchForm>
+    <div class="form-group">
         <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                  
+                    <span>Profiles</span> <i class="fa fa-caret-down"/>
+                </button>
+                <ul class="dropdown-menu">
+                    <?merge userArchivalProfiles ?>
+                    <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
+                </ul>
+            </div>
             <input type="search" class="form-control" name="searchForm_inputSearch"/>
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default" name="searchForm_inputSearchBtn" title="Search"><span class="fa fa-search text-primary">&nbsp;</span></button>
             </div>
         </div>
+        <a href="#" class="pull-right" data-toggle="collapse" href="#advencedSearch">Advenced search</a>
     </div>
 </div>
-
-<!-- Search profiles tabs -->
-<ul class="nav nav-tabs col-md-12" role="tablist" data-search-tab>
-    <li role="presentation" class="active small"><a href="#all" data-toggle="tab">All</a></li>
-    <li class="dropdown profileDropdown" role="presentation" class="small">
-        <a href="#" class="dropdown-toggle small" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span>Profiles</span> <i class="fa fa-caret-down"/>
-            <ul class="dropdown-menu">
-                <?merge userArchivalProfiles ?>
-                <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
-            </ul>
-        </a>
-    </li>
-    <?merge userArchivalProfiles ?>
-    <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
-</ul>
-<br/>
-<div class="tab-content col-md-12 advancedSearchPanel" data-search-tabContent>
-    <div role="tabpanel" class="tab-pane fade in active" id="all">
-        <br/>
-        <form class="form-horizontal" data-descriptionFields>
-            <div class="form-group col-md-12">  
-                <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
-                <div class="input-group input-group-sm input-daterange col-md-4">
-                    <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
-                    <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                    <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
-                </div>
-                <div class="col-md-5"> </div>
-            </div>
-        </form>
-    </div>
-    <?merge userArchivalProfiles ?>
-    <div role="tabpanel" class="tab-pane fade" id="[?merge .reference ?]">
-        <small class="profileDropdown"><i class="text-primary"><?merge .name ?></i></small>
-        <br class="profileTab"/>
-        <form class="form-horizontal" data-descriptionFields>
-            <div class="form-group col-md-12">  
-                <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
-                <div class="input-group input-group-sm input-daterange col-md-4">
-                    <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
-                    <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                    <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
-                </div>
-                <div class="col-md-5"> </div>
-            </div>
-            <?merge .searchFields ?>
-            <div>
-                <?merge .type.ifeq('name') ?>
-                <div>
-                    <?merge .enumeration.ifeq('') ?>
-                    <div class="form-group col-md-6">
-                        <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control input-xs descriptionInput" name="[?merge .name ?]" />
-                        </div>
-                    </div>
-                    <?merge .enumeration.ifne('') ?>
-                    <div class="form-group col-md-6">
-                        <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                        <div class="col-md-6">
-                            <select class="form-control input-sm descriptionInput" name="[?merge .name ?]" data-type="select">
-                                <option value=""></option>
-                                 <?merge .enumeration ?>
-                                <option value="[?merge . ?]"><?merge . ?></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <!--?merge .type.ifeq('boolean') ?>
-                <div class="form-group col-md-6">
-                    <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="col-md-6">
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                            </label>
-                            <label class="btn btn-default active">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="" checked>&nbsp;
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                            </label>
-                        </div>
-                    </div>
-                </div-->
-                <?merge .type.ifeq('number') ?>
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="input-group input-group-sm col-md-4">
-                        <input type="number" step="0.01" data-range="start" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
-                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                        <input type="number" step="0.01" data-range="end" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
-                    </div>
-                    <div class="col-md-5"> </div>
-                </div>
-                <?merge .type.ifeq('date') ?>
-                <div class="form-group col-md-12">  
-                    <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="input-group input-group-sm input-daterange col-md-4">
-                        <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
-                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                        <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
-                    </div>
-                    <div class="col-md-5"> </div>
-                </div>
-            </div>
-        </form>
-    </div>
+<div id="advencedSearch" class="collapse">
+    qsdqsdsqdqsdkojl
+</div>
+<div id="advencedSearchs" class="collapse">
+    <!-- Search profiles tabs -->
+    <ul class="nav nav-tabs col-md-12" role="tablist" data-search-tab>
+        <li role="presentation" class="active small"><a href="#all" data-toggle="tab">All</a></li>
+        
+        <?merge userArchivalProfiles ?>
+        <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
+    </ul>
     <br/>
+    <div class="tab-content col-md-12 advancedSearchPanel" data-search-tabContent>
+        <div role="tabpanel" class="tab-pane fade in active" id="all">
+            <br/>
+            <form class="form-horizontal" data-descriptionFields>
+                <div class="form-group col-md-12">  
+                    <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
+                    <div class="input-group input-group-sm input-daterange col-md-4">
+                        <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
+                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                        <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
+                    </div>
+                    <div class="col-md-5"> </div>
+                </div>
+            </form>
+        </div>
+        <?merge userArchivalProfiles ?>
+        <div role="tabpanel" class="tab-pane fade" id="[?merge .reference ?]">
+            <small class="profileDropdown"><i class="text-primary"><?merge .name ?></i></small>
+            <br class="profileTab"/>
+            <form class="form-horizontal" data-descriptionFields>
+                <div class="form-group col-md-12">  
+                    <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
+                    <div class="input-group input-group-sm input-daterange col-md-4">
+                        <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
+                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                        <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
+                    </div>
+                    <div class="col-md-5"> </div>
+                </div>
+                <?merge .searchFields ?>
+                <div>
+                    <?merge .type.ifeq('name') ?>
+                    <div>
+                        <?merge .enumeration.ifeq('') ?>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control input-xs descriptionInput" name="[?merge .name ?]" />
+                            </div>
+                        </div>
+                        <?merge .enumeration.ifne('') ?>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <select class="form-control input-sm descriptionInput" name="[?merge .name ?]" data-type="select">
+                                    <option value=""></option>
+                                     <?merge .enumeration ?>
+                                    <option value="[?merge . ?]"><?merge . ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--?merge .type.ifeq('boolean') ?>
+                    <div class="form-group col-md-6">
+                        <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                        <div class="col-md-6">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                                </label>
+                                <label class="btn btn-default active">
+                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="" checked>&nbsp;
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </div-->
+                    <?merge .type.ifeq('number') ?>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
+                        <div class="input-group input-group-sm col-md-4">
+                            <input type="number" step="0.01" data-range="start" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
+                            <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                            <input type="number" step="0.01" data-range="end" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
+                        </div>
+                        <div class="col-md-5"> </div>
+                    </div>
+                    <?merge .type.ifeq('date') ?>
+                    <div class="form-group col-md-12">  
+                        <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
+                        <div class="input-group input-group-sm input-daterange col-md-4">
+                            <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
+                            <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                            <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
+                        </div>
+                        <div class="col-md-5"> </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <!-- Search results -->
 <div class="container-fluid col-md-12" data-search-result/>
