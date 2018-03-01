@@ -181,17 +181,22 @@ class scheduling
         $this->changeStatus($schedulingId, "running");
 
         try {
+            $pathRouter = new \core\Route\PathRouter($task->route);
+            \core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH,$pathRouter->path);
             if (!empty($scheduling->parameters)) {
                 $info = \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
 
             } else {
                 $info = \laabs::callService($task->route);
             }
+
         } catch (\Exception $e) {
             $this->changeStatus($schedulingId, "error");
             $status = false;
             $info = $e;
         }
+
+        \core\Observer\Dispatcher::notify(LAABS_SERVICE_RETURN, $info);
 
         if ($status) {
             $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
