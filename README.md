@@ -1,7 +1,7 @@
 Description
 ===========
 
-MaarchRM is a open source software that allows you to store, find and display
+MaarchRM is an open source software that allows you to store, find and display
 your digital resources in compliance with international regulation ISO. It’s a
 full featured PHP PostgresSQL software.
 
