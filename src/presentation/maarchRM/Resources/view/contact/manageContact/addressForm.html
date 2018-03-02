@@ -155,7 +155,7 @@
             var addressObject = ContactAddressForm.serialize();
 
             if(addressObject.purpose == null || addressObject.city == null) {
-                gritter.show($('#contact_empty_text').html(),false);
+                gritter.show($('#contact_empty_text').text(),false);
 
                 return false;
             }
@@ -323,7 +323,7 @@
 
             if (address.citySubDivision) {
                 $('<p/>').addClass('list-group-item-text')
-                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').html())
+                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').text())
                          .appendTo(a);
             }
 

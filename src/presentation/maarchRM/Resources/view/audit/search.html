@@ -215,7 +215,7 @@
             },
             templates: {
                 empty: function () {
-                    return "<span class='well well-sm'>"+$('#noAccountFound').html()+"</span>";
+                    return "<span class='well well-sm'>"+$('#noAccountFound').text()+"</span>";
                 },
                 suggestion: function (account) {
                     var name = account.displayName;

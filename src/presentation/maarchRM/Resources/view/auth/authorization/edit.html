@@ -347,7 +347,7 @@
                 displayKey: 'displayName',
                 templates: {
                     empty: function() {
-                        return "<span class='well well-sm'>"+$('#noUserFound').html()+"</span>";
+                        return "<span class='well well-sm'>"+$('#noUserFound').text()+"</span>";
                     },
                     suggestion: function(user) {
                         var display =
@@ -396,7 +396,7 @@
         };
         
         if(parameters.role.roleName == "") {
-             gritter.show($('#empty_text').html(),false);
+             gritter.show($('#empty_text').text(),false);
              return false;
         }
         

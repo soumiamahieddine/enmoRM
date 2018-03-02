@@ -156,7 +156,7 @@
         });
 
         if(serviceAccount.displayName == "" || orgId == "") {
-            gritter.show($('#empty_text').html(),false);
+            gritter.show($('#empty_text').text(),false);
             return false;
         }
 
@@ -254,7 +254,7 @@
             displayKey: 'displayName',
             templates: {
                 empty: function() {
-                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                    return "<span class='well well-sm'>"+$('#noServiceFound').text()+"</span>";
                 },
                 suggestion: function(organization) {
                     var display;
