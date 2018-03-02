@@ -94,7 +94,11 @@ class Exception
         if (isset($exception->errors)) {
             $errors = [];
             foreach ($exception->errors as $error) {
-                if (is_object($error)) {
+                if (is_string($error)) {
+                    $error = new \core\Error($error);
+                }
+
+                if (is_object($error) && $error instanceof \core\Error) {
                     $error->setMessage($this->translator->getText($error->getFormat()));
 
                     $variables = [];
@@ -108,10 +112,8 @@ class Exception
                         }
                     }
                     $error->setVariables($variables);
-                } else {
-                    $error = new \core\Error($error);
+                    $errors[] = $error;
                 }
-                $errors[] = $error;
             }
             $this->json->errors = $errors;
         }
