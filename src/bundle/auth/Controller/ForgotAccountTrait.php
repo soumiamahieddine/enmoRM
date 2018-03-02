@@ -74,6 +74,7 @@ trait ForgotAccountTrait
             $title = "Maarch RM - user information";
             $result = $notificationDependency->send($title, $message, array($userAccount->emailAddress));
         } catch (\bundle\auth\Exception\authenticationException $e) {
+            \laabs::notify(LAABS_BUSINESS_EXCEPTION, $e);
         }
 
         return $result;
