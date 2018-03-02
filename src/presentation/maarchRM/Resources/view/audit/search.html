@@ -220,15 +220,14 @@
                 suggestion: function (account) {
                     var name = account.displayName;
                     if (account.accountType == 'service') {
-                        var type = $('#service_text').html();
+                        var icone = "<span class='fa fa-laptop' >&nbsp;</span>";
                     } else {
-                        var type = $('#user_text').html();
+                        var icone = "<span class='fa fa-user' >&nbsp;</span>";
                     }
                     var display =
                         "<span>"
+                        + icone
                         + "<span style='font-family:Helvetica, sans-serif;'>"
-                        + type
-                        + " - "
                         + name
                         + "</span></span><br>";
                     return display;

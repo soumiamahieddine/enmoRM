@@ -1070,7 +1070,7 @@
             wrapper: "tt-wrapper",
             input: "tt-input",
             hint: "tt-hint",
-            menu: "tt-dropdown-menu",
+            menu: "tt-menu",
             dataset: "tt-dataset",
             suggestion: "tt-suggestion",
             selectable: "tt-selectable",
