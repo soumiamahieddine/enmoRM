@@ -190,13 +190,13 @@ class scheduling
                 $info = \laabs::callService($task->route);
             }
 
-        } catch (\Exception $e) {
+            \laabs::notify(LAABS_SERVICE_RETURN, $info);
+        } catch (\Exception $info) {
             $this->changeStatus($schedulingId, "error");
             $status = false;
-            $info = $e;
-        }
-
-        \core\Observer\Dispatcher::notify(LAABS_SERVICE_RETURN, $info);
+            
+            \laabs::notify(LAABS_BUSINESS_EXCEPTION, $info);
+        }       
 
         if ($status) {
             $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
