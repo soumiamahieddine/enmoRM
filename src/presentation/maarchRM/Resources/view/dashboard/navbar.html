@@ -238,7 +238,6 @@
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
             })
-
         }
 
         var errorFunction = request.error;
@@ -266,7 +265,25 @@
         }
     }
 
-$.fn.initSmoothScrolling = function() {
+    // Event triggering system
+    function trigger(event, args) {
+        $(document).trigger(event, args);
+    }
+
+    $.fn.onEvent = function(event, func){
+
+        var callback = func;
+        $(document).on(event, function() {
+            callback.apply(this, arguments);
+        });
+
+        $(this).on("remove", function() {
+            $(document).off(event);
+        })
+    }
+
+    // Scroll following 
+    $.fn.initSmoothScrolling = function() {
         element = $(this);
         originalY = element.offset().top;
         element.css('position', 'relative');
