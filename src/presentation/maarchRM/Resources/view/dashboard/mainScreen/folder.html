@@ -1,35 +1,33 @@
 <div class="tab-pane fade in active col-xs-12" id="folderPanel">
     <div class="row">
-        <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Library</a></li>
-            <li class="active">Data</li>
-        </ol>
-        <!--h4 class="col-xs-11 pull-left">
+        <h4 class="col-xs-11 pull-left">
             <span id="folderPath"/>
             <br/>
             <small id="folderDescription"/>
-        </h4-->
-        <h4 class="col-xs-1 pull-left lockedFolder hide">
-            <i class="text-danger fa fa-lock" style="font-size: 30px"/>
         </h4>
     </div>
     <div class="row">
-        <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
-            <button type="button" class="btn btn-sm btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
-                <span class="fa fa-plus">&nbsp;</span> New archive
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"/>
+        <div class="col-md-4">
+            <h4 class="pull-left lockedFolder hide">
+                <i class="text-danger fa fa-lock" style="font-size: 30px"/>
+            </h4>
+            <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                    <span class="fa fa-plus">&nbsp;</span> New archive
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                </ul>
+            </div>
         </div>
         <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
     </div>
     <div id="folderContentList">
         <div class="row hide">
-            <!--div id="folderToolbarBtn" class="dropdown pull-right btn-group">
-                <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></butto>
+            <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
+                <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"/>
-            </div-->
+            </div>
         </div>
     </div>
 </div>
@@ -81,8 +79,10 @@
             var folderPanel = $('#folderPanel');
             if (locked) {
                 folderPanel.find('.lockedFolder').removeClass('hide');
+                $('#folderToolbarImport').addClass('hide');
             } else {
                 folderPanel.find('.lockedFolder').addClass('hide');
+                $('#folderToolbarImport').removeClass('hide');
             }
 
             if (locked) {

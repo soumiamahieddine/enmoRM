@@ -66,7 +66,6 @@ class welcome
 
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
-
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
             $this->getOrgUnitArchivalProfiles($filePlan);
@@ -75,6 +74,9 @@ class welcome
             $this->markTreeLeaf($filePlan);
 
             $this->view->setSource("filePlan", $filePlan);
+            $this->view->merge($this->view->getElementById('filePlanTree'));
+            $this->view->translate();
+
         }
 
         // Retention
@@ -134,9 +136,9 @@ class welcome
         $this->view->addContentFile('filePlan/filePlanTree.html');
         $this->markTreeLeaf([$filePlan]);
 
-        $this->view->translate();
         $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }

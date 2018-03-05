@@ -3,10 +3,19 @@
     data-orgregnumber="[?merge .registrationNumber ?]" 
     data-archivalprofiles="[?merge .archivalProfiles.json() ?]"
     data-acceptarchivewithoutprofile="[?merge .acceptArchiveWithoutProfile ?]">
-    <span class="orgNode node-default">
-        <i class="fa" data-default-icon="fa-square"/>
-        <b><?merge .displayName ?></b>
+    <span class="orgNode">
+        <i class="fa" data-default-icon="" data-closed-icon="fa-caret-right" data-opened-icon="fa-caret-down">&nbsp;</i>
+        <b data-translate="no"><?merge .displayName ?></b>
+        <div class="pull-right dropdown">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-ellipsis-v"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dLabel">
+                <li title="Add a new folder"><a class="addFolder" hef="#"><i class="fa fa-plus"/> Add a new folder</a></li>
+            </ul>
+        </div>
     </span>
+
 
     <?merge .isLeaf.bool().not() ?>
     <ul>

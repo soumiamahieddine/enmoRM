@@ -1,30 +1,37 @@
 <div class="container-fluid" style="padding-top: 10px">
     <div class="row">
         <div class="col-md-3 col-xs-12 " id="leftColumn">
-        <?hinclude /filePlan/tree.html ?>
+            <?hinclude /filePlan/tree.html ?>
         </div>
-        <div class="pull-right pull-down hidden-xs" id="leftColumnSizeCtrl">
-            <button class="left btn btn-xs btn-default"><i class="fa fa-caret-left"/></button>
-            <button class="right btn btn-xs btn-default"><i class="fa fa-caret-right"/></button>
-        </div>
+        <a id="toggleLeftColumn" href="#" class="xs-hidden"><i class="fa fa-chevron-circle-left"/></a>
         <div class="col-md-6 col-xs-12" id="middleColumn">
             <div class="row">
-                <div class="pull-left" style="padding: 0px 10px; width: 40px"><button id="toggleLeftColumn" class="btn btn-sm btn-default"><i class="fa fa-arrow-left"/></button></div>
-                <div class="pull-left col-xs-1" style="width: calc(100% - 40px)">
-                    <div class="tab-content" id="tab-content">
-                        <?hinclude dashboard/mainScreen/search.html ?>
-                        <?hinclude dashboard/mainScreen/import.html ?>
-                        <?hinclude dashboard/mainScreen/folder.html ?>
-                        <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
-                    </div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
+                    </li>
+                    <li style="display: none">
+                        <a href="#importPanel" id="importTab" data-toggle="tab" ><span class="fa fa-plus">&nbsp;</span>Create</a>
+                    </li>
+                    <li style="display: none">
+                        <a href="#searchPanel" id="searchTab" data-toggle="tab">
+                            <span class="tabTitle">Search</span>
+                            <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="tab-content">
+                    <?hinclude dashboard/mainScreen/search.html ?>
+                    <?hinclude dashboard/mainScreen/import.html ?>
+                    <?hinclude dashboard/mainScreen/folder.html ?>
+                    <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
                 </div>
             </div>
         </div>
         <div class="col-md-3 col-xs-12 hidden-xs" id="rightColumn">
-        </div>
-        <div class="pull-down" id="rightColumnSizeCtrl">
-            <button class="left btn btn-xs btn-default"><i class="fa fa-caret-left"/></button>
-            <button class="right btn btn-xs btn-default"><i class="fa fa-caret-right"/></button>
         </div>
     </div>
 </div>
@@ -34,19 +41,22 @@
         max-height: 300px;
         overflow-y: auto; 
     }
-    .pull-down {
-        position: fixed;
-        bottom: 30px;
-        z-index: 10000;
+    #middleColumn > .row {
+        padding: 0px 10px 0px 37px;
     }
-    #leftColumnSizeCtrl {
-        left: 24%;
+    #leftColumn {
+        border-right: 1px solid #DDD;
+        min-height: calc(95vh - 80px) ;
     }
-    #rightColumnSizeCtrl {
-        left: 74%;
+    #toggleLeftColumn {
+        position: absolute;
+        top: 65px;
+        left: 25.5%;
+        transition: all 0.5s ease;
+        z-index: 9999;
+        font-size: 18px;
     }
 </style>
-
 
 <script>
     $('#newSearchTabBtn').on("click", function() {
@@ -63,84 +73,25 @@
 
     $('#toggleLeftColumn').on('click', function() { ColumnResizer.toggleLeftColumn(); });
 
-    $('#leftColumnSizeCtrl').on('click', '.left', function() { ColumnResizer.leftSmaller(); });
-    $('#leftColumnSizeCtrl').on('click', '.right', function() { ColumnResizer.leftBigger(); });
-
-    $('#rightColumnSizeCtrl').on('click', '.left', function() { ColumnResizer.rightBigger(); });
-    $('#rightColumnSizeCtrl').on('click', '.right', function() { ColumnResizer.rightSmaller(); });
-
     var ColumnResizer = {
         left          : $('#leftColumn'),
         middle        : $('#middleColumn'),
         right         : $('#rightColumn'),
-        leftCtrl      : $('#leftColumnSizeCtrl'),
-        rightCtrl     : $('#rightColumnSizeCtrl'),
         toogleLeftBtn : $('#toggleLeftColumn'),
 
-
-        leftSmaller : function() {
-            var leftClass = parseInt(this.left.attr('class').substring(7, 9));
-            if (leftClass == 1) {
-                return;
-            }
-            this.left.removeClass('col-md-'+leftClass+' col-xs-12').addClass('col-md-' + (leftClass-1).toString()+' col-xs-12')
-            this.middleBigger();
-        },
-        leftBigger : function() {
-            if (this.middleSmaller() === -1) {
-                return;
-            }
-            var leftClass = parseInt(this.left.attr('class').substring(7, 9));
-            this.left.removeClass('col-md-'+leftClass+' col-xs-12').addClass('col-md-' + (leftClass+1).toString()+' col-xs-12');
-        },
-        middleSmaller : function() {
-            var middleClass = parseInt(this.middle.attr('class').substring(7, 9));
-            if (middleClass == 1) {
-                return -1;
-            }
-            this.middle.removeClass('col-md-'+middleClass+' col-xs-12').addClass('col-md-' + (middleClass-1).toString()+' col-xs-12');
-        }, 
-        middleBigger : function() {
-            var middleClass = parseInt(this.middle.attr('class').substring(7, 9));
-            this.middle.removeClass('col-md-'+middleClass+' col-xs-12').addClass('col-md-' + (middleClass+1).toString()+' col-xs-12');
-        },
-        rightSmaller : function() {
-            var rightClass = parseInt(this.right.attr('class').substring(7, 9));
-            console.log(rightClass);
-            if (rightClass == 1) {
-                return;
-            }
-            this.right.removeClass('col-md-'+rightClass+' col-xs-12 hidden-xs').addClass('col-md-' + (rightClass-1).toString()+' col-xs-12 hidden-xs');
-            this.middleBigger();
-        },
-        rightBigger : function() {
-            if (this.middleSmaller() === -1) {
-                return;
-            }
-            var rightClass = parseInt(this.right.attr('class').substring(7, 9));
-            this.right.removeClass('col-md-'+rightClass+' col-xs-12 hidden-xs').addClass('col-md-' + (rightClass+1).toString()+' col-xs-12 hidden-xs');
-        },
         toggleLeftColumn : function() {
-            var leftColumn = $('#leftColumn');
-            var rightColumn = $('#rightColumn');
 
             if (this.left.is(':visible')) {
-                this.left.removeClass().addClass("col-md-3 col-xs-12")
-                this.left.hide("slide", { direction: "left" }, 200, function() {
-                    ColumnResizer.left.removeClass();
-                    ColumnResizer.middle.removeClass().addClass("col-md-7 col-xs-12");
-                    ColumnResizer.right.removeClass().addClass("col-md-5 col-xs-12 hidden-xs");
-                    ColumnResizer.leftCtrl.css('display', 'none');
-                });
+                this.left.hide("slide", { direction: "left" }, 300);
+                this.middle.removeClass("col-md-6").addClass("col-md-7");
+                this.right.removeClass("col-md-3").addClass("col-md-5");
+                this.toogleLeftBtn.css('left', '1%').addClass('fa-rotate-180');
                 
-                this.toogleLeftBtn.addClass('fa-rotate-180');
-
             } else {
-                this.middle.removeClass().addClass("col-md-6 col-xs-12");
-                this.right.removeClass().addClass("col-md-3 col-xs-12 hidden-xs");
-                this.left.addClass("col-md-3 col-xs-12").show("slide", { direction: "left" }, 200);
-                this.toogleLeftBtn.removeClass('fa-rotate-180');
-                this.leftCtrl.css('display', '');
+                this.left.show("slide", { direction: "left" }, 300);
+                this.middle.removeClass("col-md-7").addClass("col-md-6");
+                this.right.removeClass("col-md-5").addClass("col-md-3");
+                this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
         }
     }
