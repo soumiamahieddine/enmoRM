@@ -3,7 +3,9 @@
         <i class="fa" data-opened-icon="fa-caret-down" data-closed-icon="fa-caret-right" data-default-icon="">&nbsp;</i>
         <b data-translate="no">
             <i class="fa fa-folder-o"/>
-            <?merge .name ?></b>
+            <?merge .name ?>
+        </b>
+        <?merge filePlanPrivileges.bool() ?>
         <div class="pull-right dropdown">
             <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-ellipsis-v"></span>

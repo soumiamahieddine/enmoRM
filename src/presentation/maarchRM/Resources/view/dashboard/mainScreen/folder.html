@@ -1,33 +1,23 @@
 <div class="tab-pane fade in active col-xs-12" id="folderPanel">
     <div class="row">
-        <h4 class="col-xs-11 pull-left">
-            <span id="folderPath"/>
-            <br/>
-            <small id="folderDescription"/>
-        </h4>
+        <ol class="breadcrumb" id="folderBreadcrumb">
+        </ol>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <h4 class="pull-left lockedFolder hide">
-                <i class="text-danger fa fa-lock" style="font-size: 30px"/>
-            </h4>
-            <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
-                <button type="button" class="btn btn-sm btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
-                    <span class="fa fa-plus">&nbsp;</span> New archive
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                </ul>
-            </div>
+        <h4 class="pull-left lockedFolder hide">
+            <i class="text-danger fa fa-lock" style="font-size: 30px"/>
+        </h4>
+        <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
+            <button type="button" class="btn btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                <span class="fa fa-plus">&nbsp;</span> New archive
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            </ul>
         </div>
-        <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
+    <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
     </div>
     <div id="folderContentList">
         <div class="row hide">
-            <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
-                <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"/>
-            </div>
         </div>
     </div>
 </div>
@@ -67,6 +57,29 @@
 </div>
 
 <script type="text/javascript">
+    FolderBreadcrumb = {
+        breadcrumb    : $('#folderBreadcrumb'),
+        LinkLimit     : 4,
+        textMaxLength : 25,
+        load: function(path) {
+            this.breadcrumb.html('');
+
+            if (path.length > this.LinkLimit) {
+                path[this.LinkLimit-1] = ">> "+path[this.LinkLimit-1] 
+            }
+            for(i=0; i<path.length && i<this.LinkLimit; i++) {
+                this.buildLink(path[i]).prependTo(this.breadcrumb);
+            }
+        },
+
+        buildLink: function(e) {
+            var text = e;
+            if (e.length > this.textMaxLength) {
+                text = e.substring(0,this.textMaxLength)+ " ...";
+            }
+            return $('<li/>').append($('<a/>').attr('href', '#').html(text));
+        }
+    }
     ArchiveFolderList = {
         rowTemplate: $('#listTemplate > .archive'),
         folderContents: $('#folderContentList'),
@@ -383,5 +396,9 @@
     $("#folderContentList").on('click','.pagination li', function() {
         ArchiveFolderList.initDragNDrop();
     });
+
+    $('#folderPanel').onEvent("showFolder.recordsManagement", function(e, path) {
+        FolderBreadcrumb.load(path);
+    })
 
 </script>

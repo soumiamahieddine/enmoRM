@@ -74,6 +74,7 @@ class welcome
             $this->markTreeLeaf($filePlan);
 
             $this->view->setSource("filePlan", $filePlan);
+            $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
             $this->view->translate();
 
@@ -111,7 +112,6 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
-        $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {

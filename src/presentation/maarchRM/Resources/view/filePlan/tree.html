@@ -40,7 +40,6 @@
         position: relative;
         cursor: pointer;
         width: 100%;
-        font-size: 13px;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
@@ -136,7 +135,7 @@
 
         load: function(e) {
             this.select(e);
-
+            trigger("showFolder.recordsManagement", [this.getPath(e)]);
             var orgRegNumber = e.data('orgregnumber');
             var folderId = null;
             var path = '';
@@ -159,6 +158,17 @@
 
             ArchiveFolderList.getfolderContents(orgRegNumber, folderId, path, description, profile, locked, acceptArchiveWithoutProfile);
             $('#folderTab').click();
+        },
+
+        getPath: function(e) {
+            var path = [$.trim(e.find('b:first').text())];
+            var parent = $(e).closest('ul').closest('li');
+            
+            if (parent.length) {
+                path = $.merge(path, this.getPath(parent));
+            }
+
+            return path;
         },
 
         addFolder: function() {
@@ -255,7 +265,7 @@
              .find('i')
              .css("font-size", "16px")
              .siblings()
-             .css("font-size", "13px")
+             .css("font-size", "14px")
              .find('i')
              .css("font-size", "16px");
             
@@ -276,7 +286,7 @@
         },
 
         moveOut: function(e) {
-            e.children('b').css('font-size', '13px');
+            e.children('b').css('font-size', '14px');
         },
 
         select: function(e) {
