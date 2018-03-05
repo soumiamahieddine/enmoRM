@@ -38,6 +38,8 @@ class Document extends \dependency\xml\Document
     protected $layout;
     protected $classes;
     protected $plugins;
+    protected $headers;
+    protected $layoutData;
     public $XPath;
     public $translator;
     public $dateTimeFormatter;
