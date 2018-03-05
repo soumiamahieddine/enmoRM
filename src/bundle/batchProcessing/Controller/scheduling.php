@@ -310,7 +310,7 @@ class scheduling
         if(!empty($frequency[1])) {
             $frequency[1] -= $H_Offset; 
         }
-        if(!empty($frequency[8])) {
+        if(!empty($frequency[8] && $frequency[8] != "00")) {
             $frequency[8] -= $H_Offset; 
         }
         
@@ -319,7 +319,7 @@ class scheduling
                 $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                 $currentDate->add(new \DateInterval($timeAdd));
 
-                if ($frequency[7] != "" && $frequency[8] != "") {
+                if (($frequency[7] != "" && $frequency[8] != "") && ($frequency[7] != "00" && $frequency[8] != "00")) {
                     $endDate->setTime($frequency[8], $frequency[7], "0");
                 } else {
                     $endDate->add(new \DateInterval("P1D"));
@@ -341,7 +341,7 @@ class scheduling
                     $daysWeek = explode(",", $frequency[2]);
                     $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                     $currentDate->add(new \DateInterval($timeAdd));
-                    if ($frequency[7] != "" && $frequency[8] != "") {
+                    if ($frequency[7] != "" && $frequency[8] != "" && ($frequency[7] != "00" && $frequency[8] != "00")) {
                         $endDate->setTime($frequency[8], $frequency[7], "0");
                     } else {
                         $endDate->add(new \DateInterval("P1D"));
@@ -367,7 +367,7 @@ class scheduling
                     $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                     $currentDate->add(new \DateInterval($timeAdd));
 
-                    if ($frequency[7] != "" && $frequency[8] != "") {
+                    if ($frequency[7] != "" && $frequency[8] != "" && ($frequency[7] != "00" && $frequency[8] != "00")) {
                         $endDate->setTime($frequency[8], $frequency[7], "0");
                     } else {
                         $endDate->add(new \DateInterval("P1M"));
