@@ -135,33 +135,30 @@
 
         load: function(e) {
             this.select(e);
-            trigger("showFolder.recordsManagement", [this.getPath(e)]);
             var orgRegNumber = e.data('orgregnumber');
+            var path = this.getPath(e);
             var folderId = null;
-            var path = '';
-            var description = '';
-            var profile = null;
+            var profiles = null;
             var locked = null;
+            var acceptarchivewithoutprofile = null
 
             if (e.hasClass('organization')) {
-                path = e.find('b:first').html();
-                profile = e.data('archivalprofiles');
+                profiles = e.data('archivalprofiles');
                 acceptArchiveWithoutProfile = e.data('acceptarchivewithoutprofile');
+
             } else {
                 folderId = e.attr('id');
-                path = e.data('path')
                 description = e.data('description')
-                profile = e.closest('.organization').data('archivalprofiles');
+                profiles = e.closest('.organization').data('archivalprofiles');
                 acceptArchiveWithoutProfile = e.closest('.organization').data('acceptarchivewithoutprofile');
                 locked = e.data('closed');
             }
 
-            ArchiveFolderList.getfolderContents(orgRegNumber, folderId, path, description, profile, locked, acceptArchiveWithoutProfile);
-            $('#folderTab').click();
+            trigger("showFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile]);
         },
 
         getPath: function(e) {
-            var path = [$.trim(e.find('b:first').text())];
+            var path = [[$.trim(e.find('b:first').text()), e.attr('id')]];
             var parent = $(e).closest('ul').closest('li');
             
             if (parent.length) {
@@ -182,7 +179,7 @@
         editFolder: function() {
             var folder = {
                 folderId          : this.selectedNode.attr('id'),
-                name              : this.selectedNode.find('b:first').html(),
+                name              : this.selectedNode.find('b:first').find('span').html(),
                 description       : this.selectedNode.data('description'),
                 parentFolderId    : this.selectedNode.data('parentid'),
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber'),
@@ -224,7 +221,7 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').text(folder.name);
+                .children('b').find('span').text(folder.name);
 
             return node;
         },
@@ -377,4 +374,7 @@
     $('#filePlanTree').on('click', '.addFolder', function(){ FilePlan.addFolder() })
     $('#filePlanTree').on('click', '.editFolder', function(){ FilePlan.editFolder() })
     $('#filePlanTree').on('click', '.deleteFolder', function(){ FilePlan.deleteFolder() })
+    $('#filePlanTree').onEvent('showFolder.filePlan', function(e, orgRegNumber) {
+        FilePlan.load($('#'+orgRegNumber));
+    })
 </script>

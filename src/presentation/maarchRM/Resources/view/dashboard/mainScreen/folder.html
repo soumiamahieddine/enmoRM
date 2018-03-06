@@ -1,20 +1,21 @@
 <div class="tab-pane fade in active col-xs-12" id="folderPanel">
     <div class="row">
         <ol class="breadcrumb" id="folderBreadcrumb">
+            <li><a href="#"> </a></li>
         </ol>
     </div>
     <div class="row">
-        <h4 class="pull-left lockedFolder hide">
+        <h4 class="pull-left col-md-4 lockedFolder hide">
             <i class="text-danger fa fa-lock" style="font-size: 30px"/>
         </h4>
         <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
             <button type="button" class="btn btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
                 <span class="fa fa-plus">&nbsp;</span> New archive
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <ul class="dropdown-menu">
             </ul>
         </div>
-    <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
+        <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
     </div>
     <div id="folderContentList">
         <div class="row hide">
@@ -73,28 +74,32 @@
         },
 
         buildLink: function(e) {
-            var text = e;
-            if (e.length > this.textMaxLength) {
-                text = e.substring(0,this.textMaxLength)+ " ...";
+            var text = e[0];
+            if (e[0].length > this.textMaxLength) {
+                text = e[0].substring(0,this.textMaxLength)+ " ...";
             }
-            return $('<li/>').append($('<a/>').attr('href', '#').html(text));
+            return $('<li/>').append($('<a/>').attr('href', '#').html(text).data('orgregnumber', e[1]));
+        },
+        
+        selectFolder: function(e) {
+            trigger('showFolder.filePlan', [e.data('orgregnumber')]);
         }
     }
     ArchiveFolderList = {
         rowTemplate: $('#listTemplate > .archive'),
         folderContents: $('#folderContentList'),
+        folderPanel : $('#folderPanel'),
 
-        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
+        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
             var url = "/folder?orgRegNumber="+orgRegNumber;
             if (folderId) {
                 url = url + "&folderId="+folderId;
             }
-            var folderPanel = $('#folderPanel');
             if (locked) {
-                folderPanel.find('.lockedFolder').removeClass('hide');
+                this.folderPanel.find('.lockedFolder').removeClass('hide');
                 $('#folderToolbarImport').addClass('hide');
             } else {
-                folderPanel.find('.lockedFolder').addClass('hide');
+                this.folderPanel.find('.lockedFolder').addClass('hide');
                 $('#folderToolbarImport').removeClass('hide');
             }
 
@@ -110,8 +115,6 @@
                 dataType    : 'json',
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
-                    $('#folderPath').text(path);
-                    $('#folderDescription').text(description);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -119,7 +122,6 @@
             })
 
             this.getImportForm(orgRegNumber, folderId);
-
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
             
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
@@ -397,8 +399,13 @@
         ArchiveFolderList.initDragNDrop();
     });
 
-    $('#folderPanel').onEvent("showFolder.recordsManagement", function(e, path) {
+    $('#folderPanel').onEvent("showFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile) {
         FolderBreadcrumb.load(path);
+        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile);
+    })
+
+    $('#folderBreadcrumb').on('click', 'a', function() {
+        FolderBreadcrumb.selectFolder($(this));
     })
 
 </script>
