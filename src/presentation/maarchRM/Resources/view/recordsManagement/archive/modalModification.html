@@ -293,8 +293,13 @@
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        $('#archive_search').click();
                         ModificationModal.close();
+                        ModificationModal.modal.one('hidden.bs.modal', function () {
+                            console.log("passage");
+                            //$('#modificationModal').modal();*
+                            $('#archive_search').click();
+                        });
+
                     }
                 },
                 error       : function(response) {
@@ -304,8 +309,8 @@
         },
 
         close: function() {
-            this.modal.find('input, textarea').val('');
-            this.modal.modal('hide');
+            ModificationModal.modal.find('input, textarea').val('');
+            ModificationModal.modal.modal('hide');
         },
 
         loadAccessCode: function() {
