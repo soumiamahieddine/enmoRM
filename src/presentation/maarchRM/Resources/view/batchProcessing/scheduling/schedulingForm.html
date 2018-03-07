@@ -612,9 +612,9 @@
             let route = $('#taskId').find('option:selected').data('route');
 
             $('#serviceAccountId option').each(function(key, value) {
-                let privileges = $(this).data('privilege');
+                var privileges = $(this).data('privilege');
 
-                if (!privileges || $.inArray(route, privileges) === -1) {
+                if (!privileges || ($.inArray(route, privileges) === -1 && $.inArray("*", privileges) === -1)) {
                     $(this).addClass('hide');
                 } else {
                     $(this).removeClass('hide');
