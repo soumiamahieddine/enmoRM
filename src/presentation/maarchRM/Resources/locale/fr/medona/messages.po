@@ -621,3 +621,6 @@ msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "meta-data"
 
+msgid "Default originator"
+msgstr "Service producteur par défaut"
+
