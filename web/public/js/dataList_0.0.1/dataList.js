@@ -57,45 +57,51 @@ var DataList = {
                      '<\/div>',         
 	selectAllHTML   :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
     selectorHTML    :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    resultNumberHTML:"<h2 class='itemNumber' style='margin:0px 0px 0px 40px'><small><span class='resultNumber' \/><span class='itemsName'\/><\/small><\/h2>",
 
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
-        var row = element.children('.row:first');
+        var header = element.children('.row:first');
+        var footer = element.children('.footer');
         var list = $('<div/>').addClass('list').appendTo(element);
 
 
-        if (row.length == 0) {
-            row = $('<div/>').addClass('row').prependTo(element);
+        if (header.length == 0) {
+            header = $('<div/>').addClass('row').prependTo(element);
+        }
+        if (footer.length == 0) {
+            footer = $('<div/>').addClass('row footer').appendTo(element)
         }
 
         this.dataList[id] = {
             element      : element,
             list         : list,
-            toolbar      : row
+            toolbar      : header,
+            footer       : footer
         };
         		
         // Build header row
-        row.prepend(this.selectAllHTML)
+        header.prepend(this.selectAllHTML)
            .prepend(this.filterList);
 
         // Build sorting input
         if (options.sorting) {
-            row.prepend(this.initSortingInput(options.sorting));
+            header.prepend(this.initSortingInput(options.sorting));
         }
 
         if(options.paginationType){
-            row.prepend(this.inputPagination);
+            footer.append(this.inputPagination);
 
         } else {
-            row.prepend(this.buttonPagination);
+            footer.append(this.buttonPagination);
         }
         
         if(!options.rowTranslation) {
             options.rowTranslation = "lines";
         }
         
-		row.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
+		header.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
            .removeClass('hide')
            .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
 		   
@@ -105,18 +111,16 @@ var DataList = {
             list.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
         }
         
-        if(!options.resultNumber) {
-            this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/> results<\/h4>";
-        } else {
-            this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]);
+        this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/><\/h4>";
+        if(!options.itemsName) {
+            options.itemsName = ["result", "results"];
         }
 
-        row.before(this.dataList[id].resultNumber);
-        this.dataList[id].resultNumber = row.prev();
+        header.append(this.resultNumberHTML);
 
         if (options.translation) {
             $.each(options.translation, function(key, value) {
-                row.find('[title='+key+']').attr('title', value);
+                header.find('[title='+key+']').attr('title', value);
             })
         }
 
@@ -177,19 +181,18 @@ var DataList = {
             currentRange    : options.currentRange,
             paginationType  : options.paginationType,
             unsearchable    : options.unsearchable,
+            itemsName       : options.itemsName,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             toolbar         : this.dataList[id].toolbar,
-            emptyMessage    : this.dataList[id].emptyMessage,
-            resultNumber    : this.dataList[id].resultNumber
+            footer          : this.dataList[id].footer,
+            emptyMessage    : this.dataList[id].emptyMessage
         };
 
+        console.log(this.dataList[id].itemsName);
         this.buildPaginationButtons(id);
 
         this.dataList[id].unsearchable = ['html'];
-        // if (this.dataList[id].unsearchable) {
-        //     this.dataList[id].unsearchable = ['html'];
-        // }
 
         // Order the list if an order option is selected
         var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
@@ -230,6 +233,8 @@ var DataList = {
                           .closest('ul').find('a').off().on('click', DataList.bind_pageChanging);
 
             } else {
+                pagination.find('.pageBtn').parent().remove();
+                pagination.find('.dots').remove();
                 for (var i=1; i<= pageNumber; i++) {
                     var li = $('<li/>').append($('<a/>').attr('href', '#').addClass('pageBtn').html(i));
                     lastLi.before(li);
@@ -253,7 +258,7 @@ var DataList = {
             return;
         }
 
-        var list = this.dataList[id].element.find('.datalistPagination');
+        var list = this.dataList[id].footer.find('.datalistPagination');
         list.find('.dots').remove();
         var buttons = list.find('li');
         buttons.removeClass('hide');
@@ -291,16 +296,23 @@ var DataList = {
 
         }
 
+        if (datas.length == 1) {
+            itemsName = this.dataList[id].itemsName[0];
+        } else {
+            itemsName = this.dataList[id].itemsName[1];
+        }
+        this.dataList[id].toolbar.find('.itemsName').html(" "+itemsName);
+
         this.dataList[id].list.empty();
 
         if (this.dataList[id].emptyMessage) {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
-                this.dataList[id].resultNumber.addClass('hide');
+                this.dataList[id].toolbar.find('.itemNumber').addClass('hide');
                 this.dataList[id].toolbar.find('.selectAll').addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
-                this.dataList[id].resultNumber.removeClass('hide');
+                this.dataList[id].toolbar.find('.itemNumber').removeClass('hide');
                 this.dataList[id].toolbar.find('.selectAll').removeClass('hide');
             }
         }
@@ -325,7 +337,7 @@ var DataList = {
 	    }
 
         // Set the result number
-        this.dataList[id].resultNumber.find('.resultNumber').html(datas.length);
+        this.dataList[id].toolbar.find('.itemNumber .resultNumber').html(datas.length);
         
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);

@@ -46,6 +46,8 @@
 
 <div class="hide">
     <span id="archives_text">archives</span>
+    <span id="archive_text">archive</span>
+    <span id="rows_text">rows</span>
     <span id="emptyFolder_text">Empty folder</span>
     <span id="archiveName_text">Name</span>
     <span id="depositDate_text">Deposit date</span>
@@ -56,6 +58,12 @@
     <span id="withoutProfile_text">Without profile</span>
     
 </div>
+
+<style>
+    .archive:hover {
+        background-color: #DDD;
+    }
+</style>
 
 <script type="text/javascript">
     FolderBreadcrumb = {
@@ -71,6 +79,8 @@
             for(i=0; i<path.length && i<this.LinkLimit; i++) {
                 this.buildLink(path[i]).prependTo(this.breadcrumb);
             }
+
+            this.breadcrumb.find('li:last>a').data('orgregnumber', '');
         },
 
         buildLink: function(e) {
@@ -80,9 +90,12 @@
             }
             return $('<li/>').append($('<a/>').attr('href', '#').html(text).data('orgregnumber', e[1]));
         },
-        
+
         selectFolder: function(e) {
-            trigger('showFolder.filePlan', [e.data('orgregnumber')]);
+            var orgRegNumber = e.data('orgregnumber');
+            if (orgRegNumber) {
+                trigger('showFolder.filePlan', [orgRegNumber]);
+            }
         }
     }
     ArchiveFolderList = {
@@ -130,10 +143,12 @@
         buildResultList: function(archives) {
             $('#rightColumn').html('');
 
+            resultNumberText = "";
             if (archives.length) {
                 $('#folderToolbarFreeze').removeAttr("disabled");
                 $('#folderToolbarUnfreeze').removeAttr("disabled");
                 $('#folderToolbarSearch').removeAttr("disabled");
+                
             } else {
                 $('#folderToolbarFreeze').attr("disabled", "disabled");
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
@@ -144,10 +159,10 @@
                 datas          : archives,
                 rowMerge       : ArchiveFolderList.mergeRow,
                 rowMaxNumber   : 10,
-				paginationType : 'input',
-				rowTranslation : "lignes",
+				rowTranslation : $('#rows_text').text(),
                 emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
-                resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> archive(s)<\/small><\/h2>",
+                itemsName      : [$('#archive_text').text(), $('#archives_text').text()],
+                resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> "+resultNumberText+"<\/small><\/h2>",
                 translation    : {First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
                 sorting: [
                     {
@@ -183,7 +198,7 @@
 
                 case 'file':
                 default:
-                    icon.addClass('fa fa-folder');
+                    icon.addClass('fa fa-archive');
             }
             if (archive.depositDate) {
                 $(siblings[0]).text(archive.depositDate.substring(0, 19));
