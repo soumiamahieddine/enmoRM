@@ -1,4 +1,4 @@
-<div class="tab-pane fade" id="importPanel">
+<div class="hide" id="importPanel">
     <div class="col-xs-12">
         <div class="row">
             <h4 class="pull-left">
@@ -29,12 +29,46 @@
 </div>
 
 <script type="text/javascript">
+    ImportPanel = {
+        panel: $('#importPanel'),
+        load: function(archivalProfile, orgRegNumber, folderId, parentArchive) {
+            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+            $('#archiveForm [name="filePlanPosition"]').val(folderId);
+
+            this.panel.removeClass('hide');
+
+            if (!archivalProfile) {
+                archivalProfile = "";
+            }
+
+            $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
+            this.panel.find("[data-context-profil]:first").text(archivalProfile.name);
+                
+            if (parentArchive == "") {
+                $("#archiveForm [name='parentArchiveId']").val('');
+                this.panel.find("[data-context-parentarchive]").addClass('hide');
+            }
+        },
+
+        save: function(e, button) {
+            ArchiveForm.send(e, button);
+        },
+        cancel: function() {
+            ArchiveForm.clear();
+            this.panel.addClass('hide');
+            trigger("showFolder.recordsManagement");
+        }
+    }
+
+    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchive) {
+        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchive);
+    });
+
     $('#import').on('click', function(e) {
-        ArchiveForm.send(e, $(this));
+        ImportPanel.save(e, $(this));
     });
 
     $('#cancel').on('click', function(e) {
-        ArchiveForm.clear();
-        $('#folderTab').click();
+        ImportPanel.cancel();
     });
 </script>

@@ -11,7 +11,7 @@
     sorting         -> array of object that define wich properties of datas can be sorted
                        object have to two properties : the name and the label of the sortable property
     unsearchable    -> array of unserchable property
-    resultNumber    -> the result number html. The number will be put in the .resultNumber class
+    itemsName       -> item name to display in result number as an array. The first element is the singular form the second is the plural form
     translation     -> array with key with translation
 */
 
@@ -189,7 +189,6 @@ var DataList = {
             emptyMessage    : this.dataList[id].emptyMessage
         };
 
-        console.log(this.dataList[id].itemsName);
         this.buildPaginationButtons(id);
 
         this.dataList[id].unsearchable = ['html'];

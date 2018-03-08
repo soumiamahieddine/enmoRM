@@ -154,7 +154,7 @@
                 locked = e.data('closed');
             }
 
-            trigger("showFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile]);
+            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile]);
         },
 
         getPath: function(e) {
@@ -374,7 +374,7 @@
     $('#filePlanTree').on('click', '.addFolder', function(){ FilePlan.addFolder() })
     $('#filePlanTree').on('click', '.editFolder', function(){ FilePlan.editFolder() })
     $('#filePlanTree').on('click', '.deleteFolder', function(){ FilePlan.deleteFolder() })
-    $('#filePlanTree').onEvent('showFolder.filePlan', function(e, orgRegNumber) {
+    $('#filePlanTree').onEvent('loadFolder.filePlan', function(e, orgRegNumber) {
         FilePlan.load($('#'+orgRegNumber));
     })
 </script>

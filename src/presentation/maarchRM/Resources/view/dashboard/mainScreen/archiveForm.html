@@ -89,7 +89,6 @@
             if (archive < 0) {
                 return;
             }
-
             ajax($('#import'),
                 {
                     type        : 'POST',
@@ -101,9 +100,8 @@
                         gritter.show(response.message, response.status, response.errors);
 
                         if (response.status) {
-                            ArchiveForm.clear();
-                            ArchiveFolderList.refresh();
-                            $('#folderTab').click();
+                            ImportPanel.cancel();
+                            trigger('loadFolder.filePlan', [archive.originatorOrgRegNumber]);
                         }
                     },
                     error       : function (response) {
