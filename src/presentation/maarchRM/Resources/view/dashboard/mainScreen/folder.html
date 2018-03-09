@@ -5,7 +5,7 @@
         </ol>
     </div>
     <div id="folderContents">
-        <div id="fodlerToolbar" class="row">
+        <div id="fodlerToolbar" class="row hide">
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
@@ -155,13 +155,11 @@
                 $('#folderToolbarFreeze').removeAttr("disabled");
                 $('#folderToolbarUnfreeze').removeAttr("disabled");
                 $('#folderToolbarSearch').removeAttr("disabled");
-                $('#fodlerToolbar').removeClass('hide');
 
             } else {
                 $('#folderToolbarFreeze').attr("disabled", "disabled");
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
-                $('#fodlerToolbar').addClass('hide');
             }
 
             $('#folderContentList').dataList({
@@ -264,6 +262,7 @@
 
         show: function() {
             $('#folderContents').removeClass('hide');
+            $('#fodlerToolbar').removeClass('hide');
         },
 
         buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
@@ -272,7 +271,6 @@
 
             if (!acceptArchivesWithoutProfiles && archivalProfiles.length == 0) {
                 $("#folderToolbarImport").attr('disabled', 'disabled');
-
                 return;
             }
 
@@ -303,46 +301,12 @@
         loadImportForm: function(e) {
             $('#folderContents').addClass('hide');
             trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, ""]);
-            /*var importPanel = $("#importPanel");
-
-            if (!e.data("json")) {
-                e.data("json", "");
-            }
-
-
-            $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
-
-            importPanel.find("[data-context-path]:first").text($("#folderPath").text());
-            importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
-            importPanel.find("[data-context-profil]:first").text(e.text());
-            
-            $("#archiveForm [name='parentArchiveId']").val('');
-            importPanel.find("[data-context-parentarchive]").addClass('hide');
-
-            $('#importTab').click();
-            $('#rightColumn').empty()*/
         }
     }
 
     $("#folderToolbarBtn").on('click', '.newArchive', function() {
         NewArchive.loadImportForm($(this));
     });
-
-    /*$("#folderToolbarSearch").on('click', function() {
-        var folder = $('#folderPath').text().split('/');
-        var profiles = [];
-
-        var currentOrg = $('#filePlanTree').find('.node-warning').closest('.organization');
-        var profiles = currentOrg.data('archivalprofiles');
-        var children = currentOrg.find('.organization');
-
-        children.each(function() {
-            profiles = $.merge(profiles, $(this).data('archivalprofiles'));
-        })
-
-        folder =  folder[folder.length-1];        
-        SearchTab.run($(this).data("orgregnumber"), $(this).data("folderid"), folder, profiles);
-    });*/
     
     // Actions on list
     $("#folderContentList").on('click', ".dataList-sorting", function() {
@@ -364,6 +328,10 @@
 
     $('#folderPanel').onEvent("showFolder.recordsManagement", function() {
         ArchiveFolderList.show();
+    })
+
+    $('#folderPanel').onEvent("showSearchResult.recordsManagement", function(e, archives) {
+        ArchiveFolderList.buildResultList(archives);
     })
 
     // Breadcrump
