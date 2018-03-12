@@ -1,10 +1,14 @@
-<div class="col-xs-12" id="folderPanel">
-    <div class="row">
+<div class="col-xs-12" id="folderPanel" data-translate-catalog="recordsManagement/message">
+    <div id="welcomMessage">
+        <i class="fa fa-arrow-left pull-left"/>
+        <h2 class="pull-left col-xs-10"> Select an organization unit or a folder in the tree to access an archive or to create a new one.</h2>
+    </div>
+    <div class="row folderContents hide">
         <ol class="breadcrumb" id="folderBreadcrumb">
             <li><a href="#"> </a></li>
         </ol>
     </div>
-    <div id="folderContents">
+    <div id="folderContents" class="folderContents hide">
         <div id="fodlerToolbar" class="row hide">
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
@@ -27,11 +31,11 @@
 
 <div id="listTemplate" class="hide">
     <div class="archive row">
-        <div class="archiveInfo col-xs-11">
+        <div class="archiveInfo pull-left">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <i class="fileplanLevel">&nbsp;</i>
-                <a href="#" class="archiveName"></a>
+                <span class="archiveName"></span>
                 <br/>
                 &nbsp;&nbsp;
                 <small/>&nbsp;
@@ -39,7 +43,7 @@
                 <small><i/></small>
             </h5>
         </div>
-        <div class="archiveContent col-xs-12 hide">
+        <div class="archiveContent hide">
             <ul class="tree-l">
             </ul>
         </div>
@@ -60,10 +64,13 @@
     <span id="withoutProfile_text">Without profile</span>
     
 </div>
-
-<style>
-    .archive:hover {
-        background-color: #DDD;
+<style type="text/css">
+    #welcomMessage i{
+        font-size: 40px;
+        padding-top: 15px;
+    }
+    #welcomMessage {
+        margin-top: 20%;
     }
 </style>
 
@@ -111,7 +118,7 @@
             this.orgRegNumber = orgRegNumber;
             this.folderId = folderId;
             this.show();
-
+            $('#welcomMessage').addClass('hide')
             var url = "/folder?orgRegNumber="+orgRegNumber;
             if (folderId) {
                 url = url + "&folderId="+folderId;
@@ -261,7 +268,7 @@
         },
 
         show: function() {
-            $('#folderContents').removeClass('hide');
+            $('.folderContents').removeClass('hide');
             $('#fodlerToolbar').removeClass('hide');
         },
 

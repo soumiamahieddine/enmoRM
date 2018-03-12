@@ -45,22 +45,16 @@
     }
     .folderNode > b, .orgNode > b {
         font-weight: normal;
+        font-size: 16px;
         float: left;
         width: calc(100% - 30px);
         overflow-x: hidden;
         text-overflow: ellipsis;
     }
-    .folderNode {
-        min-width:150px !important;
-    }
     .folderNode > i, .orgNode > i {
         font-size: 16px;
         float: left;
         width: 10px;
-    }
-    .folderNode > b > i {
-        padding: 0px 1px;
-        font-size: 16px;
     }
     .orgNode:hover, .folderNode:hover {
         background-color: #DDD;
@@ -250,7 +244,7 @@
             e.find('i')
              .css("font-size", "20px")
              .siblings()
-             .css("font-size", "18px");
+             .css("font-size", "20px");
 
             if (e.closest('.folder').data('closed')) {
                 e.addClass('node-danger');   
@@ -262,7 +256,7 @@
              .find('i')
              .css("font-size", "16px")
              .siblings()
-             .css("font-size", "14px")
+             .css("font-size", "16px")
              .find('i')
              .css("font-size", "16px");
             
@@ -279,11 +273,11 @@
 
     OrganizationNode = {
         moveIn: function(e) {
-            e.children('b').css('font-size', '16px');
+            e.children('b').css('font-size', '20px');
         },
 
         moveOut: function(e) {
-            e.children('b').css('font-size', '14px');
+            e.children('b').css('font-size', '16px');
         },
 
         select: function(e) {
@@ -354,6 +348,7 @@
 
     $('#app_maarchRM_main').ready(function() {
         BootstrapTree.init($('#filePlanTree'));
+        $('#filePlanTree').find('.fa:first').click();
         FilePlan.initDragNDrop();
         FilePlan.getCurrentOrgRegNumber();
     })

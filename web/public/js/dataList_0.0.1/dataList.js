@@ -62,8 +62,8 @@ var DataList = {
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
-        var header = element.children('.row:first');
-        var footer = element.children('.footer');
+        var header = element.children('.row:first').css('padding', '0px 5px');
+        var footer = element.children('.footer').css('padding', '0px 5px');
         var list = $('<div/>').addClass('list').appendTo(element);
 
 
@@ -328,7 +328,7 @@ var DataList = {
 	    for(var i=rowStart; i<rowEnd && i<datas.length; i++) {
 	        if (!datas[i].html) {
 	            var row = this.dataList[id].rowMerge(datas[i]);
-                row.addClass('dataListElement').prepend(this.selectorHTML);
+                row.css('padding', '0px 5px').addClass('dataListElement').prepend(this.selectorHTML);
 	            datas[i].html = row;
 	        }
 

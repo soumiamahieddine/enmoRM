@@ -26,6 +26,10 @@
         font-size: 10px;
         color: darkgrey;
     }
+    .archiveInfo {
+        width: calc(100% - 25px);
+        margin-left: 10px;
+    }
     .archive .tree-l {
         font-size: 12px;
         margin: 0px;
@@ -36,16 +40,19 @@
         width: 100%;
         overflow: hidden;
     }
+    .archiveInfo :hover, .archive .tree-l li>span:hover {
+        background-color: #DDD;
+    }
     .dataList {
         min-height: 300px;
     }
     .dataList .archiveContentButton,
-    .dataList a,
+    .dataList .archiveInfo,
     .dataList .bg-success,
-    .dataList .archive .tree-l li>span>span {
+    .dataList .archive .tree-l li>span {
         cursor: pointer;
     }
-    .dataList .selectedChild {
+    .dataList .selectedChild, .selected .archiveName{
         font-weight: bold;
     }
     .dataList .fa-caret-right, .dataList .fa-caret-down {
@@ -77,7 +84,7 @@
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
             if (!c) {
-                e.addClass('bg-info');
+                e.addClass('bg-info').find('.archiveInfo:first').addClass('selected');
             } else { 
                 e.removeClass('bg-info');
                 c.addClass('selectedChild').closest('li').addClass('bg-info'); 
@@ -87,7 +94,7 @@
         unselect: function(dataList) {
             $('#rightColumn').html('');
             dataList.find('.bg-info').removeClass('bg-info')
-                    .find('.selectedChild').removeClass('selectedChild');
+                    .find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
         },
 
         remove: function(archivesIds) {
@@ -159,6 +166,7 @@
                     }
 
                     template.children('span')
+                            .addClass('childrenArchiveSelection')
                             .children('span')
                             .children('i')
                             .addClass('fa')
@@ -198,11 +206,11 @@
                     template = this.archiveContentTemplate.clone();
 
                     template.children('span')
+                            .addClass('document')
                             .children('span')
                             .children('i')
                             .html('&nbsp;&nbsp;')
                             .siblings('span')
-                            .addClass('document')
                             .data('json', digitalResources[i])
                             .attr('id', digitalResources[i].resId)
                             .append($('<i class="fa fa-file-o">&nbsp;</i>'))
@@ -232,7 +240,7 @@
     })
 
     // Actions on archives
-    $('#middleColumn').on('click', '.archiveName', function() {
+    $('#middleColumn').on('click', '.archiveInfo ', function() {
         var archive = $(this).closest('.archive');
         var archiveId = archive.attr('id');
         Archive.select(archive);
@@ -245,8 +253,9 @@
         }
     })
 
-    $('#middleColumn').on('click', '.childrenArchive', function() {
-    	var child = $(this);
+    $('#middleColumn').on('click', '.childrenArchiveSelection', function() {
+    	var child = $(this).find('.childrenArchive:first');
+        console.log(child);
         var parentArchive = child.closest('.archive');
         var archiveId = child.attr('id');
         Archive.select(parentArchive, child);
