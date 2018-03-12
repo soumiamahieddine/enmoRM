@@ -9,7 +9,7 @@
         </ol>
     </div>
     <div id="folderContents" class="folderContents hide">
-        <div id="fodlerToolbar" class="row hide">
+        <div id="fodlerToolbar" class="row">
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
@@ -41,10 +41,20 @@
                 <small/>&nbsp;
                 <small/>&nbsp;
                 <small><i/></small>
+                <?merge depositPrivilege.not().then('disabled', '') ?>
             </h5>
         </div>
         <div class="archiveContent hide">
             <ul class="tree-l">
+            </ul>
+        </div>
+        <div class="dropdown pull-right addChildrenArchive hide">
+            <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-plus"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">test</a></li>
+                <li><a href="#">test1</a></li>
             </ul>
         </div>
     </div>
@@ -155,7 +165,7 @@
         },
 
         buildResultList: function(archives) {
-            $('#rightColumn').html('');
+            trigger("clearDetail.recordsManagement");
 
             resultNumberText = "";
             if (archives.length) {
@@ -180,11 +190,13 @@
                 sorting: [
                     {
                         fieldName : 'archiveName',
-                        label     : $('#archiveName_text').text()
+                        label     : $('#archiveName_text').text(),
+                        type      : 'txt'
                     },
                     {
                         fieldName : 'depositDate',
-                        label     : $('#depositDate_text').text()
+                        label     : $('#depositDate_text').text(),
+                        type      : 'num'
                     }
                 ],
 				unsearchable : [
@@ -269,7 +281,6 @@
 
         show: function() {
             $('.folderContents').removeClass('hide');
-            $('#fodlerToolbar').removeClass('hide');
         },
 
         buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
@@ -307,11 +318,11 @@
     NewArchive = {
         loadImportForm: function(e) {
             $('#folderContents').addClass('hide');
-            trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, ""]);
+            trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }
 
-    $("#folderToolbarBtn").on('click', '.newArchive', function() {
+    $("#folderPanel").on('click', '.newArchive', function() {
         NewArchive.loadImportForm($(this));
     });
     
@@ -330,6 +341,7 @@
 
     $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile) {
         FolderBreadcrumb.load(path);
+        ArchiveFolderList.show();
         ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile);
     })
 

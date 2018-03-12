@@ -14,6 +14,8 @@
     </li>
 </div>
 
+<span data-translate-catalog="recordsManagement/archivalProfile" class="hide" id="withoutProfile_txt">Without profile</span>
+
 <style>
     .archive h5 {
         margin: 5px 0px 5px 0px;
@@ -74,6 +76,11 @@
     .archive > h4 {
         margin-top: 3px;
     }
+    .addChildrenArchive>button, .addChildrenArchive>ul{
+        position: absolute;
+        top: 5px;
+        right: 10px;
+    }
 
 </style>
 
@@ -81,8 +88,11 @@
 	var Archive = {
         archiveContentTemplate: $('#archiveContentTemplate').children('li'),
 
+        selected: null,
+
         select: function(e, c) {
             this.unselect(e.closest('.dataList'));
+            this.selected = e;
             if (!c) {
                 e.addClass('bg-info').find('.archiveInfo:first').addClass('selected');
             } else { 
@@ -92,9 +102,11 @@
         },
 
         unselect: function(dataList) {
-            $('#rightColumn').html('');
+            DetailScreen.clear();
             dataList.find('.bg-info').removeClass('bg-info')
                     .find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
+            dataList.find('.addChildrenArchive').addClass('hide');
+            this.selected = null;
         },
 
         remove: function(archivesIds) {
@@ -106,15 +118,9 @@
                 url         : "/archive/"+archiveId,
                 type        : "GET",
                 success     : function (response) {
-                    $('#rightColumn').empty().html(response);
-                    var archiveToolbarBtn = $('#archiveToolbarBtn');
-
-                    if(FilePlan.selectedNode.data('closed')){
-                        archiveToolbarBtn.addClass('hide');
-                    }else {
-                        archiveToolbarBtn.removeClass('hide');
-                    }
-
+                    DetailScreen.load(response);
+                    var div = $(response).find('>div');
+                    Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'));
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -142,7 +148,7 @@
                 url         : "/documentInfo",
                 type        : "GET",
                 success     : function (response) {
-                    $('#rightColumn').html(response);
+                    DetailScreen.load(response)
                     DocumentInformation.load(resource.data('json'));
                 },
                 error       : function (response) {
@@ -162,7 +168,7 @@
                     if (childrenArchives[j].fileplanLevel == 'item') {
                         var icon = $('<i class="fa fa-file">&nbsp;</i>');
                     } else {
-                        var icon = $('<i class="fa fa-folder">&nbsp;</i>');
+                        var icon = $('<i class="fa fa-archive">&nbsp;</i>');
                     }
 
                     template.children('span')
@@ -219,6 +225,45 @@
                     BootstrapTree.addNode(parent, template, hidden);
                 }
             }
+        },
+
+        loadChildrenArchiveButton: function(archivalProfiles, withoutProfile) {
+
+            var button = this.selected.find('.addChildrenArchive');
+            var list =  button.find('ul');
+            var archiveId = button.closest('.archive').attr('id');
+            var archiveName = button.closest('.archive').find('.archiveName').text();
+
+            if (!archivalProfiles.length && withoutProfile === 0) {
+                return;
+            }
+                
+            button.removeClass('hide');
+            list.empty();
+            if (withoutProfile !== 0) {
+                list.append(
+                    $('<li/>').html(
+                        $('<a/>').attr('href', '#')
+                                 .addClass('small newArchive')
+                                 .data('parent-archive-id', archiveId)
+                                 .data('parent-archive-name', archiveName)
+                                 .text($('#withoutProfile_txt').text())
+                    )
+                );
+            }
+
+            $.each(archivalProfiles, function() {
+                list.append(
+                    $('<li/>').html(
+                        $('<a/>').attr('href', '#')
+                                 .addClass('small newArchive')
+                                 .data('json', JSON.parse(this.json))
+                                 .data('parent-archive-id', archiveId)
+                                 .data('parent-archive-name', archiveName)
+                                 .text(this.name)
+                    )
+                );   
+            })
         }
     }
 
@@ -255,7 +300,6 @@
 
     $('#middleColumn').on('click', '.childrenArchiveSelection', function() {
     	var child = $(this).find('.childrenArchive:first');
-        console.log(child);
         var parentArchive = child.closest('.archive');
         var archiveId = child.attr('id');
         Archive.select(parentArchive, child);

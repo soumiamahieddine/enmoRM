@@ -9,7 +9,7 @@
                         buttons : button with page number
     emptyMessage    -> html to show when the list is empty
     sorting         -> array of object that define wich properties of datas can be sorted
-                       object have to two properties : the name and the label of the sortable property
+                       object have tree properties : the name, the label and the type (num or txt) of the sortable property
     unsearchable    -> array of unserchable property
     itemsName       -> item name to display in result number as an array. The first element is the singular form the second is the plural form
     translation     -> array with key with translation
@@ -144,11 +144,19 @@ var DataList = {
         
 
         $.each(fields, function() {
+            var asc = '<i class="fa fa-sort-alpha-asc"\/>';
+            var desc = '<i class="fa fa-sort-alpha-desc"\/>';
+
+            if (this.type == 'num') {
+                asc = '<i class="fa fa-sort-numeric-asc"\/>';
+                desc = '<i class="fa fa-sort-numeric-desc"\/>';
+            }
+
             $('<li/>').data('value', this.fieldName).data('order', '<').append(
-                $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
+                $('<a/>').attr('href', '#').html(" "+this.label).prepend(asc).on('click', DataList.bind_dataOrdering)
             ).appendTo(ul);
             $('<li/>').data('value', this.fieldName).data('order', '>').append(
-                $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
+                $('<a/>').attr('href', '#').html(" "+this.label).prepend(desc).on('click', DataList.bind_dataOrdering)
             ).appendTo(ul);
         });
 

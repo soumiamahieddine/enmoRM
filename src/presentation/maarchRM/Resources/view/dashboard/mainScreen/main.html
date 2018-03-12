@@ -56,6 +56,9 @@
     })
 
     $('#toggleLeftColumn').on('click', function() { ColumnResizer.toggleLeftColumn(); });
+    $('#rightColumn').onEvent('clearDetail.recordsManagement', function() {
+        DetailScreen.clear();
+    });
 
     var ColumnResizer = {
         left          : $('#leftColumn'),
@@ -77,6 +80,18 @@
                 this.right.removeClass("col-md-5").addClass("col-md-3");
                 this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
+        }
+    }
+
+    var DetailScreen = {
+        rightColumn: $('#rightColumn'),
+
+        clear: function() {
+            this.rightColumn.html('');
+        },
+
+        load: function(html) {
+            this.rightColumn.empty().html(html);
         }
     }
 

@@ -2,12 +2,11 @@
     <div class="col-xs-12">
         <div class="row">
             <h4 class="pull-left">
-                <span data-context-profil/>
+                <span id="import_archivalProfile"/>
                 <br/>
-                <small data-context-path/>
-                <span data-context-parentarchive>
+                <span id="import_parentArchiveName">
                     <br/>
-                    <small><span>Sub-archive of</span> <b data-context-parentname/></small>
+                    <small><span>Sub-archive of</span> <b/></small>
                 </span>
             </h4>
         </div>
@@ -31,7 +30,12 @@
 <script type="text/javascript">
     ImportPanel = {
         panel: $('#importPanel'),
-        load: function(archivalProfile, orgRegNumber, folderId, parentArchive) {
+        load: function(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+            console.log(archivalProfile);
+            console.log(orgRegNumber);
+            console.log(folderId);
+            console.log(parentArchiveId);
+            console.log(parentArchiveName);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
 
@@ -42,11 +46,14 @@
             }
 
             $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
-            this.panel.find("[data-context-profil]:first").text(archivalProfile.name);
+            $("#import_archivalProfile").text(archivalProfile.name);
                 
-            if (parentArchive == "") {
+            if (parentArchiveId == "") {
                 $("#archiveForm [name='parentArchiveId']").val('');
-                this.panel.find("[data-context-parentarchive]").addClass('hide');
+                $('#import_parentArchiveName').addClass('hide');
+            } else {
+                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+                $('#import_parentArchiveName').removeClass('hide').find('b').text(parentArchiveName);
             }
         },
 
@@ -60,8 +67,8 @@
         }
     }
 
-    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchive) {
-        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchive);
+    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName);
     });
 
     $('#import').on('click', function(e) {
