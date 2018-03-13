@@ -101,7 +101,12 @@
 
                         if (response.status) {
                             ImportPanel.cancel();
-                            trigger('loadFolder.filePlan', [archive.originatorOrgRegNumber]);
+                            trigger("archiveImportOver.recordsManagement");
+                            var folder = archive.originatorOrgRegNumber;
+                            if (archive.filePlanPosition) {
+                                folder = archive.filePlanPosition;
+                            } 
+                            trigger('loadFolder.filePlan', [folder]);
                         }
                     },
                     error       : function (response) {

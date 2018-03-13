@@ -36,7 +36,7 @@
     }
     .folderNode > b, .orgNode > b {
         font-weight: normal;
-        font-size: 16px;
+        font-size: 14px;
         float: left;
         width: calc(100% - 30px);
         overflow-x: hidden;
@@ -76,6 +76,7 @@
         tree: $('#filePlanTree'),
         selectedNode : null,
         currentOrgRegnumber : null,
+        locked : false,
         // hoverTimeout : null,
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
@@ -119,6 +120,9 @@
         },
 
         load: function(e) {
+            if (this.locked) {
+                return;
+            }
             this.select(e);
             var orgRegNumber = e.data('orgregnumber');
             var path = this.getPath(e);
@@ -206,7 +210,7 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').find('span').text(folder.name);
+                .children('b').append(folder.name);
 
             return node;
         },
@@ -247,7 +251,7 @@
              .find('i')
              .css("font-size", "16px")
              .siblings()
-             .css("font-size", "16px")
+             .css("font-size", "14px")
              .find('i')
              .css("font-size", "16px");
             
@@ -268,7 +272,7 @@
         },
 
         moveOut: function(e) {
-            e.children('b').css('font-size', '16px');
+            e.children('b').css('font-size', '14px');
         },
 
         select: function(e) {
@@ -363,4 +367,11 @@
     $('#filePlanTree').onEvent('loadFolder.filePlan', function(e, orgRegNumber) {
         FilePlan.load($('#'+orgRegNumber));
     })
+
+    $('#filePlanTree').onEvent("archiveImportStarted.recordsManagement", function() {
+        FilePlan.locked = true;
+    });
+    $('#filePlanTree').onEvent("archiveImportOver.recordsManagement", function() {
+        FilePlan.locked = false;
+    });
 </script>

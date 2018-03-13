@@ -31,11 +31,6 @@
     ImportPanel = {
         panel: $('#importPanel'),
         load: function(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
-            console.log(archivalProfile);
-            console.log(orgRegNumber);
-            console.log(folderId);
-            console.log(parentArchiveId);
-            console.log(parentArchiveName);
             $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
             $('#archiveForm [name="filePlanPosition"]').val(folderId);
 
@@ -55,6 +50,8 @@
                 $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
                 $('#import_parentArchiveName').removeClass('hide').find('b').text(parentArchiveName);
             }
+
+            trigger("archiveImportStarted.recordsManagement");
         },
 
         save: function(e, button) {
@@ -64,6 +61,7 @@
             ArchiveForm.clear();
             this.panel.addClass('hide');
             trigger("showFolder.recordsManagement");
+            trigger("archiveImportOver.recordsManagement");
         }
     }
 

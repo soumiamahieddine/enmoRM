@@ -1,7 +1,7 @@
 <div class="col-xs-12" id="folderPanel" data-translate-catalog="recordsManagement/message">
     <div id="welcomMessage">
-        <i class="fa fa-arrow-left pull-left"/>
-        <h2 class="pull-left col-xs-10"> Select an organization unit or a folder in the tree to access an archive or to create a new one.</h2>
+        <i class="fa fa-arrow-left col-xs-1"/>
+        <h2 class="col-xs-11"> Select an organization unit or a folder in the tree to access an archive or to create a new one.</h2>
     </div>
     <div class="row folderContents hide">
         <ol class="breadcrumb" id="folderBreadcrumb">
@@ -13,7 +13,7 @@
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
-            <div id="folderToolbarBtn" class="dropdown col-md-4 btn-group">
+            <div id="folderToolbarBtn" class="col-md-4 dropdown btn-group">
                 <button type="button" class="btn btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
                     <span class="fa fa-plus">&nbsp;</span> New archive
                 </button>
@@ -41,20 +41,18 @@
                 <small/>&nbsp;
                 <small/>&nbsp;
                 <small><i/></small>
-                <?merge depositPrivilege.not().then('disabled', '') ?>
             </h5>
         </div>
-        <div class="archiveContent hide">
-            <ul class="tree-l">
-            </ul>
-        </div>
+        <?merge depositPrivilege.bool() ?>
         <div class="dropdown pull-right addChildrenArchive hide">
             <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-plus"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#">test</a></li>
-                <li><a href="#">test1</a></li>
+            </ul>
+        </div>
+        <div class="archiveContent hide">
+            <ul class="tree-l">
             </ul>
         </div>
     </div>
@@ -85,29 +83,55 @@
 </style>
 
 <script type="text/javascript">
+    $('#fullTextSearchForm').addClass('col-md-8');
+
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
-        LinkLimit     : 4,
         textMaxLength : 25,
         load: function(path) {
+            var height = 0;
             this.breadcrumb.html('');
 
-            if (path.length > this.LinkLimit) {
-                path[this.LinkLimit-1] = ">> "+path[this.LinkLimit-1] 
-            }
-            for(i=0; i<path.length && i<this.LinkLimit; i++) {
-                this.buildLink(path[i]).prependTo(this.breadcrumb);
+            for(i=0; i<path.length; i++) {
+                this.buildLink(path[i], true).prependTo(this.breadcrumb);
+
+                if (height == 0) {
+                    height = this.breadcrumb.height();
+                }
             }
 
             this.breadcrumb.find('li:last>a').data('orgregnumber', '');
+            if (this.breadcrumb.height() > height) {
+                var dots = $('<a/>').attr('href', '#')
+                                    .attr('type', 'button')
+                                    .attr('aria-haspopup', 'true')
+                                    .attr('aria-expanded', 'false')
+                                    .attr('data-toggle', 'dropdown')
+                                    .text('...');
+                var ul = $('<ul/>').addClass('dropdown-menu');
+
+                var dropdown = $('<li/>').addClass('dropdown').append(dots).append(ul);
+
+                this.breadcrumb.prepend(dropdown);
+                
+                i=path.length-1;
+
+                while(this.breadcrumb.height() > height && i>=0) {
+                    this.buildLink(path[i]).appendTo(ul);
+                    this.breadcrumb.find('>li:nth-child(2)').remove();
+                    i--;
+                }
+
+            }
+
         },
 
-        buildLink: function(e) {
+        buildLink: function(e, truncate) {
             var text = e[0];
-            if (e[0].length > this.textMaxLength) {
-                text = e[0].substring(0,this.textMaxLength)+ " ...";
+            if (e[0].length > this.textMaxLength && truncate === true) {
+                text = e[0].substring(0,this.textMaxLength)+ "...";
             }
-            return $('<li/>').append($('<a/>').attr('href', '#').html(text).data('orgregnumber', e[1]));
+            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[1]));
         },
 
         selectFolder: function(e) {
@@ -340,8 +364,8 @@
     });
 
     $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile) {
-        FolderBreadcrumb.load(path);
         ArchiveFolderList.show();
+        FolderBreadcrumb.load(path);
         ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile);
     })
 
