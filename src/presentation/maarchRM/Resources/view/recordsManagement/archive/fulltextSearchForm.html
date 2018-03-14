@@ -7,34 +7,32 @@
 #-->
 <!-- Search field -->
 <div class="form-horizontal" id="fullTextSearchForm" data-translate-catalog="recordsManagement/message">
-    <div class="row">
-        <div class="form-group">
-            <div class="input-group">
-                <div id="profileSelection" class="input-group-btn">
-                    <button id="searchByProfile" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                  
-                        <span>All</span> <i class="fa fa-caret-down"/>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li role="presentation" class="small allProfiles">
-                            <a href="#">All</a>
-                        </li>
-                        <?merge userArchivalProfiles ?>
-                        <li role="presentation" class="small [?merge .reference ?]">
-                            <a href="#" data-reference="[?merge .reference ?]">
-                                <?merge .name ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <input type="search" class="form-control" name="searchForm_inputSearch"/>
-                <div class="input-group-btn">
-                    <button type="button" class="btn btn-default" id="searchForm_inputSearchBtn" title="Search">
-                        <span class="fa fa-search text-primary"/>
-                    </button>
-                </div>
+    <div class="form-group">
+        <div class="input-group">
+            <div id="profileSelection" class="input-group-btn">
+                <button id="searchByProfile" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                  
+                    <span>All</span> <i class="fa fa-caret-down"/>
+                </button>
+                <ul class="dropdown-menu">
+                    <li role="presentation" class="small allProfiles">
+                        <a href="#">All</a>
+                    </li>
+                    <?merge userArchivalProfiles ?>
+                    <li role="presentation" class="small [?merge .reference ?]">
+                        <a href="#" data-reference="[?merge .reference ?]">
+                            <?merge .name ?>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <a id="advancedSearchButton" class="pull-right" data-toggle="collapse" href="#advancedSearchPanel">Advanced search</a>
+            <input type="search" class="form-control" name="searchForm_inputSearch"/>
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default" id="searchForm_inputSearchBtn" title="Search">
+                    <span class="fa fa-search text-primary"/>
+                </button>
+            </div>
         </div>
+        <a id="advancedSearchButton" class="pull-right" data-toggle="collapse" href="#advancedSearchPanel">Advanced search</a>
     </div>
 </div>
 
@@ -194,7 +192,7 @@ FulltextSearchForm = {
             text                 : "",
             description          : [],
             profileReference     : "",
-            filePlanPosition     : this.advancedSearchForm.data('folderid'),
+            filePlanPosition     : this.form.data('folderid'),
             orgRegNumber         : this.form.data('orgregnumber'),
             originatingDate      : ""
         };
@@ -320,5 +318,9 @@ FulltextSearchForm = {
     $('#profileSelection').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles) {
         FulltextSearchForm.load(orgRegNumber, folderId, profiles);
         FulltextSearchForm.clearForm();
+    });
+
+    $('#fullTextSearchForm').onEvent("setSearchBarClass.recordsManagement", function(e, newClass) {
+        $('#fullTextSearchForm').addClass(newClass);
     });
 </script>

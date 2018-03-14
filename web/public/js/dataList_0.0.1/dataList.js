@@ -9,7 +9,7 @@
                         buttons : button with page number
     emptyMessage    -> html to show when the list is empty
     sorting         -> array of object that define wich properties of datas can be sorted
-                       object have tree properties : the name, the label and the type (num or txt) of the sortable property
+                       object have four properties : the name (fieldName), the label (label), the type (type with 'num' or 'txt' value) of the sortable property, and a "default" (with 'ASC' or 'DESC') property to sort by default 
     unsearchable    -> array of unserchable property
     itemsName       -> item name to display in result number as an array. The first element is the singular form the second is the plural form
     translation     -> array with key with translation
@@ -62,7 +62,7 @@ var DataList = {
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
-        var header = element.children('.row:first').css('padding', '0px 5px');
+        var header = element.children('.row:first').css('padding', '0px 5px').css('border-bottom', '1px solid #DDD');
         var footer = element.children('.footer').css('padding', '0px 5px');
         var list = $('<div/>').addClass('list').appendTo(element);
 
@@ -152,12 +152,21 @@ var DataList = {
                 desc = '<i class="fa fa-sort-numeric-desc"\/>';
             }
 
-            $('<li/>').data('value', this.fieldName).data('order', '<').append(
-                $('<a/>').attr('href', '#').html(" "+this.label).prepend(asc).on('click', DataList.bind_dataOrdering)
-            ).appendTo(ul);
-            $('<li/>').data('value', this.fieldName).data('order', '>').append(
-                $('<a/>').attr('href', '#').html(" "+this.label).prepend(desc).on('click', DataList.bind_dataOrdering)
-            ).appendTo(ul);
+            var ascLi = $('<li/>').data('value', this.fieldName).data('order', '<').append(
+                            $('<a/>').attr('href', '#').html(" "+this.label).prepend(asc).on('click', DataList.bind_dataOrdering));
+
+            var descLi = $('<li/>').data('value', this.fieldName).data('order', '>').append(
+                            $('<a/>').attr('href', '#').html(" "+this.label).prepend(desc).on('click', DataList.bind_dataOrdering));
+
+            ascLi.appendTo(ul);
+            descLi.appendTo(ul);
+
+            if (this.default && this.default == "ASC") {
+                ascLi.attr('data-default', '');
+            }
+            if (this.default && this.default == "DESC") {
+                descLi.attr('data-default', '');
+            }
         });
 
         ul.children('li:first').addClass('active');
@@ -202,9 +211,9 @@ var DataList = {
         this.dataList[id].unsearchable = ['html'];
 
         // Order the list if an order option is selected
-        var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
+        var orderSelect = this.dataList[id].element.find('.dataList-sorting li[data-default]');
         if (orderSelect.length) {
-            this.sort(id, orderSelect.val(), orderSelect.find('option:selected').data('order'));
+            this.sort(id, orderSelect.data('value'), orderSelect.data('order'));
 
         } else {
             this.buildList(id);

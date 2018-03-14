@@ -151,7 +151,7 @@
                 url         : "/documentInfo",
                 type        : "GET",
                 success     : function (response) {
-                    DetailScreen.load(response)
+                    DetailScreen.load(response);
                     DocumentInformation.load(resource.data('json'));
                 },
                 error       : function (response) {
@@ -213,14 +213,13 @@
             if (digitalResources) {
                 for(var i=0; i < digitalResources.length; i++) {
                     template = this.archiveContentTemplate.clone();
-
                     template.children('span')
                             .addClass('document')
+                            .data('json', digitalResources[i])
                             .children('span')
                             .children('i')
                             .html('&nbsp;&nbsp;')
                             .siblings('span')
-                            .data('json', digitalResources[i])
                             .attr('id', digitalResources[i].resId)
                             .append($('<i class="fa fa-file-o">&nbsp;</i>'))
                             .append($('<span>').text(digitalResources[i].fileName));

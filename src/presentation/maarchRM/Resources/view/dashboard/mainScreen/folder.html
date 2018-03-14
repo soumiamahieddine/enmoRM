@@ -84,7 +84,7 @@
 
 <script type="text/javascript">
     trigger("setSearchBarClass.recordsManagement", ['col-md-8']);
-    
+
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
         textMaxLength : 25,
@@ -220,7 +220,8 @@
                     {
                         fieldName : 'depositDate',
                         label     : $('#depositDate_text').text(),
-                        type      : 'num'
+                        type      : 'num',
+                        default   : 'DESC'
                     }
                 ],
 				unsearchable : [
