@@ -30,7 +30,7 @@
 </div>
 
 <div id="listTemplate" class="hide">
-    <div class="archive row">
+    <div class="archive row" style="border-bottom: 1px solid #DDD">
         <div class="archiveInfo pull-left">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
@@ -83,8 +83,8 @@
 </style>
 
 <script type="text/javascript">
-    $('#fullTextSearchForm').addClass('col-md-8');
-
+    trigger("setSearchBarClass.recordsManagement", ['col-md-8']);
+    
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
         textMaxLength : 25,

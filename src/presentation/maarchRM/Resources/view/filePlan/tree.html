@@ -77,7 +77,7 @@
         selectedNode : null,
         currentOrgRegnumber : null,
         locked : false,
-        // hoverTimeout : null,
+        
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
         },
@@ -359,7 +359,6 @@
         FilePlan.load($(this).closest('li'));
     })
 
-
     // File plan menu
     $('#filePlanTree').on('click', '.addFolder', function(){ FilePlan.addFolder() })
     $('#filePlanTree').on('click', '.editFolder', function(){ FilePlan.editFolder() })
@@ -368,6 +367,7 @@
         FilePlan.load($('#'+orgRegNumber));
     })
 
+    // File plan lock
     $('#filePlanTree').onEvent("archiveImportStarted.recordsManagement", function() {
         FilePlan.locked = true;
     });
