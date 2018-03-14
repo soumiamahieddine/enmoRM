@@ -577,8 +577,8 @@ msgstr "Confirmer le mot de passe"
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
-msgid "A reset email has been send"
-msgstr "Un courriel de réinitialisation a été envoyé"
+msgid "If the account exists, a reset email has been send"
+msgstr "Si le compte existe, un courriel de réinitialisation a été envoyé"
 
 msgid "Password has been updated"
 msgstr "Le mot de passe a été mis à jour"
