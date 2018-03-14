@@ -162,14 +162,13 @@ var DataList = {
             descLi.appendTo(ul);
 
             if (this.default && this.default == "ASC") {
-                ascLi.attr('data-default', '');
+                ascLi.addClass('active').attr('data-default', '');
             }
             if (this.default && this.default == "DESC") {
-                descLi.attr('data-default', '');
+                descLi.addClass('active').attr('data-default', '');
             }
         });
 
-        ul.children('li:first').addClass('active');
         sortingInput.find('.btn-group').append(ul);
 
         return sortingInput;
