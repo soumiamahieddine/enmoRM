@@ -191,7 +191,7 @@ trait archiveAccessTrait
      * 
      * @return string Query
      */
-    public function getArchiveAssert($args)
+    public function getArchiveAssert($args,&$queryParams)
     {
         // Args on archive
         $currentDate = \laabs::newDate();
@@ -202,37 +202,47 @@ trait archiveAccessTrait
             $queryParts[] = "archiveName='*".$args['archiveName']."*'";
         }
         if (!empty($args['profileReference'])) {
-            $queryParts[] = "archivalProfileReference='".$args['profileReference']."'";
+            $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
+            $queryParams['archivalProfileReference']=$args['profileReference'];
         }
         if (!empty($args['agreementReference'])) {
-            $queryParts[] = "archivalAgreementReference='".$args['agreementReference']."'";
+            $queryParts['archivalAgreementReference'] = "archivalAgreementReference=:archivalAgreementReference";
+            $queryParts['archivalAgreementReference'] = $args['agreementReference'];
         }
         if (!empty($args['archiveId'])) {
-            $queryParts[] = "archiveId='".$args['archiveId']."'";
+            $queryParts['archiveId'] = "archiveId=:archiveId";
+            $queryParams['archiveId'] = $args['archiveId'];
         }
         if (!empty($args['status'])) {
-            $queryParts[] = "status='".$args['status']."'";
+            $queryParts['status'] = "status=:status";
+            $queryParams['status'] = $args['status'];
         }
         if (!empty($args['retentionRuleCode'])) {
-            $queryParts[] = "retentionRuleCode='".$args['retentionRuleCode']."'";
+            $queryParts[] = "retentionRuleCode=:retentionRuleCode";
+            $queryParams['retentionRuleCode'] = $args['retentionRuleCode'];
         }
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "true") {
-            $queryParts[] = "disposalDate<='".$currentDateString."'";
+            $queryParts['disposalDate'] = "disposalDate<= :disposalDate";
+            $queryParams['disposalDate'] = $currentDateString;
         }
         if (!empty($args['archiveExpired']) && $args['archiveExpired'] == "false") {
-            $queryParts[] = "disposalDate>='".$currentDateString."'";
+            $queryParts['disposalDate'] = "disposalDate>= :disposalDate";
+            $queryParams['disposalDate'] = $currentDateString;
         }
         if (!empty($args['partialRetentionRule']) && $args['partialRetentionRule'] == "true") {
-            $queryParts[] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+            $queryParts['partialRetentionRule'] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
         }
         if (!empty($args['finalDisposition'])) {
-            $queryParts[] = "finalDisposition='".$args['finalDisposition']."'";
+            $queryParts['finalDisposition'] = "finalDisposition= :finalDisposition";
+            $queryParams['finalDisposition'] =$args['finalDisposition'];
         }
         if (!empty($args['originatorOrgRegNumber'])) {
-            $queryParts[] = "originatorOrgRegNumber='".$args['originatorOrgRegNumber']."'";
+            $queryParts[] = "originatorOrgRegNumber= :originatorOrgRegNumber";
+            $queryParams['originatorOrgRegNumber'] = $args['originatorOrgRegNumber'];
         }
         if (!empty($args['originatorArchiveId'])) {
-            $queryParts[] = "originatorArchiveId='".$args['originatorArchiveId']."'";
+            $queryParts['originatorArchiveId'] = "originatorArchiveId= :originatorArchiveId";
+            $queryParams['originatorArchiveId'] = $args['originatorArchiveId'];
         }
         if (!empty($args['originatingDate'])) {
             if (!empty($args['originatingDate'][0]) && is_string($args['originatingDate'][0])) {
@@ -244,11 +254,13 @@ trait archiveAccessTrait
 
             if (!empty($args['originatingDate'][0])) { // originatingStartDate
                 $args['originatingDate'][0] = $args['originatingDate'][0]->format('Y-m-d');
-                $queryParts[] = "originatingDate>='".$args['originatingDate'][0]."'";
+                $queryParts['originatingDate'] = "originatingDate>= :originatingDate";
+                $queryParams['originatingDate'] =$args['originatingDate'][0];
             }
-            if (!empty($args['originatingDate'][1])) { // originatingEndDate
+            if (!empty($args['originatingDate'][1])) { // originatingEndDate;
                 $args['originatingDate'][1] = $args['originatingDate'][1]->format('Y-m-d');
-                $queryParts[] = "originatingDate<='".$args['originatingDate'][1]."'";
+                $queryParts['originatingDate'] = "originatingDate<= :originatingDate";
+                $queryParams['originatingDate'] = $args['originatingDate'][1];
             }
         }
 
@@ -262,30 +274,38 @@ trait archiveAccessTrait
         if (!empty($args['depositStartDate']) && !empty($args['depositEndDate'])) {
             $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
             $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
-            $queryParts[] = "depositDate <= '".$args['depositEndDate']."' AND depositDate >= '".$args['depositStartDate']."'";
+            $queryParts['depositDate'] = "depositDate <= :depositEndDate AND depositDate >= :depositStartDate";
+            $queryParams['depositEndDate'] = $args['depositEndDate'];
+            $queryParams['depositStartDate'] = $args['depositStartDate'];
+
         } elseif (!empty($args['depositStartDate'])) {
             $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
-            $queryParts[] = "depositDate >= '".$args['depositStartDate']."'";
+            $queryParts['depositDate'] = "depositDate >= :depositStartDate";
+            $queryParams['depositStartDate'] = $args['depositStartDate'];
 
         } elseif (!empty($args['depositEndDate'])) {
             $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
-            $queryParts[] = "depositDate <= '".$args['depositEndDate']."'";
+            $queryParts['depositDate'] = "depositDate <= :depositEndDate";
+            $queryParams['depositEndDate'] = $args['depositEndDate'];
         }
 
         if (!empty($args['depositorOrgRegNumber'])) {
-            $queryParts[] = "depositorOrgRegNumber='".$args['depositorOrgRegNumber']."'";
+            $queryParts['depositorOrgRegNumber'] = "depositorOrgRegNumber= :depositorOrgRegNumber";
+            $queryParams['depositorOrgRegNumber'] = $args['depositorOrgRegNumber'];
         }
         if (!empty($args['filePlanPosition'])) {
-            $queryParts[] = "filePlanPosition='".$args['filePlanPosition']."'";
+            $queryParts['filePlanPosition'] = "filePlanPosition= :filePlanPosition";
+            $queryParams['filePlanPosition'] = $args['filePlanPosition'];
         }
         if ($args['hasParent'] == true) {
-            $queryParts[] = "parentArchiveId!=null";
+            $queryParts['parentArchiveId'] = "parentArchiveId!=null";
         }
         if ($args['hasParent']  === false) {
-            $queryParts[] = "parentArchiveId=null";
+            $queryParts['hasParent'] = "parentArchiveId=null";
         }
 
         $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+
         if ($accessRuleAssert) {
             $queryParts[] = $accessRuleAssert;
         }
