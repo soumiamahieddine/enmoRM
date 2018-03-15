@@ -87,6 +87,9 @@
         },
 
         mouseleave: function(e) {
+            if (e.hasClass('node-warning')) {
+                return;
+            }
             e.find('.dropdown').css('visibility', 'hidden');
         },
 
@@ -94,6 +97,7 @@
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
             }
+            e.find('.dropdown').css('visibility', 'visible');
 
             this.unselect();
             var span = e.children('span');
@@ -111,6 +115,8 @@
                 return;
             }
             var span = this.selectedNode.children('span');
+            span.find('.dropdown').css('visibility', 'hidden');
+            
             if (span.hasClass('folderNode')) {
                 FolderNode.unselect(span);
             } else {

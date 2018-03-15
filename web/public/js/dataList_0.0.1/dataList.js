@@ -71,7 +71,7 @@ var DataList = {
             header = $('<div/>').addClass('row').prependTo(element);
         }
         if (footer.length == 0) {
-            footer = $('<div/>').addClass('row footer').appendTo(element)
+            footer = $('<div/>').addClass('row footer').css('margin-top', '10px').appendTo(element);
         }
 
         this.dataList[id] = {
