@@ -262,9 +262,9 @@ class serviceAccount
 
         $dataToken = new \StdClass();
         $dataToken->accountId = $serviceAccount->accountId;
+        $dataToken->salt = $serviceAccount->salt;
 
         $token = new \core\token($dataToken, 0);
-        $token->salt = $serviceAccount->salt;
 
         $jsonToken = \json_encode($token);
         $cryptedToken = \laabs::encrypt($jsonToken, \laabs::getCryptKey());
