@@ -89,17 +89,15 @@
                     suggestion: function(user) {
                         var display = 
                             "<span>"
-                                + "<span class='fa fa-user' >&nbsp;</span>"
                                 + "<span style='font-family:Helvetica, sans-serif;'>" 
                                 + user.displayName
-                                + "</span>"
-                                + "</span>";
+                                + "</span></span><br>";
 
                         return display;
                     }
                 },
                 source: function(query, cb) {
-                    users.get(query, function(suggestions) {
+                    users.search(query, function(suggestions) {
                         var i = suggestions.length
                         while (i--) {
                             if ($('#organization_userPositionList').find('#'+ suggestions[i].accountId).length)

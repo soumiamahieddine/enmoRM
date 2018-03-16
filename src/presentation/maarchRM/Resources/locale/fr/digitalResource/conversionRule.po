@@ -21,7 +21,7 @@ msgid "Select a format"
 msgstr "Sélectionnez un format"
 
 msgid "Edit a new conversion rule"
-msgstr "Éditer une nouvelle règle de conversion"
+msgstr "Créer une nouvelle règle de conversion"
 
 msgid "Puid is empty"
 msgstr "Le PuID est vide"
