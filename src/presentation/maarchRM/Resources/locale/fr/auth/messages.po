@@ -476,7 +476,7 @@ msgid "Service account created"
 msgstr "Compte de service créé"
 
 msgid "Service already exist"
-msgstr "Le service existe déjà."
+msgstr "Le compte existe déjà."
 
 msgid "Last login date"
 msgstr "Date de la dernière connexion"
