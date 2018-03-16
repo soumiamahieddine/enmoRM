@@ -98,4 +98,15 @@ class orgContact
         return true;
     }
 
+    public function loadCountriesCodes()
+    {
+        $filename = 'organization'.LAABS_URI_SEPARATOR. 'countries-codes.json';
+        $router = new \core\Route\ResourceRouter($filename);
+        $file = file_get_contents($router->getResource()->getRealPath());
+
+        $countriesCodes = json_decode($file);
+
+        return $countriesCodes;
+    }
+
 }

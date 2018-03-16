@@ -146,6 +146,15 @@ msgstr "Terme"
 msgid "Term"
 msgstr "Terme"
 
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "Service"
+msgstr "Compte de service"
+
+msgid "No account found"
+msgstr "Aucun compte trouvé"
+
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
 

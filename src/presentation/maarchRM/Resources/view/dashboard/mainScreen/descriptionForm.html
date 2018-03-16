@@ -200,7 +200,7 @@
                     break;
                 case 'number':
                     field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
+                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.val(defaultVal);
                     }

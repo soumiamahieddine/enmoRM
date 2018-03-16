@@ -212,6 +212,8 @@ class logger
         \laabs::callService(
             'audit/event/create', $this->servicePath->getName(), $this->servicePath->variables, $input, $output, true
         );
+
+        $this->servicePath = null;
     }
 
     /**

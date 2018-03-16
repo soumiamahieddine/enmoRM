@@ -124,7 +124,11 @@
         </div>
         <span id="selectAnEvent_text" class="hide">Select an event</span>
     </div>
-
+    <div style="display:none" data-translate-catalog="audit/messages">
+        <span id="user_text">User</span>
+        <span id="service_text">Service</span>
+        <span id="noAccountFound">No account found</span>
+    </div>
     <script type="text/javascript">
 
         $('#contain').ready(function() {
@@ -202,7 +206,7 @@
                 {
                     hint: true,
                     highlight: true,
-                    minLength: 3
+                    minLength: 2
                 },
         {
             name: 'users',
@@ -211,7 +215,7 @@
             },
             templates: {
                 empty: function () {
-                    return "<span class='well well-sm'>No user found</span>";
+                    return "<span class='well well-sm'>"+$('#noAccountFound').text()+"</span>";
                 },
                 suggestion: function (account) {
                     var name = account.displayName;
@@ -221,22 +225,20 @@
                         var icone = "<span class='fa fa-user' >&nbsp;</span>";
                     }
                     var display =
-                            "<span>"
-                            + icone
-                            + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + account.displayName
-                            + "</span>"
-                            + "</span>";
-                    
+                        "<span>"
+                        + icone
+                        + "<span style='font-family:Helvetica, sans-serif;'>"
+                        + name
+                        + "</span></span><br>";
                     return display;
                 }
             },
             source: function (query, cb) {
                 var listSuggestion = "";
-                services.get(query, function (suggestions) {
+                services.search(query, function (suggestions) {
                     listSuggestion = suggestions;
                 });
-                users.get(query, function (suggestions) {
+                users.search(query, function (suggestions) {
                     $.extend(listSuggestion, suggestions);
                 });
                 cb(listSuggestion);

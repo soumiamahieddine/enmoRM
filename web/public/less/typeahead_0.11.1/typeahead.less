@@ -1,0 +1,120 @@
+@color_1: #333333;
+@color_2: #ffffff;
+@background_color_1: #ffffff;
+@background_color_2: #337ab7;
+
+.tt-wrapper {
+  .tt-menu {
+    cursor: pointer;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 100%;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: @background_color_1;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+  }
+  position: relative;
+  width: 100%;
+  .tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: @color_1;
+    white-space: nowrap;
+    &:hover {
+      color: @color_2;
+      text-decoration: none;
+      outline: 0;
+      background-color: @background_color_2;
+    }
+    &:focus {
+      color: @color_2;
+      text-decoration: none;
+      outline: 0;
+      background-color: @background_color_2;
+    }
+  }
+  .tt-suggestion.tt-cursor {
+    color: @color_2;
+    text-decoration: none;
+    outline: 0;
+    background-color: @background_color_2;
+  }
+}
+.input-group.input-group-lg {
+  .tt-wrapper {
+    .form-control {
+      height: 46px;
+      padding: 10px 16px;
+      font-size: 18px;
+      line-height: 1.3333333;
+      border-radius: 6px;
+    }
+    height: 46px;
+    .tt-menu {
+      top: 46px !important;
+    }
+  }
+}
+.input-group.input-group-sm {
+  .tt-wrapper {
+    .form-control {
+      height: 30px;
+      padding: 5px 10px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 3px;
+    }
+    height: 30px;
+    .tt-menu {
+      top: 30px !important;
+    }
+  }
+}
+.input-group {
+  .tt-wrapper {
+    display: block !important;
+    height: 34px;
+    .tt-menu {
+      top: 32px !important;
+    }
+    &:not(:first-child) {
+      &:not(:last-child) {
+        .form-control {
+          border-radius: 0;
+        }
+      }
+    }
+    &:first-child {
+      .form-control {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    &:last-child {
+      .form-control {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+    }
+  }
+}

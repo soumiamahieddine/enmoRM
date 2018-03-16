@@ -6140,17 +6140,17 @@ button.close {
     display: none !important;
   }
 }
-.tt-wrapper {
-  position: relative;
-}
-.tt-wrapper .tt-dropdown-menu {
+
+.tt-wrapper .tt-menu,
+.tt-wrapper .tt-menu {
+  cursor: pointer;
   position: absolute;
   top: 100%;
   left: 0;
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  min-width: 100%;
   padding: 5px 0;
   margin: 2px 0 0;
   list-style: none;
@@ -6163,14 +6163,13 @@ button.close {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
 }
-.tt-wrapper .tt-dropdown-menu .tt-suggestions {
-  display: block;
+
+.tt-wrapper {
+  position: relative;
 }
-.tt-wrapper .tt-dropdown-menu .tt-suggestions .tt-suggestion {
+
+.tt-wrapper .tt-suggestion {
   display: block;
   padding: 3px 20px;
   clear: both;
@@ -6178,12 +6177,68 @@ button.close {
   line-height: 1.42857143;
   color: #333333;
   white-space: nowrap;
-  cursor: pointer;
 }
-.tt-wrapper .tt-dropdown-menu .tt-suggestions .tt-suggestion.tt-cursor {
+.tt-wrapper .tt-suggestion.tt-cursor,
+.tt-wrapper .tt-suggestion:hover,
+.tt-wrapper .tt-suggestion:focus {
+  color: #ffffff;
   text-decoration: none;
-  color: #262626;
-  background-color: #f5f5f5;
+  outline: 0;
+  background-color: #337ab7;
+}
+.input-group.input-group-lg .tt-wrapper .form-control {
+  height: 46px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border-radius: 6px;
+}
+.input-group.input-group-sm .tt-wrapper .form-control {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.tt-wrapper {
+  width: 100%;
+}
+.input-group .tt-wrapper {
+  display: block !important;
+  height: 34px;
+}
+
+.input-group .tt-wrapper .tt-menu {
+  top: 32px !important;
+}
+.input-group .tt-wrapper:not(:first-child):not(:last-child) .form-control {
+  border-radius: 0;
+}
+.input-group .tt-wrapper:first-child .form-control {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.input-group .tt-wrapper:last-child .form-control {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.input-group.input-group-sm .tt-wrapper {
+  height: 30px;
+}
+.input-group.input-group-sm .tt-wrapper .tt-menu,
+.input-group.input-group-sm .tt-wrapper .tt-menu {
+  top: 30px !important;
+}
+.input-group.input-group-lg .tt-wrapper {
+  height: 46px;
+}
+.input-group.input-group-lg .tt-wrapper .tt-menu,
+.input-group.input-group-lg .tt-wrapper .tt-menu {
+  top: 46px !important;
 }
 /* FONT PATH
  * -------------------------- */

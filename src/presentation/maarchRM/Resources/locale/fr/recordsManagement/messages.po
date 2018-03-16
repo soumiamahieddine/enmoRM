@@ -170,7 +170,7 @@ msgid "File extension"
 msgstr "Extension du fichier"
 
 msgid "Life cycle events"
-msgstr "Événements du cycle de vie"
+msgstr "Évènements du cycle de vie"
 
 msgid "Archive identifier"
 msgstr "Cote"
@@ -322,25 +322,25 @@ msgid "Originator req number"
 msgstr "Identifiant Service Producteur"
 
 msgid "Frozen"
-msgstr "Suspendu"
+msgstr "Gelée"
 
 msgid "Disposed"
-msgstr "Détruite"
+msgstr "Éliminée"
 
 msgid "Preserved"
-msgstr "Conservé"
+msgstr "Conservée"
 
 msgid "error"
 msgstr "Erreur"
 
 msgid "Waiting for restitution"
-msgstr "Restituable"
+msgstr "En cours de restitution"
 
 msgid "Waiting for destruction"
-msgstr "Éliminable"
+msgstr "En cours d'élimination"
 
 msgid "Restituted"
-msgstr "Restitué"
+msgstr "Restituée"
 
 msgid "Request of communication"
 msgstr "Demander la communication"
@@ -508,7 +508,7 @@ msgid "Depositor agency :"
 msgstr "Service Versant :"
 
 msgid "Event type :"
-msgstr "Type d'événement :"
+msgstr "Type d'évènement :"
 
 msgid "User :"
 msgstr "Utilisateur :"

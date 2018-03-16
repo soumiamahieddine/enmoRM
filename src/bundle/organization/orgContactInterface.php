@@ -56,4 +56,11 @@ interface orgContactInterface
      * @action organization/orgContact/create
      */
     public function deleteOrgcontact($orgContact);
+
+    /**
+     * Get countries codes
+     *
+     * @action organization/orgContact/loadCountriesCodes
+     */
+    public function readCountriesCodes();
 }

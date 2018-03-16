@@ -208,12 +208,12 @@
 
             if(contactObject.contactType == "person") {
                 if(contactObject.displayName == "" || contactObject.firstName == "" || contactObject.lastName == "") {
-                    gritter.show($('#empty_text').html(),false);
+                    gritter.show($('#empty_text').text(),false);
                     return false;
                 }
             } else {
                 if(contactObject.displayName == "") {
-                    gritter.show($('#empty_text').html(),false);
+                    gritter.show($('#empty_text').text(),false);
                     return false;
                 }
             }
