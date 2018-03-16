@@ -486,10 +486,10 @@ msgid "Authorization request send to control authority"
 msgstr "Demande d'autorisation envoyée à l'Autorité de Contrôle"
 
 msgid "Authorization accepted"
-msgstr "Autorisation acceptée"
+msgstr "Demande d'autorisation acceptée"
 
 msgid "Authorization rejected"
-msgstr "Autorisation rejetée"
+msgstr "Demande d'autorisation rejetée"
 
 msgid "Message processed"
 msgstr "Message traité"
@@ -620,4 +620,7 @@ msgstr "Aucun producteur trouvé"
 msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "meta-data"
+
+msgid "Default originator"
+msgstr "Service producteur par défaut"
 

@@ -80,6 +80,12 @@ class orgTree
             return strcmp($a->reference, $b->reference);
         });
 
+        if(\laabs::getToken("ORGANIZATION")){
+            $addOrganizationRight = in_array('owner',\laabs::getToken("ORGANIZATION")->orgRoleCodes);
+        } else {
+            $addOrganizationRight = true;
+        }
+
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
@@ -94,6 +100,7 @@ class orgTree
         $this->view->setSource("countriesCodes", $countriesCodes);
         $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->setSource("serviceLevel", $serviceLevel);
+        $this->view->setSource("addOrganizationRight", $addOrganizationRight);
         $this->view->merge();
         $this->view->translate();
 
