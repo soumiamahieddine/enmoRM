@@ -116,10 +116,10 @@ securityPolicy = "{
     'loginAttempts' : 3,
     'passwordValidity' : 0,
     'newPasswordValidity' : 1,
-    'passwordMinLength' : 0,
-    'passwordRequiresSpecialChars' : 0,
-    'passwordRequiresDigits' : 0,
-    'passwordRequiresMixedCase' : 0,
+    'passwordMinLength' : 8,
+    'passwordRequiresSpecialChars' : 1,
+    'passwordRequiresDigits' : 1,
+    'passwordRequiresMixedCase' : 1,
     'sessionTimeout' : 3600,
     'lockDelay' : 30
 }"

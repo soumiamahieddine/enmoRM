@@ -103,9 +103,10 @@ trait archiveCommunicationTrait
         $queryParams = array();
 
         if (!empty($description) || !empty($text)) {
+
             $searchClasses = [];
             if (!$profileReference) {
-                 $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+                $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
 
                 $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
 
@@ -213,6 +214,7 @@ trait archiveCommunicationTrait
 
         return $archives;
     }
+
 
     /**
      * Restitute an archive
