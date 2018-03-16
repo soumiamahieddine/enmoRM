@@ -32,7 +32,6 @@
                 Tree.removeNode($('#'+orgId).closest('li'));
             },
             error    : function(response) {
-                console.log(response);
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         });

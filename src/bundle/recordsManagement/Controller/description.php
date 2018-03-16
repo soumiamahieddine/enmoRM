@@ -136,7 +136,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $queryParams = [];
         $queryParts = ['description!=null and text!=null'];
 
-        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs);
+        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs,$queryParams);
         
         // Json
         if (!empty($description)) {
@@ -170,7 +170,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString,$queryParams);
 
         foreach ($archiveUnits as $archiveUnit) {
             $archiveUnit->descriptionObject = json_decode($archiveUnit->description);

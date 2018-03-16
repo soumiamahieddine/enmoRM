@@ -55,7 +55,6 @@ file that was distributed with this source code.
 
 <script type="application/javascript">    
     $("#addressList").on("click", '.checkIntegrity', function() {
-        console.log($(this).data('address'));
         $.ajax({
             type        : 'PUT',
             url         : '/checkAddressIntegrity',

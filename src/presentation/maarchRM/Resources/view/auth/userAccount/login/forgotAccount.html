@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <input type="text" placeholder="Email" class="form-control" name="forgotAccountEmail" id="forgotAccountEmail">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group text-danger">
                         <p class="" id="forgotAccountMessage"></p>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
         </form>
     </div>
 </div>
-
+<span class="hide" id="invalidEmail_text">Email malformed</span>
 <script type="text/javascript">
     $("#loginForm").on("click", "#forgotAccount", function() {
         ForgotAccount.show();
@@ -74,6 +74,13 @@
             if (username == "" || username == undefined || email == "" || email == undefined) {
                 return;
             }
+
+            var emailRegex = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$");
+
+            if(!emailRegex.test(email)) {
+                $('#forgotAccountMessage').text($('#invalidEmail_text').text());
+                return;
+            }
             
             ajax($('#forgotAccountSendButton'),
                 {
@@ -83,13 +90,13 @@
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
-                        $('#forgotAccountMessage').removeClass("text-danger");
+
+                        $('#forgotAccountModal').on('hidden.bs.modal', function(){
+                            $('#forgotAccountMessage').text("");
+                            $('#signInMessage').text(response.message);
+                        });
                         ForgotAccount.hide();
-                    },
-                    error       : function (response) {
-                        var response = JSON.parse(response.responseText);
-                        $('#forgotAccountMessage').addClass("text-danger");
-                        $('#forgotAccountMessage').text(response.message);
+
                     }
                 }
             );
