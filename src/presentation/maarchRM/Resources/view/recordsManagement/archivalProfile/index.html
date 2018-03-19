@@ -63,9 +63,28 @@ file that was distributed with this source code.
             </div>
         </div>
     </div>
+    <div class="modal fade" id="messagesModal"  data-translate-catalog="recordsManagement/archivalProfile">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="m_title-delete">Delete the archival profile</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="m_text-delete">
+                        delete the archival profile
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="m_no" data-dismiss="modal" title="No">No</button>
+                    <button type="button" class="btn btn-primary" id="m_yes" data-dismiss="modal" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
+
     $("#tableListArchivalprofile").on('click', '[data-edit-archivalProfile]', function () {
         load('/archivalProfile/' + $(this).attr('data-edit-archivalProfile'));
     })
@@ -75,9 +94,13 @@ file that was distributed with this source code.
     });
 
     $("#contain").on('click', '.deleteProfile', function () {
-        var button = $(this);
-        var archivalProfileId = button.data('profileid');
+        $('#messagesModal').modal();
+        button = $(this);
+        archivalProfileId = button.data('profileid');
+    })
 
+
+    $("#m_yes").on('click',function() {
         ajax($(this), {
             url: '/archivalProfile/' + archivalProfileId,
             type: 'DELETE',
@@ -89,13 +112,15 @@ file that was distributed with this source code.
                     var number = itemsNumber.html();
                     itemsNumber.text(number - 1);
                     button.closest('tr').remove();
+
+                    $('#messagesModal').modal('toggle');
                 }
             },
             error    : function(response) {
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         })
-    })
+    });
 
     $("#contain").on('click', '.generateBarCode', function () {
 

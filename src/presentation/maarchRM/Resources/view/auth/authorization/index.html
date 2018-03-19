@@ -108,26 +108,26 @@
             $("#contain").on('click', ".deleteRole", function(){
                 $('#messagesModal').modal();
 
-                var id = $(this).data('roleid');
-                $("#m_yes").click(function() {
-                    $.ajax({
-                        url:  '/auth/' +id,
-                        type: 'DELETE',
-                        contentType: 'application/json',
-                        dataType: 'json',
-                        success: function(response) {
-                            gritter.show(response.message, response.status, response.errors);
+                id = $(this).data('roleid');
+            });
+            $("#m_yes").click(function() {
+                $.ajax({
+                    url:  '/auth/' +id,
+                    type: 'DELETE',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function(response) {
+                        gritter.show(response.message, response.status, response.errors);
 
-                            if (response.status) {
-                                $('#messagesModal').one('hidden.bs.modal', function () {
-                                    load("/auth/roles");
-                                });
-                            }
-                        },
-                        error    : function(response) {
-                            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        if (response.status) {
+                            $('#messagesModal').one('hidden.bs.modal', function () {
+                                load("/auth/roles");
+                            });
                         }
-                    });
+                    },
+                    error    : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
                 });
             });
 

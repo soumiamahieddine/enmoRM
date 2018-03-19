@@ -161,3 +161,8 @@ msgstr "Aucun format trouvé"
 msgid "Mbytes"
 msgstr "Mo"
 
+msgid "delete archival agreement"
+msgstr "Attention : Vous êtes sur le point de supprimer un accord de versement."
+
+msgid "Delete the archival agreement"
+msgstr "Supprimer l'accord de versement"
