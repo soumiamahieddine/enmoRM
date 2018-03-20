@@ -1,0 +1,82 @@
+
+<div class="container-fluid" data-translate-catalog="audit/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">
+                Journal detail
+                <div class="pull-right">
+                    <button type="button" class="btn btn-warning" data-log-download="[?merge archiveId ?]/[?merge resourceId ?]" title="Download journal"><i class="fa fa-download">&nbsp;</i>Download journal</button>
+                </div>
+            </h1>
+        </div>
+        <div class="col-xs-12">
+            <div class="panel">
+                <?merge type.ifeq('application') ?>
+                <div class="row">
+                    <dl class="dl dl-horizontal">
+                        <dt>Type</dt><dd><?merge typeTranslate ?></dd>
+                        <dt>Identifier</dt><dd><?merge head[0] ?></dd>
+                        <dt>To date</dt><dd><?merge head[1] ?></dd>
+                        <dt>From date</dt><dd><?merge head[2] ?></dd>
+                    </dl>
+                </div>
+                <?merge type.ifeq('lifeCycle') ?>
+                <div class="row">
+                    <dl class="dl dl-horizontal">
+                        <dl class="dl dl-horizontal">
+                            <dt>Type</dt><dd><?merge typeTranslate ?></dd>
+                            <dt>Identifier</dt><dd><?merge head[0] ?></dd>
+                            <dt>To date</dt><dd><?merge head[2] ?></dd>
+                            <dt>From date</dt><dd><?merge head[3] ?></dd>
+                        </dl>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="audit/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel">
+                <table class="table dataTable">
+                    <thead>
+                    <?merge type.ifeq('application') ?>
+                    <tr>
+                        <th>Account</th>
+                        <th>Date</th>
+                        <th>Event</th>
+                    </tr>
+                    <?merge type.ifeq('lifeCycle') ?>
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Date</th>
+                        <th>Event</th>
+                    </tr>
+                    </thead>
+                    <?merge type.ifeq('application') ?>
+                    <tbody>
+                        <?merge events ?>
+                        <tr>
+                            <td><?merge .[1] ?></td>
+                            <td><?merge .[0] ?></td>
+                            <td><?merge .[2] ?></td>
+                        </tr>
+                    </tbody>
+                    <?merge type.ifeq('lifeCycle') ?>
+                    <tbody>
+                        <?merge events ?>
+                        <tr>
+                            <td><?merge .[0] ?></td>
+                            <td><?merge .[2] ?></td>
+                            <td><?merge .[1] ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>

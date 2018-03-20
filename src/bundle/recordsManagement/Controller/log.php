@@ -356,4 +356,16 @@ class log implements archiveDescriptionInterface
 
         return $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
     }
+
+    public function contents ($type, $archiveId, $resourceId) {
+        $archiveController = \laabs::newController('recordsManagement/archive');
+
+        $res = $archiveController->consultation($archiveId, $resourceId);
+
+        $journal = $type . PHP_EOL;
+        $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
+        $journal .= file_get_contents($res->address[0]->repository->repositoryUri . $res->address[0]->path);
+
+        return $journal;
+    }
 }

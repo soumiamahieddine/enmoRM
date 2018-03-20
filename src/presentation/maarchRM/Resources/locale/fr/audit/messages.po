@@ -155,6 +155,21 @@ msgstr "Compte de service"
 msgid "No account found"
 msgstr "Aucun compte trouvé"
 
+msgid "Journal detail"
+msgstr "Détail du journal"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "To date"
+msgstr "Date de début"
+
+msgid "From date"
+msgstr "Date de fin"
+
+msgid "Download journal"
+msgstr "Telecharger le journal (csv)"
+
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
 
