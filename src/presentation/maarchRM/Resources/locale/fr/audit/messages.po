@@ -168,7 +168,7 @@ msgid "From date"
 msgstr "Date de fin"
 
 msgid "Download journal"
-msgstr "Telecharger le journal (csv)"
+msgstr "Télécharger le journal (csv)"
 
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
