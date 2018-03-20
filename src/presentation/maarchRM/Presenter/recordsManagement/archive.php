@@ -314,6 +314,16 @@ class archive
             }
         }
 
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setUnsortableColumns(3);
+        $dataTable->setSorting(array(array(2, 'desc')));
+
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setUnsortableColumns(2);
+        $dataTable->setSorting(array(array(0, 'desc')));
+
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
 
