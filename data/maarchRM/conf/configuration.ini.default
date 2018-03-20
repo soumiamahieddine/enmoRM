@@ -92,6 +92,11 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
 
+; Any path on this list will no be logged in the application journal
+;exceptPath = "['organization/organization/readTodisplay']"
+
+; Any operation on this list will no be logged in the application journal
+;exceptOperation = "['read']"
 
 [auth]
 ; Encryption algorithm (MD5, SHA256, SHA512...)
