@@ -977,4 +977,4 @@ msgstr "Nom de la règle"
 msgctxt "archiveInformation"
 
 msgid "Archive Transfer"
-msgstr "Demande de transfert sortant"
+msgstr "Demander le transfert sortant"
