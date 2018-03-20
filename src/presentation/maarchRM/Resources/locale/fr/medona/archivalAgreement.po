@@ -162,7 +162,7 @@ msgid "Mbytes"
 msgstr "Mo"
 
 msgid "delete archival agreement"
-msgstr "Attention : Vous êtes sur le point de supprimer un accord de versement."
+msgstr "Êtes-vous sûr de vouloir supprimer cet accord de versement ? Vous ne pourrez pas revenir en arrière."
 
 msgid "Delete the archival agreement"
 msgstr "Supprimer l'accord de versement"
