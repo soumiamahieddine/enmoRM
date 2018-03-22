@@ -93,19 +93,13 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid" id="resultSearch"></div>
-    <div class="modal fade" id="modalEvent" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="modalEvent_content">
-            </div>
-        </div>
-    </div>
-    <span id="selectAnEvent_text" class="hide">Select an event</span>
+    <div class="container-fluid" id="resultSearch"/>
 </div>
-<div style="display:none" data-translate-catalog="audit/messages">
+<div class="hide" data-translate-catalog="audit/messages">
     <span id="user_text">User</span>
     <span id="service_text">Service</span>
     <span id="noAccountFound">No account found</span>
+    <span id="selectAnEvent_text">Select an event</span>
 </div>
     
 <script type="text/javascript">
@@ -408,26 +402,6 @@
 
             $('select').find('option').removeClass('hidden');
         });
- 
-        $("#contain").on('click', '.viewEvent', function () {
-
-            var eventId = $(this).attr('data-eventId');
-            $.ajax({
-                type: 'GET',
-                url: '/Event/' + eventId,
-                dataType: 'html',
-                contentType: 'application/json',
-                async: true,
-                success: function (response) {
-                    $('#modalEvent_content').html(response);
-
-                    $('#modalEvent').modal();
-                }
-            });
-        });
         
-        function serializeEvent() {
-            
-        }
 </script>
 

@@ -194,6 +194,7 @@ EOD
         }
 
         $event->output = $this->view->translator->getText($event->output, false, "audit/messages");
+        $event->path = $this->view->translator->getText($event->path, false, "audit/messages");
         $this->view->setSource("event", $event);
         $this->view->merge();
 

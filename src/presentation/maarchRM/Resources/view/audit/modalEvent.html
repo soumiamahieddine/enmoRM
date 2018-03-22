@@ -1,63 +1,67 @@
 
-            <div class="container-fluid" data-translate-catalog="audit/messages">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h1 class="page-header">
-                            Event
-                        </h1>
+<div class="container-fluid" data-translate-catalog="audit/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-header">
+                Event
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="audit/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <dl class="dl dl-horizontal">
+                    <dt><strong>Date</strong></dt> <dd id="audit_eventDate"><?merge event.eventDate ?></dd>
+                    <dt><strong>Account</strong></dt> <dd id="audit_account"><?merge event.accountId ?></dd>
+                    <dt><strong>Event</strong></dt> <dd id="audit_event"><?merge event.path ?></dd>
+                
+                <dt><strong>Status</strong></dt>
+                <dd>
+                    <?merge event.status.ifeq(1) ?><strong class="text-success fa fa-check" disabled="">&nbsp;</strong>
+                    <?merge event.status.ifne(1) ?><strong class="text-danger fa fa-times" disabled="">&nbsp;</strong>
+                </dd>
+                </dl>
+                <div class="col-xs-12">
+                    <?merge event.variables.bool() ?>
+                    <div id="audit_variables">
+                        <hr/>
+                        <h4 class="col-xs-offset-1">Variables</h4>
+                        <dl class='dl dl-horizontal'>
+                            <?merge event.variables.parse(1) ?>
+                            <span><dt><?merge event.variables.current().key()?></dt> <dd> <?merge . ?></dd></span>
+                        </dl>
+                    </div>
+                    <?merge event.info2.bool() ?>
+                    <div id="audit_info">
+                        <hr/>
+                        <h4 class="col-xs-offset-1">Info</h4>
+                        <dl class='dl dl-horizontal'>
+                            <?merge event.info2 ?>
+                            <span><dt><?merge ['name'] ?></dt> <dd> <?merge ['value'] ?></dd></span>
+                        </dl>
+                    </div>
+                    <?merge event.input.bool() ?>
+                    <div id="audit_input">
+                        <hr/>
+                        <h4 class="col-xs-offset-1">Input</h4>
+                        <dl class='dl dl-horizontal'>
+                            <?merge event.input.parse(1) ?>
+                            <span><dt><?merge event.input.current().key()?></dt> <dd> <?merge . ?></dd></span>
+                        </dl>
+                    </div>
+                    <?merge event.output.bool() ?>
+                    <div id="audit_output">
+                        <hr/>
+                        <h4 class="col-xs-offset-1">Output</h4>
+                        <span class="col-xs-offset-2"><?merge event.output ?></span>
                     </div>
                 </div>
             </div>
-            <div class="container-fluid" data-translate-catalog="audit/messages">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel">
-                            <div class="row">
-                                <dl class="dl dl-horizontal">
-                                    <dt><strong>Date</strong></dt> <dd id="audit_eventDate"><?merge event.eventDate ?></dd>
-                                    <dt><strong>Account</strong></dt> <dd id="audit_account"><?merge event.accountId ?></dd>
-                                    <dt><strong>Event</strong></dt> <dd id="audit_event"><?merge event.path ?></dd>
-                                
-                                <dt><strong>Status</strong></dt>
-                                <dd>
-                                    <?merge event.status.ifeq(1) ?><strong class="text-success fa fa-check" disabled="">&nbsp;</strong>
-                                    <?merge event.status.ifne(1) ?><strong class="text-danger fa fa-times" disabled="">&nbsp;</strong>
-                                </dd>
-                                </dl>
-                                <div class="col-xs-12">
-                                    <b>Variables</b>
-                                    <div class="panel well" id="audit_variables">
-                                        <dl class='dl dl-horizontal'>
-                                            <?merge event.variables.parse(1) ?>
-                                            <span><dt><?merge event.variables.current().key()?></dt> <dd> <?merge . ?></dd></span>
-                                        </dl>
-                                    </div>
-                                    <b>Info</b>
-                                    <div class="panel well" id="audit_info">
-                                        <dl class='dl dl-horizontal'>
-                                            <?merge event.info2 ?>
-                                            <span><dt><?merge ['name'] ?></dt> <dd> <?merge ['value'] ?></dd></span>
-                                        </dl>
-                                    </div>
-                                    <b>Input</b>
-                                    <div class="panel well" id="audit_input">
-                                        <dl class='dl dl-horizontal'>
-                                            <?merge event.input.parse(1) ?>
-                                            <span><dt><?merge event.input.current().key()?></dt> <dd> <?merge . ?></dd></span>
-                                        </dl>
-                                    </div>
-                                    <b>Output</b>
-                                    <div class="panel well" id="audit_output">
-                                        <?merge event.output ?>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
-                    </div>
-                </div>
-            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+    </div>
+</div>
