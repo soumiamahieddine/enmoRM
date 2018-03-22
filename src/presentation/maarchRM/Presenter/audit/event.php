@@ -86,6 +86,7 @@ class event
     {
         $events = array();
         $routes = array();
+        $translator = $this->view->translator;
         
         $bundles = \laabs::bundles();
         foreach ($bundles as $bundle) {
@@ -101,29 +102,17 @@ class event
         }
 
         $routes = array_unique($routes);
-
         foreach ($routes as $route) {
             $event = new \stdClass();
             $event->path = $route;
-
-            if (strpos($route, 'read') || strpos($route, 'get')) {
-                $event->class = 'read';
-            } elseif (strpos($route, 'create') || strpos($route, 'add') || strpos($route, 'new')) {
-                $event->class = 'create';
-            } elseif (strpos($route, 'update') || strpos($route, 'modify')) {
-                $event->class = 'update';
-            } elseif (strpos($route, 'delete')) {
-                $event->class = 'delete';
-            } else {
-                $event->class = 'all';
-            }
+            $event->label = $translator->getText($event->path, false, "audit/messages");
             $events[] = $event;
         }
         
         $this->view->addContentFile("audit/search.html");
         $this->view->setSource("events", $events);
-        $this->view->merge();
         $this->view->translate();
+        $this->view->merge();
 
         $this->view->addScriptSrc(
 <<<EOD
