@@ -159,7 +159,7 @@ EOD
             $dataTable->setSorting(array(array(2, 'desc')));
         } else {
             $dataTable->setUnsortableColumns(4);
-            $dataTable->setSorting(array(array(1, 'desc')));
+            $dataTable->setSorting(array(array(0, 'desc')));
         }
 
         return $this->view->saveHtml();
@@ -180,7 +180,8 @@ EOD
         // Fix error on event info
         if(isset($event->info )) {
             foreach (json_decode($event->info) as $name => $value) {
-                $event->info2[] = array('name'=> $name, 'value'=> $value);
+                $nameTraduction = $this->view->translator->getText($name, false, "audit/messages");
+                $event->info2[] = array('name'=> $nameTraduction, 'value'=> $value);
             }
         }
         if (isset($event->input)) {
@@ -194,7 +195,7 @@ EOD
         }
 
         $event->output = $this->view->translator->getText($event->output, false, "audit/messages");
-        $event->path = $this->view->translator->getText($event->path, false, "audit/messages");
+        $event->pathTraduction = $this->view->translator->getText($event->path, false, "audit/messages");
         $this->view->setSource("event", $event);
         $this->view->merge();
 
