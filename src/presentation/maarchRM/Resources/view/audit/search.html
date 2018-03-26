@@ -38,9 +38,11 @@
                                     <input type="text" class="form-control" placeholder="Account" id="accountTypeahead"/>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="status">Status</label>
-                                <div class="btn-group col-sm-7" data-toggle="buttons" >
+                                <label class="col-sm-4 control-label" for="status">Status</label>
+                                <div class="btn-group col-sm-6" data-toggle="buttons" >
                                     <label class="btn btn-info active status" title="all">
                                         <input type="radio" id="all" name="status" value="all" checked>All
                                     </label>
@@ -49,25 +51,6 @@
                                     </label>
                                     <label class="btn btn-default status" title="errors">
                                         <input type="radio" id="false" name="status" value="false">Errors
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label" for="wording">Wording</label>
-                                <div class="btn-group col-sm-7" data-toggle="buttons" >
-                                    <label class="btn btn-info active wordingAll" title="all">
-                                        <input type="checkbox" id="all" name="wording" value="all" checked>All
-                                    </label>
-                                    <label class="btn btn-default wording" title="Variables">
-                                        <input type="checkbox" id="variables" name="wording" value="variables">Variables
-                                    </label>
-                                    <label class="btn btn-default wording" title="Input">
-                                        <input type="checkbox" id="input" name="wording" value="input">Input
-                                    </label>
-                                    <label class="btn btn-default wording" title="Info">
-                                        <input type="checkbox" id="info" name="wording" value="info">Info
                                     </label>
                                 </div>
                             </div>
@@ -138,15 +121,6 @@
         },
 
         serialize : function() {
-            wording = 'all';
-            $.each(EventSearchForm.form.find('.wording.active'), function (index, value) {
-                if (wording != "all") {
-                    wording = wording + "," + value.firstElementChild.value;
-                } else {
-                    wording = value.firstElementChild.value;
-                }
-            });
-            
             serializedObject = {
                 fromDate: $('#fromDate').val(),
                 toDate: $('#toDate').val(),
@@ -154,7 +128,6 @@
                 event: $('#eventName').data('event-path'),
                 accountId: $.trim($('#accountTypeahead').val()),
                 term: $('#term').val(),
-                wording : wording
             };
             
             if ($('#accountTypeahead').data('accountid')) {
@@ -312,96 +285,6 @@
     $("#eventName").on('keypress', function () {
         $("#eventName").data('event-path', "");
    });
-
-        // checkBox button
-        $("#eventSearchForm").on('click', '.eventType', function () {
-
-            type = $(this).find('input').val();
-            if ($(this).attr('class').indexOf('btn-default') != -1) {
-
-                $('#eventSearchForm ').find('.eventTypeAll').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-                if ($('#eventSearchForm ').find('.eventType').hasClass('active') == false) {
-                    $('select').find('option').addClass('hidden');
-                }
-
-                if (type == 'read') {
-                    $('select').find('option.read').removeClass('hidden');
-                } else if (type == 'create') {
-                    $('select').find('option.create').removeClass('hidden');
-                } else if (type == 'update') {
-                    $('select').find('option.update').removeClass('hidden');
-                } else if (type == 'delete') {
-                    $('select').find('option.delete').removeClass('hidden');
-                }
-
-            } else {
-
-                if (type == 'read') {
-                    $('select').find('option.read').addClass('hidden');
-                } else if (type == 'create') {
-                    $('select').find('option.create').addClass('hidden');
-                } else if (type == 'update') {
-                    $('select').find('option.update').addClass('hidden');
-                } else if (type == 'delete') {
-                    $('select').find('option.delete').addClass('hidden');
-                }
-
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
-        
-        $("#eventSearchForm").on('click', '.eventTypeAll', function () {
-
-            $('#eventSearchForm ').find('.eventType').removeClass('btn-info active').addClass('btn-default');
-            $(this).removeClass('btn-default').addClass('btn-info');
-
-            $('select').find('option').removeClass('hidden');
-        });
-        
-        // checkBox button
-        $("#eventSearchForm").on('click', '.wording', function () {
-
-            wording = $(this).find('input').val();
-            if ($(this).attr('class').indexOf('btn-default') != -1) {
-
-                $('#eventSearchForm ').find('.wordingAll').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-                if ($('#eventSearchForm ').find('.wording').hasClass('active') == false) {
-                    $('select').find('option').addClass('hidden');
-                }
-
-                if (wording == 'variables') {
-                    $('select').find('option.variables').removeClass('hidden');
-                } else if (wording == 'input') {
-                    $('select').find('option.input').removeClass('hidden');
-                } else if (wording == 'update') {
-                    $('select').find('option.info').removeClass('hidden');
-                }
-
-            } else {
-
-                if (wording == 'variables') {
-                    $('select').find('option.variables').addClass('hidden');
-                } else if (wording == 'input') {
-                    $('select').find('option.input').addClass('hidden');
-                } else if (wording == 'info') {
-                    $('select').find('option.info').addClass('hidden');
-                }
-
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
-        
-        $("#eventSearchForm").on('click', '.wordingAll', function () {
-
-            $('#eventSearchForm ').find('.wording').removeClass('btn-info active').addClass('btn-default');
-            $(this).removeClass('btn-default').addClass('btn-info');
-
-            $('select').find('option').removeClass('hidden');
-        });
         
 </script>
 
