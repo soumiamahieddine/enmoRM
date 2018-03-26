@@ -43,20 +43,12 @@
                             <span><dt><?merge ['name'] ?></dt> <dd> <?merge ['value'] ?></dd></span>
                         </dl>
                     </div>
-                    <?merge event.input.bool() ?>
-                    <div id="audit_input">
-                        <hr/>
-                        <h4 class="col-xs-offset-1">Input</h4>
-                        <dl class='dl dl-horizontal'>
-                            <?merge event.input.parse(1) ?>
-                            <span><dt><?merge event.input.current().key()?></dt> <dd> <?merge . ?></dd></span>
-                        </dl>
-                    </div>
                     <?merge event.output.bool() ?>
                     <div id="audit_output">
                         <hr/>
                         <h4 class="col-xs-offset-1">Output</h4>
-                        <span class="col-xs-offset-2"><?merge event.output ?></span>
+                        <?merge event.output ?>
+                        <span class="col-xs-offset-2 col-xs-10"><?merge . ?></span>
                     </div>
                 </div>
             </div>

@@ -184,17 +184,25 @@ EOD
                 $event->info2[] = array('name'=> $nameTraduction, 'value'=> $value);
             }
         }
-        if (isset($event->input)) {
-            if (is_array($event->input)) {
-                foreach ($event->input as $name => $value) {
-                    if (is_string($value) && strlen($value) > 70) {
-                        $event->input[$name] = substr($value, 0, 70)."...";
+
+        if ($event->output) {
+            $output = [];
+            $outputObject = json_decode($event->output);
+            if (is_array($outputObject)) {
+                foreach ($outputObject as $outputMessage) {
+                    if (isset($outputMessage->message)) {
+                        $outputMessage->message = $this->view->translator->getText($outputMessage->message, false, "audit/messages");
+                        $output[] = vsprintf($outputMessage->message, $outputMessage->variables);
                     }
                 }
+
+                $event->output = $output;
+            
+            } elseif (is_string($event->output)) {
+                $event->output = [$this->view->translator->getText($event->output, false, "audit/messages")];
             }
         }
 
-        $event->output = $this->view->translator->getText($event->output, false, "audit/messages");
         $event->pathTraduction = $this->view->translator->getText($event->path, false, "audit/messages");
         $this->view->setSource("event", $event);
         $this->view->merge();

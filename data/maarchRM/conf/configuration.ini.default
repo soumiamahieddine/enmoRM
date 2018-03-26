@@ -93,10 +93,10 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 chainWithTimestamp = false;
 
 ; Any path on this list will no be logged in the application journal
-;exceptPath = "['organization/organization/readTodisplay']"
+;ignorePaths = "['organization/organization/readTodisplay']"
 
 ; Any operation on this list will no be logged in the application journal
-;exceptOperation = "['read']"
+;ignoreMethods = "['read']"
 
 [auth]
 ; Encryption algorithm (MD5, SHA256, SHA512...)
