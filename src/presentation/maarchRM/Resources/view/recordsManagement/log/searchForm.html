@@ -92,12 +92,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </div>
     <div class="container-fluid" id="archiveList"></div>
+
+    <!-- Modal -->
     <div class="modal fade bs-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="log" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="log_modalContainer">
             </div>
         </div>
     </div>
+    <?hinclude lifeCycle/eventModal.html ?>
 </div>
 <?hinclude recordsManagement/log/integrityCheck.html ?>
 <?hinclude recordsManagement/archive/archiveManagement.html ?>
@@ -194,4 +197,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
         });
     });
+
+    $("#contain").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    })
 </script>

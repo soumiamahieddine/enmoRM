@@ -43,23 +43,23 @@
                     <thead>
                     <?merge type.ifeq('application') ?>
                     <tr>
-                        <th>Account</th>
                         <th>Date</th>
+                        <th>Account</th>
                         <th>Event</th>
                     </tr>
                     <?merge type.ifeq('lifeCycle') ?>
                     <tr>
-                        <th>Identifier</th>
                         <th>Date</th>
                         <th>Event</th>
+                        <th/>
                     </tr>
                     </thead>
                     <?merge type.ifeq('application') ?>
                     <tbody>
                         <?merge events ?>
                         <tr>
-                            <td><?merge .[1] ?></td>
                             <td><?merge .[0] ?></td>
+                            <td><?merge .[1] ?></td>
                             <td><?merge .[2] ?></td>
                         </tr>
                     </tbody>
@@ -67,9 +67,13 @@
                     <tbody>
                         <?merge events ?>
                         <tr>
-                            <td><?merge .[0] ?></td>
                             <td><?merge .[2] ?></td>
-                            <td><?merge .[1] ?></td>
+                            <td><?merge .[7] ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-warning btn-sm showEvent" title="Show the certificate" data-eventid='[?merge .[0] ?]' data-journal-id='[?merge head[0] ?]'><span class="fa fa-fw fa-eye">&nbsp;</span></button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

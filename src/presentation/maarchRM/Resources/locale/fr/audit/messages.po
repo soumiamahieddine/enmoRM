@@ -387,6 +387,9 @@ msgstr "Suppression d'un journal de l'application"
 msgid "recordsManagement/log/form"
 msgstr "Recherche des journaux de l'application"
 
+msgid "recordsManagement/log/contents_type__archiveId__resourceId_"
+msgstr "Lecture du detail d'un journal"
+
 msgid "recordsManagement/retentionRule/readIndex"
 msgstr "Lecture de toutes les règles de conservation"
 

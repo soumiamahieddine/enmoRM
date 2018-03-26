@@ -108,7 +108,15 @@ class log
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
-        $dataTable->setSorting(array(array(1, 'desc')));
+        $dataTable->setSorting(array(array(0, 'desc')));
+
+        if ($type === "lifeCycle") {
+            $dataTable->setUnsortableColumns(2);
+        } else if ( $type === "application") {
+            for ($i = 0; $i < count($events);  $i++) {
+                $events[$i][2] = $this->view->translator->getText($events[$i][2], false, 'audit/messages');
+            }
+        }
 
         $this->view->setSource("archiveId", $id[0]);
         $this->view->setSource("resourceId", $id[1]);
