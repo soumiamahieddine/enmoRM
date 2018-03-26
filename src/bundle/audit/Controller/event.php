@@ -57,25 +57,6 @@ class event
      */
     public function add($path, array $variables = null, $input = null, $output = null, $status = false, $info = null)
     {
-
-        // Logging exception
-        $exceptPath = \laabs::configuration('audit')['exceptPath'];
-        $exceptOperation = \laabs::configuration('audit')['exceptOperation'];
-
-        if($exceptOperation) {
-            $operation = explode('/', $path);
-            $operation = end($operation);
-            foreach ($exceptOperation as $operationType) {
-                if (preg_match("/^".$operationType."/",$operation)) {
-                    return;
-                }
-            }
-        }
-
-        if ($exceptPath && in_array($path, $exceptPath)) {
-            return;        
-        }
-
         // Event creation
         $event = \laabs::newInstance('audit/event');
         $event->eventId = \laabs::newId();

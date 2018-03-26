@@ -34,8 +34,8 @@ class logger
     public $currentAuditFile;
     public $servicePath;
     public $input;
-    public $ignoreReads = false;
-    public $ignorePaths;
+    public $ignoreMethods = [];
+    public $ignorePaths = [];
 
     /**
      * Constructor
@@ -45,7 +45,14 @@ class logger
     {
         $this->sdoFactory = $sdoFactory;
 
-        $this->ignorePaths = array("audit/*");
+        if (isset(\laabs::configuration('audit')['ignoreMethods'])) {
+            $this->ignoreMethods = \laabs::configuration('audit')['ignoreMethods'];
+        }
+
+        if (isset(\laabs::configuration('audit')['ignorePaths'])) {
+            $this->ignorePaths = \laabs::configuration('audit')['ignorePaths'];
+        }
+        $this->ignorePaths[] = ("audit/*");
     }
 
     /**
@@ -123,19 +130,19 @@ class logger
      */
     public function notifyServicePath(&$servicePath, &$serviceMessage = null)
     {
-        if ($servicePath->method == 'read' && $this->ignoreReads) {
+        if (in_array($servicePath->method, $this->ignoreMethods)) {
             return;
         }
 
+
         $fullpath = $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->path;
         // TO DO : add admin to set ignore path
-        if ($this->ignorePaths) {
-            foreach ($this->ignorePaths as $ignorePath) {
-                if (fnmatch($ignorePath, $fullpath)) {
-                    return;
-                }
+        foreach ($this->ignorePaths as $ignorePath) {
+            if (fnmatch($ignorePath, $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->name)) {
+                return;
             }
         }
+
         $this->servicePath = $servicePath;
 
         //var_dump($servicePath);
