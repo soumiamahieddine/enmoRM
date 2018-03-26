@@ -291,6 +291,7 @@ function csrfprotector_init() {
 		if (this.method.toLowerCase() === 'post') {
 			// attach the token in request header
 			this.setRequestHeader(CSRFP.CSRFP_TOKEN, CSRFP._getAuthKey());
+			this.setRequestHeader("X-Laabs-Csrf", CSRFP._getAuthKey());
 		}
 		return this.old_send(data);
 	}
