@@ -38,7 +38,7 @@ if(isset($_POST['regenerate'])) {
 
                 if(document.getElementById("filename").value){
                     var file =  document.getElementById('filename').value;
-                    console.log(file)
+
                     if(file != "style.css") {
 
                         document.getElementById('title').style.display='block';
