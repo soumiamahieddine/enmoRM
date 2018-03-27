@@ -83,18 +83,34 @@
     });
     
     var ArchiveForm = {
-        send : function() {
-            var archive = this.serialize();
+        send : function(type) {
+            var archive = this.syncSerialize(type);
 
-            if (archive < 0) {
-                return;
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
+
+                if (archive < 0) {
+                    return;
+                }
+
+                data = JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer});
+            }else {
+                url = "/transfer";
+                data = this.asyncSerialize();
+
+                if (data.message <0) {
+                    return;
+                }
+
+                data = JSON.stringify(data);
             }
 
             ajax($('#import'),
                 {
                     type        : 'POST',
-                    url         : "/archive",
-                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
+                    url         : url,
+                    data        : data,
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
@@ -206,13 +222,13 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        serialize : function() {
+        syncSerialize : function() {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
                 descriptionObject : {}
-            }
+            };
 
             inputs.each(function() {
                 var value = $(this).val();
@@ -222,7 +238,7 @@
                     }
                     archive[$(this).attr('name')] = value;
                 }
-            })
+            });
 
             var selectedProfile = $('#archivalProfile').data('json');
 
@@ -237,11 +253,6 @@
             if (archive.descriptionObject === true) {
                 return -1;
             }
-
-            /*if (archive.archiveName == null || archive.archiveName == "") {
-                gritter.show($('#fieldLabel_error').text(), false);
-                return -2;
-            }*/
 
             archive.digitalResources = DocumentList.serialize();
 
@@ -258,6 +269,60 @@
             }
 
             return archive;
+        },
+
+        asyncSerialize : function() {
+            var form = $('#archiveForm, #managementMetadataForm');
+            var inputs = form.find('.archiveInput');
+            var data = {
+                messageFile : {},
+                digitalResources : []
+            };
+
+            var archive = {
+                descriptionObject : {}
+            };
+
+            inputs.each(function() {
+                var value = $(this).val();
+                if (value) {
+                    if ($(this).hasClass('datePicker')) {
+                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                    }
+                    archive[$(this).attr('name')] = value;
+                }
+            });
+
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                archive.descriptionClass = selectedProfile.descriptionClass;
+                if (selectedProfile.fileplanLevel != null) {
+                    archive.fileplanLevel = selectedProfile.fileplanLevel;
+                }
+            }
+
+            archive.descriptionObject = Metadata.serialize($('#allFields'));
+            if (archive.descriptionObject === true) {
+                return -1;
+            }
+
+            data.digitalResources = DocumentList.serialize();
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                if (selectedProfile.fileplanLevel == 'item' && data.digitalResources==null) {
+                    gritter.show($('#documentMissing_error').text(), false);
+                    return -2;
+                }
+            }
+
+            if (!selectedProfile && !archive.archiveName && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
+                gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
+                return -3;
+            }
+
+            data.messageFile = btoa(JSON.stringify(archive));
+            return data;
         },
 
         clear : function() {

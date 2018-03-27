@@ -861,6 +861,9 @@ msgstr "Métadonnées"
 msgid "Import"
 msgstr "Importer"
 
+msgid "Import with validation"
+msgstr "Importer avec validation"
+
 msgid "Click or drop a document"
 msgstr "Cliquer ou déposer un document"
 

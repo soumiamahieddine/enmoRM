@@ -67,6 +67,9 @@ class welcome
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
+
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
             $this->getOrgUnitArchivalProfiles($filePlan);
@@ -109,6 +112,8 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
+        $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
 
