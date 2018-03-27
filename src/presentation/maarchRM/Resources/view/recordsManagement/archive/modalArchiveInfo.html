@@ -81,7 +81,7 @@
     })
 
     archiveInfoModal = {
-         load: function(archiveId) {
+         load: function(archiveId, noMessageTab) {
             $.ajax({
                 type        : "GET",
                 url         : "/recordsManagement/archiveDescription/" + archiveId,
@@ -101,6 +101,11 @@
                     } else {
                         $('#modalArchiveInfo').modal();
                     }
+
+                    if (noMessageTab === true) {
+                        $('#modalArchiveInfo').find('.nav-tabs').find('li:last').remove();
+                    }
+
                 }
             });
          },
