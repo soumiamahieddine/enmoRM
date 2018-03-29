@@ -102,6 +102,39 @@ class filePlan
     }
 
     /**
+     * Create folder from path
+     * @param string  $path             The folder path
+     * @param string  ownerOrgRegNumber The owner
+     * @param boolean $recursive        Recursive creation
+     * @param string  $delimiter        The folder path
+     */
+    public function createFromPath($path, $ownerOrgRegNumber, $recursive = false, $delimiter = "/")
+    {
+        $items = \laabs\explode($delimiter, $path);
+        $parentFolderId = null;
+
+        while (!empty($items)) {
+            $folder = \laabs::newInstance("filePlan/folder");
+            $folder->name = array_shift($items);
+            $folder->parentFolderId = $parentFolderId;
+            $folder->ownerOrgRegNumber = $ownerOrgRegNumber;
+
+            try {
+                if (!$recursive && !empty($items)) {
+                    $parentFolderId = $this->readByName($folder->name)->folderId;
+                    continue;
+                }
+
+                $parentFolderId = $this->create($folder);
+            } catch (\core\Exception\ConflictException $e) {
+                $parentFolderId = $this->readByName($folder->name)->folderId;
+            }
+        }
+
+        return $parentFolderId;
+    }
+
+    /**
      * Read a folder
      * @param string $folderId The folder identifier
      * 
@@ -137,8 +170,7 @@ class filePlan
             $folder = $folders[0];
 
         } catch(\Exception $e) {
-            throw $e;
-            
+            var_dump($folderName);
             throw new \core\Exception\NotFoundException("The folder can't be found.");
         }
 
