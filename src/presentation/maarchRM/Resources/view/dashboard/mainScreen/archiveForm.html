@@ -275,53 +275,121 @@
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var data = {
-                messageFile : {},
+                messageFile : {
+                    binaryDataObject : {},
+                    descriptiveMetadata : {}
+                },
                 digitalResources : []
             };
 
-            var archive = {
-                descriptionObject : {}
+            var id = Math.random().toString(36).substr(2, 9);
+            var obj = {};
+            obj[id] = {
+                archiveName                 : null,
+                originatorArchiveId         : null,
+                originatorId                : null,
+                descriptionObject           : {},
+                originatingDate             : null,
+                managementMetadata          : {
+                    storageRule             : {},
+                    accessRule              : {},
+                    appraisalRule           : {},
+                    classificationRule      : {}
+                },
+                descriptionClass            : null,
+                dataObject                  : []
             };
 
             inputs.each(function() {
                 var value = $(this).val();
-                if (value) {
-                    if ($(this).hasClass('datePicker')) {
-                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                    }
-                    archive[$(this).attr('name')] = value;
+
+                switch ($(this).attr('name')) {
+                    case 'archivalProfileReference' :
+                        if (value) {
+                            obj[id].managementMetadata.archivalProfile = value;
+                        }
+                        break;
+                    case 'archiveName' :
+                        if (value) {
+                            obj[id].archiveName = value;
+                        }
+                        break;
+                    case 'originatingDate' :
+                        if (value) {
+                            obj[id].originatingDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
+                    case 'originatorArchiveId' :
+                        if (value) {
+                            obj[id].originatorArchiveId = value;
+                        }
+                        break;
+                    case 'originatorOrgRegNumber' :
+                        if (value) {
+                            obj[id].originatorId = value;
+                        }
+                        break;
+                    case 'filePlanPosition' :
+                        if (value) {
+                            obj[id].folderPath = value;
+                        }
+                        break;
+                    case 'parentArchiveId' :
+                        if (value) {
+                            obj[id].parentArchiveId = value;
+                        }
+                        break;
+                    case 'retentionRuleCode' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.code = value;
+                        }
+                        break;
+                    case 'retentionStartDate' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.startDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
                 }
             });
 
             var selectedProfile = $('#archivalProfile').data('json');
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
-                archive.descriptionClass = selectedProfile.descriptionClass;
+                obj[id].descriptionClass = selectedProfile.descriptionClass;
                 if (selectedProfile.fileplanLevel != null) {
-                    archive.fileplanLevel = selectedProfile.fileplanLevel;
+                    if (selectedProfile.fileplanLevel === 'file') {
+                        obj[id].archiveType = 'container';
+                    } else {
+                        obj[id].archiveType = 'item';
+                    }
                 }
             }
 
-            archive.descriptionObject = Metadata.serialize($('#allFields'));
-            if (archive.descriptionObject === true) {
+            obj[id].descriptionObject = Metadata.serialize($('#allFields'));
+            if (obj[id].descriptionObject === true) {
                 return -1;
             }
 
-            data.digitalResources = DocumentList.serialize();
+            data.messageFile.binaryDataObject = DocumentList.asyncSerialize();
 
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
-                if (selectedProfile.fileplanLevel == 'item' && data.digitalResources==null) {
+                if (obj[id].archiveType === 'item' && data.messageFile.binaryDataObject==null) {
                     gritter.show($('#documentMissing_error').text(), false);
                     return -2;
                 }
             }
 
-            if (!selectedProfile && !archive.archiveName && !archive.originatorArchiveId && !archive.originatingDate && archive.digitalResources == null) {
+            if (!selectedProfile && !obj[id].archiveName && !obj[id].originatorArchiveId && !obj[id].originatingDate && data.messageFile.binaryDataObject == null) {
                 gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
                 return -3;
             }
 
-            data.messageFile = btoa(JSON.stringify(archive));
+            $.each(data.messageFile.binaryDataObject, function(index, value) {
+                obj[id].dataObject.push(index);
+            });
+
+            data.messageFile.descriptiveMetadata[id] = obj[id];
+            data.messageFile = btoa(JSON.stringify(data.messageFile));
             return data;
         },
 
