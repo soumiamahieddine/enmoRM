@@ -1647,3 +1647,6 @@ msgstr "Réinitialisation du compte oublié"
 msgid "auth/userAccount/updateResetpassword"
 msgstr "Réinitialisation du mot de passe"
 
+msgid "organization/orgContact/readCountriesCodes"
+msgstr "Lecture de la liste des pays"
+
