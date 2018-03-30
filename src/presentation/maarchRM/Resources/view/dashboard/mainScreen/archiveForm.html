@@ -288,6 +288,7 @@
                 archiveName                 : null,
                 originatorArchiveId         : null,
                 originatorId                : null,
+                archiveType                 : null,
                 descriptionObject           : {},
                 originatingDate             : null,
                 managementMetadata          : {
@@ -363,6 +364,10 @@
                         obj[id].archiveType = 'item';
                     }
                 }
+            }
+
+            if (!obj[id].archiveType) {
+                obj[id].archiveType = 'item';
             }
 
             obj[id].descriptionObject = Metadata.serialize($('#allFields'));
