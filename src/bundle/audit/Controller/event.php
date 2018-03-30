@@ -57,6 +57,7 @@ class event
      */
     public function add($path, array $variables = null, $input = null, $output = null, $status = false, $info = null)
     {
+        // Event creation
         $event = \laabs::newInstance('audit/event');
         $event->eventId = \laabs::newId();
         $event->eventDate = \laabs::newTimestamp();

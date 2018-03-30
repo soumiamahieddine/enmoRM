@@ -170,6 +170,12 @@ msgstr "Date de fin"
 msgid "Download journal"
 msgstr "Télécharger le journal (csv)"
 
+msgid "Path"
+msgstr "Route"
+
+msgid "remoteIp"
+msgstr "Ip distant"
+
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
 

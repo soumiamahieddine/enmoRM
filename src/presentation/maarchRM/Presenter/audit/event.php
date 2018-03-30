@@ -86,6 +86,7 @@ class event
     {
         $events = array();
         $routes = array();
+        $translator = $this->view->translator;
         
         $bundles = \laabs::bundles();
         foreach ($bundles as $bundle) {
@@ -101,29 +102,17 @@ class event
         }
 
         $routes = array_unique($routes);
-
         foreach ($routes as $route) {
             $event = new \stdClass();
             $event->path = $route;
-
-            if (strpos($route, 'read') || strpos($route, 'get')) {
-                $event->class = 'read';
-            } elseif (strpos($route, 'create') || strpos($route, 'add') || strpos($route, 'new')) {
-                $event->class = 'create';
-            } elseif (strpos($route, 'update') || strpos($route, 'modify')) {
-                $event->class = 'update';
-            } elseif (strpos($route, 'delete')) {
-                $event->class = 'delete';
-            } else {
-                $event->class = 'all';
-            }
+            $event->label = $translator->getText($event->path, false, "audit/messages");
             $events[] = $event;
         }
         
         $this->view->addContentFile("audit/search.html");
         $this->view->setSource("events", $events);
-        $this->view->merge();
         $this->view->translate();
+        $this->view->merge();
 
         $this->view->addScriptSrc(
 <<<EOD
@@ -170,7 +159,7 @@ EOD
             $dataTable->setSorting(array(array(2, 'desc')));
         } else {
             $dataTable->setUnsortableColumns(4);
-            $dataTable->setSorting(array(array(1, 'desc')));
+            $dataTable->setSorting(array(array(0, 'desc')));
         }
 
         return $this->view->saveHtml();
@@ -191,20 +180,30 @@ EOD
         // Fix error on event info
         if(isset($event->info )) {
             foreach (json_decode($event->info) as $name => $value) {
-                $event->info2[] = array('name'=> $name, 'value'=> $value);
-            }
-        }
-        if (isset($event->input)) {
-            if (is_array($event->input)) {
-                foreach ($event->input as $name => $value) {
-                    if (is_string($value) && strlen($value) > 70) {
-                        $event->input[$name] = substr($value, 0, 70)."...";
-                    }
-                }
+                $nameTraduction = $this->view->translator->getText($name, false, "audit/messages");
+                $event->info2[] = array('name'=> $nameTraduction, 'value'=> $value);
             }
         }
 
-        $event->output = $this->view->translator->getText($event->output, false, "audit/messages");
+        if ($event->output) {
+            $output = [];
+            $outputObject = json_decode($event->output);
+            if (is_array($outputObject)) {
+                foreach ($outputObject as $outputMessage) {
+                    if (isset($outputMessage->message)) {
+                        $outputMessage->message = $this->view->translator->getText($outputMessage->message, false, "audit/messages");
+                        $output[] = vsprintf($outputMessage->message, $outputMessage->variables);
+                    }
+                }
+
+                $event->output = $output;
+            
+            } elseif (is_string($event->output)) {
+                $event->output = [$this->view->translator->getText($event->output, false, "audit/messages")];
+            }
+        }
+
+        $event->pathTraduction = $this->view->translator->getText($event->path, false, "audit/messages");
         $this->view->setSource("event", $event);
         $this->view->merge();
 

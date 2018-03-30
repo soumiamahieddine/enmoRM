@@ -80,7 +80,7 @@ class orgTree
             return strcmp($a->reference, $b->reference);
         });
 
-        if(\laabs::getToken("ORGANIZATION")){
+        if(\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes){
             $addOrganizationRight = in_array('owner',\laabs::getToken("ORGANIZATION")->orgRoleCodes);
         } else {
             $addOrganizationRight = true;

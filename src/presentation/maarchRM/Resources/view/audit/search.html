@@ -1,24 +1,24 @@
-<div id="contain" >
-    <div class="container-fluid" data-translate-catalog="audit/messages">
-        <div class="page-header">
-            <h1>
-                <i class="fa fa-desktop"></i>
-                Audit search
-            </h1>
-        </div>
+<div class="container-fluid" data-translate-catalog="audit/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-desktop"></i>
+            Audit search
+        </h1>
     </div>
-    <div class="container-fluid" lang="en" data-translate-catalog="audit/messages">
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="cursor:pointer;">
-                    <h4 class="panel-title" style="float:left;">
-                        Search form
-                    </h4>
-                    <i class="fa fa-caret-down" style="float:right;"></i>
-                    <div style="clear:both;"></div>
-                </div>
-                <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
-                    <form class="form-horizontal" id="event_form">
+</div>
+<div class="container-fluid" lang="en" data-translate-catalog="audit/messages">
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="cursor:pointer;">
+                <h4 class="panel-title" style="float:left;">
+                    Search form
+                </h4>
+                <i class="fa fa-caret-down" style="float:right;"></i>
+                <div style="clear:both;"></div>
+            </div>
+            <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
+                <form class="form-horizontal" id="eventSearchForm">
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="fromDate">Entry date to</label>
@@ -33,105 +33,61 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="event_accountTypeahead">Account</label>
+                                <label class="col-sm-3 control-label" for="accountTypeahead">Account</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Account" id="event_accountTypeahead" data-accountId=""/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label" for="status">Status</label>
-                                <div class="btn-group col-sm-7" data-toggle="buttons" >
-                                    <label class="btn btn-info active status" title="all">
-                                        <input type="checkbox" id="all" name="status" value="all" checked>All
-                                    </label>
-                                    <label class="btn btn-default status" title="noErrors">
-                                        <input type="checkbox" id="true" name="status" value="true">Success
-                                    </label>
-                                    <label class="btn btn-default status" title="errors">
-                                        <input type="checkbox" id="false" name="status" value="false">Errors
-                                    </label>
+                                    <input type="text" class="form-control" placeholder="Account" id="accountTypeahead"/>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label" for="wording">Wording</label>
-                                    <div class="btn-group col-sm-7" data-toggle="buttons" >
-                                        <label class="btn btn-info active wordingAll" title="all">
-                                            <input type="checkbox" id="all" name="wording" value="all" checked>All
-                                        </label>
-                                        <label class="btn btn-default wording" title="Variables">
-                                            <input type="checkbox" id="variables" name="wording" value="variables">Variables
-                                        </label>
-                                        <label class="btn btn-default wording" title="Input">
-                                            <input type="checkbox" id="input" name="wording" value="input">Input
-                                        </label>
-                                        <label class="btn btn-default wording" title="Info">
-                                            <input type="checkbox" id="info" name="wording" value="info">Info
-                                        </label>
-                                    </div>
+                                <label class="col-sm-4 control-label" for="status">Status</label>
+                                <div class="btn-group col-sm-6" data-toggle="buttons" >
+                                    <label class="btn btn-info active status" title="all">
+                                        <input type="radio" id="all" name="status" value="all" checked>All
+                                    </label>
+                                    <label class="btn btn-default status" title="noErrors">
+                                        <input type="radio" id="true" name="status" value="true">Success
+                                    </label>
+                                    <label class="btn btn-default status" title="errors">
+                                        <input type="radio" id="false" name="status" value="false">Errors
+                                    </label>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label" for="userIdAudit">Search term</label>
-                                    <div class="col-md-6">
-                                        <input type="text" class="form-control" placeholder="Term" id="term"/>
-                                    </div>
-                                </div>
-                                <label class="col-sm-4 control-label">Event type</label>
-                                <div class="btn-group col-sm-8" data-toggle="buttons">
-                                    <label class="btn btn-info active eventTypeAll" title="All">
-                                        <input type="checkbox"  name="eventType" value="all" checked/> All
-                                    </label>
-                                    <label class="btn btn-default eventType" title="Read">
-                                        <input type="checkbox"  name="eventType" value="read">Read
-                                    </label>
-                                    <label class="btn btn-default eventType" title="Create">
-                                        <input type="checkbox"  name="eventType" value="create">Create
-                                    </label>
-                                    <label class="btn btn-default eventType" title="Update">
-                                        <input type="checkbox"  name="eventType" value="update" >Update
-                                    </label>
-                                    <label class="btn btn-default eventType" title="Delete">
-                                        <input type="checkbox"  name="eventType" value="delete">Delete
-                                    </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" for="userIdAudit">Search term</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Term" id="term"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label" for="eventType">Event</label>
                                 <div class="col-sm-6">
-                                    <select class="form-control" name="event" id="event" >
-                                        <?merge events ?>
-                                        <option value="[?merge .path ?]" class="[?merge .class ?]"><?merge .path ?></option>
-                                    </select>
+                                    <input type="text" class="form-control" placeholder="Event" id="eventName" data-eventlist="[?merge events.json() ?]"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="clearfix">
-                            <button type="button" class="btn btn-primary col-md-offset-4 col-md-4" id="search" data-form-submit title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
-                            <button type="button" class="btn btn-warning col-md-offset-1" id="reset" data-form-reset title="Reset"><i class="fa fa-refresh">&nbsp;</i>Reset</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="row clearfix">
+                        <button type="button" class="btn btn-primary col-md-offset-4 col-md-4" id="search" data-form-submit title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
+                        <button type="button" class="btn btn-warning col-md-offset-1" id="reset" data-form-reset title="Reset"><i class="fa fa-refresh">&nbsp;</i>Reset</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="container-fluid" id="resultSearch"></div>
-        <div class="modal fade" id="modalEvent" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" id="modalEvent_content">
-                </div>
-            </div>
-        </div>
-        <span id="selectAnEvent_text" class="hide">Select an event</span>
     </div>
-    <div style="display:none" data-translate-catalog="audit/messages">
-        <span id="user_text">User</span>
-        <span id="service_text">Service</span>
-        <span id="noAccountFound">No account found</span>
-    </div>
-    <script type="text/javascript">
+    <div class="container-fluid" id="resultSearch"/>
+</div>
+<div class="hide" data-translate-catalog="audit/messages">
+    <span id="user_text">User</span>
+    <span id="service_text">Service</span>
+    <span id="noAccountFound">No account found</span>
+    <span id="selectAnEvent_text">Select an event</span>
+</div>
+    
+<script type="text/javascript">
 
-        $('#contain').ready(function() {
+        /*$('#contain').ready(function() {
             $("#event").append($("#event option").remove().sort(function(a, b) {
                 var at = $(a).text(), bt = $(b).text();
                 return (at > bt)?1:((at < bt)?-1:0);
@@ -141,22 +97,15 @@
 
              $('#event').val('');
         });
-
-        status= 'all';
-        wording = 'all';
         $('select').find('option').removeClass('hidden');
-        $('#contain').keypress(function (e) {
-            if (e.which != 13) {
-                return;
-            }
-            // Prevent form submit
-            e.preventDefault();
-            $("#search").click();
-        });
+        */
 
-        $('#search').on('click', function () {
-            var parameters = serializeEvent();
-            $('#search').attr('disabled', '');
+    EventSearchForm = {
+        form : $('#eventSearchForm'),
+        result : $('#resultSearch'),
+
+        search: function() {
+            var parameters = this.serialize();
             ajax($(this), {
                 type: 'GET',
                 url: '/Events',
@@ -166,48 +115,87 @@
                 async: true,
                 headers: { 'X-Laabs-Max-Count': 100 },
                 success: function (response) {
-                    $('#resultSearch').html('');
-                    $('#resultSearch').append(response);
+                    EventSearchForm.result.empty().append(response);
                 }
             });
-            $('#search').removeAttr('disabled');
-        });
+        },
 
-        $("#reset").on("click", function () {
-            var form = $('#event_form');
+        serialize : function() {
+            serializedObject = {
+                fromDate: $('#fromDate').val(),
+                toDate: $('#toDate').val(),
+                status: this.form.find('[name="status"]:checked').val(),
+                event: $('#eventName').data('event-path'),
+                accountId: $.trim($('#accountTypeahead').val()),
+                term: $('#term').val(),
+            };
+            
+            if ($('#accountTypeahead').data('accountid')) {
+                serializedObject.accountId = $('#accountTypeahead').data('accountid') ;
+            }
 
-            form.find('input[type=text]').val('');
-            form.find('select').prop('selectedIndex', 0);
+            return serializedObject;
+        },
 
-            form.find('.eventTypeAll').click();
-            form.find('.wordingAll').click();
-            form.find('.status :first').click();
+        clear: function() {
+            this.form.find('input[type=text]').val('');
+            this.form.find('select').prop('selectedIndex', 0);
+            $('#eventName').data('event-path')
+            this.form.find('.wordingAll').click();
+            this.form.find('.status :first').click();
 
-            $("#resultSearch").empty().html('');
-        });
+            this.result.empty().html('');
+        }
+    }
 
-        var users = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {url: '/user/todisplay', ttl: '0'},
-            limit: 500
-        });
-        users.initialize();
+    $('#app_maarchRM_main').keypress(function (e) {
+        if (e.which != 13) {
+            return;
+        }
+        // Prevent form submit
+        e.preventDefault();
+        $("#search").click();
+    });
 
-        var services = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {url: '/service/todisplay', ttl: '0'},
-            limit: 100
-        });
-        services.initialize();
+    $('#search').on('click', function () {
+        EventSearchForm.search();
+    });
 
-        $('#event_accountTypeahead').typeahead(
-                {
-                    hint: true,
-                    highlight: true,
-                    minLength: 2
-                },
+    $("#reset").on("click", function () {
+        EventSearchForm.clear();
+    });
+
+    // checkBox button
+    $("#eventSearchForm").on('click', '.status', function () {
+        $('#eventSearchForm').find('.status').removeClass('btn-info active').addClass('btn-default');
+        $(this).addClass('btn-info active').removeClass('btn-default');
+    });
+
+      
+    //Account typeahead  
+
+    var users = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/user/todisplay', ttl: '0'},
+        limit: 500
+    });
+    users.initialize();
+
+    var services = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/service/todisplay', ttl: '0'},
+        limit: 100
+    });
+    services.initialize();
+
+    $('#accountTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
         {
             name: 'users',
             displayKey: function (account) {
@@ -245,163 +233,58 @@
             },
             skipCache: true
         }
-        ).on('typeahead:selected', function ($event, suggestion, source) {
-            $("#event_accountTypeahead").attr('data-accountId', suggestion.accountId);
-        });
+    ).on('typeahead:selected', function ($event, suggestion, source) {
+        $("#accountTypeahead").data('accountid', suggestion.accountId);
+    });
 
-       $("#event_accountTypeahead").on('keypress', function () {
-            $("#event_accountTypeahead").attr('data-accountId', "");
-       });
+   $("#accountTypeahead").on('keypress', function () {
+        $("#accountTypeahead").data('accountid', "");
+   });
 
-        // checkBox button
-        $("#event_form").on('click', '.eventType', function () {
+    var events = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('label'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: $('#eventName').data('eventlist')
+    });
+    events.initialize();
 
-            type = $(this).find('input').val();
-            if ($(this).attr('class').indexOf('btn-default') != -1) {
-
-                $('#event_form ').find('.eventTypeAll').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-                if ($('#event_form ').find('.eventType').hasClass('active') == false) {
-                    $('select').find('option').addClass('hidden');
+   $('#eventName').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'event',
+            displayKey: function (event) {
+                return event.label;
+            },
+            templates: {
+                suggestion: function (event) {
+                    var name = event.label;
+                    var display =
+                        "<span>"
+                        + name
+                        + "</span><br>";
+                    return display;
                 }
-
-                if (type == 'read') {
-                    $('select').find('option.read').removeClass('hidden');
-                } else if (type == 'create') {
-                    $('select').find('option.create').removeClass('hidden');
-                } else if (type == 'update') {
-                    $('select').find('option.update').removeClass('hidden');
-                } else if (type == 'delete') {
-                    $('select').find('option.delete').removeClass('hidden');
-                }
-
-            } else {
-
-                if (type == 'read') {
-                    $('select').find('option.read').addClass('hidden');
-                } else if (type == 'create') {
-                    $('select').find('option.create').addClass('hidden');
-                } else if (type == 'update') {
-                    $('select').find('option.update').addClass('hidden');
-                } else if (type == 'delete') {
-                    $('select').find('option.delete').addClass('hidden');
-                }
-
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
-        
-        $("#event_form").on('click', '.eventTypeAll', function () {
-
-            $('#event_form ').find('.eventType').removeClass('btn-info active').addClass('btn-default');
-            $(this).removeClass('btn-default').addClass('btn-info');
-
-            $('select').find('option').removeClass('hidden');
-        });
-
-        
-        // checkBox button
-        $("#event_form").on('click', '.status', function () {
-            
-            if ($(this).attr('class').indexOf('btn-default') != -1) {
-                status = $(this).find('input').val();
-                $('#event_form ').find('.status').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-            } else {
-                $('#event_form ').find('.status').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
-        
-        // checkBox button
-        $("#event_form").on('click', '.wording', function () {
-
-            wording = $(this).find('input').val();
-            if ($(this).attr('class').indexOf('btn-default') != -1) {
-
-                $('#event_form ').find('.wordingAll').removeClass('btn-info active').addClass('btn-default');
-                $(this).removeClass('btn-default').addClass('btn-info');
-
-                if ($('#event_form ').find('.wording').hasClass('active') == false) {
-                    $('select').find('option').addClass('hidden');
-                }
-
-                if (wording == 'variables') {
-                    $('select').find('option.variables').removeClass('hidden');
-                } else if (wording == 'input') {
-                    $('select').find('option.input').removeClass('hidden');
-                } else if (wording == 'update') {
-                    $('select').find('option.info').removeClass('hidden');
-                }
-
-            } else {
-
-                if (wording == 'variables') {
-                    $('select').find('option.variables').addClass('hidden');
-                } else if (wording == 'input') {
-                    $('select').find('option.input').addClass('hidden');
-                } else if (wording == 'info') {
-                    $('select').find('option.info').addClass('hidden');
-                }
-
-                $(this).removeClass('btn-info').addClass('btn-default');
-            }
-        });
-        
-        $("#event_form").on('click', '.wordingAll', function () {
-
-            $('#event_form ').find('.wording').removeClass('btn-info active').addClass('btn-default');
-            $(this).removeClass('btn-default').addClass('btn-info');
-
-            $('select').find('option').removeClass('hidden');
-        });
- 
-        $("#contain").on('click', '.viewEvent', function () {
-
-            var eventId = $(this).attr('data-eventId');
-            $.ajax({
-                type: 'GET',
-                url: '/Event/' + eventId,
-                dataType: 'html',
-                contentType: 'application/json',
-                async: true,
-                success: function (response) {
-                    $('#modalEvent_content').html(response);
-
-                    $('#modalEvent').modal();
-                }
-            });
-        });
-        
-        function serializeEvent() {
-            wording = "all";
-            $.each($("#event_form").find('.wording.active'), function (index, value) {
-                if (wording != "all") {
-                    wording = wording + "," + value.firstElementChild.value;
-                } else {
-                    wording = value.firstElementChild.value;
-                }
-            });
-            
-            serializedObject = {
-                fromDate: $('#fromDate').val(),
-                toDate: $('#toDate').val(),
-                status: status,
-                event: $('#event').val(),
-                accountId: $.trim($('#event_accountTypeahead').val()),
-                term: $('#term').val(),
-                wording : wording
-            };
-            
-            if ($('#event_accountTypeahead').attr('data-accountId')) {
-                serializedObject.accountId = $('#event_accountTypeahead').attr('data-accountId') ;
-            }
-
-            return serializedObject;
+            },
+            source: function (query, process) {
+                eventList = [];
+                events.search(query, function (suggestions) {
+                    eventList = suggestions;
+                });
+                process(eventList);
+            },
+            skipCache: true
         }
-    </script>
+    ).on('typeahead:selected', function ($event, suggestion, source) {
+        $("#eventName").data('event-path', suggestion.path);
+    });
+
+    $("#eventName").on('keypress', function () {
+        $("#eventName").data('event-path', "");
+   });
+        
+</script>
 
