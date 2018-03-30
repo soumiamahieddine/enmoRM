@@ -35,4 +35,14 @@ interface searchLogArchiveInterface
      * @uses recordsManagement/log/find
      */
     public function readLogs();
+
+    /**
+     *
+     * @param string    $archiveId      Archive identifier
+     * @param string    $resourceId     Resource identifier
+     *
+     * @return recordsManagement/log/contents
+     * @uses recordsManagement/log/contents_type__archiveId__resourceId_
+     */
+    public function readLogContents_type__archiveId__resourceId_();
 }
