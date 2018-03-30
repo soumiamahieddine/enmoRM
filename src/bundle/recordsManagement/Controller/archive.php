@@ -35,6 +35,7 @@ class archive
         archiveComplianceTrait,
         archiveConversionTrait,
         archiveDestructionTrait,
+        archiveOutgoingTransferTrait,
         archiveLifeCycleTrait;
 
     /**
