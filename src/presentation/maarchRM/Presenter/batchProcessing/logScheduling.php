@@ -84,7 +84,6 @@ EOD
     public function getlogSchedulings($logSchedulings)
     {
         $this->view->addContentFile("batchProcessing/logScheduling/result.html");
-
         $this->view->translate();
         $this->view->setSource("logSchedulings", $logSchedulings);
         $this->view->merge();
@@ -107,6 +106,23 @@ EOD
     public function getlogScheduling($logScheduling)
     {
         $this->view->addContentFile("batchProcessing/logScheduling/modalEvent.html");
+        if ($logScheduling->info) {
+            $info = [];
+            $infoObject = json_decode($logScheduling->info);
+            if (is_array($infoObject)) {
+                foreach ($infoObject as $infoMessage) {
+                    if (isset($infoMessage->message)) {
+                        $infoMessage->message = $this->view->translator->getText($infoMessage->message, false, "audit/messages");
+                        $info[] = vsprintf($infoMessage->message, $infoMessage->variables);
+                    }
+                }
+
+                $logScheduling->info = $info;
+            
+            } elseif (is_string($logScheduling->info)) {
+                $logScheduling->info = [$this->view->translator->getText($logScheduling->info, false, "audit/messages")];
+            }
+        }
 
         $this->view->translate();
         $this->view->setSource("logScheduling", $logScheduling);

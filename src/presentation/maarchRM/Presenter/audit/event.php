@@ -177,7 +177,6 @@ EOD
 
         $this->view->translate();
 
-        // Fix error on event info
         if(isset($event->info )) {
             foreach (json_decode($event->info) as $name => $value) {
                 $nameTraduction = $this->view->translator->getText($name, false, "audit/messages");
