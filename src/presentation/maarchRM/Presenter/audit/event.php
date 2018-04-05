@@ -191,7 +191,11 @@ EOD
                 foreach ($outputObject as $outputMessage) {
                     if (isset($outputMessage->message)) {
                         $outputMessage->message = $this->view->translator->getText($outputMessage->message, false, "audit/messages");
-                        $output[] = vsprintf($outputMessage->message, $outputMessage->variables);
+                        if (isset($outputMessage->variables)) {
+                            $output[] = vsprintf($outputMessage->message, $outputMessage->variables);
+                        } else {
+                            $output[] = $outputMessage->message;
+                        }
                     }
                 }
 

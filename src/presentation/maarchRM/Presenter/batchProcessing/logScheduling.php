@@ -113,7 +113,11 @@ EOD
                 foreach ($infoObject as $infoMessage) {
                     if (isset($infoMessage->message)) {
                         $infoMessage->message = $this->view->translator->getText($infoMessage->message, false, "audit/messages");
-                        $info[] = vsprintf($infoMessage->message, $infoMessage->variables);
+                        if (isset($infoMessage->variables)) {
+                            $info[] = vsprintf($infoMessage->message, $infoMessage->variables);
+                        } else {
+                            $info[] = $infoMessage->message;
+                        }
                     }
                 }
 

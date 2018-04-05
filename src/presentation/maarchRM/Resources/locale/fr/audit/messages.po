@@ -158,10 +158,44 @@ msgstr "Aucun compte trouvé"
 msgid "Path"
 msgstr "Route"
 
-
 msgid "remoteIp"
 msgstr "Ip distant"
 
+msgid "New journal identifier : %s"
+msgstr "Identifiant du nouveau journal : %s"
+
+msgid "Timestamp file generated"
+msgstr "Fichier d'horodatage généré"
+
+msgid "%s archives cheked"
+msgstr "%s archives vérifiées"
+
+msgid "%s archives are valid"
+msgstr "%s archives sont valides"
+
+msgid "%s archives are not valid"
+msgstr "%s archives ne sont pas valides"
+
+msgid "Invalid archive identifier : %s"
+msgstr "Identifiant des archives invalides : %s"
+
+msgid " "Error on integrity check"
+msgstr "Erreur lors de la vérification d'intégrité"
+
+msgid "%s archives to check"
+msgstr "%s archives à vérifier"
+
+msgid "%s archives in sample"
+msgstr "%s archives dans l'échantillon"
+
+msgid "%s archives checked"
+msgstr "%s archives vérifiées"
+
+msgid "%s messages validate"
+msgstr "%s bordereaux validés"
+
+msgid "%s messages processed"
+msgstr "%s bordereaux traités"
 
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
