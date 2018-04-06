@@ -179,7 +179,7 @@ msgstr "%s archives ne sont pas valides"
 msgid "Invalid archive identifier : %s"
 msgstr "Identifiant des archives invalides : %s"
 
-msgid " "Error on integrity check"
+msgid "Error on integrity check"
 msgstr "Erreur lors de la vérification d'intégrité"
 
 msgid "%s archives to check"
@@ -191,10 +191,10 @@ msgstr "%s archives dans l'échantillon"
 msgid "%s archives checked"
 msgstr "%s archives vérifiées"
 
-msgid "%s messages validate"
+msgid "%s message(s) validate"
 msgstr "%s bordereaux validés"
 
-msgid "%s messages processed"
+msgid "%s message(s) processed"
 msgstr "%s bordereaux traités"
 
 msgid "recordsManagement/accessRule/readIndex"
