@@ -162,7 +162,7 @@ msgid "remoteIp"
 msgstr "Ip distant"
 
 msgid "New journal identifier : %s"
-msgstr "Identifiant du nouveau journal : %s"
+msgstr "Identifiant du journal archivé : %s"
 
 msgid "Timestamp file generated"
 msgstr "Fichier d'horodatage généré"
@@ -182,20 +182,20 @@ msgstr "Identifiant des archives invalides : %s"
 msgid "Error on integrity check"
 msgstr "Erreur lors de la vérification d'intégrité"
 
-msgid "%s archives to check"
-msgstr "%s archives à vérifier"
+msgid "%s archive(s) to check"
+msgstr "%s archive(s) à vérifier"
 
-msgid "%s archives in sample"
-msgstr "%s archives dans l'échantillon"
+msgid "%s archive(s) in sample"
+msgstr "%s archive(s) dans l'échantillon"
 
-msgid "%s archives checked"
-msgstr "%s archives vérifiées"
+msgid "%s archive(s) checked"
+msgstr "%s archive(s) vérifiée(s)"
 
 msgid "%s message(s) validate"
-msgstr "%s bordereaux validés"
+msgstr "%s bordereau(x) validé(s)"
 
 msgid "%s message(s) processed"
-msgstr "%s bordereaux traités"
+msgstr "%s bordereau(x) traité(s)"
 
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"

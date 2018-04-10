@@ -57,6 +57,10 @@ trait archiveComplianceTrait
         $queryPart["status"] = "status!='error' AND status!='disposed'";
         $queryPart["parentArchiveId"] = "parentArchiveId=null";
 
+        $totalNbArchivesToCheck = 0;
+        $totalNbArchivesInSample = 0;
+        $totalarchivesChecked = 0;
+
         foreach ($serviceLevels as $serviceLevel) {
             if (($serviceLevel->samplingFrequency <= 0) || ($serviceLevel->samplingRate <= 0)) {
                 continue;
@@ -124,15 +128,19 @@ trait archiveComplianceTrait
             $eventInfo['archivesChecked'] = $archivesChecked;
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
+
+            $totalNbArchivesToCheck += nbArchivesToCheck;
+            $totalNbArchivesInSample += nbArchivesInSample;
+            $totalarchivesChecked += archivesChecked;
         }
 
-        $logMessage = ["message" => "%s archives to check", "variables"=> $nbArchivesToCheck];
+        $logMessage = ["message" => "%s archive(s) to check", "variables"=> $totalNbArchivesToCheck];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
-        $logMessage = ["message" => "%s archives in sample", "variables"=> $nbArchivesInSample];
+        $logMessage = ["message" => "%s archive(s) in sample", "variables"=> $totalNbArchivesInSample];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
-        $logMessage = ["message" => "%s archives checked", "variables"=> $archivesChecked];
+        $logMessage = ["message" => "%s archive(s) checked", "variables"=> $totalarchivesChecked];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         return true;
