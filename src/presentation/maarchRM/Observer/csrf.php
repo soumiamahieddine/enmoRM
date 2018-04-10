@@ -41,6 +41,9 @@ class csrf
         $this->sdoFactory = $sdoFactory;
         $this->config = \laabs::configuration("auth")["csrfConfig"];
         $this->whiteList = \laabs::configuration("auth")["csrfWhiteList"];
+
+        var_dump($this->config);
+        exit;
     }
 
     /**
@@ -53,8 +56,8 @@ class csrf
     {
         $this->token = null;
 
-        if (!empty($_COOKIE["LAABS-CSRF"])) {
-            $this->token = $_COOKIE["LAABS-CSRF"];
+        if (!empty(\laabs::getToken("Csrf", true))) {
+            $this->token = \laabs::getToken("Csrf", true);
         }
     }
 
@@ -110,21 +113,16 @@ class csrf
      */
     public function setResponse(&$response)
     {
-        setcookie("LAABS-CSRF", $this->token, time() + 86000, '/', null, false);
-
-        if (stripos($response->body, '<html') === false) {
-            return;
-        }
-
-        $script = '<script type="text/javascript" src="' . '/public/js/csrf/csrfprotector.js' . '"></script>' . PHP_EOL;
-        str_ireplace('</body>', $script . '</body>', $response->body);
-
-        return;
+        \laabs::setToken($this->config["cookieName"], $this->token);
     }
 
     private function generateToken()
     {
         $tokenLength = 32;
+
+        if (!empty($this->config["cookieName"])) {
+            $tokenLength = $this->config["cookieName"];
+        }
 
         if (function_exists("openssl_random_pseudo_bytes")) {
             $this->token = bin2hex(openssl_random_pseudo_bytes($tokenLength));
