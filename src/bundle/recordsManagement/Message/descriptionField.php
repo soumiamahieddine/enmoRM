@@ -83,4 +83,9 @@ class descriptionField
     * @var string
     */
     public $pattern;
+
+    /**
+     * @var boolean
+     */
+    public $isArray;
 }
