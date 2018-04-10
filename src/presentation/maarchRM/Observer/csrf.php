@@ -41,9 +41,6 @@ class csrf
         $this->sdoFactory = $sdoFactory;
         $this->config = \laabs::configuration("auth")["csrfConfig"];
         $this->whiteList = \laabs::configuration("auth")["csrfWhiteList"];
-
-        var_dump($this->config);
-        exit;
     }
 
     /**
@@ -70,7 +67,8 @@ class csrf
      */
     public function check(&$userCommand, array &$args = null)
     {
-        if (in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
+
+        if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
             return;
         }
 
@@ -113,7 +111,7 @@ class csrf
      */
     public function setResponse(&$response)
     {
-        \laabs::setToken($this->config["cookieName"], $this->token);
+        \laabs::setToken($this->config["cookieName"], $this->token, null, false);
     }
 
     private function generateToken()
@@ -121,7 +119,7 @@ class csrf
         $tokenLength = 32;
 
         if (!empty($this->config["cookieName"])) {
-            $tokenLength = $this->config["cookieName"];
+            $tokenLength = $this->config["tokenLength"];
         }
 
         if (function_exists("openssl_random_pseudo_bytes")) {
@@ -136,12 +134,14 @@ class csrf
         $account = $this->sdoFactory->read('auth/account', $accountToken);
 
         if (empty($account->authentication->csrf)) {
-            $account->authentication->csrf = [];
+            if (empty($account->authentication)) {
+                $account->authentication = new \Stdclass();
+            }
+            $account->authentication->csrf = new \Stdclass();
         }
 
-        $csrfArray = $account->authentication->csrf;
-        $csrfArray->token = $this->token;
-        $account->authentication->csrf = $csrfArray;
+        $account->authentication->csrf = $this->token;
+        $account->authentication = json_encode($account->authentication);
 
         $this->sdoFactory->update($account, "auth/account");
     }
@@ -150,8 +150,10 @@ class csrf
     {
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read('auth/account', $accountToken);
-        
-        if ($account->authentication->csrf->token == $token) {
+
+        $account->authentication = json_decode($account->authentication);
+
+        if ($account->authentication->csrf != $token) {
             return false;
         }
 
