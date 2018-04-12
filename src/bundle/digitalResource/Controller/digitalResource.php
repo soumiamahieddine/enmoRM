@@ -214,7 +214,7 @@ class digitalResource
      */
     public function openContainers($clusterId, $path, $metadata=null)
     {
-        $cluster = $this->useCluster($clusterId, 'write', true);
+        $cluster = $this->useCluster($clusterId, Cluster::MODE_WRITE, true);
 
         return $this->clusterController->openContainers($cluster, $path, $metadata);
     }
@@ -244,7 +244,7 @@ class digitalResource
     public function storeCollection($resources, $clusterId)
     {
         // Get the storage objects
-        $this->useCluster($clusterId, 'write', true);
+        $this->useCluster($clusterId, Cluster::MODE_WRITE, true);
 
         foreach ($resources as $resource) {
             $this->storeDigitalResource($resource);
@@ -362,7 +362,7 @@ class digitalResource
             $resource->format = $this->formatController->get($resource->puid);
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'read', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
         $resource->cluster = $cluster;
         $contents = $this->clusterController->retrieveResource($cluster, $resource);
 
@@ -414,7 +414,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/resourceNotFoundException");
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'read', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
 
         foreach ($cluster->clusterRepository as $clusterRepository) {
             $repositoryService = $clusterRepository->repository->getService();
@@ -460,7 +460,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/clusterException", "Resource not found");
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'read', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
 
         if (!$cluster->storeMetadata) {
             return;
@@ -497,7 +497,7 @@ class digitalResource
             $resource->format = $this->formatController->get($resource->puid);
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'read', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
 
         foreach ($cluster->clusterRepository as $clusterRepository) {
             $repositoryId = $clusterRepository->repositoryId;
@@ -534,7 +534,7 @@ class digitalResource
             $resource->relatedResource[] = $this->delete($relatedResource->resId);
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'delete', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_DELETE, false);
 
         foreach ($cluster->clusterRepository as $clusterRepository) {
             $repositoryId = $clusterRepository->repositoryId;
@@ -597,7 +597,7 @@ class digitalResource
             throw \laabs::newException("digitalResource/resourceNotFoundException");
         }
 
-        $cluster = $this->useCluster($resource->clusterId, 'read', false);
+        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
 
         return $this->clusterController->verifyResource($cluster, $resource);
     }
