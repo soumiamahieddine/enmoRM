@@ -9,7 +9,7 @@
             </div>
             <div class="container-fluid">
                 <div class="sidebar-offcanvas col-sm-12">
-                    <?hinclude recordsManagement/archive/archiveModificationForm.html?>
+                    <?hinclude recordsManagement/archive/archiveModificationModal/archiveModificationForm.html?>
                     <div class="panel panel-default" data-translate-context="validationModal" id="modal_multipleSelection">
                         <div class="panel-body">
                             <h4><strong style="color:red"><span id="modal_selected"></span></strong> archives selected.</h4>
@@ -48,7 +48,6 @@
     <span id="mtext_cancelDestruction">Cancel destruction</span>
     <span id="mtext_freeze">Freeze</span>
     <span id="mtext_unfreeze">Unfreeze</span>
-    <span id="mtext_flagForTransfer">Archive Transfer</span>
     <span id="empty_text">The fields with a star are required.</span>
     <span id="empty_archivalAgency">No archival agency found</span>
 
@@ -57,7 +56,6 @@
     <span id="text_Y">year(s)</span>
     <span id="text_preservation">preservation</span>
     <span id="text_destruction">destruction</span>
-    <span id="text_unlimited">unlimited</span>
 </div>
 
 <style>
@@ -71,14 +69,6 @@
     
     $("#retentionRuleCode").on('change', function () {
         ModificationModal.loadRetentionCode();
-    });
-
-    $("#checkboxUpdateFinalDisposition").on('change', function () {
-        if (this.checked) {
-            $("#retentionRuleFinalDisposition").prop("disabled",true);
-        } else {
-            $("#retentionRuleFinalDisposition").prop("disabled",false);
-        }
     });
 
     $("#comment").bind('input propertychange', function () {
@@ -117,29 +107,26 @@
 
             if (type == 'accessRule') {
                 $('#startDate, #accessCode').css('display', '');
-                $('#retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#retentionCode').css('display', 'none');
                 $('#archivalAgency').css('display', 'none');
                 this.loadRule(archiveId, archiveName, type);
 
-            } else if (type == "retentionRule") {
-                $('#retentionRuleDuration').text('');
-                $('#retentionRuleDescription').text('');
-
-                $('#startDate, #retentionCode, #finalDisposition').css('display', '');
-                $('#accessCode, #updateFinalDisposition').css('display', 'none');
+            } else if (type == "retentionRule") { 
+                $('#startDate,#retentionCode').css('display', '');
+                $('#accessCode').css('display', 'none');
                 $('#archivalAgency').css('display', 'none');
                 this.loadRule(archiveId, archiveName);
 
             } else if (type == "flagForTransfer") {
                 $('#archivalAgency').css('display', '');
-                $('#startDate, #accessCode, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 this.loadArchivalAgency();
             } else {
                 $('#archivalAgency').css('display', 'none');
-                $('#startDate, #accessCode, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 this.modal.modal();
             }
-
+            
             $('#save').data("archiveids", "");
             $('#archiveModificationForm').css('display', '');
             $('#modal_multipleSelection').css('display', 'none');
@@ -239,29 +226,26 @@
 
             if( type === "accessRule") {
                 $('#startDate, #accessCode').css('display', '');
-                $('#retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#retentionCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '');
                 $('#archivalAgency').css('display', 'none');
 
             } else if ( type === "retentionRule") {
-                $('#retentionRuleDuration').text('');
-                $('#retentionRuleDescription').text('');
-
-                $('#startDate, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', '');
+                $('#startDate,#retentionCode').css('display', '');
                 $('#accessCode').css('display', 'none');
                 $('#archiveModificationForm').css('display', '');
                 $('#archivalAgency').css('display', 'none');
 
             } else if (type == "flagForTransfer") {
                 $('#archivalAgency').css('display', '');
-                $('#startDate, #accessCode, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 this.loadArchivalAgency();
             } else {
                 $('#archivalAgency').css('display', 'none');
-                $('#startDate, #accessCode, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', 'none');
+                $('#startDate,#accessCode,#retentionCode').css('display', 'none');
                 this.modal.modal();
             }
-
+                
             $('#save').data("archiveids", ids);
             $('#modal_multipleSelection').css('display', '');
             $('#modal_selected').html(selected);
@@ -309,20 +293,18 @@
                 success     : function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        $("#retentionRuleFinalDisposition").prop("disabled",false);
-                        $("#checkboxUpdateFinalDisposition").prop("checked",false);
                         ModificationModal.close();
+                        ModificationModal.modal.one('hidden.bs.modal', function () {
+                            console.log("passage");
+                            //$('#modificationModal').modal();*
+                            $('#archive_search').click();
+                        });
 
                     }
                 },
                 error       : function(response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                },
-                complete       : function(response) {
-                    if (response.status) {
-                        $('#archive_search').click();
-                    }
-                },
+                }
             });
         },
 
@@ -369,30 +351,21 @@
             var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
-            
-            if (retentionRuleCode) {
+
+             if (retentionRuleCode) {
+
                  var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {
                     $('#retentionRule').css("display", '');
-
-                     if(retentionRuleDuration[1] >= 9999){
-                         $('#retentionRuleDuration').text($('#text_unlimited').text());
-                     } else {
-                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                     }
+                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
                     $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
-
-                     if(retentionRuleDuration[1] >= 9999){
-                         $('#retentionRuleDuration').text($('#text_unlimited').text());
-                     } else {
-                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                     }
-
+                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                    $('#retentionRuleFinalDisposition').val(retentionRuleCode.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }
 
