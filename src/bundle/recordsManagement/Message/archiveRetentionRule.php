@@ -77,4 +77,11 @@ class archiveRetentionRule
      */
     public $disposalDate;
 
+    /**
+     * reset start date
+     *
+     * @var boolean
+     */
+    public $resetStartDate;
+
 }
