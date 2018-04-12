@@ -1,0 +1,58 @@
+<table id="accessCode" class="table table-condensed modificationForm">
+    <tr id="startDate">
+        <td><strong>Start date</strong></td>
+        <td>
+            <input class='form-control input-sm ruleInput datePicker' name="startDate"/>
+            <input type="checkbox" id="resetAccessRuleStartDate"/> <span>Reset start date</span>
+        </td>
+    </tr>
+    <td><strong>Code</strong></td>
+    <td>
+        <select id="accessRuleCode" name="accessRuleCode" class="form-control input-sm ruleInputAccess">
+                <option value="">Select a rule</option>
+                <?merge accessRules ?>
+                <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
+        </select><br>
+       
+        <dl class="dl dl-horizontal" id="accessRule">
+            <dt><span>Duration</span> : </dt><dd span id="accessRuleDuration"></dd>
+            <dt><span>Description</span> : </dt><dd id="accessRuleDescription"></dd>
+        </dl>
+    </td>
+</table>
+
+<script type="text/javascript">
+
+    $('#resetAccessRuleStartDate').on('click', function() {
+        var input = $('#accessCode').find('input[name="startDate"]');
+        if($(this).is(':checked')) {
+            input.val('').prop('disabled', true);
+        } else {
+            input.prop('disabled', false);
+        }
+    })
+
+    var accessRule_serialize = function() {
+        var form = $('#accessCode');
+        var parameter = {}
+        var code = form.find('[name="accessRuleCode"]').find('option:selected').data('json');
+        parameter.accessRule = {
+            accessRuleCode      : form.find('[name="accessRuleCode"]').val(),
+            accessRuleStartDate : form.find('[name="startDate"]').val(),
+            accessRuleDuration  : code.duration,
+            resetStartDate      : $('#resetAccessRuleStartDate').is(':checked')
+        }
+        
+        return parameter;
+    }
+
+    var accessRule_load = function(archiveId, archiveName, type) {
+        $('#accessCode').css('display', '');
+        ModificationModal.loadRule(archiveId, archiveName, type);
+    }
+
+    var accessRule_loadMultiple = function() {
+        $('#accessCode').css('display', '');
+    }
+
+</script>
