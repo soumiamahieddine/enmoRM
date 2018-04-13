@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <tbody>
                         <?merge logs ?>
                         <tr id="[?merge .archiveId ?]">
-                            <td><?merge .type ?></td>
+                            <td><?merge .typeTranslate ?></td>
                             <td><?merge .fromDate ?></td>
                             <td><?merge .toDate ?></td>
                             <td><?merge .processId ?></td>
@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 <div class="btn-group pull-right">
                                     <button type="button" class="btn btn-warning btn-sm" data-log-check="[?merge .archiveId ?]" title="Check integrity"><span class="fa fa-database"></span></button>
                                     <button type="button" class="btn btn-success btn-sm viewArchive" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
-                                    <button type="button" class="btn btn-primary btn-sm" data-log-view="[?merge .archiveId ?]/[?merge .resId ?]" title="View"><span class="fa fa-eye"></span></button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-type="[?merge .type ?]" data-log-view="[?merge .archiveId ?]/[?merge .resId ?]" title="View"><span class="fa fa-eye"></span></button>
                                 </div>
                             </td>
                         </tr>

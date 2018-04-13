@@ -19,3 +19,4 @@
  */
 namespace bundle\audit;
 define('bundle\audit\AUDIT_ENTRY', 'auditEntry');
+define('bundle\audit\AUDIT_ENTRY_OUTPUT', 'auditEntryOutput');
