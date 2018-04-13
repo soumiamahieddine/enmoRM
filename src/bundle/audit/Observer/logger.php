@@ -236,7 +236,12 @@ class logger
      */
     public function notifyOutput(&$output)
     {   
-        $output['fullMessage'] = vsprintf($output['message'], $output['variables']);
+        if (isset($output['variables'])) {
+            $output['fullMessage'] = vsprintf($output['message'], $output['variables']);
+        } else {
+            $output['fullMessage'] = $output['message'];
+
+        }
         $this->output[] = $output;
     }
 

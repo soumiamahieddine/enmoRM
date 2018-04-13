@@ -24,11 +24,12 @@
                         <?merge logScheduling.status.ifne(1) ?><strong class="text-danger fa fa-times" disabled="">&nbsp;</strong>
                     </dd>
                     </dl>
-                    <div class="col-xs-12">
-                    <b>Info</b>
-                        <div class="panel well" id="audit_info">
-                            <?merge logScheduling.info ?>
-                        </div>
+                    <?merge logScheduling.info.bool() ?>
+                    <div id="audit_output">
+                        <hr/>
+                        <h4 class="col-xs-offset-1">Information</h4>
+                        <?merge logScheduling.info ?>
+                        <span class="col-xs-offset-2 col-xs-10"><?merge . ?></span>
                     </div>
                 </div>
             </div>

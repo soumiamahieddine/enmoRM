@@ -276,6 +276,7 @@
                 });
                 process(eventList);
             },
+            limit: 10,
             skipCache: true
         }
     ).on('typeahead:selected', function ($event, suggestion, source) {
