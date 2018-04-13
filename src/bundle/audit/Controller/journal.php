@@ -115,6 +115,17 @@ class journal
             $eventLine[] = (string) $event->accountId;
             $eventLine[] = (string) $event->path;
             $eventLine[] = (string) $event->status;
+            
+            if (isset($event->output)) {
+                $output = json_decode($event->output);
+                if ($output) {
+                    $messages = [];
+                    foreach ($output as $value) {
+                        $messages[] = $value->fullMessage;
+                    }
+                    $eventLine[] = implode('  ', $messages);
+                }
+            }
 
             fputcsv($journalFile, $eventLine);
         }

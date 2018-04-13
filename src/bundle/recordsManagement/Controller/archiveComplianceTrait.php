@@ -57,6 +57,10 @@ trait archiveComplianceTrait
         $queryPart["status"] = "status!='error' AND status!='disposed'";
         $queryPart["parentArchiveId"] = "parentArchiveId=null";
 
+        $totalNbArchivesToCheck = 0;
+        $totalNbArchivesInSample = 0;
+        $totalarchivesChecked = 0;
+
         foreach ($serviceLevels as $serviceLevel) {
             if (($serviceLevel->samplingFrequency <= 0) || ($serviceLevel->samplingRate <= 0)) {
                 continue;
@@ -102,6 +106,9 @@ trait archiveComplianceTrait
                 $success = $this->checkArchiveIntegrity($archive);
 
                 if (!$success) {
+                    $logMessage = ["message" => "Error on integrity check"];
+                    \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+                    
                     break;
                 } else {
                     $archivesChecked++;
@@ -121,7 +128,20 @@ trait archiveComplianceTrait
             $eventInfo['archivesChecked'] = $archivesChecked;
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
+
+            $totalNbArchivesToCheck += nbArchivesToCheck;
+            $totalNbArchivesInSample += nbArchivesInSample;
+            $totalarchivesChecked += archivesChecked;
         }
+
+        $logMessage = ["message" => "%s archive(s) to check", "variables"=> $totalNbArchivesToCheck];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) in sample", "variables"=> $totalNbArchivesInSample];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) checked", "variables"=> $totalarchivesChecked];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         return true;
     }
@@ -146,7 +166,7 @@ trait archiveComplianceTrait
     }
     /**
      * Check integrity of one or several archives giving their identifiers
-     * @param object  $archiveIds         An array of archive identifier or an archive identifier
+     * @param object  $archiveIds An array of archive identifier or an archive identifier
      *
      * @return recordsManagement/archive[] Array of archive object
      */
@@ -166,6 +186,20 @@ trait archiveComplianceTrait
             } else {
                 $res['error'][] = (string) $archive->archiveId;
             }
+        }
+
+        $logMessage = ["message" => "%s archives cheked", "variables"=> count($archives)];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archives are valid", "variables"=> count($res['success'])];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archives are not valid", "variables"=> count($res['error'])];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        if (count($res[error])) {
+            $logMessage = ["message" => "Invalid archive identifier : %s", "variables"=> implode(', ', $res['error'])];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
         }
 
         return $res;
