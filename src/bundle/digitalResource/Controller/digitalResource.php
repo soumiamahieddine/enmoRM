@@ -71,6 +71,8 @@ class digitalResource
         $this->clusterController = \laabs::newController('digitalResource/cluster');
 
         $this->formatController = \laabs::newController('digitalResource/format');
+
+        $this->clusters = [];
     }
 
     /**
@@ -194,11 +196,11 @@ class digitalResource
      */
     public function useCluster($clusterId, $mode, $limit)
     {
-        if (!isset($this->clusters[(string) $clusterId])) {
+        if (!isset($this->clusters[$mode][(string) $clusterId])) {
             $this->currentCluster = $this->clusterController->openCluster($clusterId, $mode, $limit);
-            $this->clusters[(string) $clusterId] = $this->currentCluster;
+            $this->clusters[$mode][(string) $clusterId] = $this->currentCluster;
         } else {
-            $this->currentCluster = $this->clusters[(string) $clusterId];
+            $this->currentCluster = $this->clusters[$mode][(string) $clusterId];
         }
 
         return $this->currentCluster;
@@ -586,18 +588,19 @@ class digitalResource
     /**
      * Verify integrity of resource
      * @param digitalResource/digitalResource $resource The digital resource
+     * @param string                          $mode     The mode
      *
      * @return digitalResource/digitalResource The digitalResource object verify
      *
      * @throws digitalResource/resourceNotFoundException
      */
-    public function verifyResource($resource)
+    public function verifyResource($resource, $mode = Cluster::MODE_READ)
     {
         if (!$resource) {
             throw \laabs::newException("digitalResource/resourceNotFoundException");
         }
 
-        $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
+        $cluster = $this->useCluster($resource->clusterId, $mode, false);
 
         return $this->clusterController->verifyResource($cluster, $resource);
     }

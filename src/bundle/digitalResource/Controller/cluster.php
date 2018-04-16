@@ -191,8 +191,12 @@ class cluster
             try {
                 $clusterRepository->repository = $this->repositoryController->openRepository($clusterRepository->repositoryId);
             } catch (\Exception $e) {
-                $clusterRepository->repository = null;
-                continue;
+                if ($mode == Cluster::MODE_WRITE) {
+                    throw \laabs::newException("digitalResource/clusterException", "Repository '%s' must be accessible", 404, $e, [$clusterRepository->repositoryId]);
+                } else {
+                    $clusterRepository->repository = null;
+                    continue;
+                }
             }
         }
 
@@ -372,7 +376,15 @@ class cluster
             if ($clusterRepository->repository == null) {
                 continue;
             }
-            $resource->address = $this->sdoFactory->find("digitalResource/address", "resId='".$resource->resId."'");
+
+            $queryParams['repositoryId'] = $clusterRepository->repositoryId;
+            $queryParts['repositoryId'] = "repositoryId = :repositoryId";
+            $queryParams['resId'] = $resource->resId;
+            $queryParts['resId'] = "resId = :resId";
+
+            $queryString = implode(' AND ', $queryParts );
+
+            $resource->address = $this->sdoFactory->find("digitalResource/address", $queryString, $queryParams);
 
             foreach ($resource->address as $address) {
                 $address->repository = $clusterRepository->repository;
@@ -380,6 +392,10 @@ class cluster
 
                 if ($contents) {
                     $result = $result && $this->checkHash($address, $resource, $contents);
+
+                    if (!$result) {
+                        throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash on repository '%s'", 409, null, $clusterRepository->repositoryId);
+                    }
                 }
             }
         }
