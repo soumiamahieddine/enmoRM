@@ -32,6 +32,7 @@ CREATE TABLE "recordsManagement"."retentionRule"
   "finalDisposition" text,
   "description" text,
   "label" text,
+  "implementationDate" date,
 
   PRIMARY KEY ("code")
 )
@@ -180,6 +181,7 @@ CREATE TABLE "recordsManagement"."archive"
   "retentionDuration" text,
   "finalDisposition" text,
   "disposalDate" date,
+  "retentionRuleStatus" text,
 
   "accessRuleCode" text,
   "accessRuleDuration" text,

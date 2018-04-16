@@ -77,4 +77,11 @@ class archiveRetentionRule
      */
     public $disposalDate;
 
+    /**
+     * The retention rule status
+     *
+     * @var string
+     */
+    public $retentionRuleStatus;
+
 }
