@@ -282,7 +282,7 @@ trait archiveModificationTrait
         }
         
         if ($description) {
-            $descriptionObject = json_decode($description);
+            $descriptionObject = $description;
             if (!empty($archive->archivalProfileReference)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 

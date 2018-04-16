@@ -264,7 +264,7 @@ interface archivesInterface
      * @param string $originatorArchiveId
      * @param string $archiveName
      * @param date   $originatingDate
-     * @param string $description
+     * @param mixed  $description
      * 
      * @action recordsManagement/archive/modifyMetadata
      */

@@ -30,7 +30,7 @@ interface modifyDescriptionInterface
      * @param string $originatorArchiveId
      * @param string $archiveName     
      * @param date   $originatingDate     
-     * @param string $description 
+     * @param mixed $description
      * 
      * 
      * @return recordsManagement/archive/metadata
