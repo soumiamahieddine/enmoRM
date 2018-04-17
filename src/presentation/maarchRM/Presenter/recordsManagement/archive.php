@@ -362,42 +362,14 @@ class archive
         }
 
         if (isset($archive->descriptionClass)) {
-            if ($archive->descriptionClass != "archivesPubliques/content") {
-                $this->view->addContentFile($archive->descriptionClass . "/metadata.html");
-            } else {
-                $this->view->addContentFile("archivesPubliques/contentDescription/metadata.html");
+            $editMetadataPresenter = \laabs::newPresenter($archive->descriptionClass);
+            $archive = $editMetadataPresenter->getEditMetadata($archive, $languageCodes);
+        }
 
-                foreach ($archive->descriptionObject as $descriptionObject) {
-                    $descriptionObject->json = json_encode($descriptionObject);
-                }
-
-                if (isset($archive->descriptionObject[0]->language)) {
-                    $archive->descriptionObject[0]->lang = [];
-                    for ($i = 0; $i < count($archive->descriptionObject[0]->language); $i++) {
-                        $language = new \stdClass();
-                        $language->value = $archive->descriptionObject[0]->language[$i];
-
-                        foreach ($languageCodes as $languageCode) {
-                            if ($languageCode->value === $archive->descriptionObject[0]->language[$i]) {
-                                $language->name = $languageCode->title;
-                            }
-                        }
-                        $archive->descriptionObject[0]->lang[] = $language;
-                    }
-                }
-
-                if (isset($archive->descriptionObject[0]->custodialHistory)) {
-                    foreach ($archive->descriptionObject[0]->custodialHistory as $custodialHistory) {
-                        $custodialHistory->json = json_encode($custodialHistory);
-                    }
-                }
-
-                if (isset($archive->descriptionObject[0]->keyword)) {
-                    foreach ($archive->descriptionObject[0]->keyword as $keyword) {
-                        $keyword->json = json_encode($keyword);
-                    }
-                }
-            }
+        if ($archive->descriptionClass != "archivesPubliques/content") {
+            $this->view->addContentFile($archive->descriptionClass . "/metadata.html");
+        } else {
+            $this->view->addContentFile("archivesPubliques/contentDescription/metadata.html");
         }
 
         $this->view->setSource('languageCodes', $languageCodes);
