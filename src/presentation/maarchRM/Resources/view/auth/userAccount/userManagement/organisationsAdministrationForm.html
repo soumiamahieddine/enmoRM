@@ -28,6 +28,8 @@
 
 <script>
 
+    window.localStorage.clear();
+
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -35,7 +37,6 @@
         limit: 100
     });
 
-    window.localStorage.clear();
     organizations.initialize();
 
     // initialize typeahead
