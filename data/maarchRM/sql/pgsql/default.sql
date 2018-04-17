@@ -43,9 +43,6 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
 ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
 ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s');
 
--- "organization".orgRole
-INSERT INTO "organization"."orgRole" ("code", "name","description") VALUES
-('owner','organization/owner', 'The system owner');
 
 INSERT INTO "batchProcessing"."task"
 ("taskId", "route", "description") VALUES

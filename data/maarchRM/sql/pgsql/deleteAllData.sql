@@ -39,7 +39,6 @@ DELETE FROM "organization"."servicePosition";
 DELETE FROM "organization"."orgContact";
 DELETE FROM "organization"."organization";
 DELETE FROM "organization"."orgType";
-DELETE FROM "organization"."orgRole";
 
  -- RecordsManagement
 TRUNCATE TABLE "recordsManagement"."archiveRelationship" CASCADE;

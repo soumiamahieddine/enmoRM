@@ -4,7 +4,6 @@ DELETE FROM "organization"."servicePosition";
 DELETE FROM "organization"."orgContact";
 DELETE FROM "organization"."organization";
 DELETE FROM "organization"."orgType";
-DELETE FROM "organization"."orgRole";
 
 -- Organization unit types
 INSERT INTO "organization"."orgType"("code", "name") VALUES 
@@ -13,10 +12,6 @@ INSERT INTO "organization"."orgType"("code", "name") VALUES
 ('Direction', 'Direction d''une entreprise ou d''une collectivité'),
 ('Service', 'Service d''une entreprise ou d''une collectivité'),
 ('Division', 'Division d''une entreprise');
-
--- "organization".orgRole
-INSERT INTO "organization"."orgRole" ("code", "name","description") VALUES
-('owner','organization/owner', 'The system owner');
 
 -- Organizations
 INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES 
