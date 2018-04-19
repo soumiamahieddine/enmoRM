@@ -3,3 +3,4 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
 
 ALTER TABLE "recordsManagement"."retentionRule" ADD COLUMN "implementationDate" date;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "retentionRuleStatus" text;
+INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES ('System', 'recordsmanagement/archives/updateArchivesretentionrule');

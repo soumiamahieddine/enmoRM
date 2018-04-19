@@ -396,5 +396,10 @@ tasks = "[
                 'taskId': '06',
                 'route' : 'recordsManagement/archives/updateIndexfulltext',
                 'description' : 'Extraction plein texte'
+            },
+            {
+                'taskId': '07',
+                'route' : 'recordsManagement/archives/updateArchivesretentionrule',
+                'description' : 'Mise à jour de la durée d\'utilisation administrative'
             }
         ]"
