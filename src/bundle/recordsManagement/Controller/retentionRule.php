@@ -100,11 +100,17 @@ class retentionRule
         try {
             $res = $this->sdoFactory->update($retentionRule, 'recordsManagement/retentionRule');
 
+            // Archival profile modification
             $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "retentionRuleCode='$retentionRule->code'");
             for ($i = 0; $i < count($archivalProfiles); $i++) {
                 $eventItems = array('archivalProfileId' => $archivalProfiles[$i]->archivalProfileId);
                 $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/retentionRule', $retentionRule->code, $eventItems);
             }
+
+            // Archives update
+            $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'changed'], "retentionRuleCode = '$retentionRule->code' AND retentionStartDate != null AND retentionStartDate >= '$retentionRule->implementationDate'");
+            $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'old'], "retentionRuleCode = '$retentionRule->code' AND retentionStartDate != null AND retentionStartDate < '$retentionRule->implementationDate'");
+
         } catch (\core\Exception $e) {
             throw new \bundle\recordsManagement\Exception\retentionRuleException("Retention rule not updated.");
         }

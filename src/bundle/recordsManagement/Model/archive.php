@@ -162,6 +162,14 @@ class archive
     public $disposalDate;
 
     /**
+     * The status of retention rule
+     *
+     * @var string
+     * @xpath rm:retentionRuleStatus
+     */
+    public $retentionRuleStatus;
+
+    /**
      * The access restriction rule code
      *
      * @var string
