@@ -14,39 +14,14 @@
             </h1>
         </div>
         <div class="container-fluid" id='retentionRuleList'>
-            <?hinclude recordsManagement/retentionRUle/list.html ?>
+            <?hinclude recordsManagement/retentionRule/list.html ?>
         </div>
     </div>
 </div>
 
-<?hinclude recordsManagement/retentionRUle/modificationModal.html ?>
+<?hinclude recordsManagement/retentionRule/modificationModal.html ?>
 
 <script>
-
-    //Edit a retention rule
-    $("#rulesTable").on('click', '.edit', function () {
-        var parameters = {
-            code : $(this).data('code')
-        };
-        $.ajax({
-            type        : "GET",
-            url         : '/retentionRule/' + $(this).data('code'),
-            async       : false,
-            dataType    : 'json',
-            success     : function (response) {
-                EditionModal.load(response);
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
-    });
-
-    //New retention rule
-    $("#new-retentionRule").on('click', function () {
-        EditionModal.load();
-
-    });
 
     function reloadList() {
         $.ajax({
@@ -54,7 +29,7 @@
             url     : '/retentionRulesTable',
             dataType: 'html',
             success : function (response) {
-                $('#retentionRuleList').html(response);
+                $('#retentionRuleList').empty().html(response);
             },
             error: function (response) {
                 gritter.show(response.responseText, false);

@@ -92,11 +92,14 @@
     $("#retentionRuleModal").on('keyup change', '.form-control', function () {
         if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
             $("#add, #update").removeClass('hide');
-            $('#implementationDate').css('display', '');
+            if($('#code').prop('disabled')) {
+                $('#implementationDate').css('display', '');
+            }
         }
         else {
             $("#add, #update").addClass('hide');
         }
+
     });
 
     // cancel
@@ -216,7 +219,7 @@
 
                 $.ajax({
                     type        : "PUT",
-                    url         : '/retentionRule/' +  $(this).data('code'),
+                    url         : '/retentionRule/' +  $('#code').val(),
                     data        : JSON.stringify(parameters),
                     contentType : 'application/json',
                     async       : false,

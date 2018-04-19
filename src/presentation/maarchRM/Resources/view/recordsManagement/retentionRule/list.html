@@ -34,3 +34,31 @@
         </table>
     </div>
 </div>
+
+
+<script type="text/javascript">
+    //Edit a retention rule
+    $("#retentionRuleList").on('click', '.edit', function () {
+        var parameters = {
+            code : $(this).data('code')
+        };
+        $.ajax({
+            type        : "GET",
+            url         : '/retentionRule/' + $(this).data('code'),
+            async       : false,
+            dataType    : 'json',
+            success     : function (response) {
+                EditionModal.load(response);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    //New retention rule
+    $("#new-retentionRule").on('click', function () {
+        EditionModal.load();
+    });
+
+</script>
