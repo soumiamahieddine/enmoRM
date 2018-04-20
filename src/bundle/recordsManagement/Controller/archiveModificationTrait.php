@@ -419,9 +419,20 @@ trait archiveModificationTrait
      */
     public function updateArchiveRetentionRule($limit = 1000) {
         $archives = $this->sdoFactory->find('recordsManagement/archiveRetentionRule', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
+        $retentionRules = [];
 
         if($archives) {
             foreach ($archives as $archive) {
+                if (!isset($retentionRules[$archive->retentionRuleCode])) {
+                    $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
+                }
+
+                $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
+
+                if (!$archive->finalDisposition) {
+                    $archive->finalDisposition =  $retentionRules[$archive->retentionRuleCode]->finalDisposition;
+                }
+
                 $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
                 $archive->retentionRuleStatus = "current";
                 $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
