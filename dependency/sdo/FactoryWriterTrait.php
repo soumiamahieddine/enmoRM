@@ -324,13 +324,14 @@ trait FactoryWriterTrait
      * Update an object from storage
      * @param string $object      The data object holding data to update
      * @param string $queryString The query (update) expression, encoded in Laabs Query Language
-     * @param mixed  $keyValue    A scalar, associative array, indexed array or object representing the univoque key to use for object retrieval
+     * @param mixed  $object    A scalar, associative array, indexed array or object representing the univoque key to use for object retrieval
      *  Passing an associative array key value will allow to guess which key should be used, else the primary key will be used if exists
      *
      * @return bool The success of failure of operation
      */
-    public function updateCollection($className = false, $keyValue = false, $queryString=false)
+    public function updateCollection($className = false, $object = false, $queryString=false)
     {
+        $object = (object) $object;
         $lqlString = 'UPDATE';
                 
         $lqlString .= ' ' . $className;
@@ -348,7 +349,7 @@ trait FactoryWriterTrait
             $class = \laabs::getClass($className);
             $query->setClass($class);
 
-            $updateProperties = $class->getObjectProperties((object) $keyValue);
+            $updateProperties = $class->getObjectProperties($object);
             $query->setProperties($updateProperties);
             /* Prepare statement */
             if ($this->isCluster()) {
@@ -360,7 +361,6 @@ trait FactoryWriterTrait
             $this->preparedStmts[$lqlString] = $stmt;
         }
 
-        $object = (object) $keyValue;
         $stmt->bindObject($className, $object, $class);
 
         $executed = $this->execute($stmt);
