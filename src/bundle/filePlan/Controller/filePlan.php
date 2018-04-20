@@ -80,17 +80,7 @@ class filePlan
      */
     public function create($folder)
     {
-        // Validation :
-        // OwnerOrgRegNumber exists
-
-        if (!isset($folder->parentFolderId)) {
-            $folder->parentFolderId = null;
-
-        } elseif (!$this->sdoFactory->exists('filePlan/folder', array('folderId' => $folder->parentFolderId))) {
-            throw new \core\Exception\NotFoundException("The parent folder does not exist");
-        }
-
-        if ($this->sdoFactory->exists('filePlan/folder', array('name' => $folder->name, 'parentFolderId' =>$folder->parentFolderId))) {
+        if ($this->exists($folder)) {
             throw new \core\Exception\ConflictException("The folder already exists");
         }
 
@@ -101,6 +91,29 @@ class filePlan
         return $folder->folderId;
     }
 
+    /**
+     * Check if the folder exists
+     * @param filePlan/folder$folder
+     *
+     * @throws \core\Exception\NotFoundException
+     *
+     * @return boolean
+     */
+    public function exists($folder)
+    {
+        if (!isset($folder->parentFolderId)) {
+            $folder->parentFolderId = null;
+            $checkClause = "name='$folder->name' AND parentFolderId=NULL AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+        } elseif (!$this->sdoFactory->exists('filePlan/folder', array('folderId' => $folder->parentFolderId))) {
+            throw new \core\Exception\NotFoundException("The parent folder does not exist");
+        } else {
+            $checkClause = "name='$folder->name' AND parentFolderId='$folder->parentFolderId' AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+        }
+
+        $result = $this->sdoFactory->count('filePlan/folder', $checkClause) ? true : false;
+
+        return $result;
+    }
     /**
      * Create folder from path
      * @param string  $path             The folder path
@@ -121,13 +134,13 @@ class filePlan
 
             try {
                 if (!$recursive && !empty($items)) {
-                    $parentFolderId = $this->readByName($folder->name)->folderId;
+                    $parentFolderId = $this->readByName($folder->name, $ownerOrgRegNumber, $parentFolderId)->folderId;
                     continue;
                 }
 
                 $parentFolderId = $this->create($folder);
             } catch (\core\Exception\ConflictException $e) {
-                $parentFolderId = $this->readByName($folder->name)->folderId;
+                $parentFolderId = $this->readByName($folder->name, $ownerOrgRegNumber, $parentFolderId)->folderId;
             }
         }
 
@@ -154,25 +167,33 @@ class filePlan
 
     /**
      * Read a folder
-     * @param string $folderName The folder name
-     * 
+     * @param string $folderName        The folder name
+     * @param string $ownerOrgRegNumber The owner of the folder
+     * @param string $parentFolderId    The parent folder identifier
+     *
      * @return filePlan/folder The folder
      */
-    public function readByName($folderName)
+    public function readByName($folderName, $ownerOrgRegNumber, $parentFolderId = null)
     {
-        try {
-            $folders = $this->sdoFactory->find('filePlan/folder', "name='$folderName'");
-            
-            if (!count($folders)) {
-                throw new \Exception("", 1);
-                
-            }
-            $folder = $folders[0];
+        $folder = \laabs::newInstance("filePlan/folder");
+        $folder->name = $folderName;
+        $folder->ownerOrgRegNumber = $ownerOrgRegNumber;
+        $folder->parentFolderId = $parentFolderId;
 
-        } catch(\Exception $e) {
-            var_dump($folderName);
-            throw new \core\Exception\NotFoundException("The folder can't be found.");
+        if (!$this->exists($folder)) {
+            throw new \core\Exception\ConflictException("The folder can't be found.");
         }
+
+        if (!isset($folder->parentFolderId)) {
+            $checkClause = "name='$folder->name' AND parentFolderId=NULL AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+        } else {
+            $checkClause = "name='$folder->name' AND parentFolderId='$folder->parentFolderId' AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+        }
+
+
+        $folders = $this->sdoFactory->find('filePlan/folder', $checkClause);
+
+        $folder = $folders[0];
 
         return $folder;
     }
