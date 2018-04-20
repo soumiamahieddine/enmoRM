@@ -157,6 +157,10 @@ msgid "delivery"
 msgstr "Communication"
 msgctxt "userStoryGroup"
 
+msgid "deliveryValidation"
+msgstr "Traiter les demandes de communication"
+msgctxt "userStory"
+
 msgid "deliveryRequestReply"
 msgstr "Récupérer les communications"
 msgctxt "userStory"

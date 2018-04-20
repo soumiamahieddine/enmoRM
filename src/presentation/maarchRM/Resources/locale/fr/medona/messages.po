@@ -186,6 +186,9 @@ msgid "Message identifier"
 msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
+msgstr "Demandes de communication"
+
+msgid "Delivery authorization request"
 msgstr "Demandes d'autorisation"
 
 msgid "Communication to recover"
@@ -370,6 +373,9 @@ msgstr "Terminer"
 
 msgid "Accept"
 msgstr "Accepter"
+
+msgid "Derogation"
+msgstr "Dérogation"
 
 msgid "Reject"
 msgstr "Rejeter"
