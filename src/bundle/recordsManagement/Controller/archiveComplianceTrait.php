@@ -197,7 +197,7 @@ trait archiveComplianceTrait
         $logMessage = ["message" => "%s archives are not valid", "variables"=> count($res['error'])];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
-        if (count($res[error])) {
+        if (count($res['error'])) {
             $logMessage = ["message" => "Invalid archive identifier : %s", "variables"=> implode(', ', $res['error'])];
             \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
         }
