@@ -500,6 +500,9 @@ msgstr "Demande d'autorisation rejetée"
 msgid "Message processed"
 msgstr "Message traité"
 
+msgid "Message sent to derogation"
+msgstr "Message envoyé en dérogation"
+
 msgid "Invalid message"
 msgstr "Message invalide"
 
