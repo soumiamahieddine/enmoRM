@@ -56,6 +56,7 @@
     <span id="text_Y">year(s)</span>
     <span id="text_preservation">preservation</span>
     <span id="text_destruction">destruction</span>
+    <span id="text_unlimited">unlimited</span>
 </div>
 
 <style>
@@ -295,7 +296,6 @@
                     if (response.status) {
                         ModificationModal.close();
                         ModificationModal.modal.one('hidden.bs.modal', function () {
-                            console.log("passage");
                             //$('#modificationModal').modal();*
                             $('#archive_search').click();
                         });
@@ -359,12 +359,21 @@
 
                  if (rule) {
                     $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+
+                     if(retentionRuleDuration[1] == 999999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
                     $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     if(retentionRuleDuration[1] == 999999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
                     $('#retentionRuleFinalDisposition').val(retentionRuleCode.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }

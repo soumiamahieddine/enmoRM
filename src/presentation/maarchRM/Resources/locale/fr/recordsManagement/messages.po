@@ -971,3 +971,6 @@ msgstr "Aucune organisation sélectionnée"
 
 msgid "You have to choose a working organization unit to proceed this action."
 msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
+
+msgid "unlimited"
+msgstr "Illimitée"
