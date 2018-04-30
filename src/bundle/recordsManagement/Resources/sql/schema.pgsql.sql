@@ -186,6 +186,11 @@ CREATE TABLE "recordsManagement"."archive"
   "accessRuleStartDate" date,
   "accessRuleComDate" date,
 
+  "storageRuleCode" text,
+  "storageRuleDuration" text,
+  "storageRuleStartDate" date,
+  "storageRuleEndDate" date,
+
   "classificationRuleCode" text,
   "classificationRuleDuration" text,
   "classificationRuleStartDate" date,
@@ -299,3 +304,22 @@ PRIMARY KEY ("name")
 WITH (
   OIDS=FALSE
 );
+
+
+-- Table: "recordsManagement"."storageRule"
+
+-- DROP TABLE "recordsManagement"."storageRule";
+
+CREATE TABLE "recordsManagement"."storageRule"
+(
+  "code" text NOT NULL,
+  "duration" text NOT NULL,
+  "description" text,
+  "label" text,
+
+  PRIMARY KEY ("code")
+)
+WITH (
+  OIDS=FALSE
+);
+
