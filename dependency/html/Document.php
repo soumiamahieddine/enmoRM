@@ -414,11 +414,17 @@ class Document extends \dependency\xml\Document
      */
     public function savePlugins($node = null)
     {
+        $parameters = [];
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
             foreach ($element->plugin as $name => $plugin) {
                 if (method_exists($plugin, 'saveHtml')) {
                     $plugin->saveHtml();
+                }
+
+                if (!isset($parameters[$name]) && method_exists($plugin, 'saveParameters')) {
+                    $parameters[$name]=$plugin;
+                    $plugin->saveParameters();
                 }
             }
         }
