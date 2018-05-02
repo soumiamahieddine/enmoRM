@@ -384,42 +384,4 @@ class archive
      * @xpath rm:archiveRelationship
      */
     public $archiveRelationship;
-
-    /* ************************************************************************
-     * storageRule
-     *********************************************************************** */
-
-    /**
-     * The storage rule code
-     *
-     * @var string
-     */
-    public $storageRuleCode;
-
-    /**
-     * The starting date of the storage rule calculation
-     *
-     * @var date
-     * @xpath rm:storageRuleStartDate
-     */
-    public $storageRuleStartDate;
-
-    /**
-     * The duration of storage
-     *
-     * @var duration
-     * @xpath rm:storageRuleDuration
-     */
-    public $storageRuleDuration;
-
-
-    /**
-     * The ending date of the storage rule calculation
-     *
-     * @var date
-     * @xpath rm:storageRuleEndDate
-     */
-    public $storageEndDate;
-
-    /**
 }
