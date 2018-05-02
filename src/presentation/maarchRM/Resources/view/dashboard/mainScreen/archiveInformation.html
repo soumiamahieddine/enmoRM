@@ -412,7 +412,7 @@
                         value = valueInput.val();
                         break;
                     case "date" :
-                        value = valueInput.datepicker({ dateFormat: 'yy-mm-dd'}).val();
+                        value = valueInput.data('datepicker').getFormattedDate('yyyy-mm-dd');
                         break;
                     case "number" :
                         value = parseInt(valueInput.val());
@@ -439,7 +439,7 @@
                 archiveId           : ArchiveInformation.archiveId,
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
-                originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
+                originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
                 description         : JSON.stringify(descriptionFields)
             };
 
