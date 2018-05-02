@@ -352,6 +352,10 @@
         $.each(object, function (key, value) {
             $('[name="' + key + '"]').val(value);
         });
+        if( $('[name="duration"]').val() >=9999 & $('#durationUnit').val()=='Y' ) {
+            $('#durationUnit').val('*');
+            $('[name="duration"]').val('').prop('disabled',true);
+        }
     }
 
 </script>

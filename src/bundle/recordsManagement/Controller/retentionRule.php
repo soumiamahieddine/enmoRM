@@ -54,10 +54,6 @@ class retentionRule
             if ($retentionRule->duration == null) {
                 continue;
             }
-            if ($retentionRule->duration->y == 999999999) {
-                $retentionRule->duration = null;
-                $retentionRule->durationUnit = "Illimité";
-            }
         }
 
         return $retentionRules;

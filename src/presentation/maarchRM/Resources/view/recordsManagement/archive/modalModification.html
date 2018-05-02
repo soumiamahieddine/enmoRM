@@ -351,7 +351,7 @@
             var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
-
+             console.log(retentionRuleCode)
              if (retentionRuleCode) {
 
                  var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
