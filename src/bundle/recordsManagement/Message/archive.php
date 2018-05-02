@@ -274,4 +274,32 @@ class archive
      * @var recordsManagement/archive[]
      */
     public $contents;
+
+    /**
+     * The storage rule code
+     *
+     * @var string
+     */
+    public $storageRuleCode;
+
+    /**
+     * The starting date of the storage rule calculation
+     *
+     * @var date
+     */
+    public $storageStartDate;
+
+    /**
+     * The ending date of the storage rule calculation
+     *
+     * @var date
+     */
+    public $storageEndDate;
+
+    /**
+     * The duration of storage
+     *
+     * @var duration
+     */
+    public $storageDuration;
 }

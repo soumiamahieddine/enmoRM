@@ -1,0 +1,44 @@
+<div  data-translate-catalog="recordsManagement/storageRule">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <h4><?merge storageRule.count() ?> rule(s)</h4>
+                </div>
+                <div class="pull-right">
+                    <button type="button" id="new-storageRule" class="btn btn-default btn-sm" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                </div>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <table class="table dataTable" id="rulesTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Label</th>
+                            <th>Description</th>
+                            <th>Storage duration</th>
+                            <th/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?merge storageRule ?>
+                        <tr id="[?merge .code ?]">
+                            <td><?merge .code ?></td>
+                            <td><?merge .label ?></td>
+                            <td><?merge .description ?></td>
+                            <td><?merge .duration ?>&nbsp;<?merge .durationUnit ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-info btn-sm edit" data-code='[?merge .code ?]' title="Edit"><span class="fa fa-edit">&nbsp;</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

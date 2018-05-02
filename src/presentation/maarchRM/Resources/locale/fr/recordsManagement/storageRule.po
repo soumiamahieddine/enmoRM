@@ -1,0 +1,89 @@
+# recordsManagement/retentionRule
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Storage rules"
+msgstr "Règles d'utilité courante"
+
+msgid "Storage rule"
+msgstr "Règle d'utilité courante"
+
+msgid "Add a storage rule"
+msgstr "Ajouter une règle"
+
+msgid "rule(s)"
+msgstr "règle(s)"
+
+msgid "Edit storage rule"
+msgstr "Édition de la règle d'utilité courante"
+
+msgid "Delete the storage rule"
+msgstr "Supprimer la règle"
+
+msgid "Update the storage rule"
+msgstr "Modifier la règle"
+
+msgid "Are you sure to modify this storage rule ?"
+msgstr "Êtes-vous sûr de vouloir modifier la règle d'utilité courante ?"
+
+msgid "Are you sure to delete this storage rule ?"
+msgstr "Êtes-vous sûr de vouloir supprimer la règle d'utilité courante ?"
+
+msgid "Storage rule code"
+msgstr "Code de la règle"
+
+msgid "Storage duration"
+msgstr "Durée de conservation"
+
+msgid "Label"
+msgstr "Intitulé"
+
+msgid "Days"
+msgstr "Jours"
+
+msgid "Months"
+msgstr "Mois"
+
+msgid "Years"
+msgstr "Années"
+
+msgid "Preservation"
+msgstr "Conservation"
+
+msgid "Unlimited"
+msgstr "Illimité"
+
+msgid "Storage rule created."
+msgstr "Règle ajoutée."
+
+msgid "Storage rule updated."
+msgstr "Règle modifiée."
+
+msgid "Storage rule deleted."
+msgstr "Règle supprimée."
+
+msgid "Storage rule not deleted."
+msgstr "Règle non supprimée."
+
+msgid "The operation could not be completed because the retention rule doesn't exist."
+msgstr "Suppression impossible ! La règle n'existe pas."
+
+msgid "Y"
+msgstr "an(s)"
+msgctxt "duration"
+
+msgid "M"
+msgstr "mois"
+msgctxt "duration"
+
+msgid "D"
+msgstr "jour(s)"
+msgctxt "duration"
+
+
+msgid "destruction"
+msgstr "Destruction"
+
+msgid "preservation"
+msgstr "Conservation"
+
