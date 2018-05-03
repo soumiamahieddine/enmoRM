@@ -50,15 +50,6 @@ class storageRule
     public function index()
     {
         $retentionRules = $this->sdoFactory->find('recordsManagement/storageRule');
-        foreach ($retentionRules as $retentionRule) {
-            if ($retentionRule->duration == null) {
-                continue;
-            }
-            if ($retentionRule->duration->y == 999999999) {
-                $retentionRule->duration = null;
-                $retentionRule->durationUnit = "Illimité";
-            }
-        }
 
         return $retentionRules;
     }
