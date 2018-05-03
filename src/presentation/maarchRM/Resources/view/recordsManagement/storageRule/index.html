@@ -192,7 +192,7 @@
                 storageRule: EditionModal.serialize()
             };
 
-            if(parameters.storageRule.duration == 0) {
+            if(parameters.storageRule.duration == 0 || parameters.storageRule.code =='') {
                 gritter.show($('#empty_text').html(), false);
                 return;
             }
