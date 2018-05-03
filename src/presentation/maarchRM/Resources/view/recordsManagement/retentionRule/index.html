@@ -342,9 +342,9 @@
 
     $("#contain").on('change', '#durationUnit', function () {
         if ($('#durationUnit').val() == '*') {
-            $('#duration').attr('disabled', 'disabled');
+            $('#duration').prop('disabled', true).val('');
         } else {
-            $('#duration').removeAttr('disabled');
+            $('#duration').prop('disabled',false);
         }
     })
 
@@ -355,6 +355,8 @@
         if( $('[name="duration"]').val() >=9999 & $('#durationUnit').val()=='Y' ) {
             $('#durationUnit').val('*');
             $('[name="duration"]').val('').prop('disabled',true);
+        } else {
+            $('#duration').prop('disabled',false);
         }
     }
 

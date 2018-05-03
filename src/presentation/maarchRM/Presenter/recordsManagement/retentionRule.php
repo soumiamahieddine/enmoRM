@@ -106,12 +106,11 @@ class retentionRule
             $rule->duration = substr($rule->duration, 1, -1);
 
             if($rule->duration >= 9999 && $rule->durationUnit == 'Y' ){
-                $this->view->translator->getText('unlimited', null, "recordsManagement/retentionRule");
+                $rule->durationText = $this->view->translator->getText('Unlimited', null, "recordsManagement/retentionRule");
             } else {
-
                 $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
+                $rule->durationText =  $rule->duration.' '.  $rule->durationUnit;
             }
-            $rule->durationText =  $rule->duration.' '.  $rule->durationUnit;
         }
 
         $this->view->setSource('retentionRule', $retentionRule);
