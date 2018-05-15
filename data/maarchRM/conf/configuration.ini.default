@@ -136,6 +136,45 @@ publicUserStory = "['app/*']"
 ;    'adminFunc/contact'
 ;]"
 
+servicePrivileges = "[
+                    {
+                    'serviceURI': 'audit/event/createChainjournal',
+                    'description' : 'Chaîner le journal de l\'application'
+                    },
+                    {
+                    'serviceURI': 'batchProcessing/scheduling/updateProcess',
+                    'description' : 'Exécution automatique des tâches planifiées'
+                    },
+                    {
+                    'serviceURI': 'lifeCycle/journal/createChainjournal',
+                    'description' : 'Chaîner le journal du cycle de vie'
+                    },
+                    {
+                    'serviceURI': 'recordsmanagement/archivecompliance/readperiodic',
+                    'description' : 'Valider l\'intégrité des archives'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archives/deleteDisposablearchives',
+                    'description' : 'Détruire les archives'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archives/updateIndexfulltext',
+                    'description' : 'Extraction plein texte'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archive/create',
+                    'description' : 'Création d\'une archive'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archive/createArchiveBatch',
+                    'description' : 'Création par batch d\'archive(s)'
+                    },
+                    {
+                    'serviceURI': '*',
+                    'description' : 'Tous les droits'
+                    }
+                    ]"
+
 [lifeCycle]
 
 ; Chain life cycle journal by originator in addition to the main journal

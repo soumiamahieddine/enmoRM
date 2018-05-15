@@ -126,7 +126,7 @@ EOD
     }
 
     /**
-     * Get reseult
+     * Get result
      *
      * @param Array $events Array of audit/event object
      *
@@ -156,7 +156,7 @@ EOD
 
         if ($multipleInstance) {
             $dataTable->setUnsortableColumns(5);
-            $dataTable->setSorting(array(array(2, 'desc')));
+            $dataTable->setSorting(array(array(1, 'desc')));
         } else {
             $dataTable->setUnsortableColumns(4);
             $dataTable->setSorting(array(array(0, 'desc')));

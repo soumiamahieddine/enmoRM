@@ -129,9 +129,9 @@ trait archiveComplianceTrait
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
 
-            $totalNbArchivesToCheck += nbArchivesToCheck;
-            $totalNbArchivesInSample += nbArchivesInSample;
-            $totalarchivesChecked += archivesChecked;
+            $totalNbArchivesToCheck += $nbArchivesToCheck;
+            $totalNbArchivesInSample += $nbArchivesInSample;
+            $totalarchivesChecked += $archivesChecked;
         }
 
         $logMessage = ["message" => "%s archive(s) to check", "variables"=> $totalNbArchivesToCheck];
