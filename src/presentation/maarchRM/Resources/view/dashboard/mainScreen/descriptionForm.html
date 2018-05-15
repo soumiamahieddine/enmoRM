@@ -209,10 +209,7 @@
                 case 'timestamp':
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.data("datepicker").setDate(defaultVal);
                     }
