@@ -372,6 +372,11 @@ class archive
             $this->view->addContentFile("archivesPubliques/contentDescription/metadata.html");
         }
 
+        if ($archive->descriptionObject) {
+            $archive->descriptionObject = $archive->descriptionObject[0];
+        }
+
+        var_dump($archive->descriptionObject);
         $this->view->setSource('languageCodes', $languageCodes);
         $this->view->setSource("archive", $archive);
 
