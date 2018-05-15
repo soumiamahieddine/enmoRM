@@ -31,6 +31,8 @@
     </td>
 </table>
 
+<span class="hide" id="retentionStartDatePlaceholder">Empty value will keep previous date</span>
+
 <script type="text/javascript">
 
     $('#resetRetentionStartDate').on('click', function() {
@@ -58,11 +60,11 @@
     }
 
     var retentionRule_load = function(archiveId, archiveName, type) {
-        $('#retentionCode').css('display', '');
+        $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
     }
 
     var retentionRule_loadMultiple = function() {
-        $('#retentionCode').css('display', '');
+        $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#retentionStartDatePlaceholder").html());
     }
 </script>

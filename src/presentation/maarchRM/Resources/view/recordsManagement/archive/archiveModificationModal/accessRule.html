@@ -20,6 +20,7 @@
         </dl>
     </td>
 </table>
+<span class="hide" id="accessRuleStartDatePlaceholder">Empty value will keep previous date</span>
 
 <script type="text/javascript">
 
@@ -47,12 +48,12 @@
     }
 
     var accessRule_load = function(archiveId, archiveName, type) {
-        $('#accessCode').css('display', '');
+        $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
     }
 
     var accessRule_loadMultiple = function() {
-        $('#accessCode').css('display', '');
+        $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#accessRuleStartDatePlaceholder").html());
     }
 
 </script>
