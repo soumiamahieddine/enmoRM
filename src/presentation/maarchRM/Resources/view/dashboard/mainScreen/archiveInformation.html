@@ -376,10 +376,7 @@
                         break;
                     case 'date': 
                         customField = $("#inputCustomField").clone();
-                        customField.datepicker({
-                            language:$('#wrapper').attr('lang'),
-                            autoclose:true
-                        }).datepicker('setDate', value.html());
+                        customField.datepicker(DatePickerParams).datepicker('setDate', value.html());
                         break;
                     default :
                         customField = $("#inputCustomField").clone();
