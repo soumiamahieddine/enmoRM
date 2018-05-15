@@ -208,7 +208,7 @@ trait archiveComplianceTrait
         $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId'");
         if (count($children)) {
             foreach ($children as $child) {
-                $valid = $valid && $this->checkArchiveIntegrity($child);
+                $valid = $this->checkArchiveIntegrity($child);
 
                 if (!$valid) {
                     $errors[] = "Error on the archive $child->archiveId";
