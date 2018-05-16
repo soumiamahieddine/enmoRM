@@ -285,10 +285,12 @@ trait archiveModificationTrait
         if ($originatingDate) {
             $archive->originatingDate = $originatingDate;
         }
-        
+
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         if ($description) {
             $descriptionObject = $description;
-            if (!empty($archive->archivalProfileReference)) {
+            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 if (!empty($this->currentArchivalProfile->descriptionClass)) {

@@ -376,7 +376,6 @@ class archive
             $archive->descriptionObject = $archive->descriptionObject[0];
         }
 
-        var_dump($archive->descriptionObject);
         $this->view->setSource('languageCodes', $languageCodes);
         $this->view->setSource("archive", $archive);
 
