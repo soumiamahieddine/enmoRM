@@ -418,11 +418,18 @@ trait archiveModificationTrait
      * @param int $limit The maximum number of archive to update
      */
     public function updateArchiveRetentionRule($limit = 1000) {
-        $archives = $this->sdoFactory->find('recordsManagement/archiveRetentionRule', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
+        $archives = $this->sdoFactory->find('recordsManagement/archive', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
         $retentionRules = [];
 
         if($archives) {
             foreach ($archives as $archive) {
+
+                $retentionRule = new \stdClass();
+                $retentionRule->archiveId = $archive->archiveId;
+                $retentionRule->previousStartDate = $archive->retentionStartDate;
+                $retentionRule->previousDuration = $archive->retentionDuration;
+                $retentionRule->previousFinalDisposition = $archive->finalDisposition;
+
                 if (!isset($retentionRules[$archive->retentionRuleCode])) {
                     $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
                 }
@@ -434,9 +441,18 @@ trait archiveModificationTrait
                 }
 
                 $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
+
+                $retentionRule->retentionStartDate = $archive->retentionStartDate;
+                $retentionRule->retentionDuration = $archive->retentionDuration;
+                $retentionRule->finalDisposition = $archive->finalDisposition;
+
                 $archive->retentionRuleStatus = "current";
                 $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
-             }
+
+                // Life cycle journal
+                $this->logRetentionRuleModification($archive, $retentionRule, true);
+            }
         }
     }
 }
+
