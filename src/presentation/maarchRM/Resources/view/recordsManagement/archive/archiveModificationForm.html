@@ -94,9 +94,12 @@
 
                 parameter.retentionRule = {
                     retentionStartDate: this.modal.find('[name="startDate"]').val(),
-                    retentionRuleCode: this.modal.find('[name="retentionRuleCode"]').val(),
-                    retentionDuration: code.duration
+                    retentionRuleCode: this.modal.find('[name="retentionRuleCode"]').val()
                 };
+
+                if (code) {
+                    parameter.retentionRule.retentionDuration = code.duration;
+                }
 
                 if (!($("#updateFinalDisposition").css('display') === 'block' && $('#retentionRuleFinalDisposition').prop("disabled"))) {
                     parameter.retentionRule.finalDisposition = $('#retentionRuleFinalDisposition').val();

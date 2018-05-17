@@ -308,6 +308,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
                         $("#retentionRuleFinalDisposition").prop("disabled",false);
+                        $("#checkboxUpdateFinalDisposition").prop("checked",false);
                         ModificationModal.close();
                         ModificationModal.modal.one('hidden.bs.modal', function () {
                             //$('#modificationModal').modal();*
