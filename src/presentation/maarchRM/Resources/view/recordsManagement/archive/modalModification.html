@@ -295,7 +295,6 @@
                     if (response.status) {
                         ModificationModal.close();
                         ModificationModal.modal.one('hidden.bs.modal', function () {
-                            console.log("passage");
                             //$('#modificationModal').modal();*
                             $('#archive_search').click();
                         });
@@ -351,9 +350,8 @@
             var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
-console.log(retentionRuleCode);
-             if (retentionRuleCode) {
-
+            
+            if (retentionRuleCode) {
                  var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 

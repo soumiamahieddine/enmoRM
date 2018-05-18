@@ -57,7 +57,6 @@ class datePicker
      *  weekStart
      */
     protected $parameters;
-    protected static $parameterAdded;
 
     /* -------------------------------------------------------------------------
     - Methods
@@ -115,10 +114,8 @@ class datePicker
 
     public function saveHtml()
     {
-
         $datePickerId = \laabs\uniqid();
         $this->element->setAttribute('data-datepicker-id', $datePickerId);
-        $parameters = json_encode($this->parameters);
         $scriptText =
 <<<EOS
 $(document).ready(function() {
