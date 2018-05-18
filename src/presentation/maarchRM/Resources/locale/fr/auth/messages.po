@@ -689,10 +689,10 @@ msgid "Service name"
 msgstr "Nom du service"
 
 msgid "Token date"
-msgstr "Date de la clé"
+msgstr "Date du jeton"
 
 msgid "Token changed"
-msgstr "Clé générée"
+msgstr "Jeton généré"
 
 msgid "Service account(s)"
 msgstr "Compte(s) de service"
@@ -703,8 +703,17 @@ msgstr "Comptes de service"
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"
 
+msgid "Authentication token"
+msgstr "Jeton d'authentification"
+
 msgid "Generate token"
-msgstr "Générer une clé"
+msgstr "Générer un jeton"
+
+msgid "Token"
+msgstr "Jeton"
+
+msgid "URL encoded token"
+msgstr "Jeton URL encodé"
 
 msgid "Edit service account"
 msgstr "Éditer un compte de service"
@@ -759,3 +768,6 @@ msgstr "Organisation"
 
 msgid "All privileges"
 msgstr "Tous les privilèges"
+
+msgid "Be careful, you are about to generate a new token. This will cancel the previous token."
+msgstr "Attention, vous êtes sur le point de générer un nouveau jeton. Cela annulera le jeton précédent."
