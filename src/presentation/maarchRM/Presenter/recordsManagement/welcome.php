@@ -240,8 +240,11 @@ class welcome
 
         if (isset(\laabs::configuration('presentation.maarchRM')['displayableFormat'])) {
             $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
-            $this->view->merge();
+        } else {
+            $this->view->setSource("displayableFormat", json_encode(array()));
         }
+
+        $this->view->merge();
 
         return $this->view->saveHtml();
     }

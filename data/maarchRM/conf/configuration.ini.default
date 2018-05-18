@@ -92,6 +92,11 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
 
+; Any path on this list will no be logged in the application journal
+;ignorePaths = "['organization/organization/readTodisplay']"
+
+; Any operation on this list will no be logged in the application journal
+;ignoreMethods = "['read']"
 
 [auth]
 ; Encryption algorithm (MD5, SHA256, SHA512...)
@@ -130,6 +135,45 @@ publicUserStory = "['app/*']"
 ;blacklistUserStories = "[
 ;    'adminFunc/contact'
 ;]"
+
+servicePrivileges = "[
+                    {
+                    'serviceURI': 'audit/event/createChainjournal',
+                    'description' : 'Chaîner le journal de l\'application'
+                    },
+                    {
+                    'serviceURI': 'batchProcessing/scheduling/updateProcess',
+                    'description' : 'Exécution automatique des tâches planifiées'
+                    },
+                    {
+                    'serviceURI': 'lifeCycle/journal/createChainjournal',
+                    'description' : 'Chaîner le journal du cycle de vie'
+                    },
+                    {
+                    'serviceURI': 'recordsmanagement/archivecompliance/readperiodic',
+                    'description' : 'Valider l\'intégrité des archives'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archives/deleteDisposablearchives',
+                    'description' : 'Détruire les archives'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archives/updateIndexfulltext',
+                    'description' : 'Extraction plein texte'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archive/create',
+                    'description' : 'Création d\'une archive'
+                    },
+                    {
+                    'serviceURI': 'recordsManagement/archive/createArchiveBatch',
+                    'description' : 'Création par batch d\'archive(s)'
+                    },
+                    {
+                    'serviceURI': '*',
+                    'description' : 'Tous les droits'
+                    }
+                    ]"
 
 [lifeCycle]
 

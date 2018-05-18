@@ -5,7 +5,13 @@
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span>
             </button>
-            <h3>Archive</h3>
+            <h3>
+                Archive
+                <?merge editDescription.bool() ?>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-warning editMetadata"  data-archiveid="[?merge archive.archiveId ?]" title="Edit metadata"><i class="fa fa-edit">&nbsp;</i>Edit metadata</button>
+                </div>
+            </h3>
         </div>
     </div>
     <div class="container-fluid">

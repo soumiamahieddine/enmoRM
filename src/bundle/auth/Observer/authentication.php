@@ -105,14 +105,25 @@ class authentication
         }
 
         if (!isset($account)) {
+            var_dump("aaa");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ((!$account->enabled) || ($account->locked)) {
+            var_dump("bbb");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ($account->accountType == "service") {
+            $token = new \core\token($accountToken, 0);
+            $jsonToken = \json_encode($token);
+            $cryptedToken = \laabs::encrypt($jsonToken, \laabs::getCryptKey());
+            $cookieToken = base64_encode($cryptedToken);
+
+            if ($account->password != $cookieToken) {
+                throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
+            }
+
             $servicePosition = \laabs::newController("organization/servicePosition")->getPosition($account->accountId);
 
             if ($servicePosition != null) {

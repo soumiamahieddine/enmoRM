@@ -452,7 +452,7 @@
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
                 originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
-                description         : JSON.stringify(descriptionFields)
+                description         : descriptionFields
             };
 
             $.ajax({

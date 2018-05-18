@@ -28,14 +28,15 @@ interface modifyDescriptionInterface
      * Change the information of archive
      * @param string $archiveId
      * @param string $originatorArchiveId
-     * @param string $archiveName     
+     * @param string $archiverArchiveId
+     * @param string $archiveName
      * @param date   $originatingDate     
-     * @param string $description 
+     * @param mixed $description
      * 
      * 
      * @return recordsManagement/archive/metadata
      * 
      * @uses recordsManagement/archives/updateMetadata
      */
-    public function updateRecordsmanagementArchiveMetadata($archiveId,$originatorArchiveId,$archiveName,$originatingDate,$description);
+    public function updateRecordsmanagementArchiveMetadata($archiveId,$originatorArchiveId,$archiverArchiveId,$archiveName,$originatingDate,$description);
 }

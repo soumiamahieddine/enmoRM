@@ -978,3 +978,9 @@ msgctxt "archiveInformation"
 
 msgid "Invalid object"
 msgstr "Objet invalide"
+
+msgid "Do not update the final disposition"
+msgstr "Ne pas mettre à jour le sort final"
+
+msgid "Edit metadata"
+msgstr "Modifier les métadonnées"
