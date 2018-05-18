@@ -70,10 +70,18 @@ conversionError = false
 ;   - m for the numeric representation of a month, with leading zeros
 ;   - d for day of the month, 2 digits with leading zeros
 ;
-; To make pakages, use a number. Packages must be the only variable on the directory step name
+; To make packages, use a number. Packages must be the only variable on the directory step name
 ;       good ex : /<200>/ to make incremental containers of two hundred items
 ;       bad example : /prefix_<200>/
 storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<date(Y)>/<date(m)>/<date(d)>"
+
+; The path of journals in the file plan
+; To include the type of log you must use <type>
+; To include a part of date, you must use <date(format)>.
+;   - Y for a full numeric representation of a year, 4 digits
+;   - m for the numeric representation of a month, with leading zeros
+;   - d for day of the month, 2 digits with leading zeros
+logFilePlan = "<type>/<date(Y)>/<date(m)>"
 
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"

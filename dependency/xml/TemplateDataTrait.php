@@ -302,6 +302,9 @@ trait TemplateDataTrait
             case 'bool':
                 $value = @(bool) $source;
                 break;
+            case 'urlencode':
+                $value = @urlencode($source);
+                break;
             case 'array':
                 if (!is_array($source)) {
                     if (is_null($source)) {

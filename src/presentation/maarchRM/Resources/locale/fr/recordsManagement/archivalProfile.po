@@ -262,3 +262,6 @@ msgstr "Dossier"
 
 msgid "Profile already exist"
 msgstr "Le profil existe déjà"
+
+msgid "Read only"
+msgstr "Lecture seule"

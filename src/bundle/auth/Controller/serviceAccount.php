@@ -280,16 +280,19 @@ class serviceAccount
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
 
-        $accountToken = new \StdClass();
-        $accountToken->accountId = $serviceAccount->accountId;
+        $dataToken = new \StdClass();
+        $dataToken->accountId = $serviceAccount->accountId;
+        $dataToken->salt = $serviceAccount->salt;
+
+        $token = new \core\token($dataToken, 0);
+
+        $jsonToken = \json_encode($token);
+        $cryptedToken = \laabs::encrypt($jsonToken, \laabs::getCryptKey());
+        $cookieToken = base64_encode($cryptedToken);
+
+        $serviceAccount->password = $cookieToken;
 
         $this->sdoFactory->update($serviceAccount, 'auth/account');
-
-        $token = new \core\token($accountToken, 31536000 + time());
-        $key = \laabs::getCryptKey();
-        $jsonToken = \json_encode($token);
-        $cryptedToken = \laabs::encrypt($jsonToken, $key);
-        $cookieToken = base64_encode($cryptedToken);
 
         return $cookieToken;
     }

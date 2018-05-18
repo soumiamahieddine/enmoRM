@@ -18,73 +18,62 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Model;
+
 /**
- * Class model that represents a description field of the data dictionnary
+ * Class model that represents a binary data object
  *
  * @package RecordsManagement
- * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
- * @pkey [name]
+ * @author  Alexis Ragot(Maarch) <alexis.ragot@maarch.org>
+ *
  */
-class descriptionField
+class BinaryDataObject
 {
     /**
-     * The name of the property
+     *
+     *
+     * @var object
+     */
+    public $attachment;
+
+    /**
+     *
      *
      * @var string
-     * @notempty
      */
-    public $name;
+    public $format;
 
     /**
-    * @var string The label for users
-    * @notempty
-    */
-    public $label;
-
-    /**
-    * @var string The type of data : name, string, integer, float, boolean, number, date, timestamp, datetime 
-    * @notempty
-    */
-    public $type;
-
-    /**
-    * @var string The default value
-    */
-    public $default;
-
-    /**
-    * @var integer
-    */
-    public $minLength;
-
-    /**
-    * @var integer
-    */
-    public $maxLength;
-
-    /**
-    * @var float
-    */
-    public $minValue;
-
-    /**
-    * @var float
-    */
-    public $maxValue;
-
-    /**
-    * @var string
-    */
-    public $enumeration;
-
-    /**
-    * @var string
-    */
-    public $pattern;
-
-    /**
-     * @var boolean
+     *
+     *
+     * @var string
      */
-    public $isArray;
+    public $mimetype;
 
+    /**
+     *
+     *
+     * @var object
+     */
+    public $messageDigest;
+
+    /**
+     *
+     *
+     * @var numeric
+     */
+    public $size;
+
+    /**
+     *
+     *
+     * @var object
+     */
+    public $metadata;
+
+    /**
+     *
+     *
+     * @var array
+     */
+    public $relationships;
 }

@@ -101,6 +101,9 @@ CREATE TABLE "recordsManagement"."descriptionField"
   "maxValue" numeric,
   "enumeration" text,
   "pattern" text,
+  "isArray" boolean default false,
+
+
   PRIMARY KEY ("name")
 );
 
@@ -114,6 +117,9 @@ CREATE TABLE "recordsManagement"."archiveDescription"
   "fieldName" text NOT NULL,
   "required" boolean,
   "position" integer,
+  "isImmutable" boolean default false,
+  "isRetained" boolean default true,
+
   PRIMARY KEY ("archivalProfileId", "fieldName"),
   FOREIGN KEY ("archivalProfileId")
     REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
