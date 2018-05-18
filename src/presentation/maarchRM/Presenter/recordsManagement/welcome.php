@@ -342,7 +342,6 @@ class welcome
         $archivalProfile = null;
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
 
-
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
             $archive->archivalProfileName = $archivalProfile->name;
@@ -365,6 +364,7 @@ class welcome
                                 $label = $archiveDescription->descriptionField->label;
                                 $archivalProfileField = true;
                                 $type = $archiveDescription->descriptionField->type;
+                                $isImmutable = $archiveDescription->isImmutable;
                             }
                         }
                     }
@@ -399,7 +399,7 @@ class welcome
                         $descriptionHtml .= '<tr>';
                     }
 
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
+                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
                     if ($type == "date") {
                             $textValue = \laabs::newDate($value);
                             $textValue = $textValue->format("d/m/Y");
@@ -410,8 +410,8 @@ class welcome
                     if ($type == 'boolean') {
                         $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
                     }
+
                     $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                    $descriptionHtml .= '</tr>';
                 }
 
             }

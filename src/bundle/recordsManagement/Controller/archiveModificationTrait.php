@@ -270,8 +270,9 @@ trait archiveModificationTrait
     public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
         $archive = $this->getDescription($archiveId);
+        $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
         $this->checkRights($archive);
-        
+
         if ($archiveName) {
             $archive->archiveName = $archiveName;
         }
@@ -292,6 +293,16 @@ trait archiveModificationTrait
 
         if ($description) {
             $descriptionObject = $description;
+            foreach ($archivalProfileDescription as $descriptionImmutable){
+                if($descriptionImmutable->isImmutable) {
+                    $fieldName = (string)$descriptionImmutable->fieldName;
+                    if($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName){
+                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                    }
+                }
+
+            }
+            
             if (!empty($archive->archivalProfileReference) && !$publicArchives) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
@@ -311,7 +322,7 @@ trait archiveModificationTrait
             
             $descriptionController->update($archive);
         }
-        
+
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
         
         $operationResult = true;
