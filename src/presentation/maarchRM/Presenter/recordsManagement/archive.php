@@ -212,6 +212,8 @@ class archive
      */
     public function getDescription($archive)
     {
+        $currentService = \laabs::getToken("ORGANIZATION");
+
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
         $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
@@ -220,11 +222,16 @@ class archive
             
             $archive->archivalProfileName = $archivalProfile->name;
         }
-        
+
+        $editDescription = false;
         if (isset($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
+
+                if ((array_search('owner', $currentService->orgRoleCodes) || $currentService->registrationNumber === $archive->archiverOrgRegNumber) && $archive->status === "preserved") {
+                    $editDescription = true;
+                }
             } else {
                 $descriptionHtml = '<dl class="dl dl-horizontal">';
                 foreach ($archive->descriptionObject as $name => $value) {
@@ -326,9 +333,54 @@ class archive
 
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
+        $this->view->setSource("editDescription", $editDescription);
 
         $this->view->translate();
         $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Get metadata to edit
+     * @param archive   $archive
+     *
+     * @return string
+     */
+    public function getEditMetadata($archive)
+    {
+        $languageCodes = \laabs::callService("seda/archiveTransferComposition/readLanguageCodes");
+
+        foreach ($languageCodes as $languageCode) {
+            $languageCode->title =  ucfirst($languageCode->French);
+
+            if ($languageCode->alpha3t) {
+                $languageCode->value = $languageCode->alpha3t;
+            } else {
+                $languageCode->value = $languageCode->alpha3b;
+            }
+        }
+
+        if (isset($archive->descriptionClass)) {
+            $editMetadataPresenter = \laabs::newPresenter($archive->descriptionClass);
+            $archive = $editMetadataPresenter->getEditMetadata($archive, $languageCodes);
+        }
+
+        if ($archive->descriptionClass != "archivesPubliques/content") {
+            $this->view->addContentFile($archive->descriptionClass . "/metadata.html");
+        } else {
+            $this->view->addContentFile("archivesPubliques/contentDescription/metadata.html");
+        }
+
+        if ($archive->descriptionObject) {
+            $archive->descriptionObject = $archive->descriptionObject[0];
+        }
+
+        $this->view->setSource('languageCodes', $languageCodes);
+        $this->view->setSource("archive", $archive);
+
+        $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
