@@ -35,7 +35,7 @@
                         <div id="orgGroup" class="form-group hide">
                             <label class="control-label" for="serviceOrgId">Organization<span> : </span></label>
                             <input name="ownerOrgName" id="originatorOwnerOrgName" disabled class="form-control">
-                           <!--<span name="ownerOrgName" id="originatorOwnerOrgName"></span>-->
+                            <!--<span name="ownerOrgName" id="originatorOwnerOrgName"></span>-->
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,10 +91,10 @@
                                 </div>
                                 <div class="tab-pane fade in active" id="privilegesTab" >
                                     <h3>Privileges</h3>
-                                     <!-- it's use to clone -->
-                                     <div style="display: none" id="privilegeExemple">
+                                    <!-- it's use to clone -->
+                                    <div style="display: none" id="privilegeExemple">
                                         <div class="input-group" name="privilegeURI">
-                                            <input type="text" class="form-control" disabled=""/>
+                                            <input type="text" class="form-control"  disabled=""/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-danger" type="button" name="btnDeletePrvilege" title="Delete"><span class="fa fa-trash-o"></span></button>
                                             </span>
@@ -102,7 +102,11 @@
                                     </div>
                                     <div class="form-horizontal" id="listPrivilege">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="inputPrivilegeURI">
+                                            <select class="form-control" id="selectPrivilegeURI">
+                                                <option></option>
+                                                <?merge serviceAccount.servicePrivilegeOptions?>
+                                                <option data-serviceURI="[?merge .serviceURI ?]"><?merge .description ?></option>
+                                            </select>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
                                             </span>
@@ -111,7 +115,7 @@
                                         <div>
                                             <?merge serviceAccount.servicePrivilege ?>
                                             <div class="input-group" name="privilegeURI">
-                                                <input type="text" class="form-control" disabled="" value="[?merge .serviceURI ?]"/>
+                                                <input type="text" class="form-control" data-serviceuri="[?merge .serviceURI ?]" disabled="" value="[?merge .description ?]"/>
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-danger" type="button" name="btnDeletePrvilege" title="Delete"><span class="fa fa-trash-o"></span></button>
                                                 </span>
@@ -153,8 +157,8 @@
     <span id="nullValue_text">The fields is empty.</span>
     <span id="noServiceFound">No service found</span>
 </div>
-<script type="application/javascript">
 
+<script type="application/javascript">
     $('#tokenRegenerateRequest').on('click', function() {
         if (!$("#generatedToken").text()) {
             $("#tokenRegenerateValidation").click();
@@ -179,6 +183,18 @@
         $("#generatedUrlEncodedToken").attr("disabled", "disabled");
     });
 
+    var privileges = [];
+
+    $("[name=privilegeURI]").find('input').each(function(){
+        privileges.push($(this).val());
+    });
+
+    $("#selectPrivilegeURI").find('option').each(function(){
+        if(privileges.includes($(this).val())) {
+            $(this).hide();
+        }
+    });
+    
     //save
     $("#submitServiceAccount").on("click", function(){
         var url = '/serviceAccount';
@@ -195,17 +211,17 @@
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
         serviceAccount.emailAddress = '';
-        //serviceAccount.orgId = $("#serviceOrgId").val();
         serviceAccount.enabled = false;
         orgId = $("#serviceOrgId").val();
 
         var servicesURI = new Array();
         $("#listPrivilege").find("[name=privilegeURI]").each(function(){
-            servicesURI.push($(this).find("input").val());
+
+            servicesURI.push($(this).find("input").data('serviceuri'));
         });
 
         if(serviceAccount.displayName == "" || orgId == "") {
-            gritter.show($('#empty_text').html(),false);
+            gritter.show($('#empty_text').text(),false);
             return false;
         }
 
@@ -239,24 +255,26 @@
 
     //Add privilege
     $("#btnAddPrvilege").on("click", function(){
-        var value = $("#inputPrivilegeURI").val();
 
-        if (value == "") {
-            gritter.show($('#nullValue_text').text(),false);
-            return;
-        }
+        var serviceURI = $("#selectPrivilegeURI option:selected").data('serviceuri');
+        var description = $("#selectPrivilegeURI option:selected").val();
 
-        if (/\s/g.test(value)) {
-            gritter.show($('#whiteSpace_text').text(),false);
-            return;
-        }
+        $("#privilegeExemple").find("[name=privilegeURI]:first")
+            .clone()
+            .find('input')
+            .val(description)
+            .data("serviceuri",serviceURI)
+            .closest('[name=privilegeURI]')
+            .appendTo($("#listPrivilege"));
 
-        $("#privilegeExemple").find("[name=privilegeURI]:first").clone().appendTo($("#listPrivilege")).find("input").val($("#inputPrivilegeURI").val());
-        $("#inputPrivilegeURI").val("");
+        $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
     });
 
     //Delete privilege
     $("#privilegesTab").on("click","[name=btnDeletePrvilege]", function(){
+        var serviceURI = $(this).closest("[name=privilegeURI").find('input').data('serviceuri');
+
+        $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').show();
         $(this).closest("[name=privilegeURI").remove();
     });
 
@@ -305,7 +323,7 @@
             displayKey: 'displayName',
             templates: {
                 empty: function() {
-                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                    return "<span class='well well-sm'>"+$('#noServiceFound').text()+"</span>";
                 },
                 suggestion: function(organization) {
                     var display;
@@ -317,17 +335,16 @@
                             + organization.ownerOrgName
                             + " > "
                             + organization.displayName
-                            + "</span>"
-                            + "</span>";
+                            + "</span></span><br>";
                     }
                     else {
-                        display = this.empty();
+                        return "";
                     }
                     return display;
                 }
             },
             source: function(query, cb) {
-                organizations.get(query, function(suggestions) {
+                organizations.search(query, function(suggestions) {
                     var i = suggestions.length
                     while (i--) {
                         if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)

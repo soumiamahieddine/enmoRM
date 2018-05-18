@@ -103,9 +103,10 @@ trait archiveCommunicationTrait
         $queryParams = array();
 
         if (!empty($description) || !empty($text)) {
+
             $searchClasses = [];
             if (!$profileReference) {
-                 $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+                $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
 
                 $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
 
@@ -214,6 +215,7 @@ trait archiveCommunicationTrait
         return $archives;
     }
 
+
     /**
      * Restitute an archive
      * @param string $archiveId The idetifier of the archive
@@ -267,7 +269,25 @@ trait archiveCommunicationTrait
             throw $e;
         }
 
-        return $digitalResource;
+        $binaryDataObject = \laabs::newInstance("recordsManagement/BinaryDataObject");
+        $binaryDataObject->attachment = new \stdClass();
+        $binaryDataObject->attachment->data = base64_encode($digitalResource->getContents());
+        $binaryDataObject->attachment->uri = "";
+        $binaryDataObject->attachment->filename = $digitalResource->fileName;
+
+        if (!empty($digitalResource->fileExtension)) {
+            $digitalResource->fileName = $digitalResource->fileName . $digitalResource->fileExtension;
+        }
+
+        $binaryDataObject->format = $digitalResource->puid;
+        $binaryDataObject->mimetype = $digitalResource->mimetype;
+        $binaryDataObject->size = $digitalResource->size;
+
+        $binaryDataObject->messageDigest = new \stdClass();
+        $binaryDataObject->messageDigest->value = $digitalResource->hash;
+        $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
+
+        return $binaryDataObject;
     }
 
     /**

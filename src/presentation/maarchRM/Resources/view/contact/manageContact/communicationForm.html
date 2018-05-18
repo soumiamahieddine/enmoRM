@@ -124,7 +124,7 @@
             var communicationObject = ContactCommunicationForm.serialize();
             
             if(communicationObject.purpose == "" ||  communicationObject.comMeanCode == "" || communicationObject.value == "") {
-                gritter.show($('#contact_empty_text').html(),false);
+                gritter.show($('#contact_empty_text').text(),false);
                 return false;
             }
 

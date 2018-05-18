@@ -182,3 +182,5 @@ msgstr "Une adresse portant cette désignation existe déjà."
 msgid "A communication mean with this purpose already exist."
 msgstr "Un moyen de communication portant cette désignation existe déjà."
 
+msgid "Select a language"
+msgstr "Choisissez un langage"

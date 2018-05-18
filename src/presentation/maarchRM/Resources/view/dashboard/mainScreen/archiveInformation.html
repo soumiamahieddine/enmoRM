@@ -406,8 +406,6 @@
                 var name = input.attr('name');
                 var type = $(e).find('th').data('type');
 
-                console.log(type);
-
                 switch (valueInput.attr("type")) {
                     case "name" :
                     case "text" :
@@ -442,7 +440,7 @@
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
                 originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
-                description         : JSON.stringify(descriptionFields)
+                description         : descriptionFields
             };
 
             $.ajax({

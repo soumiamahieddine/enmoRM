@@ -51,7 +51,8 @@ var CSRFP = {
 	_getAuthKey: function() {
 		var re = new RegExp(CSRFP.CSRFP_TOKEN +"=([^;]+)(;|$)");
 		var RegExpArray = re.exec(document.cookie);
-		
+        console.log(document.cookie);
+
 		if (RegExpArray === null) {
 			return false;
 		}
@@ -144,9 +145,11 @@ var CSRFP = {
 	 * @return void
 	 */
 	_init: function() {
-		CSRFP.CSRFP_TOKEN = document.getElementById(CSRFP_FIELD_TOKEN_NAME).value;
+		//CSRFP.CSRFP_TOKEN = document.getElementById(CSRFP_FIELD_TOKEN_NAME).value;
+		CSRFP.CSRFP_TOKEN = "LAABS-CSRF";
 		try {
-			CSRFP.checkForUrls = JSON.parse(document.getElementById(CSRFP_FIELD_URLS).value);
+			//CSRFP.checkForUrls = JSON.parse(document.getElementById(CSRFP_FIELD_URLS).value);
+			CSRFP.checkForUrls = "";
 		} catch (err) {
 			console.error(err);
 			console.error('[ERROR] [CSRF Protector] unable to parse blacklisted url fields.');
@@ -290,8 +293,10 @@ function csrfprotector_init() {
 	function new_send(data) {
 		if (this.method.toLowerCase() === 'post') {
 			// attach the token in request header
-			this.setRequestHeader(CSRFP.CSRFP_TOKEN, CSRFP._getAuthKey());
+			//this.setRequestHeader(CSRFP.CSRFP_TOKEN, CSRFP._getAuthKey());
+
 		}
+        this.setRequestHeader("X-Laabs-Csrf", CSRFP._getAuthKey());
 		return this.old_send(data);
 	}
 

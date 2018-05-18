@@ -609,12 +609,18 @@
         },
 
         checkServiceAccount: function() {
-            let route = $('#taskId').find('option:selected').data('route');
+            var route = $('#taskId').find('option:selected').data('route').toLowerCase();
 
-            $('#serviceAccountId option').each(function(key, value) {
-                let privileges = $(this).data('privilege');
+            $('#serviceAccountId option').each(function() {
+                var privileges = $(this).data('privilege');
 
-                if (!privileges || $.inArray(route, privileges) === -1) {
+                if (privileges) {
+                    for (var i = 0; i < privileges.length; i++) {
+                        privileges[i] = privileges[i].toLowerCase();
+                    }
+                }
+
+                if (!privileges || ($.inArray(route, privileges) === -1 && $.inArray("*", privileges) === -1)) {
                     $(this).addClass('hide');
                 } else {
                     $(this).removeClass('hide');

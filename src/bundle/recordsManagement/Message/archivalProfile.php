@@ -38,7 +38,7 @@ class archivalProfile
      * The reference
      *
      * @var string
-     * @pattern #^[A-Za-z][A-Za-z0-9_.@-]*[A-Za-z]$#
+     * @pattern #^[A-Za-z][A-Za-z0-9_.@-]*$#
      * @notempty
      */
     public $reference;

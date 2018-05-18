@@ -62,14 +62,18 @@ class retentionRule
      */
     public function index($retentionRule)
     {
-        //$this->view->addHeaders();
-       //$this->view->useLayout();
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
         $this->view->addContentFile('recordsManagement/retentionRule/index.html');
         $this->view->translate();
 
         $dataTable = $this->view->getElementById("rulesTable")->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(5);
+
+        if ($publicArchives) {
+            $dataTable->setUnsortableColumns(4);
+        } else {
+            $dataTable->setUnsortableColumns(5);
+        }
 
         foreach ($retentionRule as $rule) {
             if (!isset($rule->durationUnit)) {
@@ -77,8 +81,13 @@ class retentionRule
                 $rule->duration = substr($rule->duration, 1, -1);
                 $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
             }
-            $rule->finalDispositionTran = $this->view->translator->getText($rule->finalDisposition, false, "recordsManagement/retentionRule");
+
+            if (!$publicArchives) {
+                $rule->finalDispositionTran = $this->view->translator->getText($rule->finalDisposition, false, "recordsManagement/retentionRule");
+            }
         }
+
+        $this->view->setSource('publicArchives', $publicArchives);
         $this->view->setSource('retentionRule', $retentionRule);
         $this->view->merge();
 
@@ -93,6 +102,7 @@ class retentionRule
      */
     public function listRules($retentionRule)
     {
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
         $this->view->addContentFile('recordsManagement/retentionRule/list.html');
         $this->view->translate();
 
@@ -107,6 +117,7 @@ class retentionRule
             $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
         }
 
+        $this->view->setSource('publicArchives', $publicArchives);
         $this->view->setSource('retentionRule', $retentionRule);
         $this->view->merge();
 

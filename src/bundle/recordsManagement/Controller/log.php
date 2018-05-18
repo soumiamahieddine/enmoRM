@@ -330,6 +330,9 @@ class log implements archiveDescriptionInterface
             // Create timestamp resource
             $timestampResource = $digitalResourceController->createFromFile($timestampFileName);
             $digitalResourceController->getHash($timestampResource, "SHA256");
+            
+            $logMessage = ["message" => "Timestamp file generated"];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
             $timestampResource->archiveId = $journalResource->archiveId;
             $timestampResource->relatedResId = $journalResource->resId;
@@ -354,6 +357,29 @@ class log implements archiveDescriptionInterface
             $archive->fullTextIndexation = "none";
         }
 
-        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
+        try {
+            $archive = $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
+            $logMessage = ["message" => "New journal identifier : %s", "variables" => $archive->archiveId];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        } catch (\Exception $e) {
+            $logMessage = ["message" => "Error on journal creation"];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+            throw $e;
+        }
+
+        return $archive->archiveId;
+    }
+
+    public function contents ($type, $archiveId, $resourceId) {
+        $archiveController = \laabs::newController('recordsManagement/archive');
+
+        $res = $archiveController->consultation($archiveId, $resourceId);
+
+        $journal = $type . PHP_EOL;
+        $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
+        $journal .= file_get_contents($res->address[0]->repository->repositoryUri . $res->address[0]->path);
+
+        return $journal;
     }
 }

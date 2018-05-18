@@ -77,8 +77,19 @@ class serviceAccount
     public function newService()
     {
         $account = \laabs::newInstance('auth/account');
-
         $account->accountType = 'service';
+        $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
+
+        foreach ($servicePrivilegesTmp as $value) {
+            $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
+            $servicePrivilege->serviceURI = $value['serviceURI'];
+            $servicePrivilege->description = $value['description'];
+            $serviceAccount->servicePrivilegeOptions []  = $servicePrivilege;
+        }
+
+        $serviceAccount->servicePrivilege = null;
+
+        return $serviceAccount;
     }
 
     /**
@@ -161,6 +172,15 @@ class serviceAccount
     {
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
         $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccountId);
+        $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
+
+
+        foreach ($servicePrivilegesTmp as $value){
+            $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
+            $servicePrivilege->serviceURI = $value['serviceURI'];
+            $servicePrivilege->description = $value['description'];
+            $serviceAccount->servicePrivilegeOptions []  = $servicePrivilege;
+        }
 
         if (isset($servicePosition->organization)) {
             $serviceAccount->orgId = $servicePosition->organization->orgId;

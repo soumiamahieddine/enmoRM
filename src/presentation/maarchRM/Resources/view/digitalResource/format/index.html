@@ -250,7 +250,6 @@ file that was distributed with this source code.
             contentType : 'application/json',
             dataType    : 'json',
             success     : function (response) {
-                console.log(response);
                 if(!response.status) {
                     gritter.show(response.message, response.status, response.errors);
                 } else {

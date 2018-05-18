@@ -157,6 +157,10 @@ msgid "delivery"
 msgstr "Communication"
 msgctxt "userStoryGroup"
 
+msgid "deliveryValidation"
+msgstr "Traiter les demandes de communication"
+msgctxt "userStory"
+
 msgid "deliveryRequestReply"
 msgstr "Récupérer les communications"
 msgctxt "userStory"
@@ -476,7 +480,7 @@ msgid "Service account created"
 msgstr "Compte de service créé"
 
 msgid "Service already exist"
-msgstr "Le service existe déjà."
+msgstr "Le compte existe déjà."
 
 msgid "Last login date"
 msgstr "Date de la dernière connexion"
@@ -577,8 +581,8 @@ msgstr "Confirmer le mot de passe"
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
-msgid "A reset email has been send"
-msgstr "Un courriel de réinitialisation a été envoyé"
+msgid "If the account exists, a reset email has been send"
+msgstr "Si le compte existe, un courriel de réinitialisation a été envoyé"
 
 msgid "Password has been updated"
 msgstr "Le mot de passe a été mis à jour"
