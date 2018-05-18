@@ -110,7 +110,9 @@ trait archiveModificationTrait
                     $retentionRule->retentionDuration = null;
                 }
 
-                if ($retentionRule->finalDisposition === '') {
+                if ($retentionRule->finalDisposition === null) {
+                    $retentionRule->finalDisposition = $archive->finalDisposition;
+                } elseif ($retentionRule->finalDisposition === '') {
                     $retentionRule->finalDisposition = null;
                 }
 
