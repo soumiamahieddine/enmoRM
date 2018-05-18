@@ -292,6 +292,7 @@ class Document extends \dependency\xml\Document
 
         $this->addScript("/public/js/bootstrap-tree/bootstrap-tree.js");
         $this->addScript("/public/js/dataList_0.0.1/dataList.js");
+        $this->addScript("/public/js/datePicker/bootstrap-datepicker.js");
 
         $this->addScript("/public/js/csrf/csrfprotector.js");
 
