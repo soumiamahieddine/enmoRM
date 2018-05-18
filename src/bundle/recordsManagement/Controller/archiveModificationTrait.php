@@ -260,13 +260,14 @@ trait archiveModificationTrait
      * Update metadata of archive
      * @param string $archiveId
      * @param string $originatorArchiveId
+     * @param string $archiverArchiveId
      * @param string $archiveName
      * @param string $description
      * @param date   $originatingDate
      * 
      * @return boolean The result of the operation
      */
-    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
+    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
         $archive = $this->getDescription($archiveId);
         $this->checkRights($archive);
@@ -279,13 +280,19 @@ trait archiveModificationTrait
             $archive->originatorArchiveId = $originatorArchiveId;
         }
 
+        if ($archiverArchiveId) {
+            $archive->archiverArchiveId = $archiverArchiveId;
+        }
+
         if ($originatingDate) {
             $archive->originatingDate = $originatingDate;
         }
-        
+
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         if ($description) {
-            $descriptionObject = json_decode($description);
-            if (!empty($archive->archivalProfileReference)) {
+            $descriptionObject = $description;
+            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 if (!empty($this->currentArchivalProfile->descriptionClass)) {
