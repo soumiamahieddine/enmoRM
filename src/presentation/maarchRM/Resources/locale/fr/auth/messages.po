@@ -157,6 +157,10 @@ msgid "delivery"
 msgstr "Communication"
 msgctxt "userStoryGroup"
 
+msgid "deliveryValidation"
+msgstr "Traiter les demandes de communication"
+msgctxt "userStory"
+
 msgid "deliveryRequestReply"
 msgstr "Récupérer les communications"
 msgctxt "userStory"
@@ -476,7 +480,7 @@ msgid "Service account created"
 msgstr "Compte de service créé"
 
 msgid "Service already exist"
-msgstr "Le service existe déjà."
+msgstr "Le compte existe déjà."
 
 msgid "Last login date"
 msgstr "Date de la dernière connexion"
@@ -577,8 +581,8 @@ msgstr "Confirmer le mot de passe"
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
-msgid "A reset email has been send"
-msgstr "Un courriel de réinitialisation a été envoyé"
+msgid "If the account exists, a reset email has been send"
+msgstr "Si le compte existe, un courriel de réinitialisation a été envoyé"
 
 msgid "Password has been updated"
 msgstr "Le mot de passe a été mis à jour"
@@ -685,10 +689,10 @@ msgid "Service name"
 msgstr "Nom du service"
 
 msgid "Token date"
-msgstr "Date de la clé"
+msgstr "Date du jeton"
 
 msgid "Token changed"
-msgstr "Clé générée"
+msgstr "Jeton généré"
 
 msgid "Service account(s)"
 msgstr "Compte(s) de service"
@@ -699,8 +703,17 @@ msgstr "Comptes de service"
 msgid "Add a service account"
 msgstr "Ajouter un compte de service"
 
+msgid "Authentication token"
+msgstr "Jeton d'authentification"
+
 msgid "Generate token"
-msgstr "Générer une clé"
+msgstr "Générer un jeton"
+
+msgid "Token"
+msgstr "Jeton"
+
+msgid "URL encoded token"
+msgstr "Jeton URL encodé"
 
 msgid "Edit service account"
 msgstr "Éditer un compte de service"
@@ -755,3 +768,6 @@ msgstr "Organisation"
 
 msgid "All privileges"
 msgstr "Tous les privilèges"
+
+msgid "Be careful, you are about to generate a new token. This will cancel the previous token."
+msgstr "Attention, vous êtes sur le point de générer un nouveau jeton. Cela annulera le jeton précédent."

@@ -162,6 +162,7 @@ class scheduling
     public function execute($schedulingId)
     {
         $status = true;
+        $info = null;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
         $task = $this->readTask($scheduling->taskId);
@@ -181,17 +182,21 @@ class scheduling
         $this->changeStatus($schedulingId, "running");
 
         try {
+            $pathRouter = new \core\Route\PathRouter($task->route);
+            \core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH,$pathRouter->path);
             if (!empty($scheduling->parameters)) {
-                $info = \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
+                \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
 
             } else {
-                $info = \laabs::callService($task->route);
+                \laabs::callService($task->route);
             }
-        } catch (\Exception $e) {
+
+        } catch (\Exception $info) {
             $this->changeStatus($schedulingId, "error");
             $status = false;
-            $info = $e;
-        }
+            
+            \laabs::notify(LAABS_BUSINESS_EXCEPTION, $info);
+        }       
 
         if ($status) {
             $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
@@ -204,6 +209,14 @@ class scheduling
         }
 
         $this->update($scheduling);
+
+        $observerPool = \core\Observer\Dispatcher::getPool(\bundle\audit\AUDIT_ENTRY_OUTPUT);
+        foreach ($observerPool as $key=>$value) {
+            if ($value instanceof \bundle\audit\Observer\logger) {
+                $info = $value->output;
+                break;
+            }
+        }
 
         $this->logSchedulingController->add($schedulingId, $scheduling->executedBy, $launchedBy, $status, $info);
 
@@ -305,7 +318,7 @@ class scheduling
         if(!empty($frequency[1])) {
             $frequency[1] -= $H_Offset; 
         }
-        if(!empty($frequency[8])) {
+        if(!empty($frequency[8] && $frequency[8] != "00")) {
             $frequency[8] -= $H_Offset; 
         }
         
@@ -314,7 +327,7 @@ class scheduling
                 $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                 $currentDate->add(new \DateInterval($timeAdd));
 
-                if ($frequency[7] != "" && $frequency[8] != "") {
+                if (($frequency[7] != "" && $frequency[8] != "") && ($frequency[7] != "00" && $frequency[8] != "00")) {
                     $endDate->setTime($frequency[8], $frequency[7], "0");
                 } else {
                     $endDate->add(new \DateInterval("P1D"));
@@ -336,7 +349,7 @@ class scheduling
                     $daysWeek = explode(",", $frequency[2]);
                     $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                     $currentDate->add(new \DateInterval($timeAdd));
-                    if ($frequency[7] != "" && $frequency[8] != "") {
+                    if ($frequency[7] != "" && $frequency[8] != "" && ($frequency[7] != "00" && $frequency[8] != "00")) {
                         $endDate->setTime($frequency[8], $frequency[7], "0");
                     } else {
                         $endDate->add(new \DateInterval("P1D"));
@@ -362,7 +375,7 @@ class scheduling
                     $timeAdd = strtoupper("PT".$frequency[5].$frequency[6]);
                     $currentDate->add(new \DateInterval($timeAdd));
 
-                    if ($frequency[7] != "" && $frequency[8] != "") {
+                    if ($frequency[7] != "" && $frequency[8] != "" && ($frequency[7] != "00" && $frequency[8] != "00")) {
                         $endDate->setTime($frequency[8], $frequency[7], "0");
                     } else {
                         $endDate->add(new \DateInterval("P1M"));

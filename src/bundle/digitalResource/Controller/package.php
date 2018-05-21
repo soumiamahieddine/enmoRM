@@ -37,9 +37,9 @@ class package {
      * Constructor
      * @param \dependency\sdo\Factory                            $sdoFactory                The Sdo factory
      * @param \bundle\digitalResource\Controller\digitalResource $digitalResourceController The controller to store package resources
-     * @param \dependency\fileSystem\plugins\zip\zip             $zip                       The compression service
+     * @param \dependency\fileSystem\plugins\zip                 $zip                       The compression service
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, \bundle\digitalResource\Controller\digitalResource $digitalResourceController, \dependency\fileSystem\plugins\zip\zip $zip)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \bundle\digitalResource\Controller\digitalResource $digitalResourceController, \dependency\fileSystem\plugins\zip $zip)
     {
         $this->sdoFactory = $sdoFactory;
 
@@ -95,7 +95,7 @@ class package {
 
 
         $digitalResourceCluster = $this->digitalResourceController->getCluster($clusterId);
-        $this->digitalResourceController->sortClusterRepositories($digitalResourceCluster, 'write', true);
+        $this->digitalResourceController->sortClusterRepositories($digitalResourceCluster, Cluster::MODE_WRITE, true);
         $this->digitalResourceController->getClusterRepositoryServices($digitalResourceCluster);
 
         foreach ($resources as $pos => $resource) {

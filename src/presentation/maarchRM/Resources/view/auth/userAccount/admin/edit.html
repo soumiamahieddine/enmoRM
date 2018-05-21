@@ -113,7 +113,7 @@
         var user = serialize();
 
         if (!validateEmail(user.emailAddress)) {
-            gritter.show($('#invalidEmail_text').html(), false);
+            gritter.show($('#invalidEmail_text').text(), false);
             return false;
         }
 
@@ -124,7 +124,7 @@
 
 
         if (user.password != user.verification) {
-            gritter.show($('#badPasswordVerification_text').html(), false);
+            gritter.show($('#badPasswordVerification_text').text(), false);
             return;
         }
 
@@ -134,7 +134,7 @@
         }
         
         if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.email == "") {
-            gritter.show($('#empty_text').html(), false);
+            gritter.show($('#empty_text').text(), false);
             return;
         }
 

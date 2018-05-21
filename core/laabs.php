@@ -822,20 +822,50 @@ class laabs
 
     /**
      * Get a token by name
-     * @param string $name The name of the token
+     * @param string  $name     The name of the token
+     * @param boolean $isHeader Get the token in header
      *
      * @return mixed The token data
      */
-    public static function getToken($name)
+    public static function getToken($name, $isHeader = false)
     {
+        $token = null;
         $cookieName = 'LAABS-'.static::toName($name);
+        $headerName = 'X-Laabs-'.static::toName($name);
 
-        $data = null;
+        if ($isHeader) {
+            $token = \laabs::getHeaderToken($headerName);
+        } else {
+            if (isset($GLOBALS["TOKEN"][$name])) {
+                $token = $GLOBALS["TOKEN"][$name];
+            } else {
+                $token = \laabs::getCookieToken($cookieName);
+            }
+        }
 
-        if (isset($GLOBALS["TOKEN"][$name])) {
-            $token = $GLOBALS["TOKEN"][$name];
+        if (empty($token)){
+            return null;
+        }
 
-        } elseif (isset($_COOKIE[$cookieName])) {
+        // Expired token cookie
+        if ($token->expiration != 0 && $token->expiration < time()) {
+            if (!$isHeader) {
+                if (isset($_COOKIE[$cookieName])) {
+                    unset($_COOKIE[$cookieName]);
+                }
+                if (isset($GLOBALS["TOKEN"][$name])) {
+                    unset($GLOBALS["TOKEN"][$name]);
+                }
+            }
+            return null;
+        }
+
+        return $token->data;
+    }
+
+    private static function getCookieToken($cookieName)
+    {
+        if (isset($_COOKIE[$cookieName])) {
             $key = static::getCryptKey();
 
             $b64Token = base64_decode($_COOKIE[$cookieName]);
@@ -846,37 +876,46 @@ class laabs
 
             // Not a token cookie
             if (!is_object($token) || !isset($token->expiration)) {
-                return;
+                return null;
             }
 
         } else {
-            return;
+            return null;
         }
 
-        // Expired token cookie
-        if ($token->expiration != 0 && $token->expiration < time()) {
-            if (isset($_COOKIE[$cookieName])) {
-                unset($_COOKIE[$cookieName]);
-            }
-            if (isset($GLOBALS["TOKEN"][$name])) {
-                unset($GLOBALS["TOKEN"][$name]);
-            }
+        return $token;
+    }
 
-            return;
-        } else {
-            return $token->data;
+    private static function getHeaderToken($headerName)
+    {
+        $token = null;
+
+        if (empty(\laabs::kernel()->request->headers[$headerName])) {
+            return null;
         }
+
+        $tokenUrlEncoded = \laabs::kernel()->request->headers[$headerName];
+
+        $key = static::getCryptKey();
+
+        $token = urldecode($tokenUrlEncoded);
+        $b64Token = base64_decode($token);
+        $jsonToken = static::decrypt($b64Token, $key);
+        $token = \json_decode(trim($jsonToken));
+
+        return $token;
     }
 
     /**
      * Create a new token
-     * @param string $name       The name of the token
-     * @param object $data       The object to save in the token
-     * @param int    $expiration The cookie and token expiration time in second (1 hour = 3600, 1 day = 86400)
+     * @param string  $name       The name of the token
+     * @param object  $data       The object to save in the token
+     * @param int     $expiration The cookie and token expiration time in second (1 hour = 3600, 1 day = 86400)
+     * @param bbolean $httpOnly   Set cookie only in http
      *
      * @return boolean The result of the token creation
      */
-    public static function setToken($name, $data, $expiration = 0)
+    public static function setToken($name, $data, $expiration = 0, $httpOnly = true)
     {
         $cookieName = 'LAABS-'.static::toName($name);
 
@@ -891,7 +930,7 @@ class laabs
         $cryptedToken = static::encrypt($jsonToken, static::getCryptKey());
         $cookieToken = base64_encode($cryptedToken);
 
-        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, false, true);
+        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, false, $httpOnly);
 
         $GLOBALS["TOKEN"][$name] = $token;
 

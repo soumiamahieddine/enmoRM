@@ -186,6 +186,9 @@ msgid "Message identifier"
 msgstr "Identifiant du bordereau"
 
 msgid "Request communication"
+msgstr "Demandes de communication"
+
+msgid "Delivery authorization request"
 msgstr "Demandes d'autorisation"
 
 msgid "Communication to recover"
@@ -362,6 +365,9 @@ msgstr "Importer un bordereau"
 msgid "Click or drop a message file"
 msgstr "Cliquer ou déposer un bordereau"
 
+msgid "Click or drop a piece"
+msgstr "Cliquer ou déposer une pièce"
+
 msgid "add attachement"
 msgstr "Ajouter des pièces jointes"
 
@@ -370,6 +376,9 @@ msgstr "Terminer"
 
 msgid "Accept"
 msgstr "Accepter"
+
+msgid "Derogation"
+msgstr "Dérogation"
 
 msgid "Reject"
 msgstr "Rejeter"
@@ -493,6 +502,9 @@ msgstr "Demande d'autorisation rejetée"
 
 msgid "Message processed"
 msgstr "Message traité"
+
+msgid "Message sent to derogation"
+msgstr "Message envoyé en dérogation"
 
 msgid "Invalid message"
 msgstr "Message invalide"
@@ -621,6 +633,6 @@ msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "meta-data"
 
-msgid "Default originator"
-msgstr "Service producteur par défaut"
+msgid "Default control authority"
+msgstr "Autorité de contrôle par défaut"
 

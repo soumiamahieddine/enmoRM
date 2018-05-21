@@ -92,6 +92,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </div>
     <div class="container-fluid" id="archiveList"></div>
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="log" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="log_modalContainer">
+            </div>
+        </div>
+    </div>
+    <?hinclude lifeCycle/eventModal.html ?>
 </div>
 <?hinclude recordsManagement/log/integrityCheck.html ?>
 <?hinclude recordsManagement/archive/archiveManagement.html ?>
@@ -136,10 +145,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         $("#type").prop('selectedIndex', 0);
         $('#archiveList').html('');
     });
-    
+
     $("#contain").on("click",'[data-log-view]', function () {
 
-        var url = "/recordsManagement/Contents/"+$(this).attr('data-log-view');
+        var url = "/log/Contents/" + $(this).data('type') + '/' + $(this).attr('data-log-view');
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType : 'html',
+            success: function(response) {
+                $('#log_modalContainer').html(response);
+                $('#infoModal').modal();
+            }
+        });
+        $(this).removeAttr("disabled");
+    });
+
+    $("#contain").on("click",'[data-log-download]', function () {
+
+        var url = "/recordsManagement/Contents/"+$(this).attr('data-log-download');
         
         var ua = window.navigator.userAgent;
         var msie = ua.indexOf("MSIE ");
@@ -147,22 +171,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         var edge = ua.indexOf("Edge");
 
         if (msie > 0 || ieemu > 0 || edge > 0) {
-            window.open(url, 'document');
+            window.local(url, 'document');
         } else {
             window.open(url, 'document');
             return;
-            
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType : 'html',
-                success: function(response, status, xhr) {
-                    $('#viewer').attr('data', response);
-                    $('#viewer').attr('type', xhr.getResponseHeader("content-type"));
-
-                    $('#viewModal').modal();
-                }
-            });
         }
         $(this).removeAttr("disabled");
     });
@@ -185,4 +197,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
         });
     });
+
+    $("#contain").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    })
 </script>

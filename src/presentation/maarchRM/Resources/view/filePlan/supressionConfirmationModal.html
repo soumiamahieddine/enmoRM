@@ -37,7 +37,7 @@ DeleteConfirmationModal = {
         var modal = $('#deleteFolderModal');
         this.target = FilePlan.selectedNode;
 
-        var message = $('#deleteFolderMessage_txt').html();
+        var message = $('#deleteFolderMessage_txt').text();
 
         message = message.replace("%1$s", '<i class="text-primary">'+ this.target.find('b:first').text() +'<\/i>');
         this.messageDiv.html(message);

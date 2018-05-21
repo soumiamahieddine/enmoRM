@@ -50,5 +50,12 @@ interface logInterface
      * @action recordsManagement/log/depositJournal
      */
     public function createDepositjournal($journalFileName, $fromDate, $toDate, $type, $processName = null, $timestampFileName = null);
-    
+
+    /**
+     * @param string $archiveId     Archiver identifier
+     * @param string $resourceId    Resource identifier
+     *
+     * @action recordsManagement/log/contents
+     */
+    public function contents_type__archiveId__resourceId_();
 }

@@ -77,8 +77,19 @@ class serviceAccount
     public function newService()
     {
         $account = \laabs::newInstance('auth/account');
-
         $account->accountType = 'service';
+        $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
+
+        foreach ($servicePrivilegesTmp as $value) {
+            $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
+            $servicePrivilege->serviceURI = $value['serviceURI'];
+            $servicePrivilege->description = $value['description'];
+            $serviceAccount->servicePrivilegeOptions []  = $servicePrivilege;
+        }
+
+        $serviceAccount->servicePrivilege = null;
+
+        return $serviceAccount;
     }
 
     /**
@@ -161,6 +172,15 @@ class serviceAccount
     {
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
         $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccountId);
+        $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
+
+
+        foreach ($servicePrivilegesTmp as $value){
+            $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
+            $servicePrivilege->serviceURI = $value['serviceURI'];
+            $servicePrivilege->description = $value['description'];
+            $serviceAccount->servicePrivilegeOptions []  = $servicePrivilege;
+        }
 
         if (isset($servicePosition->organization)) {
             $serviceAccount->orgId = $servicePosition->organization->orgId;
@@ -260,16 +280,19 @@ class serviceAccount
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
 
-        $accountToken = new \StdClass();
-        $accountToken->accountId = $serviceAccount->accountId;
+        $dataToken = new \StdClass();
+        $dataToken->accountId = $serviceAccount->accountId;
+        $dataToken->salt = $serviceAccount->salt;
+
+        $token = new \core\token($dataToken, 0);
+
+        $jsonToken = \json_encode($token);
+        $cryptedToken = \laabs::encrypt($jsonToken, \laabs::getCryptKey());
+        $cookieToken = base64_encode($cryptedToken);
+
+        $serviceAccount->password = $cookieToken;
 
         $this->sdoFactory->update($serviceAccount, 'auth/account');
-
-        $token = new \core\token($accountToken, 31536000 + time());
-        $key = \laabs::getCryptKey();
-        $jsonToken = \json_encode($token);
-        $cryptedToken = \laabs::encrypt($jsonToken, $key);
-        $cookieToken = base64_encode($cryptedToken);
 
         return $cookieToken;
     }
