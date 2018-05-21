@@ -1343,7 +1343,7 @@ trait laabsAppTrait
 
     /**
      * Parse a laabs query string into query object
-     * @param strig $queryString
+     * @param string $queryString
      * 
      * @return object
      */
@@ -1352,6 +1352,17 @@ trait laabsAppTrait
         $parser = new \core\Query\Parser();
 
         return $parser->parseQuery($queryString);
+    }
+
+    /**
+     * The app version
+     *
+     * @return String
+     */
+    public static function getVersion()
+    {
+        return file_get_contents('../VERSION.md');
+
     }
 
 }
