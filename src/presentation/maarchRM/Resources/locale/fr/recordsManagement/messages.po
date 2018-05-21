@@ -976,6 +976,9 @@ msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "archiveInformation"
 
+msgid "Error"
+msgstr "Erreur"
+
 msgid "Invalid object"
 msgstr "Objet invalide"
 
