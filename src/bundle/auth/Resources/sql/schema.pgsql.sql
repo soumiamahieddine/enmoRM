@@ -42,6 +42,9 @@ CREATE TABLE "auth"."account"
   
   "salt" text,
   "tokenDate" timestamp,
+
+  "authentication" jsonb,
+  "preferencies" jsonb,
     
   PRIMARY KEY ("accountId"),
   UNIQUE ("accountName") 

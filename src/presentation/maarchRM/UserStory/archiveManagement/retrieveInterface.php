@@ -112,6 +112,14 @@ interface retrieveInterface
     public function readRecordsmanagementArchivedescription_archiveId_();
 
     /**
+     * Get metadata to edit
+     *
+     * @return recordsManagement/archive/getEditMetadata The recordsManagement/archive object
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readRecordsmanagementArchivedescription_archiveId_Geteditmetadata();
+
+    /**
      * Retrieve an archive content document (CDO)
      *
      * @return recordsManagement/archive/getContents

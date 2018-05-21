@@ -74,12 +74,56 @@ class log
         $dataTable->setSorting(array(array(1, 'desc')));
 
         foreach ($logs as $log) {
-            $log->type = $this->view->translator->getText($log->type, false, 'recordsManagement/log');
+            $log->typeTranslate = $this->view->translator->getText($log->type, false, 'recordsManagement/log');
 
             $log->resId = \laabs::callService('recordsManagement/archives/readArchivecontents_archive_', (string) $log->archiveId)->digitalResources[0]->resId;
         }
 
         $this->view->setSource("logs", $logs);
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+
+    /**
+     *
+     */
+    public function contents($res)
+    {
+        $journal = explode(PHP_EOL, $res);
+        $id = str_getcsv($journal[1]);
+        $head = str_getcsv($journal[2]);
+
+        $events = [];
+        for ($i = 3; $i < count($journal) - 1; $i++) {
+            $events[] = str_getcsv($journal[$i]);
+        }
+
+        $type = $journal[0];
+        $typeTranslate = $this->view->translator->getText($type, false, 'recordsManagement/log');
+
+        $this->view->addContentFile("recordsManagement/log/view.html");
+        $this->view->translate();
+
+        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setSorting(array(array(0, 'desc')));
+
+        if ($type === "lifeCycle") {
+            $dataTable->setUnsortableColumns(2);
+        } else if ( $type === "application") {
+            for ($i = 0; $i < count($events);  $i++) {
+                $events[$i][2] = $this->view->translator->getText($events[$i][2], false, 'audit/messages');
+            }
+        }
+
+        $this->view->setSource("archiveId", $id[0]);
+        $this->view->setSource("resourceId", $id[1]);
+        $this->view->setSource("type", $type);
+        $this->view->setSource("typeTranslate", $typeTranslate);
+        $this->view->setSource("head", $head);
+        $this->view->setSource("events", $events);
         $this->view->merge();
 
         return $this->view->saveHtml();
