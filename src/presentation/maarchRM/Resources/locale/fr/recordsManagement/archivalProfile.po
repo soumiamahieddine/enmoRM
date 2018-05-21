@@ -263,5 +263,11 @@ msgstr "Dossier"
 msgid "Profile already exist"
 msgstr "Le profil existe déjà"
 
+msgid "delete the archival profile"
+msgstr "Êtes-vous sûr de vouloir supprimer ce profil d'archive ? Vous ne pourrez pas revenir en arrière."
+
+msgid "Delete the archival profile"
+msgstr "Supprimer le profil d'archive"
+
 msgid "Read only"
 msgstr "Lecture seule"

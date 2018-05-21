@@ -66,6 +66,24 @@ file that was distributed with this source code.
 
 
 </div>
+<div class="modal fade" id="messagesModal" lang="en" data-translate-catalog="recordsManagement/serviceLevel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="m_title-delete">Delete the service level</h4>
+            </div>
+            <div class="modal-body">
+                <p id="m_text-delete">
+                    delete service level
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="m_no" data-dismiss="modal" title="No">Cancel</button>
+                <button type="button" class="btn btn-danger" id="m_yes" data-dismiss="modal" title="Yes">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="application/javascript">
     $("#tableListServiceLevel").on('click', "[data-edit-serviceLevel]", function(){
@@ -115,21 +133,24 @@ $("#contain").on('click', '.setDefault', function(){
 
 //delete
 $("#contain").on('click', '.deleteServiceLevel', function(){
-    var tr = $(this).closest('tr');
-    $.ajax({
-        url      : '/serviceLevel/'+tr.attr('id'),
-        type     : 'DELETE',
-        dataType : 'json',
-        success  : function(response){
-            gritter.show(response.message, response.status, response.errors);
-            if(response.status) {
-                tr.remove();
-            }
-        },
-        error    : function(response) {
-            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-        }
-    })
+    tr = $(this).closest('tr');
+    $('#messagesModal').modal();
 })
+    $("#m_yes").click(function() {
+        $.ajax({
+            url      : '/serviceLevel/'+tr.attr('id'),
+            type     : 'DELETE',
+            dataType : 'json',
+            success  : function(response){
+                gritter.show(response.message, response.status, response.errors);
+                if(response.status) {
+                    tr.remove();
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    })
 
 </script>
