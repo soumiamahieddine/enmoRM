@@ -189,6 +189,20 @@ servicePrivileges = "[
                     }
                     ]"
 
+[organization]
+orgUnitRoles = "{
+                    'owner' : {
+                        'code' : 'owner',
+                        'name' : 'organization/owner',
+                        'description' : 'The system owner'
+                    },
+                    'security' : {
+                        'code' : 'security',
+                        'name' : 'organization/security',
+                        'description' : 'The security agency'
+                    }
+                }"
+
 [lifeCycle]
 
 ; Chain life cycle journal by originator in addition to the main journal
