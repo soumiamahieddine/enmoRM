@@ -216,6 +216,18 @@ trait archiveLifeCycleTrait
     }
 
     /**
+     * Log an archive outgoing transfer
+     * @param recordsManagement/archive $archive         The archive
+     * @param bool                      $operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logOutgoingTransfer($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/outgoingTransfer', $archive, $operationResult);
+    }
+
+    /**
      * Log an archive retention rule modification
      * @param recordsManagement/archive $archive         The archive
      * @param object                    $retentionRule   The retention rule object

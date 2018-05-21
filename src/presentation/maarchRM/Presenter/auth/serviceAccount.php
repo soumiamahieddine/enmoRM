@@ -89,6 +89,7 @@ class serviceAccount
         $ownerOrganizations = [];
         $organizations = [];
 
+
         foreach ($tabOrganizations as $org) {
             if($org->isOrgUnit){
                 $organizations[] = $org;
@@ -97,7 +98,22 @@ class serviceAccount
             }
         }
 
-        if($serviceAccount){
+
+        if($serviceAccount->servicePrivilege){
+            $noDescription = true;
+            foreach ($serviceAccount->servicePrivilege as $servicePrivilege ) {
+                foreach ($serviceAccount->servicePrivilegeOptions as $option) {
+                    if($servicePrivilege->serviceURI == $option->serviceURI ) {
+                        $servicePrivilege->description = $option->description;
+                        $noDescription = false;
+                    }
+                }
+                if($noDescription) {
+                    $servicePrivilege->description =  $servicePrivilege->serviceURI;
+                }
+                $noDescription = true;
+            }
+
             foreach ( $organizations as $org) {
                 if($org->orgId == $serviceAccount->orgId) {
                     $serviceAccount->orgName = $org->displayName;
@@ -111,7 +127,6 @@ class serviceAccount
                 }
             }
         }
-
         $this->view->addContentFile("auth/serviceAccount/edit.html");
         $this->view->setSource("organizations", $organizations);
         $this->view->merge($this->view->getElementById("serviceOrgId"));

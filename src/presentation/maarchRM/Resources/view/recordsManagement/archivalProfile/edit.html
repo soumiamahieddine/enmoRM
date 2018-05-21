@@ -15,7 +15,9 @@ file that was distributed with this source code.
                 </h1>
                 <?merge archivalProfile.archivalProfileId.ifne('') ?>
                 <h1>
-                    <i class="fa fa-cubes"></i>Edit a profile <small><?merge archivalProfile.reference ?></small>
+                    <i class="fa fa-cubes"></i>
+                    Edit a profile
+                    <small><?merge archivalProfile.reference ?></small>
                 </h1>
             </div>
         </div>
@@ -222,7 +224,7 @@ file that was distributed with this source code.
             var parameters = {
                 archivalProfile : this.serialize()
             };
-            
+
             if($("#contain").data('archivalprofileid')) {
                 type= 'PUT';
                 url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
@@ -230,10 +232,12 @@ file that was distributed with this source code.
                 type= 'POST';
                 url='/archivalProfile';
             }
+
             if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
                 gritter.show($("#empty_text").text(), false);
                 return;
             }
+
             ajax($('#save'), {
                 url: url,
                 type: type,

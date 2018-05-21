@@ -39,6 +39,9 @@
 </style>
 
 <script>
+    $("#modalArchiveInfo").on('click', ".editMetadata", function () {
+       archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
+    });
     // View relate archive
     $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
         archiveInfoModal.load($(this).data('archiveid'));
@@ -81,7 +84,7 @@
     })
 
     archiveInfoModal = {
-         load: function(archiveId) {
+         load: function(archiveId, noMessageTab) {
             $.ajax({
                 type        : "GET",
                 url         : "/recordsManagement/archiveDescription/" + archiveId,
@@ -101,8 +104,25 @@
                     } else {
                         $('#modalArchiveInfo').modal();
                     }
+
+                    if (noMessageTab === true) {
+                        $('#modalArchiveInfo').find('.nav-tabs').find('li:last').remove();
+                    }
+
                 }
             });
+         },
+
+         loadEditMetadata: function (archiveId) {
+             $.ajax({
+                 type: "GET",
+                 url: "/recordsManagement/archiveDescription/" + archiveId + "/getEditMetadata",
+                 dataType: 'html',
+                 success: function (response) {
+                     $('#modalContainerEditMeta').html(response);
+                     $('#viewModalEditMeta').modal();
+                 }
+             });
          },
 
          close: function() {
@@ -114,7 +134,7 @@
             var button = $('<button/>').addClass('close').attr('data-dismiss', 'modal').prependTo(pageHeader);
             var span = $('<span/>').prop('aria-hidden', 'true').html('&times;').appendTo(button);
         }
-    }
+    };
 
     archiveDocumentViewer = {
         load: function(archiveId, resId, action) {

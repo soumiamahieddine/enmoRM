@@ -89,8 +89,6 @@ class datePicker
         $format = str_replace('D', 'D', $format);    // Short day name
         $format = str_replace('l', 'DD', $format);   // Full day name
         $this->parameters->format = $format;
-
-        $this->element->ownerDocument->addScript('/public/js/datePicker/bootstrap-datepicker.js');
     }
     /*
     {

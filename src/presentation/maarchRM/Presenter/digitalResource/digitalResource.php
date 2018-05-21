@@ -44,10 +44,7 @@ class digitalResource
      */
     public function retrieve($resource)
     {
-        //$this->view->addHeaders();
-
-       //$this->view->useLayout();
-        $contents = $resource->getContents();
+        $contents = base64_decode($resource->attachment->data);
 
         if (strlen($contents) > 65536) {
             try {
