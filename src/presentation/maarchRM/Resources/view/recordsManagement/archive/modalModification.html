@@ -57,6 +57,7 @@
     <span id="text_Y">year(s)</span>
     <span id="text_preservation">preservation</span>
     <span id="text_destruction">destruction</span>
+    <span id="text_unlimited">unlimited</span>
 </div>
 
 <style>
@@ -367,20 +368,31 @@
             var retentionRuleCode = $("#retentionRuleCode").find(':selected').data('json');
             var retentionRules = "";
             var retentionRuleTable = $('#retentionRuleTable');
-
+             console.log(retentionRuleCode)
              if (retentionRuleCode) {
-
                  var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {
                     $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+
+                     if(retentionRuleDuration[1] >= 9999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
                     $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 } else {
                     $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+
+                     if(retentionRuleDuration[1] >= 9999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
+                    $('#retentionRuleFinalDisposition').val(retentionRuleCode.finalDisposition);
+
                     $('#retentionRuleDescription').text(retentionRuleCode.description);
                 }
 

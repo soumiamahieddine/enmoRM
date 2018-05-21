@@ -76,10 +76,14 @@ class retentionRule
         }
 
         foreach ($retentionRule as $rule) {
-            if (!isset($rule->durationUnit)) {
-                $rule->durationUnit = substr($rule->duration, -1);
-                $rule->duration = substr($rule->duration, 1, -1);
+            $rule->durationUnit = substr($rule->duration, -1);
+            $rule->duration = substr($rule->duration, 1, -1);
+
+            if($rule->duration >= 9999 && $rule->durationUnit == 'Y' ){
+                $rule->durationText = $this->view->translator->getText('Unlimited', null, "recordsManagement/retentionRule");
+            } else {
                 $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
+                $rule->durationText =  $rule->duration.' '.  $rule->durationUnit;
             }
 
             if (!$publicArchives) {
@@ -90,6 +94,10 @@ class retentionRule
         $this->view->setSource('publicArchives', $publicArchives);
         $this->view->setSource('retentionRule', $retentionRule);
         $this->view->merge();
+
+        $dataTable = $this->view->getElementById("rulesTable")->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setUnsortableColumns(array(4));
 
         return $this->view->saveHtml();
     }
@@ -106,20 +114,26 @@ class retentionRule
         $this->view->addContentFile('recordsManagement/retentionRule/list.html');
         $this->view->translate();
 
-        $dataTable = $this->view->getElementById("rulesTable")->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(array(4));
 
         foreach ($retentionRule as $rule) {
             $rule->durationUnit = substr($rule->duration, -1);
             $rule->duration = substr($rule->duration, 1, -1);
 
-            $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
+            if($rule->duration >= 9999 && $rule->durationUnit == 'Y' ){
+                $rule->durationText = $this->view->translator->getText('Unlimited', null, "recordsManagement/retentionRule");
+            } else {
+                $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
+                $rule->durationText =  $rule->duration.' '.  $rule->durationUnit;
+            }
         }
 
         $this->view->setSource('publicArchives', $publicArchives);
         $this->view->setSource('retentionRule', $retentionRule);
         $this->view->merge();
+
+        $dataTable = $this->view->getElementById("rulesTable")->plugin['dataTable'];
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setUnsortableColumns(array(4));
 
         return $this->view->saveHtml();
     }
