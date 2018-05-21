@@ -863,7 +863,7 @@ class laabs
         return $token->data;
     }
 
-    private function getCookieToken($cookieName)
+    private static function getCookieToken($cookieName)
     {
         if (isset($_COOKIE[$cookieName])) {
             $key = static::getCryptKey();
@@ -886,7 +886,7 @@ class laabs
         return $token;
     }
 
-    private function getHeaderToken($headerName)
+    private static function getHeaderToken($headerName)
     {
         $token = null;
 
