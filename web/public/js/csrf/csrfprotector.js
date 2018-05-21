@@ -51,7 +51,6 @@ var CSRFP = {
 	_getAuthKey: function() {
 		var re = new RegExp(CSRFP.CSRFP_TOKEN +"=([^;]+)(;|$)");
 		var RegExpArray = re.exec(document.cookie);
-        console.log(document.cookie);
 
 		if (RegExpArray === null) {
 			return false;
