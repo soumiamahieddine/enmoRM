@@ -69,11 +69,7 @@ class retentionRule
         $dataTable = $this->view->getElementById("rulesTable")->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        if ($publicArchives) {
-            $dataTable->setUnsortableColumns(4);
-        } else {
-            $dataTable->setUnsortableColumns(5);
-        }
+        $dataTable->setUnsortableColumns(4);
 
         foreach ($retentionRule as $rule) {
             $rule->durationUnit = substr($rule->duration, -1);
@@ -84,10 +80,6 @@ class retentionRule
             } else {
                 $rule->durationUnit = $this->view->translator->getText($rule->durationUnit, "duration", "recordsManagement/retentionRule");
                 $rule->durationText =  $rule->duration.' '.  $rule->durationUnit;
-            }
-
-            if (!$publicArchives) {
-                $rule->finalDispositionTran = $this->view->translator->getText($rule->finalDisposition, false, "recordsManagement/retentionRule");
             }
         }
 
