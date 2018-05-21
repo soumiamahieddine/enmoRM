@@ -32,6 +32,10 @@ class cluster
     protected $sdoFactory;
     protected $repositoryController;
 
+    const MODE_READ = "read";
+    const MODE_WRITE = "write";
+    const MODE_DELETE = "delete";
+
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
@@ -160,7 +164,7 @@ class cluster
             }
         } catch (\core\Route\Exception $e) {
             $this->sdoFactory->rollback();
-            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$clusterId]);
+            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not updated.", 404, null, [$cluster->clusterId]);
         }
         $this->sdoFactory->commit();
 
@@ -175,7 +179,7 @@ class cluster
      *
      * @return object The cluster with repositories and repo services
      */
-    public function openCluster($clusterId, $mode = "read", $limit = false)
+    public function openCluster($clusterId, $mode = Cluster::MODE_READ, $limit = false)
     {
         $cluster = $this->sdoFactory->read("digitalResource/cluster", $clusterId);
 
@@ -187,8 +191,12 @@ class cluster
             try {
                 $clusterRepository->repository = $this->repositoryController->openRepository($clusterRepository->repositoryId);
             } catch (\Exception $e) {
-                $clusterRepository->repository = null;
-                continue;
+                if ($mode == Cluster::MODE_WRITE) {
+                    throw \laabs::newException("digitalResource/clusterException", "Repository '%s' must be accessible", 404, $e, [$clusterRepository->repositoryId]);
+                } else {
+                    $clusterRepository->repository = null;
+                    continue;
+                }
             }
         }
 
@@ -216,9 +224,9 @@ class cluster
      * @param string  $mode    The operation: read, write, delete
      * @param boolean $limit   Only keep repositories with the lowest priority
      */
-    public function sortClusterRepositories($cluster, $mode = "read", $limit = false)
+    public function sortClusterRepositories($cluster, $mode = Cluster::MODE_READ, $limit = false)
     {
-        // Sort repositories by write priority
+        // Sort repositories by priority
         $priorityProperty = $mode.'Priority';
         $priority = array();
         foreach ($cluster->clusterRepository as $key => $clusterRepository) {
@@ -286,7 +294,7 @@ class cluster
             $address = $this->repositoryController->storeResource($clusterRepository->repository, $resource);
 
             if (!$address) {
-                throw \laabs::newException("digitalResource/clusterException", "%s not found", 404, null, [$clusterId]);
+                throw \laabs::newException("digitalResource/clusterException", "%s not found", 404, null, [$cluster->clusterId]);
             }
 
             $resource->address[$index] = $address;
@@ -355,10 +363,10 @@ class cluster
     /**
      * Verify a resouce
      *
-     * @param type $cluster  The cluster object where the resource is store
-     * @param type $resource The digitalResource object to verify
+     * @param object $cluster  The cluster object where the resource is store
+     * @param object $resource The digitalResource object to verify
      *
-     * @return digitalResource/digitalResource The digitalResource verify
+     * @return boolean The digitalResource verify
      */
     public function verifyResource($cluster, $resource)
     {
@@ -368,7 +376,15 @@ class cluster
             if ($clusterRepository->repository == null) {
                 continue;
             }
-            $resource->address = $this->sdoFactory->find("digitalResource/address", "resId='".$resource->resId."'");
+
+            $queryParams['repositoryId'] = $clusterRepository->repositoryId;
+            $queryParts['repositoryId'] = "repositoryId = :repositoryId";
+            $queryParams['resId'] = $resource->resId;
+            $queryParts['resId'] = "resId = :resId";
+
+            $queryString = implode(' AND ', $queryParts );
+
+            $resource->address = $this->sdoFactory->find("digitalResource/address", $queryString, $queryParams);
 
             foreach ($resource->address as $address) {
                 $address->repository = $clusterRepository->repository;
@@ -376,6 +392,10 @@ class cluster
 
                 if ($contents) {
                     $result = $result && $this->checkHash($address, $resource, $contents);
+
+                    if (!$result) {
+                        throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash on repository '%s'", 409, null, $clusterRepository->repositoryId);
+                    }
                 }
             }
         }

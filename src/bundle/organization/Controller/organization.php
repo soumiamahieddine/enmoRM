@@ -63,24 +63,50 @@ class organization
         $orgList = [];
 
         if (isset($currentOrg)) {
-            $organizations = $this->getOwnerOriginatorsOrgs($currentOrg);
+            $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
         } else {
             $owner = $this->getOrgsByRole('owner')[0];
-            $organizations = $this->getOwnerOriginatorsOrgs($owner);
+            $orgUnitList = $this->getOwnerOriginatorsOrgs($owner);
 
         }
 
-
-        foreach ($organizations as $org) {
+        foreach ($orgUnitList as $org) {
             $organization = \laabs::newInstance('organization/organization');
             $organization->displayName = $org->displayName ;
             $organization->orgId = $org->orgId ;
+            $organization->parentOrgId = $org->parentOrgId ;
             $orgList[] = $organization;
 
             foreach ($org->originators as $orgUnit) {
                 if($org->orgId == $orgUnit->ownerOrgId) {
                     $orgUnit->ownerOrgName =  $org->displayName;
                     $orgList[] = $orgUnit;
+                }
+            }
+        }
+
+        $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "parentOrgId"), 'isOrgUnit = false');
+
+        foreach ($orgList as $orgUnit) {
+            foreach ($organizations as $org) {
+                if(isset($orgUnit->parentOrgId)){
+                    if($orgUnit->parentOrgId == $org->orgId){
+                        $organization = \laabs::newInstance('organization/organization');
+                        $organization->displayName = $org->displayName ;
+                        $organization->orgId = $org->orgId ;
+                        $organization->parentOrgId = $org->parentOrgId ;
+                        $orgList[] = $organization;
+                    }
+                }
+            }
+        }
+
+        foreach ($orgList as $org){
+            foreach ($orgList as $orgParent){
+                if(isset($org->parentOrgId)){
+                    if($org->parentOrgId == $orgParent->orgId){
+                        $org->parentOrgName = $orgParent->displayName;
+                    }
                 }
             }
         }
@@ -1110,6 +1136,7 @@ class organization
                         $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->orgId = $orgObject->orgId;
+                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
                     }
                     $ownerOriginatorOrgs[$originator->ownerOrgId]->originators[] = $originator;

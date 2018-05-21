@@ -13,7 +13,7 @@
                 Retention rules
             </h1>
         </div>
-
+        <span id="publicArchives" class="hidden"><?merge publicArchives ?></span>
         <div class="container-fluid">
             <div class="row">
                 <div id='retentionRuleList'>
@@ -68,6 +68,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?merge publicArchives.bool().not() ?>
                             <div class="form-group col-md-12">
                                 <div class="col-md-10">
                                     <label class="control-label">Final disposition <span style="color: red">*</span></label>
@@ -342,9 +343,9 @@
 
     $("#contain").on('change', '#durationUnit', function () {
         if ($('#durationUnit').val() == '*') {
-            $('#duration').attr('disabled', 'disabled');
+            $('#duration').prop('disabled', true).val('');
         } else {
-            $('#duration').removeAttr('disabled');
+            $('#duration').prop('disabled',false);
         }
     })
 
@@ -352,6 +353,12 @@
         $.each(object, function (key, value) {
             $('[name="' + key + '"]').val(value);
         });
+        if( $('[name="duration"]').val() >=9999 & $('#durationUnit').val()=='Y' ) {
+            $('#durationUnit').val('*');
+            $('[name="duration"]').val('').prop('disabled',true);
+        } else {
+            $('#duration').prop('disabled',false);
+        }
     }
 
 </script>

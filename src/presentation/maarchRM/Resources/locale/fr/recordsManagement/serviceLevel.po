@@ -85,3 +85,9 @@ msgstr "Référence"
 
 msgid "Full text indexation"
 msgstr "Indexation plein texte"
+
+msgid "Delete the service level"
+msgstr "Supprimer le niveau de service"
+
+msgid "delete service level"
+msgstr "Êtes-vous sûr de vouloir supprimer ce niveau de service ? Vous ne pourrez pas revenir en arrière."
