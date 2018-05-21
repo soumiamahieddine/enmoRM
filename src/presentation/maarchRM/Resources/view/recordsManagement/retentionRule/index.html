@@ -13,7 +13,7 @@
                 Retention rules
             </h1>
         </div>
-
+        <span id="publicArchives" class="hidden"><?merge publicArchives ?></span>
         <div class="container-fluid">
             <div class="row">
                 <div id='retentionRuleList'>
@@ -68,6 +68,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <?merge publicArchives.bool().not() ?>
                             <div class="form-group col-md-12">
                                 <div class="col-md-10">
                                     <label class="control-label">Final disposition <span style="color: red">*</span></label>

@@ -47,4 +47,14 @@ class archiveDescription
      * @var integer
      */
     public $position;
+
+    /**
+     * @var boolean
+     */
+    public $isImmutable;
+
+    /**
+     * @var boolean
+     */
+    public $isRetained;
 }
