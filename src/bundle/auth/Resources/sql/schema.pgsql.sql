@@ -44,7 +44,7 @@ CREATE TABLE "auth"."account"
   "tokenDate" timestamp,
 
   "authentication" jsonb,
-  "preferencies" jsonb,
+  "preferences" jsonb,
     
   PRIMARY KEY ("accountId"),
   UNIQUE ("accountName") 

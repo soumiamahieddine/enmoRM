@@ -158,6 +158,6 @@ class account
     /**
      * @var json
      */
-    public $preferencies;
+    public $preferences;
 
 }
