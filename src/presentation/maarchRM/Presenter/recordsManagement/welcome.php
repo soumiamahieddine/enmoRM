@@ -389,26 +389,30 @@ class welcome
                                 break;
                         }
                     }
+                    if(!is_array($value)){
 
-                    if ($archivalProfileField) {
-                        $descriptionHtml .= '<tr class="archivalProfileField">';
-                    } else {
-                        $descriptionHtml .= '<tr>';
-                    }
+                        if ($archivalProfileField) {
+                            $descriptionHtml .= '<tr class="archivalProfileField">';
+                        } else {
+                            $descriptionHtml .= '<tr>';
+                        }
 
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                    if ($type == "date") {
+                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
+                        if ($type == "date") {
                             $textValue = \laabs::newDate($value);
                             $textValue = $textValue->format("d/m/Y");
-                    } else {
-                        $textValue = $value;
+                        } else {
+                            $textValue = $value;
 
+                        }
+                        if ($type == 'boolean') {
+                            $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                        }
+
+                        $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
+                        $descriptionHtml .= '</tr>';
                     }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                    }
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                    $descriptionHtml .= '</tr>';
+
                 }
 
             }
