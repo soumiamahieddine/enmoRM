@@ -416,7 +416,7 @@ class log implements archiveDescriptionInterface
 
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
-        $journal .= file_get_contents($res->address[0]->repository->repositoryUri . $res->address[0]->path);
+        $journal .= base64_decode($res->attachment->data);
 
         return $journal;
     }
