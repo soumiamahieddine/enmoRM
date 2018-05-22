@@ -4,3 +4,12 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
 ALTER TABLE "recordsManagement"."retentionRule" ADD COLUMN "implementationDate" date;
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "retentionRuleStatus" text;
 INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateArchivesretentionrule');
+
+DROP TABLE "organization"."orgRole";
+
+ALTER TABLE "recordsManagement"."descriptionField" ADD COLUMN "isArray" boolean default false;
+ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isImmutable" boolean default false;
+ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isRetained" boolean default true;
+
+ALTER TABLE "auth"."account" ADD COLUMN "authentication" jsonb;
+ALTER TABLE "auth"."account" ADD COLUMN "preferences" jsonb;

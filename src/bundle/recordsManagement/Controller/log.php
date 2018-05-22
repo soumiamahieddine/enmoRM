@@ -32,14 +32,19 @@ class log implements archiveDescriptionInterface
     /* Properties */
 
     public $sdoFactory;
+    public $logFilePlan;
+    public $filePlanController;
 
     /**
      * Constructor of access control class
-     * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\sdo\Factory $sdoFactory  The factory
+     * @param string                  $logFilePlan The path of log in the file plan
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $logFilePlan = null)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->logFilePlan = $logFilePlan;
+        $this->filePlanController = \laabs::newController("filePlan/filePlan");
     }
 
     /**
@@ -303,7 +308,7 @@ class log implements archiveDescriptionInterface
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
-        if ($currentOrganization->orgRoleCodes && !in_array("owner", (array) $currentOrganization->orgRoleCodes)) {
+        if (!($currentOrganization->orgRoleCodes && in_array("owner", (array) $currentOrganization->orgRoleCodes))) {
             throw \laabs::newException("recordsManagement/logException", "The journal must be archived by an owner organization.");
         }
 
@@ -318,6 +323,12 @@ class log implements archiveDescriptionInterface
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
         $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
+
+        if (!empty($this->logFilePlan)) {
+            $path = $this->resolveLogFilePlan($this->logFilePlan, ["type" => $log->type]);
+            $position = $this->filePlanController->createFromPath($path, $currentOrganization->registrationNumber, true);
+            $archive->filePlanPosition = $position;
+        }
 
          // Create resource
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
@@ -371,6 +382,33 @@ class log implements archiveDescriptionInterface
         return $archive->archiveId;
     }
 
+    private function resolveLogFilePlan($path, $values)
+    {
+        if (!$path) {
+            $pattern = $this->storePath;
+        }
+
+        $values = is_array($values) ? $values : get_object_vars($values);
+
+        if (preg_match_all("/\<[^\>]+\>/", $path, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case substr($token, 0, 5) == 'date(':
+                        $format = substr($token, 5, -1);
+                        $path = str_replace($variable, date($format), $path);
+                        break;
+
+                    case isset($values[$token]):
+                        $path = str_replace($variable, (string) $values[$token], $path);
+                        break;
+                }
+            }
+        }
+
+        return $path;
+    }
+
     public function contents ($type, $archiveId, $resourceId) {
         $archiveController = \laabs::newController('recordsManagement/archive');
 
@@ -378,7 +416,7 @@ class log implements archiveDescriptionInterface
 
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
-        $journal .= file_get_contents($res->address[0]->repository->repositoryUri . $res->address[0]->path);
+        $journal .= base64_decode($res->attachment->data);
 
         return $journal;
     }

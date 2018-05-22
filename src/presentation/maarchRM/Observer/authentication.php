@@ -24,7 +24,6 @@ namespace presentation\maarchRM\Observer;
  *
  * @package User
  * @author  Maarch Cyril  VAZQUEZ <cyril.vazquez@maarch.org>
- * @chboob
  */
 class authentication
 {

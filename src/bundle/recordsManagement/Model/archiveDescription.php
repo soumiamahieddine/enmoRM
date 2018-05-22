@@ -61,4 +61,15 @@ class archiveDescription
      * @var recordsManagement/descriptionField the description field from data dict
      */
     public $descriptionField;
+
+    /**
+     * @var boolean
+     */
+    public $isImmutable;
+
+    /**
+     * @var boolean
+     */
+    public $isRetained;
+
 }

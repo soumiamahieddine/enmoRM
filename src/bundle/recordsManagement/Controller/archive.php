@@ -591,9 +591,6 @@ class archive
         if (empty($startDate) || empty($duration)) {
             return null;
         }
-        if ($duration == "P999999999Y") {
-            return $duration;
-        }
 
         return $startDate->shift($duration);
     }

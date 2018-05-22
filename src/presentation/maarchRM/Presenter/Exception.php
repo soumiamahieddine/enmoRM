@@ -53,8 +53,6 @@ class Exception
      */
     public function Exception($exception)
     {
-        $exception->setMessage($this->translator->getText($exception->getFormat()));
-
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
             return $this->presentJson($exception);
         }
@@ -83,8 +81,6 @@ class Exception
         if (method_exists($exception, "setMessage")) {
             $exception->setMessage($this->translator->getText($exception->getFormat()));
             $this->json->message = $exception->getMessage();
-        } else if ($message = $exception->getMessage()) {
-            $this->json->message = $message;
         } else {
             $this->json->message = $this->translator->getText(
                 "An error occured during the process of your request. Please contact the administrator of the application.");

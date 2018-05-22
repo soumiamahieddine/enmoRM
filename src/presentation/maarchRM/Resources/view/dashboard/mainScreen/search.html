@@ -114,7 +114,7 @@
                 $("#" + uniqId + "Panel").find("[data-search-tabContent] .datePicker").each(function() {
                     var cloneDatepicker = $(this);
                     if (baseDatepicker.attr('data-datepicker-id') == cloneDatepicker.attr('data-datepicker-id')) {
-                        cloneDatepicker.replaceWith(baseDatepicker.clone(false).datepicker({language:$('#wrapper').attr('lang'), autoclose: true}).appendTo(cloneDatepicker.parent()));
+                        cloneDatepicker.replaceWith(baseDatepicker.clone(false).datepicker(DatePickerParams).appendTo(cloneDatepicker.parent()));
                     }
                 });
             });
