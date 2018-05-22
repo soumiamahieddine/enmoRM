@@ -182,7 +182,7 @@ msgstr "Identifiant du journal archivé : %s"
 msgid "Timestamp file generated"
 msgstr "Fichier d'horodatage généré"
 
-msgid "%s archives cheked"
+msgid "%s archives checked"
 msgstr "%s archives vérifiées"
 
 msgid "%s archives are valid"

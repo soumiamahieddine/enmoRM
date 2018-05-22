@@ -188,7 +188,7 @@ trait archiveComplianceTrait
             }
         }
 
-        $logMessage = ["message" => "%s archives cheked", "variables"=> count($archives)];
+        $logMessage = ["message" => "%s archives checked", "variables"=> count($archives)];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         $logMessage = ["message" => "%s archives are valid", "variables"=> count($res['success'])];
