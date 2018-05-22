@@ -32,7 +32,7 @@ class dashboard
      * @param string $title       The configuration of title
      * @param string $favicon     The configuration of favicon
      */
-    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico")
+    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico" ,$css)
     {
         $this->storage = new \stdClass();
 
@@ -57,6 +57,7 @@ class dashboard
         $this->storage->navbarTitle = $navbarTitle;
         $this->storage->title = $title;
         $this->storage->favicon = $favicon;
+        $this->storage->css = $css;
     }
 
     /**
