@@ -145,7 +145,7 @@ class organization
             }
         }
 
-        $organizationList = $this->sdoFactory->find("organization/organization", null, null, 'orgName');
+        $organizationList = $this->sdoFactory->find("organization/organization", null, [], 'orgName');
         $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationTree");
 
         // sort organization by parentOrgId

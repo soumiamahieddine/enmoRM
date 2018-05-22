@@ -181,7 +181,7 @@ trait FactoryReaderTrait
      *
      * @return array An array of objects matching the query and ordered as requested
      */
-    public function find($className, $queryString=false, $queryParams=array(), $sortingString=false, $offset=0, $length=null, $lock=false)
+    public function find($className, $queryString=false, $queryParams = array(), $sortingString=false, $offset=0, $length=null, $lock=false)
     {
         $lqlString = 'READ';
                 

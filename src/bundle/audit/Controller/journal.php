@@ -73,7 +73,7 @@ class journal
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
             }
 
-            $events = $this->sdoFactory->find('audit/event', $queryString, null, "<eventDate");
+            $events = $this->sdoFactory->find('audit/event', $queryString, [], "<eventDate");
 
         } else {
             // No previous journal, select all events

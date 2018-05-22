@@ -394,7 +394,7 @@ class repository
 
         $repositoryServiceArgs['name'] = $repository->repositoryUri;
 
-        if (count($repository->parameters)) {
+        if (!empty($repository->parameters)) {
             $repositoryServiceArgs['options'] = $repository->parameters;
         }
 

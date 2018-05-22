@@ -123,7 +123,7 @@ class log implements archiveDescriptionInterface
         $sortBy = ">fromDate";
         $numberOfResult = 300;
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, null, $sortBy, 0, $numberOfResult);
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
         foreach ($logs as $log) {
             try {
                 $archive = $archiveController->read($log->archiveId);
@@ -145,7 +145,7 @@ class log implements archiveDescriptionInterface
      */
     public function getByDate($type, $date)
     {
-        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate >= '$date' AND toDate <= '$date'", null, ">fromDate", 1);
+        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate >= '$date' AND toDate <= '$date'", [], ">fromDate", 1);
 
         if (!count($journal)) {
             return null;
@@ -214,7 +214,7 @@ class log implements archiveDescriptionInterface
      */
     public function getFirstJournal($type)
     {
-        $firstJournal = $this->sdoFactory->find('recordsManagement/log', "type='$type'", null, "<fromDate", 0, 1);
+        $firstJournal = $this->sdoFactory->find('recordsManagement/log', "type='$type'", [], "<fromDate", 0, 1);
         if (!count($firstJournal)) {
             return null;
         }
@@ -234,7 +234,7 @@ class log implements archiveDescriptionInterface
             $journal = $this->sdoFactory->read('recordsManagement/log', $journal);
         }
 
-        $nextJournal =  $this->sdoFactory->find('recordsManagement/log', "type = '$journal->type' and fromDate >= '$journal->toDate'", null, '<fromDate', 0, 1);
+        $nextJournal =  $this->sdoFactory->find('recordsManagement/log', "type = '$journal->type' and fromDate >= '$journal->toDate'", [], '<fromDate', 0, 1);
         if (!count($nextJournal)) {
             return null;
         }
@@ -258,7 +258,7 @@ class log implements archiveDescriptionInterface
             $query = "type='$type' AND ownerOrgRegNumber = null";
         }
         
-        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">toDate", 0, 1);
+        $journals = $this->sdoFactory->find('recordsManagement/log', $query, [], ">toDate", 0, 1);
 
         if (empty($journals)) {
             return null;

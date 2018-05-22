@@ -829,7 +829,12 @@ trait archiveEntryTrait
             $this->sdoFactory->beginTransaction();
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        if(!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        } else {
+            $nbArchiveObjects = null;
+        }
+
 
 
         try {
