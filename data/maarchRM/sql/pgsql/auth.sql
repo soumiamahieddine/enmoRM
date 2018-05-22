@@ -63,7 +63,7 @@ INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES
     ('System', 'lifeCycle/journal/createChainjournal'),
     ('System', 'recordsmanagement/archivecompliance/readperiodic'),
     ('System', 'batchProcessing/scheduling/updateProcess'),
-    ('System', 'recordsmanagement/archives/updateArchivesretentionrule');
+    ('System', 'recordsManagement/archives/updateArchivesretentionrule');
 
 
 -- roleMember
