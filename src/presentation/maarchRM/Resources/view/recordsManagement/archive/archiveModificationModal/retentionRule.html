@@ -3,12 +3,12 @@
         <td><strong>Start date</strong></td>
         <td>
             <input class='form-control input-sm ruleInput datePicker' name="startDate"/>
-            <input type="checkbox" id="resetRetentionStartDate"/> <span>Reset start date</span>
+            <span id="changeRRStartDate"><input type="checkbox" id="changeStartDate"/> <span>Change start date</span></span>
         </td>
     </tr>
     <td><strong>Code</strong></td>
     <td>
-         <select id="retentionRuleCode" name="retentionRuleCode" class="form-control input-sm ruleInputAccess">
+        <select id="retentionRuleCode" name="retentionRuleCode" class="form-control input-sm ruleInputAccess">
             <option value="">Select a rule</option>
             <?merge retentionRules ?>
             <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .label ?></option>
@@ -31,16 +31,14 @@
     </td>
 </table>
 
-<span class="hide" id="retentionStartDatePlaceholder">Empty value will keep previous date</span>
-
 <script type="text/javascript">
 
-    $('#resetRetentionStartDate').on('click', function() {
+    $('#changeStartDate').on('click', function() {
         var input = $('#retentionCode').find('input[name="startDate"]');
         if($(this).is(':checked')) {
-            input.val('').prop('disabled', true);
-        } else {
             input.prop('disabled', false);
+        } else {
+            input.val('').prop('disabled', true).val('');
         }
     })
 
@@ -53,18 +51,22 @@
             retentionRuleCode  : form.find('[name="retentionRuleCode"]').val(),
             retentionDuration  : code.duration,
             finalDisposition   : $('#finalDisposition').val(),
-            resetStartDate     : $('#resetRetentionStartDate').is(':checked')
+            changeStartDate     : $('#changeStartDate').is(':checked')
         }
-        
+
         return parameter;
     }
 
     var retentionRule_load = function(archiveId, archiveName, type) {
         $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
+        $('#changeRRStartDate').css('display', 'none').find('input').prop('checked', true);
+        $('#retentionCode').find('input[name="startDate"]').prop('disabled', false);
     }
 
     var retentionRule_loadMultiple = function() {
         $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#retentionStartDatePlaceholder").html());
+        $('#changeRRStartDate').css('display', '').find('input').prop('checked', false);
+        $('#retentionCode').find('input[name="startDate"]').prop('disabled', true);
     }
 </script>

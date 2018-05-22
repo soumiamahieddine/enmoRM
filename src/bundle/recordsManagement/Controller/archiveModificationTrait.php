@@ -102,10 +102,7 @@ trait archiveModificationTrait
                 }
 
                 // Update current object for caller
-                if ($retentionRule->resetStartDate) {
-                    $retentionRule->retentionStartDate = null;
-
-                } elseif (!$retentionRule->retentionStartDate) {
+                if (!$retentionRule->changeStartDate) {
                     $retentionRule->retentionStartDate = $archive->retentionStartDate;
                 }
 
@@ -174,12 +171,10 @@ trait archiveModificationTrait
             } else {
                 $accessRule->archiveId = $archiveId;
 
-                if ($accessRule->resetStartDate) {
-                    $accessRule->accessRuleStartDate = null;
-
-                } elseif (!$accessRule->accessRuleStartDate) {
+                if (!$accessRule->changeStartDate) {
                     $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
                 }
+
                 $accessRule->accessRuleComDate = null;
                 
                 if ($accessRule->accessRuleDuration != null && $accessRule->accessRuleStartDate != null) {
