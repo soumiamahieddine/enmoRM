@@ -17,68 +17,73 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace bundle\recordsManagement\Message;
-
+namespace bundle\recordsManagement\Model;
 /**
- * Class model that represents a retentionRule
+ * Class model that represents retention rule
  *
  * @package RecordsManagement
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
+ *
+ * @pkey [archiveId]
+ * 
+ * @substitution recordsManagement/archive
+ * @xmlns rm maarch.org:laabs:recordsManagement
  */
-class retentionRule
+class archiveRetentionRule
 {
     /**
-     * The retention rule code 
+     * The archive identifier
+     *
+     * @var id
+     * @xvalue generate-id
+     * @notempty
+     */
+    public $archiveId;
+
+    /**
+     * The retention rule code
      *
      * @var string
      */
-    public $code;
+    public $retentionRuleCode;
 
     /**
-     * The duration of retention 
+     * The starting date of the retention rule calculation
+     *
+     * @var date
+     * @xpath rm:retentionStartDate
+     */
+    public $retentionStartDate;
+
+    /**
+     * The duration of retention
      *
      * @var duration
+     * @xpath rm:retentionDuration
      */
-    public $duration;
+    public $retentionDuration;
 
     /**
-     * The action to execute when the retention rule is over 
+     * The action to execute when the retention rule is over
      *
      * @var string
-     * @enumeration [preservation, destruction]
+     * @xpath rm:finalDisposition
      */
     public $finalDisposition;
 
     /**
-     * The description of the rule
-     *
-     * @var string
-     */
-    public $description;
-    
-    /**
-     * The label of the rule
-     *
-     * @var string
-     */
-    public $label;
-
-    /**
-     * The implementation date of the rule
+     * The disposal date of the archive
      *
      * @var date
      */
-    public $implementationDate;
+    public $disposalDate;
 
     /**
-     * Get the string version of message
-     * @return string
+     * The status of retention rule
+     *
+     * @var string
+     * @xpath rm:retentionRuleStatus
      */
-    public function __toString()
-    {
-        return $this->code;
-    }
-    
+    public $retentionRuleStatus;
 
 }

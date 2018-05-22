@@ -305,4 +305,13 @@ interface archivesInterface
      * @action recordsManagement/archive/indexFullText
      */
     public function updateIndexfulltext($limit=200);
+
+
+    /**
+     * Update archive with changed retention rule
+     * @param int $limit The maximum number of archive to update
+     *
+     * @action recordsManagement/archive/updateArchiveRetentionRule
+     */
+    public function updateArchivesretentionrule($limit=500);
 }

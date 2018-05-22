@@ -187,6 +187,10 @@ servicePrivileges = "[
                     'description' : 'Création par batch d\'archive(s)'
                     },
                     {
+                    'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
+                    'description' : 'Mise à jour de la durée d\'utilité administrative'
+                    },
+                    {
                     'serviceURI': '*',
                     'description' : 'Tous les droits'
                     }
@@ -405,5 +409,10 @@ tasks = "[
                 'taskId': '06',
                 'route' : 'recordsManagement/archives/updateIndexfulltext',
                 'description' : 'Extraction plein texte'
+            },
+            {
+                'taskId': '07',
+                'route' : 'recordsManagement/archives/updateArchivesretentionrule',
+                'description' : 'Mise à jour de la durée d\'utilité administrative'
             }
         ]"

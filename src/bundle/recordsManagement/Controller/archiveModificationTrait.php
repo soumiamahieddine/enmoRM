@@ -120,6 +120,7 @@ trait archiveModificationTrait
                     $retentionRule->disposalDate = null;
                 }
 
+                $retentionRule->retentionRuleStatus = "current";
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
                 $retentionRule->previousStartDate = $archive->retentionStartDate;
@@ -437,4 +438,47 @@ trait archiveModificationTrait
 
         return $res;
     }
+
+    /**
+     * Update archive with changed retention rule
+     * @param int $limit The maximum number of archive to update
+     */
+    public function updateArchiveRetentionRule($limit = 1000) {
+        $archives = $this->sdoFactory->find('recordsManagement/archive', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
+        $retentionRules = [];
+
+        if($archives) {
+            foreach ($archives as $archive) {
+
+                $retentionRule = new \stdClass();
+                $retentionRule->archiveId = $archive->archiveId;
+                $retentionRule->previousStartDate = $archive->retentionStartDate;
+                $retentionRule->previousDuration = $archive->retentionDuration;
+                $retentionRule->previousFinalDisposition = $archive->finalDisposition;
+
+                if (!isset($retentionRules[$archive->retentionRuleCode])) {
+                    $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
+                }
+
+                $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
+
+                if (!$archive->finalDisposition) {
+                    $archive->finalDisposition =  $retentionRules[$archive->retentionRuleCode]->finalDisposition;
+                }
+
+                $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
+
+                $retentionRule->retentionStartDate = $archive->retentionStartDate;
+                $retentionRule->retentionDuration = $archive->retentionDuration;
+                $retentionRule->finalDisposition = $archive->finalDisposition;
+
+                $archive->retentionRuleStatus = "current";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
+
+                // Life cycle journal
+                $this->logRetentionRuleModification($archive, $retentionRule, true);
+            }
+        }
+    }
 }
+

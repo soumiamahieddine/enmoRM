@@ -90,3 +90,5 @@ msgstr "Destruction"
 msgid "preservation"
 msgstr "Conservation"
 
+msgid "Implementation date"
+msgstr "Date de mise en œuvre"
