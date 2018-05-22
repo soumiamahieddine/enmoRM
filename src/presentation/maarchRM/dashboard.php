@@ -31,8 +31,9 @@ class dashboard
      * @param string $navbarTitle The configuration of application name
      * @param string $title       The configuration of title
      * @param string $favicon     The configuration of favicon
+     * @param string $css         The configuration of css
      */
-    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico" ,$css)
+    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico" , $css = "/presentation/css/style.css")
     {
         $this->storage = new \stdClass();
 

@@ -5,7 +5,7 @@ if(isset($_POST['regenerate'])) {
     require "../dependency/html/plugins/lessphp/lessc.inc.php";
     $less = new lessc;
     $css = $less->compileFile("public/less/dashboard/style.less");
-    file_put_contents("../src/presentation/maarchRM/Resources/public/css/$fileName", $css);
+    file_put_contents("public/css/$fileName", $css);
     
     exit;
 }
