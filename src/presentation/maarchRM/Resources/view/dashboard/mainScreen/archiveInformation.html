@@ -382,6 +382,7 @@
                         break;
                     case 'date':
                         customField = $("#inputCustomField").clone();
+                        customField.datepicker(DatePickerParams).datepicker('setDate', value.html());
                         if(label.data('immutable')) {
                             customField.prop('disabled', true);
                         }
@@ -451,7 +452,7 @@
                 archiveId           : ArchiveInformation.archiveId,
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
-                originatingDate     : $('#inputOriginatingDate').datepicker({ dateFormat: 'yy-mm-dd' }).val(), 
+                originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
                 description         : descriptionFields
             };
 

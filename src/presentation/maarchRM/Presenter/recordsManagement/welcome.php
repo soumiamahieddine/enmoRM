@@ -157,7 +157,7 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
+            $archive->originatingDate = $archive->originatingDate;
         }
 
         // Retention
@@ -402,7 +402,6 @@ class welcome
                     $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
                     if ($type == "date") {
                             $textValue = \laabs::newDate($value);
-                            $textValue = $textValue->format("d/m/Y");
                     } else {
                         $textValue = $value;
 
