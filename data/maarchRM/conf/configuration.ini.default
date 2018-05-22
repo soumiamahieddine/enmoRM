@@ -14,7 +14,9 @@ publicArchives = false
 logo = "/presentation/img/RM_MNCHM.svg"
 favicon = "/presentation/img/rm.ico"
 title = "Maarch RM"
-css = "style.css"
+
+; If you use the CSS generator, the file is generated in folder "public/css/[file name]"
+css = "/presentation/css/style.css"
 
 ; Set a title in the navbar with a specific style
 ;navbarTitle = "[
