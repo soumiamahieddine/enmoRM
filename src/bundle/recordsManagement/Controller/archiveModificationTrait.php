@@ -110,7 +110,9 @@ trait archiveModificationTrait
                     $retentionRule->retentionDuration = null;
                 }
 
-                if ($retentionRule->finalDisposition === '') {
+                if ($retentionRule->finalDisposition === null) {
+                    $retentionRule->finalDisposition = $archive->finalDisposition;
+                } elseif ($retentionRule->finalDisposition === '') {
                     $retentionRule->finalDisposition = null;
                 }
 
@@ -258,17 +260,19 @@ trait archiveModificationTrait
      * Update metadata of archive
      * @param string $archiveId
      * @param string $originatorArchiveId
+     * @param string $archiverArchiveId
      * @param string $archiveName
      * @param string $description
      * @param date   $originatingDate
      * 
      * @return boolean The result of the operation
      */
-    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
+    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
         $archive = $this->getDescription($archiveId);
+        $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
         $this->checkRights($archive);
-        
+
         if ($archiveName) {
             $archive->archiveName = $archiveName;
         }
@@ -277,13 +281,29 @@ trait archiveModificationTrait
             $archive->originatorArchiveId = $originatorArchiveId;
         }
 
+        if ($archiverArchiveId) {
+            $archive->archiverArchiveId = $archiverArchiveId;
+        }
+
         if ($originatingDate) {
             $archive->originatingDate = $originatingDate;
         }
-        
+
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         if ($description) {
-            $descriptionObject = json_decode($description);
-            if (!empty($archive->archivalProfileReference)) {
+            $descriptionObject = $description;
+            foreach ($archivalProfileDescription as $descriptionImmutable){
+                if($descriptionImmutable->isImmutable) {
+                    $fieldName = (string)$descriptionImmutable->fieldName;
+                    if($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName){
+                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                    }
+                }
+
+            }
+            
+            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 if (!empty($this->currentArchivalProfile->descriptionClass)) {
@@ -302,7 +322,7 @@ trait archiveModificationTrait
             
             $descriptionController->update($archive);
         }
-        
+
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
         
         $operationResult = true;

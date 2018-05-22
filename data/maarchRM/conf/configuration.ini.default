@@ -14,6 +14,7 @@ publicArchives = false
 logo = "/presentation/img/RM_MNCHM.svg"
 favicon = "/presentation/img/rm.ico"
 title = "Maarch RM"
+css = "style.css"
 
 ; Set a title in the navbar with a specific style
 ;navbarTitle = "[
@@ -70,10 +71,18 @@ conversionError = false
 ;   - m for the numeric representation of a month, with leading zeros
 ;   - d for day of the month, 2 digits with leading zeros
 ;
-; To make pakages, use a number. Packages must be the only variable on the directory step name
+; To make packages, use a number. Packages must be the only variable on the directory step name
 ;       good ex : /<200>/ to make incremental containers of two hundred items
 ;       bad example : /prefix_<200>/
 storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archivalProfileReference>/<date(Y)>/<date(m)>/<date(d)>"
+
+; The path of journals in the file plan
+; To include the type of log you must use <type>
+; To include a part of date, you must use <date(format)>.
+;   - Y for a full numeric representation of a year, 4 digits
+;   - m for the numeric representation of a month, with leading zeros
+;   - d for day of the month, 2 digits with leading zeros
+logFilePlan = "<type>/<date(Y)>/<date(m)>"
 
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
@@ -136,6 +145,12 @@ publicUserStory = "['app/*']"
 ;    'adminFunc/contact'
 ;]"
 
+csrfWhiteList = "['user/login']"
+csrfConfig = '{
+        "cookieName" : "CSRF",
+        "tokenLength" : 32
+    }'
+
 servicePrivileges = "[
                     {
                     'serviceURI': 'audit/event/createChainjournal',
@@ -174,6 +189,20 @@ servicePrivileges = "[
                     'description' : 'Tous les droits'
                     }
                     ]"
+
+[organization]
+orgUnitRoles = "{
+                    'owner' : {
+                        'code' : 'owner',
+                        'name' : 'organization/owner',
+                        'description' : 'The system owner'
+                    },
+                    'security' : {
+                        'code' : 'security',
+                        'name' : 'organization/security',
+                        'description' : 'The security agency'
+                    }
+                }"
 
 [lifeCycle]
 
@@ -342,28 +371,6 @@ datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
 ; 2 = trace queries
 ; 3 = dump queries
 trace = 1
-
-[dependency.csrf]
-whiteList = "['user/login']"
-config = '{
-              "CSRFP_TOKEN" : "",
-              "logDirectory" : "/tmp",
-              "failedAuthAction" : {
-                  "GET" : 0,
-                  "POST" : 0
-              },
-              "errorRedirectionPage" : "",
-              "customErrorMessage" : "",
-              "jsUrl" : "/public/js/csrf/csrfprotector.js",
-              "tokenLength" : 10,
-              "cookieConfig" : {
-                  "path" : "",
-                  "domain" : "",
-                  "secure" : false
-              },
-              "disabledJavascriptMessage" : "This site attempts to protect users against <a href='https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29'> Cross-Site Request Forgeries </a> attacks. In order to do so, you must have JavaScript enabled in your web browser otherwise this site will fail to work correctly for you. See details of your web browser for how to enable JavaScript.",
-              "verifyGetFor": {}
-          }'
 
 [batchProcessing]
 tasks = "[

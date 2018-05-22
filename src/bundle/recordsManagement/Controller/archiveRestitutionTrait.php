@@ -58,14 +58,14 @@ trait archiveRestitutionTrait
 
         $archive = $this->retrieve($archiveId);
 
-        $statusChanged = $this->setStatus((string) $archive->archiveId, "restituted");
+        // $statusChanged = $this->setStatus((string) $archive->archiveId, "restituted");
 
-        $valid = count($statusChanged["success"]) ? true : false;
+        // $valid = count($statusChanged["success"]) ? true : false;
 
         // Life cycle journal
         $this->logRestitution($archive, $valid);
 
-        return $valid ? $archive : null;
+        return $archive;
     }
 
     /**

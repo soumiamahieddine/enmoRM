@@ -129,9 +129,9 @@ trait archiveComplianceTrait
 
             $this->lifeCycleJournalController->logEvent('recordsManagement/periodicIntegrityCheck', 'recordsManagement/serviceLevel', $serviceLevel->serviceLevelId, $eventInfo, $success);
 
-            $totalNbArchivesToCheck += nbArchivesToCheck;
-            $totalNbArchivesInSample += nbArchivesInSample;
-            $totalarchivesChecked += archivesChecked;
+            $totalNbArchivesToCheck += $nbArchivesToCheck;
+            $totalNbArchivesInSample += $nbArchivesInSample;
+            $totalarchivesChecked += $archivesChecked;
         }
 
         $logMessage = ["message" => "%s archive(s) to check", "variables"=> $totalNbArchivesToCheck];
@@ -188,7 +188,7 @@ trait archiveComplianceTrait
             }
         }
 
-        $logMessage = ["message" => "%s archives cheked", "variables"=> count($archives)];
+        $logMessage = ["message" => "%s archives checked", "variables"=> count($archives)];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         $logMessage = ["message" => "%s archives are valid", "variables"=> count($res['success'])];
@@ -222,32 +222,39 @@ trait archiveComplianceTrait
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
 
-        try {
-            $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
 
-            if (count($archive->digitalResources)) {
-                foreach ($archive->digitalResources as $digitalResource) {
-                    if (!$this->checkResourceIntegrity($archive, $digitalResource)) {
-                        $valid = false;
-                        $info = "Invalid resource";
-                        $this->logIntegrityCheck($archive, $info, $digitalResource, false);
-                    }
-
+        $errors = [];
+        if (count($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                try {
+                    $this->checkResourceIntegrity($archive, $digitalResource);
                     $this->logIntegrityCheck($archive, "Checking succeeded", $digitalResource, true);
+                } catch (\Exception $e) {
+                    $errors[] = $e->getMessage();
+                    $this->logIntegrityCheck($archive, $e->getMessage(), $digitalResource, false);
                 }
+
             }
-        } catch (\Exception $e) {
-            $valid = false;
-            $info = $e->getMessage();
         }
 
         // recusrively check archive objects
         $children = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '$archive->archiveId'");
         if (count($children)) {
             foreach ($children as $child) {
-                $valid = $valid && $this->checkArchiveIntegrity($child);
+                $valid = $this->checkArchiveIntegrity($child);
+
+                if (!$valid) {
+                    $errors[] = "Error on the archive $child->archiveId";
+                }
             }
         }
+
+        if (!empty($errors)) {
+            $valid = false;
+            $info = \laabs\implode(", ", $errors);
+        }
+
 
         if ($valid && $archive->status == "error") {
             $archive->status = "preserved";
@@ -293,14 +300,15 @@ trait archiveComplianceTrait
                     break;
                 }
 
-                if (!$this->digitalResourceController->verifyResource($resource)) {
+                if (!$this->digitalResourceController->verifyResource($resource, \bundle\digitalResource\Controller\cluster::MODE_WRITE)) {
+
                     break;
                 }
 
                 $valid = true;
             }
         } else {
-            $valid = $this->digitalResourceController->verifyResource($resource);
+            $valid = $this->digitalResourceController->verifyResource($resource, \bundle\digitalResource\Controller\cluster::MODE_WRITE);
         }
 
         foreach ($resource->relatedResource as $relatedResource) {

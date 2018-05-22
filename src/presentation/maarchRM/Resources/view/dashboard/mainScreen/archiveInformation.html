@@ -367,19 +367,35 @@
                 switch(label.data('type')) {
                     case 'boolean' :
                         customField = $("#inputCustomBooleanField").clone();
+                        if(label.data('immutable')) {
+                            customField.prop('disabled', true);
+                        }
                         var intValue = value.find('i').data('value');
                         booleanInput = customField.find('input[value="'+intValue+'"]');
                         break;
                     case 'number':
                         customField = $("#inputCustomNumericField").clone();
+                        if(label.data('immutable')) {
+                            customField.prop('disabled', true);
+                        }
                         customField.val(value.html());
                         break;
-                    case 'date': 
+                    case 'date':
                         customField = $("#inputCustomField").clone();
                         customField.datepicker(DatePickerParams).datepicker('setDate', value.html());
+                        if(label.data('immutable')) {
+                            customField.prop('disabled', true);
+                        }
+                        customField.datepicker({
+                            language:$('#wrapper').attr('lang'),
+                            autoclose:true
+                        }).datepicker('setDate', value.html());
                         break;
                     default :
                         customField = $("#inputCustomField").clone();
+                        if(label.data('immutable')) {
+                            customField.prop('disabled', true);
+                        }
                         customField.val(value.html());
                 }
                 
@@ -403,7 +419,7 @@
                 var name = input.attr('name');
                 var type = $(e).find('th').data('type');
 
-                switch (valueInput.attr("type")) {
+                switch (type) {
                     case "name" :
                     case "text" :
                         value = valueInput.val();
@@ -437,7 +453,7 @@
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
                 originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
-                description         : JSON.stringify(descriptionFields)
+                description         : descriptionFields
             };
 
             $.ajax({

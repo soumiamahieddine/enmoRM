@@ -149,4 +149,15 @@ class account
      * @var timestamp
      */
     public $tokenDate;
+
+    /**
+     * @var json
+     */
+    public $authentication;
+
+    /**
+     * @var json
+     */
+    public $preferences;
+
 }
