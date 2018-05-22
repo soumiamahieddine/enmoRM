@@ -169,6 +169,7 @@ servicePrivileges = "[
                     'serviceURI': 'recordsManagement/archive/createArchiveBatch',
                     'description' : 'Création par batch d\'archive(s)'
                     },
+                    {
                     'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
                     'description' : 'Mise à jour de la durée d\'utilité administrative'
                     },
