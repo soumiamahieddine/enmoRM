@@ -976,10 +976,7 @@ msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "archiveInformation"
 
-msgid "Reset start date"
-msgstr "Mettre la date à blanc"
+msgid "Change start date"
+msgstr "Changer la date"
 
-
-msgid "Empty value will keep previous date"
-msgstr "Une valeur vide laissera la date inchangée"
 
