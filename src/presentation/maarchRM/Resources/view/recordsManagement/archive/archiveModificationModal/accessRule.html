@@ -3,33 +3,32 @@
         <td><strong>Start date</strong></td>
         <td>
             <input class='form-control input-sm ruleInput datePicker' name="startDate"/>
-            <input type="checkbox" id="resetAccessRuleStartDate"/> <span>Reset start date</span>
+            <span id="changeARStartDate"><input type="checkbox" id="changeAccessRuleStartDate"/> <span>Change start date</span></span>
         </td>
     </tr>
     <td><strong>Code</strong></td>
     <td>
         <select id="accessRuleCode" name="accessRuleCode" class="form-control input-sm ruleInputAccess">
-                <option value="">Select a rule</option>
-                <?merge accessRules ?>
-                <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
-        </select><br>
-       
+            <option value="">Select a rule</option>
+            <?merge accessRules ?>
+            <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
+        </select>
+        <br>
         <dl class="dl dl-horizontal" id="accessRule">
             <dt><span>Duration</span> : </dt><dd span id="accessRuleDuration"></dd>
             <dt><span>Description</span> : </dt><dd id="accessRuleDescription"></dd>
         </dl>
     </td>
 </table>
-<span class="hide" id="accessRuleStartDatePlaceholder">Empty value will keep previous date</span>
 
 <script type="text/javascript">
 
-    $('#resetAccessRuleStartDate').on('click', function() {
+    $('#changeAccessRuleStartDate').on('click', function() {
         var input = $('#accessCode').find('input[name="startDate"]');
         if($(this).is(':checked')) {
-            input.val('').prop('disabled', true);
-        } else {
             input.prop('disabled', false);
+        } else {
+            input.val('').prop('disabled', true).val('');
         }
     })
 
@@ -41,7 +40,7 @@
             accessRuleCode      : form.find('[name="accessRuleCode"]').val(),
             accessRuleStartDate : form.find('[name="startDate"]').val(),
             accessRuleDuration  : code.duration,
-            resetStartDate      : $('#resetAccessRuleStartDate').is(':checked')
+            changeStartDate      : $('#changeAccessRuleStartDate').is(':checked')
         }
         
         return parameter;
@@ -50,10 +49,14 @@
     var accessRule_load = function(archiveId, archiveName, type) {
         $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
+        $('#changeARStartDate').css('display', 'none').find('input').prop('checked', true);
+        $('#accessCode').find('input[name="startDate"]').prop('disabled', false);
     }
 
     var accessRule_loadMultiple = function() {
         $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#accessRuleStartDatePlaceholder").html());
+        $('#changeARStartDate').css('display', '').find('input').prop('checked', false);
+        $('#accessCode').find('input[name="startDate"]').prop('disabled', true);
     }
 
 </script>
