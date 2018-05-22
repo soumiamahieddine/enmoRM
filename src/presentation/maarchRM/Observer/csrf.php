@@ -51,11 +51,8 @@ class csrf
      */
     public function getToken(&$request)
     {
-        $this->token = null;
-
-        if (!empty(\laabs::getToken("Csrf", true))) {
-            $this->token = \laabs::getToken("Csrf", true);
-        }
+        $this->token = \laabs::getToken("Csrf", true);
+        
     }
 
     /**
