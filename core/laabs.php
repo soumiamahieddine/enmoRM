@@ -973,11 +973,15 @@ class laabs
      */
     public static function encrypt($string, $key)
     {
-        $mcrypt2ssl = [
+        /*$mcrypt2ssl = [
             MCRYPT_BLOWFISH => "CAST5",
         ];
-        $cipher = \laabs::getCryptCipher();
+        $cipher = \laabs::getCryptCipher();*/
 
+        $mcrypt2ssl = [
+            "blowfish" => "CAST5",
+        ];
+        $cipher = "blowfish";
         if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
             if (!empty($mcrypt2ssl[$cipher])) {
                 $method = $mcrypt2ssl[$cipher] . "-CBC";
@@ -1014,11 +1018,15 @@ class laabs
      */
     public static function decrypt($string, $key)
     {
-        $mcrypt2ssl = [
+        /*$mcrypt2ssl = [
             MCRYPT_BLOWFISH => "CAST5",
+        ];*/
+        $mcrypt2ssl = [
+            "blowfish" => "CAST5",
         ];
 
-        $cipher = \laabs::getCryptCipher();
+        //$cipher = \laabs::getCryptCipher();
+        $cipher = "blowfish";
 
         if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
 
