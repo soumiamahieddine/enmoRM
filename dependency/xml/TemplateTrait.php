@@ -45,6 +45,9 @@ trait TemplateTrait
         $this->mergedForms = new \SplObjectStorage();
 
         $this->bindVariable("_SESSION", $_SESSION);
+
+        $version = \laabs::getVersion();
+        $this->bindVariable("version", $version);
         //$this->bindVariable("GLOBALS", $GLOBALS);
     }
 
