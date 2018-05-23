@@ -97,13 +97,13 @@ trait archiveModificationTrait
             } else {
                 $retentionRule->archiveId = $archiveId;
 
-                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                }
-
                 // Update current object for caller
                 if (!$retentionRule->changeStartDate) {
                     $retentionRule->retentionStartDate = $archive->retentionStartDate;
+                }
+
+                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
                 }
 
                 if ($retentionRule->retentionDuration === '') {
