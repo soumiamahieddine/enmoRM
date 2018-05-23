@@ -64,6 +64,8 @@ class Document
         $this->nodeExtensions = $extensions;
         $this->preserveWhiteSpace = false;
         $this->formatOutput = true;
+
+        $this->templateTrait();
         
     }
     
