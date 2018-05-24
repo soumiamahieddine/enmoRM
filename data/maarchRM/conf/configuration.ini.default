@@ -86,6 +86,12 @@ storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archiva
 ;   - d for day of the month, 2 digits with leading zeros
 logFilePlan = "<type>/<date(Y)>/<date(m)>"
 
+translationLogType = "{
+                         'lifeCycle' : 'Journal du cycle de vie',
+                         'application' : 'Journal de l\'application',
+                         'system' : 'Journal du système'
+                     }"
+
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 

@@ -33,17 +33,21 @@ class log implements archiveDescriptionInterface
 
     public $sdoFactory;
     public $logFilePlan;
+    public $translationLogType;
     public $filePlanController;
 
     /**
      * Constructor of access control class
-     * @param \dependency\sdo\Factory $sdoFactory  The factory
-     * @param string                  $logFilePlan The path of log in the file plan
+     * @param \dependency\sdo\Factory $sdoFactory         The factory
+     * @param string                  $logFilePlan        The path of log in the file plan
+     * @param array                   $translationLogType The translation of log types
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $logFilePlan = null)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $logFilePlan = null, $translationLogType = [])
     {
         $this->sdoFactory = $sdoFactory;
         $this->logFilePlan = $logFilePlan;
+        $this->translationLogType = $translationLogType;
+
         $this->filePlanController = \laabs::newController("filePlan/filePlan");
     }
 
@@ -398,8 +402,11 @@ class log implements archiveDescriptionInterface
                         $format = substr($token, 5, -1);
                         $path = str_replace($variable, date($format), $path);
                         break;
-
                     case isset($values[$token]):
+                        if (array_key_exists($values[$token], $this->translationLogType)) {
+                            $values[$token] = $this->translationLogType[$values[$token]];
+                        }
+
                         $path = str_replace($variable, (string) $values[$token], $path);
                         break;
                 }
