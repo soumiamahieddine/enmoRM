@@ -59,6 +59,8 @@ class dashboard
         $this->storage->title = $title;
         $this->storage->favicon = $favicon;
         $this->storage->css = $css;
+        $this->storage->version = \laabs::getVersion();
+        $this->storage->licence = \laabs::getLicence();
     }
 
     /**

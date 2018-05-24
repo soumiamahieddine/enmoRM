@@ -1365,4 +1365,15 @@ trait laabsAppTrait
 
     }
 
+    /**
+     * The app Licence
+     *
+     * @return String
+     */
+    public static function getLicence()
+    {
+        return file_get_contents('../LICENCE.txt');
+
+    }
+
 }

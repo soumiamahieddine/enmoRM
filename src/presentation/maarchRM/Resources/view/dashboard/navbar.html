@@ -105,7 +105,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="" onclick="load('#', 'HTML_NO_LAYOUT')">
+                    <a class="" onclick="displayInformation()">
                         <i class="fa fa-question" ></i>
                     </a>
                 </li>
@@ -114,7 +114,27 @@
     </div>
 </nav>
 
-<script type="text/javascript">
+<div class="modal fade" id="infoModal" lang="en" data-translate-catalog="auth/messages">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="m_title-delete">Information</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Version</label>
+                    <?merge .version ?>
+                </div>
+                <p>
+                    <pre style="overflow-y:scroll; height: 400px; ">
+                        <?merge .licence ?>
+                    </pre>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
     /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
     function load(url, data)
     {
@@ -398,4 +418,8 @@ $.fn.initSmoothScrolling = function() {
                 $(this).parent('li').removeClass('active');
             });
     });
+
+    function displayInformation(){
+        $('#infoModal').modal();
+    }
 </script>
