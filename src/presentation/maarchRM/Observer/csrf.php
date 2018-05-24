@@ -87,7 +87,7 @@ class csrf
 
             default:
                 if (empty($accountTokens)) {
-                    $accountTokens = $this->addToken();
+                    $accountTokens = $this->addToken([]);
                 }
                 break;
         }
