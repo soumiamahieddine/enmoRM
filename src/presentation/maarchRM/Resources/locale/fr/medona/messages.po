@@ -365,8 +365,8 @@ msgstr "Importer un bordereau"
 msgid "Click or drop a message file"
 msgstr "Cliquer ou déposer un bordereau"
 
-msgid "Click or drop a piece"
-msgstr "Cliquer ou déposer une pièce"
+msgid "Click or drop documents"
+msgstr "Cliquer ou déposer des documents"
 
 msgid "add attachement"
 msgstr "Ajouter des pièces jointes"
