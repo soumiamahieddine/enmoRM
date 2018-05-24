@@ -822,41 +822,39 @@ class laabs
 
     /**
      * Get a token by name
-     * @param string  $name     The name of the token
-     * @param boolean $isHeader Get the token in header
+     * @param string $name  The name of the token
+     * @param string $style The token location
      *
      * @return mixed The token data
      */
-    public static function getToken($name, $isHeader = false)
+    public static function getToken($name, $style=LAABS_IN_COOKIE)
     {
         $token = null;
-        $cookieName = 'LAABS-'.static::toName($name);
-        $headerName = 'X-Laabs-'.static::toName($name);
 
-        if ($isHeader) {
-            $token = \laabs::getHeaderToken($headerName);
+        if (isset($GLOBALS["TOKEN"][$name])) {
+            $token = $GLOBALS["TOKEN"][$name];
         } else {
-            if (isset($GLOBALS["TOKEN"][$name])) {
-                $token = $GLOBALS["TOKEN"][$name];
-            } else {
-                $token = \laabs::getCookieToken($cookieName);
+            switch ($style) {
+                case LAABS_IN_HEADER:
+                    $headerName = 'X-Laabs-'.static::toName($name);
+                    $token = \laabs::getHeaderToken($headerName);
+                    break;
+
+                case LAABS_IN_COOKIE:
+                default:
+                    $cookieName = 'LAABS-'.static::toName($name);
+                    $token = \laabs::getCookieToken($cookieName);
             }
         }
 
-        if (empty($token)){
+        if (empty($token)) {
             return null;
         }
 
-        // Expired token cookie
+        // Expired token
         if ($token->expiration != 0 && $token->expiration < time()) {
-            if (!$isHeader) {
-                if (isset($_COOKIE[$cookieName])) {
-                    unset($_COOKIE[$cookieName]);
-                }
-                if (isset($GLOBALS["TOKEN"][$name])) {
-                    unset($GLOBALS["TOKEN"][$name]);
-                }
-            }
+            $this->unsetToken($name, $style);
+
             return null;
         }
 
@@ -895,12 +893,12 @@ class laabs
         }
 
         $tokenUrlEncoded = \laabs::kernel()->request->headers[$headerName];
-
         $key = static::getCryptKey();
 
         $token = urldecode($tokenUrlEncoded);
         $b64Token = base64_decode($token);
         $jsonToken = static::decrypt($b64Token, $key);
+
         $token = \json_decode(trim($jsonToken));
 
         return $token;
@@ -939,18 +937,27 @@ class laabs
 
     /**
      * Delete a new cookie
-     * @param string $name The name of the cookie
+     * @param string $name  The name of the token
+     * @param string $style The location
      *
      * @return boolean The result of the cookie creation
      */
-    public static function unsetToken($name)
+    public static function unsetToken($name, $style=LAABS_IN_COOKIE)
     {
-        $cookieName = 'LAABS-'.static::toName($name);
-
-        setcookie($cookieName, "", time()-3600, '/');
-
         if (isset($GLOBALS["TOKEN"][$name])) {
             unset($GLOBALS["TOKEN"][$name]);
+        }
+        switch ($style) {
+            case LAABS_IN_HEADER:
+                return true;
+
+            case LAABS_IN_COOKIE:
+            default:
+                $cookieName = 'LAABS-'.static::toName($name);
+                setcookie($cookieName, "", time()-3600, '/');
+                if (isset($_COOKIE[$cookieName])) {
+                    unset($_COOKIE[$cookieName]);
+                }
         }
 
         return true;

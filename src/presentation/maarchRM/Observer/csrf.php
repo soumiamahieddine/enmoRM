@@ -30,7 +30,14 @@ class csrf
     protected $sdoFactory;
     protected $config;
     protected $whiteList;
-    protected $token;
+
+    protected $account;
+    
+    protected $requestToken;
+    protected $requestTokenTime;
+
+    protected $responseToken;
+    protected $responseTokenTime;
 
     /**
      * Construct the observer
@@ -45,18 +52,6 @@ class csrf
 
     /**
      * Observer for the CSRF protection
-     * @param \core\Request\HttpRequest $request
-     *
-     * @subject LAABS_REQUEST
-     */
-    public function getToken(&$request)
-    {
-        $this->token = \laabs::getToken("Csrf", true);
-        
-    }
-
-    /**
-     * Observer for the CSRF protection
      * @param \core\Reflection\Command $userCommand
      * @param array                    $args
      *
@@ -64,40 +59,40 @@ class csrf
      */
     public function check(&$userCommand, array &$args = null)
     {
-
         if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
             return;
         }
+
+        $this->getAccount();
+
+        $this->requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
+        header('X-Laabs-requestToken: '.json_encode($this->requestToken));
 
         switch ($userCommand->method) {
             case "create":
             case "update":
             case "delete":
-                if (empty($this->token)) {
-                    // todo log csrf attack
+                if (!$this->isValidToken()) {
                     $userCommand->reroute('app/authentication/readUserPrompt');
-                    break;
+                    
+                    return false;
                 }
 
-                $valid = $this->isValidToken($this->token);
-
-                if ($valid) {
-                    $this->token = null;
-                    break;
-                }
-
-                // todo log invalid token
-                $userCommand->reroute('app/authentication/readUserPrompt');
+                $this->shiftTokens();
                 break;
+
             default:
+                if (empty($this->account->authentication->csrf)) {
+                    $this->addToken();
+                } else {
+                    $this->resendToken();
+                }
                 break;
-        }
+        }       
 
-        if (empty($this->token)) {
-            $this->generateToken();
-        }
+        $this->updateAccount();
 
-        return;
+        return true;
     }
 
     /**
@@ -108,10 +103,34 @@ class csrf
      */
     public function setResponse(&$response)
     {
-        \laabs::setToken($this->config["cookieName"], $this->token, null, false);
+        header('X-Laabs-responseToken: '.json_encode($this->responseToken));
+        \laabs::setToken($this->config["cookieName"], $this->responseToken, null, false);
     }
 
-    private function generateToken()
+    /**
+     * Gets the account information with a LOCK on database
+     */
+    private function getAccount()
+    {
+        $accountToken = \laabs::getToken('AUTH');
+
+        $this->sdoFactory->beginTransaction();
+        $this->account = $this->sdoFactory->read('auth/account', $accountToken, $lock=true);
+        $this->account->authentication = json_decode($this->account->authentication);
+
+        if (empty($this->account->authentication)
+            || !isset($this->account->authentication->csrf) 
+            || empty($this->account->authentication->csrf)
+            || !is_object($this->account->authentication->csrf)) {
+            return;
+        }
+
+        header('X-Laabs-accountTokens: '.json_encode($this->account->authentication->csrf));
+
+        $this->account->authentication->csrf = get_object_vars($this->account->authentication->csrf);
+    }
+
+    private function addToken()
     {
         $tokenLength = 32;
 
@@ -120,40 +139,86 @@ class csrf
         }
 
         if (function_exists("openssl_random_pseudo_bytes")) {
-            $this->token = bin2hex(openssl_random_pseudo_bytes($tokenLength));
+            $this->responseToken = bin2hex(openssl_random_pseudo_bytes($tokenLength));
         } elseif (function_exists("random_bytes")) {
-            $this->token = bin2hex(random_bytes($tokenLength));
+            $this->responseToken = bin2hex(random_bytes($tokenLength));
         } else {
-            $this->token = \laabs::newId();
+            $this->responseToken = \laabs::newId();
         }
 
-        $accountToken = \laabs::getToken('AUTH');
-        $account = $this->sdoFactory->read('auth/account', $accountToken);
+        $this->responseTokenTime = (string) \laabs::newTimestamp();
 
-        if (empty($account->authentication->csrf)) {
-            if (empty($account->authentication)) {
-                $account->authentication = new \Stdclass();
-            }
-            $account->authentication->csrf = new \Stdclass();
+        if (!isset($this->account->authentication->csrf) || !is_array($this->account->authentication->csrf)) {
+            $this->account->authentication->csrf = [];
         }
 
-        $account->authentication->csrf = $this->token;
-        $account->authentication = json_encode($account->authentication);
+        $this->account->authentication->csrf[$this->responseTokenTime] = $this->responseToken;
 
-        $this->sdoFactory->update($account, "auth/account");
+        return true;
     }
 
-    private function isValidToken($token)
+    private function resendToken()
     {
-        $accountToken = \laabs::getToken('AUTH');
-        $account = $this->sdoFactory->read('auth/account', $accountToken);
+        ksort($this->account->authentication->csrf);
 
-        $account->authentication = json_decode($account->authentication);
+        $this->responseToken = end($this->account->authentication->csrf);
+        $this->responseTokenTime = key($this->account->authentication->csrf);
+    }
 
-        if ($account->authentication->csrf != $token) {
+    private function isValidToken()
+    {
+        if (empty($this->requestToken)) {
+            $e = new \core\Exception('Attempt to access without a valid token', 412);
+            $e->errors[] = "Empty token";
+
+            throw $e;
+
             return false;
         }
 
+        $this->requestTokenTime = array_search($this->requestToken, $this->account->authentication->csrf);
+
+        if (empty($this->requestTokenTime)) {
+            $this->requestToken = null;
+
+            $e = new \core\Exception('Attempt to access without a valid token', 412);
+            $e->errors[] = "Token not found";
+
+            throw $e;
+        }
+
+        $this->responseToken = $this->requestToken;
+
         return true;
+    }
+
+    private function shiftTokens()
+    {
+        if (!isset($this->account->authentication->csrf) || !is_array($this->account->authentication->csrf)) {
+            $this->account->authentication->csrf = [];
+        }
+
+        foreach ($this->account->authentication->csrf as $time => $token) {
+            if ($time < $this->requestTokenTime) {
+                unset($this->account->authentication->csrf[$time]);
+            }
+        }
+    }
+
+    private function updateAccount()
+    {
+        if (empty($this->account->authentication)) {
+            $this->account->authentication = new \Stdclass();
+        }
+
+        if (empty($this->account->authentication->csrf)) {
+            $this->account->authentication->csrf = [];
+        }
+
+        $this->account->authentication = json_encode($this->account->authentication);
+
+        $this->sdoFactory->update($this->account, "auth/account");
+
+        $this->sdoFactory->commit();
     }
 }
