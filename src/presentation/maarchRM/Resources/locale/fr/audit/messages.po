@@ -694,7 +694,7 @@ msgid "medona/archiveDestruction/readHistory"
 msgstr "Lecture de l'historique de destruction"
 
 msgid "medona/archiveDestruction/updateDisposearchives"
-msgstr "Marques des archives pour destruction"
+msgstr "Marquer des archives pour destruction"
 
 msgid "medona/archiveModification/updateFreeze"
 msgstr "Gel d'une archive avec génération d'un bordereau de modification"
