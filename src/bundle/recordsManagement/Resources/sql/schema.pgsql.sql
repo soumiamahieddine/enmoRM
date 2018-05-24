@@ -218,9 +218,6 @@ CREATE TABLE "recordsManagement"."archive"
     ON UPDATE NO ACTION ON DELETE NO ACTION,
   FOREIGN KEY ("accessRuleCode")
     REFERENCES "recordsManagement"."accessRule" ("code") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION,
-  FOREIGN KEY ("retentionRuleCode")
-    REFERENCES "recordsManagement"."retentionRule" ("code") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (

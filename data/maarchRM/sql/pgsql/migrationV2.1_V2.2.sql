@@ -13,3 +13,5 @@ ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isRetained" boo
 
 ALTER TABLE "auth"."account" ADD COLUMN "authentication" jsonb;
 ALTER TABLE "auth"."account" ADD COLUMN "preferences" jsonb;
+
+ALTER TABLE "recordsManagement"."archive" DROP CONSTRAINT "archive_retentionRuleCode_fkey";
