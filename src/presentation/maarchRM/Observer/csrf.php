@@ -68,6 +68,9 @@ class csrf
 
         // Get account with LOCK
         $account = $this->getAccount();
+        if (!$account) {
+            return;
+        }
         $accountTokens = $account->authentication->csrf;
 
         
@@ -106,6 +109,10 @@ class csrf
     public function setResponseToken(&$response)
     {
         $account = $this->getAccount();
+        if (!$account) {
+            return;
+        }
+
         $accountTokens = $account->authentication->csrf;
         
         $responseToken = $this->getLastToken($accountTokens);
@@ -133,6 +140,10 @@ class csrf
     private function getAccount()
     {
         $accountToken = \laabs::getToken('AUTH');
+
+        if (!$accountToken) {
+            return false;
+        }
 
         $this->sdoFactory->beginTransaction();
         $account = $this->sdoFactory->read('auth/account', $accountToken, $lock=true);
