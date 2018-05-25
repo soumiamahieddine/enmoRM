@@ -979,3 +979,17 @@ msgctxt "archiveInformation"
 msgid "Change start date"
 msgstr "Changer la date"
 
+msgid "Archive Transfer"
+msgstr "Demander le transfert sortant"
+
+msgid "Invalid object"
+msgstr "Objet invalide"
+
+msgid "Do not update the final disposition"
+msgstr "Ne pas mettre à jour le sort final"
+
+msgid "Edit metadata"
+msgstr "Modifier les métadonnées"
+
+msgid "unlimited"
+msgstr "Illimitée"

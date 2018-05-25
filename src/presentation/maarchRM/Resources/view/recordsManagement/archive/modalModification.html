@@ -71,6 +71,14 @@
         ModificationModal.loadRetentionCode();
     });
 
+    $("#checkboxUpdateFinalDisposition").on('change', function () {
+        if (this.checked) {
+            $("#retentionRuleFinalDisposition").prop("disabled",true);
+        } else {
+            $("#retentionRuleFinalDisposition").prop("disabled",false);
+        }
+    });
+
     $("#comment").bind('input propertychange', function () {
         if ($("#comment").val() == "") {
             $("#save").prop("disabled",true);
@@ -321,25 +329,34 @@
             var retentionRuleTable = $('#retentionRuleTable');
 
              if (retentionRuleCode) {
-
                  var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {
-                    $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                    $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
-                    $('#retentionRuleDescription').text(retentionRuleCode.description);
-                } else {
-                    $('#retentionRule').css("display", '');
-                    $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
-                    $('#retentionRuleFinalDisposition').val(retentionRuleCode.finalDisposition);
-                    $('#retentionRuleDescription').text(retentionRuleCode.description);
-                }
+                     $('#retentionRule').css("display", '');
 
-            } else {
-                $('#retentionRule').css("display", 'none');
-            }
+                     if(retentionRuleDuration[1] >= 9999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
+                     $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
+                     $('#retentionRuleDescription').text(retentionRuleCode.description);
+                 } else {
+                     $('#retentionRule').css("display", '');
+
+                     if(retentionRuleDuration[1] >= 9999){
+                         $('#retentionRuleDuration').text($('#text_unlimited').text());
+                     } else {
+                         $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                     }
+
+                     $('#retentionRuleDescription').text(retentionRuleCode.description);
+                 }
+
+             } else {
+                 $('#retentionRule').css("display", 'none');
+             }
             
             if(retentionRules){
                 if (!retentionRules.length) {

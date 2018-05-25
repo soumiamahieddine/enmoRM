@@ -3,9 +3,23 @@
         <td><strong>Start date</strong></td>
         <td>
             <input class='form-control input-sm ruleInput datePicker' name="startDate"/>
-            <span id="changeRRStartDate"><input type="checkbox" id="changeStartDate"/> <span>Change start date</span></span>
+            <span id="changeRRStartDate"><input type="checkbox" id="changeStartDate"/>&nbsp;<span>Change start date</span></span>
         </td>
     </tr>
+    <tr id="finalDisposition">
+        <td><strong>Final disposition</strong></td>
+        <td>
+            <select id="retentionRuleFinalDisposition" name="retentionRuleFinalDisposition" class="form-control">
+                <option value=''> To be defined later</option>
+                <option value='destruction'>Destruction</option>
+                <option value='preservation'>Preservation</option>
+            </select>
+            <div id="updateFinalDisposition" style="display: none;">
+                <input id="checkboxUpdateFinalDisposition" type="checkbox"> Do not update the final disposition
+            </div>
+        </td>
+    </tr>
+
     <td><strong>Code</strong></td>
     <td>
         <select id="retentionRuleCode" name="retentionRuleCode" class="form-control input-sm ruleInputAccess">
@@ -16,16 +30,6 @@
         <br>
         <dl class="dl dl-horizontal" id="retentionRule">
             <dt><span>Duration</span> : </dt><dd id="retentionRuleDuration"></dd>
-            <dt><span>Final disposition</span> : </dt>
-            <dd>
-                <div class="col-md-6">
-                    <select id="finalDisposition" name="finalDisposition" class="form-control input-sm">
-                        <option value=''> To be defined later </option>
-                        <option value='destruction'>Destruction</option>
-                        <option value='preservation'>Preservation</option>
-                    </select>
-                </div>
-            </dd>
             <dt><span>Description</span> : </dt><dd id="retentionRuleDescription"></dd>
         </dl>
     </td>
@@ -46,13 +50,21 @@
         var form = $('#retentionCode');
         var parameter = {};
         var code = form.find('[name="retentionRuleCode"]').find('option:selected').data('json');
+
         parameter.retentionRule = {
             retentionStartDate : form.find('[name="startDate"]').val(),
             retentionRuleCode  : form.find('[name="retentionRuleCode"]').val(),
-            retentionDuration  : code.duration,
-            finalDisposition   : $('#finalDisposition').val(),
             changeStartDate     : $('#changeStartDate').is(':checked')
+        };
+
+        if (code) {
+            parameter.retentionRule.retentionDuration = code.duration;
         }
+
+        if (!($("#updateFinalDisposition").css('display') === 'block' && $('#retentionRuleFinalDisposition').prop("disabled"))) {
+            parameter.retentionRule.finalDisposition = $('#retentionRuleFinalDisposition').val();
+        }
+
 
         return parameter;
     }
@@ -61,12 +73,23 @@
         $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
         $('#changeRRStartDate').css('display', 'none').find('input').prop('checked', true);
+        $('#updateFinalDisposition').css('display', 'none');
         $('#retentionCode').find('input[name="startDate"]').prop('disabled', false);
     }
 
     var retentionRule_loadMultiple = function() {
+        //$('#retentionRuleDuration').text('');
+        //$('#retentionRuleDescription').text('');
+
+        //$('#startDate, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', '');
+        //$('#accessCode').css('display', 'none');
+        //$('#archiveModificationForm').css('display', '');
+        //$('#archivalAgency').css('display', 'none');
+
+
         $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#retentionStartDatePlaceholder").html());
         $('#changeRRStartDate').css('display', '').find('input').prop('checked', false);
+        $('#updateFinalDisposition').css('display', '').find('input').prop('checked', false);
         $('#retentionCode').find('input[name="startDate"]').prop('disabled', true);
     }
 </script>
