@@ -104,12 +104,38 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a class="" onclick="displayInformation()">
+                        <i class="fa fa-question" ></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<script type="text/javascript">
+<div class="modal fade" id="infoModal" lang="en">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>About</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <img class="img-responsive" style="max-height:64px; margin: 0 auto;" src="/presentation/img/RM.svg"/>
+                    <br/>
+                    <p class='lead'>Version <?merge .version ?></p>
+                </div>
+                <p>
+                    <pre style="overflow-y:scroll; height: 400px; ">
+                        <?merge .licence ?>
+                    </pre>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
     /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
     function load(url, data)
     {
@@ -393,4 +419,8 @@ $.fn.initSmoothScrolling = function() {
                 $(this).parent('li').removeClass('active');
             });
     });
+
+    function displayInformation(){
+        $('#infoModal').modal();
+    }
 </script>
