@@ -582,3 +582,6 @@ msgstr "Conforme"
 
 msgid "Non compliant"
 msgstr "Non conforme"
+
+msgid "About"
+msgstr "À propos"

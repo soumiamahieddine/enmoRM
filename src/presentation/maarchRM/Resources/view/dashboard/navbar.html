@@ -114,16 +114,17 @@
     </div>
 </nav>
 
-<div class="modal fade" id="infoModal" lang="en" data-translate-catalog="auth/messages">
+<div class="modal fade" id="infoModal" lang="en">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="m_title-delete">Information</h4>
+                <h4>About</h4>
             </div>
             <div class="modal-body">
-                <div class="input-group">
-                    <label>Version</label>
-                    <?merge .version ?>
+                <div class="text-center">
+                    <img class="img-responsive" style="max-height:64px; margin: 0 auto;" src="/presentation/img/RM.svg"/>
+                    <br/>
+                    <p class='lead'>Version <?merge .version ?></p>
                 </div>
                 <p>
                     <pre style="overflow-y:scroll; height: 400px; ">
