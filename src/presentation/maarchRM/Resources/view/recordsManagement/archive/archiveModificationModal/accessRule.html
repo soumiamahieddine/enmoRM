@@ -36,11 +36,15 @@
         var form = $('#accessCode');
         var parameter = {}
         var code = form.find('[name="accessRuleCode"]').find('option:selected').data('json');
+
         parameter.accessRule = {
-            accessRuleCode      : form.find('[name="accessRuleCode"]').val(),
             accessRuleStartDate : form.find('[name="startDate"]').val(),
-            accessRuleDuration  : code.duration,
             changeStartDate      : $('#changeAccessRuleStartDate').is(':checked')
+        };
+
+        if (code) {
+            parameter.accessRule.accessRuleCode = form.find('[name="accessRuleCode"]').val();
+            parameter.accessRule.accessRuleDuration = code.duration;
         }
         
         return parameter;

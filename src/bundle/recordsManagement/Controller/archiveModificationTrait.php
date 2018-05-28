@@ -165,7 +165,6 @@ trait archiveModificationTrait
         $archives = array();
         $operationResult = null;
 
-
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
@@ -183,6 +182,11 @@ trait archiveModificationTrait
 
                 $accessRule->accessRuleComDate = null;
                 
+                if (empty($accessRule->accessRuleCode)) {
+                    $accessRule->accessRuleCode = $archive->accessRuleCode;
+                    $accessRule->accessRuleDuration = $archive->accessRuleDuration;
+                }
+
                 if ($accessRule->accessRuleDuration != null && $accessRule->accessRuleStartDate != null) {
                     $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
                 }
