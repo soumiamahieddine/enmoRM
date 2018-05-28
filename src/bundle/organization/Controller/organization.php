@@ -59,14 +59,15 @@ class organization
      */
     public function todisplay()
     {
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-        $orgList = [];
 
-        if (isset($currentOrg)) {
-            $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
-        } else {
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+
+        if (in_array('owner',$currentOrg->orgRoleCodes)) {
             $owner = $this->getOrgsByRole('owner')[0];
             $orgUnitList = $this->getOwnerOriginatorsOrgs($owner);
+
+        } else {
+            $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
 
         }
 
@@ -85,20 +86,10 @@ class organization
             }
         }
 
-        $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "parentOrgId"), 'isOrgUnit = false');
+        if(isset($owner)){
+            $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "parentOrgId","ownerOrgId"), 'isOrgUnit = false');
 
-        foreach ($orgList as $orgUnit) {
-            foreach ($organizations as $org) {
-                if(isset($orgUnit->parentOrgId)){
-                    if($orgUnit->parentOrgId == $org->orgId){
-                        $organization = \laabs::newInstance('organization/organization');
-                        $organization->displayName = $org->displayName ;
-                        $organization->orgId = $org->orgId ;
-                        $organization->parentOrgId = $org->parentOrgId ;
-                        $orgList[] = $organization;
-                    }
-                }
-            }
+            $orgList = array_merge($orgList,$organizations);
         }
 
         foreach ($orgList as $org){
@@ -131,7 +122,6 @@ class organization
             $owner = $this->getOrgsByRole('owner')[0];
             $organizations = $this->getOwnerOriginatorsOrgs($owner);
         }
-
 
         foreach ($organizations as $org) {
 
@@ -1125,6 +1115,7 @@ class organization
             }
         }
 
+        $orgIdsSecurity = ($orgIdsSecurity) ? $orgIdsSecurity: [];
         foreach ($userServices as $userService) {
             foreach ($originators as $originator) {
                 if ($owner
