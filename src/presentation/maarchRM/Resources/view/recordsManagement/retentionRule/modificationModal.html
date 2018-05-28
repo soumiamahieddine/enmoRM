@@ -149,16 +149,18 @@
                 $("#add, #update").addClass('hide');
                 $('#delete', '#update').css('display', '');
                 $('#add').css('display', 'none');
+                $('#duration').removeAttr('disabled');
                 
                 if(object.implementationDate) {
                     $('#implementationDate').css('display', '');
                 }
 
                 $.each(object, function (key, value) {
-                    if (key == "durationUnit" && object.durationUnit >= "Y" && object.duration >= 9999) {
+                    if (key == "durationUnit" && object.durationUnit == "Y" && object.duration >= 9999) {
                         $('[name="durationUnit"]').val("*");
-                    } else if (key == "duration" && object.durationUnit >= "Y" && object.duration >= 9999) {
-                        $('[name="duration"]').val("*");
+                    } else if (key == "duration" && object.durationUnit == "Y" && object.duration >= 9999) {
+                        $('[name="duration"]').val("");
+                        $('#duration').attr('disabled', 'disabled');
                     } else {
                         $('[name="' + key + '"]').val(value);
                     }
