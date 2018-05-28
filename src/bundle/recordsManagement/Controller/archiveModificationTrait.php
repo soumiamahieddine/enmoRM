@@ -102,13 +102,14 @@ trait archiveModificationTrait
                     $retentionRule->retentionStartDate = $archive->retentionStartDate;
                 }
 
-                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                }
 
                 if (empty($retentionRule->retentionRuleCode)) {
                     $retentionRule->retentionRuleCode = $archive->retentionRuleCode;
                     $retentionRule->retentionDuration = $archive->retentionDuration;
+                }
+
+                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
                 }
 
                 if ($retentionRule->retentionDuration === '') {
