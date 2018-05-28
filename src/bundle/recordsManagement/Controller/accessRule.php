@@ -51,15 +51,6 @@ class accessRule
     public function index()
     {
         $accessRules = $this->sdoFactory->find('recordsManagement/accessRule');
-        foreach ($accessRules as $accessRule) {
-            if ($accessRule->duration == null) {
-                continue;
-            }
-            if ($accessRule->duration->y >= 9999) {
-                $accessRule->duration = null;
-                $accessRule->durationUnit = "unlimited";
-            }
-        }
 
         return $accessRules;
     }

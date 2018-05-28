@@ -76,9 +76,15 @@ class accessRule
         foreach ($accessRules as $accessRule) {
             $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
             $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
-            $accessRule->accessRuleDurationUnit = $this->view->translator->getText($accessRule->accessRuleDurationUnit, "duration", "recordsManagement/accessRule");
+
+            if($accessRule->accessRuleDuration >= 9999 && $accessRule->accessRuleDurationUnit == 'Y' ){
+                $accessRule->accessRuleDurationText = $this->view->translator->getText('Unlimited', null, "recordsManagement/accessRule");
+            } else {
+                $accessRule->accessRuleDurationUnit = $this->view->translator->getText($accessRule->accessRuleDurationUnit, "duration", "recordsManagement/accessRule");
+                $accessRule->accessRuleDurationText =  $accessRule->accessRuleDuration .' '.  $accessRule->accessRuleDurationUnit;
+            }
         }
-        
+
         $this->view->translate();
         $this->view->setSource("orgUnits", $orgUnits);
         $this->view->setSource("accessRule", $accessRules);
@@ -95,8 +101,6 @@ class accessRule
      */
     public function edit($accessRule) 
     {
-
-
         $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
         $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
         return json_encode($accessRule);
