@@ -155,7 +155,13 @@
                 }
 
                 $.each(object, function (key, value) {
-                    $('[name="' + key + '"]').val(value);
+                    if (key == "durationUnit" && object.durationUnit >= "Y" && object.duration >= 9999) {
+                        $('[name="durationUnit"]').val("*");
+                    } else if (key == "duration" && object.durationUnit >= "Y" && object.duration >= 9999) {
+                        $('[name="duration"]').val("*");
+                    } else {
+                        $('[name="' + key + '"]').val(value);
+                    }
                 });
 
             } else {
