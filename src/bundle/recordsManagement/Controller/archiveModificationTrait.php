@@ -73,6 +73,9 @@ trait archiveModificationTrait
      */
     public function modifyRetentionRule($retentionRule, $archiveIds)
     {
+
+        $retentionRuleReceived = $retentionRule;
+
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
@@ -95,31 +98,35 @@ trait archiveModificationTrait
                 $operationResult = false;
 
             } else {
+
+                $retentionRule = clone($retentionRuleReceived);
+
                 $retentionRule->archiveId = $archiveId;
 
                 // Update current object for caller
-                if (!$retentionRule->changeStartDate) {
+                if ($retentionRule->changeStartDate === false) {
                     $retentionRule->retentionStartDate = $archive->retentionStartDate;
                 }
-
 
                 if (empty($retentionRule->retentionRuleCode)) {
                     $retentionRule->retentionRuleCode = $archive->retentionRuleCode;
                     $retentionRule->retentionDuration = $archive->retentionDuration;
                 }
 
-                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                }
-
-                if ($retentionRule->retentionDuration === '') {
-                    $retentionRule->retentionDuration = null;
-                }
-
                 if ($retentionRule->finalDisposition === null) {
                     $retentionRule->finalDisposition = $archive->finalDisposition;
                 } elseif ($retentionRule->finalDisposition === '') {
                     $retentionRule->finalDisposition = null;
+                }
+
+                if ($retentionRule->retentionDuration === '') {
+                    $retentionRule->retentionDuration = null;
+                } elseif (!empty($retentionRule->retentionDuration) && $retentionRule->retentionDuration->y >= 9999) {
+                    $retentionRule->disposalDate = '';
+                } else {
+                    if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                        $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                    }
                 }
 
                 if ($retentionRule->disposalDate === '') {

@@ -55,9 +55,9 @@ class accessRule
             if ($accessRule->duration == null) {
                 continue;
             }
-            if ($accessRule->duration->y >= 999999999) {
+            if ($accessRule->duration->y >= 9999) {
                 $accessRule->duration = null;
-                $accessRule->durationUnit = "Unlimited";
+                $accessRule->durationUnit = "unlimited";
             }
         }
 
