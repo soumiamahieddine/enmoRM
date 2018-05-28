@@ -53,11 +53,11 @@
 
         parameter.retentionRule = {
             retentionStartDate : form.find('[name="startDate"]').val(),
-            retentionRuleCode  : form.find('[name="retentionRuleCode"]').val(),
             changeStartDate     : $('#changeStartDate').is(':checked')
         };
 
         if (code) {
+            parameter.retentionRule.retentionRuleCode = form.find('[name="retentionRuleCode"]').val();
             parameter.retentionRule.retentionDuration = code.duration;
         }
 
@@ -78,15 +78,6 @@
     }
 
     var retentionRule_loadMultiple = function() {
-        //$('#retentionRuleDuration').text('');
-        //$('#retentionRuleDescription').text('');
-
-        //$('#startDate, #retentionCode, #finalDisposition, #updateFinalDisposition').css('display', '');
-        //$('#accessCode').css('display', 'none');
-        //$('#archiveModificationForm').css('display', '');
-        //$('#archivalAgency').css('display', 'none');
-
-
         $('#retentionCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#retentionStartDatePlaceholder").html());
         $('#changeRRStartDate').css('display', '').find('input').prop('checked', false);
         $('#updateFinalDisposition').css('display', '').find('input').prop('checked', false);

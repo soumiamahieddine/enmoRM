@@ -106,6 +106,11 @@ trait archiveModificationTrait
                     $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
                 }
 
+                if (empty($retentionRule->retentionRuleCode)) {
+                    $retentionRule->retentionRuleCode = $archive->retentionRuleCode;
+                    $retentionRule->retentionDuration = $archive->retentionDuration;
+                }
+
                 if ($retentionRule->retentionDuration === '') {
                     $retentionRule->retentionDuration = null;
                 }
@@ -121,6 +126,7 @@ trait archiveModificationTrait
                 }
 
                 $retentionRule->retentionRuleStatus = "current";
+
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
                 $retentionRule->previousStartDate = $archive->retentionStartDate;
