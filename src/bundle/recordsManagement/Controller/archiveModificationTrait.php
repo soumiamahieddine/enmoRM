@@ -487,11 +487,6 @@ trait archiveModificationTrait
                 }
 
                 $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
-
-                if (!$archive->finalDisposition) {
-                    $archive->finalDisposition =  $retentionRules[$archive->retentionRuleCode]->finalDisposition;
-                }
-
                 $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
 
                 $retentionRule->retentionStartDate = $archive->retentionStartDate;

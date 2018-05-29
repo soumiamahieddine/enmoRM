@@ -99,12 +99,14 @@ class retentionRule
             }
 
             // Archives update
-            if (!empty($retentionRule->implementationDate)) {
+            if ($retentionRule->implementationDate) {
                 $retentionRule->implementationDate = $retentionRule->implementationDate->format('Y-m-d');
-            }
 
-            $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'changed'], "retentionRuleCode = '$retentionRule->code' AND retentionStartDate != null AND retentionStartDate >= '$retentionRule->implementationDate'");
-            $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'old'], "retentionRuleCode = '$retentionRule->code' AND ((retentionStartDate != null AND retentionStartDate < '$retentionRule->implementationDate') OR (retentionStartDate = null))")  ;
+                $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'changed'], "retentionRuleCode = '$retentionRule->code' AND retentionStartDate != null AND retentionStartDate >= '$retentionRule->implementationDate'");
+                $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'old'], "retentionRuleCode = '$retentionRule->code' AND ((retentionStartDate != null AND retentionStartDate < '$retentionRule->implementationDate') OR (retentionStartDate = null))")  ;
+            } else {
+                $this->sdoFactory->updateCollection('recordsManagement/archiveRetentionRule', ['retentionRuleStatus'=> 'changed'], "retentionRuleCode = '$retentionRule->code' AND retentionStartDate != null");
+            }
 
         } catch (\core\Exception $e) {
             throw new \bundle\recordsManagement\Exception\retentionRuleException("Retention rule not updated.");
