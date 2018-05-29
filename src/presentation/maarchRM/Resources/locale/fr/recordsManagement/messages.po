@@ -862,7 +862,7 @@ msgid "Import"
 msgstr "Importer"
 
 msgid "Click or drop documents"
-msgstr "Cliquer ou déposer des documents"
+msgstr "Cliquez ou déposez des documents"
 
 msgid "Folder"
 msgstr "Dossier"
