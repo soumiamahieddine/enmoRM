@@ -1,0 +1,71 @@
+<table id="accessCode" class="table table-condensed modificationForm">
+    <tr id="startDate">
+        <td><strong>Start date</strong></td>
+        <td>
+            <input class='form-control input-sm ruleInput datePicker' name="startDate"/>
+            <span id="changeARStartDate"><input type="checkbox" id="changeAccessRuleStartDate"/> <span>Change start date</span></span>
+        </td>
+    </tr>
+    <td><strong>Code</strong></td>
+    <td>
+        <select id="accessRuleCode" name="accessRuleCode" class="form-control input-sm ruleInputAccess">
+            <option value="">Select a rule</option>
+            <?merge accessRules ?>
+            <option value='[?merge .code ?]' data-json='[?merge .json ?]'><?merge .code ?></option>
+        </select>
+        <br>
+        <dl class="dl dl-horizontal" id="accessRule">
+            <dt><span>Duration</span> : </dt><dd span id="accessRuleDuration"></dd>
+            <dt><span>Description</span> : </dt><dd id="accessRuleDescription"></dd>
+        </dl>
+    </td>
+</table>
+
+<script type="text/javascript">
+
+    $('#changeAccessRuleStartDate').on('click', function() {
+        var input = $('#accessCode').find('input[name="startDate"]');
+        if($(this).is(':checked')) {
+            input.prop('disabled', false);
+        } else {
+            input.val('').prop('disabled', true).val('');
+        }
+    });
+
+    $("#contain").on('change', '#accessRuleCode', function () {
+        var code = $(this).find('option:selected').data('json');
+        ModificationModal.loadAccessCode(code);
+    });
+
+    var accessRule_serialize = function() {
+        var form = $('#accessCode');
+        var parameter = {}
+        var code = form.find('[name="accessRuleCode"]').find('option:selected').data('json');
+
+        parameter.accessRule = {
+            accessRuleStartDate : form.find('[name="startDate"]').val(),
+            changeStartDate      : $('#changeAccessRuleStartDate').is(':checked')
+        };
+
+        if (code) {
+            parameter.accessRule.accessRuleCode = form.find('[name="accessRuleCode"]').val();
+            parameter.accessRule.accessRuleDuration = code.duration;
+        }
+        
+        return parameter;
+    };
+
+    var accessRule_load = function(archiveId, archiveName, type) {
+        $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
+        ModificationModal.loadRule(archiveId, archiveName, type);
+        $('#changeARStartDate').css('display', 'none').find('input').prop('checked', true);
+        $('#accessCode').find('input[name="startDate"]').prop('disabled', false);
+    };
+
+    var accessRule_loadMultiple = function() {
+        $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#accessRuleStartDatePlaceholder").html());
+        $('#changeARStartDate').css('display', '').find('input').prop('checked', false);
+        $('#accessCode').find('input[name="startDate"]').prop('disabled', true);
+    };
+
+</script>

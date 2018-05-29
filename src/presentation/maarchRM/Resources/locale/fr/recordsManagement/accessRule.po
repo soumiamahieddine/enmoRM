@@ -44,11 +44,11 @@ msgstr "Destruction"
 msgid "Preservation"
 msgstr "Conservation"
 
-msgid "New access code created"
-msgstr "Code de communicabilité créé"
+msgid "Access rule created"
+msgstr "Règle de communicabilité créée"
 
-msgid "Access code updated"
-msgstr "Code de communicabilité modifié"
+msgid "Access rule updated"
+msgstr "Règle de communicabilité modifiée"
 
 msgid "Final disposition"
 msgstr "Sort final"
@@ -65,8 +65,8 @@ msgstr "Mois"
 msgid "Year(s)"
 msgstr "Année(s)"
 
-msgid "unlimited"
-msgstr "Illimité"
+msgid "Unlimited"
+msgstr "Illimitée"
 
 msgid "Y"
 msgstr "an(s)"

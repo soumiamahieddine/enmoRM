@@ -438,7 +438,7 @@ trait archiveEntryTrait
         }
         
         $archive->disposalDate = null;
-        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
+        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }

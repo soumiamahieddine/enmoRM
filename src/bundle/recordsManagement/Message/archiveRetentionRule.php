@@ -78,10 +78,10 @@ class archiveRetentionRule
     public $disposalDate;
 
     /**
-     * The retention rule status
+     * change start date
      *
-     * @var string
+     * @var boolean
      */
-    public $retentionRuleStatus;
+    public $changeStartDate;
 
 }

@@ -150,7 +150,7 @@ msgid "day(s)"
 msgstr "jour(s)"
 
 msgid "Illimited"
-msgstr "Illimité"
+msgstr "Illimitée"
 
 msgid "Deposit"
 msgstr "Déposer"
