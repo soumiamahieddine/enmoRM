@@ -42,11 +42,10 @@
                     <td><strong>Depositor</strong></td>
                     <td><?merge archive.depositorOrg.displayName ?></td>
                 </tr>
-                <?merge archive.retentionDuration.bool() ?> 
+                <?merge archive.retentionRuleCode.bool() ?>
                 <tr>
                     <td><strong>Disposal rule</strong></td>
                     <td>
-                        <?merge archive.retentionRuleCode.bool() ?>
                         <span>
                             <b data-translate-context="archiveInformation">Code </b>:&nbsp;<?merge archive.retentionRuleCode ?>
                             <br/>
@@ -97,12 +96,18 @@
                         <br/>
                         
                         <span>
-                            <b>Duration</b>:&nbsp;
-                            <?merge archive.accessRuleDuration ?>&nbsp;
-                            <?merge archive.accessRuleDurationUnit.ifeq('Y') ?><span>Year(s)</span>
-                            <?merge archive.accessRuleDurationUnit.ifeq('M') ?><span>Month(s)</span>
-                            <?merge archive.accessRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
-                            <br/>
+                            <?merge archive.accessRuleDuration.ifgte(9999) ?>
+                            <div>
+                                <b>Duration</b>:&nbsp;<span>Unlimited</span>
+                            </div>
+                            <?merge archive.accessRuleDuration.iflte(9998) ?>
+                            <div>
+                                <b>Duration</b>:
+                                <?merge archive.accessRuleDuration ?>&nbsp;
+                                <?merge archive.accessRuleDurationUnit.ifeq('Y') ?><span>Year(s)</span>
+                                <?merge archive.accessRuleDurationUnit.ifeq('M') ?><span>Month(s)</span>
+                                <?merge archive.accessRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
+                            </div>
                         </span>
                         
                         <b>Start date</b>:&nbsp;<?merge archive.accessRuleStartDate ?>

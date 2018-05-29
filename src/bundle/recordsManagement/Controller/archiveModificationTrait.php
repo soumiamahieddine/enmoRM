@@ -122,15 +122,11 @@ trait archiveModificationTrait
                 if ($retentionRule->retentionDuration === '') {
                     $retentionRule->retentionDuration = null;
                 } elseif (!empty($retentionRule->retentionDuration) && $retentionRule->retentionDuration->y >= 9999) {
-                    $retentionRule->disposalDate = '';
+                    $retentionRule->disposalDate = null;
                 } else {
                     if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
                         $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
                     }
-                }
-
-                if ($retentionRule->disposalDate === '') {
-                    $retentionRule->disposalDate = null;
                 }
 
                 $retentionRule->retentionRuleStatus = "current";
@@ -173,6 +169,8 @@ trait archiveModificationTrait
         $archives = array();
         $operationResult = null;
 
+        $accessRuleReceived = $accessRule;
+
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
@@ -182,20 +180,24 @@ trait archiveModificationTrait
 
                 $operationResult = false;
             } else {
+                $accessRule = $accessRuleReceived;
+
                 $accessRule->archiveId = $archiveId;
 
                 if (!$accessRule->changeStartDate) {
                     $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
                 }
 
-                $accessRule->accessRuleComDate = null;
-                
                 if (empty($accessRule->accessRuleCode)) {
                     $accessRule->accessRuleCode = $archive->accessRuleCode;
                     $accessRule->accessRuleDuration = $archive->accessRuleDuration;
                 }
 
-                if ($accessRule->accessRuleDuration != null && $accessRule->accessRuleStartDate != null) {
+                if ($accessRule->accessRuleDuration === '') {
+                    $accessRule->accessRuleDuration = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && $accessRule->accessRuleDuration->y >= 9999) {
+                    $accessRule->accessRuleComDate = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleStartDate)) {
                     $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
                 }
 

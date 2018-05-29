@@ -30,7 +30,12 @@
         } else {
             input.val('').prop('disabled', true).val('');
         }
-    })
+    });
+
+    $("#contain").on('change', '#accessRuleCode', function () {
+        var code = $(this).find('option:selected').data('json');
+        ModificationModal.loadAccessCode(code);
+    });
 
     var accessRule_serialize = function() {
         var form = $('#accessCode');
@@ -48,19 +53,19 @@
         }
         
         return parameter;
-    }
+    };
 
     var accessRule_load = function(archiveId, archiveName, type) {
         $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', '');
         ModificationModal.loadRule(archiveId, archiveName, type);
         $('#changeARStartDate').css('display', 'none').find('input').prop('checked', true);
         $('#accessCode').find('input[name="startDate"]').prop('disabled', false);
-    }
+    };
 
     var accessRule_loadMultiple = function() {
         $('#accessCode').css('display', '').find('[name="startDate"]').attr('placeholder', $("#accessRuleStartDatePlaceholder").html());
         $('#changeARStartDate').css('display', '').find('input').prop('checked', false);
         $('#accessCode').find('input[name="startDate"]').prop('disabled', true);
-    }
+    };
 
 </script>

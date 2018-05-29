@@ -175,10 +175,6 @@
                     if (response.status) {
                         if (ModificationModal.modalType === "accessRule") {
                             rule = response.accessRule;
-                            if (rule.accessRuleDuration) {
-                                rule.accessRuleDurationUnit = rule.accessRuleDuration.substring(rule.accessRuleDuration.length - 1);
-                                rule.accessRuleDuration = rule.accessRuleDuration.substring(1, rule.accessRuleDuration.length - 1);
-                            }
                         } else {
                             rule = response.retentionRule;
                         }
@@ -188,7 +184,7 @@
                         });
 
                         if (ModificationModal.modalType === "accessRule") {
-                            ModificationModal.loadAccessCode();
+                            ModificationModal.loadAccessCode(rule);
                         }
 
                         if (ModificationModal.modalType === "retentionRule") {
@@ -290,26 +286,25 @@
             ModificationModal.modal.modal('hide');
         },
 
-        loadAccessCode: function() {
+        loadAccessCode: function(rule) {
             var accessRuleCode = $("#accessRuleCode").find(':selected').data('json');
             var accessRules = "";
             var accessRuleTable = $('#accessRuleTable');
 
             if (accessRuleCode) {
-                if (accessRuleCode.duration) {
-                    var accessRules = accessRuleCode.accessRules;
-                    var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
-                    var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+                let accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                let accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
+
+                if (rule) {
                     $('#accessRule').css("display", '');
-                    $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
-                    $('#accessRuleDescription').text(accessRuleCode.description);
-                } else {
-                    $('#accessRule').css("display", '');
-                    $('#accessRuleDuration').text(accessRuleCode.durationUnit);
+
+                    if(accessRuleDuration[1] >= 9999){
+                        $('#accessRuleDuration').text($('#text_unlimited').text());
+                    } else {
+                        $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                    }
                     $('#accessRuleDescription').text(accessRuleCode.description);
                 }
-
-
 
             } else {
                 $('#accessRule').css("display", 'none');

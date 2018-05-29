@@ -65,7 +65,7 @@ msgstr "Mois"
 msgid "Year(s)"
 msgstr "Année(s)"
 
-msgid "unlimited"
+msgid "Unlimited"
 msgstr "Illimité"
 
 msgid "Y"
