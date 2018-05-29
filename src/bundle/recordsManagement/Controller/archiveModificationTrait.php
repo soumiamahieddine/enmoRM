@@ -180,7 +180,7 @@ trait archiveModificationTrait
 
                 $operationResult = false;
             } else {
-                $accessRule = $accessRuleReceived;
+                $accessRule = clone($accessRuleReceived);
 
                 $accessRule->archiveId = $archiveId;
 
