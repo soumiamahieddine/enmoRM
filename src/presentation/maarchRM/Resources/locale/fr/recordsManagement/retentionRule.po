@@ -54,19 +54,19 @@ msgid "Preservation"
 msgstr "Conservation"
 
 msgid "Unlimited"
-msgstr "Illimité"
+msgstr "Illimitée"
 
 msgid "Retention rule created."
-msgstr "Règle ajoutée."
+msgstr "Règle de conservation ajoutée."
 
 msgid "Retention rule updated."
-msgstr "Règle modifiée."
+msgstr "Règle de conservation modifiée."
 
 msgid "Retention rule deleted."
-msgstr "Règle supprimée."
+msgstr "Règle de conservation supprimée."
 
 msgid "Retention rule not deleted."
-msgstr "Règle non supprimée."
+msgstr "Règle de conservation non supprimée."
 
 msgid "The operation could not be completed because the retention rule doesn't exist."
 msgstr "Suppression impossible ! La règle n'existe pas."

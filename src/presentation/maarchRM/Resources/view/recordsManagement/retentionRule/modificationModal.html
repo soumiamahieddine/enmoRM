@@ -150,13 +150,21 @@
                 $('#add, #update').addClass('hide');
                 $('#delete, #update').css('display', '');
                 $('#add').css('display', 'none');
+                $('#duration').removeAttr('disabled');
                 
                 if(object.implementationDate) {
                     $('#implementationDate').css('display', '');
                 }
 
                 $.each(object, function (key, value) {
-                    $('[name="' + key + '"]').val(value);
+                    if (key == "durationUnit" && object.durationUnit == "Y" && object.duration >= 9999) {
+                        $('[name="durationUnit"]').val("*");
+                    } else if (key == "duration" && object.durationUnit == "Y" && object.duration >= 9999) {
+                        $('[name="duration"]').val("");
+                        $('#duration').attr('disabled', 'disabled');
+                    } else {
+                        $('[name="' + key + '"]').val(value);
+                    }
                 });
 
             } else {
@@ -274,7 +282,7 @@
 
         serialize: function() {
             if ($('#durationUnit').val() == "*") {
-                duration = 'P' + 999999999 + 'Y';
+                duration = 'P' + 9999 + 'Y';
             } else if ($('#duration').val() == 0) {
                 duration = 0;
             } else {

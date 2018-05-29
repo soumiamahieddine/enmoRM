@@ -73,6 +73,9 @@ trait archiveModificationTrait
      */
     public function modifyRetentionRule($retentionRule, $archiveIds)
     {
+
+        $retentionRuleReceived = $retentionRule;
+
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
@@ -95,19 +98,19 @@ trait archiveModificationTrait
                 $operationResult = false;
 
             } else {
+
+                $retentionRule = clone($retentionRuleReceived);
+
                 $retentionRule->archiveId = $archiveId;
 
-                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
-                }
-
                 // Update current object for caller
-                if ($retentionRule->retentionStartDate === '') {
-                    $retentionRule->retentionStartDate = null;
+                if ($retentionRule->changeStartDate === false) {
+                    $retentionRule->retentionStartDate = $archive->retentionStartDate;
                 }
 
-                if ($retentionRule->retentionDuration === '') {
-                    $retentionRule->retentionDuration = null;
+                if (empty($retentionRule->retentionRuleCode)) {
+                    $retentionRule->retentionRuleCode = $archive->retentionRuleCode;
+                    $retentionRule->retentionDuration = $archive->retentionDuration;
                 }
 
                 if ($retentionRule->finalDisposition === null) {
@@ -116,11 +119,18 @@ trait archiveModificationTrait
                     $retentionRule->finalDisposition = null;
                 }
 
-                if ($retentionRule->disposalDate === '') {
+                if ($retentionRule->retentionDuration === '') {
+                    $retentionRule->retentionDuration = null;
+                } elseif (!empty($retentionRule->retentionDuration) && $retentionRule->retentionDuration->y >= 9999) {
                     $retentionRule->disposalDate = null;
+                } else {
+                    if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                        $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                    }
                 }
 
                 $retentionRule->retentionRuleStatus = "current";
+
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
                 $retentionRule->previousStartDate = $archive->retentionStartDate;
@@ -159,6 +169,7 @@ trait archiveModificationTrait
         $archives = array();
         $operationResult = null;
 
+        $accessRuleReceived = $accessRule;
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
@@ -169,9 +180,24 @@ trait archiveModificationTrait
 
                 $operationResult = false;
             } else {
+                $accessRule = clone($accessRuleReceived);
+
                 $accessRule->archiveId = $archiveId;
 
-                if ($accessRule->accessRuleDuration != null && $accessRule->accessRuleStartDate != null) {
+                if (!$accessRule->changeStartDate) {
+                    $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
+                }
+
+                if (empty($accessRule->accessRuleCode)) {
+                    $accessRule->accessRuleCode = $archive->accessRuleCode;
+                    $accessRule->accessRuleDuration = $archive->accessRuleDuration;
+                }
+
+                if ($accessRule->accessRuleDuration === '') {
+                    $accessRule->accessRuleDuration = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && $accessRule->accessRuleDuration->y >= 9999) {
+                    $accessRule->accessRuleComDate = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleStartDate)) {
                     $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
                 }
 

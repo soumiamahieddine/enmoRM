@@ -862,7 +862,7 @@ msgid "Import"
 msgstr "Importer"
 
 msgid "Click or drop documents"
-msgstr "Cliquer ou déposer des documents"
+msgstr "Cliquez ou déposez des documents"
 
 msgid "Folder"
 msgstr "Dossier"
@@ -972,18 +972,15 @@ msgstr "Aucune organisation sélectionnée"
 msgid "You have to choose a working organization unit to proceed this action."
 msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
 
-msgid "unlimited"
-msgstr "Illimitée"
-
 msgid "Code"
 msgstr "Nom de la règle"
 msgctxt "archiveInformation"
 
+msgid "Change start date"
+msgstr "Changer la date"
+
 msgid "Archive Transfer"
 msgstr "Demander le transfert sortant"
-
-msgid "Error"
-msgstr "Erreur"
 
 msgid "Invalid object"
 msgstr "Objet invalide"
@@ -993,3 +990,6 @@ msgstr "Ne pas mettre à jour le sort final"
 
 msgid "Edit metadata"
 msgstr "Modifier les métadonnées"
+
+msgid "Unlimited"
+msgstr "Illimitée"
