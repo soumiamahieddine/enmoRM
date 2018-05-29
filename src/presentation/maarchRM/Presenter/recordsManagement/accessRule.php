@@ -117,7 +117,7 @@ class accessRule
     {
         $this->json->status = $result;
 
-        $this->json->message = "New access code created";
+        $this->json->message = "Access rule created";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
@@ -132,7 +132,7 @@ class accessRule
     public function update($result)
     {
         $this->json->status = $result;
-        $this->json->message = "Access code updated";
+        $this->json->message = "Access rule updated";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

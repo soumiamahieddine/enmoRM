@@ -12,7 +12,7 @@ msgid "years"
 msgstr "années"
 
 msgid "Unlimited"
-msgstr "illimité"
+msgstr "illimitée"
 
 msgid "years"
 msgstr "ans"
