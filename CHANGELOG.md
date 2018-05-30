@@ -6,7 +6,7 @@
 
 - `Added` Modification des règles de plusieurs archives sans modifier la date de départ
 - `Added` Ajout d'un nouveau rôle "sécurité" afin de gérer les utilisateurs et l'organisation
-- `Changed` Gestion des jetons de compte service
+- `Changed` Gestion des jetons de compte de service
 - `Changed` Ajout des routes disponibles pour les privilèges des comptes de service dans la configuration 
 - `Fixed` Uniformisation des formats de date
 
