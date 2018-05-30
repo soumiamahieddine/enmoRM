@@ -101,16 +101,22 @@ class filePlan
      */
     public function exists($folder)
     {
+        $checkParams = [];
+
         if (!isset($folder->parentFolderId)) {
             $folder->parentFolderId = null;
-            $checkClause = "name='$folder->name' AND parentFolderId=NULL AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+            $checkClause = "name=:name AND parentFolderId=NULL AND ownerOrgRegNumber=:ownerOrgRegNumber";
         } elseif (!$this->sdoFactory->exists('filePlan/folder', array('folderId' => $folder->parentFolderId))) {
             throw new \core\Exception\NotFoundException("The parent folder does not exist");
         } else {
-            $checkClause = "name='$folder->name' AND parentFolderId='$folder->parentFolderId' AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+            $checkClause = "name=:name AND parentFolderId=:parentFolderId AND ownerOrgRegNumber=:ownerOrgRegNumber";
+            $checkParams["parentFolderId"] = $folder->parentFolderId;
         }
 
-        $result = $this->sdoFactory->count('filePlan/folder', $checkClause) ? true : false;
+        $checkParams["name"] = $folder->name;
+        $checkParams["ownerOrgRegNumber"] = $folder->ownerOrgRegNumber;
+
+        $result = $this->sdoFactory->count('filePlan/folder', $checkClause, $checkParams) ? true : false;
 
         return $result;
     }
@@ -141,6 +147,10 @@ class filePlan
                 $parentFolderId = $this->create($folder);
             } catch (\core\Exception\ConflictException $e) {
                 $parentFolderId = $this->readByName($folder->name, $ownerOrgRegNumber, $parentFolderId)->folderId;
+            } catch (\Exception $e) {
+                var_dump($folder);
+                var_dump($e);
+                exit;
             }
         }
 
@@ -180,18 +190,23 @@ class filePlan
         $folder->ownerOrgRegNumber = $ownerOrgRegNumber;
         $folder->parentFolderId = $parentFolderId;
 
+        $checkParams = [];
+
         if (!$this->exists($folder)) {
             throw new \core\Exception\ConflictException("The folder can't be found.");
         }
 
         if (!isset($folder->parentFolderId)) {
-            $checkClause = "name='$folder->name' AND parentFolderId=NULL AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+            $checkClause = "name=:name AND parentFolderId=NULL AND ownerOrgRegNumber=:ownerOrgRegNumber";
         } else {
-            $checkClause = "name='$folder->name' AND parentFolderId='$folder->parentFolderId' AND ownerOrgRegNumber='$folder->ownerOrgRegNumber'";
+            $checkClause = "name=:name AND parentFolderId=:parentFolderId AND ownerOrgRegNumber=:ownerOrgRegNumber";
+            $checkParams["parentFolderId"] = $folder->parentFolderId;
         }
 
+        $checkParams["name"] = $folder->name;
+        $checkParams["ownerOrgRegNumber"] = $folder->ownerOrgRegNumber;
 
-        $folders = $this->sdoFactory->find('filePlan/folder', $checkClause);
+        $folders = $this->sdoFactory->find('filePlan/folder', $checkClause, $checkParams);
 
         $folder = $folders[0];
 
