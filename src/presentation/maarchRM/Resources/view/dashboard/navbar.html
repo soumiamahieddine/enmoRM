@@ -236,7 +236,7 @@
         var activeButtons = $('.btn').not('[disabled]');
 
         if (button) {
-            icon = button.find('.fa').attr('class');
+            icon = button.find('.fa:first').attr('class');
         }
 
         if (!timeout) {
@@ -250,7 +250,7 @@
             
             activeButtons.prop('disabled', true);
             if (icon) {
-                button.find('.fa').removeClass(icon).addClass('fa fa-spinner fa-spin');
+                button.find('.fa:first').removeClass(icon).addClass('fa fa-spinner fa-spin');
             }
         }
 
@@ -286,7 +286,7 @@
     function ajaxEnd(activeButtons, button, icon) {
         activeButtons.prop('disabled', false);
         if (icon) {
-            button.find('.fa').removeClass('fa-spinner fa-spin').addClass(icon);
+            button.find('.fa:first').removeClass('fa-spinner fa-spin').addClass(icon);
         }
     }
 
