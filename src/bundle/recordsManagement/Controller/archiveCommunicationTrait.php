@@ -198,8 +198,13 @@ trait archiveCommunicationTrait
                 }
 
             }
+
+            $queryParams['descriptionClass'] = 'recordsManagement/log';
+            $queryParts['descriptionClass'] = "descriptionClass != :descriptionClass";
+
+
             $queryString = \laabs\implode(' AND ', $queryParts);
-            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 100);
+            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
         }
 
         foreach ($archives as $archive) {
