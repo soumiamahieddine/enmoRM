@@ -264,9 +264,19 @@ class archive
             }
         }
 
+        $checkRetentionRule = false;
+        if (isset($archive->retentionDuration) || isset($archive->retentionRuleCode) || isset($archive->retentionStartDate) || isset($archive->finalDisposition)) {
+            $checkRetentionRule = true;
+        }
+
         if (isset($archive->retentionDuration)) {
             $archive->retentionDurationUnit = substr($archive->retentionDuration, -1);
             $archive->retentionDuration = substr($archive->retentionDuration, 1, -1);
+        }
+
+        $checkAccesRule = false;
+        if (isset($archive->accessRuleDuration) || isset($archive->accessRuleCode) || isset($archive->accessRuleStartDate) || isset($archive->accessRuleComDate)) {
+            $checkAccesRule = true;
         }
 
         if (isset($archive->accessRuleDuration)) {
@@ -339,6 +349,8 @@ class archive
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
         $this->view->setSource("editDescription", $editDescription);
+        $this->view->setSource("checkRetentionRule", $checkRetentionRule);
+        $this->view->setSource("checkAccessRule", $checkAccesRule);
 
         $this->view->translate();
         $this->view->merge();
