@@ -171,6 +171,7 @@ class welcome
 
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $fileplanLevel = false;
         if ($depositPrivilege) {
             if (!empty($archive->archivalProfileReference)) {
                 $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
