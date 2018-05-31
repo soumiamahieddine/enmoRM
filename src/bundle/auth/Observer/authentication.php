@@ -105,12 +105,10 @@ class authentication
         }
 
         if (!isset($account)) {
-            var_dump("aaa");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ((!$account->enabled) || ($account->locked)) {
-            var_dump("bbb");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
