@@ -147,10 +147,6 @@ class filePlan
                 $parentFolderId = $this->create($folder);
             } catch (\core\Exception\ConflictException $e) {
                 $parentFolderId = $this->readByName($folder->name, $ownerOrgRegNumber, $parentFolderId)->folderId;
-            } catch (\Exception $e) {
-                var_dump($folder);
-                var_dump($e);
-                exit;
             }
         }
 
