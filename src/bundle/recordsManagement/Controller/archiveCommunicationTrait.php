@@ -200,7 +200,7 @@ trait archiveCommunicationTrait
             }
 
             $queryParams['descriptionClass'] = 'recordsManagement/log';
-            $queryParts['descriptionClass'] = "descriptionClass != :descriptionClass";
+            $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
 
 
             $queryString = \laabs\implode(' AND ', $queryParts);
