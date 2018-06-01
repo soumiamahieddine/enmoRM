@@ -62,7 +62,7 @@ class organization
 
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
-        if (!$currentOrg || in_array('owner',$currentOrg->orgRoleCodes)) {
+        if (!$currentOrg || (!empty($currentOrg->orgRoleCodes) && in_array('owner',$currentOrg->orgRoleCodes))) {
             $owner = $this->getOrgsByRole('owner')[0];
             $orgUnitList = $this->getOwnerOriginatorsOrgs($owner);
 
