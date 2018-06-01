@@ -922,12 +922,13 @@ class organization
         $hasDescendants = true;
 
         while ($hasDescendants) {
-            $idsString = \laabs\implode(',', $ids);
+            $idsString = \laabs\implode("','", $ids);
             $descendants = $this->sdoFactory->find('organization/organization', "parentOrgId=['$idsString'] AND isOrgUnit=false");
 
             if (empty($descendants)) {
                 $hasDescendants = false;
             } else {
+                $hasDescendants = true;
                 $ids = [];
 
                 foreach ($descendants as $descendant) {
