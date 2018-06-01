@@ -229,9 +229,11 @@ class archive
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
 
+                $hasModificationMetadata = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
                 $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
                 if (
                     (array_search('owner', $currentService->orgRoleCodes) || $currentService->registrationNumber === $archive->archiverOrgRegNumber)
+                    && $hasModificationMetadata
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
