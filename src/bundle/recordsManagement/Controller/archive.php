@@ -619,15 +619,7 @@ class archive
             return true;
         }
 
-        /*if ($account->accountType == "user") {
-            $positionController = $this->userPositionController;
-        } else {
-            $positionController = $this->servicePositionController;
-        }
-
-        $userOrgList = $positionController->listMyServices();*/
-
-        if (($archive->originatorOrgRegNumber != $currentOrganization->registrationNumber) || ($archive->archiverOrgRegNumber == $currentOrganization->registrationNumber)) {
+        if (($archive->originatorOrgRegNumber != $currentOrganization->registrationNumber) && ($archive->archiverOrgRegNumber != $currentOrganization->registrationNumber)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
