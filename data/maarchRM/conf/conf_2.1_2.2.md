@@ -52,10 +52,6 @@ Les rôles d'organisation ont été déplacés de la base de données vers la co
         'owner' : {
             'code' : 'owner',
             'description' : 'The system owner'
-        },
-        'security' : {
-            'code' : 'security',
-            'description' : 'The security agency'
         }
     }"
 
