@@ -270,7 +270,14 @@
                 .appendTo($("#listPrivilege"));
 
             $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            $(this).attr('disabled',true);
         }
+
+    });
+
+
+    $("#selectPrivilegeURI").on("change", function(){
+        $("#btnAddPrvilege").attr('disabled',false);
 
     });
 
