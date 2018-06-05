@@ -18,6 +18,7 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Controller;
+use core\Exception;
 
 /**
  * Class of adminArchivalProfile
@@ -101,12 +102,17 @@ class archivalProfile
      */
     public function getByReference($archivalProfileReference, $withRelatedProfiles=true)
     {
-        $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', array('reference' => $archivalProfileReference));
 
-        $this->readDetail($archivalProfile);
+        try {
+            $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', array('reference' => $archivalProfileReference));
 
-        if ($withRelatedProfiles) {
-            $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
+            $this->readDetail($archivalProfile);
+
+            if ($withRelatedProfiles) {
+                $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
+            }
+        } catch (\Exception $exception) {
+            throw new \core\Exception\BadRequestException("Profile %s not found", 200, null, $archivalProfileReference);
         }
 
         return $archivalProfile;
