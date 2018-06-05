@@ -57,13 +57,9 @@ trait archiveRestitutionTrait
         $this->verifyIntegrity($archiveId);
 
         $archive = $this->retrieve($archiveId);
-
-        // $statusChanged = $this->setStatus((string) $archive->archiveId, "restituted");
-
-        // $valid = count($statusChanged["success"]) ? true : false;
-
+        
         // Life cycle journal
-        $this->logRestitution($archive, $valid);
+        $this->logRestitution($archive);
 
         return $archive;
     }
