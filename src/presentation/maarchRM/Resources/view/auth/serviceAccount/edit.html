@@ -259,15 +259,19 @@
         var serviceURI = $("#selectPrivilegeURI option:selected").data('serviceuri');
         var description = $("#selectPrivilegeURI option:selected").val();
 
-        $("#privilegeExemple").find("[name=privilegeURI]:first")
-            .clone()
-            .find('input')
-            .val(description)
-            .data("serviceuri",serviceURI)
-            .closest('[name=privilegeURI]')
-            .appendTo($("#listPrivilege"));
+        if(description){
 
-        $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            $("#privilegeExemple").find("[name=privilegeURI]:first")
+                .clone()
+                .find('input')
+                .val(description)
+                .data("serviceuri",serviceURI)
+                .closest('[name=privilegeURI]')
+                .appendTo($("#listPrivilege"));
+
+            $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+        }
+
     });
 
     //Delete privilege
