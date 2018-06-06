@@ -56,7 +56,7 @@ class logScheduling
     {
         $logScheduling = \laabs::newInstance('batchProcessing/logScheduling');
         $logScheduling->logId = \laabs::newId();
-        $logScheduling->logDate = \laabs::newDateTime();
+        $logScheduling->logDate = \laabs::newDateTime(null, 'UTC');
         $logScheduling->schedulingId = $schedulingId;
         $logScheduling->executedBy = $executedBy;
         $logScheduling->launchedBy = $launchedBy;
