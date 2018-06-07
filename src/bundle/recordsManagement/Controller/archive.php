@@ -604,7 +604,8 @@ class archive
     public function checkRights($archive)
     {
         $accountToken = \laabs::getToken('AUTH');
-        $account = \laabs::newController('auth/userAccount')->edit($accountToken->accountId);
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $account = $userAccountController->edit($accountToken->accountId);
 
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");

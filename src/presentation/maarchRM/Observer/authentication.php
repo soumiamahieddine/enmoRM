@@ -137,7 +137,8 @@ class authentication
         \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
 
         $organization = \laabs::getToken("ORGANIZATION");
-        $userPositions = \laabs::newController("organization/userPosition")->getMyPositions();
+        $userPositionController = \laabs::newController("organization/userPosition");
+        $userPositions = $userPositionController->getMyPositions();
 
         if (!empty($organization)) {
             $isUserPosition = false;
