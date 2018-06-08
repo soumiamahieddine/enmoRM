@@ -49,7 +49,7 @@ class organization
      */
     public function index($query = null)
     {
-        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "ownerOrgId"), $query);
+        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "parentOrgId", "ownerOrgId"), $query);
     }
 
     /**
@@ -59,13 +59,10 @@ class organization
      */
     public function todisplay()
     {
-
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
-        if (in_array('owner',$currentOrg->orgRoleCodes)) {
-            $owner = $this->getOrgsByRole('owner')[0];
-            $orgUnitList = $this->getOwnerOriginatorsOrgs($owner);
-
+        if (!$currentOrg || (!empty($currentOrg->orgRoleCodes) && in_array('owner',$currentOrg->orgRoleCodes))) {
+            $orgUnitList = $this->getOwnerOriginatorsOrgs();
         } else {
             $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
 
@@ -104,7 +101,6 @@ class organization
 
         return $orgList;
     }
-
 
     /**
      * List of orgUnit
@@ -419,10 +415,10 @@ class organization
         $services = $this->sdoFactory->find("organization/servicePosition", "orgId = '$orgId'");
         $services = \laabs::castMessageCollection($services, 'organization/servicePositionTree');
 
-        $accountController = \laabs::newController('auth/userAccount');
+        $userAccountController = \laabs::newController('auth/userAccount');
 
         foreach ($services as $service) {
-            $service->displayName = $accountController->edit((string) $service->serviceAccountId)->displayName;
+            $service->displayName = $userAccountController->edit((string) $service->serviceAccountId)->displayName;
         }
 
         return $services;
@@ -922,12 +918,13 @@ class organization
         $hasDescendants = true;
 
         while ($hasDescendants) {
-            $idsString = \laabs\implode(',', $ids);
+            $idsString = \laabs\implode("','", $ids);
             $descendants = $this->sdoFactory->find('organization/organization', "parentOrgId=['$idsString'] AND isOrgUnit=false");
 
             if (empty($descendants)) {
                 $hasDescendants = false;
             } else {
+                $hasDescendants = true;
                 $ids = [];
 
                 foreach ($descendants as $descendant) {
@@ -1070,69 +1067,59 @@ class organization
      */
     public function isUsed($registrationNumber)
     {
-        $recordsManagementController = \laabs::newController("recordsManagement/archive");
-        $count = $recordsManagementController->countByOrg($registrationNumber);
+        $archiveController = \laabs::newController("recordsManagement/archive");
+        $count = $archiveController->countByOrg($registrationNumber);
 
         return $count > 0 ? true : false;
     }
 
-    protected function getOwnerOriginatorsOrgs($currentService)
+    protected function getOwnerOriginatorsOrgs($currentService = null)
     {
-        $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
-
         $userPositionController = \laabs::newController('organization/userPosition');
-        $orgController = \laabs::newController('organization/organization');
 
         $owner = false;
-        $orgIdsSecurity = false;
+        $userOrgs = [];
+        $userOwnerOrgs = [];
 
-        $userServices = [];
-        $ownerOriginatorOrgs = [];
+        if (!$currentService) {
+            $userPositions = $userPositionController->getMyPositions();
 
-        // Get all user services,  and check OWNER role on one of them
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
-        foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
-            $userServices[] = $userService;
-            if (isset($userService->orgRoleCodes)) {
-                foreach ($userService->orgRoleCodes as $orgRoleCode) {
-                    if ($orgRoleCode == 'owner') {
-                        $owner = true;
+            foreach ($userPositions as $userPosition) {
+                $userOrgs[] = $userPosition->organization;
+            }
+        } else {
+            $userOrgs[] = $currentService;
+        }
 
-                        break;
-                    } elseif ($orgRoleCode == 'security') {
-                        $orgIdsSecurity = [];
-                        $orgs = $this->readDescendantOrg($userService->ownerOrgId);
+        foreach ($userOrgs as $userPosition) {
+            if(!in_array($userPosition->ownerOrgId, $userOwnerOrgs)) {
+                $userOwnerOrgs[] = $userPosition->ownerOrgId;
+            }
 
-                        if (!empty($orgs)) {
-                            foreach ($orgs as $org) {
-                                $orgIdsSecurity[] = (string) $org->orgId;
-                            }
-                        }
-                        $orgIdsSecurity[] = (string) $userService->ownerOrgId;
-                    }
-                }
+            if (strpos($userPosition->orgRoleCodes, 'owner') !== false) {
+                $owner = true;
+                break;
             }
         }
 
-        $orgIdsSecurity = ($orgIdsSecurity) ? $orgIdsSecurity: [];
-        foreach ($userServices as $userService) {
-            foreach ($originators as $originator) {
-                if ($owner
-                    || $originator->registrationNumber == $userService->registrationNumber
-                    || (in_array((string) $originator->ownerOrgId, $orgIdsSecurity)))
-                {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
-                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->orgId = $orgObject->orgId;
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
-                        $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
-                    }
-                    $ownerOriginatorOrgs[$originator->ownerOrgId]->originators[] = $originator;
-                }
+        if ($owner) {
+            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+        } else {
+            $originators = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']");
+        }
+
+        $ownerOriginatorOrgs = [];
+
+        foreach ($originators as $orgUnit) {
+            if (!isset($ownerOriginatorOrgs[(string) $orgUnit->ownerOrgId])) {
+                $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $orgUnit->ownerOrgId);
+                $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
+                $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
+                $ownerOriginatorOrgs[(string) $orgObject->orgId]->orgId = $orgObject->orgId;
+                $ownerOriginatorOrgs[(string) $orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
+                $ownerOriginatorOrgs[(string) $orgObject->orgId]->originators = [];
             }
+            $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
         }
 
         return $ownerOriginatorOrgs;

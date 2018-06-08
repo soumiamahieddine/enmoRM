@@ -229,9 +229,13 @@ class archive
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
 
+                $hasModificationMetadata = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
                 $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
                 if (
-                    (array_search('owner', $currentService->orgRoleCodes) || $currentService->registrationNumber === $archive->archiverOrgRegNumber)
+                    (in_array('owner', $currentService->orgRoleCodes)
+                        || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
+                            && in_array('archiver', $currentService->orgRoleCodes)))
+                    && $hasModificationMetadata
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
@@ -264,16 +268,27 @@ class archive
             }
         }
 
+        $checkRetentionRule = false;
+        if (isset($archive->retentionDuration) || isset($archive->retentionRuleCode) || isset($archive->retentionStartDate) || isset($archive->finalDisposition)) {
+            $checkRetentionRule = true;
+        }
+
         if (isset($archive->retentionDuration)) {
             $archive->retentionDurationUnit = substr($archive->retentionDuration, -1);
             $archive->retentionDuration = substr($archive->retentionDuration, 1, -1);
+        }
+
+        $checkAccesRule = false;
+        if (isset($archive->accessRuleDuration) || isset($archive->accessRuleCode) || isset($archive->accessRuleStartDate) || isset($archive->accessRuleComDate)) {
+            $checkAccesRule = true;
         }
 
         if (isset($archive->accessRuleDuration)) {
             $archive->accessRuleDurationUnit = substr($archive->accessRuleDuration, -1);
             $archive->accessRuleDuration = substr($archive->accessRuleDuration, 1, -1);
         }
-        $archive->visible = \laabs::newController("recordsManagement/archive")->accessVerification($archive->archiveId);
+        $archiveController = \laabs::newController("recordsManagement/archive");
+        $archive->visible = $archiveController->accessVerification($archive->archiveId);
 
         $archive->relationships = (
             !empty($archive->parentRelationships)
@@ -339,6 +354,8 @@ class archive
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
         $this->view->setSource("editDescription", $editDescription);
+        $this->view->setSource("checkRetentionRule", $checkRetentionRule);
+        $this->view->setSource("checkAccessRule", $checkAccesRule);
 
         $this->view->translate();
         $this->view->merge();

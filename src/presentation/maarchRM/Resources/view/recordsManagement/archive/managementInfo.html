@@ -42,7 +42,7 @@
                     <td><strong>Depositor</strong></td>
                     <td><?merge archive.depositorOrg.displayName ?></td>
                 </tr>
-                <?merge archive.retentionRuleCode.bool() ?>
+                <?merge checkRetentionRule.bool() ?>
                 <tr>
                     <td><strong>Disposal rule</strong></td>
                     <td>
@@ -88,7 +88,7 @@
 
                     </td>
                 </tr>
-                <?merge archive.accessRuleCode.bool() ?>
+                <?merge checkAccessRule.bool() ?>
                 <tr>
                     <td><strong>Access rule</strong></td>
                     <td>                       

@@ -105,12 +105,10 @@ class authentication
         }
 
         if (!isset($account)) {
-            var_dump("aaa");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
         if ((!$account->enabled) || ($account->locked)) {
-            var_dump("bbb");exit;
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
         }
 
@@ -124,7 +122,8 @@ class authentication
                 throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
             }
 
-            $servicePosition = \laabs::newController("organization/servicePosition")->getPosition($account->accountId);
+            $servicePositionController = \laabs::newController("organization/servicePosition");
+            $servicePosition = $servicePositionController->getPosition($account->accountId);
 
             if ($servicePosition != null) {
                 \laabs::setToken("ORGANIZATION", $servicePosition->organization);
@@ -132,7 +131,8 @@ class authentication
         } else {
             $organization = \laabs::getToken("ORGANIZATION");
 
-            $userPositions = \laabs::newController("organization/userPosition")->getMyPositions();
+            $userPositionController = \laabs::newController("organization/userPosition");
+            $userPositions = $userPositionController->getMyPositions();
             
             if (!empty($organization)) {
                 $isUserPosition = false;

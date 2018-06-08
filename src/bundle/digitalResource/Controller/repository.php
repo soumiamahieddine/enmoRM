@@ -351,7 +351,6 @@ class repository
             $address->integrityCheckResult = false;
         }
 
-            var_dump('ok');
         $this->sdoFactory->update($address, 'digitalResource/address');
 
         return $address->integrityCheckResult;

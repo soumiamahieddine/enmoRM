@@ -108,7 +108,7 @@
                                                 <option data-serviceURI="[?merge .serviceURI ?]"><?merge .description ?></option>
                                             </select>
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
+                                                <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add" disabled><span class="fa fa-plus"></span></button>
                                             </span>
                                         </div>
                                         <?merge serviceAccount.servicePrivilege.bool() ?>
@@ -270,7 +270,14 @@
                 .appendTo($("#listPrivilege"));
 
             $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            $(this).attr('disabled',true);
         }
+
+    });
+
+
+    $("#selectPrivilegeURI").on("change", function(){
+        $("#btnAddPrvilege").attr('disabled',false);
 
     });
 

@@ -62,8 +62,9 @@ class welcome
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
-        $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
-
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $user = $userAccountController->get($accountToken->accountId);
+        
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
@@ -171,6 +172,7 @@ class welcome
 
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $fileplanLevel = false;
         if ($depositPrivilege) {
             if (!empty($archive->archivalProfileReference)) {
                 $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
