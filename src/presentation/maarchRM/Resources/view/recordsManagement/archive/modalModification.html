@@ -326,6 +326,7 @@
 
              if (retentionRuleCode) {
 
+                 var retentionRuleDurationUnit = rule.retentionDuration.substr(rule.retentionDuration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {
