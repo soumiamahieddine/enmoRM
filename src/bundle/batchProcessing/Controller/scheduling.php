@@ -557,7 +557,8 @@ class scheduling
         $GLOBALS["TOKEN"]['AUTH'] = $authToken;
 
         if ($account->accountType == "service") {
-            $servicePosition = \laabs::newController("organization/servicePosition")->getPosition($serviceAccountId);
+            $servicePositionController = \laabs::newController("organization/servicePosition");
+            $servicePosition = $servicePositionController->getPosition($serviceAccountId);
 
             if ($servicePosition != null) {
                 $orgToken = new \core\token($servicePosition->organization, 0);

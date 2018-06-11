@@ -325,7 +325,8 @@
             var retentionRuleTable = $('#retentionRuleTable');
 
              if (retentionRuleCode) {
-                 var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
+
+                 var retentionRuleDurationUnit = rule.retentionDuration.substr(rule.retentionDuration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {
@@ -352,6 +353,27 @@
 
              } else {
                  $('#retentionRule').css("display", 'none');
+
+                 if (rule) {
+                     $('#retentionRule').css("display", '');
+
+                     if(rule.retentionDuration) {
+                         var retentionRuleDurationUnit = rule.retentionDuration.substr(rule.retentionDuration.length - 1, 1);
+                         var retentionRuleDuration = (rule.retentionDuration.split(retentionRuleDurationUnit))[0].split("P");
+
+                         if(retentionRuleDuration[1] >= 9999){
+                             $('#retentionRuleDuration').text($('#text_unlimited').text());
+                         } else {
+                             $('#retentionRuleDuration').text(retentionRuleDuration[1] + ' ' + $('#text_' + retentionRuleDurationUnit).html());
+                         }
+                     }
+
+                     if(rule.finalDisposition) {
+                        $('#retentionRuleFinalDisposition').val(rule.finalDisposition);
+                     } else {
+                         $('#retentionRuleFinalDisposition').val("");
+                     }
+                 }
              }
             
             if(retentionRules){

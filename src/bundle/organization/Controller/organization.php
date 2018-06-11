@@ -415,10 +415,10 @@ class organization
         $services = $this->sdoFactory->find("organization/servicePosition", "orgId = '$orgId'");
         $services = \laabs::castMessageCollection($services, 'organization/servicePositionTree');
 
-        $accountController = \laabs::newController('auth/userAccount');
+        $userAccountController = \laabs::newController('auth/userAccount');
 
         foreach ($services as $service) {
-            $service->displayName = $accountController->edit((string) $service->serviceAccountId)->displayName;
+            $service->displayName = $userAccountController->edit((string) $service->serviceAccountId)->displayName;
         }
 
         return $services;
@@ -1067,8 +1067,8 @@ class organization
      */
     public function isUsed($registrationNumber)
     {
-        $recordsManagementController = \laabs::newController("recordsManagement/archive");
-        $count = $recordsManagementController->countByOrg($registrationNumber);
+        $archiveController = \laabs::newController("recordsManagement/archive");
+        $count = $archiveController->countByOrg($registrationNumber);
 
         return $count > 0 ? true : false;
     }

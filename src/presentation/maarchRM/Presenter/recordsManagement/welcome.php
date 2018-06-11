@@ -62,8 +62,9 @@ class welcome
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
-        $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
-
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $user = $userAccountController->get($accountToken->accountId);
+        
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 

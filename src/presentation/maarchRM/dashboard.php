@@ -38,7 +38,8 @@ class dashboard
         $this->storage = new \stdClass();
 
         if ($accountToken = \laabs::getToken('AUTH')) {
-            $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
+            $userAccountController = \laabs::newController('auth/userAccount');
+            $user = $userAccountController->get($accountToken->accountId);
 
             $this->storage->user = $user;
 
