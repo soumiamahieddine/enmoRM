@@ -175,13 +175,16 @@
     $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function(){
         var name = $(this).data('select');
         var val =  $('[name="'+name+'"] option:selected').text();
-        var tpl = $('#keywordTpl').clone().removeClass('hide');
 
-        tpl.find('input').val(val).attr('name',name);
-        $('[name="list-'+name+'"]').append(tpl);
-        var select = $("#"+name);
-        select.find("option:selected").addClass('hide');
-        select.val('');
+        if(val) {
+            var tpl = $('#keywordTpl').clone().removeClass('hide');
+
+            tpl.find('input').val(val).attr('name',name);
+            $('[name="list-'+name+'"]').append(tpl);
+            var select = $("#"+name);
+            select.find("option:selected").addClass('hide');
+            select.val('');
+        }
 
     });
 
