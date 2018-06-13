@@ -354,7 +354,8 @@ file that was distributed with this source code.
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
         
-        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #nameSelectPropertyDefaultValue').addClass('hide');
+        $('#keywordEnumList').empty();
 
         switch (type) {
             case "name" :
