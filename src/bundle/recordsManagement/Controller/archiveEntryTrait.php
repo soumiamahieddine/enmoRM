@@ -129,7 +129,8 @@ trait archiveEntryTrait
         $zipDirectory = $this->extractZip($zip);
 
         $archive->digitalResources = [];
-        $directory = $zipDirectory . DIRECTORY_SEPARATOR;
+        $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
+        $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
 
         if (!is_dir($directory)) {
             // todo : error
@@ -138,7 +139,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference)) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
                 $archive->digitalResources[] = $resource;
