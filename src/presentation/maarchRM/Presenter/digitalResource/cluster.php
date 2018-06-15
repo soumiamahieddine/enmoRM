@@ -136,7 +136,8 @@ class cluster
     {
         $this->view->addContentFile('digitalResource/cluster/edit.html');
 
-        $repositories = \laabs::newController("digitalResource/repository")->index();
+        $repositoryController = \laabs::newController("digitalResource/repository");
+        $repositories = $repositoryController->index();
 
         if ($cluster != null && $cluster->clusterId != null) {
             $repositoriesCopy = $repositories;

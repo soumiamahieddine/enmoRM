@@ -262,13 +262,14 @@ interface archivesInterface
      * Update metadata of archive
      * @param string $archiveId
      * @param string $originatorArchiveId
+     * @param string $archiverArchiveId
      * @param string $archiveName
      * @param date   $originatingDate
-     * @param string $description
+     * @param mixed  $description
      * 
      * @action recordsManagement/archive/modifyMetadata
      */
-    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
+    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiverArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
 
     /**
      * List an archive resources and children archives
@@ -304,4 +305,13 @@ interface archivesInterface
      * @action recordsManagement/archive/indexFullText
      */
     public function updateIndexfulltext($limit=200);
+
+
+    /**
+     * Update archive with changed retention rule
+     * @param int $limit The maximum number of archive to update
+     *
+     * @action recordsManagement/archive/updateArchiveRetentionRule
+     */
+    public function updateArchivesretentionrule($limit=500);
 }

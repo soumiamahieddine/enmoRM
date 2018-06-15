@@ -253,3 +253,7 @@ const LAABS_XOR = 'LAABS_XOR';
 const LAABS_NOR = 'LAABS_NOR';
 const LAABS_NAND = 'LAABS_NAND';
 const LAABS_XNOR = 'LAABS_XNOR';
+
+const LAABS_IN_COOKIE = 'cookie';
+const LAABS_IN_HEADER = 'header';
+const LAABS_IN_QUERY = 'query';

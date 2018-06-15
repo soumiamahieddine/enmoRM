@@ -380,10 +380,7 @@
                 case 'date':
                     field = template.find('.value');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     break;
                 case 'boolean':
                     var template = $('#customBooleanFieldTemplate').clone();

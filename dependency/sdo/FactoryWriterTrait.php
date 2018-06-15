@@ -258,7 +258,6 @@ trait FactoryWriterTrait
         $query->addAssert($keyAssert);
 
         $updateProperties = $class->getObjectProperties($object);
-
         $query->setProperties($updateProperties);
 
         $keyObject = $key->getObject($keyValue);
@@ -317,6 +316,56 @@ trait FactoryWriterTrait
                 throw new Exception\objectNotFoundException("Object of class $className could not be updated");
             }*/
         }
+
+        return true;
+    }
+
+        /**
+     * Update an object from storage
+     * @param string $object      The data object holding data to update
+     * @param string $queryString The query (update) expression, encoded in Laabs Query Language
+     * @param mixed  $object    A scalar, associative array, indexed array or object representing the univoque key to use for object retrieval
+     *  Passing an associative array key value will allow to guess which key should be used, else the primary key will be used if exists
+     *
+     * @return bool The success of failure of operation
+     */
+    public function updateCollection($className = false, $object = false, $queryString=false)
+    {
+        $object = (object) $object;
+        $lqlString = 'UPDATE';
+                
+        $lqlString .= ' ' . $className;
+
+        if ($queryString) {
+            $lqlString .= " (" . $queryString .")";
+        }
+
+        if (isset($this->preparedStmts[$lqlString])) {
+            $stmt = $this->preparedStmts[$lqlString];
+        } else {
+            // Get query object
+            $query = \core\Language\Query::parse($lqlString);
+            
+            $class = \laabs::getClass($className);
+            $query->setClass($class);
+
+            $updateProperties = $class->getObjectProperties($object);
+            $query->setProperties($updateProperties);
+            /* Prepare statement */
+            if ($this->isCluster()) {
+                $stmt = $this->das[0]->prepare($query);
+            } else {
+                $stmt = $this->das->prepare($query);
+            }
+
+            $this->preparedStmts[$lqlString] = $stmt;
+        }
+
+        $stmt->bindObject($className, $object, $class);
+
+        $executed = $this->execute($stmt);
+
+        $updated = $stmt->rowCount();
 
         return true;
     }

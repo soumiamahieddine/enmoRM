@@ -33,7 +33,6 @@ interface AdminOrgContactInterface
      * 
      * @uses organization/organization/readTree
      * @uses organization/orgType/readList
-     * @uses organization/orgRole/readList
      */
     public function readOrganizations();
 

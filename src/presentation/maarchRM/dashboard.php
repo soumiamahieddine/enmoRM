@@ -31,13 +31,15 @@ class dashboard
      * @param string $navbarTitle The configuration of application name
      * @param string $title       The configuration of title
      * @param string $favicon     The configuration of favicon
+     * @param string $css         The configuration of css
      */
-    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico")
+    public function __construct(array $menu = null, $logo = "/presentation/img/maarch_box_outline.png", $navbarTitle = false, $title = "Maarch RM", $favicon = "/presentation/img/favicon.ico" , $css = "/presentation/css/style.css")
     {
         $this->storage = new \stdClass();
 
         if ($accountToken = \laabs::getToken('AUTH')) {
-            $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
+            $userAccountController = \laabs::newController('auth/userAccount');
+            $user = $userAccountController->get($accountToken->accountId);
 
             $this->storage->user = $user;
 
@@ -57,6 +59,9 @@ class dashboard
         $this->storage->navbarTitle = $navbarTitle;
         $this->storage->title = $title;
         $this->storage->favicon = $favicon;
+        $this->storage->css = $css;
+        $this->storage->version = \laabs::getVersion();
+        $this->storage->licence = \laabs::getLicence();
     }
 
     /**

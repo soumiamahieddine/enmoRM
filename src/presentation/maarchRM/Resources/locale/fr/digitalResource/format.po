@@ -12,7 +12,7 @@ msgid "Format list"
 msgstr "Liste des formats"
 
 msgid "Click or drop a file"
-msgstr "Cliquer ou déposer un fichier"
+msgstr "Cliquez ou déposez un fichier"
 
 msgid "File name"
 msgstr "Nom du fichier"

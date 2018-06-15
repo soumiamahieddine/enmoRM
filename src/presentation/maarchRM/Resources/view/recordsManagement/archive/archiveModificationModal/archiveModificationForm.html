@@ -1,0 +1,39 @@
+<div class="panel panel-default" id="archiveModificationForm">
+    <div class="panel-body">
+        <h4>Archive(s)</h4>
+        <br/>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <tbody>
+                    <tr id="selectedArchiveId">
+                        <td><strong>Reference</strong></td>
+                        <td><span></span></td>
+                    </tr>
+                    <tr id="selectedArchiveReference">
+                        <td><strong>Archive name</strong></td>
+                        <td><span></span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <?hinclude recordsManagement/archive/archiveModificationModal/accessRule.html?>
+            <?hinclude recordsManagement/archive/archiveModificationModal/retentionRule.html?>
+        </div>
+    </div>
+</div>
+
+<script>
+    var ArchiveModification = {
+        modal: $('#modificationModal'),
+        serialize: function(type) {
+            parameter = {};
+            try {
+                parameter = eval(type+"_serialize()");
+            }
+            catch(err) {
+                parameter = {};
+            }
+
+            return parameter;
+        }
+    }
+</script>

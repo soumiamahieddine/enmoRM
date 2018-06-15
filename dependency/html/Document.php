@@ -38,6 +38,8 @@ class Document extends \dependency\xml\Document
     protected $layout;
     protected $classes;
     protected $plugins;
+    protected $headers;
+    protected $layoutData;
     public $XPath;
     public $translator;
     public $dateTimeFormatter;
@@ -290,6 +292,9 @@ class Document extends \dependency\xml\Document
 
         $this->addScript("/public/js/bootstrap-tree/bootstrap-tree.js");
         $this->addScript("/public/js/dataList_0.0.1/dataList.js");
+        $this->addScript("/public/js/datePicker/bootstrap-datepicker.js");
+
+        $this->addScript("/public/js/csrf/csrfprotector.js");
 
         //$this->addScript("/public/js/webodf.js-0.5.8/webodf.js");
 
@@ -412,11 +417,17 @@ class Document extends \dependency\xml\Document
      */
     public function savePlugins($node = null)
     {
+        $parameters = [];
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
             foreach ($element->plugin as $name => $plugin) {
                 if (method_exists($plugin, 'saveHtml')) {
                     $plugin->saveHtml();
+                }
+
+                if (!isset($parameters[$name]) && method_exists($plugin, 'saveParameters')) {
+                    $parameters[$name]=$plugin;
+                    $plugin->saveParameters();
                 }
             }
         }

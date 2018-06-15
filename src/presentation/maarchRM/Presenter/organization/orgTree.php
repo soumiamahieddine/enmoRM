@@ -63,12 +63,13 @@ class orgTree
      * index
      * @param array $organizations Array of organization
      * @param array $orgType       Array of organization type
-     * @param array $orgRole       Array of organization role
      *
      * @return view View with the list of organizations
      */
-    public function index($organizations, $orgType, $orgRole)
+    public function index($organizations, $orgType)
     {
+        $orgRole = \laabs::configuration('organization')['orgUnitRoles'];;
+
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
@@ -80,7 +81,7 @@ class orgTree
             return strcmp($a->reference, $b->reference);
         });
 
-        if(\laabs::getToken("ORGANIZATION")){
+        if(\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes){
             $addOrganizationRight = in_array('owner',\laabs::getToken("ORGANIZATION")->orgRoleCodes);
         } else {
             $addOrganizationRight = true;

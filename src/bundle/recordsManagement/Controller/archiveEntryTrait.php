@@ -129,7 +129,6 @@ trait archiveEntryTrait
         $zipDirectory = $this->extractZip($zip);
 
         $archive->digitalResources = [];
-
         $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
         $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
 
@@ -140,7 +139,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference." ")) {
+            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
                 $archive->digitalResources[] = $resource;
@@ -438,7 +437,7 @@ trait archiveEntryTrait
         }
         
         $archive->disposalDate = null;
-        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 999) {
+        if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }

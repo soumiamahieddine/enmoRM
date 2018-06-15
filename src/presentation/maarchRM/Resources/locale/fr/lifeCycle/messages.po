@@ -202,6 +202,10 @@ msgid "requesterOrgRegNumber"
 msgstr "Identifiant du demandeur"
 msgctxt "eventInfo"
 
+msgid "info"
+msgstr "Détail"
+msgctxt "eventInfo"
+
 # msgid "accountId"
 # msgstr "Identifiant technique utilisateur"
 # msgctxt "eventInfo"
@@ -466,6 +470,9 @@ msgstr "Validation d'une archive"
 
 msgid "recordsManagement/descriptionModification"
 msgstr "Modification de la description d'archive"
+
+msgid "recordsManagement/outgoingTransfer"
+msgstr "Transfert sortant"
 
 msgid "medona/sending"
 msgstr "Envoi d'un message"

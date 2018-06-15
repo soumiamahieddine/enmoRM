@@ -162,6 +162,7 @@ class scheduling
     public function execute($schedulingId)
     {
         $status = true;
+        $info = null;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
         $task = $this->readTask($scheduling->taskId);
@@ -184,13 +185,12 @@ class scheduling
             $pathRouter = new \core\Route\PathRouter($task->route);
             \core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH,$pathRouter->path);
             if (!empty($scheduling->parameters)) {
-                $info = \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
+                \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
 
             } else {
-                $info = \laabs::callService($task->route);
+                \laabs::callService($task->route);
             }
 
-            \laabs::notify(LAABS_SERVICE_RETURN, $info);
         } catch (\Exception $info) {
             $this->changeStatus($schedulingId, "error");
             $status = false;
@@ -209,6 +209,14 @@ class scheduling
         }
 
         $this->update($scheduling);
+
+        $observerPool = \core\Observer\Dispatcher::getPool(\bundle\audit\AUDIT_ENTRY_OUTPUT);
+        foreach ($observerPool as $key=>$value) {
+            if ($value instanceof \bundle\audit\Observer\logger) {
+                $info = $value->output;
+                break;
+            }
+        }
 
         $this->logSchedulingController->add($schedulingId, $scheduling->executedBy, $launchedBy, $status, $info);
 
@@ -549,7 +557,8 @@ class scheduling
         $GLOBALS["TOKEN"]['AUTH'] = $authToken;
 
         if ($account->accountType == "service") {
-            $servicePosition = \laabs::newController("organization/servicePosition")->getPosition($serviceAccountId);
+            $servicePositionController = \laabs::newController("organization/servicePosition");
+            $servicePosition = $servicePositionController->getPosition($serviceAccountId);
 
             if ($servicePosition != null) {
                 $orgToken = new \core\token($servicePosition->organization, 0);
