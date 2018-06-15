@@ -256,7 +256,14 @@ class archive
                     }
 
                     $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
-                    $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    if(is_array($value)){
+                        foreach ($value as $metadata){
+                            $descriptionHtml .= '<dd>'.$metadata.'</dd>';
+                        }
+                    } else {
+
+                        $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    }
                 }
                 
                 $descriptionHtml .='</dl>';

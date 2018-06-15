@@ -495,7 +495,6 @@ trait archiveEntryTrait
 
         if (!empty($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
-
             $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
         } else {
             $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
@@ -557,7 +556,6 @@ trait archiveEntryTrait
             if (isset($object->{$name})) {
                 $value = $object->{$name};
             }
-
             $this->validateDescriptionMetadata($value, $archiveDescription);
         }
 
@@ -583,9 +581,25 @@ trait archiveEntryTrait
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
-                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                if (($descriptionField->isArray && !is_array($value)) || (!$descriptionField->isArray && is_array($value))) {
                     throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
                 }
+                if (empty($descriptionField->enumeration)) {
+                    break;
+                }
+
+                if (!is_array($value)) {
+                    $valueArray = [$value];
+                } else {
+                    $valueArray = $value;
+                }
+
+                foreach ($valueArray as $item) {
+                    if (!in_array($item, $descriptionField->enumeration)) {
+                        throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    }
+                }
+
                 break;
 
             case 'text':
