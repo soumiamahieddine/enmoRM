@@ -411,7 +411,7 @@ msgstr "Échue"
 msgid "Not expired"
 msgstr "Non échue"
 
-msgid "Expired status"
+msgid "DAU"
 msgstr "DUA"
 
 msgid "result(s)"
