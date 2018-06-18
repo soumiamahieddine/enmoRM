@@ -265,6 +265,10 @@ file that was distributed with this source code.
 
         var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
 
+        if(!data.descriptionField.name) {
+            gritter.show($("#message_requiredFields").text(), false);
+        }
+
         if(!pattern.test(data.descriptionField.name)) {
             return;
         }
@@ -362,6 +366,7 @@ file that was distributed with this source code.
         var type = $(this).val();
         $('#namePropertyDefaultValue,#namePropertyMultipleValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #nameSelectPropertyDefaultValue').addClass('hide');
         $('#keywordEnumList').empty();
+        $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
         switch (type) {
             case "name" :
