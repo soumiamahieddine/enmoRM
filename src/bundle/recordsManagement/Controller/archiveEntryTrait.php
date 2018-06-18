@@ -133,7 +133,7 @@ trait archiveEntryTrait
         $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
 
         if (!is_dir($directory)) {
-            // todo : error
+            throw new \core\Exception("Zip malformed");
         }
 
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
