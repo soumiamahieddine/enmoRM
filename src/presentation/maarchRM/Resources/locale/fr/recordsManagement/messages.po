@@ -330,6 +330,9 @@ msgstr "Éliminée"
 msgid "Preserved"
 msgstr "Conservée"
 
+msgid "Error"
+msgstr "Erreur"
+
 msgid "error"
 msgstr "Erreur"
 
