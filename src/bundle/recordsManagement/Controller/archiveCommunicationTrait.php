@@ -198,8 +198,13 @@ trait archiveCommunicationTrait
                 }
 
             }
+
+            $queryParams['descriptionClass'] = 'recordsManagement/log';
+            $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
+
+
             $queryString = \laabs\implode(' AND ', $queryParts);
-            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 100);
+            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
         }
 
         foreach ($archives as $archive) {
@@ -269,7 +274,25 @@ trait archiveCommunicationTrait
             throw $e;
         }
 
-        return $digitalResource;
+        $binaryDataObject = \laabs::newInstance("recordsManagement/BinaryDataObject");
+        $binaryDataObject->attachment = new \stdClass();
+        $binaryDataObject->attachment->data = base64_encode($digitalResource->getContents());
+        $binaryDataObject->attachment->uri = "";
+        $binaryDataObject->attachment->filename = $digitalResource->fileName;
+
+        if (!empty($digitalResource->fileExtension)) {
+            $digitalResource->fileName = $digitalResource->fileName . $digitalResource->fileExtension;
+        }
+
+        $binaryDataObject->format = $digitalResource->puid;
+        $binaryDataObject->mimetype = $digitalResource->mimetype;
+        $binaryDataObject->size = $digitalResource->size;
+
+        $binaryDataObject->messageDigest = new \stdClass();
+        $binaryDataObject->messageDigest->value = $digitalResource->hash;
+        $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
+
+        return $binaryDataObject;
     }
 
     /**

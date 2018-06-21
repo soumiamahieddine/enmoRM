@@ -330,6 +330,9 @@ msgstr "Éliminée"
 msgid "Preserved"
 msgstr "Conservée"
 
+msgid "Error"
+msgstr "Erreur"
+
 msgid "error"
 msgstr "Erreur"
 
@@ -408,7 +411,7 @@ msgstr "Échue"
 msgid "Not expired"
 msgstr "Non échue"
 
-msgid "Expired status"
+msgid "DAU"
 msgstr "DUA"
 
 msgid "result(s)"
@@ -861,8 +864,8 @@ msgstr "Métadonnées"
 msgid "Import"
 msgstr "Importer"
 
-msgid "Click or drop a document"
-msgstr "Cliquer ou déposer un document"
+msgid "Click or drop documents"
+msgstr "Cliquez ou déposez des documents"
 
 msgid "Folder"
 msgstr "Dossier"
@@ -971,3 +974,25 @@ msgstr "Aucune organisation sélectionnée"
 
 msgid "You have to choose a working organization unit to proceed this action."
 msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
+
+msgid "Code"
+msgstr "Nom de la règle"
+msgctxt "archiveInformation"
+
+msgid "Change start date"
+msgstr "Changer la date"
+
+msgid "Archive Transfer"
+msgstr "Demander le transfert sortant"
+
+msgid "Invalid object"
+msgstr "Objet invalide"
+
+msgid "Do not update the final disposition"
+msgstr "Ne pas mettre à jour le sort final"
+
+msgid "Edit metadata"
+msgstr "Modifier les métadonnées"
+
+msgid "Unlimited"
+msgstr "Illimitée"

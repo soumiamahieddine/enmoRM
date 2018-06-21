@@ -37,6 +37,7 @@
             <div id="organization_orgUnitInfo">
                 <div class="form-group">
                     <label>Organization role</label>
+
                     <div class="dropdown">
                         <button id="oganization_addOrgRole" class="btn btn-default" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add role">
                             Add role
@@ -44,7 +45,7 @@
                         </button>
                         <ul class="dropdown-menu" id="oganization_selectOrgRole">
                             <?merge orgRole ?>
-                            <li><a href="#" data-code="[?merge .code ?]"><?merge .description ?></a></li>
+                            <li><a href="#" data-code="[?merge .['code'] ?]"><?merge .['description'] ?></a></li>
                         </ul>
                     </div>
                     <br/>

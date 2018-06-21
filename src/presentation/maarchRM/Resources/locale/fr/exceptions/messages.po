@@ -59,6 +59,9 @@ msgstr "La date de fin est antérieure à la date de début."
 msgid "An owner is already defined."
 msgstr "Un Opérateur d'Archivage est déjà défini."
 
+msgid "Profile %s not found"
+msgstr "Le profil %s n'a pas été trouvé"
+
 msgid "Role not created"
 msgstr "Rôle non créé"
 
@@ -436,4 +439,8 @@ msgstr "Lien expiré"
 
 msgid "Invalid link"
 msgstr "Lien non valide"
+
+msgid "Zip malformed"
+msgstr "Le zip est malformé."
+
 

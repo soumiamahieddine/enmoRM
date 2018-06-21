@@ -82,10 +82,6 @@ INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "
     ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50),
     ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true,2 ,50);
     
--- "organization".orgRole
-INSERT INTO "organization"."orgRole" ("code", "name","description") VALUES
-('owner','organization/owner', 'The system owner');
-
 INSERT INTO "batchProcessing"."task"
 ("taskId", "route", "description") VALUES
 ('01', 'audit/event/createChainjournal', 'Chainer le journal de l''application'),
