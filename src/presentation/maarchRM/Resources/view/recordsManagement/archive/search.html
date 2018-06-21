@@ -260,6 +260,12 @@
         $('#archive_searchForm').find("input[name='archiveExpired'][value='']").parent().click();
         $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
         $('#originatorOrgInfo').hide();
+
+        delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=depositEndDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
+
         $('#archive_searchResult').empty();
     });
 
