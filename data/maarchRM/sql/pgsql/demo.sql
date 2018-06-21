@@ -85,7 +85,7 @@ INSERT INTO "batchProcessing"."scheduling"
 ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
 ('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
 ('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
-('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');
+('sendNotification', 'Envoi des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');
 
 
 INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description", "duration", "finalDisposition") VALUES ('BULPAI', 'Bulletins de paie', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'P5Y', 'destruction');
