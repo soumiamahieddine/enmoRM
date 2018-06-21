@@ -236,9 +236,11 @@ class archive
                         || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
                             && in_array('archiver', $currentService->orgRoleCodes)))
                     && $hasModificationMetadata
+                    && $archive->messages[0]->schema != 'seda2'
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
+
                     $editDescription = true;
                 }
             } else {
@@ -254,7 +256,14 @@ class archive
                     }
 
                     $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
-                    $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    if(is_array($value)){
+                        foreach ($value as $metadata){
+                            $descriptionHtml .= '<dd>'.$metadata.'</dd>';
+                        }
+                    } else {
+
+                        $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    }
                 }
                 
                 $descriptionHtml .='</dl>';

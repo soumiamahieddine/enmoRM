@@ -208,11 +208,6 @@ orgUnitRoles = "{
                         'code' : 'owner',
                         'name' : 'organization/owner',
                         'description' : 'The system owner'
-                    },
-                    'security' : {
-                        'code' : 'security',
-                        'name' : 'organization/security',
-                        'description' : 'The security agency'
                     }
                 }"
 

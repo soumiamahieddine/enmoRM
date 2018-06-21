@@ -109,6 +109,9 @@ var ArchivesAction = {
                     let additionalSelector2 = "[data-noretention='1']";
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector2);
+                } else if (type == "flagForRestitution") {
+                    let additionalSelector = "[data-restituable='1']";
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
                 } else {
                     dataSelector.push('[data-archive-status="' + value + '"]');
                 }

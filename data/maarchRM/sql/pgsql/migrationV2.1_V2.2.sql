@@ -15,3 +15,6 @@ ALTER TABLE "auth"."account" ADD COLUMN "authentication" jsonb;
 ALTER TABLE "auth"."account" ADD COLUMN "preferences" jsonb;
 
 ALTER TABLE "recordsManagement"."archive" DROP CONSTRAINT "archive_retentionRuleCode_fkey";
+
+CREATE INDEX ON "lifeCycle"."event" ("objectId");
+CREATE INDEX ON "lifeCycle"."event" ("timestamp");
