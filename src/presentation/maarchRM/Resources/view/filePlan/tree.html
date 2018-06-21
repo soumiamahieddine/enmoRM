@@ -97,7 +97,7 @@
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
             }
-            e.find('.dropdown').css('visibility', 'visible');
+            e.find('.dropdown:first').css('visibility', 'visible');
 
             this.unselect();
             var span = e.children('span');
@@ -243,7 +243,6 @@
     FolderNode = {
         moveIn: function(e) {
             e.find('i')
-             .css("font-size", "20px")
              .siblings()
              .css("font-size", "20px");
 
@@ -255,7 +254,6 @@
         moveOut: function(e) {
             e.removeClass('node-danger')
              .find('i')
-             .css("font-size", "16px")
              .siblings()
              .css("font-size", "14px")
              .find('i')
@@ -301,8 +299,7 @@
 
     FolderDroppableOption = {
         over: function(event, ui) {
-            parent = $(this);
-            FolderNode.moveIn(parent);
+            FolderNode.moveIn($(this));
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));

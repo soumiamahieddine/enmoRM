@@ -234,7 +234,7 @@ var DataList = {
         if (datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
             var pageLi = [];
-            var pageNumber = Math.trunc(datas.length / this.dataList[id].rowMaxNumber);
+            var pageNumber = Math.floor(datas.length / this.dataList[id].rowMaxNumber);
 
             if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
