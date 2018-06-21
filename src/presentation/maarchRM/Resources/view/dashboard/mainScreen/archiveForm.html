@@ -187,6 +187,11 @@
             var unit = duration.substr(duration.length-1);
             var retentionRuleText = $('#retentionRule_text').text();
 
+            if (unit === 'Y' && numeric >= 9999) {
+                $('#retentionRuleText').text($("#preservation_text").text() + " " + $("#unlimited_text").text());
+                return;
+            }
+
             switch (unit) {
                 case 'D' : unit = $("#days_text").text();
                            break;

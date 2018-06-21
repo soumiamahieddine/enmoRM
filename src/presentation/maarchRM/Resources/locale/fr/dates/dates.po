@@ -11,8 +11,8 @@ msgstr "mois"
 msgid "years"
 msgstr "années"
 
-msgid "unlimited"
-msgstr "illimité"
+msgid "Unlimited"
+msgstr "illimitée"
 
 msgid "years"
 msgstr "ans"

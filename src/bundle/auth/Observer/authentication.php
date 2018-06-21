@@ -113,7 +113,17 @@ class authentication
         }
 
         if ($account->accountType == "service") {
-            $servicePosition = \laabs::newController("organization/servicePosition")->getPosition($account->accountId);
+            $token = new \core\token($accountToken, 0);
+            $jsonToken = \json_encode($token);
+            $cryptedToken = \laabs::encrypt($jsonToken, \laabs::getCryptKey());
+            $cookieToken = base64_encode($cryptedToken);
+
+            if ($account->password != $cookieToken) {
+                throw \laabs::newException("auth/authenticationException", "Missing authentication credential", 401);
+            }
+
+            $servicePositionController = \laabs::newController("organization/servicePosition");
+            $servicePosition = $servicePositionController->getPosition($account->accountId);
 
             if ($servicePosition != null) {
                 \laabs::setToken("ORGANIZATION", $servicePosition->organization);
@@ -121,7 +131,8 @@ class authentication
         } else {
             $organization = \laabs::getToken("ORGANIZATION");
 
-            $userPositions = \laabs::newController("organization/userPosition")->getMyPositions();
+            $userPositionController = \laabs::newController("organization/userPosition");
+            $userPositions = $userPositionController->getMyPositions();
             
             if (!empty($organization)) {
                 $isUserPosition = false;

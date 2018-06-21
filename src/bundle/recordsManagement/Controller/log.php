@@ -32,14 +32,23 @@ class log implements archiveDescriptionInterface
     /* Properties */
 
     public $sdoFactory;
+    public $logFilePlan;
+    public $translationLogType;
+    public $filePlanController;
 
     /**
      * Constructor of access control class
-     * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\sdo\Factory $sdoFactory         The factory
+     * @param string                  $logFilePlan        The path of log in the file plan
+     * @param array                   $translationLogType The translation of log types
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $logFilePlan = null, $translationLogType = [])
     {
         $this->sdoFactory = $sdoFactory;
+        $this->logFilePlan = $logFilePlan;
+        $this->translationLogType = $translationLogType;
+
+        $this->filePlanController = \laabs::newController("filePlan/filePlan");
     }
 
     /**
@@ -303,7 +312,7 @@ class log implements archiveDescriptionInterface
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
-        if ($currentOrganization->orgRoleCodes && !in_array("owner", (array) $currentOrganization->orgRoleCodes)) {
+        if (!($currentOrganization->orgRoleCodes && in_array("owner", (array) $currentOrganization->orgRoleCodes))) {
             throw \laabs::newException("recordsManagement/logException", "The journal must be archived by an owner organization.");
         }
 
@@ -319,6 +328,12 @@ class log implements archiveDescriptionInterface
         $archive->finalDisposition = 'preservation';
         $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
 
+        if (!empty($this->logFilePlan)) {
+            $path = $this->resolveLogFilePlan($this->logFilePlan, ["type" => $log->type]);
+            $position = $this->filePlanController->createFromPath($path, $currentOrganization->registrationNumber, true);
+            $archive->filePlanPosition = $position;
+        }
+
          // Create resource
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
         $journalResource->puid = "x-fmt/18";
@@ -330,6 +345,9 @@ class log implements archiveDescriptionInterface
             // Create timestamp resource
             $timestampResource = $digitalResourceController->createFromFile($timestampFileName);
             $digitalResourceController->getHash($timestampResource, "SHA256");
+            
+            $logMessage = ["message" => "Timestamp file generated"];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
             $timestampResource->archiveId = $journalResource->archiveId;
             $timestampResource->relatedResId = $journalResource->resId;
@@ -354,6 +372,59 @@ class log implements archiveDescriptionInterface
             $archive->fullTextIndexation = "none";
         }
 
-        return $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
+        try {
+            $archive = $archiveController->deposit($archive, 'journal/'.$log->type.'/<date("Y")>/<date("m")>');
+            $logMessage = ["message" => "New journal identifier : %s", "variables" => $archive->archiveId];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        } catch (\Exception $e) {
+            $logMessage = ["message" => "Error on journal creation"];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+            throw $e;
+        }
+
+        return $archive->archiveId;
+    }
+
+    private function resolveLogFilePlan($path, $values)
+    {
+        if (!$path) {
+            $pattern = $this->storePath;
+        }
+
+        $values = is_array($values) ? $values : get_object_vars($values);
+
+        if (preg_match_all("/\<[^\>]+\>/", $path, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case substr($token, 0, 5) == 'date(':
+                        $format = substr($token, 5, -1);
+                        $path = str_replace($variable, date($format), $path);
+                        break;
+                    case isset($values[$token]):
+                        if (array_key_exists($values[$token], $this->translationLogType)) {
+                            $values[$token] = $this->translationLogType[$values[$token]];
+                        }
+
+                        $path = str_replace($variable, (string) $values[$token], $path);
+                        break;
+                }
+            }
+        }
+
+        return $path;
+    }
+
+    public function contents ($type, $archiveId, $resourceId) {
+        $archiveController = \laabs::newController('recordsManagement/archive');
+
+        $res = $archiveController->consultation($archiveId, $resourceId);
+
+        $journal = $type . PHP_EOL;
+        $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
+        $journal .= base64_decode($res->attachment->data);
+
+        return $journal;
     }
 }

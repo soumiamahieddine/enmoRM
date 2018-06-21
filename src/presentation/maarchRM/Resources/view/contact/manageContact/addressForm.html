@@ -87,8 +87,17 @@
             <input type="text" class="form-control" name="postBox" placeholder="Post box">
         </div>
         <div class="form-group col-md-9">
-            <label for="country">Country</label>
-            <input type="text" class="form-control" name="country" placeholder="Country">
+            <label for="country">Country</label><br>
+            <select class="form-group" name="country" id="country">
+                <option value="" >Select a language</option>
+                <option value="FR" selected>Français</option>
+                <option disabled="disabled">----</option>
+                <?merge countriesCodes ?>
+                <span>
+                    <?merge .alpha2.ifne('FR')?>
+                    <option value="[?merge .alpha2 ?]"><?merge .name ?></option>
+                </span>
+            </select>
         </div>
     </div>
 
@@ -155,7 +164,7 @@
             var addressObject = ContactAddressForm.serialize();
 
             if(addressObject.purpose == null || addressObject.city == null) {
-                gritter.show($('#contact_empty_text').html(),false);
+                gritter.show($('#contact_empty_text').text(),false);
 
                 return false;
             }
@@ -213,6 +222,10 @@
                     address[$(this).attr('name')] = $(this).val();
                 }
             });
+
+            if ($('#country')) {
+                address['country'] = $('#country').val();
+            }
 
             return address;
         },
@@ -323,7 +336,7 @@
 
             if (address.citySubDivision) {
                 $('<p/>').addClass('list-group-item-text')
-                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').html())
+                         .text(address.citySubDivision + ' ' + $('#contact_text_citySubDivision').text())
                          .appendTo(a);
             }
 

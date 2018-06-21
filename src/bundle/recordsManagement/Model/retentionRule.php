@@ -67,6 +67,13 @@ class retentionRule
      * @var string
      */
     public $label;
+
+    /**
+     * The implementation date of the rule
+     *
+     * @var date
+     */
+    public $implementationDate;
     
 
 }

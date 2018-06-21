@@ -53,8 +53,6 @@ class Exception
      */
     public function Exception($exception)
     {
-        $exception->setMessage($this->translator->getText($exception->getFormat()));
-
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
             return $this->presentJson($exception);
         }
@@ -83,8 +81,6 @@ class Exception
         if (method_exists($exception, "setMessage")) {
             $exception->setMessage($this->translator->getText($exception->getFormat()));
             $this->json->message = $exception->getMessage();
-        } else if ($message = $exception->getMessage()) {
-            $this->json->message = $message;
         } else {
             $this->json->message = $this->translator->getText(
                 "An error occured during the process of your request. Please contact the administrator of the application.");
@@ -94,21 +90,26 @@ class Exception
         if (isset($exception->errors)) {
             $errors = [];
             foreach ($exception->errors as $error) {
-                $error->setMessage($this->translator->getText($error->getFormat()));
-
-                $variables = [];
-
-                $errorVariables = $error->getVariables();
-                if (is_array($errorVariables)) {
-                    foreach ($errorVariables as $name => $value) {
-                        $name = $this->translator->getText($name);
-                        $value = $this->translator->getText($value);
-                        $variables[$name] = $value;
-                    }
+                if (is_string($error)) {
+                    $error = new \core\Error($error);
                 }
-                $error->setVariables($variables);
-                
-                $errors[] = $error;
+
+                if (is_object($error) && $error instanceof \core\Error) {
+                    $error->setMessage($this->translator->getText($error->getFormat()));
+
+                    $variables = [];
+
+                    $errorVariables = $error->getVariables();
+                    if (is_array($errorVariables)) {
+                        foreach ($errorVariables as $name => $value) {
+                            $name = $this->translator->getText($name);
+                            $value = $this->translator->getText($value);
+                            $variables[$name] = $value;
+                        }
+                    }
+                    $error->setVariables($variables);
+                    $errors[] = $error;
+                }
             }
             $this->json->errors = $errors;
         }

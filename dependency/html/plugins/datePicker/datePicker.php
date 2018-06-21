@@ -70,10 +70,9 @@ class datePicker
         parent::__construct($element);
         
         $this->parameters = new \StdClass();
-
-        //$this->parameters->language = 'fr';
         $this->parameters->weekstart = 1;
         $this->parameters->autoclose = 'true';
+        $this->parameters->todayHighlight = true;
 
         $format = \laabs::getDateFormat();
         $format = str_replace('y', 'yy', $format);   // 2 digits year
@@ -89,8 +88,6 @@ class datePicker
         $format = str_replace('D', 'D', $format);    // Short day name
         $format = str_replace('l', 'DD', $format);   // Full day name
         $this->parameters->format = $format;
-
-        $this->element->ownerDocument->addScript('/public/js/datePicker/bootstrap-datepicker.js');
     }
     /*
     {
@@ -110,7 +107,7 @@ class datePicker
         $this->parameters->language = $translator->lang;
         if (\laabs::hasPublicResource('public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
             $view->addScript('/public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
-        } 
+        }
     }
 
 
@@ -118,20 +115,28 @@ class datePicker
     {
         $datePickerId = \laabs\uniqid();
         $this->element->setAttribute('data-datepicker-id', $datePickerId);
-        $parameters = json_encode($this->parameters);
-
         $scriptText =
 <<<EOS
 $(document).ready(function() {
-    $('*[data-datepicker-id="$datePickerId"]').datepicker($parameters);
+    $('*[data-datepicker-id="$datePickerId"]').datepicker(DatePickerParams);
 });
 EOS;
-
         $script = $this->element->ownerDocument->createElement('script');
         $CdataSection = $this->element->ownerDocument->createCDataSection($scriptText);
         $script->appendChild($CdataSection);
-
+        
         $this->element->parentNode->appendChild($script);
+    }
 
+    public function saveParameters() {
+        $parameters = json_encode($this->parameters);
+        $parametersScript = 
+<<<EOS
+var DatePickerParams = $parameters;
+EOS;
+        $variableScript = $this->element->ownerDocument->createElement('script');
+        $variableCdataSection = $this->element->ownerDocument->createCDataSection($parametersScript);
+        $variableScript->appendChild($variableCdataSection);
+        $this->element->ownerDocument->appendChild($variableScript);
     }
 }

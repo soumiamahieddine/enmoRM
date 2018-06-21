@@ -34,6 +34,7 @@
             <tr>
                 <th>Property</th>
                 <th style="width: 5%">Required</th>
+                <th style="width: 5%">Read only</th>
                 <th style="width: 5%"></th>
             </tr>
             <tr id="archiveDescriptionForm">
@@ -48,6 +49,9 @@
                 </th>
                 <th>
                     <input type="checkbox" class="pull-left" name="required" id="requiredField"/>
+                </th>
+                <th>
+                    <input type="checkbox" class="pull-left" name="isImmutable" id="isImmutableField"/>
                 </th>
                 <th>
                     <button type="button" class="btn btn-sm btn-success pull-right" id="addProperty"><span class="fa fa-plus"></span></button>
@@ -78,6 +82,9 @@
         <tr id="descriptionPropertyTemplate" data-json="" style="cursor: pointer;">
             <td class="propertyLabel"></td>
             <td class="requiredProperty">
+                 <i class="fa fa-check-square-o"></i>
+            </td>
+            <td class="isImmutableProperty">
                  <i class="fa fa-check-square-o"></i>
             </td>
             <td class="text-right">
@@ -176,6 +183,7 @@
                 fieldName    : type.val(),
                 label        : selectedOption.text(),
                 required     : $('#requiredField').is(':checked'),
+                isImmutable     : $('#isImmutableField').is(':checked')
             }
 
             return property;
@@ -201,7 +209,7 @@
             } else {
                 var select = $('#descriptionClassProperties');
             }
-            select.find('option[value="'+fieldName+'"]').show();
+                select.find('option[value="'+fieldName+'"]').show();
         }
     }
 
@@ -243,6 +251,7 @@
                     fieldName    : value.fieldName,
                     label        : select.find('option[value="'+value.fieldName+'"]').text(),
                     required     : value.required,
+                    isImmutable  : value.isImmutable
                 }
 
                 var template = PropertiesList.fillTemplate(property);
@@ -267,6 +276,12 @@
                 template.find('.requiredProperty').find("i").addClass("fa-check-square-o");
             } else {
                 template.find('.requiredProperty').find("i").addClass("fa-square-o");
+            }
+
+            if (property['isImmutable'] == true) {
+                template.find('.isImmutableProperty').find("i").addClass("fa-check-square-o");
+            } else {
+                template.find('.isImmutableProperty').find("i").addClass("fa-square-o");
             }
             
             return template;
@@ -299,6 +314,7 @@
                 var property = new Object();
                 property.fieldName = element.fieldName;
                 property.required = element.required;
+                property.isImmutable = element.isImmutable;
                 archiveDescription.push(property);
             });
             

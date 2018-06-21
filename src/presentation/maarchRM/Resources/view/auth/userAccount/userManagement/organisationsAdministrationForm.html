@@ -28,6 +28,8 @@
 
 <script>
 
+    window.localStorage.clear();
+
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -35,7 +37,6 @@
         limit: 100
     });
 
-    window.localStorage.clear();
     organizations.initialize();
 
     // initialize typeahead
@@ -50,7 +51,7 @@
             displayKey: 'displayName',
             templates: {
                 empty: function() {
-                    return "<span class='well well-sm'>"+$('#noServiceFound').html()+"</span>";
+                    return "<span class='well well-sm'>"+$('#noServiceFound').text()+"</span>";
                 },
                 suggestion: function(organization) {
                     var display;
@@ -62,8 +63,7 @@
                             + organization.ownerOrgName
                             + " > "
                             + organization.displayName
-                            + "</span>"
-                            + "</span>";
+                            + "</span></span><br>";
                     }
                     else {
                         display = this.empty();
@@ -72,7 +72,7 @@
                 }
             },
             source: function(query, cb) {
-                organizations.get(query, function(suggestions) {
+                organizations.search(query, function(suggestions) {
                     var i = suggestions.length
                     while (i--) {
                         if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)

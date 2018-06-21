@@ -222,6 +222,9 @@ msgstr "Demandeur d'archive"
 msgid "The system owner"
 msgstr "Opérateur d'Archivage"
 
+msgid "The security agency"
+msgstr "Service de sécurité"
+
 msgid "Linked to organization"
 msgstr "Contact lié à l'organisation"
 
@@ -351,4 +354,3 @@ msgstr "Niveaux de service par défaut"
 
 msgid "Service level"
 msgstr "Niveaux de service "
-

@@ -138,11 +138,6 @@
         });
     })
 
-    $("#contain").on('change', '#accessRuleCode', function () {
-        accessRuleModal.loadAccessCode();
-    })
-
-
     var accessRuleModal = {
         load: function(archiveId) {
 
@@ -198,14 +193,13 @@
             var inputs = $('#accessRuleModal').find('input, select');
             var retentionRule = $('#accessRuleModal').find('select').find('option:selected').data('json');
 
-            console.log(retentionRule);
 
             $.each(inputs, function() {
                 var a = $(this);
                 if(a.attr('name') != "archiveIds") {
                     accessRule[a.attr('name')] = a.val();
                 }
-            })
+            });
 
             accessRule['accessRuleDuration'] = retentionRule.duration;
 

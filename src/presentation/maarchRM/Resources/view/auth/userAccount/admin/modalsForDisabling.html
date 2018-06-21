@@ -12,8 +12,8 @@
                 <input type="text" class="form-control" placeholder="User" id="replacingUser" data-replacinguseraccountid=""/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="cancelDisabling" data-dismiss="modal" title="Close">Close</button>
-                <button type="button" class="btn btn-primary" id="confirmDisabling" data-accountid="[?merge user.accountId ?]" title="Ok">Ok</button>
+                <button type="button" class="btn btn-default" id="cancelDisabling" data-dismiss="modal" title="Close">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDisabling" data-accountid="[?merge user.accountId ?]" title="Ok">Disabled</button>
             </div>
         </div>
     </div>
@@ -39,22 +39,17 @@
     </div>
 </div>
 
-
+<span class="hide" id="no_user_found_text">No user found</span>
 <script >
 $('#app_maarchRM_main').ready(function(){
         // Define data source for person typeahead
-        var personsSource = new Bloodhound({
+        var users = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/userAccounts/%QUERY',
-                ajax : {
-                    async: false
-                }
-            },
+            prefetch: {url: '/user/todisplay', ttl: '0'},
             limit: 100
         });
-        personsSource.initialize();
+        users.initialize();
 
         // initialize typeahead
         $('#replacingUser').typeahead(
@@ -69,24 +64,23 @@ $('#app_maarchRM_main').ready(function(){
                 displayKey: 'displayName',
                 templates: {
                     empty: function() {
-                        return "<span class='well well-sm'>No user found</span>";
+                        return "<span class='well well-sm'>"+$('#no_user_found_text').text()+"</span>";
                     },
-                    suggestion: function(person) {
+                    suggestion: function(user) {
                         var display = 
                             "<span>"
-                                + "<span class='fa fa-user' >&nbsp;</span>"
                                 + "<span style='font-family:Helvetica, sans-serif;'>" 
-                                + person.displayName;
+                                + user.displayName;
                         display += 
                                 "</span>";
                         display += 
-                            "</span>";
-                        $("#replacingUser").attr('data-replacinguseraccountid', person.accountId);   
+                            "</span><br>";
+                        $("#replacingUser").attr('data-replacinguseraccountid', user.accountId);
                         return display;
                     }
                 },
                 source: function(query, cb) {
-                    personsSource.get(query, function(suggestions) {
+                    users.search(query, function(suggestions) {
                         cb(suggestions);
                     });
                 },

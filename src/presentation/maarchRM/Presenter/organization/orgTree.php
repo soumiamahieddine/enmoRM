@@ -63,14 +63,16 @@ class orgTree
      * index
      * @param array $organizations Array of organization
      * @param array $orgType       Array of organization type
-     * @param array $orgRole       Array of organization role
      *
      * @return view View with the list of organizations
      */
-    public function index($organizations, $orgType, $orgRole)
+    public function index($organizations, $orgType)
     {
+        $orgRole = \laabs::configuration('organization')['orgUnitRoles'];;
+
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
+        $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
 
@@ -78,6 +80,12 @@ class orgTree
         usort($archivalProfile, function($a, $b){
             return strcmp($a->reference, $b->reference);
         });
+
+        if(\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes){
+            $addOrganizationRight = in_array('owner',\laabs::getToken("ORGANIZATION")->orgRoleCodes);
+        } else {
+            $addOrganizationRight = true;
+        }
 
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
@@ -90,8 +98,10 @@ class orgTree
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
         $this->view->setSource("communicationMeans", $communicationMeans);
+        $this->view->setSource("countriesCodes", $countriesCodes);
         $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->setSource("serviceLevel", $serviceLevel);
+        $this->view->setSource("addOrganizationRight", $addOrganizationRight);
         $this->view->merge();
         $this->view->translate();
 

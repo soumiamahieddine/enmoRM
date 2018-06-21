@@ -3,7 +3,7 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Click or drop a document"
-msgstr "Cliquer ou déposer un document"
+msgstr "Cliquez ou déposez un document"
 
 msgid "File name"
 msgstr "Nom du fichier"

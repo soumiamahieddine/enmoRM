@@ -43,7 +43,7 @@
         <span id="days_text">days</span>
         <span id="months_text">months</span>
         <span id="years_text" data-translate-context="unit">years</span>
-        <span id="unlimited_text" >unlimited</span>
+        <span id="unlimited_text" >Unlimited</span>
     </div>
 
     <!-- ERROR MESSAGE -->
@@ -156,7 +156,6 @@
 
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
-            //console.log(archiveDescription);
             var target = $("#archivalProfileFields");
             var template = $('#inputFieldTemplate').clone();
             var type = archiveDescription.descriptionField.type;
@@ -200,7 +199,7 @@
                     break;
                 case 'number':
                     field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
+                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.val(defaultVal);
                     }
@@ -209,10 +208,7 @@
                 case 'timestamp':
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.data("datepicker").setDate(defaultVal);
                     }
@@ -268,10 +264,7 @@
                 case 'date':
                     field = template.find('.value');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     break;
                 case 'boolean':
                     var template = $('#customBooleanFieldTemplate').clone();

@@ -15,7 +15,7 @@ msgstr "Contact"
 msgctxt "interface"
 
 msgid "event"
-msgstr "Événement"
+msgstr "Évènement"
 msgctxt "interface"
 
 msgid "orgTree"

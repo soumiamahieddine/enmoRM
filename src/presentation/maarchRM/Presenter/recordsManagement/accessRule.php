@@ -76,9 +76,15 @@ class accessRule
         foreach ($accessRules as $accessRule) {
             $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
             $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
-            $accessRule->accessRuleDurationUnit = $this->view->translator->getText($accessRule->accessRuleDurationUnit, "duration", "recordsManagement/accessRule");
+
+            if($accessRule->accessRuleDuration >= 9999 && $accessRule->accessRuleDurationUnit == 'Y' ){
+                $accessRule->accessRuleDurationText = $this->view->translator->getText('Unlimited', null, "recordsManagement/accessRule");
+            } else {
+                $accessRule->accessRuleDurationUnit = $this->view->translator->getText($accessRule->accessRuleDurationUnit, "duration", "recordsManagement/accessRule");
+                $accessRule->accessRuleDurationText =  $accessRule->accessRuleDuration .' '.  $accessRule->accessRuleDurationUnit;
+            }
         }
-        
+
         $this->view->translate();
         $this->view->setSource("orgUnits", $orgUnits);
         $this->view->setSource("accessRule", $accessRules);
@@ -95,8 +101,6 @@ class accessRule
      */
     public function edit($accessRule) 
     {
-
-
         $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
         $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
         return json_encode($accessRule);
@@ -113,7 +117,7 @@ class accessRule
     {
         $this->json->status = $result;
 
-        $this->json->message = "New access code created";
+        $this->json->message = "Access rule created";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
@@ -128,7 +132,7 @@ class accessRule
     public function update($result)
     {
         $this->json->status = $result;
-        $this->json->message = "Access code updated";
+        $this->json->message = "Access rule updated";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

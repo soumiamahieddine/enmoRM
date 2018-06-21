@@ -57,7 +57,10 @@ msgid "The end date is lower than the begin date."
 msgstr "La date de fin est antérieure à la date de début."
 
 msgid "An owner is already defined."
-msgstr "Un Opérateur d'Archive est déjà défini."
+msgstr "Un Opérateur d'Archivage est déjà défini."
+
+msgid "Profile %s not found"
+msgstr "Le profil %s n'a pas été trouvé"
 
 msgid "Role not created"
 msgstr "Rôle non créé"
@@ -105,7 +108,7 @@ msgid "Scheduling not updated."
 msgstr "Planification non mise à jour"
 
 msgid "Scheduling not deleted."
-msgstr "Planification non détruite"
+msgstr "Planification non supprimée"
 
 msgid "Invalid identifiant."
 msgstr "Identifiant invalide"
@@ -192,16 +195,16 @@ msgid "Invalid journal date: latest date is in the future."
 msgstr "Journal invalide : la dernière date est dans le futur."
 
 msgid "Invalid journal: Next journal chaining event is incomplete."
-msgstr "Journal invalide: l'événement de chaînage du journal suivant est incomplet."
+msgstr "Journal invalide: l'évènement de chaînage du journal suivant est incomplet."
 
 msgid "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
-msgstr "Journal invalide : Le journal suivant est manquant ou l'événement de chaînage a un identifiant de journal invalide"
+msgstr "Journal invalide : Le journal suivant est manquant ou l'évènement de chaînage a un identifiant de journal invalide"
 
 msgid "Invalid journal: Chaining event has a different hash."
-msgstr "Journal invalide : L'événement de chaînage a une empreinte différente."
+msgstr "Journal invalide : L'évènement de chaînage a une empreinte différente."
 
 msgid "Unknown event type."
-msgstr "Type d'événement inconnu"
+msgstr "Type d'évènement inconnu"
 
 msgid "Key already exists"
 msgstr "La clé existe déjà"
@@ -210,7 +213,7 @@ msgid "The organization type is used."
 msgstr "Le type d'ogranisation est utilisé"
 
 msgid "Organization can''t be moved to an other organization"
-msgstr "L'organisation ne peux être déplacé sous une autre organisation."
+msgstr "L'organisation ne peut être déplacée sous une autre organisation."
 
 msgid "Organization can''t be moved to a descendent organization"
 msgstr "L'organisation' ne peut être déplacée sous une organisation descendante."
@@ -219,10 +222,10 @@ msgid "Organization Archival Profile Access can''t be update "
 msgstr "Les accès aux profils d'archives ne peuvent pas être mis à jour."
 
 msgid "Access Code not created."
-msgstr "Règle de communicabilité non créé"
+msgstr "Règle de communicabilité non créée"
 
 msgid "Access Code not updated."
-msgstr "Règle de communicabilité non mis à jour"
+msgstr "Règle de communicabilité non mise à jour"
 
 msgid "Access Code not deleted."
 msgstr "Règle de communicabilité non supprimée"
@@ -291,7 +294,7 @@ msgid "Invalid value for metadata %1$s"
 msgstr "Valeur non valide pour la métadonnée %1$s"
 
 msgid "The archival profile reference not found"
-msgstr "L'identifiant du profil d'archive n'a pas été trouvée."
+msgstr "L'identifiant du profil d'archive n'a pas été trouvé."
 
 msgid "The retention rule not found"
 msgstr "La règle de conservation n'a pas été trouvée."
@@ -414,7 +417,7 @@ msgid "No repository found with reference %s"
 msgstr "Aucun répertoire de stockage trouvé avec l'identifiant %s."
 
 msgid "Unknown event type: %s"
-msgstr "Événement de type %s non trouvé"
+msgstr "Évènement de type %s non trouvé"
 
 msgid "%s can''t be found."
 msgstr "%s n'a pas été trouvé."

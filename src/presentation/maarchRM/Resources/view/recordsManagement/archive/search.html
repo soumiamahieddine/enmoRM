@@ -68,8 +68,7 @@
                                             <option value="preserved">Preserved</option>
                                             <option value="frozen">Frozen</option>
                                             <option value="disposable">Waiting for destruction</option>
-                                            <option value="restituable">Waiting for restitution</option>
-                                            <option value="restituted">Restituted</option>
+                                            <option value="error">Error</option>
                                             <?merge deleteDescription.bool().not() ?>
                                             <option value="disposed">Disposed</option>
                                         </select>
@@ -329,14 +328,13 @@
                                 + " > ";
                     }
                        display += organization.displayName
-                        + "</span>"
-                        + "</span>";
+                        + "</span></span><br>";
 
                     return display;
                 }
             },
             source: function(query, cb) {
-                organizations.get(query, function(suggestions) {
+                organizations.search(query, function(suggestions) {
                     var i = suggestions.length
                     while (i--) {
                         if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)

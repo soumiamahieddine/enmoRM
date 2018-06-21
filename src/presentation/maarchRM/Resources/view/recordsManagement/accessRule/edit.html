@@ -41,7 +41,7 @@ file that was distributed with this source code.
                                 <option value='D'>Day(s)</option>
                                 <option value='M'>Month(s)</option>
                                 <option value='Y'>Year(s)</option>
-                                <option value='*'>unlimited</option>
+                                <option value='*'>Unlimited</option>
                             </select>
                         </div>
                     </div>
@@ -90,15 +90,21 @@ file that was distributed with this source code.
 
         load : function (accessRule) {
             if(accessRule) {
-
                 $('#newAccessRuleTitle').hide();
                 $('#editAccessRuleTitle').show();
                 $('#accessRuleTitle').text(accessRule.code);
-
+                $('#accesRuleDuration').removeAttr('disabled');
 
                 $.each(accessRule, function(key, value) {
-                    AccessRuleModal.modal.find("[name='"+key+"']").val(value);
-                })
+                    if (key == "accessRuleDurationUnit" && accessRule.accessRuleDurationUnit == "Y" && accessRule.accessRuleDuration >= 9999) {
+                        AccessRuleModal.modal.find('[name="accessRuleDurationUnit"]').val("*");
+                    } else if (key == "accessRuleDuration" && accessRule.accessRuleDurationUnit == "Y" && accessRule.accessRuleDuration >= 9999) {
+                        AccessRuleModal.modal.find('[name="accessRuleDuration"]').val("");
+                        $('#accesRuleDuration').attr('disabled', 'disabled');
+                    } else {
+                        AccessRuleModal.modal.find('[name="' + key + '"]').val(value);
+                    }
+                });
 
                 $('#code').prop('disabled', true);
 
@@ -150,7 +156,7 @@ file that was distributed with this source code.
 
         serialize : function() {
             if ($('#accessRuleDurationUnit').val() == "*") {
-                accessRuleDuration = 'P' + 999999999 + 'Y';
+                accessRuleDuration = 'P' + 9999 + 'Y';
 
             } else if ($('#accesRuleDuration').val() == 0) {
                 accessRuleDuration = 0;

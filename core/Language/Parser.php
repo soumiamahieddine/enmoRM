@@ -165,7 +165,7 @@ class Parser
         if ($queryString) {
             $this->tokenize($queryString);
         }
-       
+        
         // Operation CRUD on object OR  query ADD|REMOVE|MODIFY on component
         $this->expect($this->tokenTypes['operation']);
 
@@ -462,19 +462,20 @@ class Parser
             $this->query->bindParam($primaryKey->getName(), $keyObject, $primaryKey);
         }
 
-        $this->next();
-        $this->expect(LAABS_T_OPEN_BRACE);
+        if ($this->isNext(LAABS_T_OPEN_BRACE)) {
 
-        $object = $this->parseObject();
-        $this->query->bindParam($class->getName(), $object, $class);
-        foreach (get_object_vars($object) as $propertyName => $propertyValue) {
-            $this->query->addProperty($class->getProperty($propertyName));
+            $object = $this->parseObject();
+            $this->query->bindParam($class->getName(), $object, $class);
+            foreach (get_object_vars($object) as $propertyName => $propertyValue) {
+                $this->query->addProperty($class->getProperty($propertyName));
+            }
+
+            // Move to closing brace
+            $this->next();
+
         }
 
-        // Move to closing brace
-        $this->next();
-
-        // Assert
+         // Assert
         if ($this->isNext(LAABS_T_OPEN_PARENTHESIS)) {
             // Move to open parenthesis
             $this->next();

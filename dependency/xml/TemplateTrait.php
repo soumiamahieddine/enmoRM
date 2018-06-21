@@ -481,12 +481,16 @@ trait TemplateTrait
      */
     public function mergeNode($pi, $instr, $DOMNode)
     {
+        if ($DOMNode->nodeType == XML_DOCUMENT_FRAG_NODE && $DOMNode->childNodes->length == 0) {
+            return true;
+        }
+
         if ($pi->ownerDocument != $DOMNode->ownerDocument) {
             $DOMNode = $pi->ownerDocument->importNode($DOMNode, true);
         }
 
         $pi->parentNode->insertBefore($DOMNode, $pi);
-
+        
         return true;
     }
 

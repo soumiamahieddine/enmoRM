@@ -57,8 +57,8 @@ class authorization
             $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
             switch ($account->accountType) {
                 case 'service':
-                    $accountController = \laabs::newController('auth/serviceAccount');
-                    $privileges = $accountController->getPrivileges($accountToken->accountId);
+                    $serviceAccountController = \laabs::newController('auth/serviceAccount');
+                    $privileges = $serviceAccountController->getPrivileges($accountToken->accountId);
 
                     foreach ($privileges as $privilege) {
                         if (fnmatch(strtolower($privilege->serviceURI), $serviceName)) {
