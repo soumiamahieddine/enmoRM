@@ -419,8 +419,6 @@ class welcome
                     if ($type == 'boolean') {
                         $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
                     }
-
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
                 }
 
             }
