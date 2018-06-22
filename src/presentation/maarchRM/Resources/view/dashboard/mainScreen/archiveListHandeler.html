@@ -105,6 +105,13 @@
         },
 
         unselect: function(dataList) {
+            var multipleSelection = dataList.find('.selectAll.multipleSelection');
+            if (multipleSelection.hasClass('fa-check-square-o')) {
+                multipleSelection.click();
+            }
+
+            dataList.find('.multipleSelection.fa-check-square-o').click();
+
             DetailScreen.clear();
             dataList.find('.bg-info').removeClass('bg-info')
                     .find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
