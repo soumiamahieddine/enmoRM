@@ -119,5 +119,8 @@
         FolderForm.close();
 
     })
+    $('#folderForm').onEvent("loadFolder.filePlan", function(e, folder) {
+        FolderForm.load(folder);
+    })
 
 </script>

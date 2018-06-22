@@ -168,7 +168,8 @@
                 parentFolderId    : this.selectedNode.not('.organization').attr('id'),
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber')
             }
-            FolderForm.load(folder);
+
+            trigger("loadFolder.filePlan", [folder]);
         },
 
         editFolder: function() {
@@ -180,7 +181,8 @@
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber'),
                 closed            : this.selectedNode.data('closed')
             }
-            FolderForm.load(folder);
+
+            trigger("loadFolder.filePlan", [folder]);
         },
 
         deleteFolder: function() {
@@ -242,8 +244,7 @@
 
     FolderNode = {
         moveIn: function(e) {
-            e.find('i')
-             .siblings()
+            e.find('b')
              .css("font-size", "20px");
 
             if (e.closest('.folder').data('closed')) {
