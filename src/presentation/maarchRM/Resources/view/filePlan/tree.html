@@ -169,7 +169,7 @@
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber')
             }
 
-            trigger("loadFolder.filePlan", [folder]);
+            trigger("loadFolderForm.filePlan", [folder]);
         },
 
         editFolder: function() {
@@ -182,7 +182,7 @@
                 closed            : this.selectedNode.data('closed')
             }
 
-            trigger("loadFolder.filePlan", [folder]);
+            trigger("loadFolderForm.filePlan", [folder]);
         },
 
         deleteFolder: function() {

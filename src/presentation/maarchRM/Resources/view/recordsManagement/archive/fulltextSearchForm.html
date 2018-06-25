@@ -165,10 +165,16 @@ FulltextSearchForm = {
     },
 
     search : function() {
-        query = this.serialize();
-
+        var query = this.serialize();
         if (query.text == '' && query.description == "" && query.originatingDate == "" && query.profileReference == "") {
-            trigger('loadFolder.filePlan', [query.orgRegNumber]);
+
+            if (query.filePlanPosition) {
+                trigger('loadFolder.filePlan', [query.filePlanPosition]);
+
+            } else {
+                trigger('loadFolder.filePlan', [query.orgRegNumber]);
+            }
+            return;
         }
 
 
