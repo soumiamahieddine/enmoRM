@@ -122,6 +122,14 @@
                 this.modal.modal();
             }
 
+            if (type === 'requestCommunication' && $('#' +archiveId).data('iscommunicable') === 1) {
+                $('#derogationTr').show();
+                $('#derogationTypeaheadTr').show();
+            } else {
+                $('#derogationTr').hide();
+                $('#derogationTypeaheadTr').hide();
+            }
+
             $('#save').data("archiveids", "");
             $('#archiveModificationForm').css('display', '');
             $('#modal_multipleSelection').css('display', 'none');

@@ -636,3 +636,17 @@ msgctxt "meta-data"
 msgid "Default control authority"
 msgstr "Autorité de contrôle par défaut"
 
+msgid "Send to derogation"
+msgstr "Envoyer en dérogation"
+
+msgid "Derogation for"
+msgstr "Dérogation pour"
+
+msgid "A communication can be sent without derogation only in the case where the communication is for the originating service."
+msgstr "Une communication peut être envoyé sans dérogation seulement dans le cas où la communication est destiné au service producteur."
+
+msgid "Sent a derogation for"
+msgstr "Envoie d'une dérogation pour"
+
+msgid "Service or organization"
+msgstr "Service ou organisation"
