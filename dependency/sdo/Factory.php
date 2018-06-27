@@ -175,8 +175,12 @@ class Factory
      * 
      * @return mixed $result
      */
-    public function execute($stmt, array $args = [])
+    public function execute($stmt, $args = [])
     {
+        if ($args == null) {
+            $args = [];
+        }
+
         if ($this->trace == 2) {
             \laabs::log($stmt->getQueryString());
         }
