@@ -311,12 +311,14 @@ trait archiveEntryTrait
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
 
-        $nbArchiveObjects = count($archive->contents);
-        for ($i = 0; $i < $nbArchiveObjects; $i++) {
-            $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
-            $this->useReferences($archive->contents[$i], 'deposit');
-            $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
-            $this->completeMetadata($archive->contents[$i]);
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+            for ($i = 0; $i < $nbArchiveObjects; $i++) {
+                $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
+                $this->useReferences($archive->contents[$i], 'deposit');
+                $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
+                $this->completeMetadata($archive->contents[$i]);
+            }
         }
     }
 
@@ -644,7 +646,11 @@ trait archiveEntryTrait
             throw new \core\Exception\NotFoundException("The access rule not found");
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        $nbArchiveObjects = 0;
+
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        }
 
         if ($nbArchiveObjects) {
             $containedProfiles = [];
@@ -772,7 +778,11 @@ trait archiveEntryTrait
             }
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        $nbArchiveObjects = 0;
+
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        }
 
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
             $this->validateAttachments($archive->contents[$i]);
