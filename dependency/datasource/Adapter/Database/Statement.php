@@ -94,13 +94,15 @@ class Statement
      */
     public function execute($inputParameters=null)
     {
-        if ($inputParameters && \laabs\is_assoc($inputParameters)) {
+        if (!empty($inputParameters) && \laabs\is_assoc($inputParameters)) {
             foreach ($inputParameters as $name => $value) {
                 $inputParameters[":" . $name] = str_replace("*", "%", $value);
                 unset($inputParameters[$name]);
             }
+        } else {
+            $inputParameters = null;
         }
-        
+
         return $this->pdoStatement->execute($inputParameters);
     }
     

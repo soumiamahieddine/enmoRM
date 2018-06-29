@@ -85,7 +85,7 @@ class archive
 
         $this->view->translate();
         
-        usort($profiles, create_function('$a, $b', 'return \laabs::alphabeticalSort($a, $b, "name");'));
+        usort($profiles, array($this, "compareProfiles"));
 
         $deleteDescription = true;
         if (isset(\laabs::configuration("recordsManagement")['deleteDescription'])) {
@@ -101,6 +101,11 @@ class archive
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    private function compareProfiles($a, $b)
+    {
+        return \laabs::alphabeticalSort($a, $b, "name");
     }
 
     /**
