@@ -174,7 +174,7 @@ class PresentationKernel
      */
     protected function callUserCommand()
     {
-        if (!count($this->userCommand->services)) {
+        if (empty($this->userCommand->services)) {
             return;
         }
 

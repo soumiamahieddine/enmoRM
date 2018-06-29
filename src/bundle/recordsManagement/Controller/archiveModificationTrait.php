@@ -413,7 +413,7 @@ trait archiveModificationTrait
         $res = [];
         $res['success'] = [];
         $res['fail'] = [];
-        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", [], null, null, $limit);
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));

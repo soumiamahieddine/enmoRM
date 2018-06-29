@@ -175,8 +175,12 @@ class Factory
      * 
      * @return mixed $result
      */
-    public function execute($stmt, array $args=null)
+    public function execute($stmt, $args = [])
     {
+        if ($args == null) {
+            $args = [];
+        }
+
         if ($this->trace == 2) {
             \laabs::log($stmt->getQueryString());
         }
@@ -243,6 +247,9 @@ class Factory
             if ($this->trace > 0) {
                 \laabs::log($sqlMessage);
             }
+
+            var_dump($sqlMessage);
+            var_dump($stmt->dump());
 
             throw new \Exception(
                 "An error occured during the execution of the data access statement. " . $sqlMessage . "\n" . $stmt->dump(), 

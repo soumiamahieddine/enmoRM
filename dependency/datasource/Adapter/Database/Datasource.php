@@ -170,7 +170,7 @@ class Datasource
      * 
      * @return string
      */
-    public function prepare($queryString, array $Options=null)
+    public function prepare($queryString)
     {
         $pdoStatement = $this->pdo->prepare($queryString);
 
