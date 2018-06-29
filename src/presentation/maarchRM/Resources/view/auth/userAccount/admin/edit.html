@@ -130,8 +130,8 @@
             url = "/userAccount/" + accountId;
             type = "PUT";
         }
-        
-        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.email == "") {
+
+        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "") {
             gritter.show($('#empty_text').text(), false);
             return;
         }
