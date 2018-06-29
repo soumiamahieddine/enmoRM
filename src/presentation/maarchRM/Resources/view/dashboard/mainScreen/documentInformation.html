@@ -39,7 +39,6 @@
 <style type="text/css">
     #resourceInformation {
         font-size: 12px;
-        border-left: solid 1px #DDD;
         padding-top: 50px;
         min-height: calc(95vh - 80px);
     }
@@ -153,4 +152,8 @@
     $("#viewResource").on("click", function() {
         window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
     });
+
+    $('#resourceInformation').on('loadDocumentDetails.recordsManagement', function(e, document) {
+        DocumentInformation.load(document);
+    })
 </script>

@@ -80,7 +80,7 @@
         position: absolute;
         right: 10px;
         top: inherit; /* Handled in script */
-        z-index: 9999;
+        z-index: 8;
         margin-top: 10px;
     }
 
@@ -112,7 +112,7 @@
 
             dataList.find('.multipleSelection.fa-check-square-o').click();
 
-            DetailScreen.clear();
+            trigger("unselectArchive.recordsManagement");
             dataList.find('.bg-info').removeClass('bg-info')
                     .find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
             dataList.find('.addChildrenArchive').addClass('hide');
@@ -128,7 +128,7 @@
                 url         : "/archive/"+archiveId,
                 type        : "GET",
                 success     : function (response) {
-                    DetailScreen.load(response);
+                    trigger("showArchiveDetails.recordsManagement", [response, "/archive/"+archiveId]);
                     var div = $(response).find('>div');
                     Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'));
                 },
@@ -158,8 +158,8 @@
                 url         : "/documentInfo",
                 type        : "GET",
                 success     : function (response) {
-                    DetailScreen.load(response);
-                    DocumentInformation.load(resource.data('json'));
+                    trigger("showDocumentDetails.recordsManagement", [response]);
+                    trigger("loadDocumentDetails.recordsManagement", [response.data('json')]);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);

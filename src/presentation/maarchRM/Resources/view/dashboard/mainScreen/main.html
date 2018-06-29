@@ -1,10 +1,10 @@
 <div class="container-fluid" style="padding-top: 10px">
-    <div class="row">
+    <div id="mainScreenWrapper" class="row">
         <div class="col-md-3 col-xs-12 " id="leftColumn">
             <?hinclude /filePlan/tree.html ?>
         </div>
         <a id="toggleLeftColumn" href="#" class="hidden-sm hidden-xs"><i class="fa fa-chevron-circle-left"/></a>
-        <div class="col-md-6 col-xs-12" id="middleColumn">
+        <div class="col-md-9 col-xs-12" id="middleColumn">
             <div class="row">
                 <div class="tab-content">
                     <?hinclude dashboard/mainScreen/folder.html ?>
@@ -14,31 +14,63 @@
             </div>
         </div>
         <div class="col-md-3 col-xs-12 hidden-xs" id="rightColumn">
+            <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a>
+            <a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a>
+            <a id="closeDetailScreen" href="#" class="pull-right"><i class="fa fa-chevron-circle-right"/></a>
+            <div id="detailScreenContent"/>
         </div>
     </div>
 </div>
 
 <style>
+    #mainScreenWrapper {
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+    }
     #middleColumn .dropdown-menu {
         max-height: 300px;
         overflow-y: auto; 
     }
     #middleColumn > .row {
         padding: 0px 10px 0px 37px;
+        transition: width 0.5s ease;
     }
     #leftColumn {
         border-right: 1px solid #DDD;
     }
-    #rightColumn,  #leftColumn {
+    #rightColumn {
+        position: fixed !important;
+        right: -25%;
+        background-color: white;
+        top: 50px !important;
+        z-index: 9;
+        height: calc(100vh - 50px);
+        transition: right 0.5s ease;
+        border-left: 1px solid #DDD;
+        overflow-y: auto;
+    }
+    #rightColumn.showDetails {
+        right: 0%;
+    }
+    #leftColumn {
         min-height: calc(95vh - 80px);
+    }
+    #showMoreDetail, #closeDetailScreen, #openInNewTab {
+        font-size: 18px;
+        margin: 10px 5px;    
     }
     #toggleLeftColumn {
         position: absolute;
-        top: 65px;
         left: 25.5%;
         transition: all 0.5s ease;
         z-index: 9999;
         font-size: 18px;
+    }
+    @media (max-width: @screen-sm-min) {
+        #rightColumn {
+            right: -100%;
+        }
     }
 </style>
 
@@ -55,16 +87,46 @@
         $('#rightColumn').initSmoothScrolling();
     })
 
-    $('#toggleLeftColumn').on('click', function() { ColumnResizer.toggleLeftColumn(); });
+    // File plan
+    $('#toggleLeftColumn').on('click', function() { ColumnOrganizer.toggleLeftColumn(); });
+    
     $('#rightColumn').onEvent('clearDetail.recordsManagement', function() {
-        DetailScreen.clear();
+        ColumnOrganizer.closeDetailScreen();
     });
 
-    var ColumnResizer = {
-        left          : $('#leftColumn'),
-        middle        : $('#middleColumn'),
-        right         : $('#rightColumn'),
-        toogleLeftBtn : $('#toggleLeftColumn'),
+
+    // Detail screen
+    $('#rightColumn').onEvent("showArchiveDetails.recordsManagement", function(e, html, showMoreURI) {
+        ColumnOrganizer.showDetailsScreen(html, showMoreURI);
+    });
+    $('#rightColumn').onEvent("showDocumentDetails.recordsManagement", function(e, html) {
+        ColumnOrganizer.showDetailsScreen(html);
+    });
+
+    $('#rightColumn').onEvent("unselectArchive.recordsManagement", function(e, html) {
+        ColumnOrganizer.closeDetailScreen();
+    });
+
+    $('#closeDetailScreen').on('click', function() {
+        ColumnOrganizer.closeDetailScreen();
+    });
+
+    $('#showMoreDetail').on('click', function() {
+        ColumnOrganizer.showMoreDetail();
+    });
+
+    $('#openInNewTab').on('click', function() {
+        ColumnOrganizer.openInNewTab();
+    });
+
+
+    var ColumnOrganizer = {
+        left                : $('#leftColumn'),
+        middle              : $('#middleColumn'),
+        right               : $('#rightColumn'),
+        toogleLeftBtn       : $('#toggleLeftColumn'),
+        detailScreenContent : $('#detailScreenContent'),
+        showMoreDetailURI   : '',     
 
         toggleLeftColumn : function() {
 
@@ -80,18 +142,45 @@
                 this.right.removeClass("col-md-5").addClass("col-md-3");
                 this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
-        }
-    }
-
-    var DetailScreen = {
-        rightColumn: $('#rightColumn'),
-
-        clear: function() {
-            this.rightColumn.html('');
         },
 
-        load: function(html) {
-            this.rightColumn.empty().html(html);
+        showDetailsScreen : function(html, showMoreURI) {
+            this.detailScreenContent.empty().html(html);
+            this.right.addClass('showDetails').removeClass('hidden-xs');
+            this.middle.removeClass('col-md-9').addClass('col-md-6');
+
+            if (showMoreURI) {
+                $('#showMoreDetail').css('display', '');
+                $('#openInNewTab').css('display', '');
+                this.showMoreDetailURI = showMoreURI;
+            }
+        },
+
+        showMoreDetail : function() {
+            $.ajax({
+                url         : this.showMoreDetailURI,
+                type        : "GET",
+                success     : function (response) {
+                    ColumnOrganizer.detailScreenContent.empty().html(response);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+            $('#showMoreDetail').css('display', 'none');
+            this.right.removeClass('col-md-3').addClass('col-md-6');
+        },
+
+        closeDetailScreen : function() {
+            this.right.removeClass('showDetails col-md-6').addClass('col-md-3 hidden-xs');
+            this.middle.removeClass('col-md-6').addClass('col-md-9');
+            this.showMoreDetailURI = '';
+            $('#showMoreDetail').css('display', 'none');
+            $('#openInNewTab').css('display', 'none');
+        },
+
+        openInNewTab : function() {
+            window.open(this.showMoreDetailURI,'_blank');
         }
     }
 
