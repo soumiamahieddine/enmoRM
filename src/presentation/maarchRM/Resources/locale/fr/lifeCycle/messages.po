@@ -490,7 +490,7 @@ msgid "medona/acceptance"
 msgstr "Acceptation d'un message"
 
 msgid "medona/acknowledgement"
-msgstr "Accusé de réception"
+msgstr "Acquittement"
 
 msgid "medona/rejection"
 msgstr "Rejet d'un message"
