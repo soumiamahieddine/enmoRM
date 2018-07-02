@@ -1,10 +1,10 @@
 <div class="container-fluid" style="padding-top: 10px">
     <div id="mainScreenWrapper" class="row">
-        <div class="col-md-3 col-xs-12 " id="leftColumn">
+        <div class="col-sm-3 col-xs-12 " id="leftColumn">
             <?hinclude /filePlan/tree.html ?>
         </div>
         <a id="toggleLeftColumn" href="#" class="hidden-sm hidden-xs"><i class="fa fa-chevron-circle-left"/></a>
-        <div class="col-md-9 col-xs-12" id="middleColumn">
+        <div class="col-sm-9 col-xs-12" id="middleColumn">
             <div class="row">
                 <div class="tab-content">
                     <?hinclude dashboard/mainScreen/folder.html ?>
@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-xs-12 hidden-xs" id="rightColumn">
+        <div class="col-sm-3 col-xs-12 hidden-xs" id="rightColumn">
             <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a>
             <a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a>
             <a id="closeDetailScreen" href="#" class="pull-right"><i class="fa fa-chevron-circle-right"/></a>
@@ -107,6 +107,13 @@
         ColumnOrganizer.closeDetailScreen();
     });
 
+    $("#rightColumn").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+        console.log(parentArchiveId);
+        if (!parentArchiveId) {
+            ColumnOrganizer.closeDetailScreen();
+        }
+    });
+
     $('#closeDetailScreen').on('click', function() {
         ColumnOrganizer.closeDetailScreen();
     });
@@ -132,14 +139,14 @@
 
             if (this.left.is(':visible')) {
                 this.left.hide("slide", { direction: "left" }, 300);
-                this.middle.removeClass("col-md-6").addClass("col-md-7");
-                this.right.removeClass("col-md-3").addClass("col-md-5");
+                this.middle.removeClass("col-sm-6").addClass("col-sm-7");
+                this.right.removeClass("col-sm-3").addClass("col-sm-5");
                 this.toogleLeftBtn.css('left', '1%').addClass('fa-rotate-180');
                 
             } else {
                 this.left.show("slide", { direction: "left" }, 300);
-                this.middle.removeClass("col-md-7").addClass("col-md-6");
-                this.right.removeClass("col-md-5").addClass("col-md-3");
+                this.middle.removeClass("col-sm-7").addClass("col-sm-6");
+                this.right.removeClass("col-sm-5").addClass("col-sm-3");
                 this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
         },
@@ -147,7 +154,7 @@
         showDetailsScreen : function(html, showMoreURI) {
             this.detailScreenContent.empty().html(html);
             this.right.addClass('showDetails').removeClass('hidden-xs');
-            this.middle.removeClass('col-md-9').addClass('col-md-6');
+            this.middle.removeClass('col-sm-9').addClass('col-sm-6');
 
             if (showMoreURI) {
                 $('#showMoreDetail').css('display', '');
@@ -168,12 +175,12 @@
                 }
             })
             $('#showMoreDetail').css('display', 'none');
-            this.right.removeClass('col-md-3').addClass('col-md-6');
+            this.right.removeClass('col-sm-3').addClass('col-sm-6');
         },
 
         closeDetailScreen : function() {
-            this.right.removeClass('showDetails col-md-6').addClass('col-md-3 hidden-xs');
-            this.middle.removeClass('col-md-6').addClass('col-md-9');
+            this.right.removeClass('showDetails col-sm-6').addClass('col-sm-3 hidden-xs');
+            this.middle.removeClass('col-sm-6').addClass('col-sm-9');
             this.showMoreDetailURI = '';
             $('#showMoreDetail').css('display', 'none');
             $('#openInNewTab').css('display', 'none');
