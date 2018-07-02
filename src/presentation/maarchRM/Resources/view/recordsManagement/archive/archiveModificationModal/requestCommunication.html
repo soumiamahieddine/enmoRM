@@ -4,7 +4,7 @@
 
         parameter.derogation = 0;
         if ($('#derogationTr').is(':visible') && $("#derogationTr [name='sendDerogation']").is(':checked')) {
-            if ($("#derogationTypeahead").val().length !== 0) {
+            if ($("#derogationInput").val().length !== 0) {
                 parameter.derogation = 1;
             }else {
                     gritter.show($('#empty_text').html(), false);
