@@ -65,6 +65,27 @@ interface appInterface
 
     /**
      * Search form
+     * @param string $archiveId
+     * @param string $profileReference
+     * @param string $status
+     * @param string $archiveName
+     * @param string $agreementReference
+     * @param string $archiveExpired
+     * @param string $finalDisposition
+     * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @uses recordsManagement/archives/read
      *
@@ -80,8 +101,18 @@ interface appInterface
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
         $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
         $description = null,
-        $text = null
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     );
 
     /**

@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div id="advancedSearchPanel" class="col-xs-12 collapse">
+<div id="advancedSearchPanel" class="col-xs-12 collapse" data-translate-catalog="recordsManagement/messages">
     <div class="col-xs-12">
         <form class="form-horizontal ">
             <div class="form-group">  
@@ -200,7 +200,8 @@ FulltextSearchForm = {
             profileReference     : "",
             filePlanPosition     : this.form.data('folderid'),
             orgRegNumber         : this.form.data('orgregnumber'),
-            originatingDate      : ""
+            originatingStartDate : advancedSearchPanel.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
+            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')
         };
 
         var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
