@@ -359,6 +359,7 @@ class welcome
 
             if (isset($archive->descriptionObject)) {
                 foreach ($archive->descriptionObject as $name => $value) {
+                    $isImmutable = false;
                     $label = $type = $archivalProfileField = null;
                     if ($archivalProfile) {
                         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -395,19 +396,17 @@ class welcome
                         }
                     }
                     if(!is_array($value)){
-
                         if ($archivalProfileField) {
                             $descriptionHtml .= '<tr class="archivalProfileField">';
                         } else {
                             $descriptionHtml .= '<tr>';
                         }
 
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
-                    if ($type == "date") {
-                            $textValue = \laabs::newDate($value);
-                    } else {
-                        $textValue = $value;
-
+                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
+                        if ($type == "date") {
+                                $textValue = \laabs::newDate($value);
+                        } else {
+                            $textValue = $value;
                         }
                         if ($type == 'boolean') {
                             $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
@@ -415,9 +414,6 @@ class welcome
 
                         $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
                         $descriptionHtml .= '</tr>';
-                    }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
                     }
                 }
 
