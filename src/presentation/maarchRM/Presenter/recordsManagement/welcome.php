@@ -376,23 +376,25 @@ class welcome
                         $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
 
-                    if (empty($type) && $value != "") {
+                    if (empty($type)) {
                         $type = 'text';
-                        switch (gettype($value)) {
-                            case 'boolean':
-                                $type = 'boolean';
-                                break;
+                        if (!empty($value)) {
+                            switch (gettype($value)) {
+                                case 'boolean':
+                                    $type = 'boolean';
+                                    break;
 
-                            case 'integer':
-                            case 'double':
-                                $type = 'number';
-                                break;
+                                case 'integer':
+                                case 'double':
+                                    $type = 'number';
+                                    break;
 
-                            case 'string':
-                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                    $type = 'date';
-                                }
-                                break;
+                                case 'string':
+                                    if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                        $type = 'date';
+                                    }
+                                    break;
+                            }
                         }
                     }
                     if(!is_array($value)){
