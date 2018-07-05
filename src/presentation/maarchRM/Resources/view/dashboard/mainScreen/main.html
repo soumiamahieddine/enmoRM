@@ -99,8 +99,11 @@
     $('#rightColumn').onEvent("showArchiveDetails.recordsManagement", function(e, html, showMoreURI) {
         ColumnOrganizer.showDetailsScreen(html, showMoreURI);
     });
-    $('#rightColumn').onEvent("showDocumentDetails.recordsManagement", function(e, html) {
+    $('#rightColumn').onEvent("showDocumentDetails.recordsManagement", function(e, html, resource) {
         ColumnOrganizer.showDetailsScreen(html);
+        if (typeof DocumentInformation.load === "function") {
+            DocumentInformation.load(resource);
+        }
     });
 
     $('#rightColumn').onEvent("unselectArchive.recordsManagement", function(e, html) {
@@ -108,7 +111,6 @@
     });
 
     $("#rightColumn").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
-        console.log(parentArchiveId);
         if (!parentArchiveId) {
             ColumnOrganizer.closeDetailScreen();
         }

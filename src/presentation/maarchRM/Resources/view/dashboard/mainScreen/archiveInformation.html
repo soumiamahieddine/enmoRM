@@ -5,8 +5,7 @@
     <input class="originatingDate hide" value="[?merge archive.originatingDate ?]">
 
     <div class="col-xs-12 text-center">
-        <i class="infoIcon fa fa-archive [?merge status.ifne('frozen').then('hide', '') ?]" style="color: #69B5DB"/>
-        <i class="infoIcon fa fa-archive [?merge status.ifeq('frozen').then('hide', '') ?]"/> 
+        <i class="infoIcon fa [?merge archive.fileplanLevel.ifeq('item').then('fa-file', 'fa-archive') ?]" style="[?merge status.ifeq('frozen').then('color: #69B5DB', '') ?]"/>
     </div>
     <div class="col-xs-12">
         <h4 class="text-center text-info">
