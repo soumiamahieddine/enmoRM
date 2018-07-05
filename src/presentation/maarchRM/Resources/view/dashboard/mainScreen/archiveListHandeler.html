@@ -158,8 +158,7 @@
                 url         : "/documentInfo",
                 type        : "GET",
                 success     : function (response) {
-                    trigger("showDocumentDetails.recordsManagement", [response]);
-                    trigger("loadDocumentDetails.recordsManagement", [response.data('json')]);
+                    trigger("showDocumentDetails.recordsManagement", [response, resource.data('json')]);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);

@@ -36,10 +36,12 @@
     FolderForm = {
         form : $('#folderForm'),
         load: function(folder) {
+            console.log(folder);
             $('#filePlanTree').addClass('hide');
             $('#filePlanMenu').css('visibility', 'hidden');
 
             $.each(folder, function(key, value) {
+                console.log(key, value);
                 FolderForm.form.find('[name="'+key+'"]').not('[type="radio"]').val(value);
             })
             if (folder.closed == true) {
@@ -88,9 +90,9 @@
                     if (response.status) {
                         if (type == 'POST') {
                             folder.folderId = response.folderId;
-                            FilePlan.addFolderNode(folder);
+                            trigger('addFolderNode.filePlan', [folder]);
                         } else {
-                            FilePlan.editFolderNode(folder);
+                            trigger('editFolderNode.filePlan', [folder]);
                         }
                         FolderForm.close();
                     }

@@ -175,7 +175,7 @@
         editFolder: function() {
             var folder = {
                 folderId          : this.selectedNode.attr('id'),
-                name              : this.selectedNode.find('b:first').find('span').html(),
+                name              : this.selectedNode.find('b:first').text().trim(),
                 description       : this.selectedNode.data('description'),
                 parentFolderId    : this.selectedNode.data('parentid'),
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber'),
@@ -218,7 +218,8 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').append(folder.name);
+                .children('b').html($('<i/>').addClass('fa fa-folder-o'))
+                              .append(" " +folder.name);
 
             return node;
         },
@@ -377,5 +378,13 @@
     });
     $('#filePlanTree').onEvent("archiveImportOver.recordsManagement", function() {
         FilePlan.locked = false;
+    });
+
+    $('#filePlanTree').onEvent("addFolderNode.filePlan", function(e, folder) {
+        FilePlan.addFolderNode(folder);
+    });
+
+    $('#filePlanTree').onEvent("editFolderNode.filePlan", function(e, folder) {
+        FilePlan.editFolderNode(folder);
     });
 </script>
