@@ -493,7 +493,7 @@ var DataList = {
         var a = $(this);
         var id = a.closest('.dataList').data('datalist-id');
         var filterInput = a.closest('.filterList');
-        var filterValue = filterInput.find('input').val();
+        var filterValue = filterInput.find('input').val().toLowerCase();
         var filteredDatas = [];
 
         if(filterValue == ""){
@@ -510,6 +510,9 @@ var DataList = {
 
                     if(!unsearchable){
                         var haystack = value;
+                        if (haystack) {
+                            haystack = haystack.toLowerCase();
+                        }
                         if (value && value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
                             haystack = value.substring(0, 10);
                         }
