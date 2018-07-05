@@ -145,6 +145,11 @@ trait archiveCommunicationTrait
                     $queryParams['retentionRuleCode'] = $retentionRuleCode;
                 }
 
+                if ($filePlanPosition){
+                    $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
+                    $queryParams['filePlanPosition'] = $filePlanPosition;
+                }
+
                 if ($originatorOrgRegNumber){
                     $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
                     $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
