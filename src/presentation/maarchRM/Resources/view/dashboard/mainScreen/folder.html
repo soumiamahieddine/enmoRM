@@ -87,7 +87,6 @@
 
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
-        textMaxLength : 25,
         load: function(path) {
             var height = 0;
             this.breadcrumb.html('');
@@ -128,9 +127,6 @@
 
         buildLink: function(e, truncate) {
             var text = e[0];
-            if (e[0].length > this.textMaxLength && truncate === true) {
-                text = e[0].substring(0,this.textMaxLength)+ "...";
-            }
             return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[1]));
         },
 
