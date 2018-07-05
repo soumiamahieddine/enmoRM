@@ -133,20 +133,33 @@
         right               : $('#rightColumn'),
         toogleLeftBtn       : $('#toggleLeftColumn'),
         detailScreenContent : $('#detailScreenContent'),
-        showMoreDetailURI   : '',     
+        showMoreDetailURI   : '',
 
         toggleLeftColumn : function() {
 
             if (this.left.is(':visible')) {
                 this.left.hide("slide", { direction: "left" }, 300);
-                this.middle.removeClass("col-sm-6").addClass("col-sm-7");
-                this.right.removeClass("col-sm-3").addClass("col-sm-5");
+
+                if (this.middle.hasClass("col-sm-9")) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-12");
+                } else if (this.middle.hasClass("col-sm-6")) {
+                    this.middle.removeClass("col-sm-6").addClass("col-sm-9");
+                }
+
                 this.toogleLeftBtn.css('left', '1%').addClass('fa-rotate-180');
                 
             } else {
                 this.left.show("slide", { direction: "left" }, 300);
-                this.middle.removeClass("col-sm-7").addClass("col-sm-6");
-                this.right.removeClass("col-sm-5").addClass("col-sm-3");
+
+                if (this.middle.hasClass("col-sm-12")) {
+                    this.middle.removeClass("col-sm-12").addClass("col-sm-9");
+                } else if (this.middle.hasClass('col-sm-9') && this.right.hasClass('showDetails')) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-6");
+                } else if (this.middle.hasClass('col-sm-9')) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-12");
+                }
+
+
                 this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
         },
@@ -154,7 +167,12 @@
         showDetailsScreen : function(html, showMoreURI) {
             this.detailScreenContent.empty().html(html);
             this.right.addClass('showDetails').removeClass('hidden-xs');
-            this.middle.removeClass('col-sm-9').addClass('col-sm-6');
+
+            if (this.middle.hasClass('col-sm-9')) {
+                this.middle.removeClass('col-sm-9').addClass('col-sm-6');
+            } else if (this.middle.hasClass('col-sm-12')) {
+                this.middle.removeClass('col-sm-12').addClass('col-sm-9');
+            }
 
             if (showMoreURI) {
                 $('#showMoreDetail').css('display', '');
@@ -179,8 +197,17 @@
         },
 
         closeDetailScreen : function() {
+            if (!this.right.hasClass('showDetails')) {
+                return;
+            }
             this.right.removeClass('showDetails col-sm-6').addClass('col-sm-3 hidden-xs');
-            this.middle.removeClass('col-sm-6').addClass('col-sm-9');
+
+            if (this.middle.hasClass('col-sm-6')) {
+                this.middle.removeClass('col-sm-6').addClass('col-sm-9');
+            } else if (this.middle.hasClass('col-sm-9')) {
+                this.middle.removeClass('col-sm-9').addClass('col-sm-12');
+            }
+
             this.showMoreDetailURI = '';
             $('#showMoreDetail').css('display', 'none');
             $('#openInNewTab').css('display', 'none');
