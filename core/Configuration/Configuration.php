@@ -44,7 +44,8 @@ class Configuration
             } else {
                 self::$instance = new Configuration();
                 self::$instance->registerVariable('laabsDirectory', dirname(getcwd()));
-                
+                self::$instance->registerVariable('version', \laabs::getVersion());
+
                 $confFile = \laabs::getConfiguration();
                 self::$instance->loadFile($confFile);
                 

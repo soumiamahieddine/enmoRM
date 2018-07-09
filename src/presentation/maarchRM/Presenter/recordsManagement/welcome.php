@@ -62,8 +62,9 @@ class welcome
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
-        $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
-
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $user = $userAccountController->get($accountToken->accountId);
+        
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
@@ -162,7 +163,7 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
+            $archive->originatingDate = $archive->originatingDate;
         }
 
         // Retention
@@ -176,6 +177,7 @@ class welcome
 
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $fileplanLevel = false;
         if ($depositPrivilege) {
             if (!empty($archive->archivalProfileReference)) {
                 $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
@@ -245,8 +247,11 @@ class welcome
 
         if (isset(\laabs::configuration('presentation.maarchRM')['displayableFormat'])) {
             $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
-            $this->view->merge();
+        } else {
+            $this->view->setSource("displayableFormat", json_encode(array()));
         }
+
+        $this->view->merge();
 
         return $this->view->saveHtml();
     }
@@ -344,7 +349,6 @@ class welcome
         $archivalProfile = null;
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
 
-
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
             $archive->archivalProfileName = $archivalProfile->name;
@@ -360,6 +364,7 @@ class welcome
 
             if (isset($archive->descriptionObject)) {
                 foreach ($archive->descriptionObject as $name => $value) {
+                    $isImmutable = false;
                     $label = $type = $archivalProfileField = null;
                     if ($archivalProfile) {
                         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -367,6 +372,7 @@ class welcome
                                 $label = $archiveDescription->descriptionField->label;
                                 $archivalProfileField = true;
                                 $type = $archiveDescription->descriptionField->type;
+                                $isImmutable = $archiveDescription->isImmutable;
                             }
                         }
                     }
@@ -394,26 +400,26 @@ class welcome
                                 break;
                         }
                     }
+                    if(!is_array($value)){
+                        if ($archivalProfileField) {
+                            $descriptionHtml .= '<tr class="archivalProfileField">';
+                        } else {
+                            $descriptionHtml .= '<tr>';
+                        }
 
-                    if ($archivalProfileField) {
-                        $descriptionHtml .= '<tr class="archivalProfileField">';
-                    } else {
-                        $descriptionHtml .= '<tr>';
-                    }
+                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
+                        if ($type == "date") {
+                                $textValue = \laabs::newDate($value);
+                        } else {
+                            $textValue = $value;
+                        }
+                        if ($type == 'boolean') {
+                            $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                        }
 
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                    if ($type == "date") {
-                            $textValue = \laabs::newDate($value);
-                            $textValue = $textValue->format("d/m/Y");
-                    } else {
-                        $textValue = $value;
-
+                        $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
+                        $descriptionHtml .= '</tr>';
                     }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                    }
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                    $descriptionHtml .= '</tr>';
                 }
 
             }

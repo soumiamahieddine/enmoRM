@@ -50,7 +50,6 @@
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
     SetEnv LAABS_CRYPT_KEY mySecretKey
-    SetEnv LAABS_CRYPT_CIPHER MCRYPT_BLOWFISH
 </VirtualHost>
 
 <VirtualHost *:80>
@@ -103,5 +102,4 @@
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
     SetEnv LAABS_CRYPT_KEY mySecretKey
-    SetEnv LAABS_CRYPT_CIPHER MCRYPT_BLOWFISH
 </VirtualHost>

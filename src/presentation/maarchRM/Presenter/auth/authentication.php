@@ -72,7 +72,6 @@ class authentication
     {
         $view = $this->view;
 
-        $view->addHeaders();
         $view->addContentFile("auth/userAccount/login/form.html");
         $view->setSource('logo', $this->logoUri);
         $view->translate();

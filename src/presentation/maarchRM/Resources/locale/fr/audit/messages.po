@@ -155,6 +155,72 @@ msgstr "Compte de service"
 msgid "No account found"
 msgstr "Aucun compte trouvé"
 
+msgid "Journal detail"
+msgstr "Détail du journal"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "To date"
+msgstr "Date de début"
+
+msgid "From date"
+msgstr "Date de fin"
+
+msgid "Download journal"
+msgstr "Télécharger le journal (csv)"
+
+msgid "Path"
+msgstr "Route"
+
+msgid "remoteIp"
+msgstr "Ip distant"
+
+msgid "New journal identifier : %s"
+msgstr "Identifiant du journal archivé : %s"
+
+msgid "Timestamp file generated"
+msgstr "Fichier d'horodatage généré"
+
+msgid "%s archives checked"
+msgstr "%s archive(s) vérifiée(s)"
+
+msgid "%s archives are valid"
+msgstr "%s archive(s) valide(s)"
+
+msgid "%s archives are not valid"
+msgstr "%s archive(s) non-valide(s)"
+
+msgid "%s archives are communicated"
+msgstr "%s archive(s) communiquée(s)"
+
+msgid "%s archives are deleted"
+msgstr "%s archive(s) détruite(s)"
+
+msgid "%s archives are restituted"
+msgstr "%s archive(s) restituée(s)"
+
+msgid "Invalid archive identifier : %s"
+msgstr "Identifiant des archives invalides : %s"
+
+msgid "Error on integrity check"
+msgstr "Erreur lors de la vérification d'intégrité"
+
+msgid "%s archive(s) to check"
+msgstr "%s archive(s) à vérifier"
+
+msgid "%s archive(s) in sample"
+msgstr "%s archive(s) dans l'échantillon"
+
+msgid "%s archive(s) checked"
+msgstr "%s archive(s) vérifiée(s)"
+
+msgid "%s message(s) validate"
+msgstr "%s bordereau(x) validé(s)"
+
+msgid "%s message(s) processed"
+msgstr "%s bordereau(x) traité(s)"
+
 msgid "recordsManagement/accessRule/readIndex"
 msgstr "Lecture des règles de communicabilité"
 
@@ -371,6 +437,9 @@ msgstr "Suppression d'un journal de l'application"
 
 msgid "recordsManagement/log/form"
 msgstr "Recherche des journaux de l'application"
+
+msgid "recordsManagement/log/contents_type__archiveId__resourceId_"
+msgstr "Lecture du detail d'un journal"
 
 msgid "recordsManagement/retentionRule/readIndex"
 msgstr "Lecture de toutes les règles de conservation"
@@ -634,7 +703,7 @@ msgid "medona/archiveDestruction/readHistory"
 msgstr "Lecture de l'historique de destruction"
 
 msgid "medona/archiveDestruction/updateDisposearchives"
-msgstr "Marques des archives pour destruction"
+msgstr "Marquer des archives pour destruction"
 
 msgid "medona/archiveModification/updateFreeze"
 msgstr "Gel d'une archive avec génération d'un bordereau de modification"
@@ -1646,4 +1715,7 @@ msgstr "Réinitialisation du compte oublié"
 
 msgid "auth/userAccount/updateResetpassword"
 msgstr "Réinitialisation du mot de passe"
+
+msgid "organization/orgContact/readCountriesCodes"
+msgstr "Lecture de la liste des pays"
 

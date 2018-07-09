@@ -351,7 +351,6 @@ class repository
             $address->integrityCheckResult = false;
         }
 
-            var_dump('ok');
         $this->sdoFactory->update($address, 'digitalResource/address');
 
         return $address->integrityCheckResult;
@@ -394,7 +393,7 @@ class repository
 
         $repositoryServiceArgs['name'] = $repository->repositoryUri;
 
-        if (count($repository->parameters)) {
+        if (!empty($repository->parameters)) {
             $repositoryServiceArgs['options'] = $repository->parameters;
         }
 

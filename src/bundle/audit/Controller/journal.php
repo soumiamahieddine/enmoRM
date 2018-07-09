@@ -73,7 +73,7 @@ class journal
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
             }
 
-            $events = $this->sdoFactory->find('audit/event', $queryString, null, "<eventDate");
+            $events = $this->sdoFactory->find('audit/event', $queryString, [], "<eventDate");
 
         } else {
             // No previous journal, select all events
@@ -115,6 +115,17 @@ class journal
             $eventLine[] = (string) $event->accountId;
             $eventLine[] = (string) $event->path;
             $eventLine[] = (string) $event->status;
+            
+            if (isset($event->output)) {
+                $output = json_decode($event->output);
+                if ($output) {
+                    $messages = [];
+                    foreach ($output as $value) {
+                        $messages[] = $value->fullMessage;
+                    }
+                    $eventLine[] = implode('  ', $messages);
+                }
+            }
 
             fputcsv($journalFile, $eventLine);
         }

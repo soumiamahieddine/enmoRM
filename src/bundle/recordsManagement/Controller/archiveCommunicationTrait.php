@@ -158,14 +158,14 @@ trait archiveCommunicationTrait
                 if ($originatingStartDate && $originatingEndDate) {
                     $queryParams['originatingStartDate'] = $originatingStartDate;
                     $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['depositDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
+                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
                 } elseif ($originatingStartDate) {
                     $queryParams['originatingStartDate'] = $originatingStartDate;
-                    $queryParts['depositDate'] = "originatingDate >= :depositStartDate";
+                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate";
 
                 } elseif ($originatingEndDate) {
                     $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['date'] = "originatingDate <= :originatingEndDate";
+                    $queryParts['originatingDate'] = "originatingDate <= :originatingEndDate";
                 }
 
                 if ($depositStartDate && $depositEndDate) {
@@ -178,7 +178,7 @@ trait archiveCommunicationTrait
 
                 } elseif ($depositEndDate) {
                     $queryParams['depositEndDate'] = $depositEndDate;
-                    $queryParts['date'] = "depositDate <= :depositEndDate";
+                    $queryParts['depositDate'] = "depositDate <= :depositEndDate";
                 }
                 if($archiveExpired){
                     $currentDate = \laabs::newDate();
@@ -198,17 +198,18 @@ trait archiveCommunicationTrait
                 }
 
             }
+
+            $queryParams['descriptionClass'] = 'recordsManagement/log';
+            $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
+
+
             $queryString = \laabs\implode(' AND ', $queryParts);
-            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 100);
+            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
         }
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
                 $archive->disposable = true;
-            }
-
-            if (isset($originators[$archive->originatorOrgRegNumber])) {
-                $archive->originator = $originators[$archive->originatorOrgRegNumber];
             }
         }
 
@@ -269,7 +270,25 @@ trait archiveCommunicationTrait
             throw $e;
         }
 
-        return $digitalResource;
+        $binaryDataObject = \laabs::newInstance("recordsManagement/BinaryDataObject");
+        $binaryDataObject->attachment = new \stdClass();
+        $binaryDataObject->attachment->data = base64_encode($digitalResource->getContents());
+        $binaryDataObject->attachment->uri = "";
+        $binaryDataObject->attachment->filename = $digitalResource->fileName;
+
+        if (!empty($digitalResource->fileExtension)) {
+            $digitalResource->fileName = $digitalResource->fileName . $digitalResource->fileExtension;
+        }
+
+        $binaryDataObject->format = $digitalResource->puid;
+        $binaryDataObject->mimetype = $digitalResource->mimetype;
+        $binaryDataObject->size = $digitalResource->size;
+
+        $binaryDataObject->messageDigest = new \stdClass();
+        $binaryDataObject->messageDigest->value = $digitalResource->hash;
+        $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
+
+        return $binaryDataObject;
     }
 
     /**

@@ -68,6 +68,7 @@
                                             <option value="preserved">Preserved</option>
                                             <option value="frozen">Frozen</option>
                                             <option value="disposable">Waiting for destruction</option>
+                                            <option value="error">Error</option>
                                             <?merge deleteDescription.bool().not() ?>
                                             <option value="disposed">Disposed</option>
                                         </select>
@@ -138,7 +139,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label"></label>
+                                    <label class="col-sm-4 control-label">DAU</label>
                                     <div class="btn-group col-sm-6" data-toggle="buttons">
                                         <label class="btn btn-info active archiveExpired" title="All">
                                             <input type="radio" name="archiveExpired" value="" checked/> All
@@ -259,6 +260,12 @@
         $('#archive_searchForm').find("input[name='archiveExpired'][value='']").parent().click();
         $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
         $('#originatorOrgInfo').hide();
+
+        delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=depositEndDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
+        delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
+
         $('#archive_searchResult').empty();
     });
 

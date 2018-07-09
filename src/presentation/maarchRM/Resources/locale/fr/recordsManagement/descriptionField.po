@@ -59,3 +59,6 @@ msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez
 msgid "You must define all required fields"
 msgstr "Vous devez remplir tous les champs obligatoires."
 
+msgid "Multiple value"
+msgstr "Valeur multiple"
+

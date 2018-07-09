@@ -7,4 +7,6 @@ INSERT INTO "batchProcessing"."scheduling"
 ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
 ('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
 ('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
-('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');
+('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused'),
+('fulltext', 'Extraction plein texte', 'System', '06', '00;05;;;;;;;', null,null,null,'paused'),
+('updateArchiveRetentionRule', 'Mise à jour de la durée d''utilité administrative', 'System', '07', '00;06;;;;;;;', null,null,null,'paused');

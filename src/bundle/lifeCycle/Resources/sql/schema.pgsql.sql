@@ -46,3 +46,12 @@ CREATE TABLE "lifeCycle"."eventFormat"
 WITH (
   OIDS=FALSE
 );
+
+
+CREATE INDEX
+  ON "lifeCycle"."event"
+  ("objectId");
+
+CREATE INDEX
+  ON "lifeCycle"."event"
+  ("timestamp");
