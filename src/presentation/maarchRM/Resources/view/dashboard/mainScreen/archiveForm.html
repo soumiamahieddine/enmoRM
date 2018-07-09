@@ -83,18 +83,34 @@
     });
     
     var ArchiveForm = {
-        send : function() {
-            var archive = this.serialize();
+        send : function(type) {
+            var archive = this.syncSerialize(type);
 
-            if (archive < 0) {
-                return;
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
+
+                if (archive < 0) {
+                    return;
+                }
+
+                data = JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer});
+            }else {
+                url = "/transfer";
+                data = this.asyncSerialize();
+
+                if (data.message <0) {
+                    return;
+                }
+
+                data = JSON.stringify(data);
             }
 
             ajax($('#import'),
                 {
                     type        : 'POST',
-                    url         : "/archive",
-                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
+                    url         : url,
+                    data        : data,
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
@@ -211,13 +227,13 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        serialize : function() {
+        syncSerialize : function() {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
                 descriptionObject : {}
-            }
+            };
 
             inputs.each(function() {
                 var value = $(this).val();
@@ -227,7 +243,7 @@
                     }
                     archive[$(this).attr('name')] = value;
                 }
-            })
+            });
 
             var selectedProfile = $('#archivalProfile').data('json');
 
@@ -242,11 +258,6 @@
             if (archive.descriptionObject === true) {
                 return -1;
             }
-
-            /*if (archive.archiveName == null || archive.archiveName == "") {
-                gritter.show($('#fieldLabel_error').text(), false);
-                return -2;
-            }*/
 
             archive.digitalResources = DocumentList.serialize();
 
@@ -263,6 +274,133 @@
             }
 
             return archive;
+        },
+
+        asyncSerialize : function() {
+            var form = $('#archiveForm, #managementMetadataForm');
+            var inputs = form.find('.archiveInput');
+            var data = {
+                messageFile : {
+                    binaryDataObject : {},
+                    descriptiveMetadata : {}
+                },
+                attachments : []
+            };
+
+            var id = Math.random().toString(36).substr(2, 9);
+            var obj = {};
+            obj[id] = {
+                archiveName                 : null,
+                originatorArchiveId         : null,
+                originatorId                : null,
+                archiveType                 : null,
+                descriptionObject           : {},
+                originatingDate             : null,
+                managementMetadata          : {
+                    storageRule             : {},
+                    accessRule              : {},
+                    appraisalRule           : {},
+                    classificationRule      : {}
+                },
+                descriptionClass            : null,
+                dataObject                  : []
+            };
+
+            inputs.each(function() {
+                var value = $(this).val();
+
+                switch ($(this).attr('name')) {
+                    case 'archivalProfileReference' :
+                        if (value) {
+                            obj[id].managementMetadata.archivalProfile = value;
+                        }
+                        break;
+                    case 'archiveName' :
+                        if (value) {
+                            obj[id].archiveName = value;
+                        }
+                        break;
+                    case 'originatingDate' :
+                        if (value) {
+                            obj[id].originatingDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
+                    case 'originatorArchiveId' :
+                        if (value) {
+                            obj[id].originatorArchiveId = value;
+                        }
+                        break;
+                    case 'originatorOrgRegNumber' :
+                        if (value) {
+                            obj[id].originatorId = value;
+                        }
+                        break;
+                    case 'filePlanPosition' :
+                        if (value) {
+                            obj[id].folderPath = value;
+                        }
+                        break;
+                    case 'parentArchiveId' :
+                        if (value) {
+                            obj[id].parentArchiveId = value;
+                        }
+                        break;
+                    case 'retentionRuleCode' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.code = value;
+                        }
+                        break;
+                    case 'retentionStartDate' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.startDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
+                }
+            });
+
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                obj[id].descriptionClass = selectedProfile.descriptionClass;
+                if (selectedProfile.fileplanLevel != null) {
+                    if (selectedProfile.fileplanLevel === 'file') {
+                        obj[id].archiveType = 'container';
+                    } else {
+                        obj[id].archiveType = 'item';
+                    }
+                }
+            }
+
+            if (!obj[id].archiveType) {
+                obj[id].archiveType = 'item';
+            }
+
+            obj[id].descriptionObject = Metadata.serialize($('#allFields'));
+            if (obj[id].descriptionObject === true) {
+                return -1;
+            }
+
+            data.messageFile.binaryDataObject = DocumentList.asyncSerialize();
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                if (obj[id].archiveType === 'item' && data.messageFile.binaryDataObject==null) {
+                    gritter.show($('#documentMissing_error').text(), false);
+                    return -2;
+                }
+            }
+
+            if (!selectedProfile && !obj[id].archiveName && !obj[id].originatorArchiveId && !obj[id].originatingDate && data.messageFile.binaryDataObject == null) {
+                gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
+                return -3;
+            }
+
+            $.each(data.messageFile.binaryDataObject, function(index, value) {
+                obj[id].dataObject.push(index);
+            });
+
+            data.messageFile.descriptiveMetadata[id] = obj[id];
+            data.messageFile = btoa(JSON.stringify(data.messageFile));
+            return data;
         },
 
         clear : function() {

@@ -864,8 +864,11 @@ msgstr "Métadonnées"
 msgid "Import"
 msgstr "Importer"
 
-msgid "Click or drop documents"
-msgstr "Cliquez ou déposez des documents"
+msgid "Import with validation"
+msgstr "Importer avec validation"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
 
 msgid "Folder"
 msgstr "Dossier"
