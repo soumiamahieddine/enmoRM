@@ -248,9 +248,6 @@ class Factory
                 \laabs::log($sqlMessage);
             }
 
-            var_dump($sqlMessage);
-            var_dump($stmt->dump());
-
             throw new \Exception(
                 "An error occured during the execution of the data access statement. " . $sqlMessage . "\n" . $stmt->dump(), 
                 null, 
