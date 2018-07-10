@@ -642,10 +642,10 @@ msgstr "Autorité de contrôle par défaut"
 msgid "Send to third party"
 msgstr "Communication à un tiers"
 
-msgid "Requestor"
+msgid "Requester"
 msgstr "Demandeur"
 
-msgid "If you deactivate this option, you agree not to communicate these archives outside the originator service."
+msgid "If you desactivate this option, you agree not to communicate these archives outside the originator service."
 msgstr "En désactivant cette option, vous vous engagez à ne pas communiquer ces archives en dehors du service producteur."
 
 msgid "Sent a derogation for"
