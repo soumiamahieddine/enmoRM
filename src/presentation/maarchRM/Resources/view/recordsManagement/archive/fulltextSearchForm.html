@@ -166,8 +166,7 @@ FulltextSearchForm = {
 
     search : function() {
         var query = this.serialize();
-        if (query.text == '' && query.description == "" && query.originatingDate == "" && query.profileReference == "") {
-
+        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "") {
             if (query.filePlanPosition) {
                 trigger('loadFolder.filePlan', [query.filePlanPosition]);
 
@@ -176,7 +175,6 @@ FulltextSearchForm = {
             }
             return;
         }
-
 
         ajax($('#searchForm_inputSearchBtn'),{
             type        : 'GET',
@@ -218,6 +216,10 @@ FulltextSearchForm = {
         var originatingDateStop = advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
         if (originatingDateStart || originatingDateStop) {
             query.originatingDate = [originatingDateStart, originatingDateStop]
+        }
+
+        if (!query.filePlanPosition) {
+            query.filePlanPosition = "";
         }
 
         var advancedSearchField = this.form.find('.advancedSearchField:visible');
