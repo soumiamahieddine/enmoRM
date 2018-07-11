@@ -304,7 +304,7 @@
                     classificationRule      : {}
                 },
                 descriptionClass            : null,
-                dataObject                  : []
+                dataObjects                 : []
             };
 
             inputs.each(function() {
@@ -396,7 +396,7 @@
             }
 
             $.each(data.messageFile.binaryDataObject, function(index, value) {
-                obj[id].dataObject.push(index);
+                obj[id].dataObjects.push(index);
             });
 
             data.messageFile.descriptiveMetadata[id] = obj[id];
