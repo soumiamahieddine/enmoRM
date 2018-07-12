@@ -677,3 +677,9 @@ msgstr "Description de l'objet"
 
 msgid "Originating date"
 msgstr "Date de production"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "Container"
+msgstr "Conteneur"
