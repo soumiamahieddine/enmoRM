@@ -185,6 +185,9 @@ msgstr "Date de fin"
 msgid "Message identifier"
 msgstr "Identifiant du bordereau"
 
+msgid "Message"
+msgstr "Bordereau"
+
 msgid "Request communication"
 msgstr "Demandes de communication"
 
@@ -636,3 +639,17 @@ msgctxt "meta-data"
 msgid "Default control authority"
 msgstr "Autorité de contrôle par défaut"
 
+msgid "Send to third party"
+msgstr "Communication à un tiers"
+
+msgid "Requester"
+msgstr "Demandeur"
+
+msgid "If you desactivate this option, you agree not to communicate these archives outside the originator service."
+msgstr "En désactivant cette option, vous vous engagez à ne pas communiquer ces archives en dehors du service producteur."
+
+msgid "Sent a derogation for"
+msgstr "Envoi d'une dérogation pour"
+
+msgid "Service or organization"
+msgstr "Service ou organisation"
