@@ -168,6 +168,10 @@
 
         showDetailsScreen : function(html, showMoreURI) {
             this.detailScreenContent.empty().html(html);
+            if (this.detailScreenContent.hasClass('showDetails')) {
+                return true;
+            }
+            
             this.right.addClass('showDetails').removeClass('hidden-xs');
 
             if (this.middle.hasClass('col-sm-9')) {
