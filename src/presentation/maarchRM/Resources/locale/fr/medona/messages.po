@@ -651,5 +651,14 @@ msgstr "En désactivant cette option, vous vous engagez à ne pas communiquer ce
 msgid "Sent a derogation for"
 msgstr "Envoi d'une dérogation pour"
 
+msgid "Originating date"
+msgstr "Date de production"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "Container"
+msgstr "Conteneur"
+
 msgid "Service or organization"
 msgstr "Service ou organisation"

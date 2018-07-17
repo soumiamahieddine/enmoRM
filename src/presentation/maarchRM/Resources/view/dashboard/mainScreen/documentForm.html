@@ -161,6 +161,34 @@
             }
 
             return digitalResources;
+        },
+
+        asyncSerialize: function() {
+            var tr = this.list.find('tr');
+
+            var binaryDataObject = {};
+
+            $.each(tr, function(){
+                var id = Math.random().toString(36).substr(2, 9);
+                var obj = {};
+                obj[id] = {
+                    attachment : {
+                        value        : null,
+                        filename    : null
+                    },
+                    mimetype    : null,
+                    size        : null
+                };
+
+                obj[id].attachment.value = $(this).attr('data-binary');
+                obj[id].attachment.filename = $(this).find("[name=fileName]").text();
+                obj[id].mimetype = $(this).find("[name=type]").text();
+                obj[id].size = $(this).find("[name=size]").text();
+
+                binaryDataObject[id] = obj[id];
+            });
+
+            return binaryDataObject;
         }
     }
 
