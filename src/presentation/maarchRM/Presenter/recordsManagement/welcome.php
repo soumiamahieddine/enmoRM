@@ -68,9 +68,6 @@ class welcome
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
-        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
-
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
             $this->getOrgUnitArchivalProfiles($filePlan);
@@ -113,8 +110,6 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
-        $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
-        $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
 
@@ -381,23 +376,25 @@ class welcome
                         $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
 
-                    if (empty($type) && $value != "") {
+                    if (empty($type)) {
                         $type = 'text';
-                        switch (gettype($value)) {
-                            case 'boolean':
-                                $type = 'boolean';
-                                break;
+                        if (!empty($value)) {
+                            switch (gettype($value)) {
+                                case 'boolean':
+                                    $type = 'boolean';
+                                    break;
 
-                            case 'integer':
-                            case 'double':
-                                $type = 'number';
-                                break;
+                                case 'integer':
+                                case 'double':
+                                    $type = 'number';
+                                    break;
 
-                            case 'string':
-                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                    $type = 'date';
-                                }
-                                break;
+                                case 'string':
+                                    if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                        $type = 'date';
+                                    }
+                                    break;
+                            }
                         }
                     }
                     if(!is_array($value)){

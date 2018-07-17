@@ -21,11 +21,7 @@
         </div>
 
         <div class="pull-right">
-            <?merge syncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
-            <i>&nbsp;</i>
-            <?merge asyncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
+            <a href="#" class="btn btn-sm bg-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
             <a href="#" class="small text-danger" id="cancel">Cancel</a>
         </div>
@@ -33,12 +29,8 @@
 </div>
 
 <script type="text/javascript">
-    $('#syncImport').on('click', function(e) {
-        ArchiveForm.send('sync', e, $(this));
-    });
-
-    $('#asyncImport').on('click', function(e) {
-        ArchiveForm.send('async', e, $(this));
+    $('#import').on('click', function(e) {
+        ArchiveForm.send(e, $(this));
     });
 
     $('#cancel').on('click', function(e) {

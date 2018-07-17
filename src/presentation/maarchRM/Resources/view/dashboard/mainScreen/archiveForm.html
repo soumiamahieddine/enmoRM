@@ -83,34 +83,18 @@
     });
     
     var ArchiveForm = {
-        send : function(type) {
-            var archive = this.syncSerialize(type);
+        send : function() {
+            var archive = this.serialize();
 
-            if (type === 'sync') {
-                url = "/archive";
-                archive = this.syncSerialize();
-
-                if (archive < 0) {
-                    return;
-                }
-
-                data = JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer});
-            }else {
-                url = "/transfer";
-                data = this.asyncSerialize();
-
-                if (data.message <0) {
-                    return;
-                }
-
-                data = JSON.stringify(data);
+            if (archive < 0) {
+                return;
             }
 
             ajax($('#import'),
                 {
                     type        : 'POST',
-                    url         : url,
-                    data        : data,
+                    url         : "/archive",
+                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
@@ -227,13 +211,13 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function() {
+        serialize : function() {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
                 descriptionObject : {}
-            };
+            }
 
             inputs.each(function() {
                 var value = $(this).val();
@@ -243,7 +227,7 @@
                     }
                     archive[$(this).attr('name')] = value;
                 }
-            });
+            })
 
             var selectedProfile = $('#archivalProfile').data('json');
 
@@ -258,6 +242,11 @@
             if (archive.descriptionObject === true) {
                 return -1;
             }
+
+            /*if (archive.archiveName == null || archive.archiveName == "") {
+                gritter.show($('#fieldLabel_error').text(), false);
+                return -2;
+            }*/
 
             archive.digitalResources = DocumentList.serialize();
 
@@ -403,7 +392,6 @@
             data.messageFile = btoa(JSON.stringify(data.messageFile));
             return data;
         },
-
         clear : function() {
             $('#retentionRule').removeAttr("disabled");
             $('#archiveForm, #managementMetadataForm').find('.archiveInput').not('[name="filePlanPosition"],[name="originatorOrgRegNumber"]').val('').change();
