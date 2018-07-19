@@ -138,6 +138,7 @@ class archive
         }
 
         $orgController = \laabs::newController('organization/organization');
+        $archiveController = \laabs::newController('recordsManagement/archive');
         $orgsByRegNumber = $orgController->orgList();
 
         $currentDate = \laabs::newDate();
@@ -155,6 +156,12 @@ class archive
 
             if (isset($orgsByRegNumber[$archive->originatorOrgRegNumber])) {
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
+
+                try {
+                    $archive->hasRights = $archiveController->checkRights($archive);
+                } catch(\Exception $e) {
+                    $archive->hasRights = false;
+                }
             }
         }
 
