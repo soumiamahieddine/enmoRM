@@ -83,18 +83,38 @@
     });
     
     var ArchiveForm = {
-        send : function() {
-            var archive = this.serialize();
+        send : function(type) {
+            var archive = this.syncSerialize(type);
 
-            if (archive < 0) {
-                return;
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
+
+                if (archive < 0) {
+                    return;
+                }
+
+                data = JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer});
+            } else {
+                url = "/transfer";
+                data = this.asyncSerialize();
+
+                if (data.message <0) {
+                    return;
+                }
+
+                data = JSON.stringify(data);
+
+                if (archive < 0) {
+                    return;
+                }
             }
 
             ajax($('#import'),
                 {
                     type        : 'POST',
-                    url         : "/archive",
-                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
+                    url         : url,
+                    data        : data,
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
@@ -211,7 +231,7 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        serialize : function() {
+        syncSerialize : function() {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
@@ -227,7 +247,7 @@
                     }
                     archive[$(this).attr('name')] = value;
                 }
-            })
+            });
 
             var selectedProfile = $('#archivalProfile').data('json');
 
@@ -273,8 +293,7 @@
                     binaryDataObject : {},
                     descriptiveMetadata : {}
                 },
-                attachments : [],
-                schema : 'recordsManagement'
+                attachments : []
             };
 
             var id = Math.random().toString(36).substr(2, 9);
@@ -293,7 +312,7 @@
                     classificationRule      : {}
                 },
                 descriptionClass            : null,
-                dataObjects                 : []
+                dataObject                  : []
             };
 
             inputs.each(function() {
@@ -385,7 +404,7 @@
             }
 
             $.each(data.messageFile.binaryDataObject, function(index, value) {
-                obj[id].dataObjects.push(index);
+                obj[id].dataObject.push(index);
             });
 
             data.messageFile.descriptiveMetadata[id] = obj[id];
