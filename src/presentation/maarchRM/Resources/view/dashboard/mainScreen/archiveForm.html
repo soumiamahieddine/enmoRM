@@ -409,7 +409,7 @@
             });
 
             data.messageFile.descriptiveMetadata[id] = obj[id];
-            data.messageFile = btoa(JSON.stringify(data.messageFile));
+            data.messageFile = btoa(unescape(encodeURIComponent(JSON.stringify(data.messageFile))));
             return data;
         },
         clear : function() {
