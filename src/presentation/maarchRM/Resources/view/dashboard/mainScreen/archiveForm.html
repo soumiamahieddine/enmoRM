@@ -313,7 +313,7 @@
                     classificationRule      : {}
                 },
                 descriptionClass            : null,
-                dataObject                  : []
+                dataObjects                 : []
             };
 
             inputs.each(function() {
@@ -382,7 +382,7 @@
             }
 
             if (!obj[id].archiveType) {
-                obj[id].archiveType = 'item';
+                obj[id].archiveType = 'container';
             }
 
             obj[id].descriptionObject = Metadata.serialize($('#allFields'));
@@ -405,7 +405,7 @@
             }
 
             $.each(data.messageFile.binaryDataObject, function(index, value) {
-                obj[id].dataObject.push(index);
+                obj[id].dataObjects.push(index);
             });
 
             data.messageFile.descriptiveMetadata[id] = obj[id];
