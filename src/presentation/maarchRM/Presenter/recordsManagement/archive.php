@@ -1006,7 +1006,7 @@ class archive
                 }
 
                 if (!empty($value)) {
-                    $descriptionHtml .= '<dt name="' . $name . '">' . $name . '</dt>';
+                    $descriptionHtml .= '<dt title="' . $name . '" name="' . $name . '">' . $name . '</dt>';
                     if (is_array($value)) {
                         foreach ($value as $metadata) {
                             $descriptionHtml .= '<dd>' . $metadata . '</dd>';
