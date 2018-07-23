@@ -161,28 +161,57 @@
             }
 
             return digitalResources;
+        },
+
+        asyncSerialize: function() {
+            var tr = this.list.find('tr');
+
+            var binaryDataObject = {};
+
+            $.each(tr, function(){
+                var id = Math.random().toString(36).substr(2, 9);
+                var obj = {};
+                obj[id] = {
+                    attachment : {
+                        value        : null,
+                        filename    : null
+                    },
+                    mimetype    : null,
+                    size        : null
+                };
+
+                obj[id].attachment.value = $(this).attr('data-binary');
+                obj[id].attachment.filename = $(this).find("[name=fileName]").text();
+                obj[id].mimetype = $(this).find("[name=type]").text();
+                obj[id].size = $(this).find("[name=size]").text();
+
+                binaryDataObject[id] = obj[id];
+            });
+
+            return binaryDataObject;
+
         }
-    }
+    };
 
     $('#documentList').on('click', '.deleteDocument', function() {
         DocumentList.removeDocument($(this));
-    })
+    });
 
     // Drag & drop
     $('#document_XMLDropZone').on('dragenter', function(e) {
         e.preventDefault();
         e.stopPropagation();
-    })
+    });
 
     $('#document_XMLDropZone').on('dragover', function(e) {
         e.preventDefault();
         e.stopPropagation();
         $('#document_XMLDropZone').css('opacity', '1');
-    })
+    });
 
     $("#document_XMLDropZone").on('dragleave', function(e) {
         $('#document_XMLDropZone').css('opacity', '0.5');
-    })
+    });
 
     $('#document_XMLDropZone').on('drop', function(e) {
         if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
@@ -196,21 +225,21 @@
         for (var i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
             DocumentForm.upload(e.originalEvent.dataTransfer.files[i]);
         }
-    })
+    });
 
     // Files browser
     $('#document_XMLDropZone').on('click', function() {
         $('#document_filesBrowser').click();
-    })
+    });
 
     $('#document_filesBrowser').on('change', function() {
         for (var i = 0; i < $(this).context.files.length; i++) {
             DocumentForm.upload($(this).context.files[i]);
         }
         DocumentForm.reset();
-    })
+    });
 
     $('#documentForm').on('click', '[name=zipContainer]', function() {
         DocumentForm.disabledZipContainter();
-    })
+    });
 </script>

@@ -78,8 +78,6 @@
                 </div>
             </div>
         </div>
-        <!-- modals for disabling user -->
-        <?hinclude auth/userAccount/admin/modalsForDisabling.html ?>
     </div>
 </div>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -176,17 +174,55 @@ $("#contain").on('click', '.lockUser', function() {
     });
 });
 
-//enable
-$("#contain").on('click', '.enableUser', function() {
-    $('#enableUserModal').modal('show');
-    $('#confirmEnabling').attr('data-accountid', $(this).attr('data-accountid'));
-});
-
-//disable
 $("#contain").on('click', '.disableUser', function() {
-    $('#disableUserModal').modal('show');
-    $('#replacingUser').val('');
-    $('#confirmDisabling').attr('data-accountid', $(this).attr('data-accountid'));
+    let userAccountId = $(this).attr('data-accountid');
+
+    ajax($(this), {
+        url         : '/useraccount/'+userAccountId+'/disable',
+        type        : 'PUT',
+        contentType : 'application/json',
+        dataType    : 'json',
+        success     : function(response) {
+            var tr = $('#'+userAccountId);
+            gritter.show(response.message, response.status, response.errors);
+
+            if ($('#activatedUsers').prop('checked')) {
+                window.location.reload();
+                return;
+            }
+
+            tr.find('.userStatus > i').removeClass('fa-check').addClass('fa-ban');
+            tr.find('.disableUser').css('display', 'none');
+            tr.find('.enableUser').css('display', '');
+        },
+        error    : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    });
 });
 
+$("#contain").on('click', '.enableUser', function() {
+    var userAccountId = $(this).attr('data-accountid');
+
+    var parameters = {
+        user : userAccountId
+    };
+    ajax($(this), {
+        url         : '/useraccount/'+userAccountId+'/enable',
+        type        : 'PUT',
+        contentType : 'application/json',
+        data        : JSON.stringify(parameters),
+        dataType    : 'json',
+        success     : function(response) {
+            var tr = $('#'+userAccountId);
+            gritter.show(response.message, response.status, response.errors);
+            tr.find('.userStatus > i').removeClass('fa-ban').addClass('fa-check');
+            tr.find('.disableUser').css('display', '');
+            tr.find('.enableUser').css('display', 'none');
+        },
+        error       : function(response) {
+            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+        }
+    });
+});
 </script>

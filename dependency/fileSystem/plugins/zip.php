@@ -44,6 +44,9 @@ class zip
         } else {
             $this->executable = $zipExecutable;
         }
+        $locale = 'fr_FR.UTF-8';
+        setlocale(LC_ALL, $locale);
+        putenv('LC_ALL='.$locale);
     }
 
     
@@ -53,7 +56,8 @@ class zip
         $tokens[] = "a";
         $tokens[] = '"' . $archive . '"';
         $tokens[] = '"' . $filename . '"';
-        //$tokens[] = '-scsUTF-8';
+//        $tokens[] = '-scsUTF-8';
+        
         if ($options) {
             foreach ($options as $option) {
                 $tokens[] = $option;
@@ -61,16 +65,11 @@ class zip
         }
 
         $command = implode(' ', $tokens);
-
         $output = array();
         $return = null;
         $this->errors = array();
 
         exec($command, $output, $return);
-
-        // var_dump($command);
-        // var_dump($output);
-        // var_dump($return);
 
         if ($return === 0) {
             return true;
