@@ -102,6 +102,9 @@ trait archiveCommunicationTrait
         $queryParts = array();
         $queryParams = array();
 
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
+
         if (!empty($description) || !empty($text)) {
 
             $searchClasses = [];
@@ -181,8 +184,6 @@ trait archiveCommunicationTrait
                     $queryParts['depositDate'] = "depositDate <= :depositEndDate";
                 }
                 if($archiveExpired){
-                    $currentDate = \laabs::newDate();
-                    $currentDateString = $currentDate->format('Y-m-d');
                     if ($archiveExpired == "true") {
 
                         $queryParams['disposalDate'] = $currentDateString;
@@ -202,6 +203,11 @@ trait archiveCommunicationTrait
             $queryParams['descriptionClass'] = 'recordsManagement/log';
             $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
 
+            $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+
+            if ($accessRuleAssert) {
+                $queryParts[] = $accessRuleAssert;
+            }
 
             $queryString = \laabs\implode(' AND ', $queryParts);
             $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
