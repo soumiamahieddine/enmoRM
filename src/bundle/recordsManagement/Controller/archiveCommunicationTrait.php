@@ -148,6 +148,11 @@ trait archiveCommunicationTrait
                     $queryParams['retentionRuleCode'] = $retentionRuleCode;
                 }
 
+                if ($originatorArchiveId){
+                    $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
+                    $queryParams['originatorArchiveId'] = $originatorArchiveId;
+                }
+
                 if ($originatorOrgRegNumber){
                     $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
                     $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
