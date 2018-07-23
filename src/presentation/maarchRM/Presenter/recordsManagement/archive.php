@@ -257,27 +257,12 @@ class archive
                 }
             } else {
                 $descriptionHtml = '<dl class="dl dl-horizontal">';
-                foreach ($archive->descriptionObject as $name => $value) {
-                    if (!empty($archive->archivalProfileReference)) {
-                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                            if ($archiveDescription->fieldName == $name) {
-                                $name = $archiveDescription->descriptionField->label;
-                                break;
-                            }
-                        }
-                    }
 
-                    $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
-                    if(is_array($value)){
-                        foreach ($value as $metadata){
-                            $descriptionHtml .= '<dd>'.$metadata.'</dd>';
-                        }
-                    } else {
-
-                        $descriptionHtml .= '<dd>'.$value.'</dd>';
-                    }
+                if (isset($archivalProfile)) {
+                    $descriptionHtml .= $this->setDescription($archive->descriptionObject, $archivalProfile);
+                } else {
+                    $descriptionHtml .= $this->setDescription($archive->descriptionObject);
                 }
-                
                 $descriptionHtml .='</dl>';
             }
 
@@ -1006,4 +991,75 @@ class archive
 
         return $ownerOriginatorOrgs;
     }
+
+    protected function setDescription($descriptions, $archivalProfile = null) {
+        $descriptionHtml = "";
+        foreach ($descriptions as $name => $value) {
+            if (\gettype($value) !== 'array' && \gettype($value) !== 'object') {
+                if (isset($archivalProfile)) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $name) {
+                            $name = $archiveDescription->descriptionField->label;
+                            break;
+                        }
+                    }
+                }
+
+                if (!empty($value)) {
+                    $descriptionHtml .= '<dt name="' . $name . '">' . $name . '</dt>';
+                    if (is_array($value)) {
+                        foreach ($value as $metadata) {
+                            $descriptionHtml .= '<dd>' . $metadata . '</dd>';
+                        }
+                    } else {
+
+                        $descriptionHtml .= '<dd>' . $value . '</dd>';
+                    }
+                }
+            }
+        }
+
+        foreach ($descriptions as $name => $value) {
+            if (\gettype($value) === 'array' || \gettype($value) === 'object') {
+                if (isset($archivalProfile)) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if (!empty($name) && $archiveDescription->fieldName == $name) {
+                            $name = $archiveDescription->descriptionField->label;
+                            break;
+                        }
+                    }
+                }
+
+                if (!empty($name)) {
+                    $id = \laabs::newId();
+                    $descriptionHtml .= '
+                        <br>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" href="#' . $id . '" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                        ' . $name . '
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="' . $id . '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                <dl class="dl dl-horizontal">';
+                }
+
+                if (isset($archivalProfile)) {
+                    $descriptionHtml .= $this->setDescription($value, $archivalProfile);
+                } else {
+                    $descriptionHtml .= $this->setDescription($value);
+                }
+
+                if (!empty($name)) {
+                    $descriptionHtml .= '</dl></div></div></div>';
+                }
+            }
+        }
+
+        return $descriptionHtml;
+    }
 }
+
