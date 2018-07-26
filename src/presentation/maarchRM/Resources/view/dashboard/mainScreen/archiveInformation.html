@@ -1,25 +1,11 @@
-<div id="archiveInformation" class="row">
+<div id="archiveInformation" class="row" data-children-archive-profiles="[?merge archivalProfileList.json() ?]" data-accept-without-profile="[?mergeacceptArchiveWithoutProfile ?]" >
     <input class="archiveInformationId hide" value="[?merge archive.archiveId ?]">
     <input class="archiveName hide" value="[?merge archive.archiveName ?]">
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
     <input class="originatingDate hide" value="[?merge archive.originatingDate ?]">
 
-    <div class="col-xs-12">
-        <?merge acceptArchiveWithoutProfile.bool().add(archivalProfileList.count()).bool()?>
-        <div id="archiveToolbarBtn" class="dropdown pull-right btn-group [?merge fileplanLevel.ifeq('item').then('hide','') ?]">
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive"><span class="fa fa-plus"></span></button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <?merge acceptArchiveWithoutProfile.bool() ?>
-                <li><a class="small newArchive" style="cursor: pointer;" data-reference="">Without profile</a></li>
-                <?merge archivalProfileList ?>
-                <li><a class="userProfile small newArchive" style="cursor: pointer;" data-reference="[?merge .reference ?]" data-json="[?merge .json ?]"><?merge .name?></a></li>
-            </ul>
-        </div>
-    </div>
-
     <div class="col-xs-12 text-center">
-        <i class="infoIcon fa fa-archive [?merge status.ifne('frozen').then('hide', '') ?]" style="color: #69B5DB"/>
-        <i class="infoIcon fa fa-archive [?merge status.ifeq('frozen').then('hide', '') ?]"/> 
+        <i class="infoIcon fa [?merge archive.fileplanLevel.ifeq('item').then('fa-file', 'fa-archive') ?]" style="[?merge status.ifeq('frozen').then('color: #69B5DB', '') ?]"/>
     </div>
     <div class="col-xs-12">
         <h4 class="text-center text-info">
@@ -197,8 +183,8 @@
 <style type="text/css">
     #archiveInformation {
         font-size: 12px;
-        border-left: solid 1px #DDD;
-        margin-top: 50px;
+        padding-top: 50px;
+        min-height: calc(95vh - 80px) ;
     }
     #archiveInformation table {
         table-layout:fixed;

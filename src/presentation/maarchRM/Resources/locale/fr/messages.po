@@ -577,6 +577,9 @@ msgstr "Copier"
 msgid "You must define at least the name, the identifier, the date of the document or a document"
 msgstr "Vous devez définir au moins le nom, l'identifiant, la date du document ou un document"
 
+msgid "rows"
+msgstr "lignes"
+
 msgid "Compliant"
 msgstr "Conforme"
 

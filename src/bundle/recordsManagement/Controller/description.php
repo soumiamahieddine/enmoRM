@@ -134,7 +134,8 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
     public function search($description=null, $text=null, array $archiveArgs=[])
     {
         $queryParams = [];
-        $queryParts = ['description!=null and text!=null'];
+        $queryParts = [];
+        $queryParts = ['(description!=null and text!=null)'];
 
         $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs,$queryParams);
         
@@ -173,7 +174,9 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString,$queryParams);
 
         foreach ($archiveUnits as $archiveUnit) {
-            $archiveUnit->descriptionObject = json_decode($archiveUnit->description);
+            if ($archiveUnit->descriptionObject) {
+                $archiveUnit->descriptionObject = json_decode($archiveUnit->description);
+            }
         }
 
         return $archiveUnits;

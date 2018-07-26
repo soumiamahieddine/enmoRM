@@ -440,7 +440,9 @@ msgstr "Lien expiré"
 msgid "Invalid link"
 msgstr "Lien non valide"
 
+msgid "Parent archive is an item and can not contain items."
+msgstr "L'archive parente est une pièce, elle ne peut contenir des pièces"
+
 msgid "Zip malformed"
 msgstr "Le zip est malformé."
-
 

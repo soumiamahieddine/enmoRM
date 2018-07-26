@@ -79,6 +79,10 @@ class welcome
             $this->markTreeLeaf($filePlan);
 
             $this->view->setSource("filePlan", $filePlan);
+            $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
+            $this->view->merge($this->view->getElementById('filePlanTree'));
+            $this->view->translate();
+
         }
 
         // Retention
@@ -140,9 +144,9 @@ class welcome
         $this->view->addContentFile('filePlan/filePlanTree.html');
         $this->markTreeLeaf([$filePlan]);
 
-        $this->view->translate();
         $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
