@@ -77,7 +77,8 @@
 
     $('#import').on('click', function(e) {
         ImportPanel.save(e, $(this));
-
+    });
+    
     $('#syncImport').on('click', function(e) {
         ArchiveForm.send('sync', e, $(this));
     });
