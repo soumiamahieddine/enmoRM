@@ -609,8 +609,17 @@ class archive
 
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
-        //$userOrgList = [];
-        $positionController = null;
+
+        $positionController = \laabs::newController('organization/userPosition');
+
+        $descandantServices = $positionController->readDescandantService($currentOrganization->orgId);
+
+        $descandantRegNumber = [];
+        $descandantRegNumber[] = $currentOrganization->registrationNumber;
+
+        foreach ($descandantServices as $descandantService) {
+            $descandantRegNumber[] = $descandantService;
+        }
 
         if (!$currentOrganization) {
             return false;
@@ -620,7 +629,7 @@ class archive
             return true;
         }
 
-        if (($archive->originatorOrgRegNumber != $currentOrganization->registrationNumber) && ($archive->archiverOrgRegNumber != $currentOrganization->registrationNumber)) {
+        if (!in_array($archive->originatorOrgRegNumber, $descandantRegNumber) && ($archive->archiverOrgRegNumber != $currentOrganization->registrationNumber)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 

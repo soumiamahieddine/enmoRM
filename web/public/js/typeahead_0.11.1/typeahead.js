@@ -1575,7 +1575,7 @@
             www.mixin(this);
             this.highlight = !!o.highlight;
             this.name = o.name || nameGenerator();
-            this.limit = o.limit || Infinity;
+            this.limit = o.limit || 5;
             this.displayFn = getDisplayFn(o.display || o.displayKey);
             this.templates = getTemplates(o.templates, this.displayFn);
             this.source = o.source.__ttAdapter ? o.source.__ttAdapter() : o.source;
@@ -1715,8 +1715,8 @@
                     suggestions = suggestions || [];
                     if (!canceled && rendered < that.limit) {
                         that.cancel = $.noop;
-                        rendered += suggestions.length;
                         that._append(query, suggestions.slice(0, that.limit - rendered));
+                        rendered += suggestions.length;
                         that.async && that.trigger("asyncReceived", query);
                     }
                 }

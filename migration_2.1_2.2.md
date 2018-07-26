@@ -1,10 +1,29 @@
-# Modification configuration 2.1 => 2.2
+# Migration 2.1 => 2.2
 
 Pour toutes les modifications ci-dessous, merci de vous référer à la documentation **AVANT tout changement** pour plus de détails'.
 
-## CSRF
+## Exploitation
 
-Suppression de la dépendance CSRF dans le fichier **vhost.conf** et ajout de la configuration suivante : 
+Les clés des comptes de service doivent être réinitialisées
+
+## Virtual host
+
+Suppression de la dépendance CSRF dans le fichier **vhost.conf**
+
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.1_V2.2.sql
+
+
+## Configuration
+
+Les modifications de configuration font référence au fichier **configuration.ini**
+
+### CSRF
+
+Ajout de la configuration suivante : 
 
     csrfWhiteList = "['user/login']"
     csrfConfig = '{
@@ -14,7 +33,7 @@ Suppression de la dépendance CSRF dans le fichier **vhost.conf** et ajout de la
         
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/csrf.md) 
 
-## Customisation CSS
+### Customisation CSS
 
 L'ajout de la customisation CSS permet d'utiliser une feuille de style personnalisable. 
 
@@ -22,7 +41,7 @@ L'ajout de la customisation CSS permet d'utiliser une feuille de style personnal
 
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/customisation.md)
 
-## Gestion des répertoires de log
+### Gestion des répertoires de log
 
 Les répertoires des logs sont personnalisables depuis la 2.2.
 
@@ -43,7 +62,7 @@ Les répertoires des logs sont personnalisables depuis la 2.2.
 
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/log_filePlan_path.md)
 
-## Rôle d'organisation
+### Rôle d'organisation
 
 Les rôles d'organisation ont été déplacés de la base de données vers la configuration. 
 
@@ -57,7 +76,7 @@ Les rôles d'organisation ont été déplacés de la base de données vers la co
 
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/organization_roles.md)
 
-## Ajout d'une nouvelle tâche planifiée
+### Ajout d'une nouvelle tâche planifiée
 
 Une tâche se prénommant "Mise à jour de la durée d'utilité administrative" a été ajoutée.
 
@@ -106,7 +125,7 @@ De ce fait, il faut ajouter le privilège :
         }
     ]"
     
-et la tâche :
+et toutes les tâches :
 
     [batchProcessing]
     tasks = "[

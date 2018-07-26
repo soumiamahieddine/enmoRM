@@ -67,6 +67,10 @@ class welcome
         
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
+
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
+
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
             $this->getOrgUnitArchivalProfiles($filePlan);
@@ -113,6 +117,9 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
+        $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
+        $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
@@ -361,6 +368,7 @@ class welcome
 
             if (isset($archive->descriptionObject)) {
                 foreach ($archive->descriptionObject as $name => $value) {
+                    $isImmutable = false;
                     $label = $type = $archivalProfileField = null;
                     if ($archivalProfile) {
                         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -377,44 +385,47 @@ class welcome
                         $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
 
-                    if (empty($type) && $value != "") {
+                    if (empty($type)) {
                         $type = 'text';
-                        switch (gettype($value)) {
-                            case 'boolean':
-                                $type = 'boolean';
-                                break;
+                        if (!empty($value)) {
+                            switch (gettype($value)) {
+                                case 'boolean':
+                                    $type = 'boolean';
+                                    break;
 
-                            case 'integer':
-                            case 'double':
-                                $type = 'number';
-                                break;
+                                case 'integer':
+                                case 'double':
+                                    $type = 'number';
+                                    break;
 
-                            case 'string':
-                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                    $type = 'date';
-                                }
-                                break;
+                                case 'string':
+                                    if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                        $type = 'date';
+                                    }
+                                    break;
+                            }
                         }
                     }
+                    if(!is_array($value)){
+                        if ($archivalProfileField) {
+                            $descriptionHtml .= '<tr class="archivalProfileField">';
+                        } else {
+                            $descriptionHtml .= '<tr>';
+                        }
 
-                    if ($archivalProfileField) {
-                        $descriptionHtml .= '<tr class="archivalProfileField">';
-                    } else {
-                        $descriptionHtml .= '<tr>';
+                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
+                        if ($type == "date") {
+                                $textValue = \laabs::newDate($value);
+                        } else {
+                            $textValue = $value;
+                        }
+                        if ($type == 'boolean') {
+                            $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                        }
+
+                        $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
+                        $descriptionHtml .= '</tr>';
                     }
-
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
-                    if ($type == "date") {
-                            $textValue = \laabs::newDate($value);
-                    } else {
-                        $textValue = $value;
-
-                    }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                    }
-
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
                 }
 
             }

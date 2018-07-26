@@ -103,8 +103,6 @@ CREATE TABLE "recordsManagement"."descriptionField"
   "enumeration" text,
   "pattern" text,
   "isArray" boolean default false,
-
-
   PRIMARY KEY ("name")
 );
 

@@ -71,6 +71,7 @@ class digitalResource
                         }
                         break;
 
+                    case 'text/html' :
                     case 'text/plain':
                         $contents = substr($contents, 0, 65536);
                         break;
@@ -78,6 +79,14 @@ class digitalResource
             } catch (\Exception $exception) {
                 \laabs::setResponseCode('500');
             }
+        } else {
+            switch ($resource->mimetype) {
+                case 'text/html' :
+                case 'text/plain':
+                        $contents = strip_tags($contents);
+                        break;
+            }
+
         }
 
         $url = \laabs::createPublicResource($contents);

@@ -122,6 +122,17 @@
                 this.modal.modal();
             }
 
+            if (type === 'requestCommunication' && $('#' +archiveId).data('iscommunicable') === 1) {
+                $('#derogationTr').show();
+                $('#derogationInputTr').show();
+                $("#derogationTr .toggle").removeClass('btn-default off');
+                $("#derogationTr .toggle").addClass('btn-info');
+
+            } else {
+                $('#derogationTr').hide();
+                $('#derogationInputTr').hide();
+            }
+
             $('#save').data("archiveids", "");
             $('#archiveModificationForm').css('display', '');
             $('#modal_multipleSelection').css('display', 'none');
@@ -326,7 +337,7 @@
 
              if (retentionRuleCode) {
 
-                 var retentionRuleDurationUnit = rule.retentionDuration.substr(rule.retentionDuration.length - 1, 1);
+                 var retentionRuleDurationUnit = retentionRuleCode.duration.substr(retentionRuleCode.duration.length - 1, 1);
                  var retentionRuleDuration = (retentionRuleCode.duration.split(retentionRuleDurationUnit))[0].split("P");
 
                  if (rule) {

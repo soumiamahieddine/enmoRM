@@ -46,7 +46,7 @@ class eventFormat
      */
     public function index()
     {
-        return $this->sdoFactory->find("lifeCycle/eventFormat", null, null, "type");
+        return $this->sdoFactory->find("lifeCycle/eventFormat", null, [], "type");
     }
 
     /**

@@ -85,7 +85,7 @@ class archive
 
         $this->view->translate();
         
-        usort($profiles, create_function('$a, $b', 'return \laabs::alphabeticalSort($a, $b, "name");'));
+        usort($profiles, array($this, "compareProfiles"));
 
         $deleteDescription = true;
         if (isset(\laabs::configuration("recordsManagement")['deleteDescription'])) {
@@ -101,6 +101,11 @@ class archive
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    private function compareProfiles($a, $b)
+    {
+        return \laabs::alphabeticalSort($a, $b, "name");
     }
 
     /**
@@ -138,6 +143,7 @@ class archive
         }
 
         $orgController = \laabs::newController('organization/organization');
+        $archiveController = \laabs::newController('recordsManagement/archive');
         $orgsByRegNumber = $orgController->orgList();
 
         $currentDate = \laabs::newDate();
@@ -155,6 +161,12 @@ class archive
 
             if (isset($orgsByRegNumber[$archive->originatorOrgRegNumber])) {
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
+
+                try {
+                    $archive->hasRights = $archiveController->checkRights($archive);
+                } catch(\Exception $e) {
+                    $archive->hasRights = false;
+                }
             }
         }
 
@@ -236,9 +248,11 @@ class archive
                         || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
                             && in_array('archiver', $currentService->orgRoleCodes)))
                     && $hasModificationMetadata
+                    && $archive->messages[0]->schema != 'seda2'
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
+
                     $editDescription = true;
                 }
             } else {
@@ -254,7 +268,14 @@ class archive
                     }
 
                     $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
-                    $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    if(is_array($value)){
+                        foreach ($value as $metadata){
+                            $descriptionHtml .= '<dd>'.$metadata.'</dd>';
+                        }
+                    } else {
+
+                        $descriptionHtml .= '<dd>'.$value.'</dd>';
+                    }
                 }
                 
                 $descriptionHtml .='</dl>';

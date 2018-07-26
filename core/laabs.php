@@ -853,7 +853,7 @@ class laabs
 
         // Expired token
         if ($token->expiration != 0 && $token->expiration < time()) {
-            $this->unsetToken($name, $style);
+            static::unsetToken($name, $style);
 
             return null;
         }
@@ -973,18 +973,11 @@ class laabs
      */
     public static function encrypt($string, $key)
     {
-        $mcrypt2ssl = [
-            MCRYPT_BLOWFISH => "CAST5",
-        ];
         $cipher = \laabs::getCryptCipher();
 
-        if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
-            if (!empty($mcrypt2ssl[$cipher])) {
-                $method = $mcrypt2ssl[$cipher] . "-CBC";
-            } else {
-                $method = $cipher;
-            }
-            
+        if (extension_loaded('openssl') && in_array($cipher, openssl_get_cipher_methods())) {
+            $method = $cipher;
+
             $message_padded = $string;
             if (strlen($message_padded) % 8) {
                 $message_padded = str_pad($message_padded,
@@ -994,14 +987,6 @@ class laabs
             return openssl_encrypt($message_padded, $method, $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, "12345678");
         }
         
-        if (extension_loaded('mcrypt')) {
-            $cipher = \laabs::getCryptCipher();
-
-            $key = str_pad($key, 16, "\0");
-
-            return mcrypt_encrypt($cipher, $key, $string, "cbc", "12345678");
-        }
-
         return static::RC4($string, $key);
     }
 
@@ -1014,29 +999,12 @@ class laabs
      */
     public static function decrypt($string, $key)
     {
-        $mcrypt2ssl = [
-            MCRYPT_BLOWFISH => "CAST5",
-        ];
-
         $cipher = \laabs::getCryptCipher();
 
-        if (extension_loaded('openssl') && (!empty($mcrypt2ssl[$cipher]) || in_array($cipher, openssl_get_cipher_methods()))) {
-
-            if (!empty($mcrypt2ssl[$cipher])) {
-                $method = $mcrypt2ssl[$cipher] . "-CBC";
-            } else {
-                $method = $cipher;
-            }
+        if (extension_loaded('openssl') && in_array($cipher, openssl_get_cipher_methods())) {
+            $method = $cipher;
 
             return openssl_decrypt($string, $method, $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, "12345678");
-        }
-
-        if (extension_loaded('mcrypt')) {
-            $cipher = \laabs::getCryptCipher();
-
-            $key = str_pad($key, 16, "\0");
-
-            return mcrypt_decrypt($cipher, $key, $string, "cbc", "12345678");
         }
 
         return static::RC4($string, $key);

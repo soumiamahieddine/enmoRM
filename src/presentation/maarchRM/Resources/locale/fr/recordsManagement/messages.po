@@ -330,6 +330,9 @@ msgstr "Éliminée"
 msgid "Preserved"
 msgstr "Conservée"
 
+msgid "Error"
+msgstr "Erreur"
+
 msgid "error"
 msgstr "Erreur"
 
@@ -408,7 +411,7 @@ msgstr "Échue"
 msgid "Not expired"
 msgstr "Non échue"
 
-msgid "Expired status"
+msgid "DAU"
 msgstr "DUA"
 
 msgid "result(s)"
@@ -860,6 +863,12 @@ msgstr "Métadonnées"
 
 msgid "Import"
 msgstr "Importer"
+
+msgid "Import with validation"
+msgstr "Importer avec validation"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
 
 msgid "Click or drop documents"
 msgstr "Cliquez ou déposez des documents"

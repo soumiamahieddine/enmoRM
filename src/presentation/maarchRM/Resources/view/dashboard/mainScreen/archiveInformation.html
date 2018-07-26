@@ -400,10 +400,11 @@
             var descriptionFields = {};
             $('#metadata').find('tr').each(function(i, e) {
                 var input = $(e).find('th > input');
-                var valueInput = $(e).find('td input');
+                var valueInput = $(e).find('td > input');
                 var label = input.val();
                 var name = input.attr('name');
                 var type = $(e).find('th').data('type');
+                var value = null;
 
                 switch (type) {
                     case "name" :
@@ -416,9 +417,9 @@
                     case "number" :
                         value = parseInt(valueInput.val());
                         break;
-                    case "number" :
-                        inputValue = valueInput.parent('.active').find('input').val();
-                        value = valueInput == 1 ? true : false;
+                    case "boolean" :
+                        var inputValue = valueInput.parent('.active').find('input').val();
+                        value = inputValue == 1 ? true : false;
                         break;
                     default:
                 }
@@ -474,7 +475,7 @@
                 });
             }
 
-            var tr = $('<tr/>').append($('<th/>').append(label))
+            var tr = $('<tr/>').append($('<th/>').data("type", type).append(label))
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);

@@ -171,13 +171,13 @@ class Service
         // Get construction method
         if ($this->hasConstructor()) {
             $constructor = $this->getConstructor();
-            $contructorArgs = $constructor->getCallArgs($passedArgs, $this->configuration);
-            $serviceObject = parent::newInstanceArgs($contructorArgs);
+            $constructorArgs = $constructor->getCallArgs($passedArgs, $this->configuration);
+            $serviceObject = parent::newInstanceArgs($constructorArgs);
 
         } elseif ($this->hasMethod($this->getShortName()) && ($method = $this->getMethod($this->getShortName())) && $method->isStatic() && $method->isPublic()) {
             
             $staticFactory = $this->getMethod($this->getShortName());
-            $staticFactoryArgs = $factory->getCallArgs($passedArgs, $this->configuration);
+            $staticFactoryArgs = $staticFactory->getCallArgs($passedArgs, $this->configuration);
             $serviceObject = $staticFactory->callArgs(null, $staticFactoryArgs);
         
         } else {

@@ -235,7 +235,6 @@ trait archiveModificationTrait
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
-        $res = $this->setStatus($archiveIds, 'frozen');
 
         $archives = array();
 
@@ -243,12 +242,20 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            $operationResult = true;
+            $archives[$archiveId] = $archive;
+        }
 
-            $archives[] = $archive;
+        $res = $this->setStatus($archiveIds, 'frozen');
 
-            // Life cycle journal
-            $this->logFreeze($archive, $operationResult);
+
+        for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
+            $archive = $archives[$res['success'][$i]];
+            $this->logFreeze($archive, true);
+        }
+
+        for ($i = 0, $count = count($res['error']); $i < $count; $i++) {
+            $archive = $archives[$res['error'][$i]];
+            $this->logFreeze($archive, false);
         }
 
         return $res;
@@ -265,19 +272,27 @@ trait archiveModificationTrait
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
-        $res = $this->setStatus($archiveIds, 'preserved');
 
         $archives = array();
+
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            $operationResult = true;
+            $archives[$archiveId] = $archive;
+        }
 
-            $archives[] = $archive;
+        $res = $this->setStatus($archiveIds, 'preserved');
 
-            // Life cycle journal
-            $this->logUnfreeze($archive, $operationResult);
+
+        for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
+            $archive = $archives[$res['success'][$i]];
+            $this->logUnfreeze($archive, true);
+        }
+
+        for ($i = 0, $count = count($res['error']); $i < $count; $i++) {
+            $archive = $archives[$res['error'][$i]];
+            $this->logUnfreeze($archive, false);
         }
 
         return $res;
@@ -413,7 +428,7 @@ trait archiveModificationTrait
         $res = [];
         $res['success'] = [];
         $res['fail'] = [];
-        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", [], null, null, $limit);
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));

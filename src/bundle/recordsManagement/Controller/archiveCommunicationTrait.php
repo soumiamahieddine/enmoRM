@@ -102,6 +102,9 @@ trait archiveCommunicationTrait
         $queryParts = array();
         $queryParams = array();
 
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
+
         if (!empty($description) || !empty($text)) {
 
             $searchClasses = [];
@@ -150,6 +153,11 @@ trait archiveCommunicationTrait
                     $queryParams['filePlanPosition'] = $filePlanPosition;
                 }
 
+                if ($originatorArchiveId){
+                    $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
+                    $queryParams['originatorArchiveId'] = $originatorArchiveId;
+                }
+
                 if ($originatorOrgRegNumber){
                     $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
                     $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
@@ -163,14 +171,14 @@ trait archiveCommunicationTrait
                 if ($originatingStartDate && $originatingEndDate) {
                     $queryParams['originatingStartDate'] = $originatingStartDate;
                     $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['depositDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
+                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
                 } elseif ($originatingStartDate) {
                     $queryParams['originatingStartDate'] = $originatingStartDate;
-                    $queryParts['depositDate'] = "originatingDate >= :depositStartDate";
+                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate";
 
                 } elseif ($originatingEndDate) {
                     $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['date'] = "originatingDate <= :originatingEndDate";
+                    $queryParts['originatingDate'] = "originatingDate <= :originatingEndDate";
                 }
 
                 if ($depositStartDate && $depositEndDate) {
@@ -183,11 +191,9 @@ trait archiveCommunicationTrait
 
                 } elseif ($depositEndDate) {
                     $queryParams['depositEndDate'] = $depositEndDate;
-                    $queryParts['date'] = "depositDate <= :depositEndDate";
+                    $queryParts['depositDate'] = "depositDate <= :depositEndDate";
                 }
                 if($archiveExpired){
-                    $currentDate = \laabs::newDate();
-                    $currentDateString = $currentDate->format('Y-m-d');
                     if ($archiveExpired == "true") {
 
                         $queryParams['disposalDate'] = $currentDateString;
@@ -207,6 +213,11 @@ trait archiveCommunicationTrait
             $queryParams['descriptionClass'] = 'recordsManagement/log';
             $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
 
+            $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+
+            if ($accessRuleAssert) {
+                $queryParts[] = $accessRuleAssert;
+            }
 
             $queryString = \laabs\implode(' AND ', $queryParts);
             $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
@@ -215,10 +226,6 @@ trait archiveCommunicationTrait
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
                 $archive->disposable = true;
-            }
-
-            if (isset($originators[$archive->originatorOrgRegNumber])) {
-                $archive->originator = $originators[$archive->originatorOrgRegNumber];
             }
         }
 
