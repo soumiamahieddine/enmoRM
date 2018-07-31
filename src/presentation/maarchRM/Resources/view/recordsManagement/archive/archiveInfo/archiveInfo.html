@@ -1,16 +1,19 @@
 <div class="panel-group" id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
-    <div class="panel">    
-        <div class="panel-heading text-center" role="tab">
-            <h4>
-                <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#descriptiveMetadata" >
-                    <span class="text-info">Description</span>
-                </a>
-            </h4>
+    <div class="panel">
+        <?merge archive.descriptionObject.bool() ?>
+        <div>
+            <div class="panel-heading text-center" role="tab">
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#descriptiveMetadata" >
+                        <span class="text-info">Description</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="descriptiveMetadata" class="panel-collapse collapse in" role="tabpanel">
+                <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+            </div>
+            <hr/>
         </div>
-        <div id="descriptiveMetadata" class="panel-collapse collapse in" role="tabpanel">
-            <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
-        </div>
-        <hr/>
 
         <div class="panel-heading text-center" role="tab">
             <h4>
@@ -54,17 +57,19 @@
         </div>
 
         <?merge archive.messages.bool() ?>
-        <div class="panel-heading text-center" role="tab">
-            <hr/>
-            <h4>
-                <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#messages" >
-                    <span class="text-info">Messages</span>
-                </a>
-            </h4>
-        </div>
-        <div id="messages" class="panel-collapse collapse" role="tabpanel">
-            <div class="row">
-                <?hinclude recordsManagement/archive/message.html ?>
+        <div>
+            <div class="panel-heading text-center" role="tab">
+                <hr/>
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#messages" >
+                        <span class="text-info">Messages</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="messages" class="panel-collapse collapse" role="tabpanel">
+                <div class="row">
+                    <?hinclude recordsManagement/archive/message.html ?>
+                </div>
             </div>
         </div>
     </div>
