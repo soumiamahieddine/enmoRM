@@ -278,9 +278,7 @@ class archive
         $this->view->translate();
         $this->view->merge();
 
-
-        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable->setPaginationType("simple");
+        $dataTable = $this->view->getElementById("lifeCycleTable")->childNodes->item(1)->plugin['dataTable'];
 
         $dataTable->setUnsortableColumns(2);
         $dataTable->setUnsearchableColumns(2);
