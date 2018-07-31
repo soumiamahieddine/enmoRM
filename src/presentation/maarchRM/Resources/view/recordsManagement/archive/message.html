@@ -1,5 +1,5 @@
-<div id="messages" class="table-responsive" >
-    <table class="table table-condensed dataTable" >
+<div id="messagesTable" class="table-responsive" >
+    <table class="table table-condensed dataTable" id="messageTable">
         <thead>
         <th data-translate-context="message">Reference</th>
         <th>Type</th>
@@ -21,7 +21,7 @@
                 <td>
 
                     <div class="btn-group pull-right">
-                        <?merge .isVisible.not().then('true') @disabled?>
+                        <!--?merge .isVisible.not().then('false') @disabled?-->
                         <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
                             <span class="fa fa-eye">&nbsp;</span>
                         </button>
@@ -33,6 +33,10 @@
 </div>
 
 <script>
+    $('#messagesTable').ready(function() {
+        $('#messagesTable').find('.dataTable-footer:first').remove();
+    });
+
     $("#messages").on('click', '.viewMessage', function() {
         $.ajax({
             url      : "/medona/message/" + $(this).data('message-id'),

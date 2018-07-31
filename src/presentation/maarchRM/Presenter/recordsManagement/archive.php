@@ -243,6 +243,9 @@ class archive
         // Relationships
         $this->setArchiveRelationships($archive);
 
+        // Message
+        $this->checkMessage($archive);
+
         $descriptionFragment = $this->view->createDocumentFragment();
         $descriptionFragment->appendHtmlFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
 
@@ -320,7 +323,8 @@ class archive
      *
      * @return string
      */
-    protected function getDescriptiveMetadatas($archive) {
+    protected function getDescriptiveMetadatas($archive)
+    {
         $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
         if ($archive->originatingDate) {
             $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
@@ -339,65 +343,9 @@ class archive
             $descriptionHtml = '<table">';
 
             if (isset($archive->descriptionObject)) {
-                foreach ($archive->descriptionObject as $name => $value) {
-                    $label = $type = $archivalProfileField = null;
-                    if ($archivalProfile) {
-                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                            if ($archiveDescription->fieldName == $name) {
-                                $label = $archiveDescription->descriptionField->label;
-                                $archivalProfileField = true;
-                                $type = $archiveDescription->descriptionField->type;
-                            }
-                        }
-                    }
-
-                    if (empty($label)) {
-                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                    }
-
-                    if (empty($type) && $value != "") {
-                        $type = 'text';
-                        switch (gettype($value)) {
-                            case 'boolean':
-                                $type = 'boolean';
-                                break;
-
-                            case 'integer':
-                            case 'double':
-                                $type = 'number';
-                                break;
-
-                            case 'string':
-                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                    $type = 'date';
-                                }
-                                break;
-                        }
-                    }
-
-                    if ($archivalProfileField) {
-                        $descriptionHtml .= '<tr class="archivalProfileField">';
-                    } else {
-                        $descriptionHtml .= '<tr>';
-                    }
-
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                    if ($type == "date") {
-                            $textValue = \laabs::newDate($value);
-                            $textValue = $textValue->format("d/m/Y");
-                    } else {
-                        $textValue = $value;
-
-                    }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                    }
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                    $descriptionHtml .= '</tr>';
-                }
-                
-                $descriptionHtml .='</dl>';
+                $descriptionHtml .= $this->setDescription($archive->descriptionObject, $archivalProfile);
             }
+
             $descriptionHtml .= '</table>';
         }
 
@@ -411,6 +359,133 @@ class archive
         }
 
         $this->view->setSource('modificationPrivilege', $modificationPrivilege);
+    }
+
+    protected function setDescription($descriptions, $archivalProfile = null)
+    {
+        $descriptionHtml = "";
+        foreach ($descriptions as $name => $value) {
+            if (\gettype($value) !== 'array' && \gettype($value) !== 'object') {
+                $label = $type = $archivalProfileField = null;
+                if ($archivalProfile) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $name) {
+                            $label = $archiveDescription->descriptionField->label;
+                            $archivalProfileField = true;
+                            $type = $archiveDescription->descriptionField->type;
+                        }
+                    }
+                }
+
+                if (empty($label)) {
+                    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+                }
+
+                if (empty($type) && $value != "") {
+                    $type = 'text';
+                    switch (gettype($value)) {
+                        case 'boolean':
+                            $type = 'boolean';
+                            break;
+
+                        case 'integer':
+                        case 'double':
+                            $type = 'number';
+                            break;
+
+                        case 'string':
+                            if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                $type = 'date';
+                            }
+                            break;
+                    }
+                }
+
+                if ($archivalProfileField) {
+                    $descriptionHtml .= '<tr class="archivalProfileField">';
+                } else {
+                    $descriptionHtml .= '<tr>';
+                }
+
+                $descriptionHtml .= '<th title="' . $label . '" name="' . $name . '" data-type="' . $type . '">' . $label . '</th>';
+                if ($type == "date") {
+                    $textValue = \laabs::newDate($value);
+                    $textValue = $textValue->format("d/m/Y");
+                } else {
+                    $textValue = $value;
+
+                }
+                if ($type == 'boolean') {
+                    $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                }
+                $descriptionHtml .= '<td title="' . $value . '">' . $textValue . '</td>';
+                $descriptionHtml .= '</tr>';
+            }
+        }
+
+        foreach ($descriptions as $name => $value) {
+            if (\gettype($value) === 'array' && \gettype($value) === 'object') {
+                $label = $type = $archivalProfileField = null;
+                if ($archivalProfile) {
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        if ($archiveDescription->fieldName == $name) {
+                            $label = $archiveDescription->descriptionField->label;
+                            $archivalProfileField = true;
+                            $type = $archiveDescription->descriptionField->type;
+                        }
+                    }
+                }
+
+                if (empty($label)) {
+                    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+                }
+
+                if (empty($type) && $value != "") {
+                    $type = 'text';
+                    switch (gettype($value)) {
+                        case 'boolean':
+                            $type = 'boolean';
+                            break;
+
+                        case 'integer':
+                        case 'double':
+                            $type = 'number';
+                            break;
+
+                        case 'string':
+                            if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                $type = 'date';
+                            }
+                            break;
+                    }
+                }
+
+                if (!empty($name)) {
+                    $id = \laabs::newId();
+                    $descriptionHtml .= '
+                        <br>
+                        <div class="panel panel-info">
+                            <div class="panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" href="#' . $id . '" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                        ' . $name . '
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="' . $id . '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                <dl class="dl dl-horizontal">';
+                }
+
+                $descriptionHtml .= $this->setDescription($value);
+
+                if (!empty($name)) {
+                    $descriptionHtml .= '</dl></div></div></div>';
+                }
+            }
+        }
+
+        return $descriptionHtml;
     }
 
     protected function setArchiveTree($archive) {
@@ -501,6 +576,27 @@ class archive
         }
         
         return $this->archivalProfiles[$reference];
+    }
+
+    protected function checkMessage($archive) {
+        if(\laabs::hasBundle('medona')) {
+            if (isset($archive->messages)) {
+                foreach ($archive->messages as $message) {
+                    $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
+
+                    $currentService = \laabs::getToken("ORGANIZATION");
+
+                    $message->isVisible = false;
+                    if (!in_array('owner', $currentService->orgRoleCodes)) {
+                        if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
+                            $message->isVisible = true;
+                        }
+                    } else {
+                        $message->isVisible = true;
+                    }
+                }
+            }
+        }
     }
 
     /**
