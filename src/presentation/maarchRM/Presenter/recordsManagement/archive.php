@@ -587,7 +587,7 @@ class archive
                     $currentService = \laabs::getToken("ORGANIZATION");
 
                     $message->isVisible = false;
-                    if (!in_array('owner', $currentService->orgRoleCodes)) {
+                    if (isset($currentService->orgRoleCodes) &&  !in_array('owner', $currentService->orgRoleCodes)) {
                         if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
                             $message->isVisible = true;
                         }
