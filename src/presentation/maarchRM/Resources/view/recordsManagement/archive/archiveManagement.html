@@ -37,7 +37,7 @@
 
 // view the document
 $("#archiveList").on('click', ".viewDocument", function() {
-    trigger('show.digitalResource', [$(this).closest('tr').attr('archiveid'), $(this).closest('tr').attr('resid')]);
+    trigger('showResource.digitalResource', [$(this).closest('tr').attr('archiveid'), $(this).closest('tr').attr('resid')]);
 });
 
 // view the archive description

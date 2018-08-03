@@ -87,7 +87,8 @@
         archiveInfoModal.loadResourceDescription(resource);
     })
 
-    $('#modalArchiveInfo').onEvent('show.digitalResource', function(e, archiveId, resId) {
+    $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
+        console.trace()
         archiveDocumentViewer.load(archiveId, resId);
     })
 
@@ -178,7 +179,7 @@
             window.open(url, 'document');
         },
 
-        loadResource: function(archiveId, resId) {
+        loadResource: function(archiveId, resId) { alert('ok');
             var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
             window.open(url, 'document');
         }
