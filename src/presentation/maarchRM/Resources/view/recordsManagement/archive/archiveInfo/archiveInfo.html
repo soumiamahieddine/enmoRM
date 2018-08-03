@@ -107,3 +107,14 @@
         font-size: 16px !important;
     }
 </style>
+
+<script>
+    if ($("#archiveInfos").find('.panel-collapse').length === 1) {
+        $("#archiveInfos").find('.panel-collapse').addClass('in');
+    } else {
+        collapse = $("#archiveInfos").find('.panel-collapse')['0'];
+        if (!($(collapse).hasClass('in'))) {
+            $(collapse).addClass('in');
+        }
+    }
+</script>
