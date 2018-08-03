@@ -291,12 +291,14 @@ class archive
         $this->view->translate();
         $this->view->merge();
 
-        $dataTable = $this->view->getElementById("lifeCycleTable")->childNodes->item(1)->plugin['dataTable'];
+        if ($this->view->getElementById("lifeCycleTable")) {
+            $dataTable = $this->view->getElementById("lifeCycleTable")->childNodes->item(1)->plugin['dataTable'];
 
-        $dataTable->setUnsortableColumns(2);
-        $dataTable->setUnsearchableColumns(2);
+            $dataTable->setUnsortableColumns(2);
+            $dataTable->setUnsearchableColumns(2);
 
-        $dataTable->setSorting(array(array(0, 'desc')));
+            $dataTable->setSorting(array(array(0, 'desc')));
+        }
         
 
         return $this->view->saveHtml();
