@@ -264,6 +264,16 @@ class archive
     public function getArchiveDetails($archive) {
         $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
 
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
+        $archive->depositPrivilege = $syncImportPrivilege || $asyncImportPrivilege;
+
+        // Archival profile
+        if ($archive->depositPrivilege) {
+            $this->getChildrenArchivesProfiles($archive);
+            $archive->depositPrivilege = $archive->depositPrivilege && (count($archive->archivalProfileList) || $archive->acceptArchiveWithoutProfile); 
+        }
+
         // Managment metadata
         $this->setManagementMetadatas($archive);
 
@@ -596,6 +606,44 @@ class archive
                     }
                 }
             }
+        }
+    }
+            
+    protected function getChildrenArchivesProfiles($archive) {
+
+        $archive->archivalProfileList = [];
+
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+            $archive->archivalProfileName = $archivalProfile->name;
+                
+            $list = [];
+
+            if (count($archivalProfile->containedProfiles)) {
+                 $list = $archivalProfile->containedProfiles;
+            }
+
+            if (count($list)) {
+                foreach ($list as $profile) {
+                    $profileObject = new \stdClass();
+                    $profileObject->reference = $profile->reference;
+                    $profileObject->name = $profile->name;
+                    $profileObject->json = json_encode($profile);
+
+                    $archive->archivalProfileList[] = $profileObject;
+                }
+            }
+
+            if (!count($archive->archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
+                $archive->depositPrivilege = false;
+            }
+
+            $archive->acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+            $archive->fileplanLevel = $archivalProfile->fileplanLevel;
+            $archive->acceptUserIndex = $archivalProfile->acceptUserIndex;
+        } else {
+            $archive->acceptArchiveWithoutProfile = true;
+            $archive->fileplanLevel = true;
         }
     }
 

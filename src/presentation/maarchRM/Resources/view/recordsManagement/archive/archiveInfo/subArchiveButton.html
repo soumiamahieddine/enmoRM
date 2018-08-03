@@ -1,0 +1,27 @@
+<?merge archive.depositPrivilege ?>
+<div class="dropdown pull-right addChildrenArchive" data-translate-catalog="recordsManagement/messages">
+    <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span><i class="fa fa-plus"/> <span>Add sub-archive</span></span>
+    </button>
+    <ul class="dropdown-menu">
+        <?merge archive.archivalProfileList ?>
+        <li><a href="#" class="newArchive" 
+                data-parent-archive-id="[?merge archive.archiveId ?]"
+                data-parent-archive-name="[?merge archive.archiveName ?]"
+                data-parent-orgregnumber="[?merge archive.orgRegNumber ?]"
+                data-parent-fileplanposition="[?merge archive.filePlanPosition ?]"
+                data-json="[?merge .json ?]">
+                <?merge .name ?>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+$(".addChildrenArchive").on('click', '.newArchive', function() {
+    var e = $(this);
+        trigger('newArchiveForm.recordsManagement', [e.data('json'), e.data('parent-orgregnumber'), e.data('parent-fileplanposition'), e.data('parent-archive-id'), e.data('parent-archive-name')]);
+});
+
+</script>

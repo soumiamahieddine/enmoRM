@@ -1005,3 +1005,6 @@ msgstr "Illimitée"
 
 msgid "Messages"
 msgstr "Bordereaux"
+
+msgid "Add sub-archive"
+msgstr "Ajout de sous-archive"

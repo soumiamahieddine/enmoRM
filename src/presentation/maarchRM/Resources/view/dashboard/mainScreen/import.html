@@ -1,4 +1,4 @@
-<div class="hide" id="importPanel">
+<div class="hide row" id="importPanel">
     <div class="col-xs-12">
         <div class="row">
             <h4 class="pull-left">
@@ -21,13 +21,13 @@
 
         <div class="pull-right">
             <?merge syncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
             <?merge asyncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
+            <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
 
             <i>&nbsp;</i>
-            <a href="#" class="small text-danger" id="cancel">Cancel</a>
+            <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
         </div>
     </div>
 </div>
@@ -66,8 +66,6 @@
         cancel: function() {
             ArchiveForm.clear();
             this.panel.addClass('hide');
-            trigger("showFolder.recordsManagement");
-            trigger("archiveImportOver.recordsManagement");
         }
     }
 
@@ -89,5 +87,6 @@
 
     $('#cancel').on('click', function(e) {
         ImportPanel.cancel();
+        trigger("archiveImportOver.recordsManagement");
     });
 </script>

@@ -120,8 +120,8 @@
                         gritter.show(response.message, response.status, response.errors);
 
                         if (response.status) {
+                            trigger("archiveImportOver.recordsManagement", [archive.parentArchiveId]);
                             ImportPanel.cancel();
-                            trigger("archiveImportOver.recordsManagement");
                             var folder = archive.originatorOrgRegNumber;
                             if (archive.filePlanPosition) {
                                 folder = archive.filePlanPosition;
