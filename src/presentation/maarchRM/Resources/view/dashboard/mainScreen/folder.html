@@ -135,6 +135,14 @@
             if (orgRegNumber) {
                 trigger('loadFolder.filePlan', [orgRegNumber]);
             }
+        },
+
+        lockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', true);
+        },
+
+        unlockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', false);
         }
     }
     ArchiveFolderList = {
@@ -377,6 +385,14 @@
     // Breadcrump
     $('#folderBreadcrumb').on('click', 'a', function() {
         FolderBreadcrumb.selectFolder($(this));
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportStarted.recordsManagement", function() {
+        FolderBreadcrumb.lockNavigation();
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportOver.recordsManagement", function() {
+        FolderBreadcrumb.unlockNavigation();
     })
 
 </script>
