@@ -181,6 +181,9 @@
                 dataType    : 'json',
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
+                    if (locked) {
+                        ArchiveFolderList.folderPanel.find('.addChildrenArchive').remove();
+                    }
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
