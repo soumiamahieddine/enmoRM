@@ -202,6 +202,10 @@ msgid "requesterOrgRegNumber"
 msgstr "Identifiant du demandeur"
 msgctxt "eventInfo"
 
+msgid "info"
+msgstr "Détail"
+msgctxt "eventInfo"
+
 # msgid "accountId"
 # msgstr "Identifiant technique utilisateur"
 # msgctxt "eventInfo"
@@ -467,6 +471,9 @@ msgstr "Validation d'une archive"
 msgid "recordsManagement/descriptionModification"
 msgstr "Modification de la description d'archive"
 
+msgid "recordsManagement/outgoingTransfer"
+msgstr "Transfert sortant"
+
 msgid "medona/sending"
 msgstr "Envoi d'un message"
 
@@ -483,13 +490,16 @@ msgid "medona/acceptance"
 msgstr "Acceptation d'un message"
 
 msgid "medona/acknowledgement"
-msgstr "Accusé de réception"
+msgstr "Acquittement"
 
 msgid "medona/rejection"
 msgstr "Rejet d'un message"
 
 msgid "medona/retry"
 msgstr "Reprise d'un message"
+
+msgid "medona/authorization"
+msgstr "Demande d'autorisation"
 
 msgid "Result"
 msgstr "Résultat"

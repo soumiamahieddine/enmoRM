@@ -76,7 +76,7 @@ EOS;
 
         
 
-        if (count($this->toolbars)) {
+        if (!empty($this->toolbars)) {
             foreach ($this->toolbars as $class => $html) {
                 $scriptText .=
 <<<EOS

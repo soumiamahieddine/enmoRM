@@ -62,22 +62,32 @@
                     <ul class="nav nav-tabs nav-justified">
                         <li id="privilegesTabBtn" class="active"><a href="#privilegesTab" data-toggle="[?merge role.superadmin.then('', 'tab') ?]">Privileges</a></li>
                         <?merge serviceAccount.accountId.bool() ?>
-                        <li id="generateTokenTabBtn" class=""><a href="#generateTokenTab" data-toggle="tab">Generate token</a></li>
+                        <li id="generateTokenTabBtn" class=""><a href="#generateTokenTab" data-toggle="tab">Authentication token</a></li>
                     </ul>
                     <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
                         <div class="panel-body">
                             <div class="tab-content">
                                 <?merge serviceAccount.accountId.bool() ?>
                                 <div class="tab-pane fade in" id="generateTokenTab" >
-                                    <h3>Generate token</h3>
-                                    <div class="well">
-                                        <button type="button" class="btn btn-link" id="tokenRegenerate" title="Generate token">
+                                        <button type="button" class="btn btn-info" id="tokenRegenerateRequest" title="Generate token">
                                             <span class="fa fa-refresh">&nbsp;</span>Generate token
                                         </button>
-                                        <div class="input-group col-xs-12">
-                                            <textarea id="serviceToken" class="text-primary col-xs-12" rows="5" style="resize: none; resize: vertical" readonly=""></textarea>
+                                        <div class="form-group">
+                                            <label>Token</label><button type="button" class="btn btn-link" id="copy-generatedToken" title="Copy"><span class="fa fa-copy"></span></button>
+                                            <div>
+                                                <textarea id="generatedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
+                                                    <?merge serviceAccount.password ?>
+                                                </textarea>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <div class="form-group">
+                                            <label>URL encoded token</label><button type="button" class="btn btn-link" id="copy-generatedUrlEncodedToken" title="Copy"><span class="fa fa-copy"></span></button>
+                                            <div>
+                                                <textarea id="generatedUrlEncodedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
+                                                    <?merge serviceAccount.password.urlencode() ?>
+                                                </textarea>
+                                            </div>
+                                        </div>
                                 </div>
                                 <div class="tab-pane fade in active" id="privilegesTab" >
                                     <h3>Privileges</h3>
@@ -98,7 +108,7 @@
                                                 <option data-serviceURI="[?merge .serviceURI ?]"><?merge .description ?></option>
                                             </select>
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
+                                                <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add" disabled><span class="fa fa-plus"></span></button>
                                             </span>
                                         </div>
                                         <?merge serviceAccount.servicePrivilege.bool() ?>
@@ -121,6 +131,25 @@
         </form>
     </div>
 </div>
+<div class="modal fade" id="tokenRegenerateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Generate token</h4>
+            </div>
+            <div class="modal-body">
+                Be careful, you are about to generate a new token. This will cancel the previous token.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="tokenRegenerateValidation" title="Ok">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <div style="display:none">
     <span id="empty_text">The fields with a star are required.</span>
@@ -130,7 +159,29 @@
 </div>
 
 <script type="application/javascript">
+    $('#tokenRegenerateRequest').on('click', function() {
+        if (!$("#generatedToken").text()) {
+            $("#tokenRegenerateValidation").click();
+            return;
+        }
+        $("#tokenRegenerateModal").modal();
+    });
 
+    $('#copy-generatedToken').on('click', function() {
+        $("#generatedToken").removeAttr("disabled");
+        $("#generatedToken").select();
+        document.execCommand("copy");
+        document.getSelection().removeAllRanges();
+        $("#generatedToken").attr("disabled", "disabled");
+    });
+
+    $('#copy-generatedUrlEncodedToken').on('click', function() {
+        $("#generatedUrlEncodedToken").removeAttr("disabled");
+        $("#generatedUrlEncodedToken").select();
+        document.execCommand("copy");
+        document.getSelection().removeAllRanges();
+        $("#generatedUrlEncodedToken").attr("disabled", "disabled");
+    });
 
     var privileges = [];
 
@@ -143,7 +194,7 @@
             $(this).hide();
         }
     });
-
+    
     //save
     $("#submitServiceAccount").on("click", function(){
         var url = '/serviceAccount';
@@ -208,15 +259,26 @@
         var serviceURI = $("#selectPrivilegeURI option:selected").data('serviceuri');
         var description = $("#selectPrivilegeURI option:selected").val();
 
-        $("#privilegeExemple").find("[name=privilegeURI]:first")
-            .clone()
-            .find('input')
-            .val(description)
-            .data("serviceuri",serviceURI)
-            .closest('[name=privilegeURI]')
-            .appendTo($("#listPrivilege"));
+        if(description){
 
-        $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            $("#privilegeExemple").find("[name=privilegeURI]:first")
+                .clone()
+                .find('input')
+                .val(description)
+                .data("serviceuri",serviceURI)
+                .closest('[name=privilegeURI]')
+                .appendTo($("#listPrivilege"));
+
+            $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            $(this).attr('disabled',true);
+        }
+
+    });
+
+
+    $("#selectPrivilegeURI").on("change", function(){
+        $("#btnAddPrvilege").attr('disabled',false);
+
     });
 
     //Delete privilege
@@ -233,13 +295,15 @@
     });
 
     //Cancel
-    $("#tokenRegenerate").on("click", function(){
+    $("#tokenRegenerateValidation").on("click", function(){
+        $("#tokenRegenerateModal").modal("hide");
         ajax($(this), {
             url         : "/Serviceaccount/"+ $("#serviceAccountId").val() + "/token",
             type        : "GET",
             dataType    : "json",
             success  : function(response){
-                $('#serviceToken').text(response.cookie);
+                $('#generatedToken').text(response.cookie);
+                $('#generatedUrlEncodedToken').text(encodeURIComponent(response.cookie));
                 gritter.show(response.message, response.status);
             },
             error    : function(response) {

@@ -58,7 +58,7 @@ trait TemplateTrait
      * @param string $source
      *
      */
-    public function merge($node=null, $source=null)
+    public function merge($node = null, $source = null)
     {
         // Avoid garbage nodes merge
         if (!isset($this->mergedNodes)) {
@@ -245,7 +245,7 @@ trait TemplateTrait
                 $mergedValue = str_replace($pi, (string) $tmpTextNode->wholeText, $textNode->nodeValue);
 
                 //$mergedValue = str_replace($pi, (string) $value, $textNode->nodeValue);
-                //$mergedValue = htmlentities($mergedValue);
+                $mergedValue = htmlentities($mergedValue);
                 $textNode->nodeValue = str_replace($pi, $value, $mergedValue);
             }
         }
@@ -481,12 +481,16 @@ trait TemplateTrait
      */
     public function mergeNode($pi, $instr, $DOMNode)
     {
+        if ($DOMNode->nodeType == XML_DOCUMENT_FRAG_NODE && $DOMNode->childNodes->length == 0) {
+            return true;
+        }
+
         if ($pi->ownerDocument != $DOMNode->ownerDocument) {
             $DOMNode = $pi->ownerDocument->importNode($DOMNode, true);
         }
 
         $pi->parentNode->insertBefore($DOMNode, $pi);
-
+        
         return true;
     }
 

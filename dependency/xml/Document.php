@@ -64,6 +64,8 @@ class Document
         $this->nodeExtensions = $extensions;
         $this->preserveWhiteSpace = false;
         $this->formatOutput = true;
+
+        $this->templateTrait();
         
     }
     
@@ -138,7 +140,7 @@ class Document
         if (isset($class->tags['xmlns'])) {
             foreach ($class->tags['xmlns'] as $xmlnsDecl) {
                 $prefix = strtok($xmlnsDecl, " ");
-                $xmlns = strtok("");
+                $xmlns = trim(strtok(""));
                 $this->XPath->registerNamespace($prefix, $xmlns);
             }
         }

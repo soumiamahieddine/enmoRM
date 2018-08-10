@@ -32,14 +32,23 @@ class log implements archiveDescriptionInterface
     /* Properties */
 
     public $sdoFactory;
+    public $logFilePlan;
+    public $translationLogType;
+    public $filePlanController;
 
     /**
      * Constructor of access control class
-     * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\sdo\Factory $sdoFactory         The factory
+     * @param string                  $logFilePlan        The path of log in the file plan
+     * @param array                   $translationLogType The translation of log types
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $logFilePlan = null, $translationLogType = [])
     {
         $this->sdoFactory = $sdoFactory;
+        $this->logFilePlan = $logFilePlan;
+        $this->translationLogType = $translationLogType;
+
+        $this->filePlanController = \laabs::newController("filePlan/filePlan");
     }
 
     /**
@@ -118,7 +127,7 @@ class log implements archiveDescriptionInterface
         $sortBy = ">fromDate";
         $numberOfResult = 300;
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, null, $sortBy, 0, $numberOfResult);
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
         foreach ($logs as $log) {
             try {
                 $archive = $archiveController->read($log->archiveId);
@@ -140,7 +149,7 @@ class log implements archiveDescriptionInterface
      */
     public function getByDate($type, $date)
     {
-        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate >= '$date' AND toDate <= '$date'", null, ">fromDate", 1);
+        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate >= '$date' AND toDate <= '$date'", [], ">fromDate", 1);
 
         if (!count($journal)) {
             return null;
@@ -209,7 +218,7 @@ class log implements archiveDescriptionInterface
      */
     public function getFirstJournal($type)
     {
-        $firstJournal = $this->sdoFactory->find('recordsManagement/log', "type='$type'", null, "<fromDate", 0, 1);
+        $firstJournal = $this->sdoFactory->find('recordsManagement/log', "type='$type'", [], "<fromDate", 0, 1);
         if (!count($firstJournal)) {
             return null;
         }
@@ -229,7 +238,7 @@ class log implements archiveDescriptionInterface
             $journal = $this->sdoFactory->read('recordsManagement/log', $journal);
         }
 
-        $nextJournal =  $this->sdoFactory->find('recordsManagement/log', "type = '$journal->type' and fromDate >= '$journal->toDate'", null, '<fromDate', 0, 1);
+        $nextJournal =  $this->sdoFactory->find('recordsManagement/log', "type = '$journal->type' and fromDate >= '$journal->toDate'", [], '<fromDate', 0, 1);
         if (!count($nextJournal)) {
             return null;
         }
@@ -253,7 +262,7 @@ class log implements archiveDescriptionInterface
             $query = "type='$type' AND ownerOrgRegNumber = null";
         }
         
-        $journals = $this->sdoFactory->find('recordsManagement/log', $query, null, ">toDate", 0, 1);
+        $journals = $this->sdoFactory->find('recordsManagement/log', $query, [], ">toDate", 0, 1);
 
         if (empty($journals)) {
             return null;
@@ -303,7 +312,7 @@ class log implements archiveDescriptionInterface
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
-        if ($currentOrganization->orgRoleCodes && !in_array("owner", (array) $currentOrganization->orgRoleCodes)) {
+        if (!($currentOrganization->orgRoleCodes && in_array("owner", (array) $currentOrganization->orgRoleCodes))) {
             throw \laabs::newException("recordsManagement/logException", "The journal must be archived by an owner organization.");
         }
 
@@ -318,6 +327,12 @@ class log implements archiveDescriptionInterface
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
         $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
+
+        if (!empty($this->logFilePlan)) {
+            $path = $this->resolveLogFilePlan($this->logFilePlan, ["type" => $log->type]);
+            $position = $this->filePlanController->createFromPath($path, $currentOrganization->registrationNumber, true);
+            $archive->filePlanPosition = $position;
+        }
 
          // Create resource
         $journalResource = $digitalResourceController->createFromFile($journalFileName);
@@ -371,6 +386,36 @@ class log implements archiveDescriptionInterface
         return $archive->archiveId;
     }
 
+    private function resolveLogFilePlan($path, $values)
+    {
+        if (!$path) {
+            $pattern = $this->storePath;
+        }
+
+        $values = is_array($values) ? $values : get_object_vars($values);
+
+        if (preg_match_all("/\<[^\>]+\>/", $path, $variables)) {
+            foreach ($variables[0] as $variable) {
+                $token = substr($variable, 1, -1);
+                switch (true) {
+                    case substr($token, 0, 5) == 'date(':
+                        $format = substr($token, 5, -1);
+                        $path = str_replace($variable, date($format), $path);
+                        break;
+                    case isset($values[$token]):
+                        if (array_key_exists($values[$token], $this->translationLogType)) {
+                            $values[$token] = $this->translationLogType[$values[$token]];
+                        }
+
+                        $path = str_replace($variable, (string) $values[$token], $path);
+                        break;
+                }
+            }
+        }
+
+        return $path;
+    }
+
     public function contents ($type, $archiveId, $resourceId) {
         $archiveController = \laabs::newController('recordsManagement/archive');
 
@@ -378,7 +423,7 @@ class log implements archiveDescriptionInterface
 
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
-        $journal .= file_get_contents($res->address[0]->repository->repositoryUri . $res->address[0]->path);
+        $journal .= base64_decode($res->attachment->data);
 
         return $journal;
     }

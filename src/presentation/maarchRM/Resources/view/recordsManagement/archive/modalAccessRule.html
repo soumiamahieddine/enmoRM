@@ -138,11 +138,6 @@
         });
     })
 
-    $("#contain").on('change', '#accessRuleCode', function () {
-        accessRuleModal.loadAccessCode();
-    })
-
-
     var accessRuleModal = {
         load: function(archiveId) {
 
@@ -204,7 +199,7 @@
                 if(a.attr('name') != "archiveIds") {
                     accessRule[a.attr('name')] = a.val();
                 }
-            })
+            });
 
             accessRule['accessRuleDuration'] = retentionRule.duration;
 

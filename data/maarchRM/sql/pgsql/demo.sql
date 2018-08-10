@@ -41,7 +41,6 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('UTILISATEUR', 'archiveRetrieval/*'),
     ('UTILISATEUR', 'archiveDeposit/*'),
     ('UTILISATEUR', 'archiveManagement/modify'),
-    ('UTILISATEUR', 'archiveManagement/retrieve'),
     ('UTILISATEUR', 'archiveManagement/filePlan');
 
 
@@ -49,10 +48,6 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
 ('ADMIN', 'superadmin');
 
-
--- publicUserStory
-INSERT INTO "auth"."publicUserStory"("userStory") VALUES 
-('app/*');
     
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
@@ -81,19 +76,6 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
 INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", "reference", "digitalResourceClusterId", "control", "default", "samplingFrequency","samplingRate") VALUES
     ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50),
     ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true,2 ,50);
-    
--- "organization".orgRole
-INSERT INTO "organization"."orgRole" ("code", "name","description") VALUES
-('owner','organization/owner', 'The system owner');
-
-INSERT INTO "batchProcessing"."task"
-("taskId", "route", "description") VALUES
-('01', 'audit/event/createChainjournal', 'Chainer le journal de l''application'),
-('02', 'lifeCycle/journal/createChainjournal', 'Chainer le journal du cyle de vie'),
-('03', 'recordsManagement/archiveCompliance/readPeriodic', 'Valider l''intégrité des archives'),
-('04', 'recordsManagement/archives/deleteDisposablearchives', 'Détruire les archives'),
-('05', 'batchProcessing/notification/updateProcess', 'Envoyer notification'),
-('06', 'recordsManagement/archives/updateIndexfulltext', 'Extraction plein texte');
 
 
 INSERT INTO "batchProcessing"."scheduling"
@@ -102,7 +84,7 @@ INSERT INTO "batchProcessing"."scheduling"
 ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
 ('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
 ('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
-('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');
+('sendNotification', 'Envoi des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused');
 
 
 INSERT INTO "recordsManagement"."retentionRule" ("code", "label", "description", "duration", "finalDisposition") VALUES ('BULPAI', 'Bulletins de paie', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'P5Y', 'destruction');
@@ -350,6 +332,7 @@ INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ddur', 'DUR', 'Dominique', 'Mme', 'Dominique DUR', 'ddur', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES ('user', 'ssissoko', 'SISSOKO', 'Sylvain', 'M.', 'Sylvain SISSOKO', 'ssissoko', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
 
+INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "password", "salt", "tokenDate", "enabled") VALUES ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', 'phdF9WkJuTKkDuPXoqDZuOjLMAFGC6ZrzrSEEqC9YjJN9CZUNWsAOPn1I+PaDT2+g3S2i2/qgt5/Wo4ra68GTAfXSmzR8+IraIzVgvp4+7cQHvlfg7zofQ==', '5440ff64f62bfb39300fc4d46451f5a2', '2018-06-21 09:12:24.256064', true);
 
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ppetit', 'ACME', '', true);
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('aadams', 'DESR', '', true);
@@ -368,7 +351,9 @@ INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function",
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ttong', 'CC', '', true);
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ddur', 'CC', '', true);
 INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('ssissoko', 'CC', '', true);
+INSERT INTO "organization"."userPosition" ("userAccountId", "orgId", "function", "default") VALUES ('superadmin', 'SAM', '', true);
 
+INSERT INTO "organization"."servicePosition" ("serviceAccountId", "orgId") VALUES ('System', 'ARC');
 
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'ppetit');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR', 'aadams');
@@ -387,8 +372,6 @@ INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'UTILISATEUR
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'bblier');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'kmama');
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDANT_ARCHIVES', 'ccharles');
--- Insert postprocess SQL queries here
-INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "enabled") VALUES ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true); 
 
 INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', '*');
 

@@ -24,7 +24,7 @@ class Query
      * The property set
      * @var array
      */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * The collection asserts

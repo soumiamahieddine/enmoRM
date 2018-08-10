@@ -5,22 +5,6 @@ DROP SCHEMA IF EXISTS "organization" CASCADE;
 CREATE SCHEMA "organization"
   AUTHORIZATION postgres;
 
-
--- Table: "organization"."orgRole"
-
--- DROP TABLE "organization"."orgRole";
-
-CREATE TABLE "organization"."orgRole"
-(
-  "code" text NOT NULL,
-  "name" text,
-  "description" text,
-  PRIMARY KEY ("code")
-)
-WITH (
-  OIDS=FALSE
-);
-
 -- Table: "organization"."orgType"
 
 -- DROP TABLE "organization"."orgType";

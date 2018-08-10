@@ -296,6 +296,8 @@ trait archiveAccessTrait
         if (!empty($args['filePlanPosition'])) {
             $queryParts['filePlanPosition'] = "filePlanPosition= :filePlanPosition";
             $queryParams['filePlanPosition'] = $args['filePlanPosition'];
+        } else {
+            $queryParts['filePlanPosition'] = "filePlanPosition= null";
         }
         if ($args['hasParent'] == true) {
             $queryParts['parentArchiveId'] = "parentArchiveId!=null";
@@ -304,11 +306,11 @@ trait archiveAccessTrait
             $queryParts['hasParent'] = "parentArchiveId=null";
         }
 
-        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+        //$accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
 
-        if ($accessRuleAssert) {
-            $queryParts[] = $accessRuleAssert;
-        }
+        // if ($accessRuleAssert) {
+        //     $queryParts[] = $accessRuleAssert;
+        // }
 
         return implode(' and ', $queryParts);
     }

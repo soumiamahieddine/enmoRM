@@ -591,9 +591,6 @@ class archive
         if (empty($startDate) || empty($duration)) {
             return null;
         }
-        if ($duration == "P999999999Y") {
-            return $duration;
-        }
 
         return $startDate->shift($duration);
     }
@@ -607,12 +604,22 @@ class archive
     public function checkRights($archive)
     {
         $accountToken = \laabs::getToken('AUTH');
-        $account = \laabs::newController('auth/userAccount')->edit($accountToken->accountId);
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $account = $userAccountController->edit($accountToken->accountId);
 
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
-        //$userOrgList = [];
-        $positionController = null;
+
+        $positionController = \laabs::newController('organization/userPosition');
+
+        $descandantServices = $positionController->readDescandantService($currentOrganization->orgId);
+
+        $descandantRegNumber = [];
+        $descandantRegNumber[] = $currentOrganization->registrationNumber;
+
+        foreach ($descandantServices as $descandantService) {
+            $descandantRegNumber[] = $descandantService;
+        }
 
         if (!$currentOrganization) {
             return false;
@@ -622,15 +629,7 @@ class archive
             return true;
         }
 
-        /*if ($account->accountType == "user") {
-            $positionController = $this->userPositionController;
-        } else {
-            $positionController = $this->servicePositionController;
-        }
-
-        $userOrgList = $positionController->listMyServices();*/
-
-        if (($archive->originatorOrgRegNumber != $currentOrganization->registrationNumber) || ($archive->archiverOrgRegNumber == $currentOrganization->registrationNumber)) {
+        if (!in_array($archive->originatorOrgRegNumber, $descandantRegNumber) && ($archive->archiverOrgRegNumber != $currentOrganization->registrationNumber)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 

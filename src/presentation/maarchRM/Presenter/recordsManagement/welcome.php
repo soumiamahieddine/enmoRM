@@ -62,10 +62,14 @@ class welcome
 
         $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
-        $user = \laabs::newController('auth/userAccount')->get($accountToken->accountId);
-
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $user = $userAccountController->get($accountToken->accountId);
+        
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
+
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
 
         $filePlan = \laabs::callService('filePlan/filePlan/readTree');
         if ($filePlan) {
@@ -75,6 +79,10 @@ class welcome
             $this->markTreeLeaf($filePlan);
 
             $this->view->setSource("filePlan", $filePlan);
+            $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
+            $this->view->merge($this->view->getElementById('filePlanTree'));
+            $this->view->translate();
+
         }
 
         // Retention
@@ -109,6 +117,8 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
+        $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
         
 
@@ -134,9 +144,9 @@ class welcome
         $this->view->addContentFile('filePlan/filePlanTree.html');
         $this->markTreeLeaf([$filePlan]);
 
-        $this->view->translate();
         $this->view->setSource("filePlan", [$filePlan]);
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
@@ -157,7 +167,7 @@ class welcome
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
         if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
+            $archive->originatingDate = $archive->originatingDate;
         }
 
         // Retention
@@ -171,6 +181,7 @@ class welcome
 
         // Add a sub archive
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $fileplanLevel = false;
         if ($depositPrivilege) {
             if (!empty($archive->archivalProfileReference)) {
                 $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
@@ -240,8 +251,11 @@ class welcome
 
         if (isset(\laabs::configuration('presentation.maarchRM')['displayableFormat'])) {
             $this->view->setSource("displayableFormat", json_encode(\laabs::configuration('presentation.maarchRM')['displayableFormat']));
-            $this->view->merge();
+        } else {
+            $this->view->setSource("displayableFormat", json_encode(array()));
         }
+
+        $this->view->merge();
 
         return $this->view->saveHtml();
     }
@@ -339,7 +353,6 @@ class welcome
         $archivalProfile = null;
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
 
-
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
             $archive->archivalProfileName = $archivalProfile->name;
@@ -355,6 +368,7 @@ class welcome
 
             if (isset($archive->descriptionObject)) {
                 foreach ($archive->descriptionObject as $name => $value) {
+                    $isImmutable = false;
                     $label = $type = $archivalProfileField = null;
                     if ($archivalProfile) {
                         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -362,6 +376,7 @@ class welcome
                                 $label = $archiveDescription->descriptionField->label;
                                 $archivalProfileField = true;
                                 $type = $archiveDescription->descriptionField->type;
+                                $isImmutable = $archiveDescription->isImmutable;
                             }
                         }
                     }
@@ -370,45 +385,47 @@ class welcome
                         $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
                     }
 
-                    if (empty($type) && $value != "") {
+                    if (empty($type)) {
                         $type = 'text';
-                        switch (gettype($value)) {
-                            case 'boolean':
-                                $type = 'boolean';
-                                break;
+                        if (!empty($value)) {
+                            switch (gettype($value)) {
+                                case 'boolean':
+                                    $type = 'boolean';
+                                    break;
 
-                            case 'integer':
-                            case 'double':
-                                $type = 'number';
-                                break;
+                                case 'integer':
+                                case 'double':
+                                    $type = 'number';
+                                    break;
 
-                            case 'string':
-                                if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                    $type = 'date';
-                                }
-                                break;
+                                case 'string':
+                                    if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                                        $type = 'date';
+                                    }
+                                    break;
+                            }
                         }
                     }
+                    if(!is_array($value)){
+                        if ($archivalProfileField) {
+                            $descriptionHtml .= '<tr class="archivalProfileField">';
+                        } else {
+                            $descriptionHtml .= '<tr>';
+                        }
 
-                    if ($archivalProfileField) {
-                        $descriptionHtml .= '<tr class="archivalProfileField">';
-                    } else {
-                        $descriptionHtml .= '<tr>';
-                    }
+                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
+                        if ($type == "date") {
+                                $textValue = \laabs::newDate($value);
+                        } else {
+                            $textValue = $value;
+                        }
+                        if ($type == 'boolean') {
+                            $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                        }
 
-                    $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'">'.$label.'</th>';
-                    if ($type == "date") {
-                            $textValue = \laabs::newDate($value);
-                            $textValue = $textValue->format("d/m/Y");
-                    } else {
-                        $textValue = $value;
-
+                        $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
+                        $descriptionHtml .= '</tr>';
                     }
-                    if ($type == 'boolean') {
-                        $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                    }
-                    $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                    $descriptionHtml .= '</tr>';
                 }
 
             }

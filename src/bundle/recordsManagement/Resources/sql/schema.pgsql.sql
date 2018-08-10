@@ -32,6 +32,7 @@ CREATE TABLE "recordsManagement"."retentionRule"
   "finalDisposition" text,
   "description" text,
   "label" text,
+  "implementationDate" date,
 
   PRIMARY KEY ("code")
 )
@@ -101,6 +102,7 @@ CREATE TABLE "recordsManagement"."descriptionField"
   "maxValue" numeric,
   "enumeration" text,
   "pattern" text,
+  "isArray" boolean default false,
   PRIMARY KEY ("name")
 );
 
@@ -114,6 +116,9 @@ CREATE TABLE "recordsManagement"."archiveDescription"
   "fieldName" text NOT NULL,
   "required" boolean,
   "position" integer,
+  "isImmutable" boolean default false,
+  "isRetained" boolean default true,
+
   PRIMARY KEY ("archivalProfileId", "fieldName"),
   FOREIGN KEY ("archivalProfileId")
     REFERENCES "recordsManagement"."archivalProfile" ("archivalProfileId") MATCH SIMPLE
@@ -180,6 +185,7 @@ CREATE TABLE "recordsManagement"."archive"
   "retentionDuration" text,
   "finalDisposition" text,
   "disposalDate" date,
+  "retentionRuleStatus" text,
 
   "accessRuleCode" text,
   "accessRuleDuration" text,
@@ -215,9 +221,6 @@ CREATE TABLE "recordsManagement"."archive"
     ON UPDATE NO ACTION ON DELETE NO ACTION,
   FOREIGN KEY ("accessRuleCode")
     REFERENCES "recordsManagement"."accessRule" ("code") MATCH SIMPLE
-    ON UPDATE NO ACTION ON DELETE NO ACTION,
-  FOREIGN KEY ("retentionRuleCode")
-    REFERENCES "recordsManagement"."retentionRule" ("code") MATCH SIMPLE
     ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (

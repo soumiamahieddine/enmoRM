@@ -44,10 +44,7 @@ class digitalResource
      */
     public function retrieve($resource)
     {
-        //$this->view->addHeaders();
-
-       //$this->view->useLayout();
-        $contents = $resource->getContents();
+        $contents = base64_decode($resource->attachment->data);
 
         if (strlen($contents) > 65536) {
             try {
@@ -74,6 +71,7 @@ class digitalResource
                         }
                         break;
 
+                    case 'text/html' :
                     case 'text/plain':
                         $contents = substr($contents, 0, 65536);
                         break;
@@ -81,6 +79,14 @@ class digitalResource
             } catch (\Exception $exception) {
                 \laabs::setResponseCode('500');
             }
+        } else {
+            switch ($resource->mimetype) {
+                case 'text/html' :
+                case 'text/plain':
+                        $contents = strip_tags($contents);
+                        break;
+            }
+
         }
 
         $url = \laabs::createPublicResource($contents);

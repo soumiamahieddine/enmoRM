@@ -73,6 +73,9 @@ trait archiveModificationTrait
      */
     public function modifyRetentionRule($retentionRule, $archiveIds)
     {
+
+        $retentionRuleReceived = $retentionRule;
+
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
@@ -95,28 +98,38 @@ trait archiveModificationTrait
                 $operationResult = false;
 
             } else {
+
+                $retentionRule = clone($retentionRuleReceived);
+
                 $retentionRule->archiveId = $archiveId;
 
-                if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                    $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                // Update current object for caller
+                if ($retentionRule->changeStartDate === false) {
+                    $retentionRule->retentionStartDate = $archive->retentionStartDate;
                 }
 
-                // Update current object for caller
-                if ($retentionRule->retentionStartDate === '') {
-                    $retentionRule->retentionStartDate = null;
+                if (empty($retentionRule->retentionRuleCode)) {
+                    $retentionRule->retentionRuleCode = $archive->retentionRuleCode;
+                    $retentionRule->retentionDuration = $archive->retentionDuration;
+                }
+
+                if ($retentionRule->finalDisposition === null) {
+                    $retentionRule->finalDisposition = $archive->finalDisposition;
+                } elseif ($retentionRule->finalDisposition === '') {
+                    $retentionRule->finalDisposition = null;
                 }
 
                 if ($retentionRule->retentionDuration === '') {
                     $retentionRule->retentionDuration = null;
-                }
-
-                if ($retentionRule->finalDisposition === '') {
-                    $retentionRule->finalDisposition = null;
-                }
-
-                if ($retentionRule->disposalDate === '') {
+                } elseif (!empty($retentionRule->retentionDuration) && $retentionRule->retentionDuration->y >= 9999) {
                     $retentionRule->disposalDate = null;
+                } else {
+                    if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
+                        $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                    }
                 }
+
+                $retentionRule->retentionRuleStatus = "current";
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
@@ -156,6 +169,7 @@ trait archiveModificationTrait
         $archives = array();
         $operationResult = null;
 
+        $accessRuleReceived = $accessRule;
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
@@ -166,9 +180,24 @@ trait archiveModificationTrait
 
                 $operationResult = false;
             } else {
+                $accessRule = clone($accessRuleReceived);
+
                 $accessRule->archiveId = $archiveId;
 
-                if ($accessRule->accessRuleDuration != null && $accessRule->accessRuleStartDate != null) {
+                if (!$accessRule->changeStartDate) {
+                    $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
+                }
+
+                if (empty($accessRule->accessRuleCode)) {
+                    $accessRule->accessRuleCode = $archive->accessRuleCode;
+                    $accessRule->accessRuleDuration = $archive->accessRuleDuration;
+                }
+
+                if ($accessRule->accessRuleDuration === '') {
+                    $accessRule->accessRuleDuration = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && $accessRule->accessRuleDuration->y >= 9999) {
+                    $accessRule->accessRuleComDate = null;
+                } elseif (!empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleStartDate)) {
                     $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
                 }
 
@@ -206,7 +235,6 @@ trait archiveModificationTrait
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
-        $res = $this->setStatus($archiveIds, 'frozen');
 
         $archives = array();
 
@@ -214,12 +242,20 @@ trait archiveModificationTrait
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            $operationResult = true;
+            $archives[$archiveId] = $archive;
+        }
 
-            $archives[] = $archive;
+        $res = $this->setStatus($archiveIds, 'frozen');
 
-            // Life cycle journal
-            $this->logFreeze($archive, $operationResult);
+
+        for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
+            $archive = $archives[$res['success'][$i]];
+            $this->logFreeze($archive, true);
+        }
+
+        for ($i = 0, $count = count($res['error']); $i < $count; $i++) {
+            $archive = $archives[$res['error'][$i]];
+            $this->logFreeze($archive, false);
         }
 
         return $res;
@@ -236,19 +272,27 @@ trait archiveModificationTrait
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
-        $res = $this->setStatus($archiveIds, 'preserved');
 
         $archives = array();
+
         foreach ($archiveIds as $archiveId) {
             $archive = $this->getDescription($archiveId);
             $this->checkRights($archive);
 
-            $operationResult = true;
+            $archives[$archiveId] = $archive;
+        }
 
-            $archives[] = $archive;
+        $res = $this->setStatus($archiveIds, 'preserved');
 
-            // Life cycle journal
-            $this->logUnfreeze($archive, $operationResult);
+
+        for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
+            $archive = $archives[$res['success'][$i]];
+            $this->logUnfreeze($archive, true);
+        }
+
+        for ($i = 0, $count = count($res['error']); $i < $count; $i++) {
+            $archive = $archives[$res['error'][$i]];
+            $this->logUnfreeze($archive, false);
         }
 
         return $res;
@@ -258,17 +302,22 @@ trait archiveModificationTrait
      * Update metadata of archive
      * @param string $archiveId
      * @param string $originatorArchiveId
+     * @param string $archiverArchiveId
      * @param string $archiveName
      * @param string $description
      * @param date   $originatingDate
      * 
      * @return boolean The result of the operation
      */
-    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
+    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
         $archive = $this->getDescription($archiveId);
+
+        if (!empty($archive->archivalProfileReference)) {
+            $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
+        }
         $this->checkRights($archive);
-        
+
         if ($archiveName) {
             $archive->archiveName = $archiveName;
         }
@@ -277,13 +326,32 @@ trait archiveModificationTrait
             $archive->originatorArchiveId = $originatorArchiveId;
         }
 
+        if ($archiverArchiveId) {
+            $archive->archiverArchiveId = $archiverArchiveId;
+        }
+
         if ($originatingDate) {
             $archive->originatingDate = $originatingDate;
         }
-        
+
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         if ($description) {
-            $descriptionObject = json_decode($description);
-            if (!empty($archive->archivalProfileReference)) {
+            $descriptionObject = $description;
+
+            if (!empty($archivalProfileDescription)) {
+                foreach ($archivalProfileDescription as $descriptionImmutable) {
+                    if ($descriptionImmutable->isImmutable) {
+                        $fieldName = (string)$descriptionImmutable->fieldName;
+                        if ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
+                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                        }
+                    }
+
+                }
+            }
+            
+            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 if (!empty($this->currentArchivalProfile->descriptionClass)) {
@@ -302,7 +370,7 @@ trait archiveModificationTrait
             
             $descriptionController->update($archive);
         }
-        
+
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
         
         $operationResult = true;
@@ -360,7 +428,7 @@ trait archiveModificationTrait
         $res = [];
         $res['success'] = [];
         $res['fail'] = [];
-        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", [], null, null, $limit);
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));
@@ -411,4 +479,42 @@ trait archiveModificationTrait
 
         return $res;
     }
+
+    /**
+     * Update archive with changed retention rule
+     * @param int $limit The maximum number of archive to update
+     */
+    public function updateArchiveRetentionRule($limit = 1000) {
+        $archives = $this->sdoFactory->find('recordsManagement/archive', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
+        $retentionRules = [];
+
+        if($archives) {
+            foreach ($archives as $archive) {
+
+                $retentionRule = new \stdClass();
+                $retentionRule->archiveId = $archive->archiveId;
+                $retentionRule->previousStartDate = $archive->retentionStartDate;
+                $retentionRule->previousDuration = $archive->retentionDuration;
+                $retentionRule->previousFinalDisposition = $archive->finalDisposition;
+
+                if (!isset($retentionRules[$archive->retentionRuleCode])) {
+                    $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
+                }
+
+                $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
+                $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
+
+                $retentionRule->retentionStartDate = $archive->retentionStartDate;
+                $retentionRule->retentionDuration = $archive->retentionDuration;
+                $retentionRule->finalDisposition = $archive->finalDisposition;
+
+                $archive->retentionRuleStatus = "current";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
+
+                // Life cycle journal
+                $this->logRetentionRuleModification($archive, $retentionRule, true);
+            }
+        }
+    }
 }
+

@@ -1,13 +1,12 @@
-<div class="tab-pane fade" id="importPanel">
+<div class="hide" id="importPanel">
     <div class="col-xs-12">
         <div class="row">
             <h4 class="pull-left">
-                <span data-context-profil/>
+                <span id="import_archivalProfile"/>
                 <br/>
-                <small data-context-path/>
-                <span data-context-parentarchive>
+                <span id="import_parentArchiveName">
                     <br/>
-                    <small><span>Sub-archive of</span> <b data-context-parentname/></small>
+                    <small><span>Sub-archive of</span> <b/></small>
                 </span>
             </h4>
         </div>
@@ -21,7 +20,12 @@
         </div>
 
         <div class="pull-right">
-            <a href="#" class="btn btn-sm bg-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <?merge syncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm bg-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <i>&nbsp;</i>
+            <?merge asyncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm bg-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
+
             <i>&nbsp;</i>
             <a href="#" class="small text-danger" id="cancel">Cancel</a>
         </div>
@@ -29,12 +33,61 @@
 </div>
 
 <script type="text/javascript">
+
+    ImportPanel = {
+        panel: $('#importPanel'),
+        load: function(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+            $('#archiveForm [name="filePlanPosition"]').val(folderId);
+
+            this.panel.removeClass('hide');
+
+            if (!archivalProfile) {
+                archivalProfile = "";
+            }
+
+            $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
+            $("#import_archivalProfile").text(archivalProfile.name);
+                
+            if (parentArchiveId == "") {
+                $("#archiveForm [name='parentArchiveId']").val('');
+                $('#import_parentArchiveName').addClass('hide');
+            } else {
+                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+                $('#import_parentArchiveName').removeClass('hide').find('b').text(parentArchiveName);
+            }
+
+            trigger("archiveImportStarted.recordsManagement");
+        },
+
+        save: function(e, button) {
+            ArchiveForm.send(e, button);
+        },
+        cancel: function() {
+            ArchiveForm.clear();
+            this.panel.addClass('hide');
+            trigger("showFolder.recordsManagement");
+            trigger("archiveImportOver.recordsManagement");
+        }
+    }
+
+    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName);
+    });
+
     $('#import').on('click', function(e) {
-        ArchiveForm.send(e, $(this));
+        ImportPanel.save(e, $(this));
+    });
+
+    $('#syncImport').on('click', function(e) {
+        ArchiveForm.send('sync', e, $(this));
+    });
+
+    $('#asyncImport').on('click', function(e) {
+        ArchiveForm.send('async', e, $(this));
     });
 
     $('#cancel').on('click', function(e) {
-        ArchiveForm.clear();
-        $('#folderTab').click();
+        ImportPanel.cancel();
     });
 </script>

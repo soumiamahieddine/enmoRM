@@ -43,7 +43,7 @@
         <span id="days_text">days</span>
         <span id="months_text">months</span>
         <span id="years_text" data-translate-context="unit">years</span>
-        <span id="unlimited_text" >unlimited</span>
+        <span id="unlimited_text" >Unlimited</span>
     </div>
 
     <!-- ERROR MESSAGE -->
@@ -113,7 +113,7 @@
             <label class="col-md-3 small control-label"></label>
             <div class="col-md-9">
                 <select class="form-control input-sm">
-                    <option></option>
+                    <option value=""></option>
                 </select>
             </div>
         </div>
@@ -141,7 +141,16 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<span  id="addBtnTpl" class="input-group-btn hide">
+    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
+</span>
+<div id="keywordTpl" class="input-group hide" name="keyword">
+    <input type="text" class="form-control input-sm" data-enumerate = "true" disabled="" />
+    <span class="input-group-btn">
+        <button class="btn btn-danger btn-sm" type="button" name="btnDeleteKeyword" title="Delete"><span class="fa fa-trash-o"></span></button>
+    </span>
+</div>
+
 <script type="text/javascript">
     // METADATAS
     $('.addCustomField').on('click', function(e) {
@@ -154,14 +163,39 @@
         Metadata.removeField($(this));
     });
 
+    //Delete keyword
+    $("#archivalProfileFields").on("click","[name=btnDeleteKeyword]", function(){
+        var selectId = $(this).closest("[name=keyword").find('input').attr('name');
+        var val = $(this).closest("[name=keyword").find('input').val();
+        $(this).closest("[name=keyword").remove();
+        $('#'+selectId).find('option[value="'+val+'"]').removeClass('hide');
+    });
+
+    //Add keyword
+    $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function(){
+        var name = $(this).data('select');
+        var val =  $('[name="'+name+'"] option:selected').text();
+
+        if(val) {
+            var tpl = $('#keywordTpl').clone().removeClass('hide');
+
+            tpl.find('input').val(val).attr('name',name);
+            $('[name="list-'+name+'"]').append(tpl);
+            var select = $("#"+name);
+            select.find("option:selected").addClass('hide');
+            select.val('');
+        }
+
+    });
+
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
-            //console.log(archiveDescription);
             var target = $("#archivalProfileFields");
             var template = $('#inputFieldTemplate').clone();
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
             var enumeration= archiveDescription.descriptionField.enumeration;
+            var isArray= archiveDescription.descriptionField.isArray;
             var label = archiveDescription.descriptionField.label;
             var name = archiveDescription.descriptionField.name;
             var required = archiveDescription.required;
@@ -183,12 +217,14 @@
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
+                        field.attr('data-enumerate','NOT_VALUE');
+                        field.attr('id',name);
 
                         $.each(enumeration, function (index, value) {
-                           field.append($('<option>', {
-                               value: value,
-                               text: value
-                           }));
+                            field.append($('<option>', {
+                                value: value,
+                                text: value
+                            }));
                         });
                         field.val(defaultVal);
                     } else {
@@ -209,14 +245,11 @@
                 case 'timestamp':
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.data("datepicker").setDate(defaultVal);
                     }
-                    
+
                     break;
                 case 'boolean':
                     var template = $('#booleanFieldTemplate').clone();
@@ -235,13 +268,24 @@
             }
 
             field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
-            
+
             template.find("label:first").text(label);
-            
+
             if (required) {
                 $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
                 field.attr("data-required", required);
             }
+
+            if(isArray) {
+                var btnGroup  = $('#addBtnTpl').clone();
+                btnGroup.removeClass('hide');
+                btnGroup.find('button').attr('data-select',name);
+                template.find('div').addClass('input-group').append(btnGroup);
+                template.append('<label class="col-md-3 small control-label"></label>');
+                template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
+            }
+
+            template.appendTo(target);
 
             template.removeAttr('id').appendTo(target);
         },
@@ -261,17 +305,14 @@
                 case 'name':
                     field = template.find('input');
                     break;
-                case 'number' : 
+                case 'number' :
                     field = template.find('.value');
                     field.attr('type', 'number').attr('placeholder', $('#number_text').html());
                     break;
                 case 'date':
                     field = template.find('.value');
                     field.attr('placeholder', $('#date_text').text());
-                    field.datepicker({
-                        language:$('#wrapper').attr('lang'),
-                        autoclose:true
-                    });
+                    field.datepicker(DatePickerParams);
                     break;
                 case 'boolean':
                     var template = $('#customBooleanFieldTemplate').clone();
@@ -296,7 +337,7 @@
         serialize : function(target) {
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
             var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
-            var inputsCustom = target.find("#customFields").children();           
+            var inputsCustom = target.find("#customFields").children();
             var flagEmptyRequiredField = false;
             var flagEmptyCustomField = false;
 
@@ -313,16 +354,19 @@
                 var type = $(this).attr("data-type");
                 var name = $(this).attr('name');
                 var required = $(this).attr('data-required');
-                
+                var enumerate = $(this).attr('data-enumerate');
+                if(enumerate == 'NOT_VALUE'){
+                    return;
+                }
                 switch(type) {
                     case "boolean":
                         value = Boolean($.trim($(this).prop("checked")));
                         break;
-                    
+
                     case "date":
                         value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
                         break;
-                    
+
                     case 'number':
                         value = Number($.trim($(this).val()));
                         break;
@@ -330,7 +374,7 @@
                     default :
                         value = $.trim($(this).val());
                 }
-   
+
                 if (required == "true" && (value === "" || value === null || value === undefined)) {
                     flagEmptyRequiredField = true;
                     $(this).closest(".form-group").addClass('has-error');
@@ -340,24 +384,37 @@
                 } else {
                     $(this).closest(".form-group").removeClass('has-error');
                 }
+                if(enumerate){
+                    if(enumerate != 'NOT_VALUE'){
 
-                descriptionObject[name] = value;
+                        if(!descriptionObject[name]){
+                            descriptionObject[name] = [value];
+                        } else {
+                            descriptionObject[name].push(value)
+                        }
+                    }
+                }
+                else {
+
+                    descriptionObject[name] = value;
+                }
+
             });
-            
+
             $.each(inputsCustom, function() {
                 var value = "";
                 var type = $(this).find('[data-type]').attr("data-type");
                 var name = $(this).find('.name').val();
-                
+
                 switch(type) {
                     case "boolean":
                         value = Boolean($.trim($(this).find('.value').prop("checked")));
                         break;
-                    
+
                     case "date":
                         value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
                         break;
-                    
+
                     case 'number':
                         value = Number($.trim($(this).find('.value').val()));
                         break;
@@ -376,7 +433,7 @@
 
                 descriptionObject[name] = value;
             });
-            
+
             var result = descriptionObject;
 
             if (flagEmptyRequiredField) {
@@ -395,7 +452,7 @@
             $('#archivalProfileFields').empty();
             $('#customFields').empty();
         },
-        
+
         acceptUserIndex : function(value) {
             if (value) {
                 $('#customFields').empty();
@@ -407,3 +464,4 @@
         }
     }
 </script>
+<script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>

@@ -43,7 +43,7 @@ $("#archiveList").on('click', ".viewDocument", function() {
 // view the archive description
 $('#archiveList').on('click', '.viewArchive', function () {
     archiveInfoModal.load($(this).closest('tr').attr('id'));
-})
+});
 
 /* ----------------------------------------------------------------------------------------------------*/
 /* -- LIST ACTIONS -- */
@@ -109,6 +109,9 @@ var ArchivesAction = {
                     let additionalSelector2 = "[data-noretention='1']";
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
                     dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector2);
+                } else if (type == "flagForRestitution") {
+                    let additionalSelector = "[data-restituable='1']";
+                    dataSelector.push('[data-archive-status="' + value + '"]'+additionalSelector);
                 } else {
                     dataSelector.push('[data-archive-status="' + value + '"]');
                 }

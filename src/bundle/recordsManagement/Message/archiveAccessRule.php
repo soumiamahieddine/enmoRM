@@ -70,4 +70,11 @@ class archiveAccessRule
      */
     public $accessRuleComDate;
 
+    /**
+     * change start date
+     *
+     * @var boolean
+     */
+    public $changeStartDate;
+
 }

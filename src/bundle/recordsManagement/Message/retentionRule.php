@@ -65,6 +65,13 @@ class retentionRule
     public $label;
 
     /**
+     * The implementation date of the rule
+     *
+     * @var date
+     */
+    public $implementationDate;
+
+    /**
      * Get the string version of message
      * @return string
      */

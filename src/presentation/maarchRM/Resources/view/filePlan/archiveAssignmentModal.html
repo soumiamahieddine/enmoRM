@@ -125,6 +125,7 @@
                     if (response.status) {
                         Archive.remove(ArchiveAssignmentModal.archives);
                         ArchiveAssignmentModal.close();
+                        ArchiveFolderList.initDragNDrop();
                     }
                 },
                 error       : function (response) {

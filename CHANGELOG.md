@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## Version 2.2
+
+### Exploitation
+
+- `Added` Modification des règles de plusieurs archives sans modifier la date de départ
+- `Changed` Gestion des jetons de compte de service
+- `Changed` Ajout des routes disponibles pour les privilèges des comptes de service dans la configuration 
+- `Fixed` Uniformisation des formats de date
+
+### Métadonnées
+
+- `Added` Possibilité de mettre les métadonnées en lecture seule
+
+### Classement
+
+- `Added` Possibilité de définir un répertoire pour les archives des journaux
+
+### IHM
+
+- `Added` Ajout d'un message de confirmation avant la suppression
+- `Added` Configuration d'un CSS spécifique
+- `Added` Ajout d'un "À propos"
+- `Changed` Amélioration de l'affichage des archives des journaux
+- `Changed` Amélioration de l'affichage des événements de l'application
+
+### Administration
+
+- `Added` Modification rétroactive des règles de conservation
+
+### Sécurité
+
+- `Security` Amélioration de la protection contre le CSRF (Cross-Site Request Forgery)
+
 ## Version 2.1
 
 ### Exploitation

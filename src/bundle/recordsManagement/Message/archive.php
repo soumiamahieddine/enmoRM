@@ -113,6 +113,13 @@ class archive
     public $disposalDate;
 
     /**
+     * The retention rule status
+     *
+     * @var string
+     */
+    public $retentionRuleStatus;
+    
+    /**
      * The originating date of the archive
      *
      * @var timestamp

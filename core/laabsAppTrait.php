@@ -1103,19 +1103,19 @@ trait laabsAppTrait
     /**
      * Get the crypt cipher
      *
-     * @return integer The crypt cipher mcrypt constant
+     * @return string An openssl crypt cipher
      */
     public static function getCryptCipher()
     {
         if (isset($_SERVER['LAABS_CRYPT_CIPHER'])) {
-            $cipherName = LAABS_NS_SEPARATOR . (string) $_SERVER['LAABS_CRYPT_CIPHER'];
+            $cipherName = (string) $_SERVER['LAABS_CRYPT_CIPHER'];
 
-            if (defined($cipherName)) {
-                return constant($cipherName);
+            if (in_array($cipherName, openssl_get_cipher_methods())) {
+                return $cipherName;
             }
         } 
 
-        return \MCRYPT_CAST_128;
+        return "CAST5-CBC";
     }
 
     /* Array retrieval
@@ -1343,7 +1343,7 @@ trait laabsAppTrait
 
     /**
      * Parse a laabs query string into query object
-     * @param strig $queryString
+     * @param string $queryString
      * 
      * @return object
      */
@@ -1352,6 +1352,28 @@ trait laabsAppTrait
         $parser = new \core\Query\Parser();
 
         return $parser->parseQuery($queryString);
+    }
+
+    /**
+     * The app version
+     *
+     * @return String
+     */
+    public static function getVersion()
+    {
+        return file_get_contents('../VERSION.md');
+
+    }
+
+    /**
+     * The app Licence
+     *
+     * @return String
+     */
+    public static function getLicence()
+    {
+        return file_get_contents('../LICENCE.txt');
+
     }
 
 }

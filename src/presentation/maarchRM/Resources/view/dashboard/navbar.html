@@ -104,14 +104,39 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a class="" onclick="displayInformation()">
+                        <i class="fa fa-question" ></i>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
+<div class="modal fade" id="aboutModal" lang="en">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>About</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <img class="img-responsive" style="max-height:64px; margin: 0 auto;" src="/presentation/img/RM.svg"/>
+                    <br/>
+                    <p class='lead'>Version <?merge .version ?></p>
+                </div>
+                <p>
+                    <pre style="overflow-y:scroll; height: 400px; ">
+                        <?merge .licence ?>
+                    </pre>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
-
     function load(url, data)
     {
         var loading = false;
@@ -211,7 +236,7 @@
         var activeButtons = $('.btn').not('[disabled]');
 
         if (button) {
-            icon = button.find('.fa').attr('class');
+            icon = button.find('.fa:first').attr('class');
         }
 
         if (!timeout) {
@@ -225,7 +250,7 @@
             
             activeButtons.prop('disabled', true);
             if (icon) {
-                button.find('.fa').removeClass(icon).addClass('fa fa-spinner fa-spin');
+                button.find('.fa:first').removeClass(icon).addClass('fa fa-spinner fa-spin');
             }
         }
 
@@ -238,7 +263,6 @@
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
             })
-
         }
 
         var errorFunction = request.error;
@@ -262,11 +286,29 @@
     function ajaxEnd(activeButtons, button, icon) {
         activeButtons.prop('disabled', false);
         if (icon) {
-            button.find('.fa').removeClass('fa-spinner fa-spin').addClass(icon);
+            button.find('.fa:first').removeClass('fa-spinner fa-spin').addClass(icon);
         }
     }
 
-$.fn.initSmoothScrolling = function() {
+    // Event triggering system
+    function trigger(event, args) {
+        $(document).trigger(event, args);
+    }
+
+    $.fn.onEvent = function(event, func){
+
+        var callback = func;
+        $(document).on(event, function() {
+            callback.apply(this, arguments);
+        });
+
+        $(this).on("remove", function() {
+            $(document).off(event);
+        })
+    }
+
+    // Scroll following 
+    $.fn.initSmoothScrolling = function() {
         element = $(this);
         originalY = element.offset().top;
         element.css('position', 'relative');
@@ -395,4 +437,8 @@ $.fn.initSmoothScrolling = function() {
                 $(this).parent('li').removeClass('active');
             });
     });
+
+    function displayInformation(){
+        $('#aboutModal').modal();
+    }
 </script>
