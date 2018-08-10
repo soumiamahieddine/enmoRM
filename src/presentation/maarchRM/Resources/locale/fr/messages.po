@@ -214,6 +214,10 @@ msgid "Deposit"
 msgstr "Dépôt"
 msgctxt "layout"
 
+msgid "Storage rules"
+msgstr "Règle d'utilité courante"
+msgctxt "layout"
+
 msgid "Description fields"
 msgstr "Données descriptives"
 msgctxt "layout"

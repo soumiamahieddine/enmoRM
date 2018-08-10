@@ -1,0 +1,356 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Cyril Vazquez <cyril.vazquez@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+    #-->
+
+    <div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/storageRule">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-gavel"></i>
+                Storage rule
+            </h1>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div id='storageRuleList'>
+                    <?hinclude recordsManagement/storageRule/list.html ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" id="storageRuleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" lang="en" data-translate-catalog="recordsManagement/storageRule">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 >Retention rule</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="row" id="storageRule-form">
+                        <div class="row" style="padding:14px">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="code">Storage rule code <span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" id="code" name="code" placeholder="Storage rule code"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-10">
+                                    <label class="control-label">Label</label>
+                                    <input type="text" id="label" name="label" class="form-control" style="resize: none; resize: vertical"></input>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-10">
+                                    <label class="control-label">Description</label>
+                                    <textarea id="description" name="description" class="form-control" style="resize: none; resize: vertical"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-10">
+                                    <label class="control-label">Storage duration <span style="color: red">*</span></label>
+                                    <div class="form-inline">
+                                        <input type="number" class="form-control" id="duration" name="duration" >
+                                        <select id="durationUnit" name="durationUnit" class="form-control">
+                                            <option value='D'>Days</option>
+                                            <option value='M'>Months</option>
+                                            <option value='Y'>Years</option>
+                                            <option value="*">Unlimited</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cancel" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                            <button type="button" id="delete" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o">&nbsp;</i>Delete</button>
+                            <button type="button" id="add" class="btn btn-success hide" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                            <button type="button" id="update" class="btn btn-success hide" title="Update"><i class="fa fa-save">&nbsp;</i>Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="messagesModal" lang="en" data-translate-catalog="recordsManagement/storageRule">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 id="m_title-delete">Delete the storage rule</h4>
+                    <h4 id="m_title-update">Update the storage rule</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="m_text-delete">
+                        Are you sure to delete this storage rule ?
+                    </p>
+                    <p id="m_text-update">
+                        Are you sure to modify this storage rule ?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="m_no" data-dismiss="modal" title="No">No</button>
+                    <button type="button" class="btn btn-primary" id="m_yes" data-dismiss="modal" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div style="display:none">
+    <span id="empty_text">The fields with a star are required.</span>
+</div>
+<script>
+
+    //Edit a storage rule
+    $("#storageRuleList").on('click', '.edit', function () {
+
+        $.ajax({
+            type        : "GET",
+            url         : '/storageRule/' + $(this).data('code'),
+            async       : false,
+            dataType    : 'json',
+            success     : function (response) {
+                $('#code').prop('disabled', true);
+                $("#add, #update").addClass('hide');
+                $('#delete').css('display', '');
+                $('#update').css('display', '');
+
+                mergeObject(response);
+                $('#storageRuleModal').modal();
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    //New storage rule
+    $("#new-storageRule").on('click', function () {
+        $('#code').prop('disabled', false);
+        $('#delete').css('display', 'none');
+        $('#update').css('display', 'none');
+        $('#add').removeClass('hide');
+        $('input[type="text"]').val('');
+        $('#duration').val('');
+        $('#duration').removeAttr('disabled');
+        $('#description').val('');
+
+        $('#storageRuleModal').modal();
+
+    });
+
+
+    /********************************************** Edition modal ************************************************/
+    $("#storageRule-form").on('keyup change', '.form-control', function () {
+        if ($('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
+            $("#update").removeClass('hide');
+        }
+        else {
+            $(" #update").addClass('hide');
+        }
+    });
+
+    // cancel
+    $("#cancel").on('click',  function () {
+        EditionModal.close();
+    });
+
+    // add
+    $("#add").on('click', function () {
+        EditionModal.add();
+    });
+
+    // update
+    $("#update").on('click',  function () {
+        EditionModal.update();
+    });
+
+    //delete
+    $("#delete").on('click',function () {
+        EditionModal.deleteRule();
+    });
+
+    //modal cancel
+    $("#m_no").on('click', function () {
+        $('m_yes').off();
+    });
+
+    var EditionModal = {
+        editionModal: $('#storageRuleModal'),
+
+        add: function() {
+
+            var parameters = {
+                storageRule: EditionModal.serialize()
+            };
+
+            if(parameters.storageRule.duration == 0 || parameters.storageRule.code =='') {
+                gritter.show($('#empty_text').html(), false);
+                return;
+            }
+
+            $.ajax({
+                type        : 'POST',
+                url         : '/storageRule',
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                async       : false,
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        reloadList();
+                        EditionModal.close();
+                    }
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        update: function() {
+
+            $('#messagesModal').modal();
+            $('#m_title-delete').css('display', 'none');
+            $('#m_title-update').css('display', '');
+            $('#m_text-delete').css('display', 'none');
+            $('#m_text-update').css('display', '');
+
+            var parameters = {
+                storageRule: EditionModal.serialize()
+            };
+
+            if(parameters.storageRule.duration == 0) {
+                gritter.show($('#empty_text').html(), false);
+                return;
+            }
+
+            $('#m_yes').one('click', function () {
+
+                $.ajax({
+                    type        : "PUT",
+                    url         : '/storageRule/' +  $(this).data('code'),
+                    data        : JSON.stringify(parameters),
+                    contentType : 'application/json',
+                    async       : false,
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+                        if (response.status) {
+
+                            EditionModal.close();
+                            $('#storageRuleModal').one('hidden.bs.modal', function () {
+                                reloadList();
+                            });
+                        }
+                        $("#add, #update").prop('disabled', false);
+                    },
+                    error    : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        $("#add, #update").prop('disabled', false);
+                    }
+                });
+            });
+        },
+
+        deleteRule: function() {
+            $('#messagesModal').modal();
+            $('#m_title-delete').css('display', '');
+            $('#m_title-update').css('display', 'none');
+            $('#m_text-delete').css('display', '');
+            $('#m_text-update').css('display', 'none');
+
+            $('#m_yes').one('click', function () {
+
+                $.ajax({
+                    type        : "DELETE",
+                    url         : '/storageRule/' + $('#code').val(),
+                    contentType : 'application/json',
+                    async       : false,
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+                        if (response.status) {
+                            EditionModal.close();
+                            $('#storageRuleModal').one('hidden.bs.modal', function () {
+                                reloadList();
+                            })
+                        }
+                    },
+                    error    : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                });
+            });
+        },
+
+        serialize: function() {
+            if ($('#durationUnit').val() == "*") {
+                duration = 'P' + 999999999 + 'Y';
+            } else if ($('#duration').val() == 0) {
+                duration = 0;
+            } else {
+                duration = 'P' + $('#duration').val() + $('#durationUnit').val();
+            }
+            storageRule = {
+                code: $('#code').val(),
+                label: $("#label").val(),
+                duration: duration,
+                description: $('#description').val(),
+            };
+
+            return storageRule;
+        },
+
+        close: function() {
+            this.editionModal.modal('hide');
+            this.editionModal.find('input, textarea').val('');
+        }
+    }
+
+    function reloadList() {
+        $.ajax({
+            type    : "GET",
+            url     : '/storageRulesTable',
+            dataType: 'html',
+            success : function (response) {
+                $('#app_maarchRM_main').html(response);
+            },
+            error: function (response) {
+                gritter.show(response.responseText, false);
+            }
+        });
+    }
+
+    $("#storageRule-form").on('change', '#durationUnit', function () {
+        if ($('#durationUnit').val() == '*') {
+            $('#duration').prop('disabled', true);
+            $('#duration').val('');
+        } else {
+            $('#duration').removeAttr('disabled');
+        }
+    })
+
+    function mergeObject(object) {
+        $.each(object, function (key, value) {
+            $('[name="' + key + '"]').val(value);
+            if( $('[name="duration"]').val() >=9999 & $('#durationUnit').val()=='Y' ) {
+                $('#durationUnit').val('*');
+                $('[name="duration"]').val('').prop('disabled',true);
+            } else {
+                $('#duration').prop('disabled',false);
+            }
+
+        });
+    }
+
+</script>
