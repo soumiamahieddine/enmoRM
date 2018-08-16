@@ -20,22 +20,20 @@
         
         <div class="collapse navbar-collapse" id='leMenu'>
             <ul class="nav navbar-nav navbar-right" style="cursor: pointer;">
-            
-                <?merge .menu.bool() ?>
-                <li>
-                    <a class="" onclick="load('/', 'HTML_NO_LAYOUT')">
-                        <i class="fa fa-home fa-fw" ></i>
-                    </a>
-                </li>
                 <?merge .menu ?>
                 <li class="[?merge ['submenu'].count().bool().then('dropdown') ?]">
-                    <a class="dropdown-toggle" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <?merge ['submenu'].count().bool().not() ?>
+                    <a title="[?merge ['title'] ?]" data-toggle="tooltip" data-placement="bottom" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" role="button">
+                        <i class="[?merge ['class'] ?]"></i>
+                        <?merge ['label'] ?>
+                    </a>
+                    <?merge ['submenu'].count().bool() ?>
+                    <a class="dropdown-toggle" title="[?merge ['title'] ?]" data-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="[?merge ['class'] ?]"></i>
                         <?merge ['label'] ?>
                         <?merge ['submenu'].count().bool() ?>
                         <span class="caret"></span>
                     </a>
-                    <?merge ['submenu'].count().bool() ?>
                     <ul class="dropdown-menu" role="menu">
                         <?merge ['submenu'] ?>
                         <li class="dropdown-submenu pull-left" style="width: 100%">
@@ -137,6 +135,10 @@
 </div>
 <script>
     /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
     function load(url, data)
     {
         var loading = false;
