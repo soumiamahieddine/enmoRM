@@ -84,16 +84,17 @@ class dashboard
                     unset($menu[$i]);
                 }
             } else {
-                if (substr($item['href'], 0, 7) != 'http://') {
-                    $path = substr($item['href'], 1);
-                    try {
-                        $command = \laabs::command('READ', $path);
-                        if (!$this->hasUserPrivilege($command->userStory)) {
-                            unset($menu[$i]);
-                        }
-                    } catch (\Exception $e) {
+                $parser = parse_url($item['href']);
+                if (isset($parser['scheme'])) {
+                    continue;
+                }
+                try {
+                    $command = \laabs::command('READ', substr($parser['path'], 1));
+                    if (!$this->hasUserPrivilege($command->userStory)) {
                         unset($menu[$i]);
                     }
+                } catch (\Exception $e) {
+                    unset($menu[$i]);
                 }
             }
         }
