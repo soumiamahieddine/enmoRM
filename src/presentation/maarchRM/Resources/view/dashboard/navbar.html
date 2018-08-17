@@ -136,7 +136,7 @@
 <script>
     /* @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3 or later */
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[title]').tooltip();
     });
 
     function load(url, data)
@@ -178,6 +178,7 @@
                 $("#loadingModal").css('display', 'none');
             }
         });
+        $('[title]').tooltip();
     }
 
     function back(url, data)
@@ -290,6 +291,7 @@
         if (icon) {
             button.find('.fa:first').removeClass('fa-spinner fa-spin').addClass(icon);
         }
+
     }
 
     // Event triggering system
