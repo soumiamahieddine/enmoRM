@@ -24,6 +24,7 @@
     <?hinclude /filePlan/movingConfirmationModal.html ?>
     <?hinclude /filePlan/supressionConfirmationModal.html ?>
     <?hinclude /filePlan/archiveAssignmentModal.html ?>
+    <span id="dropError" class="hide">Invalid action</span>
 </div>
 
 <style>
@@ -315,8 +316,9 @@
             } else if ($(ui.helper).hasClass('archiveHelper')) {
                 if (FilePlan.selectedNode.closest('li').data('orgregnumber') == $(this).closest('li').data('orgregnumber')) {
                     ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
+                } else {
+                    gritter.show($('#dropError').text(), false);
                 }
-
             }
         }
     }
@@ -341,6 +343,8 @@
                 if (droppableLi.attr('id') != FilePlan.selectedNode.attr('id') &&
                     droppableLi.data('orgregnumber') == FilePlan.selectedNode.data('orgregnumber')){
                     ArchiveAssignmentModal.removeFromFolder($(ui.helper).data('archives'));
+                } else {
+                    gritter.show($('#dropError').text(), false);
                 }
             }
         }
