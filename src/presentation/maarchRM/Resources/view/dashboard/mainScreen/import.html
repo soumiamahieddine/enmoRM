@@ -1,34 +1,32 @@
-<div class="hide" id="importPanel">
-    <div class="col-xs-12">
-        <div class="row">
-            <h4 class="pull-left">
-                <span id="import_archivalProfile"/>
+<div class="hide col-xs-12" id="importPanel">
+    <div class="row">
+        <h4 class="pull-left">
+            <span id="import_archivalProfile"/>
+            <br/>
+            <span id="import_parentArchiveName">
                 <br/>
-                <span id="import_parentArchiveName">
-                    <br/>
-                    <small><span>Sub-archive of</span> <b/></small>
-                </span>
-            </h4>
+                <small><span>Sub-archive of</span> <b/></small>
+            </span>
+        </h4>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <?hinclude dashboard/mainScreen/archiveForm.html ?>
         </div>
-        <div class="row">
-            <div class="col-lg-8 col-md-12">
-                <?hinclude dashboard/mainScreen/archiveForm.html ?>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <?hinclude dashboard/mainScreen/documentForm.html ?>    
-            </div>
+        <div class="col-lg-4 col-md-12">
+            <?hinclude dashboard/mainScreen/documentForm.html ?>    
         </div>
+    </div>
 
-        <div class="pull-right">
-            <?merge syncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
-            <i>&nbsp;</i>
-            <?merge asyncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm bg-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
+    <div class="pull-right">
+        <?merge syncImportPrivilege.bool() ?>
+        <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+        <i>&nbsp;</i>
+        <?merge asyncImportPrivilege.bool() ?>
+        <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
 
-            <i>&nbsp;</i>
-            <a href="#" class="small text-danger" id="cancel">Cancel</a>
-        </div>
+        <i>&nbsp;</i>
+        <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
     </div>
 </div>
 
@@ -48,8 +46,8 @@
 
             $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
             $("#import_archivalProfile").text(archivalProfile.name);
-                
-            if (parentArchiveId == "") {
+            
+            if (!parentArchiveId) {
                 $("#archiveForm [name='parentArchiveId']").val('');
                 $('#import_parentArchiveName').addClass('hide');
             } else {
@@ -66,8 +64,6 @@
         cancel: function() {
             ArchiveForm.clear();
             this.panel.addClass('hide');
-            trigger("showFolder.recordsManagement");
-            trigger("archiveImportOver.recordsManagement");
         }
     }
 
@@ -89,5 +85,6 @@
 
     $('#cancel').on('click', function(e) {
         ImportPanel.cancel();
+        trigger("archiveImportOver.recordsManagement");
     });
 </script>

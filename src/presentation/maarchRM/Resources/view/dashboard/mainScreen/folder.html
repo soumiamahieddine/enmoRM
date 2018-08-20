@@ -135,6 +135,14 @@
             if (orgRegNumber) {
                 trigger('loadFolder.filePlan', [orgRegNumber]);
             }
+        },
+
+        lockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', true);
+        },
+
+        unlockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', false);
         }
     }
     ArchiveFolderList = {
@@ -173,6 +181,9 @@
                 dataType    : 'json',
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
+                    if (locked) {
+                        ArchiveFolderList.folderPanel.find('.addChildrenArchive').remove();
+                    }
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -377,6 +388,14 @@
     // Breadcrump
     $('#folderBreadcrumb').on('click', 'a', function() {
         FolderBreadcrumb.selectFolder($(this));
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportStarted.recordsManagement", function() {
+        FolderBreadcrumb.lockNavigation();
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportOver.recordsManagement", function() {
+        FolderBreadcrumb.unlockNavigation();
     })
 
 </script>
