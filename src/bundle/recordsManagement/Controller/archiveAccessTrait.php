@@ -311,14 +311,16 @@ trait archiveAccessTrait
      * Get the related information of an archive
      * @param string $archiveId The identifier of the archive
      *
-     * @return object
+     * @return recordsManagement/archive
      */
-    public function getRelatedInformation($archiveId){
-        $res = new \stdClass();
-        $res->lifeCycleEvents = $this->getArchiveLifeCycleEvent($archiveId);
-        $res->relationships = $this->getArchiveRelationship($archiveId);
+    public function getRelatedInformation($archive){
+        if (is_scalar($archive)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archive);
+        }
+        $archive->lifeCycleEvents = $this->getArchiveLifeCycleEvent($archive->archiveId);
+        $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
 
-        return $res;
+        return $archive;
     }
 
     /**
@@ -348,11 +350,6 @@ trait archiveAccessTrait
      */
     public function getDigitalResources($archiveId)
     {
-        /*$digitalResources = [];
-        foreach ($this->digitalResourceController->getResourcesByArchiveId($archiveId) as $digitalResource) {
-            $digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
-        }*/
-
         return $this->digitalResourceController->getResourcesByArchiveId($archiveId);
     }
 

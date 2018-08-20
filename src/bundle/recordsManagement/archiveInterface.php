@@ -61,6 +61,27 @@ interface archiveInterface
     public function readMetadarcata_archiveId_();
 
     /**
+     * Get archive related Information
+     *
+     * @action recordsManagement/archive/getRelatedInformation
+     */
+    public function readRelatedinformation_archive_();
+
+    /**
+     * Get the children of an archive as an index
+     *
+     * @action recordsManagement/archive/listChildrenArchive
+     */
+    public function readListchildrenarchive_archive_();
+
+    /**
+     * Retrieve an archive resource contents
+     *
+     * @action recordsManagement/archive/getDigitalResources
+     */
+    public function readDigitalresources_archiveId_();
+
+    /**
      * Retrieve an archive document by its id
      *
      * @action recordsManagement/archive/getDocument
