@@ -374,6 +374,29 @@ msgid "archivesChecked"
 msgstr "Nombre d'archives vérifiées"
 msgctxt "eventInfo"
 
+msgid "motivation"
+msgstr "Motivation"
+msgctxt "eventInfo"
+
+msgid "justification"
+msgstr "Justification"
+msgctxt "eventInfo"
+
+msgid "nomDestinataire"
+msgstr "Nom du destinataire"
+msgctxt "eventInfo"
+
+msgid "prenomDestinataire"
+msgstr "Prénom du destinataire"
+msgctxt "eventInfo"
+
+msgid "matriculeDestinataire"
+msgstr "Matricule du destinataire"
+msgctxt "eventInfo"
+
+msgid "serviceDestinataire"
+msgstr "Service du destinataire"
+msgctxt "eventInfo"
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------

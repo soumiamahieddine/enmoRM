@@ -1,9 +1,8 @@
-<div class="hide col-xs-12" id="importPanel">
-    <div class="row">
-        <h4 class="pull-left">
-            <span id="import_archivalProfile"/>
-            <br/>
-            <span id="import_parentArchiveName">
+<div class="hide row" id="importPanel">
+    <div class="col-xs-12">
+        <div class="row">
+            <h4 class="pull-left">
+                <span id="import_archivalProfile"/>
                 <br/>
                 <small><span>Sub-archive of</span> <b/></small>
             </span>
@@ -17,16 +16,16 @@
             <?hinclude dashboard/mainScreen/documentForm.html ?>    
         </div>
     </div>
+        <div class="pull-right">
+            <?merge syncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <i>&nbsp;</i>
+            <?merge asyncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
 
-    <div class="pull-right">
-        <?merge syncImportPrivilege.bool() ?>
-        <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
-        <i>&nbsp;</i>
-        <?merge asyncImportPrivilege.bool() ?>
-        <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
-
-        <i>&nbsp;</i>
-        <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
+            <i>&nbsp;</i>
+            <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
+        </div>
     </div>
 </div>
 

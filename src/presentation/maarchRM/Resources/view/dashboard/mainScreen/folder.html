@@ -381,6 +381,10 @@
         ArchiveFolderList.show();
     })
 
+    $('#folderPanel').onEvent("archiveImportOver.recordsManagement", function() {
+        ArchiveFolderList.show();
+    })
+
     $('#folderPanel').onEvent("showSearchResult.recordsManagement", function(e, archives) {
         ArchiveFolderList.buildResultList(archives);
     })

@@ -1,0 +1,70 @@
+<div id="managementInfo" data-translate-catalog="recordsManagement/messages">
+    <table>
+        <tr class="originator">
+            <th title="Originator">Originator</th>
+            <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
+        </tr>
+        <tr class="archiveId">
+            <th title="Identifier">Identifier</th>
+            <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
+        </tr>
+        <tr>
+            <th title="Deposit date">Deposit date</th>
+            <td title='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
+        </tr>
+        <tr id="disposalDate">
+            <th title="Disposal date">Disposal date</th>
+            <td title='[?merge archive.disposalDate ?]'><?merge archive.disposalDate ?></td>
+        </tr>
+        <tr id="finalDisposition">
+            <th title="Final disposition">Final disposition</th>
+            <td title='[?merge archive.finalDisposition ?]'><?merge archive.finalDisposition ?></td>
+        </tr>
+        <tr>
+            <th title="Status">Status</th>
+            <td title='[?merge archive.status ?]'><?merge archive.statusDesc ?></td>
+        </tr>
+        <tr id="retentionRuleSelect" style="border:0px solid transparent; display: none">
+        <input id="inputRetentionRuleCode" class="hide" value="[?merge archive.retentionRuleCode ?]"/>
+            <th title="Retention rule">Retention rule</th>
+            <td>
+                <select id="retentionRuleCode" name="retentionRuleCode" class="col-xs-12">
+                    <option value=''>Select a retention rule</option>
+                    <?merge retentionRules ?>
+                    <option value='[?merge .code ?]' data-duration="[?merge .durationText ?]" data-finaldisposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr id="startDate" style="border:0px solid transparent; display: none">
+            <th title="Start date">Start date</th>
+            <td>
+                <input type="text" class="datePicker startDate col-xs-12" name="startDate" placeholder="Start date" value="[?merge archive.retentionStartDate ?]"/>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <?merge archive.accessRuleComDate.bool() ?>
+        <tr>
+            <th title="Communication date">Communication date</th>
+            <td id="accessRuleComDate" title="[?merge archive.accessRuleComDate ?]"><?merge archive.accessRuleComDate ?></td>
+        </tr>
+        <?merge archive.lastCheckDate.bool() ?>
+        <tr>
+            <th title="Last check date">Last check date</th>
+            <td id="lastCheckDate" title="[?merge archive.lastCheckDate ?]"><?merge archive.lastCheckDate ?></td>
+        </tr>
+        <?merge archive.lastDeliveryDate.bool() ?>
+        <tr>
+            <th title="Last delivery date">Last delivery date</th>
+            <td id="lastDeliveryDate" title="[?merge archive.lastDeliveryDate ?]"><?merge archive.lastDeliveryDate ?></td>
+        </tr>
+        <?merge archive.lastModificationDate.bool() ?>
+        <tr>
+            <th title="Last modification date">Last modification date</th>
+            <td id="lastModificationDate" title="[?merge archive.lastModificationDate ?]"><?merge archive.lastModificationDate ?></td>
+        </tr>
+    </table>
+</div>
+<button type="button" class="btn btn-default btn-sm pull-right" id="saveManagementMetadata" title="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
+<button type="button" class="btn btn-default btn-sm pull-right" id="cancelManagementEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>

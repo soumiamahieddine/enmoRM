@@ -51,7 +51,7 @@ msgstr "Gestion des règles de conservation"
 msgctxt "interface"
 
 msgid "message"
-msgstr "Gestion de messages"
+msgstr "Gestion de bordereaux"
 msgctxt "interface"
 
 msgid "document"
@@ -1002,3 +1002,9 @@ msgstr "Modifier les métadonnées"
 
 msgid "Unlimited"
 msgstr "Illimitée"
+
+msgid "Messages"
+msgstr "Bordereaux"
+
+msgid "Add sub-archive"
+msgstr "Ajout de sous-archive"
