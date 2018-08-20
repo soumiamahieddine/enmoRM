@@ -54,6 +54,13 @@ interface archiveInterface
         RETRIEVE ARCHIVE
     */
     /**
+     * Get archive metadata
+     *
+     * @action recordsManagement/archive/getMetaData
+     */
+    public function readMetadarcata_archiveId_();
+
+    /**
      * Retrieve an archive document by its id
      *
      * @action recordsManagement/archive/getDocument

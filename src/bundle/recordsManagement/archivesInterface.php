@@ -81,6 +81,16 @@ interface archivesInterface
         $originatingEndDate = null
     );
 
+    /**
+     * Get archives list
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
+     *
+     * @action recordsManagement/archive/index
+     */
+    public function readList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
+
     /*
         MODIFY ARCHIVES
     */
