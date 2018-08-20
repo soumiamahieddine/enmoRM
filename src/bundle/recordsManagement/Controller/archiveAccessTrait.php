@@ -348,12 +348,12 @@ trait archiveAccessTrait
      */
     public function getDigitalResources($archiveId)
     {
-        $digitalResources = [];
+        /*$digitalResources = [];
         foreach ($this->digitalResourceController->getResourcesByArchiveId($archiveId) as $digitalResource) {
             $digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
-        }
+        }*/
 
-        return $digitalResources;
+        return $this->digitalResourceController->getResourcesByArchiveId($archiveId);
     }
 
     /**

@@ -99,7 +99,8 @@ class journal
             $eventLine[3] = (string) $previousJournal->archiveId;
 
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalResource = $archiveController->getDigitalResources($previousJournal->archiveId)[0];
+            $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
+            $journalResource = $archiveController->consultation($previousJournal->archivedId, $resources[0]->resId);
 
             $eventLine[4] = (string) $journalResource->hashAlgorithm;
             $eventLine[5] = (string) $journalResource->hash;
