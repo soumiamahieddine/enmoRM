@@ -36,6 +36,9 @@ class archive
     protected $translator;
     protected $archivalProfileController;
     protected $archivalProfiles = [];
+    protected $archivalProfilesByReference = [];
+    protected $organizations = [];
+    protected $getOrgByRegNumber = [];
 
     /**
      * Constuctor
@@ -647,6 +650,53 @@ class archive
             $archive->acceptArchiveWithoutProfile = true;
             $archive->fileplanLevel = true;
         }
+    }
+
+    private function useOrganizations() {
+        if($this->organizations){
+            $this->organizations = \laabs::callService('organization/organization/readIndex');
+            
+            foreach($this->organizations as $organization){
+                $this->orgByRegNumber[$organization->registrationNumber] = $organization;
+            }
+        }
+    }
+
+    private function useArchivalProfile() {
+        if($this->archivalProfiles){
+            $this->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+            
+            foreach($this->archivalProfiles as $profile){
+                $this->archivalProfilesByReference[$profile->reference] = $profile;
+            }
+        }
+    }
+
+    protected function archiveFormatting($archive)
+    {
+        $this->useOrganizations();
+        $this->useArchivalProfile();
+
+        $archive->originatorOrgName = $this->orgByRegNumber[$archive->originatorOrgRegNumber]['displayName'];
+
+        if($archive->originatorOwnerOrgId) {
+            $archive->originatorOwnerOrgName = $this->organizations[$archive->originatorOwnerOrgId]['displayName'];
+        }
+
+        if($archive->depositorOrgRegNumber) {
+            $archive->depositorOrgName = $this->orgByRegNumber[$archive->depositorOrgRegNumber]['displayName'];
+        }
+
+        if($archive->archiverOrgRegNumber) {
+            $archive->archiverOrgName = $this->orgByRegNumber[$archive->archiverOrgRegNumber]['displayName'];
+        }
+        
+        if ($archive->archivalProfileReference) {
+            $archive->archivalProfileName = $this->archivalProfilesByReference[$archive->archiveProfile]['name'];
+        }
+
+        $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+        $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
     }
 
     /**
