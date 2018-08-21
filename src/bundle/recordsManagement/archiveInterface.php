@@ -58,21 +58,21 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/getMetaData
      */
-    public function readMetadarcata_archiveId_();
+    public function readMetadata_archiveId_();
 
     /**
      * Get archive related Information
      *
      * @action recordsManagement/archive/getRelatedInformation
      */
-    public function readRelatedinformation_archive_();
+    public function readRelatedinformation_archiveId_();
 
     /**
      * Get the children of an archive as an index
      *
      * @action recordsManagement/archive/listChildrenArchive
      */
-    public function readListchildrenarchive_archive_();
+    public function readListchildrenarchive_archiveId_();
 
     /**
      * Retrieve an archive resource contents

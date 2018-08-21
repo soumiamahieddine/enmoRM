@@ -166,9 +166,6 @@ class welcome
         $archive->originatorOrgName = $originatorOrg->displayName;
 
         $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
-        if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate;
-        }
 
         // Retention
         $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');

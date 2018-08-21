@@ -257,6 +257,9 @@ trait archiveAccessTrait
             $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
             $queryParams['filePlanPosition'] = $filePlanPosition;
         }
+        else{
+            $queryParts['filePlanPosition'] = "filePlanPosition = null";
+        }
 
         if ($archiveUnit == false){
             $queryParts['parentArchiveId'] = "parentArchiveId = null";
@@ -306,19 +309,20 @@ trait archiveAccessTrait
         }
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
-
         return $archive;
     }
 
     /**
      * Get the related information of an archive
-     * @param string $archiveId The identifier of the archive
+     * @param string $archiveId The identifier of the archive or the archive itself
      *
      * @return recordsManagement/archive
      */
-    public function getRelatedInformation($archive){
-        if (is_scalar($archive)){
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archive);
+    public function getRelatedInformation($archiveId){
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
         }
         $archive->lifeCycleEvents = $this->getArchiveLifeCycleEvent($archive->archiveId);
         $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
@@ -328,15 +332,21 @@ trait archiveAccessTrait
 
     /**
      * Get the children of an archive as an index
-     * @param string $archiveId The identifier of the archive
+     * @param string $archiveId The identifier of the archive or the archive itself
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archive){
-        if (is_scalar($archive)){
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archive);
+    public function listChildrenArchive($archiveId){
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
         }
+
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+
         $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
+
 
         foreach ($archive->childrenArchives as $child) {
             $this->listChildrenArchive($child);
@@ -787,6 +797,14 @@ trait archiveAccessTrait
         $archives = $this->sdoFactory->find('recordsManagement/archive', "status='$status'");
 
         return $archives;
+    }
+
+    /**
+     *
+     */
+    public function getDetails($archiveMeta, $archiveTree)
+    {
+
     }
 
     /**

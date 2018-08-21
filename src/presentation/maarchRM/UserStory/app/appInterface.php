@@ -29,7 +29,7 @@ interface appInterface
      * Retrieve archive info
      *
      * @return recordsManagement/welcome/archiveInfo
-     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     * @uses  recordsManagement/archive/readMetadata_archiveId_
      */
     public function readArchive_archiveId_();
 
@@ -37,9 +37,9 @@ interface appInterface
      * Retrieve archive contents
      *
      * @return recordsManagement/welcome/archiveContent
-     * @uses  recordsManagement/archives/readArchivecontents_archive_
+     * @uses  recordsManagement/archive/readListchildrenarchive_archiveId_
      */
-    public function readArchivecontents_archive_();
+    public function readArchivecontents_archiveId_();
 
     /**
      * Retrieve archive info
