@@ -295,7 +295,12 @@ trait archiveAccessTrait
      */
     public function getMetadata($archiveId)
     {
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
+        }
+        $this->getAccessRule($archive);
 
         if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
@@ -431,9 +436,42 @@ trait archiveAccessTrait
      */
     public function retrieve($archiveId)
     {
-        $archive = $this->read($archiveId);
+        /*
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         $this->getArchiveComponents($archive, true);
+
+        return $archive;
+        */
+
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
+        }
+        $this->getMetadata($archive);
+        $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
+
+        if (!empty($archive->archiverOrgRegNumber)) {
+            $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
+        }
+        if (!empty($archive->depositorOrgRegNumber)) {
+            $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
+        }
+        $this->getRelatedInformation($archive);
+        $this->listChildrenArchive($archive);
+
+        if(!is_null($archive->childrenArchives)){
+            foreach($archive->childrenArchives as $child){
+                $this->retrieve($child);
+            }
+        }
+
+        $archive->communicability = $this->accessVerification($archive);
+
+        if(\laabs::hasBundle('medona')) {
+            $archive->messages = $this->getMessageByArchiveid($archiveId);
+        }
 
         return $archive;
     }
@@ -473,7 +511,7 @@ trait archiveAccessTrait
      */
     public function accessVerification($archiveId)
     {
-        $archive = $this->read($archiveId);
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         $comDateAccess = $this->accessComDateVerification($archive);
 
@@ -502,69 +540,6 @@ trait archiveAccessTrait
                 return true;
             }
         }
-    }
-
-    /**
-     * Get archive package, data and metadata
-     *
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManangement/archive The archive package (data and metadata)
-     */
-    public function getPackage($archiveId)
-    {
-        $archive = $this->read($archiveId);
-
-        if (!$this->accessVerification($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
-
-        $nbResource = count($archive->digitalResources);
-
-        for ($i = 0; $i < $nbResource; $i++) {
-            $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($archive->digitalResources[$i]->resId);
-        }
-
-        return $archive;
-    }
-
-    /**
-     * Get an archive package for the communication
-     *
-     * @param string $archiveId The archive identifier
-     */
-    public function getCommunicationPackage($archiveId)
-    {
-        // Constituer les paquets à communiquer avec aip
-
-        // $archive = $this->read($archiveId);
-
-        // if (!$this->accessVerification($archive)) {
-        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        // }
-
-        // $this->logging($archive);
-    }
-
-    /**
-     * Send archive for consultation
-     *
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManagement/archive The archive package
-     */
-    public function sendForConsultation($archiveId)
-    {
-        // Envoyer pour consultation simple avec historique
-
-        // $archive = $this->read($archiveId);
-
-        // if (!$this->accessVerification($archive)) {
-        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        // }
-
     }
 
     /**
@@ -748,65 +723,6 @@ trait archiveAccessTrait
         return "(".implode(" OR ", $queryParts).")";
     }
 
-
-    /**
-     * Read an archive by its id
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManagement/archive object
-     */
-    public function read($archiveId)
-    {
-        return $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-    }
-
-    /**
-     * Get the archives by originator
-     * @param string $originatorOrgRegNumber
-     *
-     * @return recordsManagement/archive[] Array of recordsManagement/archive object
-     */
-    public function getArchiveByOriginator($originatorOrgRegNumber)
-    {
-        $archives = $this->sdoFactory->read("recordsManagement/archive", array('originatorOrgRegNumber' => $originatorOrgRegNumber));
-
-        return $archives;
-    }
-
-    /**
-     * Get the archive originator
-     * @param string $archiveId
-     *
-     * @return string The originatorOrgRegNumber
-     */
-    public function getArchiveOriginatorOrgRegNumber($archiveId)
-    {
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
-
-        return $archive->originatorOrgRegNumber;
-    }
-
-    /**
-     * Get archives by status
-     * @param string $status
-     *
-     * @return recordsManagement/archive[] Array of recordsManagement/archive oject
-     */
-    public function getByStatus($status)
-    {
-        $archives = $this->sdoFactory->find('recordsManagement/archive', "status='$status'");
-
-        return $archives;
-    }
-
-    /**
-     *
-     */
-    public function getDetails($archiveMeta, $archiveTree)
-    {
-
-    }
-
     /**
      * Retrieve an archive description by its archive id
      * @param string $archiveId The archive identifer
@@ -885,41 +801,6 @@ trait archiveAccessTrait
         }
 
         return $archive;
-    }
-
-    /**
-     * Get the archive components
-     * @param recordsManagement/archive $archive The parent archive
-     * @param boolean $withContents With contents
-     *
-     * @return recordsManagement/archive Archive with children archives
-     */
-    protected function getArchiveComponents($archive, $withContents = false)
-    {
-        $this->getAccessRule($archive);
-
-        $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
-
-        if (!empty($archive->descriptionClass)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
-        }
-
-        $archiveDigitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
-        foreach ($archiveDigitalResources as $digitalResource) {
-            $archive->digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
-        }
-
-        $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
-        foreach ($archive->contents as $content) {
-            $this->getArchiveComponents($content, $withContents);
-        }
-
-        $archive->relatedArchives = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
-        $archive->relatedArchives = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
-
-        $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-
     }
 
     /**
