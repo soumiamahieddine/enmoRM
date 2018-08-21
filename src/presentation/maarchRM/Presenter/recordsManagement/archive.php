@@ -218,7 +218,31 @@ class archive
         $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
 
         return $contents;
-    }  
+    }
+
+    /**
+     * Get archive description
+     * @param archive $archive
+     *
+     * @return string
+     */
+    public function getArchiveInfo($archive)
+    {
+        $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
+        
+        // Managment metadata
+        $this->setManagementMetadatas($archive);
+
+        // Descriptive metadata
+        $this->getDescriptiveMetadatas($archive);
+
+        $this->view->setSource("archive", $archive);
+
+        $this->view->translate();
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
 
     /**
      * Get archive description
@@ -305,7 +329,8 @@ class archive
         
 
         return $this->view->saveHtml();
-    } 
+    }
+
     protected function setManagementMetadatas($archive) {
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
@@ -672,7 +697,7 @@ class archive
         }
     }
 
-    protected function archiveFormatting($archive)
+    private function archiveFormatting($archive)
     {
         $this->useOrganizations();
         $this->useArchivalProfile();
@@ -780,6 +805,25 @@ class archive
     }
 
     //JSON
+
+        /**
+     * Show an archive tree content
+     * @param object $archive
+     *
+     * @return string
+     */
+    public function showArchiveTree($archive)
+    {
+        if (isset($archive->digitalResources)) {
+            $this->json->digitalResources = $archive->digitalResources;
+        }
+
+        if (isset($archive->childrenArchives)) {
+            $this->json->childrenArchives = $archive->childrenArchives;
+        }
+
+        return $this->json->save();
+    }
 
     /**
      * Return archive with his retention rule
