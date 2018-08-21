@@ -42,46 +42,6 @@ class archiveFilePlanPosition
     }
 
     /**
-     * Get the archives on the given folder
-     * @param string $orgRegNumber
-     * @param string $folderId
-     * 
-     * @return recordsManagement/archiveFilePlanPosition[] Array of archive
-     */
-    public function getFolderContents($orgRegNumber, $folderId=null)
-    {
-        if (empty($folderId)) {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = null and (parentArchiveId = null)';
-            $queryArgs = ['orgRegNumber'=>$orgRegNumber];
-        } else {
-            $queryString = 'originatorOrgRegNumber = :orgRegNumber and filePlanPosition = :folderId and (parentArchiveId = null)';
-            $queryArgs = ['orgRegNumber'=>$orgRegNumber, 'folderId'=>$folderId];
-        }
-
-        $queryString .= "and status != 'disposed'";
-        
-        $archives = $this->sdoFactory->find('recordsManagement/archiveFilePlanPosition', $queryString, $queryArgs);
-            
-        // CVA 08-03-17 : Si nécessaire, ne sélectionner que mes racines
-        /* $archivesById = [];
-        foreach ($archives as $archive) {
-            $archivesById[$archive->archiveId] = $archive;
-        }
-
-        $rootArchives = [];
-        foreach ($archivesById as $archiveId => $archive) {
-            if (empty($archive->parentArchiveId) || !isset($archivesById[$archive->parentArchiveId])) {
-                $rootArchives[] = $archive;
-            }
-        }
-
-        return $rootArchives;
-        */
-
-        return $archives;
-    }
-
-    /**
      * Move an archive into a folder
      * @param array  $archiveIds   The archive identifier list
      * @param string $fromFolderId The originating folder identifier

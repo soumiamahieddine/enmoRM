@@ -16,13 +16,14 @@ interface appInterface
 
     /**
      * Folder contents
-     * @param string $orgRegNumber
-     * @param string $folderId
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
      * 
-     * @uses recordsManagement/archives/readFolder
+     * @uses recordsManagement/archives/readList
      * @return recordsManagement/welcome/folderContents
      */
-    public function readFolder($orgRegNumber, $folderId=false);
+    public function readFolder($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
 
     /**
      * Retrieve archive info

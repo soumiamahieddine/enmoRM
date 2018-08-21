@@ -157,9 +157,9 @@
             this.folderId = folderId;
             this.show();
             $('#welcomMessage').addClass('hide')
-            var url = "/folder?orgRegNumber="+orgRegNumber;
+            var url = "/folder?originatorOrgRegNumber="+orgRegNumber;
             if (folderId) {
-                url = url + "&folderId="+folderId;
+                url = url + "&filePlanPosition="+folderId;
             }
             if (locked) {
                 this.folderPanel.find('.lockedFolder').removeClass('hide');
