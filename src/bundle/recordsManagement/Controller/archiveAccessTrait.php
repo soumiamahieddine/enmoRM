@@ -329,7 +329,7 @@ trait archiveAccessTrait
         }else{
             $archive = $archiveId;
         }
-        $archive->lifeCycleEvents = $this->getArchiveLifeCycleEvent($archive->archiveId);
+        $archive->lifeCycleEvent = $this->getArchiveLifeCycleEvent($archive->archiveId);
         $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
 
         return $archive;
@@ -496,8 +496,8 @@ trait archiveAccessTrait
     public function getArchiveRelationship($archiveId)
     {
         $res = [];
-        $res['childrenRelationship'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
-        $res['parentRelationship'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
+        $res['childrenRelationships'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
+        $res['parentRelationships'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
 
         return $res;
     }
