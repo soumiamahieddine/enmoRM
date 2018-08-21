@@ -229,7 +229,7 @@ class archive
     public function getArchiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
-        
+
         // Managment metadata
         $this->setManagementMetadatas($archive);
 
@@ -252,7 +252,8 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->getChildrenArchives($archive);
+        // $archiveTree = \laabs::newController("recordsManagement/archive")->getChildrenArchives($archive);
+        $archiveTree = \laabs::callService('recordsManagement/archive/readListchildrenarchive_archiveId_', (string) $archive->archiveId);
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
         // Relationships
@@ -585,8 +586,8 @@ class archive
         $parentRelationships = [];
         $relationshipTypes = [];
 
-        if ($archive->childrenRelationships) {
-            foreach ($archive->childrenRelationships as $relationship) {
+        if ($archive->relationships['childrenRelationships']) {
+            foreach ($archive->relationships['childrenRelationships'] as $relationship) {
                 $childrenRelationships[$relationship->typeCode] = $relationship;
             }
             $archive->childrenRelationships = $childrenRelationships;
@@ -594,8 +595,8 @@ class archive
             $relationshipTypes[$relationship->typeCode]=true;
         }
 
-        if ($archive->parentRelationships) {
-            foreach ($archive->parentRelationships as $relationship) {
+        if ($archive->relationships['parentRelationships']) {
+            foreach ($archive->relationships['parentRelationships'] as $relationship) {
                 $parentRelationships[$relationship->typeCode] = $relationship;
             }
             $archive->parentRelationships = $parentRelationships;
