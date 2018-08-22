@@ -337,11 +337,12 @@ trait archiveAccessTrait
 
     /**
      * Get the children of an archive as an index
-     * @param string $archiveId The identifier of the archive or the archive itself
+     * @param string $archiveId     The identifier of the archive or the archive itself
+     * @param bool   $loadResources Load the resources info
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archiveId){
+    public function listChildrenArchive($archiveId, $loadResources = false){
         if (is_scalar($archiveId)){
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         }else{
@@ -349,6 +350,12 @@ trait archiveAccessTrait
         }
 
         $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+
+        if ($loadResources) {
+            foreach ($archive->digitalResources as $i => $digitalResource) {
+                $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
+            }
+        }
 
         $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
 
@@ -459,7 +466,7 @@ trait archiveAccessTrait
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
         $this->getRelatedInformation($archive);
-        $this->listChildrenArchive($archive);
+        $this->listChildrenArchive($archive, true);
 
         if(!is_null($archive->childrenArchives)){
             foreach($archive->childrenArchives as $child){
