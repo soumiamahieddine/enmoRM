@@ -339,10 +339,11 @@ trait archiveAccessTrait
      * Get the children of an archive as an index
      * @param string $archiveId     The identifier of the archive or the archive itself
      * @param bool   $loadResources Load the resources info
+     * @param bool   $loadBinary    Load the resources binary
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archiveId, $loadResources = false){
+    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false){
         if (is_scalar($archiveId)){
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         }else{
@@ -351,7 +352,12 @@ trait archiveAccessTrait
 
         $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
 
-        if ($loadResources) {
+        if ($loadBinary) {
+            foreach ($archive->digitalResources as $i => $digitalResource) {
+                $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
+            }
+
+        } elseif ($loadResourcesInfo) {
             foreach ($archive->digitalResources as $i => $digitalResource) {
                 $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
             }
@@ -438,10 +444,11 @@ trait archiveAccessTrait
     /**
      * Retrieve an archive by its id
      * @param string $archiveId
+     * @param bool   $withBinary
      *
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId)
+    public function retrieve($archiveId, $withBinary =false)
     {
         /*
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -466,7 +473,7 @@ trait archiveAccessTrait
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
         $this->getRelatedInformation($archive);
-        $this->listChildrenArchive($archive, true);
+        $this->listChildrenArchive($archive, true, $withBinary);
 
         if(!is_null($archive->childrenArchives)){
             foreach($archive->childrenArchives as $child){
@@ -941,7 +948,7 @@ trait archiveAccessTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve($archiveId, true);
 
         $this->logDelivery($archive);
 
