@@ -291,6 +291,9 @@ class archive
 
     private function setArchive($archive)
     {
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
+        $archive->depositPrivilege = $syncImportPrivilege || $asyncImportPrivilege;
         // Archival profile
         if ($archive->depositPrivilege) {
             $this->getChildrenArchivesProfiles($archive);
@@ -534,14 +537,22 @@ class archive
         $this->setDigitalResources($archive);
 
         foreach ($archive->childrenArchives as $key => $child) {
-            $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
-            if (!isset($childrenByProfiles[$archivalProfile->name])) {
-                $childrenByProfiles[$archivalProfile->name] = [];
+            if(!is_null($child->archivalProfileReference)) {
+                $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
+
+                if (!isset($childrenByProfiles[$archivalProfile->name])) {
+                    $childrenByProfiles[$archivalProfile->name] = [];
+                }
+
+                $child->archivalProfileName = $archivalProfile->name;
+                $childrenByProfiles[$child->archivalProfileName][] = $child;
             }
-
-            $child->archivalProfileName = $archivalProfile->name;
-            $childrenByProfiles[$child->archivalProfileName][]= $child;
-
+            else{
+                if(!isset($childrenByProfiles["noProfile"])){
+                    $childrenByProfiles["noProfile"] = [];
+                }
+                $childrenByProfiles["noProfile"][] = $child;
+            }
             // Digital resources
             $this->setDigitalResources($archive->childrenArchives[$key]);
             $this->setArchiveTree($archive->childrenArchives[$key]);
