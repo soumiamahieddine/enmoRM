@@ -34,7 +34,6 @@ class archive
     public $view;
     protected $json;
     protected $translator;
-    protected $archivalProfileController;
     protected $archivalProfiles = [];
     protected $archivalProfilesByReference = [];
     protected $organizations = [];
@@ -59,8 +58,6 @@ class archive
 
         $this->translator = $translator;
         $this->translator->setCatalog('recordsManagement/messages');
-
-        $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
     }
 
     /**
@@ -82,8 +79,7 @@ class archive
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
 
-        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
-        $retentionRules = $retentionRuleController->index();
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
 
         $this->view->addContentFile("recordsManagement/archive/search.html");
 
@@ -125,8 +121,7 @@ class archive
         $this->view->translate();
 
         //access code selector
-        $accessRuleController = \laabs::newController('recordsManagement/accessRule');
-        $accessRules = $accessRuleController->index();
+        $accessRules = \laabs::callService('recordsManagement/accessRule/readIndex');
         foreach ($accessRules as $accessRule) {
             $accessRule->json = json_encode($accessRule);
             if ($accessRule->duration != null) {
@@ -136,8 +131,7 @@ class archive
         }
 
          //retention code selector
-        $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
-        $retentionRules = $retentionRuleController->index();
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
         foreach ($retentionRules as $retentionRule) {
             $retentionRule->json = json_encode($retentionRule);
             if ($retentionRule->duration != null) {
@@ -146,9 +140,8 @@ class archive
             }
         }
 
-        $orgController = \laabs::newController('organization/organization');
         $archiveController = \laabs::newController('recordsManagement/archive');
-        $orgsByRegNumber = $orgController->orgList();
+        $orgsByRegNumber = \laabs::callService('organization/organization/readOrgList');
 
         $currentDate = \laabs::newDate();
         foreach ($archives as $archive) {
@@ -252,16 +245,13 @@ class archive
      */
     public function getArchiveWithChildren($archive, $archiveRelation, $archiveTree)
     {
-        // $archiveTree = \laabs::newController("recordsManagement/archive")->getChildrenArchives($archive);
-        //$archiveTree = \laabs::callService('recordsManagement/archive/readListchildrenarchive_archiveId_', (string) $archive->archiveId);
-
         $archive->lifeCycleEvent = $archiveRelation->lifeCycleEvent;
         $archive->relationships = $archiveRelation->relationships;
         $archive->digitalResources = $archiveTree->digitalResources;
         $archive->childrenArchives = $archiveTree->childrenArchives;
 
         $this->view->addContentFile("recordsManagement/archive/description.html");
-        
+
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -621,7 +611,7 @@ class archive
     {
         if (!isset($this->archivalProfiles[$reference])) {
             try {
-                $this->archivalProfiles[$reference] = $this->archivalProfileController->getByReference($reference);
+                $this->archivalProfiles[$reference] = \laabs::callService('recordsManagement/archivalProfile/readProfiledescription_archivalProfileReference_', $reference);
             } catch(\Exception $e) {
                 return null;
             }
@@ -1298,7 +1288,6 @@ class archive
     {
         $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
 
-        $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
 
         $owner = false;
@@ -1306,9 +1295,9 @@ class archive
         $ownerOriginatorOrgs = [];
 
         // Get all user services,  and check OWNER role on one of them
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $userPositionController->readDescandantService((string) $currentService->orgId));
+        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), \laabs::callService('organization/userPosition/readDescendantservices', (string) $currentService->orgId));
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
-            $userService = $orgController->getOrgByRegNumber($userServiceOrgRegNumber);
+            $userService = \laabs::callService('organization/organization/readByregnumber', $userServiceOrgRegNumber);
             $userServices[] = $userService;
             if (isset($userService->orgRoleCodes)) {
                 foreach ($userService->orgRoleCodes as $orgRoleCode) {
