@@ -53,7 +53,7 @@ trait archiveDestructionTrait
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
 
-            $this->listChildrenArchive($archive);
+            $this->listChildrenArchive($archive, true);
 
             if ($archive->childrenArchives) {
                 $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
