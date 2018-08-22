@@ -245,19 +245,67 @@ class archive
     }
 
     /**
-     * Get archive description
+     * Get archive with children
      * @param archive $archive
      *
      * @return string
      */
-    public function getDescription($archive)
+    public function getArchiveWithChildren($archive, $archiveRelation, $archiveTree)
     {
         // $archiveTree = \laabs::newController("recordsManagement/archive")->getChildrenArchives($archive);
-        $archiveTree = \laabs::callService('recordsManagement/archive/readListchildrenarchive_archiveId_', (string) $archive->archiveId);
-        $this->view->addContentFile("recordsManagement/archive/description.html");
+        //$archiveTree = \laabs::callService('recordsManagement/archive/readListchildrenarchive_archiveId_', (string) $archive->archiveId);
 
+        $archive->lifeCycleEvent = $archiveRelation->lifeCycleEvent;
+        $archive->relationships = $archiveRelation->relationships;
+        $archive->digitalResources = $archiveTree->digitalResources;
+        $archive->childrenArchives = $archiveTree->childrenArchives;
+
+        $this->view->addContentFile("recordsManagement/archive/description.html");
+        
         // Relationships
         $this->setArchiveTree($archive);
+
+        $this->setArchive($archive);
+
+        $descriptionFragment = $this->view->createDocumentFragment();
+        $descriptionFragment->appendHtmlFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
+
+        $description = $this->view->getElementById("archiveInformationDiv");
+        $description->appendChild($descriptionFragment);
+
+        //$this->view->setSource("visible", $visible);
+
+        $this->view->setSource("archive", $archive);
+
+        $this->view->translate();
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    public function getArchive($archive, $archiveRelation)
+    {
+        $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
+
+        $archive->lifeCycleEvent = $archiveRelation->lifeCycleEvent;
+        $archive->relationships = $archiveRelation->relationships;
+
+        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
+        $archive->depositPrivilege = $syncImportPrivilege || $asyncImportPrivilege;
+
+        $this->setArchive($archive);
+
+        return $this->view->saveHtml();
+    }
+
+    private function setArchive($archive)
+    {
+        // Archival profile
+        if ($archive->depositPrivilege) {
+            $this->getChildrenArchivesProfiles($archive);
+            $archive->depositPrivilege = $archive->depositPrivilege && (count($archive->archivalProfileList) || $archive->acceptArchiveWithoutProfile);
+        }
 
         // Managment metadata
         $this->setManagementMetadatas($archive);
@@ -274,46 +322,6 @@ class archive
         // Message
         $this->checkMessage($archive);
 
-        $descriptionFragment = $this->view->createDocumentFragment();
-        $descriptionFragment->appendHtmlFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
-
-        $description = $this->view->getElementById("archiveInformationDiv");
-        $description->appendChild($descriptionFragment);
-
-        //$this->view->setSource("visible", $visible);
-        $this->view->setSource("archive", $archive);
-
-        $this->view->translate();
-        $this->view->merge();
-
-        return $this->view->saveHtml();
-    }
-
-    public function getArchiveDetails($archive) {
-        $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
-
-        $syncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        $asyncImportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/transferImport");
-        $archive->depositPrivilege = $syncImportPrivilege || $asyncImportPrivilege;
-
-        // Archival profile
-        if ($archive->depositPrivilege) {
-            $this->getChildrenArchivesProfiles($archive);
-            $archive->depositPrivilege = $archive->depositPrivilege && (count($archive->archivalProfileList) || $archive->acceptArchiveWithoutProfile); 
-        }
-
-        // Managment metadata
-        $this->setManagementMetadatas($archive);
-
-        // Descriptive metadata
-        $this->getDescriptiveMetadatas($archive);
-
-        // Life Cycle event
-        $this->setArchiveLifeCycleEvents($archive);
-
-        // Relationships
-        $this->setArchiveRelationships($archive);
-        
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
@@ -327,12 +335,10 @@ class archive
 
             $dataTable->setSorting(array(array(0, 'desc')));
         }
-        
-
-        return $this->view->saveHtml();
     }
 
-    protected function setManagementMetadatas($archive) {
+    protected function setManagementMetadatas($archive)
+    {
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
 
@@ -529,7 +535,8 @@ class archive
         return $descriptionHtml;
     }
 
-    protected function setArchiveTree($archive) {
+    protected function setArchiveTree($archive)
+    {
         $childrenByProfiles = [];
 
 
@@ -553,7 +560,8 @@ class archive
         $archive->childrenArchives = $childrenByProfiles;
     }
 
-    protected function setDigitalResources($archive) {
+    protected function setDigitalResources($archive)
+    {
         if ($archive->status == "disposed") {
             $archive->digitalResources = null;
 
@@ -575,13 +583,15 @@ class archive
         }
     }
 
-    protected function setArchiveLifeCycleEvents($archive) {
+    protected function setArchiveLifeCycleEvents($archive)
+    {
         foreach ($archive->lifeCycleEvent as $key => $event) {
             $archive->lifeCycleEvent[$key]->timestamp = $event->timestamp->format('Y-m-d H:i:s');
         }
     }
 
-    protected function setArchiveRelationships($archive) {
+    protected function setArchiveRelationships($archive)
+    {
         $childrenRelationships = [];
         $parentRelationships = [];
         $relationshipTypes = [];
@@ -607,7 +617,8 @@ class archive
         $archive->relationshipTypes = array_keys($relationshipTypes);
     }
 
-    protected function loadArchivalProfile($reference) {
+    protected function loadArchivalProfile($reference)
+    {
         if (!isset($this->archivalProfiles[$reference])) {
             try {
                 $this->archivalProfiles[$reference] = $this->archivalProfileController->getByReference($reference);
@@ -619,7 +630,8 @@ class archive
         return $this->archivalProfiles[$reference];
     }
 
-    protected function checkMessage($archive) {
+    protected function checkMessage($archive)
+    {
         if(\laabs::hasBundle('medona')) {
             if (isset($archive->messages)) {
                 foreach ($archive->messages as $message) {
@@ -640,7 +652,8 @@ class archive
         }
     }
             
-    protected function getChildrenArchivesProfiles($archive) {
+    protected function getChildrenArchivesProfiles($archive)
+    {
 
         $archive->archivalProfileList = [];
 
@@ -678,7 +691,8 @@ class archive
         }
     }
 
-    private function useOrganizations() {
+    private function useOrganizations()
+    {
         if($this->organizations){
             $this->organizations = \laabs::callService('organization/organization/readIndex');
             
@@ -688,7 +702,8 @@ class archive
         }
     }
 
-    private function useArchivalProfile() {
+    private function useArchivalProfile()
+    {
         if($this->archivalProfiles){
             $this->archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
             
