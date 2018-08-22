@@ -443,15 +443,8 @@ trait LocalisationTrait
 
     protected function parseText($text)
     {
-        //var_dump("text " . $text);
-        //var_dump("text " . bin2hex($text));
         if (preg_match('#^(?<prefix>[\s\t\r\n]*)?(?<graph>.*[[:graph:]])(?<suffix>[\s\t\r\n]*)?$#', $text, $format)) {
-            /*var_dump("format graph " . $format['graph']);
-            var_dump("format graph " . bin2hex($format['graph']));
-            var_dump("format prefix " . bin2hex($format['prefix']));
-            var_dump("format suffix " . bin2hex($format['suffix']));*/
-            $graph = preg_replace('#\s+#', " ", $format['graph']);
-
+            $graph = preg_replace('# +#', " ", $format['graph']);
             $prefix = isset($format['prefix']) ? $format['prefix'] : "";
             $suffix = isset($format['suffix']) ? $format['suffix'] : "";
         } else {
