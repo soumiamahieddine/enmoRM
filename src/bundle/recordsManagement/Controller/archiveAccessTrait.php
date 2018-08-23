@@ -198,7 +198,7 @@ trait archiveAccessTrait
 
                         $queryParams['disposalDate'] = $currentDateString;
                         $queryParts['disposalDate'] = "disposalDate <= :disposalDate";
-                    }else if($archiveExpired == "false"){
+                    } elseif($archiveExpired == "false"){
                         $queryParams['disposalDate'] = $currentDateString;
                         $queryParts['disposalDate'] = "disposalDate >= :disposalDate";
                     }
@@ -256,8 +256,7 @@ trait archiveAccessTrait
         if ($filePlanPosition){
             $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
             $queryParams['filePlanPosition'] = $filePlanPosition;
-        }
-        else{
+        } else {
             $queryParts['filePlanPosition'] = "filePlanPosition = null";
         }
 
@@ -314,6 +313,7 @@ trait archiveAccessTrait
         }
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
+
         return $archive;
     }
 
@@ -352,22 +352,25 @@ trait archiveAccessTrait
 
         $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
 
-        if ($loadBinary) {
-            foreach ($archive->digitalResources as $i => $digitalResource) {
-                $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
-            }
+        if ($archive->digitalResources) {
+            if ($loadBinary) {
+                foreach ($archive->digitalResources as $i => $digitalResource) {
+                    $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
+                }
 
-        } elseif ($loadResourcesInfo) {
-            foreach ($archive->digitalResources as $i => $digitalResource) {
-                $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
+            } elseif ($loadResourcesInfo) {
+                foreach ($archive->digitalResources as $i => $digitalResource) {
+                    $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
+                }
             }
         }
 
         $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
 
-
-        foreach ($archive->childrenArchives as $child) {
-            $this->listChildrenArchive($child);
+        if ($archive->childrenArchives) {
+            foreach ($archive->childrenArchives as $child) {
+                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary);
+            }
         }
 
         return $archive;
@@ -475,7 +478,7 @@ trait archiveAccessTrait
         $this->getRelatedInformation($archive);
         $this->listChildrenArchive($archive, true, $withBinary);
 
-        if(!is_null($archive->childrenArchives)){
+        if(!empty($archive->childrenArchives)){
             foreach($archive->childrenArchives as $child){
                 $this->retrieve($child);
             }
