@@ -150,7 +150,7 @@ FulltextSearchForm = {
 
         $.each(profiles, function() {
             profileReferences.push("." + this.reference);
-        })
+        });
 
         profileReferences.push(".allProfiles");
         $('#profileSelection li').removeClass('hide').not(profileReferences.join(', ')).addClass('hide');
@@ -183,6 +183,7 @@ FulltextSearchForm = {
             dataType    : 'json',
             success     : function (response) {
                 if (response.status) {
+                    trigger("searchView.recordsManagement");
                     trigger("showSearchResult.recordsManagement", [response.archives])
                 }
             }

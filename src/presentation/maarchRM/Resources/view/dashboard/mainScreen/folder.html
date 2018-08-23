@@ -13,14 +13,17 @@
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
+            <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
             <div id="folderToolbarBtn" class="col-md-4 dropdown btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
                     <span class="fa fa-plus">&nbsp;</span> New archive
                 </button>
                 <ul class="dropdown-menu">
                 </ul>
+                <button type="button" class="btn btn-warning pull-right hide" id="folderToolbarCloseSearch" title="Close search">
+                    <span class="fa fa-close">&nbsp;</span> Close search
+                </button>
             </div>
-            <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
         </div>
         <div id="folderContentList">
             <div class="row hide">
@@ -85,6 +88,26 @@
 <script type="text/javascript">
     trigger("setSearchBarClass.recordsManagement", ['col-md-8']);
 
+
+    $("#folderToolbarBtn").onEvent("searchView.recordsManagement", function (e) {
+        ToolbarButtons.initSearchView();
+    });
+
+    $("#folderToolbarBtn").onEvent("folderView.recordsManagement", function (e) {
+        ToolbarButtons.initfolderView();
+    });
+
+    ToolbarButtons = {
+        initSearchView: function() {
+            $("#folderToolbarCloseSearch").removeClass("hide");
+            $("#folderToolbarImport").addClass("hide");
+        },
+        initfolderView: function() {
+            $("#folderToolbarCloseSearch").addClass("hide");
+            $("#folderToolbarImport").removeClass("hide");
+        }
+    }
+
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
         load: function(path) {
@@ -144,7 +167,7 @@
         unlockNavigation : function() {
             this.breadcrumb.find('a').prop('disabled', false);
         }
-    }
+    };
     ArchiveFolderList = {
         rowTemplate    : $('#listTemplate > .archive'),
         folderContents : $('#folderContentList'),
@@ -313,6 +336,7 @@
 
         show: function() {
             $('.folderContents').removeClass('hide');
+            trigger("folderView.recordsManagement");
         },
 
         buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
