@@ -1008,3 +1008,9 @@ msgstr "Bordereaux"
 
 msgid "Add sub-archive"
 msgstr "Ajout de sous-archive"
+
+msgid "archive found"
+msgstr "archive trouvé"
+
+msgid "archives found"
+msgstr "archives trouvées"

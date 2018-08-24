@@ -18,7 +18,7 @@
                 <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
                     <span class="fa fa-plus">&nbsp;</span> New archive
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu pull-right">
                 </ul>
                 <button type="button" class="btn btn-warning pull-right hide" id="folderToolbarCloseSearch" title="Close search">
                     <span class="fa fa-close">&nbsp;</span> Close search
@@ -64,6 +64,8 @@
 <div class="hide">
     <span id="archives_text">archives</span>
     <span id="archive_text">archive</span>
+    <span id="foundArchives_text">archives found</span>
+    <span id="foundArchive_text">archive found</span>
     <span id="rows_text">rows</span>
     <span id="emptyFolder_text">Empty folder</span>
     <span id="archiveName_text">Name</span>
@@ -88,6 +90,9 @@
 <script type="text/javascript">
     trigger("setSearchBarClass.recordsManagement", ['col-md-8']);
 
+    $("#folderToolbarCloseSearch").on('click', function(e) {
+        trigger('folderView.recordsManagement');
+    });
 
     $("#folderToolbarBtn").onEvent("searchView.recordsManagement", function (e) {
         ToolbarButtons.initSearchView();
@@ -218,7 +223,7 @@
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives) {
+        buildResultList: function(archives, options = null) {
             trigger("clearDetail.recordsManagement");
 
             resultNumberText = "";
@@ -233,31 +238,44 @@
                 $('#folderToolbarSearch').attr("disabled", "disabled");
             }
 
-            $('#folderContentList').dataList({
-                datas          : archives,
-                rowMerge       : ArchiveFolderList.mergeRow,
-                rowMaxNumber   : 10,
-				rowTranslation : $('#rows_text').text(),
-                emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
-                itemsName      : [$('#archive_text').text(), $('#archives_text').text()],
-                translation    : {First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
+            defaultOptions = {
+                datas: archives,
+                rowMerge: ArchiveFolderList.mergeRow,
+                rowMaxNumber: 10,
+                rowTranslation: $('#rows_text').text(),
+                emptyMessage: '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>' + $('#emptyFolder_text').html() + '<\/i>',
+                itemsName: [$('#archive_text').text(), $('#archives_text').text()],
+                translation: {
+                    First: $('#first_text').html(),
+                    Previous: $('#previous_text').html(),
+                    Next: $('#next_text').html(),
+                    Last: $('#last_text').html()
+                },
                 sorting: [
                     {
-                        fieldName : 'archiveName',
-                        label     : $('#archiveName_text').text(),
-                        type      : 'txt'
+                        fieldName: 'archiveName',
+                        label: $('#archiveName_text').text(),
+                        type: 'txt'
                     },
                     {
-                        fieldName : 'depositDate',
-                        label     : $('#depositDate_text').text(),
-                        type      : 'num',
-                        default   : 'DESC'
+                        fieldName: 'depositDate',
+                        label: $('#depositDate_text').text(),
+                        type: 'num',
+                        default: 'DESC'
                     }
                 ],
-				unsearchable : [
-				    "status"				
-				]
-            })
+                unsearchable: [
+                    "status"
+                ]
+            };
+
+            if(options){
+                $.each(options, function( key, value ) {
+                    defaultOptions[key] = value;
+                })
+            }
+
+            $('#folderContentList').dataList(defaultOptions);
 
             if (!(FilePlan.selectedNode.hasClass('folder') && FilePlan.selectedNode.data('closed'))) {
                 this.initDragNDrop();
@@ -410,7 +428,10 @@
     })
 
     $('#folderPanel').onEvent("showSearchResult.recordsManagement", function(e, archives) {
-        ArchiveFolderList.buildResultList(archives);
+        var options = {
+            itemsName: [$('#foundArchive_text').text(), $('#foundArchives_text').text()]
+        };
+        ArchiveFolderList.buildResultList(archives, options);
     })
 
     // Breadcrump

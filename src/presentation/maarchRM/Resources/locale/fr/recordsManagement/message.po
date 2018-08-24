@@ -177,3 +177,6 @@ msgstr "Veuillez sélectionner un service ou un dossier dans l'arborescence afin
 
 msgid "New archive"
 msgstr "Nouvelle archive"
+
+msgid "Close search"
+msgstr "Fermer la recherche"

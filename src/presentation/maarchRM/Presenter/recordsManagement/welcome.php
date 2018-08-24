@@ -204,7 +204,7 @@ class welcome
                     }
                 }
 
-                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->filePlanLevel == 'file') {
+                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->fileplanLevel == 'file') {
                     $depositPrivilege = false;
                 }
 
