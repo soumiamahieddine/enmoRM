@@ -1010,7 +1010,10 @@ msgid "Add sub-archive"
 msgstr "Ajout de sous-archive"
 
 msgid "archive found"
-msgstr "archive trouvé"
+msgstr "archive trouvée"
 
 msgid "archives found"
 msgstr "archives trouvées"
+
+msgid "Results of search"
+msgstr "Résultats de la recherche"

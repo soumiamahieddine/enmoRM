@@ -62,6 +62,7 @@
 </div>
 
 <div class="hide">
+    <span id="resultsOfSearch">Results of search</span>
     <span id="archives_text">archives</span>
     <span id="archive_text">archive</span>
     <span id="foundArchives_text">archives found</span>
@@ -92,6 +93,7 @@
 
     $("#folderToolbarCloseSearch").on('click', function(e) {
         trigger('folderView.recordsManagement');
+        FilePlan.load($("#filePlanTree").find('.node-warning').closest('li'));
     });
 
     $("#folderToolbarBtn").onEvent("searchView.recordsManagement", function (e) {
@@ -106,6 +108,7 @@
         initSearchView: function() {
             $("#folderToolbarCloseSearch").removeClass("hide");
             $("#folderToolbarImport").addClass("hide");
+            $('#folderBreadcrumb').html($('#resultsOfSearch').text() + ' : ' + $("input[name=searchForm_inputSearch]").val());
         },
         initfolderView: function() {
             $("#folderToolbarCloseSearch").addClass("hide");
