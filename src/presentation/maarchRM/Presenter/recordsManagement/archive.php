@@ -225,7 +225,7 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->getChildrenArchives($archive);
+        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive);
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
         // Relationships
