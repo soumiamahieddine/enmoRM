@@ -13,18 +13,20 @@
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
-            <div class="col-xs-11">
+            <div class="col-xs-10">
             <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
             </div>
-            <div id="folderToolbarBtn" class="col-md-1 dropdown btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
-                    <span class="fa fa-plus">&nbsp;</span> New archive
-                </button>
-                <ul class="dropdown-menu pull-right">
-                </ul>
+            <div class="col-xs-2">
                 <button type="button" class="btn btn-warning pull-right hide" id="folderToolbarCloseSearch" title="Close search">
                     <span class="fa fa-close">&nbsp;</span> Close search
                 </button>
+                <div id="folderToolbarBtn" class="dropdown btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                        <span class="fa fa-plus">&nbsp;</span> New archive
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                    </ul>
+                </div>
             </div>
         </div>
         <div id="folderContentList">
