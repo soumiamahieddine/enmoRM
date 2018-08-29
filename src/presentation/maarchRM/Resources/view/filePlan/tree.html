@@ -157,7 +157,14 @@
         },
 
         getPath: function(e) {
-            return this.pathList[e.data('orgregnumber')];
+            var path = [[$.trim(e.find('b:first').text()), e.attr('id')]];
+            var parent = $(e).closest('ul').closest('li');
+
+            if (parent.length) {
+                path = $.merge(path, this.getPath(parent));
+            }
+            
+            return path;
         },
 
         initFilePlanPath: function() {

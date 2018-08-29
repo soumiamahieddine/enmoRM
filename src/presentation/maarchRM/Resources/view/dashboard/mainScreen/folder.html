@@ -166,8 +166,8 @@
         },
 
         buildLink: function(e, truncate) {
-            var text = e[1];
-            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[0]));
+            var text = e[0];
+            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[1]));
         },
 
         selectFolder: function(e) {
