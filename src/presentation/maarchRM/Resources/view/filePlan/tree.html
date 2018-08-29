@@ -78,6 +78,7 @@
         selectedNode : null,
         currentOrgRegnumber : null,
         locked : false,
+        pathList : {},
         
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
@@ -150,18 +151,36 @@
                 locked = e.data('closed');
             }
 
-            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile]);
+            var orgs = $('#filePlanTree').find('.organization');
+
+            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, this.pathList]);
         },
 
         getPath: function(e) {
-            var path = [[$.trim(e.find('b:first').text()), e.attr('id')]];
-            var parent = $(e).closest('ul').closest('li');
-            
-            if (parent.length) {
-                path = $.merge(path, this.getPath(parent));
-            }
+            return this.pathList[e.data('orgregnumber')];
+        },
 
-            return path;
+        initFilePlanPath: function() {
+                this.getPathTree(this.tree, 0);
+        },
+
+        getPathTree: function(parent, cpt) {
+            var orgNodes = parent.find('>ul').find('>li.organization');
+
+            if (orgNodes.length > 0) {
+                var parentPath = [];
+                if (parent.data('orgregnumber') && FilePlan.pathList[parent.data('orgregnumber')]) {
+                    parentPath = $.merge([], FilePlan.pathList[parent.data('orgregnumber')]);
+                }
+                orgNodes.each(function() {
+                    var org = [$(this).data('orgregnumber'), $(this).data('path')];
+                    var path = [];
+                    path.push(org);
+
+                    FilePlan.pathList[$(this).data('orgregnumber')] = $.merge($.merge([], parentPath), path);
+                    FilePlan.getPathTree($(this));
+                });
+            }
         },
 
         addFolder: function() {
@@ -354,6 +373,7 @@
         BootstrapTree.init($('#filePlanTree'));
         $('#filePlanTree').find('.fa:first').click();
         FilePlan.initDragNDrop();
+        FilePlan.initFilePlanPath();
         FilePlan.getCurrentOrgRegNumber();
     })
 

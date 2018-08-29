@@ -46,6 +46,10 @@
                 <small/>&nbsp;
                 <small/>&nbsp;
                 <small><i/></small>
+                <small class="folderInfo">
+                    <br/>
+                    <span></span>
+                </small>
             </h5>
         </div>
         <?merge depositPrivilege.bool() ?>
@@ -98,7 +102,7 @@
         FilePlan.load($("#filePlanTree").find('.node-warning').closest('li'));
     });
 
-    $("#folderToolbarBtn").onEvent("searchView.recordsManagement", function (e) {
+    $("#folderToolbarBtn").onEvent("showSearchResult.recordsManagement", function (e) {
         ToolbarButtons.initSearchView();
     });
 
@@ -160,8 +164,8 @@
         },
 
         buildLink: function(e, truncate) {
-            var text = e[0];
-            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[1]));
+            var text = e[1];
+            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[0]));
         },
 
         selectFolder: function(e) {
@@ -184,11 +188,14 @@
         folderContents : $('#folderContentList'),
         folderPanel    : $('#folderPanel'),
         orgRegNumber   : null,
-        folderId       : null, 
+        folderId       : null,
+        pathList       : [],
+        showArchivePath: false,
 
-        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
+        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles, pathList) {
             this.orgRegNumber = orgRegNumber;
             this.folderId = folderId;
+            this.pathList = pathList;
             this.show();
             $('#welcomMessage').addClass('hide')
             var url = "/folder?orgRegNumber="+orgRegNumber;
@@ -224,13 +231,28 @@
                 }
             })
 
+            pathList = {};
+            $.each(this.pathList, function(key, value) {
+                var path = "";
+
+                $.each(value, function(key, value) {
+                    path += value[1] + ' / ';
+                })
+
+                pathList[key] = path;
+            })
+
+            this.pathList = pathList;
+
+
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
             
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives, options = null) {
+        buildResultList: function(archives, options = null, showArchivePath = false) {
             trigger("clearDetail.recordsManagement");
+            this.showArchivePath = showArchivePath;
 
             resultNumberText = "";
             if (archives.length) {
@@ -312,6 +334,10 @@
             }
             if (archive.originatorArchiveId) {
                 $(siblings[2]).children('i').text(archive.originatorArchiveId);
+            }
+
+            if (ArchiveFolderList.showArchivePath && ArchiveFolderList.pathList[archive.originatorOrgRegNumber]) {
+                $(siblings[3]).children('span').text(ArchiveFolderList.pathList[archive.originatorOrgRegNumber]);
             }
 
             return archiveDiv;
@@ -419,10 +445,10 @@
         ArchiveFolderList.initDragNDrop();
     });
 
-    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile) {
+    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList) {
         ArchiveFolderList.show();
         FolderBreadcrumb.load(path);
-        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile);
+        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList);
     })
 
     $('#folderPanel').onEvent("showFolder.recordsManagement", function() {
@@ -437,7 +463,7 @@
         var options = {
             itemsName: [$('#foundArchive_text').text(), $('#foundArchives_text').text()]
         };
-        ArchiveFolderList.buildResultList(archives, options);
+        ArchiveFolderList.buildResultList(archives, options, true);
     })
 
     // Breadcrump

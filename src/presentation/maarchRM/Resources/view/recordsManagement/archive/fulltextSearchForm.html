@@ -182,7 +182,6 @@ FulltextSearchForm = {
             dataType    : 'json',
             success     : function (response) {
                 if (response.status) {
-                    trigger("searchView.recordsManagement");
                     trigger("showSearchResult.recordsManagement", [response.archives])
                 }
             }
