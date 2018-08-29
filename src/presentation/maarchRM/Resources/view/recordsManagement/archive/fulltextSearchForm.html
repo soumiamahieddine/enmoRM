@@ -15,7 +15,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li role="presentation" class="small allProfiles">
-                        <a href="#">All</a>
+                        <a data-reference="all" href="#">All</a>
                     </li>
                     <?merge userArchivalProfiles ?>
                     <li role="presentation" class="small [?merge .reference ?]">
@@ -208,7 +208,7 @@ FulltextSearchForm = {
         }
 
         var profileReference = $('#profileSelection').data('profileReference');
-        if (profileReference) {
+        if (profileReference && profileReference != "all") {
             query.profileReference = profileReference;
         }
 

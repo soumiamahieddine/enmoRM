@@ -1015,5 +1015,5 @@ msgstr "archive trouvée"
 msgid "archives found"
 msgstr "archives trouvées"
 
-msgid "Results of search"
-msgstr "Résultats de la recherche"
+msgid "Results of search in"
+msgstr "Résultats de la recherche dans"
