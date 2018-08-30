@@ -58,6 +58,16 @@ class serviceAccount
     }
 
     /**
+     * List all services enabled for administration
+     *
+     * @return auth/account[] The array of services
+     */
+    public function enabledServices()
+    {
+        return $this->sdoFactory->find('auth/account', "accountType='service' AND enabled='TRUE'");
+    }
+
+    /**
      * List all service to display
      *
      * @return array The array of stdClass with dislpay name and service identifier
