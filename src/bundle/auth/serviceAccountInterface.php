@@ -35,13 +35,6 @@ interface serviceAccountInterface
     public function readIndex();
 
     /**
-     * List the enabled authorization's service Account
-     *
-     * @action auth/serviceAccount/enabledServices
-     */
-    public function readEnabledservices();
-
-    /**
      * List the service account detail
      *
      * @action auth/serviceAccount/search
