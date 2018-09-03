@@ -152,6 +152,94 @@ class welcome
     }
 
     /**
+     * Show an archive information
+     * @param recordsManagement/archive $archive The archive
+     *
+     * @return string
+     */
+    public function archiveInfo($archive)
+    {
+        $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
+
+        // Archive
+        $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
+        $archive->originatorOrgName = $originatorOrg->displayName;
+
+        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
+        if ($archive->originatingDate) {
+            $archive->originatingDate = $archive->originatingDate;
+        }
+
+        // Retention
+        $retentionRules = \laabs::callService('recordsManagement/retentionRule/readIndex');
+        for ($i = 0, $count = count($retentionRules); $i < $count; $i++) {
+            $retentionRules[$i]->durationText = (string) $retentionRules[$i]->duration;
+        }
+
+        $archivalProfileList = [];
+        $acceptArchiveWithoutProfile = $acceptUserIndex = false;
+
+        // Add a sub archive
+        $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $fileplanLevel = false;
+        if ($depositPrivilege) {
+            if (!empty($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                $archive->archivalProfileName = $archivalProfile->name;
+                
+                $list = [];
+
+                if (count($archivalProfile->containedProfiles)) {
+                     $list = $archivalProfile->containedProfiles;
+                }
+
+                if (count($list)) {
+                    foreach ($list as $profile) {
+                        $profileObject = new \stdClass();
+                        $profileObject->reference = $profile->reference;
+                        $profileObject->name = $profile->name;
+                        $profileObject->json = json_encode($profile);
+
+                        $archivalProfileList[] = $profileObject;
+                    }
+                }
+
+                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->fileplanLevel == 'file') {
+                    $depositPrivilege = false;
+                }
+
+                $acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+                $fileplanLevel = $archivalProfile->fileplanLevel;
+                $acceptUserIndex = $archivalProfile->acceptUserIndex;
+            } else {
+                $acceptArchiveWithoutProfile = true;
+                $fileplanLevel = true;
+            }
+        }
+
+        $this->view->translate();
+
+        $this->view->setSource("status", $archive->status);
+
+        $archive->status = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+        $archive->finalDisposition = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
+
+        $this->getDescription($archive);
+        $this->view->setSource('retentionRules', $retentionRules);
+        $this->view->setSource("archive", $archive);
+        $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("archivalProfileList", $archivalProfileList);
+        $this->view->setSource("fileplanLevel", $fileplanLevel);
+        $this->view->setSource("acceptArchiveWithoutProfile", $acceptArchiveWithoutProfile);
+        $this->view->setSource("acceptUserIndex", $acceptUserIndex);
+        $this->view->setSource('managementPrivilege', \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify"));
+
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
      * Show a document information
      *
      * @return string

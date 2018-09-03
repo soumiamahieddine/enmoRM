@@ -223,6 +223,11 @@ class archive
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
+        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive);
+
+        // Relationships
+        $this->setArchiveTree($archive);
+
         // Managment metadata
         $this->setManagementMetadatas($archive);
 

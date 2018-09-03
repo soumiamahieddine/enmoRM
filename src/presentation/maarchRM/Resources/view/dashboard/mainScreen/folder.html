@@ -13,14 +13,21 @@
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
-            <div id="folderToolbarBtn" class="col-md-4 dropdown btn-group">
-                <button type="button" class="btn btn-success dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
-                    <span class="fa fa-plus">&nbsp;</span> New archive
-                </button>
-                <ul class="dropdown-menu">
-                </ul>
-            </div>
+            <div class="col-xs-10">
             <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="btn btn-warning pull-right hide" id="folderToolbarCloseSearch" title="Close search">
+                    <span class="fa fa-close">&nbsp;</span> Close search
+                </button>
+                <div id="folderToolbarBtn" class="dropdown btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                        <span class="fa fa-plus">&nbsp;</span> New archive
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                    </ul>
+                </div>
+            </div>
         </div>
         <div id="folderContentList">
             <div class="row hide">
@@ -41,6 +48,10 @@
                 <small/>&nbsp;
                 <small/>&nbsp;
                 <small><i/></small>
+                <small class="folderInfo">
+                    <br/>
+                    <span></span>
+                </small>
             </h5>
         </div>
         <?merge depositPrivilege.bool() ?>
@@ -59,8 +70,11 @@
 </div>
 
 <div class="hide">
+    <span id="resultsOfSearch">Results of search in</span>
     <span id="archives_text">archives</span>
     <span id="archive_text">archive</span>
+    <span id="foundArchives_text">archives found</span>
+    <span id="foundArchive_text">archive found</span>
     <span id="rows_text">rows</span>
     <span id="emptyFolder_text">Empty folder</span>
     <span id="archiveName_text">Name</span>
@@ -83,7 +97,33 @@
 </style>
 
 <script type="text/javascript">
-    trigger("setSearchBarClass.recordsManagement", ['col-md-8']);
+    trigger("setSearchBarClass.recordsManagement", ['col-md-10']);
+
+    $("#folderToolbarCloseSearch").on('click', function(e) {
+        trigger('folderView.recordsManagement');
+        FilePlan.load($("#filePlanTree").find('.node-warning').closest('li'));
+    });
+
+    $("#folderToolbarBtn").onEvent("showSearchResult.recordsManagement", function (e) {
+        ToolbarButtons.initSearchView();
+    });
+
+    $("#folderToolbarBtn").onEvent("folderView.recordsManagement", function (e) {
+        ToolbarButtons.initfolderView();
+    });
+
+    ToolbarButtons = {
+        initSearchView: function() {
+            $("#folderToolbarCloseSearch").removeClass("hide");
+            $("#folderToolbarImport").addClass("hide");
+            $('#folderBreadcrumb').html($('#resultsOfSearch').text() + ' : ' + $("#filePlanTree").find('.node-warning').closest('li').data('path').replace(/\//g, ' > '));
+        },
+        initfolderView: function() {
+            $("#folderToolbarCloseSearch").addClass("hide");
+            $("#folderToolbarImport").removeClass("hide");
+            $("input[name=searchForm_inputSearch]").val("")
+        }
+    }
 
     FolderBreadcrumb = {
         breadcrumb    : $('#folderBreadcrumb'),
@@ -144,17 +184,20 @@
         unlockNavigation : function() {
             this.breadcrumb.find('a').prop('disabled', false);
         }
-    }
+    };
     ArchiveFolderList = {
         rowTemplate    : $('#listTemplate > .archive'),
         folderContents : $('#folderContentList'),
         folderPanel    : $('#folderPanel'),
         orgRegNumber   : null,
-        folderId       : null, 
+        folderId       : null,
+        pathList       : [],
+        showArchivePath: false,
 
-        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
+        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles, pathList) {
             this.orgRegNumber = orgRegNumber;
             this.folderId = folderId;
+            this.pathList = pathList;
             this.show();
             $('#welcomMessage').addClass('hide')
             var url = "/folder?originatorOrgRegNumber="+orgRegNumber;
@@ -190,13 +233,28 @@
                 }
             })
 
+            pathList = {};
+            $.each(this.pathList, function(key, value) {
+                var path = "";
+
+                $.each(value, function(key, value) {
+                    path += value[1] + ' / ';
+                })
+
+                pathList[key] = path;
+            })
+
+            this.pathList = pathList;
+
+
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
             
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives) {
+        buildResultList: function(archives, options = null, showArchivePath = false) {
             trigger("clearDetail.recordsManagement");
+            this.showArchivePath = showArchivePath;
 
             resultNumberText = "";
             if (archives.length) {
@@ -210,31 +268,44 @@
                 $('#folderToolbarSearch').attr("disabled", "disabled");
             }
 
-            $('#folderContentList').dataList({
-                datas          : archives,
-                rowMerge       : ArchiveFolderList.mergeRow,
-                rowMaxNumber   : 10,
-				rowTranslation : $('#rows_text').text(),
-                emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
-                itemsName      : [$('#archive_text').text(), $('#archives_text').text()],
-                translation    : {First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
+            defaultOptions = {
+                datas: archives,
+                rowMerge: ArchiveFolderList.mergeRow,
+                rowMaxNumber: 10,
+                rowTranslation: $('#rows_text').text(),
+                emptyMessage: '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>' + $('#emptyFolder_text').html() + '<\/i>',
+                itemsName: [$('#archive_text').text(), $('#archives_text').text()],
+                translation: {
+                    First: $('#first_text').html(),
+                    Previous: $('#previous_text').html(),
+                    Next: $('#next_text').html(),
+                    Last: $('#last_text').html()
+                },
                 sorting: [
                     {
-                        fieldName : 'archiveName',
-                        label     : $('#archiveName_text').text(),
-                        type      : 'txt'
+                        fieldName: 'archiveName',
+                        label: $('#archiveName_text').text(),
+                        type: 'txt'
                     },
                     {
-                        fieldName : 'depositDate',
-                        label     : $('#depositDate_text').text(),
-                        type      : 'num',
-                        default   : 'DESC'
+                        fieldName: 'depositDate',
+                        label: $('#depositDate_text').text(),
+                        type: 'num',
+                        default: 'DESC'
                     }
                 ],
-				unsearchable : [
-				    "status"				
-				]
-            })
+                unsearchable: [
+                    "status"
+                ]
+            };
+
+            if(options){
+                $.each(options, function( key, value ) {
+                    defaultOptions[key] = value;
+                })
+            }
+
+            $('#folderContentList').dataList(defaultOptions);
 
             if (!(FilePlan.selectedNode.hasClass('folder') && FilePlan.selectedNode.data('closed'))) {
                 this.initDragNDrop();
@@ -265,6 +336,10 @@
             }
             if (archive.originatorArchiveId) {
                 $(siblings[2]).children('i').text(archive.originatorArchiveId);
+            }
+
+            if (ArchiveFolderList.showArchivePath && ArchiveFolderList.pathList[archive.originatorOrgRegNumber]) {
+                $(siblings[3]).children('span').text(ArchiveFolderList.pathList[archive.originatorOrgRegNumber]);
             }
 
             return archiveDiv;
@@ -313,6 +388,7 @@
 
         show: function() {
             $('.folderContents').removeClass('hide');
+            trigger("folderView.recordsManagement");
         },
 
         buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
@@ -371,10 +447,10 @@
         ArchiveFolderList.initDragNDrop();
     });
 
-    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile) {
+    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList) {
         ArchiveFolderList.show();
         FolderBreadcrumb.load(path);
-        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile);
+        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList);
     })
 
     $('#folderPanel').onEvent("showFolder.recordsManagement", function() {
@@ -386,7 +462,10 @@
     })
 
     $('#folderPanel').onEvent("showSearchResult.recordsManagement", function(e, archives) {
-        ArchiveFolderList.buildResultList(archives);
+        var options = {
+            itemsName: [$('#foundArchive_text').text(), $('#foundArchives_text').text()]
+        };
+        ArchiveFolderList.buildResultList(archives, options, true);
     })
 
     // Breadcrump
