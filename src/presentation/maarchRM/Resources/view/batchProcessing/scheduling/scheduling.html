@@ -193,6 +193,20 @@
                     <h4 class="modal-title">Logs scheduling list</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form">
+                        <div class="input-group col-md-3">
+                            <input type="text" class="datePicker form-control" id="dateLogHistory">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary" id="searchLogHistory">
+                                    <spans class="fa fa-search"></spans>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div id="modalTableList">
+                    </div>
                 </div>
             </div>
         </div>
@@ -241,6 +255,14 @@
 
     $('#taskList').on('mouseleave', '.showHistory', function() {
         $(this).css('color', '');
+    })
+
+    $('#searchLogHistory').on('click', function() {
+        if (!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')) {
+            return;
+        }
+
+        TaskList.showHistory($('#searchLogHistory').data("schedulingid"));
     })
 
 
@@ -298,7 +320,9 @@
 
     // task history
     $('#taskList').on('click', '.showHistory', function(e) {
-        TaskList.showHistory($(this).closest('a'));
+        $('#searchLogHistory').data("schedulingid", $(this).closest('a').data('json').schedulingId);
+        $("#dateLogHistory").data("datepicker").setDate("yyyy-mm-dd");
+        TaskList.showHistory($(this).closest('a').data('json').schedulingId);
         e.stopPropagation();
     });
 
@@ -486,15 +510,13 @@
             });
         },
 
-        showHistory : function(a) {
-            var schedulingId = a.data('json').schedulingId;
-
+        showHistory : function(schedulingId) {
             $.ajax({
                 type        : 'GET',
-                url         : '/batchProcessing/logSchedulings/'+ schedulingId,
+                url         : '/batchProcessing/logSchedulings/'+ schedulingId + "/" +  $('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'),
                 contentType : 'application/json',
                 success     : function (response) {
-                    $('#logSchedulingListModal').modal().find('.modal-body').html(response);
+                    $('#logSchedulingListModal').modal().find('#modalTableList').html(response);
                 }
             });
         }
