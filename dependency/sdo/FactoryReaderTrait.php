@@ -465,7 +465,11 @@ trait FactoryReaderTrait
 
         $lqlString .= ' [' . $propertyName . ']';
 
+        $queryArgs = [];
         if ($queryString) {
+            if (is_array($queryString)) {
+                list($queryString, $queryArgs) = $queryString;
+            }
             $lqlString .= "(" . $queryString .")";
         } 
 
@@ -490,7 +494,7 @@ trait FactoryReaderTrait
         }
 
         /* Execute statement */
-        $result = $this->execute($stmt);
+        $result = $this->execute($stmt, $queryArgs);
         
         /* Fetch all objects */
         if ($result) {

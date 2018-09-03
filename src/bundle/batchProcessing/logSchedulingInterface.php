@@ -34,7 +34,7 @@ interface logschedulingInterface
     /**
      * Get search form for entries
      *
-     * @action batchProcessing/logScheduling/getLogBySchedulingId
+     * @action batchProcessing/logScheduling/getLogs
      */
-    public function read_schedulingId_();
+    public function read_schedulingId__logDate_();
 }
