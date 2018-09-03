@@ -941,7 +941,7 @@ class journal
             $eventLine[8] = (string) $previousJournal->archiveId;
 
             $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
-            $journalResource = $archiveController->consultation($previousJournal->archivedId, $resources[0]->resId);
+            $journalResource = $archiveController->consultation($previousJournal->archiveId, $resources[0]->resId);
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;

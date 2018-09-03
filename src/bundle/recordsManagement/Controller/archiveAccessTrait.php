@@ -198,7 +198,7 @@ trait archiveAccessTrait
 
                         $queryParams['disposalDate'] = $currentDateString;
                         $queryParts['disposalDate'] = "disposalDate <= :disposalDate";
-                    }else if($archiveExpired == "false"){
+                    } elseif($archiveExpired == "false"){
                         $queryParams['disposalDate'] = $currentDateString;
                         $queryParts['disposalDate'] = "disposalDate >= :disposalDate";
                     }
@@ -245,6 +245,9 @@ trait archiveAccessTrait
         $queryParts = array();
         $queryParams = array();
 
+        $currentDate = \laabs::newDate();
+        $currentDateString = $currentDate->format('Y-m-d');
+
         if ($originatorOrgRegNumber){
             $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
             $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
@@ -253,6 +256,8 @@ trait archiveAccessTrait
         if ($filePlanPosition){
             $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
             $queryParams['filePlanPosition'] = $filePlanPosition;
+        } else {
+            $queryParts['filePlanPosition'] = "filePlanPosition = null";
         }
 
         if ($archiveUnit == false){
@@ -289,7 +294,12 @@ trait archiveAccessTrait
      */
     public function getMetadata($archiveId)
     {
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
+        }
+        $this->getAccessRule($archive);
 
         if (!$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
@@ -309,15 +319,17 @@ trait archiveAccessTrait
 
     /**
      * Get the related information of an archive
-     * @param string $archiveId The identifier of the archive
+     * @param string $archiveId The identifier of the archive or the archive itself
      *
      * @return recordsManagement/archive
      */
-    public function getRelatedInformation($archive){
-        if (is_scalar($archive)){
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archive);
+    public function getRelatedInformation($archiveId){
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
         }
-        $archive->lifeCycleEvents = $this->getArchiveLifeCycleEvent($archive->archiveId);
+        $archive->lifeCycleEvent = $this->getArchiveLifeCycleEvent($archive->archiveId);
         $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
 
         return $archive;
@@ -325,18 +337,40 @@ trait archiveAccessTrait
 
     /**
      * Get the children of an archive as an index
-     * @param string $archiveId The identifier of the archive
+     * @param string $archiveId     The identifier of the archive or the archive itself
+     * @param bool   $loadResources Load the resources info
+     * @param bool   $loadBinary    Load the resources binary
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archive){
-        if (is_scalar($archive)){
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archive);
+    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false){
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
         }
+
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+
+        if ($archive->digitalResources) {
+            if ($loadBinary) {
+                foreach ($archive->digitalResources as $i => $digitalResource) {
+                    $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
+                }
+
+            } elseif ($loadResourcesInfo) {
+                foreach ($archive->digitalResources as $i => $digitalResource) {
+                    $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
+                }
+            }
+        }
+
         $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
 
-        foreach ($archive->childrenArchives as $child) {
-            $this->listChildrenArchive($child);
+        if ($archive->childrenArchives) {
+            foreach ($archive->childrenArchives as $child) {
+                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary);
+            }
         }
 
         return $archive;
@@ -413,14 +447,48 @@ trait archiveAccessTrait
     /**
      * Retrieve an archive by its id
      * @param string $archiveId
+     * @param bool   $withBinary
      *
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId)
+    public function retrieve($archiveId, $withBinary =false)
     {
-        $archive = $this->read($archiveId);
+        /*
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         $this->getArchiveComponents($archive, true);
+
+        return $archive;
+        */
+
+        if (is_scalar($archiveId)){
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        }else{
+            $archive = $archiveId;
+        }
+        $this->getMetadata($archive);
+        $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
+
+        if (!empty($archive->archiverOrgRegNumber)) {
+            $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
+        }
+        if (!empty($archive->depositorOrgRegNumber)) {
+            $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
+        }
+        $this->getRelatedInformation($archive);
+        $this->listChildrenArchive($archive, true, $withBinary);
+
+        if(!empty($archive->childrenArchives)){
+            foreach($archive->childrenArchives as $child){
+                $this->retrieve($child);
+            }
+        }
+
+        $archive->communicability = $this->accessVerification($archive);
+
+        if(\laabs::hasBundle('medona')) {
+            $archive->messages = $this->getMessageByArchiveid($archiveId);
+        }
 
         return $archive;
     }
@@ -445,8 +513,8 @@ trait archiveAccessTrait
     public function getArchiveRelationship($archiveId)
     {
         $res = [];
-        $res['childrenRelationship'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
-        $res['parentRelationship'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
+        $res['childrenRelationships'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
+        $res['parentRelationships'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
 
         return $res;
     }
@@ -460,7 +528,7 @@ trait archiveAccessTrait
      */
     public function accessVerification($archiveId)
     {
-        $archive = $this->read($archiveId);
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         $comDateAccess = $this->accessComDateVerification($archive);
 
@@ -489,69 +557,6 @@ trait archiveAccessTrait
                 return true;
             }
         }
-    }
-
-    /**
-     * Get archive package, data and metadata
-     *
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManangement/archive The archive package (data and metadata)
-     */
-    public function getPackage($archiveId)
-    {
-        $archive = $this->read($archiveId);
-
-        if (!$this->accessVerification($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        }
-
-        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
-
-        $nbResource = count($archive->digitalResources);
-
-        for ($i = 0; $i < $nbResource; $i++) {
-            $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($archive->digitalResources[$i]->resId);
-        }
-
-        return $archive;
-    }
-
-    /**
-     * Get an archive package for the communication
-     *
-     * @param string $archiveId The archive identifier
-     */
-    public function getCommunicationPackage($archiveId)
-    {
-        // Constituer les paquets à communiquer avec aip
-
-        // $archive = $this->read($archiveId);
-
-        // if (!$this->accessVerification($archive)) {
-        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        // }
-
-        // $this->logging($archive);
-    }
-
-    /**
-     * Send archive for consultation
-     *
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManagement/archive The archive package
-     */
-    public function sendForConsultation($archiveId)
-    {
-        // Envoyer pour consultation simple avec historique
-
-        // $archive = $this->read($archiveId);
-
-        // if (!$this->accessVerification($archive)) {
-        //     throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
-        // }
-
     }
 
     /**
@@ -735,122 +740,6 @@ trait archiveAccessTrait
         return "(".implode(" OR ", $queryParts).")";
     }
 
-
-    /**
-     * Read an archive by its id
-     * @param string $archiveId The archive identifier
-     *
-     * @return recordsManagement/archive object
-     */
-    public function read($archiveId)
-    {
-        return $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-    }
-
-    /**
-     * Get the archives by originator
-     * @param string $originatorOrgRegNumber
-     *
-     * @return recordsManagement/archive[] Array of recordsManagement/archive object
-     */
-    public function getArchiveByOriginator($originatorOrgRegNumber)
-    {
-        $archives = $this->sdoFactory->read("recordsManagement/archive", array('originatorOrgRegNumber' => $originatorOrgRegNumber));
-
-        return $archives;
-    }
-
-    /**
-     * Get the archive originator
-     * @param string $archiveId
-     *
-     * @return string The originatorOrgRegNumber
-     */
-    public function getArchiveOriginatorOrgRegNumber($archiveId)
-    {
-        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
-
-        return $archive->originatorOrgRegNumber;
-    }
-
-    /**
-     * Get archives by status
-     * @param string $status
-     *
-     * @return recordsManagement/archive[] Array of recordsManagement/archive oject
-     */
-    public function getByStatus($status)
-    {
-        $archives = $this->sdoFactory->find('recordsManagement/archive', "status='$status'");
-
-        return $archives;
-    }
-
-    /**
-     * Retrieve an archive description by its archive id
-     * @param string $archiveId The archive identifer
-     *
-     * @return recordsManagement/archive object
-     */
-    public function getDescription($archiveId)
-    {
-        if (!$this->sdoFactory->exists('recordsManagement/archive', $archiveId)) {
-            throw \laabs::newException("recordsManagement/unknownArchive", "The archive identifier %s does not exist.", 404, null, [$archiveId]);
-        }
-
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-
-        if (!empty($archive->descriptionClass)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
-
-        $archive->descriptionObject = $descriptionController->read($archive->archiveId);
-
-        /*    $index = 'archives';
-            if (!empty($archive->archivalProfileReference)) {
-                $index = $archive->archivalProfileReference;
-            }
-
-            $ft = \laabs::newService('dependency/fulltext/FulltextEngineInterface');
-            $ftresults = $ft->find('archiveId:"'.$archiveId.'"', $index, $limit = 1);
-
-            if (count($ftresults)) {
-                $archive->descriptionObject = $ftresults[0];
-            }
-        }*/
-
-        $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
-
-        $archive->digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
-        foreach ($archive->digitalResources as $i => $digitalResource) {
-            $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
-        }
-
-        $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-
-        if (!empty($archive->archiverOrgRegNumber)) {
-            $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
-        }
-        if (!empty($archive->depositorOrgRegNumber)) {
-            $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
-        }
-
-        $this->getParentArchive($archive);
-        $this->listChildrenArchive($archive);
-
-        $archive->childrenRelationships = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
-        $archive->parentRelationships = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
-
-        $archive->communicability = $this->accessVerification($archive);
-
-        if(\laabs::hasBundle('medona')) {
-            $archive->messages = $this->getMessageByArchiveid($archiveId);
-        }
-        return $archive;
-    }
-
     /**
      * Get the parent archive
      * @param recordsManagement/archive $archive The archive
@@ -864,41 +753,6 @@ trait archiveAccessTrait
         }
 
         return $archive;
-    }
-
-    /**
-     * Get the archive components
-     * @param recordsManagement/archive $archive The parent archive
-     * @param boolean $withContents With contents
-     *
-     * @return recordsManagement/archive Archive with children archives
-     */
-    protected function getArchiveComponents($archive, $withContents = false)
-    {
-        $this->getAccessRule($archive);
-
-        $archive->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($archive->archiveId, 'recordsManagement/archive');
-
-        if (!empty($archive->descriptionClass)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $archive->descriptionObject = $descriptionController->read($archive->archiveId);
-        }
-
-        $archiveDigitalResources = $this->digitalResourceController->getResourcesByArchiveId($archive->archiveId);
-        foreach ($archiveDigitalResources as $digitalResource) {
-            $archive->digitalResources[] = $this->digitalResourceController->retrieve($digitalResource->resId);
-        }
-
-        $archive->contents = $this->sdoFactory->find('recordsManagement/archive', "parentArchiveId = '".(string) $archive->archiveId."'");
-        foreach ($archive->contents as $content) {
-            $this->getArchiveComponents($content, $withContents);
-        }
-
-        $archive->relatedArchives = $this->archiveRelationshipController->getByArchiveId($archive->archiveId);
-        $archive->relatedArchives = $this->archiveRelationshipController->getByRelatedArchiveId($archive->archiveId);
-
-        $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-
     }
 
     /**
@@ -1097,7 +951,7 @@ trait archiveAccessTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve($archiveId, true);
 
         $this->logDelivery($archive);
 

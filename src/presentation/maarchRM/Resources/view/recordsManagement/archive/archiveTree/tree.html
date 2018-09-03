@@ -29,6 +29,7 @@
 <script>
     ArchiveTree = {
         selected: null,
+        init : false,
         select: function(e) {
             this.unselect();
             var li = e.closest('li')
@@ -36,12 +37,16 @@
             if(e.hasClass('archiveName')) {
                 li.children('span').removeClass('node-default').addClass('node-warning');
 
-                trigger("showDetails.archive", li.data('archive-id'));
+                if (this.init) {
+                    trigger("showDetails.archive", li.data('archive-id'));
+                }
                 this.selected = li;
 
             } else if (e.hasClass('documentName')) {
                 e.addClass('node-warning');
-                trigger("showDetails.digitalResource", li.data('json'));
+                if (this.init) {
+                    trigger("showDetails.digitalResource", li.data('json'));
+                }
                 this.selected = li;
             }
         },
@@ -58,12 +63,13 @@
         }
     }
 
-    $('#archiveTree').on('click', '.archiveName, .documentName', function() {
+    $('#archiveTree').on('click', '.archiveName, .documentName', function(e, status) {
         ArchiveTree.select($(this));
     })
 
     $('#archiveTree').ready(function() {
         BootstrapTree.init($('#archiveTree'));
         $("#rootArchiveTreeOpenner").click().siblings('.archiveName').click();
+        ArchiveTree.init = true;
     })
 </script>

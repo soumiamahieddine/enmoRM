@@ -74,7 +74,7 @@ class dashboard
         return $this->storage;
     }
 
-    protected function filterMenuAuth($menu)
+    public function filterMenuAuth($menu)
     {
         foreach ($menu as $i => $item) {
             if (isset($item['submenu'])) {

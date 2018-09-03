@@ -87,16 +87,19 @@ interface retrieveInterface
     /**
      * View the archive
      *
-     * @return recordsManagement/archive/getDescription The recordsManagement/archive object
-     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     * @return recordsManagement/archive/getArchiveWithChildren The recordsManagement/archive object
+     * @uses  recordsManagement/archive/readMetadata_archiveId_
+     * @uses  recordsManagement/archive/readRelatedinformation_archiveId_
+     * @uses  recordsManagement/archive/readListchildrenarchive_archiveId_
      */
     public function readRecordsmanagementArchivedescription_archiveId_();
 
         /**
      * View the archive
      *
-     * @return recordsManagement/archive/getArchiveDetails
-     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     * @return recordsManagement/archive/getArchive
+     * @uses  recordsManagement/archive/readMetadata_archiveId_
+     * @uses  recordsManagement/archive/readRelatedinformation_archiveId_
      */
     public function readRecordsmanagementArchiveinfo_archiveId_();
 
