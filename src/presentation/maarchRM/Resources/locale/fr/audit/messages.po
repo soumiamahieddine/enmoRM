@@ -529,7 +529,7 @@ msgid "medona/archivalAgreement/delete_archivalAgreementId_"
 msgstr "Suppression d'une convention d'archivage"
 
 msgid "medona/archiveAuthorization/readIncominglist"
-msgstr "Liste des bordereaux d'autorisation envoyées"
+msgstr "Liste des bordereaux d'autorisation envoyés"
 
 msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
 msgstr "Liste des bordereaux d'autorisation de communication envoyés"
