@@ -579,6 +579,10 @@ class organization
         $archivalProfilesAccess = $this->sdoFactory->readChildren("organization/archivalProfileAccess", $organization);
         $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
 
+        foreach ($contacts as $contact) {
+            $this->deleteContactPosition($contact->contactId, (string) $organization->orgId);
+        }
+
         foreach ($children as $child) {
             if(\laabs::hasBundle('medona')) {
                 $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
@@ -586,7 +590,7 @@ class organization
                     throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
                 }
             }
-            $this->delete($child);
+            $this->delete($child->orgId);
         }
 
         foreach ($users as $user) {
@@ -594,9 +598,6 @@ class organization
         }
         foreach ($services as $service) {
             $this->sdoFactory->delete($service);
-        }
-        foreach ($contacts as $contact) {
-            $this->deleteContactPosition($contact->contactId, (string) $organization->orgId);
         }
 
         $result = $this->sdoFactory->delete($organization);
@@ -750,9 +751,9 @@ class organization
         $contactPosition = $this->sdoFactory->read("organization/orgContact", array("contactId" => $contactId, "orgId" => $orgId));
 
         $contactController = \laabs::newController('contact/contact');
-        $contactController->delete($contactId);
+        $this->sdoFactory->delete($contactPosition);
 
-        return $this->sdoFactory->delete($contactPosition);
+        return $contactController->delete($contactId);
     }
 
     /**
