@@ -15,7 +15,7 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li role="presentation" class="small allProfiles">
-                        <a href="#">All</a>
+                        <a data-reference="all" href="#">All</a>
                     </li>
                     <?merge userArchivalProfiles ?>
                     <li role="presentation" class="small [?merge .reference ?]">
@@ -150,10 +150,9 @@ FulltextSearchForm = {
 
         $.each(profiles, function() {
             profileReferences.push("." + this.reference);
-        })
+        });
 
         profileReferences.push(".allProfiles");
-        $('#profileSelection li').removeClass('hide').not(profileReferences.join(', ')).addClass('hide');
         this.form.data('orgregnumber', orgRegNumber).data('folderid', folderId);
         $('#profileSelection .allProfiles > a').click();
         this.clearForm();
@@ -208,7 +207,7 @@ FulltextSearchForm = {
         }
 
         var profileReference = $('#profileSelection').data('profileReference');
-        if (profileReference) {
+        if (profileReference && profileReference != "all") {
             query.profileReference = profileReference;
         }
 

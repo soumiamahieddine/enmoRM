@@ -204,7 +204,7 @@ class welcome
                     }
                 }
 
-                if (!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
+                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->fileplanLevel == 'file') {
                     $depositPrivilege = false;
                 }
 
@@ -302,25 +302,6 @@ class welcome
     }
 
     /**
-     * Show an archive content
-     * @param object $archive
-     *
-     * @return string
-     */
-    public function archiveContent($archive)
-    {
-        if (isset($archive->digitalResources)) {
-            $this->json->digitalResources = $archive->digitalResources;
-        }
-
-        if (isset($archive->childrenArchives)) {
-            $this->json->childrenArchives = $archive->childrenArchives;
-        }
-
-        return $this->json->save();
-    }
-
-    /**
      * Show the result of movin²g an archive into a folder
      * @param int $result
      *
@@ -340,106 +321,6 @@ class welcome
         }
 
         return $this->json->save();
-    }
-
-    /**
-     * Get archive description
-     * @param archive $archive
-     *
-     * @return string
-     */
-    protected function getDescription($archive)
-    {
-        $archivalProfile = null;
-        $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-
-        if (!empty($archive->archivalProfileReference)) {
-            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
-            $archive->archivalProfileName = $archivalProfile->name;
-        }
-
-        if (!empty($archive->descriptionClass)) {
-            $presenter = \laabs::newPresenter($archive->descriptionClass);
-            $descriptionHtml = $presenter->read($archive->descriptionObject);
-            $modificationPrivilege = false;
-
-        } else {
-            $descriptionHtml = '<table">';
-
-            if (isset($archive->descriptionObject)) {
-                foreach ($archive->descriptionObject as $name => $value) {
-                    $isImmutable = false;
-                    $label = $type = $archivalProfileField = null;
-                    if ($archivalProfile) {
-                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                            if ($archiveDescription->fieldName == $name) {
-                                $label = $archiveDescription->descriptionField->label;
-                                $archivalProfileField = true;
-                                $type = $archiveDescription->descriptionField->type;
-                                $isImmutable = $archiveDescription->isImmutable;
-                            }
-                        }
-                    }
-
-                    if (empty($label)) {
-                        $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                    }
-
-                    if (empty($type)) {
-                        $type = 'text';
-                        if (!empty($value)) {
-                            switch (gettype($value)) {
-                                case 'boolean':
-                                    $type = 'boolean';
-                                    break;
-
-                                case 'integer':
-                                case 'double':
-                                    $type = 'number';
-                                    break;
-
-                                case 'string':
-                                    if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                        $type = 'date';
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                    if(!is_array($value)){
-                        if ($archivalProfileField) {
-                            $descriptionHtml .= '<tr class="archivalProfileField">';
-                        } else {
-                            $descriptionHtml .= '<tr>';
-                        }
-
-                        $descriptionHtml .= '<th title="'.$label.'" name="'.$name.'" data-type="'.$type.'"'.'data-Immutable="'.$isImmutable.'">'.$label.'</th>';
-                        if ($type == "date") {
-                                $textValue = \laabs::newDate($value);
-                        } else {
-                            $textValue = $value;
-                        }
-                        if ($type == 'boolean') {
-                            $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                        }
-
-                        $descriptionHtml .= '<td title="'.$value.'">'.$textValue.'</td>';
-                        $descriptionHtml .= '</tr>';
-                    }
-                }
-
-            }
-            $descriptionHtml .= '</table>';
-        }
-
-        if ($descriptionHtml) {
-            $node = $this->view->getElementById("metadata");
-            $this->view->addContent($descriptionHtml, $node);
-        } else {
-            unset($archive->descriptionObject);
-        }
-
-        $this->view->setSource('modificationPrivilege', $modificationPrivilege);
     }
 
     /**

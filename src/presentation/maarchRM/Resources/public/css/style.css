@@ -5481,7 +5481,7 @@ button.close {
   color: #ffffff;
   text-align: center;
   text-decoration: none;
-  background-color: #000000;
+  background-color: #05aaf3;
   border-radius: 4px;
 }
 .tooltip-arrow {
@@ -5496,52 +5496,52 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #05aaf3;
 }
 .tooltip.top-left .tooltip-arrow {
   bottom: 0;
   left: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #05aaf3;
 }
 .tooltip.top-right .tooltip-arrow {
   bottom: 0;
   right: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #05aaf3;
 }
 .tooltip.right .tooltip-arrow {
   top: 50%;
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: #000000;
+  border-right-color: #05aaf3;
 }
 .tooltip.left .tooltip-arrow {
   top: 50%;
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: #000000;
+  border-left-color: #05aaf3;
 }
 .tooltip.bottom .tooltip-arrow {
   top: 0;
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #05aaf3;
 }
 .tooltip.bottom-left .tooltip-arrow {
   top: 0;
   left: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #05aaf3;
 }
 .tooltip.bottom-right .tooltip-arrow {
   top: 0;
   right: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #05aaf3;
 }
 .popover {
   position: absolute;
@@ -6140,8 +6140,10 @@ button.close {
     display: none !important;
   }
 }
-
-.tt-wrapper .tt-menu,
+.tt-wrapper {
+  position: relative;
+  width: 100%;
+}
 .tt-wrapper .tt-menu {
   cursor: pointer;
   position: absolute;
@@ -6164,11 +6166,6 @@ button.close {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-
-.tt-wrapper {
-  position: relative;
-}
-
 .tt-wrapper .tt-suggestion {
   display: block;
   padding: 3px 20px;
@@ -6178,13 +6175,26 @@ button.close {
   color: #333333;
   white-space: nowrap;
 }
-.tt-wrapper .tt-suggestion.tt-cursor,
-.tt-wrapper .tt-suggestion:hover,
+.tt-wrapper .tt-suggestion:hover {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #337ab7;
+}
 .tt-wrapper .tt-suggestion:focus {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
   background-color: #337ab7;
+}
+.tt-wrapper .tt-suggestion.tt-cursor {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #337ab7;
+}
+.input-group.input-group-lg .tt-wrapper {
+  height: 46px;
 }
 .input-group.input-group-lg .tt-wrapper .form-control {
   height: 46px;
@@ -6193,6 +6203,12 @@ button.close {
   line-height: 1.3333333;
   border-radius: 6px;
 }
+.input-group.input-group-lg .tt-wrapper .tt-menu {
+  top: 46px !important;
+}
+.input-group.input-group-sm .tt-wrapper {
+  height: 30px;
+}
 .input-group.input-group-sm .tt-wrapper .form-control {
   height: 30px;
   padding: 5px 10px;
@@ -6200,14 +6216,13 @@ button.close {
   line-height: 1.5;
   border-radius: 3px;
 }
-.tt-wrapper {
-  width: 100%;
+.input-group.input-group-sm .tt-wrapper .tt-menu {
+  top: 30px !important;
 }
 .input-group .tt-wrapper {
   display: block !important;
   height: 34px;
 }
-
 .input-group .tt-wrapper .tt-menu {
   top: 32px !important;
 }
@@ -6225,20 +6240,6 @@ button.close {
   border-bottom-left-radius: 0;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
-}
-.input-group.input-group-sm .tt-wrapper {
-  height: 30px;
-}
-.input-group.input-group-sm .tt-wrapper .tt-menu,
-.input-group.input-group-sm .tt-wrapper .tt-menu {
-  top: 30px !important;
-}
-.input-group.input-group-lg .tt-wrapper {
-  height: 46px;
-}
-.input-group.input-group-lg .tt-wrapper .tt-menu,
-.input-group.input-group-lg .tt-wrapper .tt-menu {
-  top: 46px !important;
 }
 /* FONT PATH
  * -------------------------- */
@@ -8596,7 +8597,7 @@ button.close {
 .tree-l li {
   list-style-type: none;
   margin: 0;
-  padding: 5px 5px 0 5px;
+  padding: 5px 0px 0 5px;
   position: relative;
 }
 .tree li::before,
@@ -9229,11 +9230,11 @@ fieldset[disabled] .datepicker td span.active.active {
 .gritter-item-wrapper {
   position: relative;
   margin: 0 0 10px 0;
-  background: url('../../img/gritter_1.7.4/ie-spacer.gif');
+  background: url('/public/img/gritter_1.7.4/ie-spacer.gif');
   /* ie7/8 fix */
 }
 .gritter-top {
-  /*background:url('../../img/gritter_1.7.4/gritter.png') no-repeat left -30px;*/
+  /*background:url('/public/img/gritter_1.7.4/gritter.png') no-repeat left -30px;*/
   background: #0d8eff;
   height: 10px;
 }
@@ -9241,7 +9242,7 @@ fieldset[disabled] .datepicker td span.active.active {
   background-position: right -30px;
 }
 .gritter-bottom {
-  /*background:url('../../img/gritter_1.7.4/gritter.png') no-repeat left bottom;*/
+  /*background:url('/public/img/gritter_1.7.4/gritter.png') no-repeat left bottom;*/
   background: #0d8eff;
   height: 8px;
   margin: 0;
@@ -9251,7 +9252,7 @@ fieldset[disabled] .datepicker td span.active.active {
 }
 .gritter-item {
   display: block;
-  /*background:url('../../img/gritter_1.7.4/gritter.png') no-repeat left -40px;*/
+  /*background:url('/public/img/gritter_1.7.4/gritter.png') no-repeat left -40px;*/
   background: #0d8eff;
   color: #eee;
   padding: 2px 11px 8px 11px;

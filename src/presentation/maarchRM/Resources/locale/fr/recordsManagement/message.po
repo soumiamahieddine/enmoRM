@@ -173,7 +173,10 @@ msgid "All profiles"
 msgstr "Tous les profils"
 
 msgid "Select an organization unit or a folder in the tree to access an archive or to create a new one."
-msgstr "Veuillez sélectionner un service ou un dossier dans l'arborescence afin de consulter ou verser une nouvelle archives."
+msgstr "Veuillez sélectionner un service ou un dossier dans l'arborescence afin de consulter ou verser une nouvelle archive."
 
 msgid "New archive"
 msgstr "Nouvelle archive"
+
+msgid "Close search"
+msgstr "Fermer la recherche"

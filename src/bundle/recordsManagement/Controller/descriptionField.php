@@ -41,7 +41,7 @@ class descriptionField
     }
 
     /**
-     *  List
+     * List
      *
      * @return recordsManagement/descriptionField[] The list of retention rules
      */
@@ -53,8 +53,10 @@ class descriptionField
     }
 
     /**
-     *  Create
+     * Create
      * @param recordsManagement/descriptionField $descriptionField The description field
+     *
+     * @throws \Exception
      *
      * @return boolean The request result
      */
@@ -77,7 +79,7 @@ class descriptionField
     }
 
     /**
-     *  Read a field
+     * Read a field
      * @param string $name The field name
      *
      * @return recordsManagement/descriptionField The description field
@@ -98,8 +100,10 @@ class descriptionField
     }
 
     /**
-     *  Update a description field
+     * Update a description field
      * @param recordsManagement/descriptionField $descriptionField The description field
+     *
+     * @throws \Exception
      *
      * @return boolean The request result
      */
@@ -121,6 +125,8 @@ class descriptionField
     /**
      * Delete a description field
      * @param string $name The description field name
+     *
+     * @throws \Exception
      *
      * @return boolean The request result
      */

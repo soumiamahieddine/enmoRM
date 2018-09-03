@@ -1,0 +1,33 @@
+<div id="archiveRelationshipsTable" class="col-xs-12">
+    <button id="addArchiveRelationship" class="btn btn-default pull-right">
+        <i class="fa fa-plus"> </i>
+        Add relationship
+    </button>
+    <div class="col-xs-12">
+       TO DO
+    </div>
+</div>
+
+<div id="archiveRelationshipForm" class="col-xs-12 hide">
+    <?hinclude recordsManagement/archive/archiveInfo/relationshipForm.html ?>
+</div>
+
+<script type="text/javascript">
+    $('#addArchiveRelationship').on('click', function() {
+        $('#archiveRelationshipsTable').addClass('hide');
+        $('#archiveRelationshipForm').removeClass('hide');
+    });
+
+    $('#archiveRelationshipForm').onEvent('closeRelationshipForm.archive', function() {
+        $('#archiveRelationshipForm').addClass('hide');
+        $('#archiveRelationshipsTable').removeClass('hide');
+    });
+
+    $('#archiveRelationshipForm').onEvent('relationshipAdded.archive', function(e, relationship) {
+        trigger('showDetails.archive', relationship.archiveId)
+    })
+
+    $("#archiveRelationshipsTable").on('click', ".viewRelatedArchive", function () {
+        trigger('showFullDetails.archive', $(this).data('archiveid'))
+    })
+</script>

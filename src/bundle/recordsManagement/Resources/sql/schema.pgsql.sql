@@ -262,7 +262,7 @@ CREATE TABLE "recordsManagement"."archiveRelationship"
   "archiveId" text NOT NULL,
   "relatedArchiveId" text NOT NULL,
   "typeCode" text NOT NULL,
-  "description" text,
+  "description" jsonb,
 
   PRIMARY KEY ("archiveId", "relatedArchiveId", "typeCode"),
   FOREIGN KEY ("archiveId") 

@@ -1,6 +1,6 @@
 <!-- ARCHIVE DESCRIPTION -->
 <div class="modal fade" id="modalArchiveInfo" data-backdrop="true" data-keyboard="static" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="width: 80%">
         <div class="modal-content" id="modalArchiveInfo_content">
         </div>
     </div>
@@ -39,14 +39,6 @@
 </style>
 
 <script>
-    $("#modalArchiveInfo").on('click', ".editMetadata", function () {
-       archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
-    });
-    // View relate archive
-    $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
-        archiveInfoModal.load($(this).data('archiveid'));
-    })
-
     // Show life cycle event 
     $("#modalArchiveInfo").on('click', '.showEvent', function () {
         eventInfo.load($(this).data('eventid'));
@@ -83,8 +75,25 @@
         });
     })
 
+    $('#modalArchiveInfo').onEvent('showFullDetails.archive', function(e, archiveId) {
+        archiveInfoModal.load(archiveId);
+    })
+
+    $('#modalArchiveInfo').onEvent('showDetails.archive', function(e, archiveId){
+        archiveInfoModal.loadDescription(archiveId);
+    })
+
+    $('#modalArchiveInfo').onEvent('showDetails.digitalResource', function(e, resource){
+        archiveInfoModal.loadResourceDescription(resource);
+    })
+
+    $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
+        console.trace()
+        archiveDocumentViewer.load(archiveId, resId);
+    })
+
     archiveInfoModal = {
-         load: function(archiveId, noMessageTab) {
+        load: function(archiveId, noMessageTab) {
             $.ajax({
                 type        : "GET",
                 url         : "/recordsManagement/archiveDescription/" + archiveId,
@@ -97,7 +106,7 @@
                     }
 
                     if ($("#modalArchiveInfo").is(":visible")) {
-                        archiveInfoModal.close();
+                        $('#modalArchiveInfo').modal('hide');
                         $('#modalArchiveInfo').one('hidden.bs.modal', function () {
                             $('#modalArchiveInfo').modal();
                         })
@@ -111,7 +120,32 @@
 
                 }
             });
-         },
+        },
+
+        loadDescription: function(archiveId) {
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archiveInfo/" + archiveId,
+                dataType    : 'html',
+                success     : function (response) {
+                    $('#archiveInformationDiv').empty().html(response);
+                }
+            });
+        },
+
+        loadResourceDescription: function(resource) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    $('#archiveInformationDiv').html(response);
+                    DocumentInformation.load(resource);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
 
          loadEditMetadata: function (archiveId) {
              $.ajax({
@@ -126,7 +160,7 @@
          },
 
          close: function() {
-            $('#modalArchiveInfo').modal('hide');
+            $('#modalArchiveInfo').modal('hide').empty();
          },
 
          addClosingButton: function() {
@@ -145,7 +179,7 @@
             window.open(url, 'document');
         },
 
-        loadResource: function(archiveId, resId) {
+        loadResource: function(archiveId, resId) { alert('ok');
             var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
             window.open(url, 'document');
         }

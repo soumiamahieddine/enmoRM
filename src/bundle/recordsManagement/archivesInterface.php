@@ -81,6 +81,16 @@ interface archivesInterface
         $originatingEndDate = null
     );
 
+    /**
+     * Get archives list
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
+     *
+     * @action recordsManagement/archive/index
+     */
+    public function readList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
+
     /*
         MODIFY ARCHIVES
     */
@@ -241,19 +251,6 @@ interface archivesInterface
      *
      */
     public function readIntegritycheck($archiveIds);
-
-    /* 
-        FILE PLAN
-    */
-    /**
-     * Get archives by file plan position
-     * @param string $orgRegNumber
-     * @param string $folderId
-     *
-     * @action recordsManagement/archiveFilePlanPosition/getFolderContents
-     *
-     */
-    public function readFolder($orgRegNumber, $folderId=null);
     
     /*
      *  METADATA

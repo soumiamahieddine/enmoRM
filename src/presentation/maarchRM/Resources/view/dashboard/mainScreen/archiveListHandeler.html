@@ -330,4 +330,8 @@
 
     })
 
+    $('#middleColumn').onEvent('showDetails.archive', function(e, archiveId) {
+         Archive.getInfo(archiveId);
+    })
+
 </script>
