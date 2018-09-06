@@ -56,11 +56,39 @@ class authentication
         $this->view = $view;
 
         $this->logoUri = $logo;
+        $this->loginLogoUri = $logo;
 
         $this->json = $json;
         $this->translator = $translator;
         $this->translator->setCatalog('auth/messages');
         $this->json->status = true;
+
+        /*$this->loginStyle = "
+            .modal-backdrop {
+                background-image: url('presentation/img/RM.svg');
+                background-repeat: no-repeat;
+                background-position: center top;
+                background-color: #fff;
+                opacity:1 !important;
+            } 
+
+            .modal {
+              text-align: center;
+              padding: 0!important;
+            }
+
+            .modal:before {
+              content: '';
+              display: inline-block;
+              height: 80%;
+              vertical-align: middle;
+            }
+
+            .modal-dialog {
+              display: inline-block;
+              text-align: left;
+              vertical-align: middle;
+            }";*/
     }
 
     /**
@@ -73,9 +101,14 @@ class authentication
         $view = $this->view;
 
         $view->addContentFile("auth/userAccount/login/form.html");
-        $view->setSource('logo', $this->logoUri);
+        $view->setSource('logo', $this->loginLogoUri);
         $view->translate();
         $view->merge();
+
+        if (isset($this->loginStyle)) {
+            $style = $this->view->createElement('style', $this->loginStyle);
+            $this->view->getContainer()->appendChild($style);
+        }
 
         return $view->saveHtml();
     }
