@@ -234,7 +234,12 @@ class archive
         // Descriptive metadata
         $this->getDescriptiveMetadatas($archive);
 
+        $this->getChildrenArchivesProfiles($archive);
+
         $this->view->setSource("archive", $archive);
+        $this->view->setSource("archivalProfileList", $archive->archivalProfileList);
+        $this->view->setSource("acceptArchiveWithoutProfile", $archive->acceptArchiveWithoutProfile);
+        $this->view->setSource("acceptUserIndex", $archive->acceptUserIndex);
 
         $this->view->translate();
         $this->view->merge();
@@ -537,7 +542,6 @@ class archive
     {
         $childrenByProfiles = [];
 
-
         // Digital resources
         $this->setDigitalResources($archive);
 
@@ -684,16 +688,15 @@ class archive
                 }
             }
 
-            if (!count($archive->archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) {
+            if ((!count($archive->archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile ) || $archivalProfile->fileplanLevel == 'item') {
                 $archive->depositPrivilege = false;
             }
 
             $archive->acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
-            $archive->fileplanLevel = $archivalProfile->fileplanLevel;
             $archive->acceptUserIndex = $archivalProfile->acceptUserIndex;
         } else {
             $archive->acceptArchiveWithoutProfile = true;
-            $archive->fileplanLevel = true;
+            $archive->acceptUserIndex = true;
         }
     }
 

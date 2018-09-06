@@ -129,7 +129,7 @@
                 success     : function (response) {
                     trigger("showArchiveDetails.recordsManagement", [response, "/archive/"+archiveId]);
                     var div = $(response).find('>div');
-                    Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'));
+                    Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -235,14 +235,14 @@
             }
         },
 
-        loadChildrenArchiveButton: function(archivalProfiles, withoutProfile) {
+        loadChildrenArchiveButton: function(archivalProfiles, withoutProfile, $fileplanLevel) {
 
             var button = this.selected.closest('.archive').find('.addChildrenArchive');
             var list =  button.find('ul');
             var archiveId = button.closest('.archive').attr('id');
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
-            if (!archivalProfiles.length && withoutProfile === 0) {
+            if (!archivalProfiles.length && withoutProfile !== 1 && fileplanLevel== 'item') {
                 return;
             }
                 

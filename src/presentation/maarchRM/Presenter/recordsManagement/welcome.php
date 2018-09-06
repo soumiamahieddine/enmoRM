@@ -157,7 +157,7 @@ class welcome
      *
      * @return string
      */
-    public function archiveInfo($archive)
+    /*public function archiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
@@ -204,7 +204,7 @@ class welcome
                     }
                 }
 
-                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->fileplanLevel == 'file') {
+                if ((!count($archivalProfileList) && !$archivalProfile->acceptArchiveWithoutProfile) || $archivalProfile->fileplanLevel == 'item') {
                     $depositPrivilege = false;
                 }
 
@@ -237,7 +237,7 @@ class welcome
         $this->view->merge();
 
         return $this->view->saveHtml();
-    }
+    }*/
 
     /**
      * Show a document information
