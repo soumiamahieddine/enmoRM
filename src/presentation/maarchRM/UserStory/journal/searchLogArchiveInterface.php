@@ -45,4 +45,30 @@ interface searchLogArchiveInterface
      * @uses recordsManagement/log/contents_type__archiveId__resourceId_
      */
     public function readLogContents_type__archiveId__resourceId_();
+
+    /**
+     * Check integrity of log
+     * @param string $archiveId
+     *
+     * @uses lifeCycle/journal/checkIntegrity
+     * @return recordsManagement/log/checkIntegrity
+     */
+    public function readJournal_journalId_Checkintegrity($archiveId);
+
+    /**
+     * View the archive
+     *
+     * @return recordsManagement/archive/getDescription The recordsManagement/archive object
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readRecordsmanagementArchivedescription_archiveId_();
+
+    /**
+     * Retrieve an archive content document (CDO)
+     *
+     * @return recordsManagement/archive/getContents
+     *
+     * @uses  recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_
+     */
+    public function readRecordsmanagementContents_archiveId__resId_();
 }

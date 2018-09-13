@@ -46,15 +46,6 @@ interface lifeCycleJournalInterface
     public function readJournals($eventType = false, $objectClass = false, $objectId = false, $minDate = false, $maxDate = false);
 
     /**
-     * Check integrity of log
-     * @param string $archiveId
-     * 
-     * @uses lifeCycle/journal/checkIntegrity
-     * @return recordsManagement/log/checkIntegrity
-     */
-    public function readJournal_journalId_Checkintegrity($archiveId);
-
-    /**
      * Get the current journal
      * @param id      $journalId The identifier of the journal
      * @param integer $offset    The reading offset
