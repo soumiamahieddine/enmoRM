@@ -16,29 +16,30 @@ interface appInterface
 
     /**
      * Folder contents
-     * @param string $orgRegNumber
-     * @param string $folderId
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
      * 
-     * @uses recordsManagement/archives/readFolder
+     * @uses recordsManagement/archives/readList
      * @return recordsManagement/welcome/folderContents
      */
-    public function readFolder($orgRegNumber, $folderId=false);
+    public function readFolder($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
 
     /**
      * Retrieve archive info
      *
-     * @return recordsManagement/welcome/archiveInfo
-     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     * @return recordsManagement/archive/getArchiveInfo
+     * @uses  recordsManagement/archive/readMetadata_archiveId_
      */
     public function readArchive_archiveId_();
 
     /**
      * Retrieve archive contents
      *
-     * @return recordsManagement/welcome/archiveContent
-     * @uses  recordsManagement/archives/readArchivecontents_archive_
+     * @return recordsManagement/archive/showArchiveTree
+     * @uses  recordsManagement/archive/readListchildrenarchive_archiveId_
      */
-    public function readArchivecontents_archive_();
+    public function readArchivecontents_archiveId_();
 
     /**
      * Retrieve archive info
@@ -65,6 +66,27 @@ interface appInterface
 
     /**
      * Search form
+     * @param string $archiveId
+     * @param string $profileReference
+     * @param string $status
+     * @param string $archiveName
+     * @param string $agreementReference
+     * @param string $archiveExpired
+     * @param string $finalDisposition
+     * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
      *
      * @uses recordsManagement/archives/read
      *
@@ -80,8 +102,18 @@ interface appInterface
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
         $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
         $description = null,
-        $text = null
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
     );
 
     /**

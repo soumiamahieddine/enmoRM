@@ -439,15 +439,14 @@ class userAccount
     /**
      * Disable a user
      * @param string $userAccountId          The identifier of the user
-     * @param string $replacingUserAccountId The identifier of the replacing user
      *
      * @return boolean The result of the request
      */
-    public function disable($userAccountId, $replacingUserAccountId)
+    public function disable($userAccountId)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $userAccount->enabled = false;
-        $userAccount->replacingUserAccountId = $replacingUserAccountId;
+        //$userAccount->replacingUserAccountId = $replacingUserAccountId;
 
         return $this->sdoFactory->update($userAccount);
     }

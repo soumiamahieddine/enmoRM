@@ -86,5 +86,4 @@ class descriptionField
      * @var boolean
      */
     public $isArray;
-
 }

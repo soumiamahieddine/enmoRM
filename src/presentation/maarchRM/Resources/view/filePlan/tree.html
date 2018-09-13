@@ -8,15 +8,6 @@
 <div lang="en" data-translate-catalog="filePlan/messages">
     <div class="row" >
         <input type="hidden" id="filePlanPrivileges" value="[?merge filePlanPrivileges ?]"/>
-
-        <div id="filePlanMenu" class="btn-toolbar pull-right" role="toolbar">
-            <?merge filePlanPrivileges.bool() ?>
-            <div class="btn-group" role="group">
-                <button type="button" disabled class="btn btn-sm btn-default" id="addFolder" title="Add a new folder"><i class="fa fa-plus"/></button>
-                <button type="button" disabled class="btn btn-sm btn-default" id="editFolder" title="Edit folder"><i class="fa fa-edit"/></button>
-                <button type="button" disabled class="btn btn-sm btn-default" id="deleteFolder" title="Delete folder"><i class="fa fa-trash"/></button>
-            </div>
-        </div>
     </div>
     <?merge filePlan.bool() ?>
     <div id="filePlanTree" class="tree-l">
@@ -33,22 +24,50 @@
     <?hinclude /filePlan/movingConfirmationModal.html ?>
     <?hinclude /filePlan/supressionConfirmationModal.html ?>
     <?hinclude /filePlan/archiveAssignmentModal.html ?>
+    <span id="dropError" class="hide">Invalid action</span>
 </div>
 
 <style>
     .folderNode, .orgNode {
         position: relative;
-    }
-    .folderNode {
-        padding: 0px !important; 
-        min-width:150px !important;
+        cursor: pointer;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     .folderNode > b, .orgNode > b {
-        font-size: 12px;
-        cursor: pointer;
+        font-weight: normal;
+        font-size: 14px;
+        float: left;
+        width: calc(100% - 30px);
+        overflow-x: hidden;
+        text-overflow: ellipsis;
     }
-    .folderNode > i {
-        font-size: 20px;
+    .folderNode > i, .orgNode > i {
+        font-size: 16px;
+        float: left;
+        width: 10px;
+    }
+    .orgNode:hover, .folderNode:hover {
+        background-color: #DDD;
+    }
+    #filePlanTree > ul {
+        padding-left: 0;
+    }
+    #filePlanTree li {
+        padding: 0px;
+    }
+
+    #filePlanTree .dropdown-menu {
+        padding: 10px;
+        font-size: 12px;
+    }
+    #filePlanTree .dropdown-menu a {
+        padding: 5px 0px;
+    }
+
+    .folderNode .dropdown, .orgNode .dropdown {
+        visibility: hidden
     }
 
 </style>
@@ -58,15 +77,29 @@
         tree: $('#filePlanTree'),
         selectedNode : null,
         currentOrgRegnumber : null,
-        // hoverTimeout : null,
+        locked : false,
+        pathList : {},
+        
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
+        },
+
+        mouseenter: function(e) {
+            e.find('.dropdown').css('visibility', 'visible');
+        },
+
+        mouseleave: function(e) {
+            if (e.hasClass('node-warning')) {
+                return;
+            }
+            e.find('.dropdown').css('visibility', 'hidden');
         },
 
         select: function(e) {
             if (this.selectedNode && (this.selectedNode.attr('id') == e.attr('id'))) {
                 return;
             }
+            e.find('.dropdown:first').css('visibility', 'visible');
 
             this.unselect();
             var span = e.children('span');
@@ -84,6 +117,8 @@
                 return;
             }
             var span = this.selectedNode.children('span');
+            span.find('.dropdown').css('visibility', 'hidden');
+            
             if (span.hasClass('folderNode')) {
                 FolderNode.unselect(span);
             } else {
@@ -93,30 +128,66 @@
         },
 
         load: function(e) {
+            if (this.locked) {
+                return;
+            }
             this.select(e);
-
             var orgRegNumber = e.data('orgregnumber');
+            var path = this.getPath(e);
             var folderId = null;
-            var path = '';
-            var description = '';
-            var profile = null;
+            var profiles = null;
             var locked = null;
+            var acceptarchivewithoutprofile = null
 
             if (e.hasClass('organization')) {
-                path = e.find('b:first').html();
-                profile = e.data('archivalprofiles');
+                profiles = e.data('archivalprofiles');
                 acceptArchiveWithoutProfile = e.data('acceptarchivewithoutprofile');
+
             } else {
                 folderId = e.attr('id');
-                path = e.data('path')
                 description = e.data('description')
-                profile = e.closest('.organization').data('archivalprofiles');
+                profiles = e.closest('.organization').data('archivalprofiles');
                 acceptArchiveWithoutProfile = e.closest('.organization').data('acceptarchivewithoutprofile');
                 locked = e.data('closed');
             }
 
-            ArchiveFolderList.getfolderContents(orgRegNumber, folderId, path, description, profile, locked, acceptArchiveWithoutProfile);
-            $('#folderTab').click();
+            var orgs = $('#filePlanTree').find('.organization');
+
+            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, this.pathList]);
+        },
+
+        getPath: function(e) {
+            var path = [[$.trim(e.find('b:first').text()), e.attr('id')]];
+            var parent = $(e).closest('ul').closest('li');
+
+            if (parent.length) {
+                path = $.merge(path, this.getPath(parent));
+            }
+            
+            return path;
+        },
+
+        initFilePlanPath: function() {
+                this.getPathTree(this.tree, 0);
+        },
+
+        getPathTree: function(parent, cpt) {
+            var orgNodes = parent.find('>ul').find('>li.organization');
+
+            if (orgNodes.length > 0) {
+                var parentPath = [];
+                if (parent.data('orgregnumber') && FilePlan.pathList[parent.data('orgregnumber')]) {
+                    parentPath = $.merge([], FilePlan.pathList[parent.data('orgregnumber')]);
+                }
+                orgNodes.each(function() {
+                    var org = [$(this).data('orgregnumber'), $(this).data('path')];
+                    var path = [];
+                    path.push(org);
+
+                    FilePlan.pathList[$(this).data('orgregnumber')] = $.merge($.merge([], parentPath), path);
+                    FilePlan.getPathTree($(this));
+                });
+            }
         },
 
         addFolder: function() {
@@ -124,19 +195,21 @@
                 parentFolderId    : this.selectedNode.not('.organization').attr('id'),
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber')
             }
-            FolderForm.load(folder);
+
+            trigger("loadFolderForm.filePlan", [folder]);
         },
 
         editFolder: function() {
             var folder = {
                 folderId          : this.selectedNode.attr('id'),
-                name              : this.selectedNode.find('b:first').html(),
+                name              : this.selectedNode.find('b:first').text().trim(),
                 description       : this.selectedNode.data('description'),
                 parentFolderId    : this.selectedNode.data('parentid'),
                 ownerOrgRegNumber : this.selectedNode.data('orgregnumber'),
                 closed            : this.selectedNode.data('closed')
             }
-            FolderForm.load(folder);
+
+            trigger("loadFolderForm.filePlan", [folder]);
         },
 
         deleteFolder: function() {
@@ -172,7 +245,8 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').text(folder.name);
+                .children('b').html($('<i/>').addClass('fa fa-folder-o'))
+                              .append(" " +folder.name);
 
             return node;
         },
@@ -198,68 +272,50 @@
 
     FolderNode = {
         moveIn: function(e) {
-            e.find('i')
-             .css("font-size", "34px")
-             .siblings()
+            e.find('b')
              .css("font-size", "20px");
 
             if (e.closest('.folder').data('closed')) {
-                e.find('i').removeClass('text-primary').addClass('text-danger');   
+                e.addClass('node-danger');   
             }
         },
 
         moveOut: function(e) {
-            e.find('i')
-             .css("font-size", "20px")
-             .addClass('text-primary')
-             .removeClass('text-danger') 
+            e.removeClass('node-danger')
+             .find('i')
              .siblings()
-             .css("font-size", "12px");
+             .css("font-size", "14px")
+             .find('i')
+             .css("font-size", "16px");
             
         },
 
-        mouseenter: function(e) {
-            if (e.css('font-size') != '20px') {
-                e.addClass('label label-default');
-            }
-        },
-
-        mouseleave: function(e) {
-            if (!e.hasClass('label-warning')) {
-                e.removeClass('label label-default');
-            }
-        },
-
         select: function(e) {
-            e.find('b:first').removeClass('label-default').addClass('label-warning')
-             .siblings('i').removeClass('text-primary').addClass('text-warning');
-            $('#editFolder, #deleteFolder, #addFolder').prop('disabled', false);
-
+            e.addClass('node-warning');
         },
 
         unselect: function(e) {
-            e.find('b:first').removeClass('label label-default label-warning')
-             .siblings('i').removeClass('text-warning').addClass('text-primary');
+            e.removeClass('node-warning');
         }
     }
 
     OrganizationNode = {
         moveIn: function(e) {
-            e.children('b').css('font-size', '18px');
+            e.children('b').css('font-size', '20px');
         },
 
         moveOut: function(e) {
-            e.children('b').css('font-size', '12px');
+            e.children('b').css('font-size', '14px');
         },
 
         select: function(e) {
-            e.removeClass('node-default').addClass('node-warning');
+            e.addClass('node-warning');
             $('#editFolder, #deleteFolder').prop('disabled', true);
             $('#addFolder').prop('disabled', false);
         },
 
         unselect: function(e) {
-            e.removeClass('node-warning').addClass('node-default');
+            e.removeClass('node-warning');
         }
     }
 
@@ -272,8 +328,7 @@
 
     FolderDroppableOption = {
         over: function(event, ui) {
-            parent = $(this);
-            FolderNode.moveIn(parent);
+            FolderNode.moveIn($(this));
         },
         out: function(event, ui) {
            FolderNode.moveOut($(this));
@@ -287,8 +342,9 @@
             } else if ($(ui.helper).hasClass('archiveHelper')) {
                 if (FilePlan.selectedNode.closest('li').data('orgregnumber') == $(this).closest('li').data('orgregnumber')) {
                     ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
+                } else {
+                    gritter.show($('#dropError').text(), false);
                 }
-
             }
         }
     }
@@ -313,6 +369,8 @@
                 if (droppableLi.attr('id') != FilePlan.selectedNode.attr('id') &&
                     droppableLi.data('orgregnumber') == FilePlan.selectedNode.data('orgregnumber')){
                     ArchiveAssignmentModal.removeFromFolder($(ui.helper).data('archives'));
+                } else {
+                    gritter.show($('#dropError').text(), false);
                 }
             }
         }
@@ -320,31 +378,44 @@
 
     $('#app_maarchRM_main').ready(function() {
         BootstrapTree.init($('#filePlanTree'));
+        $('#filePlanTree').find('.fa:first').click();
         FilePlan.initDragNDrop();
+        FilePlan.initFilePlanPath();
         FilePlan.getCurrentOrgRegNumber();
     })
 
     // Folder selection
-    $('#filePlanTree').on('mouseenter', '.folderNode > b', function() { 
-        FolderNode.mouseenter($(this));
+    $('#filePlanTree').on('mouseenter', '.folderNode, .orgNode', function() { 
+        FilePlan.mouseenter($(this));
     })
-    $('#filePlanTree').on('mouseleave', '.folderNode > b', function() { 
-        FolderNode.mouseleave($(this));
+    $('#filePlanTree').on('mouseleave', '.folderNode, .orgNode', function() { 
+        FilePlan.mouseleave($(this));
     })
-
-    $('#filePlanTree').on('mouseenter', '.orgNode > b', function() { 
-        OrganizationNode.moveIn($(this));
-    })
-    $('#filePlanTree').on('mouseleave', '.orgNode > b', function() { 
-        OrganizationNode.moveOut($(this));
-    })
-    $('#filePlanTree').on('click', '.folderNode > b, .orgNode > b', function() {
+    $('#filePlanTree').on('click', '.folderNode, .orgNode', function() {
         FilePlan.load($(this).closest('li'));
     })
 
-
     // File plan menu
-    $('#addFolder').on('click', function(){ FilePlan.addFolder() })
-    $('#editFolder').on('click', function(){ FilePlan.editFolder() })
-    $('#deleteFolder').on('click', function(){ FilePlan.deleteFolder() })
+    $('#filePlanTree').on('click', '.addFolder', function(){ FilePlan.addFolder() })
+    $('#filePlanTree').on('click', '.editFolder', function(){ FilePlan.editFolder() })
+    $('#filePlanTree').on('click', '.deleteFolder', function(){ FilePlan.deleteFolder() })
+    $('#filePlanTree').onEvent('loadFolder.filePlan', function(e, orgRegNumber) {
+        FilePlan.load($('#'+orgRegNumber));
+    })
+
+    // File plan lock
+    $('#filePlanTree').onEvent("archiveImportStarted.recordsManagement", function() {
+        FilePlan.locked = true;
+    });
+    $('#filePlanTree').onEvent("archiveImportOver.recordsManagement", function() {
+        FilePlan.locked = false;
+    });
+
+    $('#filePlanTree').onEvent("addFolderNode.filePlan", function(e, folder) {
+        FilePlan.addFolderNode(folder);
+    });
+
+    $('#filePlanTree').onEvent("editFolderNode.filePlan", function(e, folder) {
+        FilePlan.editFolderNode(folder);
+    });
 </script>

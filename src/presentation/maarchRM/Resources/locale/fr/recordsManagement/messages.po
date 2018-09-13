@@ -51,7 +51,7 @@ msgstr "Gestion des règles de conservation"
 msgctxt "interface"
 
 msgid "message"
-msgstr "Gestion de messages"
+msgstr "Gestion de bordereaux"
 msgctxt "interface"
 
 msgid "document"
@@ -864,6 +864,12 @@ msgstr "Métadonnées"
 msgid "Import"
 msgstr "Importer"
 
+msgid "Import with validation"
+msgstr "Importer avec validation"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
+
 msgid "Click or drop documents"
 msgstr "Cliquez ou déposez des documents"
 
@@ -996,3 +1002,18 @@ msgstr "Modifier les métadonnées"
 
 msgid "Unlimited"
 msgstr "Illimitée"
+
+msgid "Messages"
+msgstr "Bordereaux"
+
+msgid "Add sub-archive"
+msgstr "Ajout de sous-archive"
+
+msgid "archive found"
+msgstr "archive trouvée"
+
+msgid "archives found"
+msgstr "archives trouvées"
+
+msgid "Results of search in"
+msgstr "Résultats de la recherche dans"

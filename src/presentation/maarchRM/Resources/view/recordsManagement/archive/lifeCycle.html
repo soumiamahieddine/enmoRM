@@ -1,14 +1,14 @@
-<div class="table-responsive" data-translate-catalog="lifeCycle/messages">
+<div id="lifeCycleTable" class="table-responsive" data-translate-catalog="lifeCycle/messages">
     <table class="table table-condensed dataTable" >
         <thead>
-        <th>Date</th>
-        <th>Description</th>
-        <th/>
+            <th>Date</th>
+            <th>Description</th>
+            <th/>
         </thead>
         <tbody>
             <?merge archive.lifeCycleEvent ?>
             <tr>
-                <td class="col-md-3">
+                <td>
                     <?merge .timestamp ?>
                 </td>
                 <td data-type="[?merge .eventType ?]">
@@ -17,7 +17,7 @@
                 <td>
                     <div class="btn-group">
                         <button type="button" class="btn btn-warning btn-sm showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
-                            <span class="fa fa-fw fa-eye">&nbsp;</span>
+                            <span class="fa fa-eye"/>
                         </button>
                     </div>
                 </td>
@@ -25,3 +25,9 @@
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    $('#lifeCycleTable').ready(function() {
+        $('#lifeCycleTable').find('.dataTable-footer:first').remove();
+    })
+</script>

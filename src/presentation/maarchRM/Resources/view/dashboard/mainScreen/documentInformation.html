@@ -39,8 +39,8 @@
 <style type="text/css">
     #resourceInformation {
         font-size: 12px;
-        border-left: solid 1px #DDD;
-        margin-top: 50px;
+        padding-top: 50px;
+        min-height: calc(95vh - 80px);
     }
     #resourceInformation table {
         table-layout:fixed;
@@ -126,7 +126,7 @@
 
                 if (resource.mimetype.match(mimetype)) {
                     $.ajax({
-                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        url         : "/"+$("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
                         type        : "GET",
                         dataType    : 'html',
                         success     : function(response) {
@@ -152,4 +152,5 @@
     $("#viewResource").on("click", function() {
         window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
     });
+
 </script>

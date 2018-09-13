@@ -85,10 +85,10 @@ interface batchSchedulingInterface
     /**
      * Get log scheduling list
      *
-     * @uses batchProcessing/logScheduling/read_schedulingId_
+     * @uses batchProcessing/logScheduling/read_schedulingId__logDate_
      * @return batchProcessing/logScheduling/getlogSchedulings
      */
-    public function readBatchprocessingLogschedulings_schedulingId_();
+    public function readBatchprocessingLogschedulings_schedulingId__logDate_();
 
     /**
      * Get log

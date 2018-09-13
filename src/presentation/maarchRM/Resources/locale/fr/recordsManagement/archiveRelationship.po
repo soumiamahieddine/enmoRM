@@ -32,3 +32,11 @@ msgstr "Ajouter une relation"
 msgid "Search"
 msgstr "Rechercher"
 
+msgid "Archive relationship created"
+msgstr "Relation créée."
+
+msgid "Archive relationship updated"
+msgstr "Relation modifiée."
+
+msgid "Archive relationship deleted"
+msgstr "Relation supprimée."

@@ -300,7 +300,7 @@ msgid "recordsManagement/archive/create"
 msgstr "Création d'une archive"
 
 msgid "recordsManagement/archive/createArchivebatch"
-msgstr "Création par batch d'archive(s)"
+msgstr "Création d'archive(s) par batch"
 
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'un document"
@@ -439,7 +439,7 @@ msgid "recordsManagement/log/form"
 msgstr "Recherche des journaux de l'application"
 
 msgid "recordsManagement/log/contents_type__archiveId__resourceId_"
-msgstr "Lecture du detail d'un journal"
+msgstr "Lecture du détail d'un journal"
 
 msgid "recordsManagement/retentionRule/readIndex"
 msgstr "Lecture de toutes les règles de conservation"
@@ -529,7 +529,7 @@ msgid "medona/archivalAgreement/delete_archivalAgreementId_"
 msgstr "Suppression d'une convention d'archivage"
 
 msgid "medona/archiveAuthorization/readIncominglist"
-msgstr "Liste des bordereaux d'autorisation envoyées"
+msgstr "Liste des bordereaux d'autorisation envoyés"
 
 msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
 msgstr "Liste des bordereaux d'autorisation de communication envoyés"
@@ -592,7 +592,7 @@ msgid "medona/archiveDelivery/readIncominglist"
 msgstr "Liste des bordereaux de demandes de communication reçus"
 
 msgid "medona/archiveDelivery/readOutgoinglist"
-msgstr "Liste des bordereaux de demandes de communication envoyées"
+msgstr "Liste des bordereaux de demandes de communication envoyés"
 
 msgid "medona/archiveDelivery/readCount"
 msgstr "Nombre de bordereaux de demande de communication"
@@ -1477,7 +1477,7 @@ msgid "archivesPubliques/content/delete_contentId_"
 msgstr "Suppression d'une archive publique"
 
 msgid "archivesPubliques/thesaurus/read_name__query_"
-msgstr "Recherche thesaurus dans le registre"
+msgstr "Recherche thésaurus dans le registre"
 
 msgid "recordsManagement/descriptionField/create"
 msgstr "Création d'un champ de description"
@@ -1588,7 +1588,7 @@ msgid "Info"
 msgstr "Informations"
 
 msgid "User already exist"
-msgstr "L'utilisateur existe déja."
+msgstr "L'utilisateur existe déjà."
 
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
@@ -1618,22 +1618,22 @@ msgid "medona/archiveAuthorization/readReference"
 msgstr "Lecture d'un message d'autorisation d'une archive"
 
 msgid "medona/archiveAuthorization/read_messageId_Retry"
-msgstr "Reprise d'une message d'autorisation"
+msgstr "Reprise d'un message d'autorisation"
 
 msgid "medona/archiveDelivery/read_messageId_Retry"
-msgstr "Reprise d'une message de communication"
+msgstr "Reprise d'un message de communication"
 
 msgid "medona/archiveDestruction/read_messageId_Retry"
-msgstr "Reprise d'une message de destruction"
+msgstr "Reprise d'un message de destruction"
 
 msgid "medona/archiveNotification/read_messageId_Retry"
 msgstr "Reprise d'une message de notification"
 
 msgid "medona/archiveRestitution/read_messageId_Retry"
-msgstr "Reprise d'une message de restitution"
+msgstr "Reprise d'un message de restitution"
 
 msgid "medona/archiveTransfer/read_messageId_Retry"
-msgstr "Reprise d'une message de transfert"
+msgstr "Reprise d'un message de transfert"
 
 msgid "medona/message/read_messageId_Retry"
 msgstr "Reprise d'un message"
@@ -1719,3 +1719,17 @@ msgstr "Réinitialisation du mot de passe"
 msgid "organization/orgContact/readCountriesCodes"
 msgstr "Lecture de la liste des pays"
 
+msgid "anadoc/procedure/readExport_archiveId_"
+msgstr "Export d'une archive"
+
+msgid "anadoc/procedure/readServices"
+msgstr "Lecture des services"
+
+msgid "anadoc/procedure/read_archiveId_"
+msgstr "Lecture d'une procedure"
+
+msgid "anadoc/procedure/read"
+msgstr "Recherche d'une procedure"
+
+msgid "anadoc/procedure/readSortingtypes"
+msgstr "Recherche d'un service"

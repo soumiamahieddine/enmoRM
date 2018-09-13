@@ -120,24 +120,55 @@
         });
     });
 
-// Enable
     $("#user_enableUser").on('click', function () {
         if ($(this).hasClass('active')) {
             return;
         }
-        $('#enableUserModal').modal('show');
-        $('#confirmEnabling').data('useraccountid', $(this).data('useraccountid'));
+
+        let userAccountId = $(this).data('useraccountid');
+
+        var parameters = {
+            user : userAccountId
+        };
+
+        ajax($(this), {
+            url         : '/useraccount/'+userAccountId+'/enable',
+            type        : 'PUT',
+            contentType : 'application/json',
+            data        : JSON.stringify(parameters),
+            dataType    : 'json',
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error       : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
     });
 
-// Disable
-    $("#user_disableUser").on('click', function () {
+
+    $("#user_disableUser").on('click', function() {
         if ($(this).hasClass('active')) {
             return;
         }
-        $('#disableUserModal').modal('show');
-        $('#replacingUser').val('');
-        $('#confirmDisabling').data('useraccountid', $(this).data('useraccountid'));
+
+        let userAccountId = $(this).data('useraccountid');
+
+        ajax($(this), {
+            url         : '/useraccount/'+userAccountId+'/disable',
+            type        : 'PUT',
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
     });
+
+
 
     // generate a new password
     $("#user_resetPassword").on('click', function () {

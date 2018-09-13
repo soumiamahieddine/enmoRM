@@ -214,6 +214,10 @@ msgid "Deposit"
 msgstr "Dépôt"
 msgctxt "layout"
 
+msgid "Storage rules"
+msgstr "Règle d'utilité courante"
+msgctxt "layout"
+
 msgid "Description fields"
 msgstr "Données descriptives"
 msgctxt "layout"
@@ -577,6 +581,9 @@ msgstr "Copier"
 msgid "You must define at least the name, the identifier, the date of the document or a document"
 msgstr "Vous devez définir au moins le nom, l'identifiant, la date du document ou un document"
 
+msgid "rows"
+msgstr "lignes"
+
 msgid "Compliant"
 msgstr "Conforme"
 
@@ -585,3 +592,6 @@ msgstr "Non conforme"
 
 msgid "About"
 msgstr "À propos"
+
+msgid "Invalid action"
+msgstr "Action invalide"

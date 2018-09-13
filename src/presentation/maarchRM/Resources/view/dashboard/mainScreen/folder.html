@@ -1,40 +1,68 @@
-<div class="tab-pane fade in active col-xs-12" id="folderPanel">
-    <div class="row">
-        <h4 class="col-xs-11 pull-left">
-            <span id="folderPath"/>
-            <br/>
-            <small id="folderDescription"/>
-        </h4>
-        <h4 class="col-xs-1 pull-left lockedFolder hide">
-            <i class="text-danger fa fa-lock" style="font-size: 30px"/>
-        </h4>
+<div class="col-xs-12" id="folderPanel" data-translate-catalog="recordsManagement/message">
+    <div id="welcomMessage">
+        <i class="fa fa-arrow-left col-xs-1"/>
+        <h2 class="col-xs-11"> Select an organization unit or a folder in the tree to access an archive or to create a new one.</h2>
     </div>
-    <div id="folderContentList">
-        <div class="row hide">
-            <div id="folderToolbarBtn" class="dropdown pull-right btn-group">
-                <button type="button" class="btn btn-sm btn-default" id="folderToolbarSearch" title="Search" disabled><span class="fa fa-search"></span></button>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled><span class="fa fa-plus"></span></button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"/>
+    <div class="row folderContents hide">
+        <ol class="breadcrumb" id="folderBreadcrumb">
+            <li><a href="#"> </a></li>
+        </ol>
+    </div>
+    <div id="folderContents" class="folderContents hide">
+        <div id="fodlerToolbar" class="row">
+            <h4 class="pull-left col-md-4 lockedFolder hide">
+                <i class="text-danger fa fa-lock" style="font-size: 30px"/>
+            </h4>
+            <div class="col-xs-10">
+            <?hinclude recordsManagement/archive/fulltextSearchForm.html ?>
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="btn btn-warning pull-right hide" id="folderToolbarCloseSearch" title="Close search">
+                    <span class="fa fa-close">&nbsp;</span> Close search
+                </button>
+                <div id="folderToolbarBtn" class="dropdown btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle pull-right [?merge depositPrivilege.not().then('disabled', '') ?]" id="folderToolbarImport" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" title="New archive" disabled>
+                        <span class="fa fa-plus">&nbsp;</span> New archive
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="folderContentList">
+            <div class="row hide">
             </div>
         </div>
     </div>
 </div>
 
 <div id="listTemplate" class="hide">
-    <div class="archive row">
-        <div class="archiveInfo col-xs-11">
+    <div class="archive row" style="border-bottom: 1px solid #DDD">
+        <div class="archiveInfo pull-left">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <i class="fileplanLevel">&nbsp;</i>
-                <a href="#" class="archiveName"></a>
+                <span class="archiveName"></span>
                 <br/>
                 &nbsp;&nbsp;
                 <small/>&nbsp;
                 <small/>&nbsp;
                 <small><i/></small>
+                <small class="folderInfo">
+                    <br/>
+                    <span></span>
+                </small>
             </h5>
         </div>
-        <div class="archiveContent col-xs-12 hide">
+        <?merge depositPrivilege.bool() ?>
+        <div class="dropdown pull-right addChildrenArchive hide">
+            <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-plus"></span>
+            </button>
+            <ul class="dropdown-menu">
+            </ul>
+        </div>
+        <div class="archiveContent hide">
             <ul class="tree-l">
             </ul>
         </div>
@@ -42,7 +70,12 @@
 </div>
 
 <div class="hide">
+    <span id="resultsOfSearch">Results of search in</span>
     <span id="archives_text">archives</span>
+    <span id="archive_text">archive</span>
+    <span id="foundArchives_text">archives found</span>
+    <span id="foundArchive_text">archive found</span>
+    <span id="rows_text">rows</span>
     <span id="emptyFolder_text">Empty folder</span>
     <span id="archiveName_text">Name</span>
     <span id="depositDate_text">Deposit date</span>
@@ -53,22 +86,130 @@
     <span id="withoutProfile_text">Without profile</span>
     
 </div>
+<style type="text/css">
+    #welcomMessage i{
+        font-size: 40px;
+        padding-top: 15px;
+    }
+    #welcomMessage {
+        margin-top: 20%;
+    }
+</style>
 
 <script type="text/javascript">
-    ArchiveFolderList = {
-        rowTemplate: $('#listTemplate > .archive'),
-        folderContents: $('#folderContentList'),
+    trigger("setSearchBarClass.recordsManagement", ['col-md-10']);
 
-        getfolderContents: function(orgRegNumber, folderId, path, description, archivalProfiles, locked, acceptArchivesWithoutProfiles) {
-            var url = "/folder?orgRegNumber="+orgRegNumber;
-            if (folderId) {
-                url = url + "&folderId="+folderId;
+    $("#folderToolbarCloseSearch").on('click', function(e) {
+        trigger('folderView.recordsManagement');
+        FilePlan.load($("#filePlanTree").find('.node-warning').closest('li'));
+    });
+
+    $("#folderToolbarBtn").onEvent("showSearchResult.recordsManagement", function (e) {
+        ToolbarButtons.initSearchView();
+    });
+
+    $("#folderToolbarBtn").onEvent("folderView.recordsManagement", function (e) {
+        ToolbarButtons.initfolderView();
+    });
+
+    ToolbarButtons = {
+        initSearchView: function() {
+            $("#folderToolbarCloseSearch").removeClass("hide");
+            $("#folderToolbarImport").addClass("hide");
+            $('#folderBreadcrumb').html($('#resultsOfSearch').text() + ' : ' + $("#filePlanTree").find('.node-warning').closest('li').data('path').replace(/\//g, ' > '));
+        },
+        initfolderView: function() {
+            $("#folderToolbarCloseSearch").addClass("hide");
+            $("#folderToolbarImport").removeClass("hide");
+            $("input[name=searchForm_inputSearch]").val("")
+        }
+    }
+
+    FolderBreadcrumb = {
+        breadcrumb    : $('#folderBreadcrumb'),
+        load: function(path) {
+            var height = 0;
+            this.breadcrumb.html('');
+
+            for(i=0; i<path.length; i++) {
+                this.buildLink(path[i], true).prependTo(this.breadcrumb);
+
+                if (height == 0) {
+                    height = this.breadcrumb.height();
+                }
             }
-            var folderPanel = $('#folderPanel');
+
+            this.breadcrumb.find('li:last>a').data('orgregnumber', '');
+            if (this.breadcrumb.height() > height) {
+                var dots = $('<a/>').attr('href', '#')
+                                    .attr('type', 'button')
+                                    .attr('aria-haspopup', 'true')
+                                    .attr('aria-expanded', 'false')
+                                    .attr('data-toggle', 'dropdown')
+                                    .text('...');
+                var ul = $('<ul/>').addClass('dropdown-menu');
+
+                var dropdown = $('<li/>').addClass('dropdown').append(dots).append(ul);
+
+                this.breadcrumb.prepend(dropdown);
+                
+                i=path.length-1;
+
+                while(this.breadcrumb.height() > height && i>=0) {
+                    this.buildLink(path[i]).appendTo(ul);
+                    this.breadcrumb.find('>li:nth-child(2)').remove();
+                    i--;
+                }
+
+            }
+
+        },
+
+        buildLink: function(e, truncate) {
+            var text = e[0];
+            return $('<li/>').append($('<a/>').attr('href', '#').text(text).data('orgregnumber', e[1]));
+        },
+
+        selectFolder: function(e) {
+            var orgRegNumber = e.data('orgregnumber');
+            if (orgRegNumber) {
+                trigger('loadFolder.filePlan', [orgRegNumber]);
+            }
+        },
+
+        lockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', true);
+        },
+
+        unlockNavigation : function() {
+            this.breadcrumb.find('a').prop('disabled', false);
+        }
+    };
+    ArchiveFolderList = {
+        rowTemplate    : $('#listTemplate > .archive'),
+        folderContents : $('#folderContentList'),
+        folderPanel    : $('#folderPanel'),
+        orgRegNumber   : null,
+        folderId       : null,
+        pathList       : [],
+        showArchivePath: false,
+
+        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles, pathList) {
+            this.orgRegNumber = orgRegNumber;
+            this.folderId = folderId;
+            this.pathList = pathList;
+            this.show();
+            $('#welcomMessage').addClass('hide')
+            var url = "/folder?originatorOrgRegNumber="+orgRegNumber;
+            if (folderId) {
+                url = url + "&filePlanPosition="+folderId;
+            }
             if (locked) {
-                folderPanel.find('.lockedFolder').removeClass('hide');
+                this.folderPanel.find('.lockedFolder').removeClass('hide');
+                $('#folderToolbarImport').addClass('hide');
             } else {
-                folderPanel.find('.lockedFolder').addClass('hide');
+                this.folderPanel.find('.lockedFolder').addClass('hide');
+                $('#folderToolbarImport').removeClass('hide');
             }
 
             if (locked) {
@@ -83,57 +224,88 @@
                 dataType    : 'json',
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
-                    $('#folderPath').text(path);
-                    $('#folderDescription').text(description);
+                    if (locked) {
+                        ArchiveFolderList.folderPanel.find('.addChildrenArchive').remove();
+                    }
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
                 }
             })
 
-            this.getImportForm(orgRegNumber, folderId);
+            pathList = {};
+            $.each(this.pathList, function(key, value) {
+                var path = "";
+
+                $.each(value, function(key, value) {
+                    path += value[1] + ' / ';
+                })
+
+                pathList[key] = path;
+            })
+
+            this.pathList = pathList;
+
 
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
             
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives) {
-            $('#rightColumn').html('');
+        buildResultList: function(archives, options = null, showArchivePath = false) {
+            trigger("clearDetail.recordsManagement");
+            this.showArchivePath = showArchivePath;
 
+            resultNumberText = "";
             if (archives.length) {
                 $('#folderToolbarFreeze').removeAttr("disabled");
                 $('#folderToolbarUnfreeze').removeAttr("disabled");
                 $('#folderToolbarSearch').removeAttr("disabled");
+
             } else {
                 $('#folderToolbarFreeze').attr("disabled", "disabled");
                 $('#folderToolbarUnfreeze').attr("disabled", "disabled");
                 $('#folderToolbarSearch').attr("disabled", "disabled");
             }
 
-            $('#folderContentList').dataList({
-                datas          : archives,
-                rowMerge       : ArchiveFolderList.mergeRow,
-                rowMaxNumber   : 10,
-				paginationType : 'input',
-				rowTranslation : "lignes",
-                emptyMessage   : '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>'+$('#emptyFolder_text').html()+'<\/i>',
-                resultNumber   : "<h2 style='margin:0px'><small><span class='resultNumber' \/> archive(s)<\/small><\/h2>",
-                translation    : {First:$('#first_text').html(), Previous:$('#previous_text').html(), Next:$('#next_text').html(), Last:$('#last_text').html()},
+            defaultOptions = {
+                datas: archives,
+                rowMerge: ArchiveFolderList.mergeRow,
+                rowMaxNumber: 10,
+                rowTranslation: $('#rows_text').text(),
+                emptyMessage: '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>' + $('#emptyFolder_text').html() + '<\/i>',
+                itemsName: [$('#archive_text').text(), $('#archives_text').text()],
+                translation: {
+                    First: $('#first_text').html(),
+                    Previous: $('#previous_text').html(),
+                    Next: $('#next_text').html(),
+                    Last: $('#last_text').html()
+                },
                 sorting: [
                     {
-                        fieldName : 'archiveName',
-                        label     : $('#archiveName_text').text()
+                        fieldName: 'archiveName',
+                        label: $('#archiveName_text').text(),
+                        type: 'txt'
                     },
                     {
-                        fieldName : 'depositDate',
-                        label     : $('#depositDate_text').text()
+                        fieldName: 'depositDate',
+                        label: $('#depositDate_text').text(),
+                        type: 'num',
+                        default: 'DESC'
                     }
                 ],
-				unsearchable : [
-				    "status"				
-				]
-            })
+                unsearchable: [
+                    "status"
+                ]
+            };
+
+            if(options){
+                $.each(options, function( key, value ) {
+                    defaultOptions[key] = value;
+                })
+            }
+
+            $('#folderContentList').dataList(defaultOptions);
 
             if (!(FilePlan.selectedNode.hasClass('folder') && FilePlan.selectedNode.data('closed'))) {
                 this.initDragNDrop();
@@ -154,7 +326,7 @@
 
                 case 'file':
                 default:
-                    icon.addClass('fa fa-folder');
+                    icon.addClass('fa fa-archive');
             }
             if (archive.depositDate) {
                 $(siblings[0]).text(archive.depositDate.substring(0, 19));
@@ -164,6 +336,10 @@
             }
             if (archive.originatorArchiveId) {
                 $(siblings[2]).children('i').text(archive.originatorArchiveId);
+            }
+
+            if (ArchiveFolderList.showArchivePath && ArchiveFolderList.pathList[archive.originatorOrgRegNumber]) {
+                $(siblings[3]).children('span').text(ArchiveFolderList.pathList[archive.originatorOrgRegNumber]);
             }
 
             return archiveDiv;
@@ -206,22 +382,13 @@
             })
         },
         
-        getImportForm: function(orgRegNumber, folderId) {
-            $('#archiveForm [name="filePlanPosition"]').val(folderId);
-            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
-
-            /*if (archivalProfiles.length < 1) {
-                $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", {});
-                $('#folderTab').click();
-                return;
-            }
-            
-            $("#folderToolbarBtn .dropdown-menu").data("archivalprofiles", archivalProfiles);*/
-
+        refresh: function() {
+            trigger('loadFolder.filePlan', [this.orgRegNumber]);
         },
 
-        refresh: function() {
-            FilePlan.selectedNode.find('b:first').click();
+        show: function() {
+            $('.folderContents').removeClass('hide');
+            trigger("folderView.recordsManagement");
         },
 
         buildNewArchiveDropdownMenu: function(archivalProfiles, acceptArchivesWithoutProfiles) {
@@ -230,12 +397,11 @@
 
             if (!acceptArchivesWithoutProfiles && archivalProfiles.length == 0) {
                 $("#folderToolbarImport").attr('disabled', 'disabled');
-
                 return;
             }
 
             if (acceptArchivesWithoutProfiles) {
-                var a = $("<a/>")
+                var a = $("<a/>") 
                     .addClass("small newArchive")
                     .data("reference", '')
                     .attr('style', "cursor: pointer;")
@@ -259,105 +425,16 @@
 
     NewArchive = {
         loadImportForm: function(e) {
-            var importPanel = $("#importPanel");
-
-            if (!e.data("json")) {
-                e.data("json", "");
-            }
-
-            $("#archiveForm [name='archivalProfileReference']").val(e.data("reference")).data("json", e.data("json")).change();
-
-            importPanel.find("[data-context-path]:first").text($("#folderPath").text());
-            importPanel.find("[data-context-description]:first").text($("#folderDescription").text());
-            importPanel.find("[data-context-profil]:first").text(e.text());
-            
-            $("#archiveForm [name='parentArchiveId']").val('');
-            importPanel.find("[data-context-parentarchive]").addClass('hide');
-
-            $('#importTab').click();
-            $('#rightColumn').empty()
+            $('#folderContents').addClass('hide');
+            trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }
 
-    $("#folderToolbarBtn").on("show.bs.dropdown", function() {
-        //NewArchive.buildNewArchiveDropdownMenu();
-    });
-
-    $("#folderToolbarBtn").on('click', '.newArchive', function() {
+    $("#folderPanel").on('click', '.newArchive', function() {
         NewArchive.loadImportForm($(this));
     });
-
-    $("#folderToolbarSearch").on('click', function() {
-        var folder = $('#folderPath').text().split('/');
-        var profiles = [];
-
-        var currentOrg = $('#filePlanTree').find('.node-warning').closest('.organization');
-        var profiles = currentOrg.data('archivalprofiles');
-        var children = currentOrg.find('.organization');
-
-        children.each(function() {
-            profiles = $.merge(profiles, $(this).data('archivalprofiles'));
-        })
-
-        folder =  folder[folder.length-1];        
-        SearchTab.run($(this).data("orgregnumber"), $(this).data("folderid"), folder, profiles);
-    });
     
-    $("#folderToolbarBtn").on('click','.freeze', function() {
-        var archivesIds = [];
-        $('#folderContentList').find('.fa-check-square-o').closest('div').each(function(i,ele){
-            if (ele.attributes[1]) {
-                archivesIds.push(ele.attributes[1].value);
-            }
-        });
-        
-        var parameters = {
-            archiveIds : archivesIds
-        };
-        
-        $.ajax({
-            type        : 'PUT',
-            url         : "/recordsManagement/archive/freeze",
-            data        : JSON.stringify(parameters),
-            contentType : 'application/json',
-            dataType    : 'json',
-            success     : function (response) {
-                gritter.show(response.message, response.status, response.errors);
-            },
-            error       : function (response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
-    });
-    
-    $("#folderToolbarBtn").on('click','.unfreeze', function() {
-       var archivesIds = [];
-        $('#folderContentList').find('.fa-check-square-o').closest('div').each(function(i,ele){
-            if (ele.attributes[1]) {
-                archivesIds.push(ele.attributes[1].value);
-            }
-        });
-        
-        var parameters = {
-            archiveIds : archivesIds
-        };
-        
-        $.ajax({
-            type        : 'PUT',
-            url         : "/recordsManagement/archive/unfreeze",
-            data        : JSON.stringify(parameters),
-            contentType : 'application/json',
-            dataType    : 'json',
-            success     : function (response) {
-                gritter.show(response.message, response.status, response.errors);
-
-            },
-            error       : function (response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
-    });
-
+    // Actions on list
     $("#folderContentList").on('click', ".dataList-sorting", function() {
         ArchiveFolderList.initDragNDrop();
     });
@@ -369,5 +446,39 @@
     $("#folderContentList").on('click','.pagination li', function() {
         ArchiveFolderList.initDragNDrop();
     });
+
+    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList) {
+        ArchiveFolderList.show();
+        FolderBreadcrumb.load(path);
+        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList);
+    })
+
+    $('#folderPanel').onEvent("showFolder.recordsManagement", function() {
+        ArchiveFolderList.show();
+    })
+
+    $('#folderPanel').onEvent("archiveImportOver.recordsManagement", function() {
+        ArchiveFolderList.show();
+    })
+
+    $('#folderPanel').onEvent("showSearchResult.recordsManagement", function(e, archives) {
+        var options = {
+            itemsName: [$('#foundArchive_text').text(), $('#foundArchives_text').text()]
+        };
+        ArchiveFolderList.buildResultList(archives, options, true);
+    })
+
+    // Breadcrump
+    $('#folderBreadcrumb').on('click', 'a', function() {
+        FolderBreadcrumb.selectFolder($(this));
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportStarted.recordsManagement", function() {
+        FolderBreadcrumb.lockNavigation();
+    })
+
+    $('#folderBreadcrumb').onEvent("archiveImportOver.recordsManagement", function() {
+        FolderBreadcrumb.unlockNavigation();
+    })
 
 </script>

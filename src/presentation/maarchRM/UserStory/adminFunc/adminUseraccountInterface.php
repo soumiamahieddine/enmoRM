@@ -72,12 +72,11 @@ interface adminUseraccountInterface
 
     /**
      * Disable a user
-     * @param string $replacingUserAccountId Identifier of user account
-     * 
+     *
      * @return auth/user/disable
      * @uses auth/userAccount/updateDisable_userAccountId_
      */
-    public function updateUseraccount_userAccountId_Disable($replacingUserAccountId);
+    public function updateUseraccount_userAccountId_Disable();
 
     /**
      * Enable a user

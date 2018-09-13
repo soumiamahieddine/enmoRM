@@ -18,6 +18,7 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Model;
+use core\Encoding\json;
 
 /**
  * Class model that represents an archive
@@ -325,6 +326,13 @@ class archive
     /* ************************************************************************
      * Description
      *********************************************************************** */
+    /**
+     * The description of archive
+     *
+     * @var json
+     */
+    public $description;
+
     /**
      * The status of fulltext indaxation
      *

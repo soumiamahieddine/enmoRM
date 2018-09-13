@@ -30,7 +30,7 @@ interface archiveDescriptionInterface
     /**
      * View the archive
      * 
-     * @action recordsManagement/archive/getDescription
+     * @action recordsManagement/archive/retrieve
      */
     public function read_archiveId_();
 

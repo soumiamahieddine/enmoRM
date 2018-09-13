@@ -105,6 +105,14 @@ msgid "serviceLevel"
 msgstr "Gérer les niveaux de service"
 msgctxt "userStory"
 
+msgid "archivalExport"
+msgstr "Exporter une archive"
+msgctxt "userStory"
+
+msgid "archivalRelationships"
+msgstr "Ajouter une relation à l'archive"
+msgctxt "userStory"
+
 # ---------------------------------------------------------
 # Journal
 # ---------------------------------------------------------

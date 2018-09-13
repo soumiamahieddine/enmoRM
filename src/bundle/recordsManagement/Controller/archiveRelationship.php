@@ -42,16 +42,6 @@ class archiveRelationship
     }
 
     /**
-     * New empty relationship
-     *
-     * @return recordsManagement/archiveRelationship The archival relationship object
-     */
-    public function newRelationship()
-    {
-        return \laabs::newInstance("recordsManagement/archiveRelationship");
-    }
-
-    /**
      * Create a relationship
      * @param recordsManagement/archiveRelationship $archiveRelationship The archive relationship object
      *
@@ -102,6 +92,10 @@ class archiveRelationship
     {
         $archiveRelationships = $this->sdoFactory->find("recordsManagement/archiveRelationship", "archiveId='$archiveId'");
 
+        foreach ($archiveRelationships as $relationship) {
+            $this->decodeDescription($relationship);
+        }
+
         return $archiveRelationships;
     }
 
@@ -116,6 +110,15 @@ class archiveRelationship
     {
         $archiveRelationships = $this->sdoFactory->find("recordsManagement/archiveRelationship", "relatedArchiveId='$relatedArchiveId'");
 
+        foreach ($archiveRelationships as $relationship) {
+            $this->decodeDescription($relationship);
+        }
+
         return $archiveRelationships;
+    }
+
+    protected function decodeDescription($relationship)
+    {
+        $relationship->description = json_decode($relationship->description);
     }
 }

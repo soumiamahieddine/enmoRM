@@ -120,7 +120,6 @@ file that was distributed with this source code.
                                 <input type="checkbox" class="form-control" name="isArray" data-toggle="toggle"/>
                             </div>
                         </div>
-
                         <div class="form-group hide" id="textPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
                             <div class="col-md-8">
@@ -198,6 +197,8 @@ file that was distributed with this source code.
         </div>
     </div>
 </div>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <script type="text/javascript">
@@ -374,7 +375,6 @@ file that was distributed with this source code.
                 $('#keywordEnumList').removeClass('hide');
                 $('#namePropertyDefaultValue').removeClass('hide');
                 $('#namePropertyMultipleValue').removeClass('hide');
-                
                 break;
 
             case "text" : 
@@ -418,7 +418,7 @@ file that was distributed with this source code.
         $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
-        
+
         $('#keywordEnumList').empty();
         $('#keywordEnumForm').addClass('hide');
         $('#keywordEnumList').addClass('hide');
@@ -543,6 +543,7 @@ file that was distributed with this source code.
     
     function serializeName(property) {
         var nbResult = $("#keywordEnumList").find(".list-group-item").length;
+
         if (nbResult == 0) {
             property['default'] = $('#namePropertyDefaultValue').find('input').val();
         } else {

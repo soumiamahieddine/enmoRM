@@ -88,9 +88,9 @@
                     if (response.status) {
                         if (type == 'POST') {
                             folder.folderId = response.folderId;
-                            FilePlan.addFolderNode(folder);
+                            trigger('addFolderNode.filePlan', [folder]);
                         } else {
-                            FilePlan.editFolderNode(folder);
+                            trigger('editFolderNode.filePlan', [folder]);
                         }
                         FolderForm.close();
                     }
@@ -118,6 +118,9 @@
     $('#cancelFolder').on('click', function() {
         FolderForm.close();
 
+    })
+    $('#folderForm').onEvent("loadFolderForm.filePlan", function(e, folder) {
+        FolderForm.load(folder);
     })
 
 </script>

@@ -1,0 +1,120 @@
+<div class="panel-group" id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
+    <div class="panel">
+        <div class="row">
+            <?hinclude /recordsManagement/archive/archiveInfo/subArchiveButton.html ?>
+        </div>
+        <?merge archive.descriptionObject.bool() ?>
+        <div>
+            <div class="panel-heading text-center" role="tab">
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#descriptiveMetadata" >
+                        <span class="text-info">Description</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="descriptiveMetadata" class="panel-collapse collapse in" role="tabpanel">
+                <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+            </div>
+            <hr>
+        </div>
+
+        <div class="panel-heading text-center" role="tab">
+            <h4>
+                <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#managementInfo" >
+                    <span class="text-info">Management information</span>
+                </a>
+            </h4>
+        </div>
+        <div id="managementInfo" class="panel-collapse collapse" role="tabpanel">
+            <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
+        </div>
+
+        <?merge archive.notArchiver.bool().not() ?>
+        <div>
+            <hr>
+            <div class="panel-heading text-center" role="tab">
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#lifeCycle" >
+                        <span class="text-info">Life cycle</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="lifeCycle" class="panel-collapse collapse" role="tabpanel">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <?hinclude /recordsManagement/archive/lifeCycle.html ?>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+
+        <?merge archive.notArchiver.bool().not() ?>
+        <div>
+            <div class="panel-heading text-center" role="tab">
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#relationships" >
+                        <span class="text-info">Relationships</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="relationships" class="panel-collapse collapse" role="tabpanel">
+                <div class="row">
+                    <?hinclude recordsManagement/archive/archiveInfo/relationships.html ?>
+                </div>
+            </div>
+        </div>
+
+        <?merge archive.messages.bool() ?>
+        <div>
+            <div class="panel-heading text-center" role="tab">
+                <hr/>
+                <h4>
+                    <a role="button" data-toggle="collapse" data-parent="#archiveInfos" href="#messages" >
+                        <span class="text-info">Messages</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="messages" class="panel-collapse collapse" role="tabpanel">
+                <div class="row">
+                    <?hinclude recordsManagement/archive/message.html ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+    #archiveInfos .panel-heading {
+        padding:0px 15px !important;
+    }
+    #descriptiveMetadata table, #managementInfo table {
+        table-layout:fixed;
+        width:100%;
+    }
+    #descriptiveMetadata table th, #managementInfo table th {
+        width: 40%;
+        text-align: right;
+    }
+    #descriptiveMetadata table td, #descriptiveMetadata table th,
+    #managementInfo table td, #managementInfo table th {
+        padding: 0 5px 0 5px ;
+        text-overflow: crop;
+        overflow: hidden;
+    }
+    #descriptiveMetadata .archivalProfileName {
+        font-size: 16px !important;
+    }
+</style>
+
+<script>
+    if ($("#archiveInfos").find('.panel-collapse').length === 1) {
+        $("#archiveInfos").find('.panel-collapse').addClass('in');
+    } else {
+        collapse = $("#archiveInfos").find('.panel-collapse')['0'];
+        if (!($(collapse).hasClass('in'))) {
+            $(collapse).addClass('in');
+        }
+    }
+</script>
