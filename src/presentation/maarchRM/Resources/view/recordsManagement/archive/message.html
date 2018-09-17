@@ -21,7 +21,7 @@
                 <td>
 
                     <div class="btn-group pull-right">
-                        <!--?merge .isVisible.not().then('false') @disabled?-->
+                        <?merge .isVisible.not().then('false') @disabled?>
                         <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
                             <span class="fa fa-eye">&nbsp;</span>
                         </button>
@@ -37,7 +37,7 @@
         $('#messagesTable').find('.dataTable-footer:first').remove();
     });
 
-    $("#messages").on('click', '.viewMessage', function() {
+    $("#messagesTable").on('click', '.viewMessage', function() {
         $.ajax({
             url      : "/medona/message/" + $(this).data('message-id'),
             type     : "GET",
