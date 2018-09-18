@@ -546,7 +546,11 @@ class scheduling
     {
         $account = $this->sdoFactory->read("auth/account", $serviceAccountId);
 
-        if ((!$account->enabled) || ($account->locked)) {
+        if(!$account->enabled) {
+            throw \laabs::newException("auth/authenticationException", "Account disabled");
+        }
+
+        if (($account->locked)) {
             throw \laabs::newException("auth/authenticationException", "Missing authentication credential");
         }
 

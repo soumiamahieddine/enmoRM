@@ -119,6 +119,9 @@ msgstr "Erreur d'exécution"
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
 
+msgid "Account disabled"
+msgstr "Le compte de service est désactivé"
+
 msgid "Task already exists."
 msgstr "Une tâche avec la même route existe déjà."
 
