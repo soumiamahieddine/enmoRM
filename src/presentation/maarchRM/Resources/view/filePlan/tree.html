@@ -246,7 +246,7 @@
                 .data('closed', folder.closed)
                 .children('span')
                 .children('b').html($('<i/>').addClass('fa fa-folder-o'))
-                              .append(" " +folder.name);
+                              .text(" " +folder.name);
 
             return node;
         },
