@@ -336,7 +336,7 @@ trait archiveModificationTrait
 
         $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
 
-        if ($description && $description != '{}') {
+        if (!empty($description)) {
             $descriptionObject = $description;
 
             if (!empty($archivalProfileDescription)) {
@@ -367,7 +367,7 @@ trait archiveModificationTrait
                 $descriptionController = $this->useDescriptionController('recordsManagement/description');
             }
             $archive->descriptionObject = $descriptionObject;
-            
+
             $descriptionController->update($archive);
         }
 
