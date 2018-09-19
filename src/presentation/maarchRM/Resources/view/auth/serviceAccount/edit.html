@@ -356,6 +356,7 @@
             },
             source: function(query, cb) {
                 organizations.search(query, function(suggestions) {
+                    console.log(suggestions);
                     var i = suggestions.length
                     while (i--) {
                         if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)

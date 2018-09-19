@@ -126,7 +126,7 @@
 
                 if (resource.mimetype.match(mimetype)) {
                     $.ajax({
-                        url         : "/"+$("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
                         type        : "GET",
                         dataType    : 'html',
                         success     : function(response) {
