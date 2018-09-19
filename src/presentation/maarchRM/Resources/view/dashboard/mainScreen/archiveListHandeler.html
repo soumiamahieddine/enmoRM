@@ -236,10 +236,15 @@
         },
 
         loadChildrenArchiveButton: function(archivalProfiles, withoutProfile, $fileplanLevel) {
-
             var button = this.selected.closest('.archive').find('.addChildrenArchive');
             var list =  button.find('ul');
-            var archiveId = button.closest('.archive').attr('id');
+
+            if (Archive.selected.find(".selectedChild").attr("id")) {
+                var archiveId = Archive.selected.find(".selectedChild").attr("id");
+            } else {
+                var archiveId = button.closest('.archive').attr('id');
+            }
+
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
             if (!archivalProfiles.length && withoutProfile !== 1 && fileplanLevel== 'item') {

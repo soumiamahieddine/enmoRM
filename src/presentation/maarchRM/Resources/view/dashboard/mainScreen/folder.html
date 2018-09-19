@@ -426,6 +426,7 @@
     NewArchive = {
         loadImportForm: function(e) {
             $('#folderContents').addClass('hide');
+
             trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }
