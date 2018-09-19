@@ -113,20 +113,22 @@ class serviceAccount
                 }
                 $noDescription = true;
             }
+        }
 
-            foreach ( $organizations as $org) {
-                if($org->orgId == $serviceAccount->orgId) {
-                    $serviceAccount->orgName = $org->displayName;
-                    $ownerOrgid = $org->ownerOrgId;
-                }
-            }
-            foreach ( $ownerOrganizations as $org) {
-                if($ownerOrgid == $org->orgId) {
-                    $serviceAccount->ownerOrgName = $org->displayName;
 
-                }
+        foreach ( $organizations as $org) {
+            if($org->orgId == $serviceAccount->orgId) {
+                $serviceAccount->orgName = $org->displayName;
+                $ownerOrgid = $org->ownerOrgId;
             }
         }
+        foreach ( $ownerOrganizations as $org) {
+            if($ownerOrgid == $org->orgId) {
+                $serviceAccount->ownerOrgName = $org->displayName;
+
+            }
+        }
+
         $this->view->addContentFile("auth/serviceAccount/edit.html");
         $this->view->setSource("organizations", $organizations);
         $this->view->merge($this->view->getElementById("serviceOrgId"));
