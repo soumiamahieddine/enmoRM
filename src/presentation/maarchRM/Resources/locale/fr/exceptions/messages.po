@@ -119,7 +119,7 @@ msgstr "Erreur d'exécution"
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
 
-msgid "Account disabled"
+msgid "Service account disabled"
 msgstr "Le compte de service est désactivé"
 
 msgid "Task already exists."
