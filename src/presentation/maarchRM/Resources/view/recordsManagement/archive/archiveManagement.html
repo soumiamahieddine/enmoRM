@@ -1,6 +1,6 @@
 <div data-translate-catalog="recordsManagement/messages">
         <?hinclude recordsManagement/archive/modalArchiveInfo.html ?>
-    <div class="modal fade" id="corruptedModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bs-example-modal-lg" id="corruptedModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="container_corruptedModal">
             </div>
@@ -37,12 +37,12 @@
 
 // view the document
 $("#archiveList").on('click', ".viewDocument", function() {
-    trigger('showResource.digitalResource', [$(this).closest('tr').attr('archiveid'), $(this).closest('tr').attr('resid')]);
+    archiveDocumentViewer.load($(this).closest('tr').attr('archiveid'), $(this).closest('tr').attr('resid'));
 });
 
 // view the archive description
 $('#archiveList').on('click', '.viewArchive', function () {
-    trigger('showFullDetails.archive', [$(this).closest('tr').attr('id')])
+    archiveInfoModal.load($(this).closest('tr').attr('id'));
 });
 
 /* ----------------------------------------------------------------------------------------------------*/

@@ -453,19 +453,13 @@ trait archiveAccessTrait
      */
     public function retrieve($archiveId, $withBinary =false)
     {
-        /*
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-
-        $this->getArchiveComponents($archive, true);
-
-        return $archive;
-        */
-
         if (is_scalar($archiveId)){
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         }else{
             $archive = $archiveId;
+            $archiveId = (string) $archive->archiveId;
         }
+
         $this->getMetadata($archive);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
 
@@ -477,6 +471,8 @@ trait archiveAccessTrait
         }
         $this->getRelatedInformation($archive);
         $this->listChildrenArchive($archive, true, $withBinary);
+
+        $this->getParentArchive($archive);
 
         if(!empty($archive->childrenArchives)){
             foreach($archive->childrenArchives as $child){
