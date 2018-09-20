@@ -72,23 +72,23 @@
                             </div>
                         </div>
                     </div>
-                    <!--?merge .type.ifeq('boolean') ?>
+                    <?merge .type.ifeq('boolean') ?>
                     <div class="form-group col-md-6">
                         <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
                         <div class="col-md-6">
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-default">
-                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="0"><i class="fa fa-times"></i>
                                 </label>
                                 <label class="btn btn-default active">
-                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="" checked>&nbsp;
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="" checked>&nbsp;
                                 </label>
                                 <label class="btn btn-default">
-                                    <input type="radio" name="[?merge .name ?]" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="1"><i class="fa fa-check"></i>
                                 </label>
                             </div>
                         </div>
-                    </div-->
+                    </div>
                     <?merge .type.ifeq('number') ?>
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
@@ -231,7 +231,7 @@ FulltextSearchForm = {
             if (type == "" || type == null || type == undefined) {
                 type = $(this).data('type');
             }
-            
+
             switch (type) {
                 case 'select':
                     // keyword enum
@@ -242,11 +242,21 @@ FulltextSearchForm = {
 
                 case 'radio':
                     // format boolean
-                    if (!$(this).parent().hasClass("active") || $(this).val() == "") {
+
+                    if (!$(this).prop("checked")) {
                         break;
                     }
-                    value = $(this).val() == 1 ? 'true' : 'false';
-                    query.description[name] = name+'='+ value;
+
+                    switch ($(this).val()) {
+                        case "1": value = "1";
+                            break;
+                        case "0": value = "0";
+                            break;
+                        default:
+                            return;
+                    }
+
+                    query.description[name] = name+'=' + value;
                     break;
 
                 case 'text':
@@ -300,7 +310,7 @@ FulltextSearchForm = {
 
     clearForm : function() {
         $('#fullTextSearchForm > input').val('');
-        this.advancedSearchForm.find('input, select').val('');
+        this.advancedSearchForm.find('input[type=text], input[type=number], input[type=date], select').val('');
     }
 }
 

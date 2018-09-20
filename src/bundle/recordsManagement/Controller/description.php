@@ -232,7 +232,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
     protected function getComparisonExpression($comparison)
     {
-        $left = "description->>'".$comparison->left."'";
+        $left = "description->>'". (string) $comparison->left."'";
 
         switch (true) {
             case $comparison->right instanceof \core\Language\NumberOperand :
