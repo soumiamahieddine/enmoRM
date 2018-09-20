@@ -4,7 +4,7 @@
             <h4 class="pull-left">
                 <span id="import_archivalProfile"/>
                 <br/>
-                <small><span>Sub-archive of</span> <b/></small>
+                <small><span>Sub-archive of </span><span id="import_parentArchiveName"><b></b></span></small>
             </span>
         </h4>
     </div>
@@ -51,7 +51,7 @@
                 $('#import_parentArchiveName').addClass('hide');
             } else {
                 $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-                $('#import_parentArchiveName').removeClass('hide').find('b').text(parentArchiveName);
+                $('#import_parentArchiveName').find('b').text(parentArchiveName);
             }
 
             trigger("archiveImportStarted.recordsManagement");
