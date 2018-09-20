@@ -121,7 +121,9 @@
         initfolderView: function() {
             $("#folderToolbarCloseSearch").addClass("hide");
             $("#folderToolbarImport").removeClass("hide");
-            $("input[name=searchForm_inputSearch]").val("")
+            $("input[name=searchForm_inputSearch]").val("");
+            $("[name=originatingDateMin]").datepicker('setDate', null);
+            $("[name=originatingDateMax]").datepicker('setDate', null);
         }
     }
 
