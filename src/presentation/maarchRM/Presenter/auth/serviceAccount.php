@@ -117,11 +117,9 @@ class serviceAccount
 
 
         foreach ( $organizations as $org) {
-            if(!isset($serviceAccount)){
-                if($org->orgId == $serviceAccount->orgId) {
-                    $serviceAccount->orgName = $org->displayName;
-                    $ownerOrgid = $org->ownerOrgId;
-                }
+            if(isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
+                $serviceAccount->orgName = $org->displayName;
+                $ownerOrgid = $org->ownerOrgId;
             }
         }
         foreach ( $ownerOrganizations as $org) {
