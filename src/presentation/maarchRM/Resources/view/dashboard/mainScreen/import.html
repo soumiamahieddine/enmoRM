@@ -44,7 +44,11 @@
             }
 
             $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
-            $("#import_archivalProfile").text(archivalProfile.name);
+            if(typeof archivalProfile.name === "undefined") {
+                $("#import_archivalProfile").text("");
+            } else {
+                $("#import_archivalProfile").text(archivalProfile.name);
+            }
 
             if (!parentArchiveId) {
                 $("#archiveForm [name='parentArchiveId']").val('');
