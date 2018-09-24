@@ -72,6 +72,11 @@
 
     $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
         ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName);
+        if(typeof archivalProfile === "undefined"){
+            FilePlanLevelToggle.load(true);
+        } else {
+            FilePlanLevelToggle.load(false);
+        }
     });
 
     $('#import').on('click', function(e) {
