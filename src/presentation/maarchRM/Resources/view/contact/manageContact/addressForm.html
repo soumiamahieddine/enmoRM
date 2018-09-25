@@ -31,60 +31,60 @@
         <div class="form-group">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="purpose">Purpose<span style="color : red"> *</span></label>
-                    <input type="text" class="form-control" name="purpose" placeholder="Purpose">
+                    <label for="addressPurpose">Purpose<span style="color : red"> *</span></label>
+                    <input type="text" class="form-control" id="addressPurpose" name="purpose" placeholder="Purpose">
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-4">
-            <label for="room">Room</label>
-            <input type="text" class="form-control" name="room" placeholder="Room">
+            <label for="addressRoom">Room</label>
+            <input type="text" class="form-control" id="addressRoom" name="room" placeholder="Room">
         </div>
         <div class="form-group col-md-4">
-            <label for="floor">Floor</label>
-            <input type="text" class="form-control" name="floor" placeholder="Floor">
+            <label for="addressFloor">Floor</label>
+            <input type="text" class="form-control" id="addressFloor" name="floor" placeholder="Floor">
         </div>
         <div class="form-group col-md-4">
-            <label for="building">Building</label>
-            <input type="text" class="form-control" name="building" placeholder="Building">
+            <label for="addressBuilding">Building</label>
+            <input type="text" class="form-control" id="addressBuilding" name="building" placeholder="Building">
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-3">
-            <label for="number">Number</label>
-            <input type="text" class="form-control" name="number" placeholder="Number">
+            <label for="addressNumber">Number</label>
+            <input type="text" class="form-control" id="addressNumber" name="number" placeholder="Number">
         </div>
         <div class="form-group col-md-9">
-            <label for="street">Street</label>
-            <input type="text" class="form-control" name="street" placeholder="Street">
+            <label for="addressStreet">Street</label>
+            <input type="text" class="form-control" id="addressStreet" name="street" placeholder="Street">
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-6">
-            <label for="block">Block</label>
-            <input type="text" class="form-control" name="block" placeholder="Block">
+            <label for="addressBlock">Block</label>
+            <input type="text" class="form-control" id="addressBlock" name="block" placeholder="Block">
         </div>
         <div class="form-group col-md-6">
-            <label for="citySubDivision">City sub division</label>
-            <input type="text" class="form-control" name="citySubDivision" placeholder="City sub division">
+            <label for="addressCitySubDivision">City sub division</label>
+            <input type="text" class="form-control" id="addressCitySubDivision" name="citySubDivision" placeholder="City sub division">
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-3">
-            <label for="postCode">PC</label>
-            <input type="text" class="form-control" name="postCode" placeholder="Post code">
+            <label for="addressPostCode">PC</label>
+            <input type="text" class="form-control" id="addressPostCode" name="postCode" placeholder="Post code">
         </div>
         <div class="form-group col-md-9">
-            <label for="city">City<span style="color : red"> *</span></label>
-            <input type="text" class="form-control" name="city" placeholder="City">
+            <label for="addressCity">City<span style="color : red"> *</span></label>
+            <input type="text" class="form-control" id="addressCity" name="city" placeholder="City">
         </div>
     </div>
     <div class="row">
         <div class="form-group col-md-3">
-            <label for="postBox">PB</label>
-            <input type="text" class="form-control" name="postBox" placeholder="Post box">
+            <label for="addressPostBox">PB</label>
+            <input type="text" class="form-control" id="addressPostBox" name="postBox" placeholder="Post box">
         </div>
         <div class="form-group col-md-9">
             <label for="country">Country</label><br>
@@ -144,6 +144,7 @@
 
     var ContactAddressForm = {
         read: function(selection){
+            ContactAddressForm.cancel();
             var address = selection.data('address');
 
             $('#contact_address-form').css('display', '');
@@ -156,7 +157,7 @@
             selection.addClass('active');
 
              $.each(address, function (key, value) {
-                $('#contact_address-form').find('input[name="' + key + '"]').val(value);
+                $('#contact_address-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
             });
         },
 
@@ -355,6 +356,7 @@
 
         cancel: function() {
             $('#contact_address-form').find('input').val('');
+            $('#contact_address-form').find('select').val('');
             $('#contact_address-form').css('display', 'none');
             $('#contact_addressList').find('a').removeClass('active');
 
