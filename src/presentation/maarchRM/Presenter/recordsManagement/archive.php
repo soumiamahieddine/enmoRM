@@ -311,21 +311,20 @@ class archive
         $archiveController = \laabs::newController("recordsManagement/archive");
         $archive->visible = $archiveController->accessVerification($archive->archiveId);
 
+        $archive->relatedArchives = (
+            !empty($archive->relationships['parentRelationships'])
+            || !empty($archive->relationships['childrenRelationships'])
+        );
+
+        if ($archive->relatedArchives) {
+            $archive->parentRelationships = $archive->relationships['parentRelationships'];
+            $archive->childrenRelationships = $archive->relationships['childrenRelationships'];
+        }
         $archive->relationships = (
             !empty($archive->parentRelationships)
             || !empty($archive->childrenRelationships)
             || !empty($archive->parentArchive)
             || !empty($archive->childrenArchives)
-        );
-
-        /*var_dump($archive->relationships);
-        var_dump($archive->parentRelationships);
-        var_dump($archive->childrenRelationships);
-        var_dump($archive->parentArchive);
-        var_dump($archive->childrenArchives);*/
-        $archive->relatedArchives = (
-            !empty($archive->parentRelationships)
-            || !empty($archive->childrenRelationships)
         );
 
         if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
