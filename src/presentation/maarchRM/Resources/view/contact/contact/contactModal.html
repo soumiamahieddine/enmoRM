@@ -5,7 +5,7 @@
                 <div class="container-fluid" style="margin-top:24px">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="active">
-                            <a href="#contact_modalTab" id="contactTabBtn" data-toggle="tab">Contact</a>
+                            <a href="#contact_modalTab" id="contactTabBtn" data-toggle="tab">Contact<span style="color : red">*</span></a>
                         </li>
                         <li>
                             <a href="#address_modalTab" id="addressTabBtn" data-toggle="tab">Address</a>
@@ -84,6 +84,12 @@
         save : function(button) {
             if (this.newOrgContact) {
                 var contactObject = ContactInformation.serialize();
+
+                if(contactObject.displayName == "" || contactObject.firstName == "" || contactObject.lastName == "") {
+                    gritter.show($('#empty_text').text(),false);
+                    return false;
+                }
+
                 contactObject.address = ContactAddressForm.serializeList();
                 contactObject.communication = ContactCommunicationForm.serializeList();
 
