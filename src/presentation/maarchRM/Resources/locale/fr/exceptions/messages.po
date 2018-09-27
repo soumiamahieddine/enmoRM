@@ -446,6 +446,6 @@ msgstr "Lien non valide"
 msgid "Parent archive is an item and can not contain items."
 msgstr "L'archive parente est une pièce, elle ne peut contenir des pièces"
 
-msgid "Zip malformed"
-msgstr "Le zip est malformé."
+msgid "The container file is non-compliant"
+msgstr "Le fichier conteneur est non conforme."
 

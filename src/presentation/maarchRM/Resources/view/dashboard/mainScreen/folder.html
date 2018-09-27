@@ -121,7 +121,9 @@
         initfolderView: function() {
             $("#folderToolbarCloseSearch").addClass("hide");
             $("#folderToolbarImport").removeClass("hide");
-            $("input[name=searchForm_inputSearch]").val("")
+            $("input[name=searchForm_inputSearch]").val("");
+            $("[name=originatingDateMin]").datepicker('setDate', null);
+            $("[name=originatingDateMax]").datepicker('setDate', null);
         }
     }
 
@@ -426,6 +428,7 @@
     NewArchive = {
         loadImportForm: function(e) {
             $('#folderContents').addClass('hide');
+
             trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }

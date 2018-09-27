@@ -69,8 +69,9 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
-        
-        $this->sdoFactory->update($descriptionObject);
+        $archive->description = $descriptionObject->description;
+
+        $res = $this->sdoFactory->update($descriptionObject);
     }
 
     protected function getText($data)
@@ -232,7 +233,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
     protected function getComparisonExpression($comparison)
     {
-        $left = "description->>'".$comparison->left."'";
+        $left = "description->>'". (string) $comparison->left."'";
 
         switch (true) {
             case $comparison->right instanceof \core\Language\NumberOperand :
