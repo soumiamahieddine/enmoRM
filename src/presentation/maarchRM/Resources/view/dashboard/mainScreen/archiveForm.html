@@ -24,12 +24,18 @@
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
+    <div class="form-group" id="fileplanLevelDiv">
+        <label class="col-md-3 control-label small">Fileplan level</label>
+        <div class="col-md-9">
+            <input type="checkbox" data-width="100" class="input-sm" id="fileplanLevelToggle">
+        </div>
+    </div>
 
     <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
-    <input type="hidden" class="archiveInput" name="fileplanLevel" value='file'/>
+    <input type="hidden" class="archiveInput" id="fileplanLevel" name="fileplanLevel" value='file'/>
 </form>
 
 <?hinclude dashboard/mainScreen/descriptionForm.html ?>
@@ -64,10 +70,51 @@
 </div>
 
 <div class="hide">
+    <span id="text_file"><i class='fa fa-folder'></i> File</span>
+    <span id="text_item"><i class='fa fa-file'></i> Item</span>
     <span id="message_requiredFieldOnEmptyForm">You must define at least the name, the identifier, the date of the document or a document</span>
 </div>
 
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
+
+
+    FilePlanLevelToggle = {
+        load: function (isWithoutProfile = true) {
+            if(isWithoutProfile == true) {
+
+                if($('#fileplanLevelDiv').is(":hidden")) {
+                    $('#fileplanLevelDiv').show();
+                }
+
+                $('#fileplanLevelToggle').bootstrapToggle({
+                    on: $('#text_item'),
+                    off: $('#text_file'),
+                });
+
+                $('#fileplanLevel').val("file");
+
+                if($('#fileplanLevel').val() == 'item') {
+                    $('#fileplanLevelToggle').bootstrapToggle('on');
+                    $("#contentsTabBtn").addClass('hide');
+                }
+
+
+                $('#fileplanLevelToggle').on('change', function (e) {
+                    if ($('#fileplanLevelToggle').prop('checked')) {
+                        $("#fileplanLevel").val('item');
+                        $("#contentsTabBtn").addClass('hide');
+                    } else {
+                        $("#fileplanLevel").val('file');
+                        $("#contentsTabBtn").removeClass('hide');
+                    }
+                });
+            } else {
+                $('#fileplanLevelDiv').hide();
+            }
+        }
+    };
+
     $('#app_maarchRM_main').ready(function () {
         $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
     });

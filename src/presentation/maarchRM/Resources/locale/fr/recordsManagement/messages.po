@@ -1017,3 +1017,12 @@ msgstr "archives trouvées"
 
 msgid "Results of search in"
 msgstr "Résultats de la recherche dans"
+
+msgid "Fileplan level"
+msgstr "Niveau dans le plan"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "File"
+msgstr "Dossier"
