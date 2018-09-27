@@ -42,8 +42,6 @@ class journal
 
     protected $journals;
 
-    protected $digitalResourcesController;
-
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
@@ -59,8 +57,6 @@ class journal
         $this->currentJournalFile = null;
         $this->currentJournalId = null;
         $this->currentOffset = 0;
-
-        $this->digitalResourcesController = \laabs::newController('digitalResource/digitalResource');
 
         $this->eventFormats = $this->sdoFactory->index('lifeCycle/eventFormat');
         foreach ($this->eventFormats as $eventFormat) {
