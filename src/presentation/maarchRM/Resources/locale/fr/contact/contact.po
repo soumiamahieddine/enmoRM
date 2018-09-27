@@ -184,3 +184,9 @@ msgstr "Un moyen de communication portant cette désignation existe déjà."
 
 msgid "Select a language"
 msgstr "Choisissez un langage"
+
+msgid "No address"
+msgstr "Aucune adresse"
+
+msgid "No communication mean"
+msgstr "Aucun moyen de communication"

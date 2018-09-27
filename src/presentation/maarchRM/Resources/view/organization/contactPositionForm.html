@@ -56,6 +56,8 @@
     <span id="text_building">Building</span>
     <span id="text_citySubdivision">City sub division</span>
     <span id="text_postBox">Post box</span>
+    <span id="text_noAddress">No address</span>
+    <span id="text_noCommunicationMean">No communication mean</span>
 </div>
 
 <script>
@@ -274,6 +276,14 @@
             var divCommunication = $('<div/>').addClass("col-md-6 form-group")
                                               .appendTo(panelBody);
             var commList = $('<div/>').appendTo(divCommunication);
+
+            if (contact.address.length == 0) {
+                addressList.text($("#text_noAddress").text());
+            }
+
+            if (contact.communication.length == 0) {
+                commList.text($("#text_noCommunicationMean").text());
+            }
 
             $.each(contact.address, function(){
                 ContactForm.addAddressToScreen(this, addressList);
