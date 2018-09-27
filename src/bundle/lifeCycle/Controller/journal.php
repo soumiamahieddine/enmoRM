@@ -62,8 +62,6 @@ class journal
         foreach ($this->eventFormats as $eventFormat) {
             $eventFormat->format = explode(' ', $eventFormat->format);
         }
-
-        $this->journals = [];
     }
 
     /**
@@ -177,20 +175,30 @@ class journal
         $events = [];
         $logController = \laabs::newController('recordsManagement/log');
 
+        $tmpDir = \laabs::getTmpDir();
+        $journalFile = null;
+
         $journal = $logController->getByDate('lifeCycle', (string) $date);
 
         if (!$journal) {
             return $events;
         }
 
-        if (!isset($this->journals[(string) $journal->archiveId])) {
-            $archiveController = \laabs::newController('recordsManagement/archive');
+        $archiveController = \laabs::newController('recordsManagement/archive');
+
+        if (!\laabs\file_exists($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId)) {
             $resources = $archiveController->getDigitalResources($journal->archiveId);
-            $journalResource = $archiveController->consultation($journal->archivedId, $resources[0]->resId);
-            $this->journals[(string) $journal->archiveId] = $journalResource->getContents();
+            $journalResource = $resources[0];
+
+            if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalResource->getContents())) {
+                throw \laabs::newException("lifeCycle/journalException", "Journal file cannot be written");
+            }
+
+            $journalFile = $journalResource->getContents();
+        } else {
+            $journalFile = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
         }
 
-        $journalFile = $this->journals[(string) $journal->archiveId];
         $offset = 0;
 
         do {
@@ -387,7 +395,7 @@ class journal
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
             $resources = $archiveController->getDigitalResources($journalReference->archiveId);
-            $journalResource = $archiveController->consultation($journalReference->archivedId, $resources[0]->resId);
+            $journalResource = $resources[0];
             
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
@@ -764,7 +772,7 @@ class journal
             $archiveId = (string) $journal->archiveId;
         }
         $resources = $archiveController->getDigitalResources($journal->archiveId);
-        $journalResource = $archiveController->consultation($journal->archivedId, $resources[0]->resId);
+        $journalResource = $resources[0];
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
@@ -788,7 +796,7 @@ class journal
         }
 
         $resources = $archiveController->getDigitalResources($journalResource->archiveId);
-        $nextJournalResource = $archiveController->consultation($journalResource->archivedId, $resources[0]->resId);
+        $nextJournalResource = $resources[0];
         $nextJournalContents = $nextJournalResource->getContents();
 
         $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
@@ -941,7 +949,7 @@ class journal
             $eventLine[8] = (string) $previousJournal->archiveId;
 
             $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
-            $journalResource = $archiveController->consultation($previousJournal->archiveId, $resources[0]->resId);
+            $journalResource = $resources[0];
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;
