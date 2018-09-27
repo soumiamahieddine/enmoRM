@@ -550,10 +550,6 @@ class scheduling
             throw \laabs::newException("auth/authenticationException", "Service account disabled");
         }
 
-        if (($account->locked)) {
-            throw \laabs::newException("auth/authenticationException", "Missing authentication credential");
-        }
-
         $data = new \StdClass();
         $data->accountId = $serviceAccountId;
 
