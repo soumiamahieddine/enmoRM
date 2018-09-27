@@ -8,7 +8,40 @@
         <i class="infoIcon fa [?merge archive.fileplanLevel.ifeq('item').then('fa-file', 'fa-archive') ?]" style="[?merge status.ifeq('frozen').then('color: #69B5DB', '') ?]"/>
     </div>
     <div class="col-xs-12">
-        <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+        <h4 class="text-center text-info">
+            <?merge archive.archivalProfileName ?>
+            <?merge modificationPrivilege.bool() ?>
+            <button type="button" class="btn btn-default btn-sm" id="editMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
+        </h4>
+        <table>
+            <tr class="archiveName">
+                <th title="Name">Name</th>
+                <td title='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
+            </tr>
+            <tr class="originatorArchiveId">
+                <th title="Originator archive identifier">Originator archive identifier</th>
+                <td title='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
+            </tr>
+            <tr class="originatingDate">
+                <th title="Originating date">Originating date</th>
+                <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
+            </tr>
+        </table>
+        <div id="metadata">
+        </div>
+        <?merge acceptUserIndex ?>
+        <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn" style="display: none">
+            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+                &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
+            </button>
+            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+                <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
+                <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
+            </ul>
+        </div>
+        <!--<div id="metadata" class="panel-collapse collapse" role="tabpanel"></div>-->
+        <button type="button" class="pull-right btn btn-default btn-sm" id="saveMetadata" title="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
+        <button type="button" class="pull-right btn btn-default btn-sm" id="cancelMetadataEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
     </div>
     <div class="col-xs-12">
         <div class="panel-group" id="archiveDetails" role="tablist" aria-multiselectable="true">
@@ -175,7 +208,7 @@
 </style>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
-<!--script>
+<script>
     var ArchiveInformation = {
         archiveId: $('#archiveInformation').find('.archiveInformationId').val(),
 
@@ -507,4 +540,4 @@
         ArchiveInformation.loadImportForm($(this));
     });
         
-</script-->
+</script>

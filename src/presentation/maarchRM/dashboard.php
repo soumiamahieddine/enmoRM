@@ -90,7 +90,7 @@ class dashboard
                 }
                 try {
                     $command = \laabs::command('READ', substr($parser['path'], 1));
-                    if (!$this->hasUserPrivilege($command->userStory)) {
+                    if (!$this->hasUserPrivilege($command)) {
                         unset($menu[$i]);
                     }
                 } catch (\Exception $e) {
@@ -102,11 +102,51 @@ class dashboard
         return $menu;
     }
 
-    protected function hasUserPrivilege($userStory)
+    protected function hasUserPrivilege($command)
     {
+        if (isset($command->tags['requires'])) {
+            if (!$this->checkRequirements($command)) {
+                return;
+            }
+        }
+
         foreach ($this->userPrivileges as $userPrivilege) {
-            if (fnmatch($userPrivilege, $userStory)) {
+            if (fnmatch($userPrivilege, $command->userStory)) {
                 return true;
+            }
+        }
+    }
+
+    protected function checkRequirements($command) 
+    {
+        // All requirements must be fulfilled
+        foreach ($command->tags['requires'] as $requirement) {
+            $requirement = array_map('trim', explode(',', substr($requirement, 1, -1)));
+            if (!$this->checkRequirement($requirement)) {
+                return;
+            }
+        }
+
+        return true;
+    }
+
+    protected function checkRequirement($requirement) 
+    {
+        // At least one requirement must be fulfilled
+        foreach ($requirement as $requirementItem) {
+            if (substr($requirementItem, -2) == '/*') {
+                foreach ($this->userPrivileges as $userPrivilege) {
+                    $domain = explode('/', $userPrivilege)[0].'/?';
+                    if (fnmatch($requirementItem, $domain)) {
+                        return true;
+                    }
+                }
+            }
+
+            foreach ($this->userPrivileges as $userPrivilege) {
+                if (fnmatch($userPrivilege, $requirementItem)) {
+                    return true;
+                }
             }
         }
     }

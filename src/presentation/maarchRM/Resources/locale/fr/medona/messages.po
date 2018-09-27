@@ -449,6 +449,12 @@ msgstr "Validé"
 msgid "draft"
 msgstr "Brouillon"
 
+msgid "toBeModified"
+msgstr "À modifier"
+
+msgid "modified"
+msgstr "Modifié"
+
 msgid "Download"
 msgstr "Télécharger"
 

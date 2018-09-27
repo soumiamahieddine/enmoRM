@@ -195,9 +195,19 @@
                 <div class="modal-body">
                     <div class="form">
                         <div class="input-group col-md-3">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-warning" id="searchDayMinusOne">
+                                    <spans class="fa fa-angle-double-left"></spans>
+                                </button>
+                            </div>
                             <input type="text" class="datePicker form-control" id="dateLogHistory">
                             <div class="input-group-btn">
-                                <button type="button" class="btn btn-primary" id="searchLogHistory">
+                                <button type="button" class="btn btn-warning" id="searchDayPlusOne">
+                                    <spans class="fa fa-angle-double-right"></spans>
+                                </button>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary" style="margin-left: 5px;" id="searchLogHistory">
                                     <spans class="fa fa-search"></spans>
                                 </button>
                             </div>
@@ -236,6 +246,8 @@
 
 <script type="text/javascript">
 
+    var d = new Date();
+
     // Task list delete button
     $('#taskList').on('mouseenter', '.deleteTask', function() {
         $(this).addClass('text-danger');
@@ -257,14 +269,44 @@
         $(this).css('color', '');
     })
 
-    $('#searchLogHistory').on('click', function() {
-        if (!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')) {
-            return;
+    $('#searchDayMinusOne').on('click', function() {
+        if(!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')){
+            $('#dateLogHistory').datepicker('setDate', d);
         }
-
-        TaskList.showHistory($('#searchLogHistory').data("schedulingid"));
+        var date = new Date($('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'));
+        date.setDate(date.getDate()-1);
+        $('#dateLogHistory').datepicker('setDate', date);
+        $('#searchLogHistory').click();
     })
 
+    $('#searchDayPlusOne').on('click', function() {
+        if(!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')){
+            $('#dateLogHistory').datepicker('setDate', d);
+            $('#searchLogHistory').click();
+            return;
+        }
+        var date = new Date($('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'));
+        date.setDate(date.getDate()+1);
+        if(date < d) {
+            $('#dateLogHistory').datepicker('setDate', date);
+            $('#searchLogHistory').click();
+        }else{
+            $("#searchDayPlusOne").attr('disabled','disabled')
+        }
+    })
+
+    $('#searchLogHistory').on('click', function() {
+        if (!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')) {
+            $('#dateLogHistory').datepicker('setDate', d);
+        }
+
+        if($('#dateLogHistory').val() == ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear()) {
+            $("#searchDayPlusOne").attr('disabled','disabled')
+        }else{
+            $("#searchDayPlusOne").removeAttr('disabled');
+        }
+        TaskList.showHistory($('#searchLogHistory').data("schedulingid"));
+    })
 
     // New schedule
     $('#scheduleNewTask').on('click', function() {
@@ -324,6 +366,9 @@
         $("#dateLogHistory").data("datepicker").setDate("yyyy-mm-dd");
         TaskList.showHistory($(this).closest('a').data('json').schedulingId);
         e.stopPropagation();
+        if($('#dateLogHistory').val() == ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear()) {
+            $("#searchDayPlusOne").attr('disabled','disabled');
+        }
     });
 
     var TaskList = {

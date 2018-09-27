@@ -238,6 +238,7 @@ class serviceAccount
             }
 
             $this->sdoFactory->update($serviceAccount, 'auth/account');
+
             $this->createServicePrivilege($servicesURI, $serviceAccount->accountId);
         } catch (\Exception $exception) {
             if ($transactionControl) {
@@ -346,22 +347,24 @@ class serviceAccount
      */
     public function createServicePrivilege(array $servicesURI, $accountId)
     {
-        foreach ($servicesURI as $key => $service) {
-            $service = trim($service);
-            if (preg_match('/\s/', $service)) {
-                throw new \bundle\auth\Exception\badValueException("The fields contain white spaces.");
-            }
-        }
-
         $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $accountId), 'auth/account');
 
-        $servicePrivilege = new \stdClass();
+        if(!empty($servicesURI)){
+            foreach ($servicesURI as $key => $service) {
+                $service = trim($service);
+                if (preg_match('/\s/', $service)) {
+                    throw new \bundle\auth\Exception\badValueException("The fields contain white spaces.");
+                }
+            }
 
-        foreach ($servicesURI as $key => $service) {
-            $servicePrivilege->serviceURI = trim($service);
-            $servicePrivilege->accountId = $accountId;
+            $servicePrivilege = new \stdClass();
 
-            $this->sdoFactory->create($servicePrivilege, "auth/servicePrivilege");
+            foreach ($servicesURI as $key => $service) {
+                $servicePrivilege->serviceURI = trim($service);
+                $servicePrivilege->accountId = $accountId;
+
+                $this->sdoFactory->create($servicePrivilege, "auth/servicePrivilege");
+            }
         }
 
         return true;

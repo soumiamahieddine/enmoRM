@@ -509,7 +509,7 @@ file that was distributed with this source code.
             name         : $('#fieldName').find('input').val(),
             label        : $('#propertyLabel').find('input').val(),
             type         : type,
-        }
+        };
         
         
         // Default value
@@ -522,9 +522,11 @@ file that was distributed with this source code.
                 break;
             case "boolean":
                 switch ($('#booleanPropertyDefaultValue').find('input:checked').val()) {
-                    case "1": property['default'] = true;
+                    case "1": property['default'] = 1;
                               break;
-                    default: property['default'] = false;
+                    case "0": property['default'] = 0;
+                              break;
+                    default: property['default'] = "";
                               break;
                 }
                 break;

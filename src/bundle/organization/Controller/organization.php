@@ -65,7 +65,6 @@ class organization
             $orgUnitList = $this->getOwnerOriginatorsOrgs();
         } else {
             $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
-
         }
 
         foreach ($orgUnitList as $org) {
@@ -89,17 +88,19 @@ class organization
             $orgList = array_merge($orgList,$organizations);
         }
 
-        foreach ($orgList as $org){
-            foreach ($orgList as $orgParent){
-                if(isset($org->parentOrgId)){
-                    if($org->parentOrgId == $orgParent->orgId){
-                        $org->parentOrgName = $orgParent->displayName;
+        if (isset($orgList)) {
+            foreach ($orgList as $org) {
+                foreach ($orgList as $orgParent) {
+                    if (isset($org->parentOrgId)) {
+                        if ($org->parentOrgId == $orgParent->orgId) {
+                            $org->parentOrgName = $orgParent->displayName;
+                        }
                     }
                 }
             }
-        }
 
-        return $orgList;
+            return $orgList;
+        }
     }
 
     /**
@@ -1090,6 +1091,11 @@ class organization
             }
         } else {
             $userOrgs[] = $currentService;
+        }
+
+        if($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN"){
+            unset($userOrgs);
+            $userOrgs[] = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE")[0];
         }
 
         foreach ($userOrgs as $userPosition) {

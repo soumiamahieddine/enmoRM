@@ -69,8 +69,9 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
-        
-        $this->sdoFactory->update($descriptionObject);
+        $archive->description = $descriptionObject->description;
+
+        $res = $this->sdoFactory->update($descriptionObject);
     }
 
     protected function getText($data)
