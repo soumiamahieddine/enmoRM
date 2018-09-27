@@ -4,7 +4,7 @@
             <h4 class="pull-left">
                 <span id="import_archivalProfile"/>
                 <br/>
-                <small><span>Sub-archive of</span> <b/></small>
+                <small id="import_isSubArchive"><span>Sub-archive of </span><span id="import_parentArchiveName"><b></b></span></small>
             </span>
         </h4>
     </div>
@@ -44,14 +44,18 @@
             }
 
             $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
-            $("#import_archivalProfile").text(archivalProfile.name);
-            
+            if(typeof archivalProfile.name === "undefined") {
+                $("#import_archivalProfile").text("");
+            } else {
+                $("#import_archivalProfile").text(archivalProfile.name);
+            }
+
             if (!parentArchiveId) {
                 $("#archiveForm [name='parentArchiveId']").val('');
-                $('#import_parentArchiveName').addClass('hide');
+                $('#import_isSubArchive').addClass('hide');
             } else {
                 $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-                $('#import_parentArchiveName').removeClass('hide').find('b').text(parentArchiveName);
+                $('#import_parentArchiveName').find('b').text(parentArchiveName);
             }
 
             trigger("archiveImportStarted.recordsManagement");

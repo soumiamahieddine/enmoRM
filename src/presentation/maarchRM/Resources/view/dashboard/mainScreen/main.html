@@ -167,11 +167,16 @@
         },
 
         showDetailsScreen : function(html, showMoreURI) {
+
+            if($('#detailScreenContent').hasClass('big')){
+                $("#showMoreDetail").addClass('hide');
+            }
+
             this.detailScreenContent.empty().html(html);
             if (this.detailScreenContent.hasClass('showDetails')) {
                 return true;
             }
-            
+
             this.right.addClass('showDetails').removeClass('hidden-xs');
 
             if (this.middle.hasClass('col-sm-9')) {
@@ -193,6 +198,7 @@
                 type        : "GET",
                 success     : function (response) {
                     ColumnOrganizer.detailScreenContent.empty().html(response);
+                    $("#detailScreenContent").addClass("big");
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -203,6 +209,12 @@
         },
 
         closeDetailScreen : function() {
+
+            if($('#detailScreenContent').hasClass('big')){
+                $("#detailScreenContent").removeClass('big');
+                $("#showMoreDetail").removeClass('hide');
+            }
+
             if (!this.right.hasClass('showDetails')) {
                 return;
             }
