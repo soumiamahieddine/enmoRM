@@ -326,7 +326,7 @@ class log implements archiveDescriptionInterface
         $archive->accessRuleDuration = 'P0D';
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
-        $archive->filePlanLevel = 'item';
+        $archive->fileplanLevel = 'item';
         $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
 
         if (!empty($this->logFilePlan)) {
