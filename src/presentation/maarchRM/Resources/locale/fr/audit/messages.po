@@ -278,6 +278,21 @@ msgstr "Lecture d'une description d'archive"
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'information d'un document d'archive"
 
+msgid "recordsManagement/archive/readDigitalresources_archiveId_"
+msgstr "Lecture des ressources d'une archive"
+
+msgid "recordsManagement/archive/readDigitalresources_archiveId_"
+msgstr "Lecture des ressources d'une archive"
+
+msgid "recordsManagement/archive/readMetadata_archiveId_"
+msgstr "Lecture des métadonnées d'une archive"
+
+msgid "recordsManagement/archive/readListchildrenarchive_archiveId_"
+msgstr "Lecture des archives enfants d'une archive"
+
+msgid "recordsManagement/archive/readRelatedinformation_archiveId_"
+msgstr "Lecture des informations relatives d'une archive"
+
 msgid "recordsManagement/archive/readContents_archiveId_"
 msgstr "Lecture d'un document d'archive"
 
@@ -300,7 +315,7 @@ msgid "recordsManagement/archive/create"
 msgstr "Création d'une archive"
 
 msgid "recordsManagement/archive/createArchivebatch"
-msgstr "Création d'archive(s) par batch"
+msgstr "Création d'archive(s) par script"
 
 msgid "recordsManagement/archive/readDocument_docId_"
 msgstr "Lecture d'un document"
@@ -344,6 +359,9 @@ msgstr "Lecture d'une relation en fonction d'une archive"
 msgid "recordsManagement/archives/read"
 msgstr "Lecture de toutes les archives"
 
+msgid "recordsManagement/archives/readList"
+msgstr "Lecture du plan de classements"
+
 msgid "recordsManagement/archives/updateFreeze"
 msgstr "Gel d'une archive"
 
@@ -355,6 +373,9 @@ msgstr "Lecture de la règle de conservation d'une ou de plusieurs archives"
 
 msgid "recordsManagement/archives/updateRetentionrule"
 msgstr "Modification d'une règle de conservation d'une ou de plusieurs archives"
+
+msgid "recordsManagement/archives/updateArchivesretentionrule"
+msgstr "Mise à jour de la durée d'utilité administrative"
 
 msgid "recordsManagement/archives/readAccessrule"
 msgstr "Lecture de toutes les règles de communicabilité"
@@ -455,6 +476,21 @@ msgstr "Modification d'une règle de conservation"
 
 msgid "recordsManagement/retentionRule/delete_code_"
 msgstr "Suppression d'une règle de conservation"
+
+msgid "recordsManagement/storageRule/readIndex"
+msgstr "Lecture de toutes les règles de stockage"
+
+msgid "recordsManagement/storageRule/create"
+msgstr "Création d'une règle de stockage"
+
+msgid "recordsManagement/storageRule/read_code_"
+msgstr "Lecture d'une règle de stockage"
+
+msgid "recordsManagement/storageRule/update"
+msgstr "Modification d'une règle de stockage"
+
+msgid "recordsManagement/storageRule/delete_code_"
+msgstr "Suppression d'une règle de stockage"
 
 msgid "recordsManagement/serviceLevel/readIndex"
 msgstr "Lecture des différents niveaux de service"
@@ -642,9 +678,6 @@ msgstr "Création d'une demande de communication"
 msgid "medona/archiveDelivery/readHistory"
 msgstr "Lecture de l'historique de communication"
 
-msgid "medona/archiveDelivery/readReplies"
-msgstr "Lecture des réponses de demande de communication"
-
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
 msgstr "Téléchargement de l'archive communiquée"
 
@@ -656,6 +689,15 @@ msgstr "Liste des bordereaux de demande de communication reçus"
 
 msgid "medona/archiveDelivery/readSearch"
 msgstr "Recherche de bordereaux de communication"
+
+msgid "medona/archiveDelivery/updateRequestderogation_messageId_"
+msgstr "Envoie en déragotion d'une demande de communication"
+
+msgid "medona/archiveDelivery/readRequestReplyList"
+msgstr "Lecture des réponses aux demandes de communication"
+
+msgid "medona/archiveDelivery/readRequestList"
+msgstr "Lecture des réponses aux demandes de communication"
 
 msgid "medona/archiveDestruction/readIncominglist"
 msgstr "Liste des bordereaux de demande de destruction reçus"
@@ -1457,6 +1499,9 @@ msgstr "Création d'une notification pour les tâches planifiées"
 
 msgid "batchProcessing/notification/updateProcess"
 msgstr "Exécution du processus de notification des tâches planifiées"
+
+msgid "batchProcessing/logscheduling/read_schedulingId__logDate_"
+msgstr "Lecture par date d'un événement d'une tâche planifiée"
 
 msgid "archivesPubliques/content/createSearch"
 msgstr "Lecture de toutes les archives publiques"

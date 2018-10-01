@@ -206,6 +206,10 @@ msgid "info"
 msgstr "Détail"
 msgctxt "eventInfo"
 
+msgid "code"
+msgstr "Code"
+msgctxt "eventInfo"
+
 # msgid "accountId"
 # msgstr "Identifiant technique utilisateur"
 # msgctxt "eventInfo"
@@ -523,6 +527,9 @@ msgstr "Reprise d'un message"
 
 msgid "medona/authorization"
 msgstr "Demande d'autorisation"
+
+msgid "medona/message"
+msgstr "Identifiant bordereau"
 
 msgid "Result"
 msgstr "Résultat"
