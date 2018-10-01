@@ -185,6 +185,12 @@
         deleteCommunication: function() {
             $('#contact_communicationConfirmDelete').modal('hide');
 
+            if (!$('#contact_communicationId').val()) {
+                $('#contact_communicationList').find('.active').remove();
+                ContactCommunicationForm.cancel();
+                return;
+            }
+
             $.ajax({
                 type        : 'DELETE',
                 url         : '/contactCommunication/' + $('#contact_communicationId').val(),
@@ -194,7 +200,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
                         $('#contact_communicationList').find('.active').remove();
-                        ContactCommunicationForm.cancel()
+                        ContactCommunicationForm.cancel();
                     }
                     $('#contact_new-communication').css('display', '');
                 },

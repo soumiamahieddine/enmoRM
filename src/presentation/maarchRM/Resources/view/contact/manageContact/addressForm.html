@@ -245,6 +245,12 @@
         deleteAddress: function() {
             $('#contact_addressConfirmDelete').modal('hide');
 
+            if (!$('#contact_addressId').val()) {
+                $('#contact_addressList').find('.active').remove();
+                ContactAddressForm.cancel();
+                return;
+            }
+
             $.ajax( {
                 type        : 'DELETE',
                 url         : '/contactaddress/' + $('#contact_addressId').val(),
@@ -254,7 +260,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
                         $('#contact_addressList').find('.active').remove();
-                        ContactAddressForm.cancel()
+                        ContactAddressForm.cancel();
                         $('#contact_new-address').css('display', '');
                     }
                 },
