@@ -153,10 +153,10 @@
 </div>
 
 <span  id="addBtnTpl" class="input-group-btn hide">
-    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
+    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-plus"></span></button>
 </span>
 <div id="keywordTpl" class="input-group hide" name="keyword">
-    <input type="text" class="form-control input-sm" data-enumerate = "true" disabled="" />
+    <input type="text" class="form-control input-sm" data-enumerate ="true" disabled="" />
     <span class="input-group-btn">
         <button class="btn btn-danger btn-sm" type="button" name="btnDeleteKeyword" title="Delete"><span class="fa fa-trash-o"></span></button>
     </span>
@@ -175,7 +175,7 @@
     });
 
     //Delete keyword
-    $("#archivalProfileFields").on("click","[name=btnDeleteKeyword]", function(){
+    $("#archivalProfileFields").on("click","[name=btnDeleteKeyword]", function() {
         var selectId = $(this).closest("[name=keyword").find('input').attr('name');
         var val = $(this).closest("[name=keyword").find('input').val();
         $(this).closest("[name=keyword").remove();
@@ -183,18 +183,43 @@
     });
 
     //Add keyword
-    $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function(){
-        var name = $(this).data('select');
-        var val =  $('[name="'+name+'"] option:selected').text();
+    $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function() {
+
+        let val = null;
+        let input = null;
+        let name = $(this).data('select');
+        let inputType = $(this).data('input-type');
+
+        switch (inputType) {
+            case "select" :
+                input = $('#archivalProfileFields').find('[name="'+name+'"]').not("[disabled]");
+                let option = input.find('option:selected');
+                val =  option.text();
+                break;
+
+            case "input" :
+                input = $('#archivalProfileFields').find('input[name="'+name+'"]').not("[disabled]");
+                val =  input.val();
+                break;
+        }
+
+        var tpl = $('#keywordTpl').clone().removeClass('hide');
+
 
         if(val) {
-            var tpl = $('#keywordTpl').clone().removeClass('hide');
-
             tpl.find('input').val(val).attr('name',name);
             $('[name="list-'+name+'"]').append(tpl);
-            var select = $("#"+name);
-            select.find("option:selected").addClass('hide');
-            select.val('');
+
+            switch (inputType) {
+                case "select" :
+                    input.find("option:selected").addClass('hide');
+                    break;
+
+                case "input" :
+                    break;
+            }
+
+            input.val('');
         }
 
     });
@@ -237,8 +262,12 @@
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
-                        field.attr('data-enumerate','NOT_VALUE');
-                        field.attr('id',name);
+
+                        if (isArray) {
+                            field.attr('data-enumerate', 'NOT_VALUE');
+                        }
+
+                        field.attr('id', name);
 
                         $.each(enumeration, function (index, value) {
                             field.append($('<option>', {
@@ -302,6 +331,13 @@
                 var btnGroup  = $('#addBtnTpl').clone();
                 btnGroup.removeClass('hide');
                 btnGroup.find('button').attr('data-select',name);
+                if (enumeration) {
+                    btnGroup.find('button').attr('data-input-type',"select");
+                } else {
+                    btnGroup.find('button').attr('data-input-type',"input");
+                    template.find('input').attr('data-enumerate', 'NOT_VALUE');
+                }
+
                 template.find('div').addClass('input-group').append(btnGroup);
                 template.append('<label class="col-md-3 small control-label"></label>');
                 template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
@@ -377,6 +413,7 @@
             $.each(inputsArchivalProfile, function() {
                 //var value = $.trim($(this).val());
                 var type = $(this).attr("data-type");
+                var inputType = $(this).attr("type");
                 var name = $(this).attr('name');
                 var required = $(this).attr('data-required');
                 var enumerate = $(this).attr('data-enumerate');
