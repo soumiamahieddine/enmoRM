@@ -1041,9 +1041,11 @@ class archive
     protected function setDescription($descriptions, $archivalProfile = null)
     {
         $descriptionHtml = "";
+
         foreach ($descriptions as $name => $value) {
             if (\gettype($value) !== 'array' && \gettype($value) !== 'object') {
                 $label = $type = $archivalProfileField = null;
+
                 if ($archivalProfile) {
                     foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                         if ($archiveDescription->fieldName == $name) {
@@ -1085,20 +1087,24 @@ class archive
                 }
 
                 $descriptionHtml .= '<th title="' . $label . '" name="' . $name . '" data-type="' . $type . '">' . $label . '</th>';
+
                 if ($type == "date") {
                     $textValue = \laabs::newDate($value);
                     $textValue = $textValue->format("d/m/Y");
                 } else {
                     $textValue = $value;
-
                 }
+
                 if ($type == 'boolean') {
                     $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
                 }
+
                 $descriptionHtml .= '<td title="' . $value . '">' . $textValue . '</td>';
                 $descriptionHtml .= '</tr>';
             }
         }
+
+        return $descriptionHtml;
     }
 
     /**
@@ -1110,6 +1116,7 @@ class archive
     protected function getDescriptiveMetadatas($archive)
     {
         $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
+
         if ($archive->originatingDate) {
             $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
         }
