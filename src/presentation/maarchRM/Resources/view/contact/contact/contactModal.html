@@ -85,7 +85,7 @@
             if (this.newOrgContact) {
                 var contactObject = ContactInformation.serialize();
 
-                if(contactObject.displayName == "" || contactObject.firstName == "" || contactObject.lastName == "") {
+                if(!this.self && (contactObject.displayName == "" || contactObject.firstName == "" || contactObject.lastName == "")) {
                     gritter.show($('#empty_text').text(),false);
                     return false;
                 }
