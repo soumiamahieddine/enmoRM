@@ -190,3 +190,6 @@ msgstr "Aucune adresse"
 
 msgid "No communication mean"
 msgstr "Aucun moyen de communication"
+
+msgid "Please to fill in at least an address or a communication mean"
+msgstr "Merci de remplir au moins une adresse ou un moyen de communication"

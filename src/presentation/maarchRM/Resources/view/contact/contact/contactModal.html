@@ -28,6 +28,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="hide">
+                    <span id="empty_orgContact">Please to fill in at least an address or a communication mean</span>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-dismiss="modal" title="Cancel">Cancel</button>
@@ -92,6 +95,11 @@
 
                 contactObject.address = ContactAddressForm.serializeList();
                 contactObject.communication = ContactCommunicationForm.serializeList();
+
+                if(this.self && contactObject.address.length == 0 && contactObject.communication.length == 0) {
+                    gritter.show($('#empty_orgContact').text(),false);
+                    return false;
+                }
 
                 ajax(button, {
                     type        : 'POST',
