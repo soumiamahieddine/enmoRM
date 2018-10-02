@@ -282,7 +282,7 @@ class archive
                         || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
                             && in_array('archiver', $currentService->orgRoleCodes)))
                     && $hasModificationMetadata
-                    && $archive->messages[0]->schema != 'seda2'
+                    && (!is_null($archive->messages) && $archive->messages[0]->schema != 'seda2')
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
