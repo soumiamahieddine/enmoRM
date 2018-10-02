@@ -65,17 +65,19 @@
     $('#organizationInfo_modifyAddress').on('click', function() {
         var newObject = false;
 
-        if ($('#organizationInfo_addressList').html() + $('#organizationInfo_communicationList').html() == '') {
-            var newObject = true;
+        var contact = $('#organizationInfo_address').data('contact');
+
+        if(!contact.contactId) {
+            newObject = true;
         }
 
         ContactModal.load($('#organizationInfo_address').data('contact'), newObject, true);
-    })
+    });
 
     // Add new contact
     $('#organizationInfo_addContact').on('click', function(){
         ContactModal.load(null, true, false);
-    })
+    });
 
     // Modify contact
     $('#organizationInfo_contactList').on('click', '.modifyOrgContact', function(){
