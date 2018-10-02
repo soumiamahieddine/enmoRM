@@ -88,9 +88,9 @@
         </div>
         <div class="form-group col-md-9">
             <label for="country">Country</label><br>
-            <select class="form-control" name="country" id="country">
-                <option value="" >Select a language</option>
-                <option value="FR" selected>Français</option>
+            <select class="form-group" name="country" id="country">
+                <option value="" >Select a country</option>
+                <option value="FR" selected="selected">Français</option>
                 <option disabled="disabled">----</option>
                 <?merge countriesCodes ?>
                 <span>
@@ -362,7 +362,7 @@
 
         cancel: function() {
             $('#contact_address-form').find('input').val('');
-            $('#contact_address-form').find('select').val('');
+            $('#contact_address-form').find('select').val('FR');
             $('#contact_address-form').css('display', 'none');
             $('#contact_addressList').find('a').removeClass('active');
 
