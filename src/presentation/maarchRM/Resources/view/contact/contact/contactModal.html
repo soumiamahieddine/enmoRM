@@ -5,7 +5,7 @@
                 <div class="container-fluid" style="margin-top:24px">
                     <ul class="nav nav-tabs nav-justified">
                         <li class="active">
-                            <a href="#contact_modalTab" id="contactTabBtn" data-toggle="tab">Contact</a>
+                            <a href="#contact_modalTab" id="contactTabBtn" data-toggle="tab">Contact<span style="color : red">&nbsp;*</span></a>
                         </li>
                         <li>
                             <a href="#address_modalTab" id="addressTabBtn" data-toggle="tab">Address</a>
@@ -27,6 +27,9 @@
                             <?hinclude contact/manageContact/communicationForm.html ?>
                         </div>
                     </div>
+                </div>
+                <div class="hide">
+                    <span id="empty_orgContact">Please to fill in at least an address or a communication mean</span>
                 </div>
             </div>
             <div class="modal-footer">
@@ -84,8 +87,19 @@
         save : function(button) {
             if (this.newOrgContact) {
                 var contactObject = ContactInformation.serialize();
+
+                if(!this.self && (contactObject.displayName == "" || contactObject.firstName == "" || contactObject.lastName == "")) {
+                    gritter.show($('#empty_text').text(),false);
+                    return false;
+                }
+
                 contactObject.address = ContactAddressForm.serializeList();
                 contactObject.communication = ContactCommunicationForm.serializeList();
+
+                if(this.self && contactObject.address.length == 0 && contactObject.communication.length == 0) {
+                    gritter.show($('#empty_orgContact').text(),false);
+                    return false;
+                }
 
                 ajax(button, {
                     type        : 'POST',

@@ -21,24 +21,21 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="communicationPurpose">Purpose<span style="color : red"> *</span></label>
-                    <input type="text" class="form-control" name="purpose" placeholder="Purpose">
+                    <input type="text" class="form-control" name="purpose" placeholder="Purpose" id="communicationPurpose">
                 </div>
             </div>
         </div>
     </div>
     <div class="form-group">
-        <label for="comMeanCode">Communication mean<span style="color : red"> *</span></label>
+        <label for="contact_comMeanCode">Communication mean<span style="color : red"> *</span></label>
         <div class="row " >
             <div class=" col-xs-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="contact_comMeanCode"  name="comMeanName">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">&nbsp;<span class="caret"></span></button>
-                        <ul id="contact_comMeanCodeList" class="dropdown-menu dropdown-menu-right" role="menu">
-                            <?merge communicationMeans ?>
-                            <li><a data-code="[?merge .code ?]" class="titleSelection"><?merge .name ?></a></li>
-                        </ul>
-                    </div>
+                    <select class="form-control col-xs-12" name="comMeanCode" id="contact_comMeanCode">
+                        <option value=""></option>
+                        <?merge communicationMeans ?>
+                        <option value="[?merge .code ?]"><?merge .name ?></option>
+                    </select>
                 </div>
             </div>
             <div class=" col-xs-6">
@@ -47,8 +44,8 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="info">Information</label>
-        <input type="text" class="form-control" name="info" placeholder="Information">
+        <label for="communicationInfo">Information</label>
+        <input type="text" class="form-control" name="info" placeholder="Information" id="communicationInfo">
     </div>
     <div class="panel-footer clearfix">
         <div>
@@ -69,11 +66,6 @@
 <span class="hide" id="contact_Fax">Fax</span>
 
 <script type="text/javascript">
-
-    //
-    $("#contact_comMeanCodeList").on('click', ".titleSelection", function(){
-        $('#contact_comMeanCode').val($(this).text());
-    });
 
     // Read
     $("#contact_communicationList").on('click', 'a', function () {
@@ -116,8 +108,9 @@
             var communication = selection.data('communication');
 
             $.each(communication, function (key, value) {
-                    $('#contact_communication-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
+                $('#contact_communication-form').find('input[name="' + key + '"], select[name="' + key + '"]').val(value);
             });
+
         },
 
         save: function() {
@@ -179,14 +172,6 @@
                 communication[$(this).attr('name')] = $(this).val();
             });
 
-            $('#contact_comMeanCodeList').find('a').each(function(){
-
-                if($('#contact_comMeanCode').val() == $(this).html()) {
-                    communication['comMeanCode'] =  $(this).data('code');
-                }
-            })
-
-
             return communication;
         },
 
@@ -194,15 +179,17 @@
             var communicationList = [];
             var a = $('#contact_communicationList').find('a');
 
-            $.each(a, function(){
-
-            })
-
             return communicationList;
         },
 
         deleteCommunication: function() {
             $('#contact_communicationConfirmDelete').modal('hide');
+
+            if (!$('#contact_communicationId').val()) {
+                $('#contact_communicationList').find('.active').remove();
+                ContactCommunicationForm.cancel();
+                return;
+            }
 
             $.ajax({
                 type        : 'DELETE',
@@ -213,7 +200,7 @@
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status == true) {
                         $('#contact_communicationList').find('.active').remove();
-                        ContactCommunicationForm.cancel()
+                        ContactCommunicationForm.cancel();
                     }
                     $('#contact_new-communication').css('display', '');
                 },
@@ -237,12 +224,8 @@
 
             var a = $('<a/>').data('communication', communication).attr('href', '#').addClass('list-group-item').appendTo(communicationList);
 
-            $('#contact_comMeanCodeList').find('a').each(function(){
+            comMeanCode = $("#contact_comMeanCode > option[value=" + communication.comMeanCode + "]").text();
 
-                if($(this).data('code') == communication.comMeanCode) {
-                    comMeanCode = $(this).text();
-                }
-            })
             $('<b/>').addClass('list-item-heading')
                      .text(communication.purpose)
                      .appendTo(a);
