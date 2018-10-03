@@ -51,44 +51,56 @@ class authentication
             \dependency\html\Document $view,
             \dependency\json\JsonObject $json,
             \dependency\localisation\TranslatorInterface $translator,
-            $logo
+            $logo, 
+            $altLogo = "presentation/img/RM.svg",
+            $loginStyle = null
     ) {
         $this->view = $view;
 
         $this->logoUri = $logo;
-        $this->loginLogoUri = $logo;
+
+        if (isset($altLogo)) {
+            $this->loginLogoUri = $altLogo;
+        } else {
+            $this->loginLogoUri = $logo;
+        }
 
         $this->json = $json;
         $this->translator = $translator;
         $this->translator->setCatalog('auth/messages');
         $this->json->status = true;
 
-        /*$this->loginStyle = "
-            .modal-backdrop {
-                background-image: url('presentation/img/RM.svg');
-                background-repeat: no-repeat;
-                background-position: center top;
-                background-color: #fff;
-                opacity:1 !important;
-            } 
+        if (!isset($loginStyle)) {
+            $this->loginStyle = "
+                .modal-backdrop {
+                    background-image: url('presentation/img/19093d7d-21f4-491b-bca1-5f57704c29d9.jpg');
+                    background-repeat: no-repeat;
+                    background-position: center top;
+                    background-color: #fff;
+                    background-size: cover;
+                    opacity:1 !important;
+                } 
 
-            .modal {
-              text-align: center;
-              padding: 0!important;
-            }
+                .modal {
+                  text-align: center;
+                  padding: 0!important;
+                }
 
-            .modal:before {
-              content: '';
-              display: inline-block;
-              height: 80%;
-              vertical-align: middle;
-            }
+                .modal:before {
+                  content: '';
+                  display: inline-block;
+                  height: 50%;
+                  vertical-align: middle;
+                }
 
-            .modal-dialog {
-              display: inline-block;
-              text-align: left;
-              vertical-align: middle;
-            }";*/
+                .modal-dialog {
+                  display: inline-block;
+                  text-align: left;
+                  vertical-align: middle;
+                }";
+        } else {
+            $this->loginStyle = $loginStyle;
+        }
     }
 
     /**
