@@ -248,6 +248,12 @@
                 .children('b').html($('<i/>')).addClass('fa fa-folder-o')
                               .text(" " +folder.name);
 
+            var folderElement = $("#" + folder.parentFolderId );
+
+            if(folderElement.length && folderElement.find('span > b:first').hasClass('fa-folder-o')) {
+                folderElement.find('span > b:first').addClass('fa-folder').removeClass('fa-folder-o');
+            }
+
             return node;
         },
 
