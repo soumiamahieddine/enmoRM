@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Version 2.3
+
+### Exploitation
+
+- `Added` Compatibilité navigateur Microsoft (IE 11 / Edge)
+- `Added` Compatibilité PHP 7.2
+- `Fixed` Optimisation mémoire
+
+### IHM
+
+- `Changed` Modification de l'écran principal
+- `Added` Personnalisation de la page de connexion
+- `Fixed` Bloquer le double clic
+
+### Administration
+
+- `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication
+
 ## Version 2.2
 
 ### Exploitation
