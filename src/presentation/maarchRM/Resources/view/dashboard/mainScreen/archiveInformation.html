@@ -175,6 +175,7 @@
 
     <input id="inputCustomBooleanField" placeholder="Value" type="text" class="col-xs-12"/>
 
+    <input id="inputHiddenCustomField" placeholder="Value" type="hidden" class="col-xs-12"/>
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
     <span id="customFieldError_txt">Metadatas are incomplete.</span>
@@ -377,12 +378,18 @@
                             autoclose:true
                         }).datepicker('setDate', value.html());
                         break;
-                    default :
+                    case 'name_array':
                         customField = $("#inputCustomField").clone();
-                        if(label.data('immutable')) {
-                            customField.prop('disabled', true);
-                        }
+                        customField.data("array", value.data("array"));
                         customField.val(value.html());
+                        customField.prop('disabled', true);
+                        break;
+                    default :
+                            customField = $("#inputCustomField").clone();
+                            if(label.data('immutable')) {
+                                customField.prop('disabled', true);
+                            }
+                            customField.val(value.html());
                 }
                 
                 value.html('').append(customField.removeAttr('id'));
@@ -407,6 +414,9 @@
                 var value = null;
 
                 switch (type) {
+                    case "name_array" :
+                        value = valueInput.data("array");
+                        break;
                     case "name" :
                     case "text" :
                         value = valueInput.val();

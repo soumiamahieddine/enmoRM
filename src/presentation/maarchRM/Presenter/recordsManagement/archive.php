@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2018 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -1043,65 +1043,72 @@ class archive
         $descriptionHtml = "";
 
         foreach ($descriptions as $name => $value) {
-            if (\gettype($value) !== 'array' && \gettype($value) !== 'object') {
-                $label = $type = $archivalProfileField = null;
-
-                if ($archivalProfile) {
-                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                        if ($archiveDescription->fieldName == $name) {
-                            $label = $archiveDescription->descriptionField->label;
-                            $archivalProfileField = true;
-                            $type = $archiveDescription->descriptionField->type;
-                        }
-                    }
-                }
-
-                if (empty($label)) {
-                    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-                }
-
-                if (empty($type) && $value != "") {
-                    $type = 'text';
-                    switch (gettype($value)) {
-                        case 'boolean':
-                            $type = 'boolean';
-                            break;
-
-                        case 'integer':
-                        case 'double':
-                            $type = 'number';
-                            break;
-
-                        case 'string':
-                            if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                                $type = 'date';
-                            }
-                            break;
-                    }
-                }
-
-                if ($archivalProfileField) {
-                    $descriptionHtml .= '<tr class="archivalProfileField">';
-                } else {
-                    $descriptionHtml .= '<tr>';
-                }
-
-                $descriptionHtml .= '<th title="' . $label . '" name="' . $name . '" data-type="' . $type . '">' . $label . '</th>';
-
-                if ($type == "date") {
-                    $textValue = \laabs::newDate($value);
-                    $textValue = $textValue->format("d/m/Y");
-                } else {
-                    $textValue = $value;
-                }
-
-                if ($type == 'boolean') {
-                    $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                }
-
-                $descriptionHtml .= '<td title="' . $value . '">' . $textValue . '</td>';
-                $descriptionHtml .= '</tr>';
+            if (\gettype($value) == 'object') {
+                continue;
             }
+
+            $label = $type = $archivalProfileField = null;
+
+            if ($archivalProfile) {
+                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                    if ($archiveDescription->fieldName == $name) {
+                        $label = $archiveDescription->descriptionField->label;
+                        $archivalProfileField = true;
+                        $type = $archiveDescription->descriptionField->type;
+                    }
+                }
+            }
+
+            if (empty($label)) {
+                $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
+            }
+
+            if (empty($type) && $value != "") {
+                $type = 'text';
+                switch (gettype($value)) {
+                    case 'boolean':
+                        $type = 'boolean';
+                        break;
+
+                    case 'integer':
+                    case 'double':
+                        $type = 'number';
+                        break;
+
+                    case 'string':
+                        if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
+                            $type = 'date';
+                        }
+                        break;
+                }
+            }
+
+            if ($archivalProfileField) {
+                $descriptionHtml .= '<tr class="archivalProfileField">';
+            } else {
+                $descriptionHtml .= '<tr>';
+            }
+
+            $th = '<th title="' . $label . '" name="' . $name . '" data-type="' . $type . '">' . $label . '</th>';
+
+            if ($type == "date") {
+                $textValue = \laabs::newDate($value);
+                $textValue = $textValue->format("d/m/Y");
+                $td = '<td title="' . $value . '">' . $textValue . '</td>';
+            } elseif ($type == 'boolean') {
+                $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
+                $td = '<td title="' . $value . '">' . $textValue . '</td>';
+            } elseif ($type == 'name' && is_array($value)) {
+                $textValue = \laabs\implode(", ", $value);
+                $th = '<th title="' . $label . '" name="' . $name . '" data-type="name_array">' . $label . '</th>';
+                $td = "<td title='" . $textValue . "' data-array='" . json_encode($value) . "'>" . $textValue . "</td>";
+            } else {
+                $textValue = $value;
+                $td = '<td title="' . $value . '">' . $textValue . '</td>';
+            }
+
+
+            $descriptionHtml .= $th . $td . '</tr>';
         }
 
         return $descriptionHtml;
@@ -1131,7 +1138,7 @@ class archive
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
         } else {
-            $descriptionHtml = '<table">';
+            $descriptionHtml = '<table>';
 
             if (isset($archive->descriptionObject)) {
                 $descriptionHtml .= $this->setDescription($archive->descriptionObject, $archivalProfile);
