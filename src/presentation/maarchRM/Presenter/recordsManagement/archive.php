@@ -1048,6 +1048,7 @@ class archive
             }
 
             $label = $type = $archivalProfileField = null;
+            $isImmutable = false;
 
             if ($archivalProfile) {
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -1055,6 +1056,7 @@ class archive
                         $label = $archiveDescription->descriptionField->label;
                         $archivalProfileField = true;
                         $type = $archiveDescription->descriptionField->type;
+                        $isImmutable = $archiveDescription->isImmutable;
                     }
                 }
             }
@@ -1089,7 +1091,15 @@ class archive
                 $descriptionHtml .= '<tr>';
             }
 
-            $th = '<th title="' . $label . '" name="' . $name . '" data-type="' . $type . '">' . $label . '</th>';
+            $th = "<th title='" . $label . "'";
+            $th .= " name='" . $name . "'";
+            $th .= "data-type='" . $type . "'";
+
+            if  ($isImmutable) {
+                $th .= "data-immutable='immutable'";
+            }
+
+            $th .= ">" . $label . "</th>";
 
             if ($type == "date") {
                 $textValue = \laabs::newDate($value);
