@@ -128,7 +128,7 @@
     $('#retentionRule').on('change', function() {
         ArchiveForm.displayRetentionRulesInfo();
     });
-    
+
     var ArchiveForm = {
         send : function(type) {
 
@@ -171,7 +171,7 @@
                             var folder = archive.originatorOrgRegNumber;
                             if (archive.filePlanPosition) {
                                 folder = archive.filePlanPosition;
-                            } 
+                            }
                             trigger('loadFolder.filePlan', [folder]);
                         }
                     },
@@ -202,13 +202,13 @@
                 $('#retentionRule').val(selectedProfile.retentionRuleCode).change().attr("disabled", "disabled");
             }
 
-            if (value == '' 
-                || selectedProfile.retentionStartDate == '' 
+            if (value == ''
+                || selectedProfile.retentionStartDate == ''
                 || selectedProfile.retentionStartDate == null) {
-                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
+                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]");
                 retentionStartDate.data("datepicker").setDate(new Date())
                 retentionStartDate.closest(".form-group").removeClass("hide");
-                
+
             } else {
                  $("#managementMetadataForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
             }
@@ -217,16 +217,16 @@
             var value = $('#archivalProfile').val();
 
             $('#archivalProfileFields').empty();
-            
+
             if (value == "") {
                 Metadata.acceptUserIndex(true);
                 return;
             }
-            
+
             var selectedProfile = $('#archivalProfile').data('json');
-            
+
             Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
-            
+
             $.each(selectedProfile.archiveDescription, function(key, value) {
                 Metadata.addArchiveDescription(value);
             });
@@ -242,7 +242,7 @@
             }
 
             var finalDisposition = selected.data('final-disposition');
-            
+
             var duration = selected.data('duration');
 
             if (duration === undefined) {

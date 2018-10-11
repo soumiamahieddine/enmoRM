@@ -84,7 +84,7 @@ class archive
         $this->view->addContentFile("recordsManagement/archive/search.html");
 
         $this->view->translate();
-        
+
         usort($profiles, array($this, "compareProfiles"));
 
         $deleteDescription = true;
@@ -265,7 +265,7 @@ class archive
         $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
-            
+
             $archive->archivalProfileName = $archivalProfile->name;
         }
 
@@ -311,7 +311,7 @@ class archive
                         $descriptionHtml .= '<dd>'.$value.'</dd>';
                     }
                 }
-                
+
                 $descriptionHtml .='</dl>';
             }
 
@@ -689,7 +689,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * Serializer JSON for metadata method
      * @param array $result
@@ -700,7 +700,7 @@ class archive
     {
         if ($result) {
              $this->json->message = 'Archive updated';
-             
+
         } else {
              $this->json->message = 'Archive not updated';
         }
@@ -709,7 +709,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * Return new digital resource for an archive
      * @param digitalResource/digitalResource $digitalResource
@@ -809,7 +809,7 @@ class archive
         if (array_key_exists('error', $result)) {
             $echec = count($result['error']);
         }
-        
+
         $this->translator->setCatalog('recordsManagement/messages');
         $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
         $this->json->message = $this->translator->getText($this->json->message);
