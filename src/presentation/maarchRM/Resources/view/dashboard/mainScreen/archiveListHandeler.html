@@ -247,7 +247,7 @@
 
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
-            if (fileplanLevel == 'item' || (!archivalProfiles.length && withoutProfile !== 1)) {
+            if ($(fileplanLevel).val() == 'file' || (!archivalProfiles.length && withoutProfile !== 1)) {
                 return;
             }
                 
