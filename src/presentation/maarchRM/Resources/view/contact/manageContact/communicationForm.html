@@ -179,6 +179,10 @@
             var communicationList = [];
             var a = $('#contact_communicationList').find('a');
 
+            $.each(a, function(){
+                communicationList.push($(this).data('communication'));
+            });
+
             return communicationList;
         },
 
