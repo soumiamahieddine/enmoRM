@@ -173,8 +173,6 @@
         </label>
     </div>
 
-    <input id="inputCustomBooleanField" placeholder="Value" type="text" class="col-xs-12"/>
-
     <input id="inputHiddenCustomField" placeholder="Value" type="hidden" class="col-xs-12"/>
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
@@ -428,8 +426,13 @@
                         value = parseInt(valueInput.val());
                         break;
                     case "boolean" :
-                        var inputValue = valueInput.parent('.active').find('input').val();
-                        value = inputValue == 1 ? true : false;
+                        var inputValue = $(e).find('td').find('.active > input').val();
+
+                        if (inputValue === "") {
+                            value = inputValue;
+                        } else {
+                            value = inputValue == 1 ? true : false;
+                        }
                         break;
                     default:
                 }
