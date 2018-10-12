@@ -429,9 +429,9 @@
                         var inputValue = $(e).find('td').find('.active > input').val();
 
                         if (inputValue === "") {
-                            value = inputValue;
+                            value = null;
                         } else {
-                            value = inputValue == 1 ? true : false;
+                            value = inputValue;
                         }
                         break;
                     default:
