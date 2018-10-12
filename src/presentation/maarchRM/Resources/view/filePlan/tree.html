@@ -79,7 +79,7 @@
         currentOrgRegnumber : null,
         locked : false,
         pathList : {},
-        
+
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
         },
@@ -118,7 +118,7 @@
             }
             var span = this.selectedNode.children('span');
             span.find('.dropdown').css('visibility', 'hidden');
-            
+
             if (span.hasClass('folderNode')) {
                 FolderNode.unselect(span);
             } else {
@@ -163,7 +163,7 @@
             if (parent.length) {
                 path = $.merge(path, this.getPath(parent));
             }
-            
+
             return path;
         },
 
@@ -245,14 +245,10 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').html($('<i/>')).addClass('fa fa-folder-o')
+                .children('b').html($('<i/>')).addClass('fa fa-folder')
                               .text(" " +folder.name);
 
             var folderElement = $("#" + folder.parentFolderId );
-
-            if(folderElement.length && folderElement.find('span > b:first').hasClass('fa-folder-o')) {
-                folderElement.find('span > b:first').addClass('fa-folder').removeClass('fa-folder-o');
-            }
 
             return node;
         },
@@ -265,7 +261,7 @@
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
         },
-        
+
         getChildrenOrg : function() {
             var orgNode = FilePlan.selectedNode;
             if (!$(FilePlan.selectedNode).hasClass("organization")) {
@@ -282,7 +278,7 @@
              .css("font-size", "20px");
 
             if (e.closest('.folder').data('closed')) {
-                e.addClass('node-danger');   
+                e.addClass('node-danger');
             }
         },
 
@@ -293,7 +289,7 @@
              .css("font-size", "14px")
              .find('i')
              .css("font-size", "16px");
-            
+
         },
 
         select: function(e) {
@@ -344,7 +340,7 @@
 
             if ($(ui.draggable).hasClass('folder')) {
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
-                
+
             } else if ($(ui.helper).hasClass('archiveHelper')) {
                 if (FilePlan.selectedNode.closest('li').data('orgregnumber') == $(this).closest('li').data('orgregnumber')) {
                     ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
@@ -391,10 +387,10 @@
     })
 
     // Folder selection
-    $('#filePlanTree').on('mouseenter', '.folderNode, .orgNode', function() { 
+    $('#filePlanTree').on('mouseenter', '.folderNode, .orgNode', function() {
         FilePlan.mouseenter($(this));
     })
-    $('#filePlanTree').on('mouseleave', '.folderNode, .orgNode', function() { 
+    $('#filePlanTree').on('mouseleave', '.folderNode, .orgNode', function() {
         FilePlan.mouseleave($(this));
     })
     $('#filePlanTree').on('click', '.folderNode, .orgNode', function() {
