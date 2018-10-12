@@ -162,8 +162,7 @@
             var defaultName = "";
             var list = $('<li/>').html(
                             $('<a/>').addClass('nameSelection')
-                        ); 
-
+                        );
             displayNames.html('');
             if (firstName + lastName + orgName == "") {
 
@@ -182,9 +181,14 @@
                 }
             } else if (firstName + lastName == "" && orgName != "") {
                 defaultName = orgName;
+                if ($("#contact_displayName").val() != '') {
+                    defaultName = $("#contact_displayName").val();
+                    list.find('a').text(defaultName);
+                    list.clone().appendTo(displayNames);
+                }
                 list.find('a').text(orgName);
                 list.clone().appendTo(displayNames);
-                
+
             } else {
                 defaultName = firstName+lastName;
 
@@ -270,7 +274,6 @@
             $.each(contact, function(key, value) {
                 contactForm.find('[name=' + key + ']').val(value);
             })
-
             contactForm.find('input[name=type][value="' +type+ '"]').closest('label').click();
 
             $.each(contact.address, function() {
@@ -291,7 +294,7 @@
 
             contact.contactType = $('#contact_information-form').find('input[name=type]:checked').val();
             contact.contactId = $('#contact_contactId').val();
-            
+
             return contact;
         },
 
@@ -315,5 +318,5 @@
     $('#app_maarchRM_main').ready(function() {
         ContactInformation.init();
     });
-    
+
 </script>
