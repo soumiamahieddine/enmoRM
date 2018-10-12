@@ -84,8 +84,8 @@ file that was distributed with this source code.
                                                     <select id="code" name="retentionRuleCode" class="form-control">
                                                         <option value="">Select a retention rule code</option>
                                                         <?merge retentionRules ?>
-                                                        <option value='[?merge .code ?]' 
-                                                                data-duration="[?merge .retentionDuration ?]" 
+                                                        <option value='[?merge .code ?]'
+                                                                data-duration="[?merge .retentionDuration ?]"
                                                                 data-duration-unit='[?merge .retentionDurationUnit ?]'
                                                                 data-final-disposition='[?merge .finalDisposition ?]'>
                                                             <?merge .label ?>
@@ -94,12 +94,12 @@ file that was distributed with this source code.
                                                 </div>
                                                 <div class="col-md-offset-4">
                                                     <small>
-                                                        <label>Retention duration</label> : 
+                                                        <label>Retention duration</label> :
                                                         <span id="duration"></span>
                                                     </small>
                                                     <br/>
                                                     <small class="finalDisposition dl dl-horizontal">
-                                                        <label>Final disposition</label> : 
+                                                        <label>Final disposition</label> :
                                                         <span id="finalDisposition"></span>
                                                     </small>
                                                 </div>
@@ -136,7 +136,7 @@ file that was distributed with this source code.
                                             <div id='accessRule' >
                                                 <div class="col-md-offset-4">
                                                     <small>
-                                                        <label>Access rule duration</label> : 
+                                                        <label>Access rule duration</label> :
                                                         <span id="accessRuleDuration"></span>
                                                     </small>
                                                 </div>
@@ -174,7 +174,7 @@ file that was distributed with this source code.
             <span id="text_destruction">destruction</span>
             <span id="empty_text">The fields with a star are required.</span>
             <span id="text_file"><i class='fa fa-folder'></i> File</span>
-            <span id="text_item"><i class='fa fa-file'></i> Item</span>          
+            <span id="text_item"><i class='fa fa-file'></i> Item</span>
         </div>
     </div>
 </div>
@@ -190,14 +190,14 @@ file that was distributed with this source code.
             var durationUnit = retentionRule.data('duration-unit');
             var finalDisposition = retentionRule.data("final-disposition");
             if (finalDisposition) {
-                if(durationUnit) {
-                    $('.finalDisposition').css('display','');
-                    $('#duration').text(duration + ' ' + $('#text_' + durationUnit).html());
-                    $('#finalDisposition').text($('#text_' + finalDisposition).html());
-                } else {
+                if(duration >= 9999 && durationUnit == "Y"){
                     $('#duration').text($('#text_I').html());
                     $('.finalDisposition').css('display','none');
                     $('#finalDisposition').html('');
+                } else if(durationUnit) {
+                    $('.finalDisposition').css('display','');
+                    $('#duration').text(duration + ' ' + $('#text_' + durationUnit).html());
+                    $('#finalDisposition').text($('#text_' + finalDisposition).html());
                 }
             } else {
                 $('.finalDisposition').css('display','');
@@ -247,7 +247,7 @@ file that was distributed with this source code.
                 success: function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        
+
                         load(returnUrl);
                     }
                 },
@@ -281,10 +281,10 @@ file that was distributed with this source code.
             if(serializedObject.retentionRuleCode ==''){
                 serializedObject.retentionRuleCode = null;
             }
-            
+
             serializedObject.archiveDescription = PropertiesList.serialize();
 
-            
+
             if ($("#fileplanLevel").val() != 'item') {
                 serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
                 serializedObject.containedProfiles = ArchiveStructure.serialize();
@@ -292,7 +292,7 @@ file that was distributed with this source code.
                 serializedObject.acceptArchiveWithoutProfile = false;
                 serializedObject.containedProfiles = [];
             }
-            
+
             return serializedObject;
         }
     }
@@ -300,7 +300,7 @@ file that was distributed with this source code.
     $("#archivalProfileCancelBtn").on("click", function (){
         load('/archivalProfiles');
     });
-    
+
     $("#contain").ready(function () {
         $('#fileplanLevelToggle').bootstrapToggle({
           on: $('#text_item'),
@@ -340,7 +340,7 @@ file that was distributed with this source code.
         }
     });
 
-   
+
 
     //add group to access rules
     $("#contain").on('click', '#addGroup', function () {
@@ -381,7 +381,7 @@ file that was distributed with this source code.
         ArchivalProfile.save("/archivalProfiles");
     });
 
-    
+
     $('#fileplanLevelToggle').on('change', function (e) {
         if ($('#fileplanLevelToggle').prop('checked')) {
             $("#fileplanLevel").val('item');
