@@ -560,50 +560,69 @@ class organization
     public function delete($orgId)
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
-        
-        if ($this->isUsed($organization->registrationNumber)) {
-            throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
+
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
         }
 
-        if(\laabs::hasBundle('medona')) {
-            $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'");
-            if (count($controlAuthorities) > 0) {
-                throw new \core\Exception\ForbiddenException("The organization %s is used in control authority.", 403, null, [$organization->registrationNumber]);
+        try {
+            if ($this->isUsed($organization->registrationNumber)) {
+                throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
             }
-        }
 
-
-        $children = $this->sdoFactory->readChildren("organization/organization", $organization);
-        $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
-        $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
-        $contacts = $this->sdoFactory->readChildren("organization/orgContact", $organization);
-        $archivalProfilesAccess = $this->sdoFactory->readChildren("organization/archivalProfileAccess", $organization);
-        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
-
-        foreach ($contacts as $contact) {
-            $this->deleteContactPosition($contact->contactId, (string) $organization->orgId);
-        }
-
-        foreach ($children as $child) {
             if(\laabs::hasBundle('medona')) {
-                $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
+                $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'");
                 if (count($controlAuthorities) > 0) {
-                    throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
+                    throw new \core\Exception\ForbiddenException("The organization %s is used in control authority.", 403, null, [$organization->registrationNumber]);
                 }
             }
-            $this->delete($child->orgId);
+
+
+            $children = $this->sdoFactory->readChildren("organization/organization", $organization);
+            $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
+            $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
+            $contacts = $this->sdoFactory->readChildren("organization/orgContact", $organization);
+            $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", $organization);
+
+            foreach ($contacts as $contact) {
+                $this->deleteContactPosition($contact->contactId, (string) $organization->orgId);
+            }
+
+            foreach ($children as $child) {
+                if(\laabs::hasBundle('medona')) {
+                    $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
+                    if (count($controlAuthorities) > 0) {
+                        throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
+                    }
+                }
+                $this->delete($child->orgId);
+            }
+
+            foreach ($users as $user) {
+                $this->sdoFactory->delete($user);
+            }
+            foreach ($services as $service) {
+                $this->sdoFactory->delete($service);
+            }
+
+            $this->sdoFactory->delete($organization);
+        } catch (\Exception $exception) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            throw $exception;
         }
 
-        foreach ($users as $user) {
-            $this->sdoFactory->delete($user);
-        }
-        foreach ($services as $service) {
-            $this->sdoFactory->delete($service);
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
         }
 
-        $result = $this->sdoFactory->delete($organization);
 
-        return $result;
+
+        return true;
     }
 
     /**
