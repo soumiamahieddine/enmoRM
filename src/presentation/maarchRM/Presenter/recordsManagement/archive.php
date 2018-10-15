@@ -290,7 +290,10 @@ class archive
                     $editDescription = true;
                 }
             } else {
-                $descriptionHtml = '<dl class="dl dl-horizontal">';
+                //$descriptionHtml = '<dl class="dl dl-horizontal">';
+                $dl = $this->view->createElement('dl');
+                $dl->setAttribute('class', "dl dl-horizontal");
+
                 foreach ($archive->descriptionObject as $name => $value) {
                     if (!empty($archive->archivalProfileReference)) {
                         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -301,18 +304,26 @@ class archive
                         }
                     }
 
-                    $descriptionHtml .= '<dt name="'.$name.'">'.$name.'</dt>';
+                    //$descriptionHtml .= '<dt name="'.$name.'">'.htmlspecialchars($name).'</dt>';
+                    $dt = $this->view->createElement('dt', $this->view->createTextNode($name));
+                    $dl->appendChild($dt);
                     if(is_array($value)){
                         foreach ($value as $metadata){
-                            $descriptionHtml .= '<dd>'.$metadata.'</dd>';
+                            $dd = $this->view->createElement('dd', $this->view->createTextNode($metadata));
+                            $dl->appendChild($dd);
+                            //$descriptionHtml .= '<dd>'.htmlspecialchars($metadata).'</dd>';
                         }
                     } else {
-
-                        $descriptionHtml .= '<dd>'.$value.'</dd>';
+                        $dd = $this->view->createElement('dd', $this->view->createTextNode($value).'-------- mother fuckerrr!');
+                        $dl->appendChild($dd);
+                        //$descriptionHtml .= '<dd>'.htmlspecialchars($value).'---</dd>';
                     }
                 }
 
-                $descriptionHtml .='</dl>';
+                $node = $this->view->getElementById("descriptionTab");
+                $node->appendChild($dl);
+
+                //$descriptionHtml .='</dl>';
             }
 
             if ($descriptionHtml) {
@@ -1042,6 +1053,8 @@ class archive
     {
         $descriptionHtml = "";
 
+        $table = $this->view->createElement('table');
+
         foreach ($descriptions as $name => $value) {
             if (\gettype($value) == 'object') {
                 continue;
@@ -1085,48 +1098,64 @@ class archive
                 }
             }
 
+            // Table row
+            $tr = $this->view->createElement('tr');
+            $table->appendChild($tr);
+
             if ($archivalProfileField) {
-                $descriptionHtml .= '<tr class="archivalProfileField">';
-            } else {
-                $descriptionHtml .= '<tr>';
+                $tr->setAttribute('class', "archivalProfileField");
             }
 
-            $th = "<th title='" . $label . "'";
-            $th .= " name='" . $name . "'";
-            $th .= "data-type='" . $type . "'";
+            // table header column
+            $th = $this->view->createElement('th', $label);
+            $tr->appendChild($th); 
+            $th->setAttribute('title', $label);
+            $th->setAttribute('name', $name);
+            $th->setAttribute('data-type', $type);
 
             if  ($isImmutable) {
-                $th .= "data-immutable='immutable'";
+                $th->setAttribute('data-immutable', 'immutable');
             }
 
-            $th .= ">" . $label . "</th>";
+            // Table data column
+            $td = $this->view->createElement('td');
+            $tr->appendChild($td); 
+
+            $th->setAttribute('title', $value);
 
             if ($type == "date") {
                 $textValue = \laabs::newDate($value);
                 $textValue = $textValue->format("d/m/Y");
-                $td = '<td title="' . $value . '">' . $textValue . '</td>';
-            } elseif ($type == 'boolean') {
-                if (is_null($value)) {
-                    $textValue = '<i class="" data-value=""/>';
-                } else {
-                    $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';
-                }
 
-                $td = '<td title="' . $value . '">' . $textValue . '</td>';
+                $valueNode = $this->view->createTextNode($textValue);
+            } elseif ($type == 'boolean') {
+                $valueNode = $this->view->createElement('i');
+                if (is_null($value)) {
+                    $valueNode->setAttribute('data-value', '0');
+                } else {
+                    if ($value) {
+                        $valueNode->setAttribute('class', "fa fa-check");
+                        $valueNode->setAttribute('data-value', '1');
+                    } else {
+                        $valueNode->setAttribute('class', "fa fa-times");
+                        $valueNode->setAttribute('data-value', '0');
+                    }
+                }
             } elseif ($type == 'name' && is_array($value)) {
                 $textValue = \laabs\implode(", ", $value);
-                $th = '<th title="' . $label . '" name="' . $name . '" data-type="name_array">' . $label . '</th>';
-                $td = "<td title='" . $textValue . "' data-array='" . json_encode($value) . "'>" . $textValue . "</td>";
+                $th->setAttribute('data-type', 'name_array');
+                $th->setAttribute('data-array', json_encode($value));
+
+                $valueNode = $this->view->createTextNode($textValue);
             } else {
-                $textValue = $value;
-                $td = '<td title="' . $value . '">' . $textValue . '</td>';
+                $valueNode = $this->view->createTextNode($value);
             }
 
-
-            $descriptionHtml .= $th . $td . '</tr>';
+            
+            $td->appendChild($valueNode);
         }
 
-        return $descriptionHtml;
+        return $this->view->saveHTML($table);
     }
 
     /**
@@ -1153,13 +1182,11 @@ class archive
             $presenter = \laabs::newPresenter($archive->descriptionClass);
             $descriptionHtml = $presenter->read($archive->descriptionObject);
         } else {
-            $descriptionHtml = '<table>';
-
             if (isset($archive->descriptionObject)) {
-                $descriptionHtml .= $this->setDescription($archive->descriptionObject, $archivalProfile);
+                $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
+            } else {
+                $descriptionHtml = '<table></table>';
             }
-
-            $descriptionHtml .= '</table>';
         }
 
         if ($descriptionHtml) {
