@@ -11,6 +11,7 @@
         <h4 class="text-center text-info">
             <?merge archive.archivalProfileName ?>
             <?merge modificationPrivilege.bool() ?>
+            <?merge archive.status.ifne('disposed') ?>
             <button type="button" class="btn btn-default btn-sm" id="editMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
         </h4>
         <table>

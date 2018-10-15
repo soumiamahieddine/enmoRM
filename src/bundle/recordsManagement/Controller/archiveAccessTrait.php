@@ -248,6 +248,9 @@ trait archiveAccessTrait
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
+        $queryParts['status'] = "status != :status";
+        $queryParams['status'] = 'disposed';
+
         if ($originatorOrgRegNumber){
             $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
             $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
