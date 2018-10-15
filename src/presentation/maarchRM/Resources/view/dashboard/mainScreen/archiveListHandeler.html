@@ -246,8 +246,9 @@
             }
 
             var archiveName = button.closest('.archive').find('.archiveName').text();
+            var archiveStatus = button.closest('.archive').find('.status').text();
 
-            if ($(fileplanLevel).val() == 'file' || (!archivalProfiles.length && withoutProfile !== 1)) {
+            if (archiveStatus == 'disposed' || $(fileplanLevel).val() == 'file' || (!archivalProfiles.length && withoutProfile !== 1)) {
                 return;
             }
                 

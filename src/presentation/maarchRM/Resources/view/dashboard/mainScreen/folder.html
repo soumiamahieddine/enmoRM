@@ -43,6 +43,7 @@
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
                 <i class="fileplanLevel">&nbsp;</i>
                 <span class="archiveName"></span>
+                <span class="status hidden"></span>
                 <br/>
                 &nbsp;&nbsp;
                 <small/>&nbsp;
@@ -318,9 +319,13 @@
             var archiveDiv = ArchiveFolderList.rowTemplate.clone();
             var icon = archiveDiv.find('.fileplanLevel');
             var siblings = archiveDiv.attr('id', archive.archiveId)
-                                     .find('.archiveName').text(archive.archiveName)
-                                     .siblings('small');
-            
+                .find('.archiveName').text(archive.archiveName)
+                .find('.status').text(archive.status)
+                    .siblings('small');
+
+            archiveDiv.attr('id', archive.archiveId)
+                .find('.status').text(archive.status);
+
             switch (archive.fileplanLevel) {
                 case 'item':
                     icon.addClass('fa fa-file');
