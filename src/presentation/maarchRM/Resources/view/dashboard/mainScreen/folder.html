@@ -403,7 +403,7 @@
             dropdown.children().remove();
 
             if (!acceptArchivesWithoutProfiles && archivalProfiles.length == 0) {
-                $("#folderToolbarImport").attr('disabled', 'disabled');
+                $("#folderToolbarImport").addClass('hide');
                 return;
             }
 
