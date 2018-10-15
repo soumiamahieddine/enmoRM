@@ -1106,7 +1106,7 @@ class archive
                 $textValue = $textValue->format("d/m/Y");
                 $td = '<td title="' . $value . '">' . $textValue . '</td>';
             } elseif ($type == 'boolean') {
-                if ($value === "") {
+                if (is_null($value)) {
                     $textValue = '<i class="" data-value=""/>';
                 } else {
                     $textValue = $value ? '<i class="fa fa-check" data-value="1"/>' : '<i class="fa fa-times" data-value="0"/>';

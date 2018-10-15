@@ -428,11 +428,10 @@
                         }
 
                         switch ($(this).val()) {
-                            case "1": value = true;
+                            case "1":
+                            case "0": value = $(this).val();
                                 break;
-                            case "0": value = false;
-                                break;
-                            default: value = "";
+                            default: value = null;
                                 break;
                         }
 
