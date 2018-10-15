@@ -12,9 +12,17 @@ publicArchives = false
 
 ; Logos, title and favicon of the application
 logo = "/presentation/img/RM_MNCHM.svg"
+altLogo = "presentation/img/RM.svg"
 favicon = "/presentation/img/rm.ico"
 title = "Maarch RM"
-
+loginBackground = ".modal-backdrop {
+    background-image: url('presentation/img/19093d7d-21f4-491b-bca1-5f57704c29d9.jpg');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: #fff;
+    background-size: cover;
+    opacity: 1 !important;
+}"
 ; If you use the CSS generator, the file is generated in folder "public/css/[file name]"
 css = "/presentation/css/style.css"
 

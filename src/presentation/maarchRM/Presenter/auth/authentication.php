@@ -52,8 +52,8 @@ class authentication
             \dependency\json\JsonObject $json,
             \dependency\localisation\TranslatorInterface $translator,
             $logo, 
-            $altLogo = "presentation/img/RM.svg",
-            $loginStyle = null
+            $altLogo = null,
+            $loginBackground = null
     ) {
         $this->view = $view;
 
@@ -70,37 +70,7 @@ class authentication
         $this->translator->setCatalog('auth/messages');
         $this->json->status = true;
 
-        if (!isset($loginStyle)) {
-            $this->loginStyle = "
-                .modal-backdrop {
-                    background-image: url('presentation/img/19093d7d-21f4-491b-bca1-5f57704c29d9.jpg');
-                    background-repeat: no-repeat;
-                    background-position: center top;
-                    background-color: #fff;
-                    background-size: cover;
-                    opacity:1 !important;
-                } 
-
-                .modal {
-                  text-align: center;
-                  padding: 0!important;
-                }
-
-                .modal:before {
-                  content: '';
-                  display: inline-block;
-                  height: 50%;
-                  vertical-align: middle;
-                }
-
-                .modal-dialog {
-                  display: inline-block;
-                  text-align: left;
-                  vertical-align: middle;
-                }";
-        } else {
-            $this->loginStyle = $loginStyle;
-        }
+        $this->loginBackground = $loginBackground;
     }
 
     /**
@@ -114,13 +84,9 @@ class authentication
 
         $view->addContentFile("auth/userAccount/login/form.html");
         $view->setSource('logo', $this->loginLogoUri);
+        $view->setSource('loginBackground', $this->loginBackground);
         $view->translate();
         $view->merge();
-
-        if (isset($this->loginStyle)) {
-            $style = $this->view->createElement('style', $this->loginStyle);
-            $this->view->getContainer()->appendChild($style);
-        }
 
         return $view->saveHtml();
     }
