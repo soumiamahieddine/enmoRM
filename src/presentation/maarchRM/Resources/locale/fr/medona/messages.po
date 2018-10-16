@@ -690,7 +690,7 @@ msgstr "Date de production"
 msgid "Send to third party"
 msgstr "Communication à un tiers"
 
-msgid "Requester"
+msgid "Requestor"
 msgstr "Demandeur"
 
 msgid "If you desactivate this option, you agree not to communicate these archives outside the originator service."

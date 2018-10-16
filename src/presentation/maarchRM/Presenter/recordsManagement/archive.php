@@ -1239,6 +1239,7 @@ class archive
 
         $archive->visible = \laabs::newController("recordsManagement/archive")->accessVerification($archive->archiveId);
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+        $archive->finalDispositionDesc = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
     }
 
     protected function setDigitalResources($archive)
