@@ -89,3 +89,5 @@ msgstr "Requis"
 msgid "Add field"
 msgstr "Ajouter un champ"
 
+msgid "Text"
+msgstr "Texte"

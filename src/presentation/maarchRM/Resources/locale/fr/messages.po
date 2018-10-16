@@ -595,3 +595,6 @@ msgstr "À propos"
 
 msgid "Invalid action"
 msgstr "Action invalide"
+
+msgid "Text"
+msgstr "Texte"
