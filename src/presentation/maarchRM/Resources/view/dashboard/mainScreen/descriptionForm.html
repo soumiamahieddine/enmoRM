@@ -13,16 +13,16 @@
     </div>
     <div class="form-group">
         <div class="dropup col-xs-12" id="customFieldAddBtn">
-            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+            <button type="button" class="addCustomField btn btn-sm btn-link pull-right" data-type="text" title="Add field">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
-            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+            <!--ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
                 <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
                 <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
                 <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
                 <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
                 <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
-            </ul>
+            </ul-->
         </div>
     </div>
 </form>
@@ -58,7 +58,7 @@
 
     <div data-translate-catalog="documentManagement/documentMetadata">
         <!-- CUSTOM TEXT FIELD TEMPLATE -->
-        <div class="form-group" id="customTextFieldTemplate">
+        <!--div class="form-group" id="customTextFieldTemplate">
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
@@ -66,7 +66,7 @@
                 <input type="text" class="form-control input-sm value" placeholder="Text"/>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
-        </div>
+        </div-->
 
         <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
         <div class="form-group" id="customTextareaFieldTemplate">
@@ -80,7 +80,7 @@
         </div>
 
         <!-- CUSTOM BOOLEAN FIELD TEMPLATE -->
-        <div class="form-group" id="customBooleanFieldTemplate">
+        <!--div class="form-group" id="customBooleanFieldTemplate">
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
@@ -98,7 +98,7 @@
                 </div>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
-        </div>
+        </div-->
 
 
         <!-- TEXT FIELD TEMPLATE -->
@@ -381,7 +381,6 @@
                     });
                     break;
                 default:
-                    console.log("Error invalid type");
                     return;
                     break;
             }

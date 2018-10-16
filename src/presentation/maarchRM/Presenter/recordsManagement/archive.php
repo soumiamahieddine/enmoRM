@@ -1060,7 +1060,8 @@ class archive
                 continue;
             }
 
-            $label = $type = $archivalProfileField = null;
+            $label = $archivalProfileField = null;
+            $type = 'text';
             $isImmutable = false;
 
             if ($archivalProfile) {
@@ -1076,26 +1077,6 @@ class archive
 
             if (empty($label)) {
                 $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-            }
-
-            if (empty($type) && $value != "") {
-                $type = 'text';
-                switch (gettype($value)) {
-                    case 'boolean':
-                        $type = 'boolean';
-                        break;
-
-                    case 'integer':
-                    case 'double':
-                        $type = 'number';
-                        break;
-
-                    case 'string':
-                        if (preg_match("#\d{4}\-\d{2}\-\d{2}#", $value)) {
-                            $type = 'date';
-                        }
-                        break;
-                }
             }
 
             // Table row
