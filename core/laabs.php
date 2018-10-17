@@ -930,7 +930,7 @@ class laabs
 
         setcookie($cookieName, $cookieToken, $expirationTime, '/', null, false, $httpOnly);
 
-        $GLOBALS["TOKEN"][$name] = $token;
+        $GLOBALS["TOKEN"][$name] = json_decode($jsonToken);
 
         return true;
     }
