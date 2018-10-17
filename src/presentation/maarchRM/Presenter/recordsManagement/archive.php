@@ -1051,9 +1051,29 @@ class archive
 
     protected function setDescription($descriptions, $archivalProfile = null)
     {
-        $descriptionHtml = "";
+        $descriptions = get_object_vars($descriptions);
 
         $table = $this->view->createElement('table');
+
+        if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
+            usort($archivalProfile->archiveDescription, function($a, $b) {
+                return $a->position > $b->position;
+            });
+
+            $descriptionsSorted = [];
+
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                $descriptionsSorted[$archiveDescription->fieldName] = $descriptions[$archiveDescription->fieldName];
+                unset($descriptions[$archiveDescription->fieldName]);
+            }
+
+            if (!empty($descriptions)) {
+                foreach ($descriptions as $name => $value) {
+                    $descriptionsSorted[$name] = $value;
+                }
+            }
+            $descriptions = $descriptionsSorted;
+        }
 
         foreach ($descriptions as $name => $value) {
             if (\gettype($value) == 'object') {
