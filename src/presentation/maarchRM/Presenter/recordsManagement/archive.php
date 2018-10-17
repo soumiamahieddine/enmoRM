@@ -288,9 +288,13 @@ class archive
                     && $publicArchives) {
 
                     $editDescription = true;
+
+                    $node = $this->view->getElementById("descriptionTab");
+                    $this->view->addContent($descriptionHtml, $node);
+                } else {
+                    unset($archive->descriptionObject);
                 }
             } else {
-                //$descriptionHtml = '<dl class="dl dl-horizontal">';
                 $dl = $this->view->createElement('dl');
                 $dl->setAttribute('class', "dl dl-horizontal");
 
@@ -304,33 +308,24 @@ class archive
                         }
                     }
 
-                    //$descriptionHtml .= '<dt name="'.$name.'">'.htmlspecialchars($name).'</dt>';
-                    $dt = $this->view->createElement('dt', $this->view->createTextNode($name));
+                    $dt = $this->view->createElement('dt');
+                    $dt->appendChild($this->view->createTextNode($name));
                     $dl->appendChild($dt);
                     if(is_array($value)){
                         foreach ($value as $metadata){
                             $dd = $this->view->createElement('dd', $this->view->createTextNode($metadata));
                             $dl->appendChild($dd);
-                            //$descriptionHtml .= '<dd>'.htmlspecialchars($metadata).'</dd>';
                         }
                     } else {
-                        $dd = $this->view->createElement('dd', $this->view->createTextNode($value));
+                        $dd = $this->view->createElement('dd');
+                        $dd->appendChild($this->view->createTextNode($value));
                         $dl->appendChild($dd);
-                        //$descriptionHtml .= '<dd>'.htmlspecialchars($value).'---</dd>';
                     }
                 }
 
                 $node = $this->view->getElementById("descriptionTab");
                 $node->appendChild($dl);
 
-                //$descriptionHtml .='</dl>';
-            }
-
-            if ($descriptionHtml) {
-                $node = $this->view->getElementById("descriptionTab");
-                $this->view->addContent($descriptionHtml, $node);
-            } else {
-                unset($archive->descriptionObject);
             }
         }
 
