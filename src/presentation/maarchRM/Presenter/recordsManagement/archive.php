@@ -313,7 +313,8 @@ class archive
                     $dl->appendChild($dt);
                     if(is_array($value)){
                         foreach ($value as $metadata){
-                            $dd = $this->view->createElement('dd', $this->view->createTextNode($metadata));
+                            $dd = $this->view->createElement('dd');
+                            $dd->appendChild($this->view->createTextNode($metadata));
                             $dl->appendChild($dd);
                         }
                     } else {

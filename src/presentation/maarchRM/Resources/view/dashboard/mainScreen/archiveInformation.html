@@ -388,7 +388,7 @@
                             if(label.data('immutable')) {
                                 customField.prop('disabled', true);
                             }
-                            customField.val(value.html());
+                            customField.val(value.text());
                 }
                 
                 value.html('').append(customField.removeAttr('id'));
