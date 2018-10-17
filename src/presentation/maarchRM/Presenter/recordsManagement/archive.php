@@ -314,7 +314,7 @@ class archive
                             //$descriptionHtml .= '<dd>'.htmlspecialchars($metadata).'</dd>';
                         }
                     } else {
-                        $dd = $this->view->createElement('dd', $this->view->createTextNode($value).'-------- mother fuckerrr!');
+                        $dd = $this->view->createElement('dd', $this->view->createTextNode($value));
                         $dl->appendChild($dd);
                         //$descriptionHtml .= '<dd>'.htmlspecialchars($value).'---</dd>';
                     }
@@ -1100,9 +1100,12 @@ class archive
 
             // Table data column
             $td = $this->view->createElement('td');
-            $tr->appendChild($td); 
 
-            $th->setAttribute('title', $value);
+            $tr->appendChild($td);
+
+            if (!empty($value) && !is_array($value)) {
+                $th->setAttribute('title', $value);
+            }
 
             if ($type == "date") {
                 $textValue = \laabs::newDate($value);
@@ -1112,7 +1115,7 @@ class archive
             } elseif ($type == 'boolean') {
                 $valueNode = $this->view->createElement('i');
                 if (is_null($value)) {
-                    $valueNode->setAttribute('data-value', '0');
+                    $valueNode->setAttribute('data-value', '');
                 } else {
                     if ($value) {
                         $valueNode->setAttribute('class', "fa fa-check");
@@ -1125,7 +1128,7 @@ class archive
             } elseif ($type == 'name' && is_array($value)) {
                 $textValue = \laabs\implode(", ", $value);
                 $th->setAttribute('data-type', 'name_array');
-                $th->setAttribute('data-array', json_encode($value));
+                $td->setAttribute('data-array', json_encode($value));
 
                 $valueNode = $this->view->createTextNode($textValue);
             } else {
