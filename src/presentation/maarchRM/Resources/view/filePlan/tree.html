@@ -245,8 +245,9 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').html($('<i/>')).addClass('fa fa-folder')
-                              .text(" " +folder.name);
+                .children('b')
+                .children('i')
+                .after(' '+folder.name);
 
             var folderElement = $("#" + folder.parentFolderId );
 
