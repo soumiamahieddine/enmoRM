@@ -346,7 +346,7 @@
                 var customField = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
-                customLabel.removeAttr('id').val(label.html()).attr('name', label.attr('name'));
+                customLabel.removeAttr('id').val(label.text()).attr('name', label.attr('name'));
                 label.html('').append(customLabel);
                 var booleanInput = null;
 
