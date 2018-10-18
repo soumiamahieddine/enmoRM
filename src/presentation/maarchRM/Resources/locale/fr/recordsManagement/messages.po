@@ -241,7 +241,7 @@ msgstr "Intégrité"
 msgid "Size (octets)"
 msgstr "Taille (octets)"
 
-msgid "Preservation"
+msgid "preservation"
 msgstr "Conservation"
 
 msgid "Access entries"
