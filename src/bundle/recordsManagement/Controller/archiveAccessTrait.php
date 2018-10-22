@@ -99,129 +99,177 @@ trait archiveAccessTrait
             'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
         ];
 
+        $searchClasses = [];
+        if (!$profileReference) {
+            $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+
+            $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+
+            foreach ($descriptionClassController->index() as $descriptionClass) {
+                $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
+            }
+        } else {
+            $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
+            if ($archivalProfile->descriptionClass != '') {
+                $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
+            } else {
+                $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
+            }
+        }
+        foreach ($searchClasses as $descriptionClass => $descriptionController) {
+            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
+        }
+
+        return $archives;
+    }
+
+    /**
+     * Search archives by profile / dates / agreement
+     * @param string $archiveId
+     * @param string $profileReference
+     * @param string $status
+     * @param string $archiveName
+     * @param string $agreementReference
+     * @param string $archiveExpired
+     * @param string $finalDisposition
+     * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
+     *
+     * @return recordsManagement/archive[] Array of recordsManagement/archive object
+     */
+    public function registrySearch(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
+    ) {
         $queryParts = array();
         $queryParams = array();
 
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
-        if (!empty($description) || !empty($text)) {
-
-            $searchClasses = [];
-            if (!$profileReference) {
-                $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
-
-                $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
-
-                foreach ($descriptionClassController->index() as $descriptionClass) {
-                    $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
-                }
-            } else {
-                $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
-                if ($archivalProfile->descriptionClass != '') {
-                    $searchClasses[$archivalProfile->descriptionClass] = $this->useDescriptionController($archivalProfile->descriptionClass);
-                } else {
-                    $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
-                }
-            }
-            foreach ($searchClasses as $descriptionClass => $descriptionController) {
-                $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
-            }
-
+        if ($archiveId){
+            $queryParts['archiveId'] = "archiveId = :archiveId";
+            $queryParams['archiveId'] = $archiveId;
         } else {
-            if ($archiveId){
-                $queryParts['archiveId'] = "archiveId = :archiveId";
-                $queryParams['archiveId'] = $archiveId;
-            } else {
-                if ($profileReference){
-                    $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
-                    $queryParams['archivalProfileReference'] = $profileReference;
-                }
-
-                if ($status){
-                    $queryParts['status'] = "status = :status";
-                    $queryParams['status'] = $status;
-                }
-
-                if ($retentionRuleCode){
-                    $queryParts['retentionRuleCode'] = "retentionRuleCode = :retentionRuleCode";
-                    $queryParams['retentionRuleCode'] = $retentionRuleCode;
-                }
-
-                if ($filePlanPosition){
-                    $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
-                    $queryParams['filePlanPosition'] = $filePlanPosition;
-                }
-
-                if ($originatorArchiveId){
-                    $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
-                    $queryParams['originatorArchiveId'] = $originatorArchiveId;
-                }
-
-                if ($originatorOrgRegNumber){
-                    $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
-                    $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
-                }
-
-                if ($finalDisposition){
-                    $queryParts['finalDisposition'] = "finalDisposition = :finalDisposition";
-                    $queryParams['finalDisposition'] = $finalDisposition;
-                }
-
-                if ($originatingStartDate && $originatingEndDate) {
-                    $queryParams['originatingStartDate'] = $originatingStartDate;
-                    $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
-                } elseif ($originatingStartDate) {
-                    $queryParams['originatingStartDate'] = $originatingStartDate;
-                    $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate";
-
-                } elseif ($originatingEndDate) {
-                    $queryParams['originatingEndDate'] = $originatingEndDate;
-                    $queryParts['originatingDate'] = "originatingDate <= :originatingEndDate";
-                }
-
-                if ($depositStartDate && $depositEndDate) {
-                    $queryParams['depositStartDate'] = $depositStartDate;
-                    $queryParams['depositEndDate'] = $depositEndDate;
-                    $queryParts['depositDate'] = "depositDate >= :depositStartDate AND depositDate <= :depositEndDate";
-                } elseif ($depositStartDate) {
-                    $queryParams['depositStartDate'] = $depositStartDate;
-                    $queryParts['depositDate'] = "depositDate >= :depositStartDate";
-
-                } elseif ($depositEndDate) {
-                    $queryParams['depositEndDate'] = $depositEndDate;
-                    $queryParts['depositDate'] = "depositDate <= :depositEndDate";
-                }
-                if($archiveExpired){
-                    if ($archiveExpired == "true") {
-
-                        $queryParams['disposalDate'] = $currentDateString;
-                        $queryParts['disposalDate'] = "disposalDate <= :disposalDate";
-                    } elseif($archiveExpired == "false"){
-                        $queryParams['disposalDate'] = $currentDateString;
-                        $queryParts['disposalDate'] = "disposalDate >= :disposalDate";
-                    }
-                }
-
-                if($partialRetentionRule){
-                    $queryParts['partialRetentionRule'] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
-                }
-
+            if ($profileReference){
+                $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
+                $queryParams['archivalProfileReference'] = $profileReference;
             }
 
-            $queryParams['descriptionClass'] = 'recordsManagement/log';
-            $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
-
-            $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
-
-            if ($accessRuleAssert) {
-                $queryParts[] = $accessRuleAssert;
+            if ($status){
+                $queryParts['status'] = "status = :status";
+                $queryParams['status'] = $status;
             }
 
-            $queryString = \laabs\implode(' AND ', $queryParts);
-            $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+            if ($retentionRuleCode){
+                $queryParts['retentionRuleCode'] = "retentionRuleCode = :retentionRuleCode";
+                $queryParams['retentionRuleCode'] = $retentionRuleCode;
+            }
+
+            if ($filePlanPosition){
+                $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
+                $queryParams['filePlanPosition'] = $filePlanPosition;
+            }
+
+            if ($originatorArchiveId){
+                $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
+                $queryParams['originatorArchiveId'] = $originatorArchiveId;
+            }
+
+            if ($originatorOrgRegNumber){
+                $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
+                $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
+            }
+
+            if ($finalDisposition){
+                $queryParts['finalDisposition'] = "finalDisposition = :finalDisposition";
+                $queryParams['finalDisposition'] = $finalDisposition;
+            }
+
+            if ($originatingStartDate && $originatingEndDate) {
+                $queryParams['originatingStartDate'] = $originatingStartDate;
+                $queryParams['originatingEndDate'] = $originatingEndDate;
+                $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate AND originatingDate <= :originatingEndDate";
+            } elseif ($originatingStartDate) {
+                $queryParams['originatingStartDate'] = $originatingStartDate;
+                $queryParts['originatingDate'] = "originatingDate >= :originatingStartDate";
+
+            } elseif ($originatingEndDate) {
+                $queryParams['originatingEndDate'] = $originatingEndDate;
+                $queryParts['originatingDate'] = "originatingDate <= :originatingEndDate";
+            }
+
+            if ($depositStartDate && $depositEndDate) {
+                $queryParams['depositStartDate'] = $depositStartDate;
+                $queryParams['depositEndDate'] = $depositEndDate;
+                $queryParts['depositDate'] = "depositDate >= :depositStartDate AND depositDate <= :depositEndDate";
+            } elseif ($depositStartDate) {
+                $queryParams['depositStartDate'] = $depositStartDate;
+                $queryParts['depositDate'] = "depositDate >= :depositStartDate";
+
+            } elseif ($depositEndDate) {
+                $queryParams['depositEndDate'] = $depositEndDate;
+                $queryParts['depositDate'] = "depositDate <= :depositEndDate";
+            }
+            if($archiveExpired){
+                if ($archiveExpired == "true") {
+
+                    $queryParams['disposalDate'] = $currentDateString;
+                    $queryParts['disposalDate'] = "disposalDate <= :disposalDate";
+                } elseif($archiveExpired == "false"){
+                    $queryParams['disposalDate'] = $currentDateString;
+                    $queryParts['disposalDate'] = "disposalDate >= :disposalDate";
+                }
+            }
+
+            if($partialRetentionRule){
+                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+            }
+
         }
+
+        $queryParams['descriptionClass'] = 'recordsManagement/log';
+        $queryParts['descriptionClass'] = "(descriptionClass != :descriptionClass OR descriptionClass=NULL)";
+
+        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+
+        if ($accessRuleAssert) {
+            $queryParts[] = $accessRuleAssert;
+        }
+
+        $queryString = \laabs\implode(' AND ', $queryParts);
+        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
