@@ -502,7 +502,6 @@ var DataList = {
             $.each(DataList.dataList[id].datas, function(key, element) {
                 var position = -1;
                 var unsearchable = false;
-                console.log(DataList.dataList[id].datas);
                 $.each(element, function(key, value) {
                     unsearchable = DataList.dataList[id].unsearchable.indexOf(key) != -1;
 
