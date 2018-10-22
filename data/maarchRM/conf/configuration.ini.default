@@ -157,9 +157,9 @@ securityPolicy = "{
 publicUserStory = "['app/*']"
 
 ; Blacklist of user stories
-;blacklistUserStories = "[
-;    'adminFunc/contact'
-;]"
+blacklistUserStories = "[
+    'adminFunc/contact'
+]"
 
 csrfWhiteList = "['user/login']"
 csrfConfig = '{
