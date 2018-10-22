@@ -243,7 +243,6 @@ trait FactoryReaderTrait
         if ($result) {
             $array = $stmt->fetchAll($className);
         }
-        //var_dump($stmt->getQueryString());
 
         return $array;
     }
