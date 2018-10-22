@@ -149,7 +149,7 @@
     </div>
 </div>
 
-<div class="hide">
+<div class="hide" data-translate-catalog="recordsManagement/messages" data-fileplan-level="[?merge archive.fileplanLevel ?]" data-children-archive-profiles="[?merge archivalProfileList.json() ?]" data-accept-without-profile="[?merge acceptArchiveWithoutProfile ?]" >
     <div class="form-group" id="inputFinalDisposition">
         <br>
         <input type="radio" name="finalDisposition" class="input-sm" value="destruction">&nbsp;Destruction
@@ -180,7 +180,7 @@
     <input id="inputHiddenCustomField" placeholder="Value" type="hidden" class="col-xs-12"/>
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
-    <span id="customFieldError_txt">Metadatas are incomplete.</span>
+    <span id="customFieldError_txt">Missing Label</span>
 </div>
 
 <style type="text/css">
@@ -410,6 +410,8 @@
 
         saveMetadata: function() {
             var descriptionFields = {};
+            var isSavable = true;
+            
             $('#metadata').find('tr').each(function(i, e) {
                 var input = $(e).find('th > input');
                 var valueInput = $(e).find('td > input');
@@ -451,9 +453,14 @@
                 } else if (label == '' && value != '') {
                     gritter.show($('#customFieldError_txt').text(), false);
                     descriptionFields = false;
+                    isSavable = false;
                     return;
                 }
             });
+
+            if (!isSavable) {
+                return;
+            }
 
             var parameters = {
                 archiveId           : ArchiveInformation.archiveId,

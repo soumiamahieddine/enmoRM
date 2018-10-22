@@ -900,8 +900,8 @@ msgstr "Archive modifiée"
 msgid "Add field"
 msgstr "Ajouter un champ"
 
-msgid "Metadatas are incomplete."
-msgstr "Les métadonnées sont imcomplètes."
+msgid "Missing Label"
+msgstr "Un libellé est nécessaire avec la valeur"
 
 msgid "Label"
 msgstr "Libellé"
