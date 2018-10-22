@@ -710,3 +710,6 @@ msgstr "Conteneur"
 
 msgid "Service or organization"
 msgstr "Service ou organisation"
+
+msgid "Schema"
+msgstr "Schéma"
