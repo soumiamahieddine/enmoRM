@@ -149,7 +149,7 @@ trait archiveAccessTrait
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
-    public function registrySearch(
+    public function searchRegistry(
         $archiveId = null,
         $profileReference = null,
         $status = null,
