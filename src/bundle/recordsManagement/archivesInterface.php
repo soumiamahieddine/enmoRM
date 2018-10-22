@@ -82,6 +82,57 @@ interface archivesInterface
     );
 
     /**
+     * Search archives by profile / dates / agreement
+     * @param string $archiveId
+     * @param string $profileReference
+     * @param string $status
+     * @param string $archiveName
+     * @param string $agreementReference
+     * @param string $archiveExpired
+     * @param string $finalDisposition
+     * @param string $originatorOrgRegNumber
+     * @param string $originatorOwnerOrgId
+     * @param string $originatorArchiveId
+     * @param array  $originatingDate
+     * @param string $filePlanPosition
+     * @param bool   $hasParent
+     * @param string $description
+     * @param string $text
+     * @param bool   $partialRetentionRule
+     * @param string $retentionRuleCode
+     * @param string $depositStartDate
+     * @param string $depositEndDate
+     * @param string $originatingStartDate
+     * @param string $originatingEndDate
+     *
+     * @action recordsManagement/archive/searchRegistry
+     *
+     */
+    public function readRegistry(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null
+    );
+
+    /**
      * Get archives list
      * @param string  $originatorOrgRegNumber The organization registration number
      * @param string  $filePlanPosition       The file plan position
