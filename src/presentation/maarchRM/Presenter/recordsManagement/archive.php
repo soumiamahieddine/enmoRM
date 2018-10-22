@@ -1038,7 +1038,11 @@ class archive
             }
 
             $archive->acceptArchiveWithoutProfile = $archivalProfile->acceptArchiveWithoutProfile;
+
             $archive->acceptUserIndex = $archivalProfile->acceptUserIndex;
+        } elseif (!empty($archive->descriptionClass)) {
+            $archive->acceptArchiveWithoutProfile = false;
+            $archive->acceptUserIndex = false;
         } else {
             $archive->acceptArchiveWithoutProfile = true;
             $archive->acceptUserIndex = true;

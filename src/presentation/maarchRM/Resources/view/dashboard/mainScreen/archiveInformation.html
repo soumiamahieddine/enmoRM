@@ -28,7 +28,10 @@
                 <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
             </tr>
         </table>
-        <div id="metadata">
+        <div id="metadata" data-descriptionclass="[?merge archive.descriptionClass ?]">
+        <!-- 
+            Presentation of profile specific descriptive metadata 
+        -->
         </div>
         <?merge acceptUserIndex ?>
         <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn" style="display: none">
@@ -340,6 +343,9 @@
                               .html('')
                               .append($('#inputOriginatingDate').datepicker('setDate', $('#archiveInformation').find('.originatingDate').val()));
 
+            if ($('#metadata').data('descriptionclass') != undefined) {
+                return;
+            }
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
