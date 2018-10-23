@@ -288,12 +288,11 @@ class archive
                     && $publicArchives) {
 
                     $editDescription = true;
-
-                    $node = $this->view->getElementById("descriptionTab");
-                    $this->view->addContent($descriptionHtml, $node);
-                } else {
-                    unset($archive->descriptionObject);
                 }
+
+                $node = $this->view->getElementById("descriptionTab");
+                $this->view->addContent($descriptionHtml, $node);
+                
             } else {
                 $dl = $this->view->createElement('dl');
                 $dl->setAttribute('class', "dl dl-horizontal");
