@@ -333,4 +333,15 @@ class archive
 
         return $this->currentDescriptionController;
     }
+
+    /**
+     * Read an archive by its id
+     * @param string $archiveId The archive identifier
+     *
+     * @return recordsManagement/archive object
+     */
+    public function read($archiveId)
+    {
+        return $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+    }
 }
