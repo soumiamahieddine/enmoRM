@@ -79,7 +79,7 @@ trait archiveDestructionTrait
      */
     public function eliminate($archiveId)
     {
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve((string)$archiveId);
 
         $result = $this->setStatus($archiveId, 'disposed');
 
@@ -155,7 +155,7 @@ trait archiveDestructionTrait
         $destructArchives['success'] = [];
 
         foreach ($archives['success'] as $archiveId) {
-            $archive = $this->retrieve($archiveId);
+            $archive = $this->retrieve((string)$archiveId);
 
             if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
                 $destructArchives['error'][] = $archive;
