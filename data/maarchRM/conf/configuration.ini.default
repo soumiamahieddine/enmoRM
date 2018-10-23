@@ -158,8 +158,9 @@ publicUserStory = "['app/*']"
 
 ; Blacklist of user stories
 blacklistUserStories = "[
-    'adminFunc/contact'
-]"
+    'adminFunc/contact',
+    'adminArchive/adminStorageRule'
+]" 
 
 csrfWhiteList = "['user/login']"
 csrfConfig = '{
