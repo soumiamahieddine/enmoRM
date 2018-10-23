@@ -508,7 +508,6 @@ trait archiveAccessTrait
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         }else{
             $archive = $archiveId;
-            $archiveId = (string) $archive->archiveId;
         }
 
         $this->getMetadata($archive);
@@ -534,7 +533,7 @@ trait archiveAccessTrait
         $archive->communicability = $this->accessVerification($archive);
 
         if(\laabs::hasBundle('medona')) {
-            $archive->messages = $this->getMessageByArchiveid($archiveId);
+            $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
         }
 
         return $archive;
@@ -998,7 +997,7 @@ trait archiveAccessTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve($archiveId, true);
+        $archive = $this->retrieve((string) $archiveId, true);
 
         $this->logDelivery($archive);
 
