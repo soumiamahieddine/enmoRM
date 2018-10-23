@@ -458,6 +458,12 @@ msgstr "Modifié"
 msgid "Download"
 msgstr "Télécharger"
 
+msgid "To be modified"
+msgstr "À modifier"
+
+msgid "Modified"
+msgstr "Modifié"
+
 msgid "originator_authorization_wait"
 msgstr "En attente d'autorisation du producteur"
 
