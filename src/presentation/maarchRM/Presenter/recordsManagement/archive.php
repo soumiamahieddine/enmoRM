@@ -925,7 +925,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * DigitalResource exceptions
      * @param string $exception The exception
@@ -948,21 +948,6 @@ class archive
      * @return string String serialized in JSON
      */
     public function archiveDoesNotMatchProfileException($exception)
-    {
-        // Manage errors
-        $this->json->status = false;
-        $this->json->message = $this->translator->getText($exception->getMessage());
-
-        return $this->json->save();
-    }
-
-    /**
-     * Archive doesn't match with profile exceptions
-     * @param string $exception The exception
-     *
-     * @return string String serialized in JSON
-     */
-    public function notDisposableArchiveException($exception)
     {
         // Manage errors
         $this->json->status = false;
