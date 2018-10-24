@@ -910,7 +910,22 @@ class archive
 
         return $this->json->save();
     }
+    
+    /**
+     * Wrong archive infos exceptions
+     * @param object $exception The exception
+     *
+     * @return string String serialized in JSON
+     */
+    public function notDisposableArchiveException($exception)
+    {
+        // Manage errors
+        $this->json->status = false;
+        $this->json->message = $this->translator->getText($exception->getMessage());
 
+        return $this->json->save();
+    }
+    
     /**
      * DigitalResource exceptions
      * @param string $exception The exception
