@@ -999,11 +999,27 @@ class archive
             $this->json->digitalResources = $archive->digitalResources;
         }
 
+        $codes = \laabs::callService('recordsManagement/retentionRule/read_code_', 'DIP');
         if (isset($archive->childrenArchives)) {
+            $this->addRetentionRuleLabel($archive->childrenArchives);
             $this->json->childrenArchives = $archive->childrenArchives;
         }
 
         return $this->json->save();
+    }
+
+    /**
+     * @param array $childrenArchives
+     *
+     */
+    protected function addRetentionRuleLabel($childrenArchives)
+    {
+        foreach ($childrenArchives as $children) {
+            $children->retentionRuleLabel = \laabs::callService('recordsManagement/retentionRule/read_code_', $children->retentionRuleCode)->label;
+            if (isset($children->childrenArchives)) {
+                $this->addRetentionRuleLabel($children->childrenArchives);
+            }
+        }
     }
 
     protected function getChildrenArchivesProfiles($archive)

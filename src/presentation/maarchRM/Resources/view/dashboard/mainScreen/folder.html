@@ -45,9 +45,9 @@
                 <span class="archiveName"></span>
                 <span class="status hidden"></span>
                 <br/>
-                &nbsp;&nbsp;
-                <small/>&nbsp;
-                <small/>&nbsp;
+                &nbsp;
+                <small/>
+                <small/>
                 <small><i/></small>
                 <small class="folderInfo">
                     <br/>
@@ -318,10 +318,10 @@
         mergeRow: function(archive) {
             var archiveDiv = ArchiveFolderList.rowTemplate.clone();
             var icon = archiveDiv.find('.fileplanLevel');
-            var siblings = archiveDiv.attr('id', archive.archiveId)
-                .find('.archiveName').text(archive.archiveName)
-                .find('.status').text(archive.status)
-                    .siblings('small');
+            archiveDiv.attr('id', archive.archiveId);
+            archiveDiv.find('.archiveName').text(archive.archiveName);
+            archiveDiv.find('.status').text(archive.status);
+            var siblings = archiveDiv.find('small');
 
             archiveDiv.attr('id', archive.archiveId)
                 .find('.status').text(archive.status);
@@ -335,14 +335,15 @@
                 default:
                     icon.addClass('fa fa-archive');
             }
-            if (archive.depositDate) {
-                $(siblings[0]).text(archive.depositDate.substring(0, 19));
-            }
-            if (archive.archivalProfileReference) {
-                $(siblings[1]).text(archive.archivalProfileReference);
+
+            if (archive.archivalProfileName) {
+                $(siblings[0]).text(' ' + archive.archivalProfileName);
             }
             if (archive.originatorArchiveId) {
-                $(siblings[2]).children('i').text(archive.originatorArchiveId);
+                $(siblings[1]).text(' ' + archive.originatorArchiveId);
+            }
+            if (archive.originatingDate) {
+                $(siblings[2]).text(' ' + archive.originatingDate);
             }
 
             if (ArchiveFolderList.showArchivePath && ArchiveFolderList.pathList[archive.originatorOrgRegNumber]) {

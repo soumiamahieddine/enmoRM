@@ -195,14 +195,12 @@
                             .append($('<a/>').attr('href','#').class);
 
 
+                    if (childrenArchives[j].retentionRuleLabel) {
+                        $(smalls[0]).text(childrenArchives[j].retentionRuleLabel);
+                    }
+
                     if (childrenArchives[j].depositDate) {
-                        $(smalls[0]).text(childrenArchives[j].depositDate.substring(0, 19));
-                    }
-                    if (childrenArchives[j].archivalProfileReference) {
-                        $(smalls[1]).text(childrenArchives[j].archivalProfileReference);
-                    }
-                    if (childrenArchives[j].originatorArchiveId) {
-                        $(smalls[2]).children('i').text(childrenArchives[j].originatorArchiveId);
+                        $(smalls[1]).text(childrenArchives[j].originatingDate);
                     }
 
                     BootstrapTree.addNode(parent, template, hidden);
