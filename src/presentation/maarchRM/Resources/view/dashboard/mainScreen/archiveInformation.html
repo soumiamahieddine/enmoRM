@@ -11,6 +11,7 @@
         <h4 class="text-center text-info">
             <?merge archive.archivalProfileName ?>
             <?merge modificationPrivilege.bool() ?>
+            <?merge archive.status.ifne('disposed') ?>
             <button type="button" class="btn btn-default btn-sm" id="editMetadata" title="Edit" style="border:0px solid transparent"><i class="fa fa-edit"></i></button>
         </h4>
         <table>
@@ -27,19 +28,17 @@
                 <td title='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
             </tr>
         </table>
-        <div id="metadata">
+        <div id="metadata" data-descriptionclass="[?merge archive.descriptionClass ?]">
+        <!-- 
+            Presentation of profile specific descriptive metadata 
+        -->
         </div>
         <?merge acceptUserIndex ?>
         <div class="dropup col-xs-12" id="archiveCustomFieldAddBtn" style="display: none">
-            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+            <button type="button" class="btn btn-sm btn-link pull-right addCustomField" data-type="text" title="Add field">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
-            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
-                <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
-                <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
-            </ul>
         </div>
-        <!--<div id="metadata" class="panel-collapse collapse" role="tabpanel"></div>-->
         <button type="button" class="pull-right btn btn-default btn-sm" id="saveMetadata" title="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
         <button type="button" class="pull-right btn btn-default btn-sm" id="cancelMetadataEdition" title="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
     </div>
@@ -76,11 +75,11 @@
                     </tr>
                     <tr id="finalDisposition">
                         <th title="Final disposition">Final disposition</th>
-                        <td title='[?merge archive.finalDisposition ?]'><?merge archive.finalDisposition ?></td>
+                        <td title='[?merge archive.finalDisposition ?]'><?merge archive.finalDispositionDesc ?></td>
                     </tr>
                     <tr>
                         <th title="Status">Status</th>
-                        <td title='[?merge archive.status ?]'><?merge archive.status ?></td>
+                        <td title='[?merge archive.status ?]'><?merge archive.statusDesc ?></td>
                     </tr>
                     <tr id="retentionRuleSelect" style="border:0px solid transparent; display: none">
                     <input id="inputRetentionRuleCode" class="hide" value="[?merge archive.retentionRuleCode ?]"/>
@@ -145,7 +144,7 @@
     </div>
 </div>
 
-<div class="hide">
+<div class="hide" data-translate-catalog="recordsManagement/messages" data-fileplan-level="[?merge archive.fileplanLevel ?]" data-children-archive-profiles="[?merge archivalProfileList.json() ?]" data-accept-without-profile="[?merge acceptArchiveWithoutProfile ?]" >
     <div class="form-group" id="inputFinalDisposition">
         <br>
         <input type="radio" name="finalDisposition" class="input-sm" value="destruction">&nbsp;Destruction
@@ -173,11 +172,10 @@
         </label>
     </div>
 
-    <input id="inputCustomBooleanField" placeholder="Value" type="text" class="col-xs-12"/>
-
+    <input id="inputHiddenCustomField" placeholder="Value" type="hidden" class="col-xs-12"/>
     <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
-    <span id="customFieldError_txt">Metadatas are incomplete.</span>
+    <span id="customFieldError_txt">Missing Label</span>
 </div>
 
 <style type="text/css">
@@ -340,13 +338,16 @@
                               .html('')
                               .append($('#inputOriginatingDate').datepicker('setDate', $('#archiveInformation').find('.originatingDate').val()));
 
+            if ($('#metadata').data('descriptionclass') != undefined) {
+                return;
+            }
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
                 var customField = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
-                customLabel.removeAttr('id').val(label.html()).attr('name', label.attr('name'));
+                customLabel.removeAttr('id').val(label.text()).attr('name', label.attr('name'));
                 label.html('').append(customLabel);
                 var booleanInput = null;
 
@@ -377,12 +378,18 @@
                             autoclose:true
                         }).datepicker('setDate', value.html());
                         break;
-                    default :
+                    case 'name_array':
                         customField = $("#inputCustomField").clone();
-                        if(label.data('immutable')) {
-                            customField.prop('disabled', true);
-                        }
+                        customField.data("array", value.data("array"));
                         customField.val(value.html());
+                        customField.prop('disabled', true);
+                        break;
+                    default :
+                            customField = $("#inputCustomField").clone();
+                            if(label.data('immutable')) {
+                                customField.prop('disabled', true);
+                            }
+                            customField.val(value.text());
                 }
                 
                 value.html('').append(customField.removeAttr('id'));
@@ -398,6 +405,8 @@
 
         saveMetadata: function() {
             var descriptionFields = {};
+            var isSavable = true;
+            
             $('#metadata').find('tr').each(function(i, e) {
                 var input = $(e).find('th > input');
                 var valueInput = $(e).find('td > input');
@@ -407,6 +416,9 @@
                 var value = null;
 
                 switch (type) {
+                    case "name_array" :
+                        value = valueInput.data("array");
+                        break;
                     case "name" :
                     case "text" :
                         value = valueInput.val();
@@ -418,8 +430,13 @@
                         value = parseInt(valueInput.val());
                         break;
                     case "boolean" :
-                        var inputValue = valueInput.parent('.active').find('input').val();
-                        value = inputValue == 1 ? true : false;
+                        var inputValue = $(e).find('td').find('.active > input').val();
+
+                        if (inputValue === "") {
+                            value = null;
+                        } else {
+                            value = inputValue;
+                        }
                         break;
                     default:
                 }
@@ -431,9 +448,14 @@
                 } else if (label == '' && value != '') {
                     gritter.show($('#customFieldError_txt').text(), false);
                     descriptionFields = false;
+                    isSavable = false;
                     return;
                 }
             });
+
+            if (!isSavable) {
+                return;
+            }
 
             var parameters = {
                 archiveId           : ArchiveInformation.archiveId,

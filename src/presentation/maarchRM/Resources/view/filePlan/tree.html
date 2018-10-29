@@ -79,7 +79,7 @@
         currentOrgRegnumber : null,
         locked : false,
         pathList : {},
-        
+
         getCurrentOrgRegNumber: function() {
             this.currentOrgRegNumber = this.tree.find('li:first').data('orgregnumber');
         },
@@ -118,7 +118,7 @@
             }
             var span = this.selectedNode.children('span');
             span.find('.dropdown').css('visibility', 'hidden');
-            
+
             if (span.hasClass('folderNode')) {
                 FolderNode.unselect(span);
             } else {
@@ -163,7 +163,7 @@
             if (parent.length) {
                 path = $.merge(path, this.getPath(parent));
             }
-            
+
             return path;
         },
 
@@ -245,8 +245,11 @@
                 .data('description', folder.description)
                 .data('closed', folder.closed)
                 .children('span')
-                .children('b').html($('<i/>').addClass('fa fa-folder-o'))
-                              .text(" " +folder.name);
+                .children('b')
+                .children('i')
+                .after(' '+folder.name);
+
+            var folderElement = $("#" + folder.parentFolderId );
 
             return node;
         },
@@ -259,7 +262,7 @@
             $('#filePlanTree').find('.folderNode').droppable(FolderDroppableOption);
             $('#filePlanTree').find('.orgNode').droppable(OrganizationDroppableOption);
         },
-        
+
         getChildrenOrg : function() {
             var orgNode = FilePlan.selectedNode;
             if (!$(FilePlan.selectedNode).hasClass("organization")) {
@@ -276,7 +279,7 @@
              .css("font-size", "20px");
 
             if (e.closest('.folder').data('closed')) {
-                e.addClass('node-danger');   
+                e.addClass('node-danger');
             }
         },
 
@@ -287,7 +290,7 @@
              .css("font-size", "14px")
              .find('i')
              .css("font-size", "16px");
-            
+
         },
 
         select: function(e) {
@@ -338,7 +341,7 @@
 
             if ($(ui.draggable).hasClass('folder')) {
                 MovingConfirmationModal.show($(ui.draggable).closest('li'), $(this).closest('li'));
-                
+
             } else if ($(ui.helper).hasClass('archiveHelper')) {
                 if (FilePlan.selectedNode.closest('li').data('orgregnumber') == $(this).closest('li').data('orgregnumber')) {
                     ArchiveAssignmentModal.moveInFolder($(ui.helper).data('archives'), $(this));
@@ -378,17 +381,16 @@
 
     $('#app_maarchRM_main').ready(function() {
         BootstrapTree.init($('#filePlanTree'));
-        $('#filePlanTree').find('.fa:first').click();
         FilePlan.initDragNDrop();
         FilePlan.initFilePlanPath();
         FilePlan.getCurrentOrgRegNumber();
     })
 
     // Folder selection
-    $('#filePlanTree').on('mouseenter', '.folderNode, .orgNode', function() { 
+    $('#filePlanTree').on('mouseenter', '.folderNode, .orgNode', function() {
         FilePlan.mouseenter($(this));
     })
-    $('#filePlanTree').on('mouseleave', '.folderNode, .orgNode', function() { 
+    $('#filePlanTree').on('mouseleave', '.folderNode, .orgNode', function() {
         FilePlan.mouseleave($(this));
     })
     $('#filePlanTree').on('click', '.folderNode, .orgNode', function() {

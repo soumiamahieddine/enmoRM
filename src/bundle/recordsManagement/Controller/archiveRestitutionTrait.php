@@ -56,7 +56,7 @@ trait archiveRestitutionTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve($archiveId, true);
+        $archive = $this->retrieve((string)$archiveId, true);
         
         // Life cycle journal
         $this->logRestitution($archive);
@@ -99,7 +99,7 @@ trait archiveRestitutionTrait
         }
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->retrieve($archiveId, true);
+            $archive = $this->retrieve((string)$archiveId, true);
             $destroyedArchives =  $this->destructArchive($archive);
             $archiveIds = array_diff($archiveIds, $destroyedArchives);
         }

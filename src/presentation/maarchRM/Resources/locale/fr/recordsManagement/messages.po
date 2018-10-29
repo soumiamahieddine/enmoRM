@@ -241,7 +241,7 @@ msgstr "Intégrité"
 msgid "Size (octets)"
 msgstr "Taille (octets)"
 
-msgid "Preservation"
+msgid "preservation"
 msgstr "Conservation"
 
 msgid "Access entries"
@@ -779,6 +779,9 @@ msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
+msgid "Final disposition must be advised for this action"
+msgstr "Un sort final doit être renseigné pour exécuter cette action."
+
 msgid "Profil and data management not found"
 msgstr "Profil et données de gestion non trouvés"
 
@@ -900,8 +903,8 @@ msgstr "Archive modifiée"
 msgid "Add field"
 msgstr "Ajouter un champ"
 
-msgid "Metadatas are incomplete."
-msgstr "Les métadonnées sont imcomplètes."
+msgid "Missing Label"
+msgstr "Un libellé est nécessaire avec la valeur"
 
 msgid "Label"
 msgstr "Libellé"

@@ -31,7 +31,7 @@ class accessRule
 {
 
     public $view;
-    
+
     protected $json;
 
     protected $translator;
@@ -45,11 +45,11 @@ class accessRule
     public function __construct(
         \dependency\html\Document $view,
         \dependency\json\JsonObject $json,
-        \dependency\localisation\TranslatorInterface $translator) 
+        \dependency\localisation\TranslatorInterface $translator)
     {
-        
+
         $this->view = $view;
-        
+
         $this->json = $json;
         $this->json->status = true;
 
@@ -60,10 +60,10 @@ class accessRule
     /**
      * Get access codes
      * @param array $accessRules
-     * 
+     *
      * @return string
      */
-    public function index($accessRules) 
+    public function index($accessRules)
     {
         $this->view->addContentFile('recordsManagement/accessRule/index.html');
         $orgUnits = \laabs::callService('organization/organization/readOrgunitList');
@@ -96,10 +96,10 @@ class accessRule
     /**
      * The view to edit a new access code
      * @param recordsManagement/accessRule $accessRule The access code
-     * 
+     *
      * @return string
      */
-    public function edit($accessRule) 
+    public function edit($accessRule)
     {
         $accessRule->accessRuleDurationUnit = substr($accessRule->duration, -1);
         $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
@@ -110,7 +110,7 @@ class accessRule
     /**
      * Serializer JSON for create method
      * @param bool $result
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function create($result)
@@ -126,7 +126,7 @@ class accessRule
     /**
      * Serializer JSON for update method
      * @param object $result
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function update($result)
@@ -136,12 +136,12 @@ class accessRule
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
-    } 
-   
+    }
+
     /**
      * Exception
      * @param recordsManagement/Exception/accessRuleException $accessRuleException
-     * 
+     *
      * @return string
      */
     public function accessRuleException($accessRuleException)

@@ -53,6 +53,16 @@ trait archiveDestructionTrait
                 throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
             }
 
+            //if finaldisposition is not null or empty
+            if (empty($archive->finalDisposition) || is_null($archive->finalDisposition)) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Final disposition must be advised for this action");
+            }
+
+            //if retention is not null or empty
+            if (empty($archive->retentionStartDate) || is_null($archive->retentionStartDate)) {
+                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Retention Start date must be advised for this action.");
+            }
+
             $this->listChildrenArchive($archive, true);
 
             if ($archive->childrenArchives) {
@@ -79,7 +89,7 @@ trait archiveDestructionTrait
      */
     public function eliminate($archiveId)
     {
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve((string)$archiveId);
 
         $result = $this->setStatus($archiveId, 'disposed');
 
@@ -155,7 +165,7 @@ trait archiveDestructionTrait
         $destructArchives['success'] = [];
 
         foreach ($archives['success'] as $archiveId) {
-            $archive = $this->retrieve($archiveId);
+            $archive = $this->retrieve((string)$archiveId);
 
             if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
                 $destructArchives['error'][] = $archive;

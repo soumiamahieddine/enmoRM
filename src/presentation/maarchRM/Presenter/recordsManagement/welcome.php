@@ -292,8 +292,18 @@ class welcome
             $orgsName[$organization->registrationNumber] = $organization->displayName;
         }
 
+        $profiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+        $profilesName = [];
+
+        foreach ($profiles as $profile) {
+            $profilesName[$profile->reference] = $profile->name;
+        }
+
         foreach ($archives as $archive) {
             $archive->originatorOrgName = $orgsName[$archive->originatorOrgRegNumber];
+            if (!empty($archive->archivalProfileReference)) {
+                $archive->archivalProfileName = $profilesName[$archive->archivalProfileReference];
+            }
         }
 
         $this->json->archives = $archives;

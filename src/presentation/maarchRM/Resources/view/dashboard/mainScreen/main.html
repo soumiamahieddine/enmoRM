@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="col-sm-3 col-xs-12 hidden-xs" id="rightColumn">
-            <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a>
-            <a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a>
+            <!-- <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a> -->
+            <!--a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a-->
             <a id="closeDetailScreen" href="#" class="pull-right"><i class="fa fa-chevron-circle-right"/></a>
             <div id="detailScreenContent"/>
         </div>
@@ -30,7 +30,7 @@
     }
     #middleColumn .dropdown-menu {
         max-height: 300px;
-        overflow-y: auto; 
+        overflow-y: auto;
     }
     #middleColumn > .row {
         padding: 0px 10px 0px 37px;
@@ -58,7 +58,7 @@
     }
     #showMoreDetail, #closeDetailScreen, #openInNewTab {
         font-size: 18px;
-        margin: 10px 5px;    
+        margin: 10px 5px;
     }
     #toggleLeftColumn {
         position: absolute;
@@ -82,18 +82,16 @@
         SearchTab.close($(this).closest("li"));
     });
 
-
     $('#app_maarchRM_main').ready(function() {
         $('#rightColumn').initSmoothScrolling();
     })
 
     // File plan
     $('#toggleLeftColumn').on('click', function() { ColumnOrganizer.toggleLeftColumn(); });
-    
+
     $('#rightColumn').onEvent('clearDetail.recordsManagement', function() {
         ColumnOrganizer.closeDetailScreen();
     });
-
 
     // Detail screen
     $('#rightColumn').onEvent("showArchiveDetails.recordsManagement", function(e, html, showMoreURI) {
@@ -149,7 +147,7 @@
                 }
 
                 this.toogleLeftBtn.css('left', '1%').addClass('fa-rotate-180');
-                
+
             } else {
                 this.left.show("slide", { direction: "left" }, 300);
 
@@ -160,8 +158,6 @@
                 } else if (this.middle.hasClass('col-sm-9')) {
                     this.middle.removeClass("col-sm-9").addClass("col-sm-12");
                 }
-
-
                 this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
             }
         },
@@ -173,13 +169,14 @@
             }
 
             this.detailScreenContent.empty().html(html);
+
             if (this.detailScreenContent.hasClass('showDetails')) {
                 return true;
             }
 
             this.right.addClass('showDetails').removeClass('hidden-xs');
 
-            if (this.middle.hasClass('col-sm-9')) {
+            if (this.middle.hasClass('col-sm-9') && this.left.is(':visible')) {
                 this.middle.removeClass('col-sm-9').addClass('col-sm-6');
             } else if (this.middle.hasClass('col-sm-12')) {
                 this.middle.removeClass('col-sm-12').addClass('col-sm-9');

@@ -17,7 +17,9 @@ var BootstrapTree = {
                        .find('.fa:first')
                        .each(function() {
                             $(this).addClass($(this).data('closed-icon'));
-                       })
+                            $(this).next().find("i").addClass("fa_folder");
+                      //     $(this).next().find("i").addClass("fa-folder").removeClass("fa-folder-o");
+                       });
 
         $('.parent_li').find(' > ul > li').hide();
 
@@ -55,7 +57,7 @@ var BootstrapTree = {
                       .removeClass(parentIcon.data('default-icon'))
                       .on('click', BootstrapTree.toggleNode);
         }
-        
+
         elementIcon = element.find('.fa:first');
         elementIcon.addClass(elementIcon.data('default-icon'));
 

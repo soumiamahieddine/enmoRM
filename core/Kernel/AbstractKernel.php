@@ -293,7 +293,8 @@ abstract class AbstractKernel
     {
         $contentLanguages = \laabs::getContentLanguages();
         $requestAcceptLangs = $this->request->acceptLanguage;
-        if (count($requestAcceptLangs)) {
+
+        if (!empty($requestAcceptLangs)) {
             foreach ($requestAcceptLangs as $locale => $proprity) {
                 if (isset($contentLanguages[$locale])) {
                     return $contentLanguages[$locale];

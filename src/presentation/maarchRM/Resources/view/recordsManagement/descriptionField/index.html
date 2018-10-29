@@ -114,12 +114,6 @@ file that was distributed with this source code.
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group hide" id="namePropertyMultipleValue">
-                            <label class="col-md-2 control-label">Multiple value</label>
-                            <div class="col-md-7">
-                                <input type="checkbox" class="form-control" name="isArray" data-toggle="toggle"/>
-                            </div>
-                        </div>
                         <div class="form-group hide" id="textPropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
                             <div class="col-md-8">
@@ -365,7 +359,7 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#namePropertyDefaultValue,#namePropertyMultipleValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #nameSelectPropertyDefaultValue').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #nameSelectPropertyDefaultValue').addClass('hide');
         $('#keywordEnumList').empty();
         $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
@@ -374,7 +368,6 @@ file that was distributed with this source code.
                 $('#keywordEnumForm').removeClass('hide');
                 $('#keywordEnumList').removeClass('hide');
                 $('#namePropertyDefaultValue').removeClass('hide');
-                $('#namePropertyMultipleValue').removeClass('hide');
                 break;
 
             case "text" : 
@@ -411,10 +404,6 @@ file that was distributed with this source code.
         $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
         $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
 
-        $('#namePropertyMultipleValue [name=isArray]').bootstrapToggle('off');
-
-        $("#namePropertyMultipleValue").addClass('hide');
-
         $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
@@ -440,13 +429,7 @@ file that was distributed with this source code.
                 break;
 
             case "name" :
-                $("#keywordEnumForm, #keywordEnumList, #namePropertyMultipleValue").removeClass("hide");
-                if(descriptionField.isArray) {
-                    $("#namePropertyMultipleValue [name=isArray]").bootstrapToggle('on');
-                } else {
-                    $("#namePropertyMultipleValue [name=isArray]").bootstrapToggle('off');
-                }
-
+                $("#keywordEnumForm, #keywordEnumList").removeClass("hide");
                 if (descriptionField.enumeration !== "" && descriptionField.enumeration !== null && descriptionField.enumeration !== undefined) {
                     $.each(descriptionField.enumeration, function (key, item) {
                         $("#inputAddEnumField").val(item);
@@ -558,7 +541,7 @@ file that was distributed with this source code.
             property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
         }
 
-        property['isArray'] = $('#namePropertyMultipleValue [name=isArray]').prop("checked");
+        property['isArray'] = false;
 
         return property;
     }

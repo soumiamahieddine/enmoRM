@@ -81,6 +81,10 @@ msgid "adminRetentionRule"
 msgstr "Gérer les règles de conservation"
 msgctxt "userStory"
 
+msgid "adminStorageRule"
+msgstr "Gérer les règles de stockage"
+msgctxt "userStory"
+
 msgid "archivalAgreement"
 msgstr "Gérer les accords de versement"
 msgctxt "userStory"

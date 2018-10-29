@@ -375,5 +375,13 @@ INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES ( 'CORRESPONDA
 
 INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES  ('System', '*');
 
+-- communicationMean --
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('TE','Téléphone',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('AL','Téléphone mobile',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('FX','Fax',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('AO','URL',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('AU','FTP',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('EM','E-mail',true);
+INSERT INTO "contact"."communicationMean" ("code", "name", "enabled") VALUES ('AH','World Wide Web',false);
 
 -- End of postProcess

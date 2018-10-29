@@ -496,25 +496,28 @@ var DataList = {
         var filterValue = filterInput.find('input').val().toLowerCase();
         var filteredDatas = [];
 
-        if(filterValue == ""){
-            filteredDatas = undefined;
-        
-        } else{
-
+        if (filterValue == "") {
+            filteredDatas = undefined;        
+        } else {
             $.each(DataList.dataList[id].datas, function(key, element) {
                 var position = -1;
                 var unsearchable = false;
-
-                $.each(element, function(key, value){
+                $.each(element, function(key, value) {
                     unsearchable = DataList.dataList[id].unsearchable.indexOf(key) != -1;
 
-                    if(!unsearchable){
+                    if (!unsearchable) {
                         var haystack = value;
                         if (haystack) {
-                            haystack = haystack.toLowerCase();
+                            if (typeof haystack === 'string' || haystack instanceof String) {
+                                haystack = haystack.toLowerCase();
+                            }
                         }
-                        if (value && value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
-                            haystack = value.substring(0, 10);
+                        if (value) {
+                            if (typeof haystack === 'string' || haystack instanceof String) {
+                                if(value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+                                    haystack = value.substring(0, 10);
+                                }
+                            } 
                         }
                         if((typeof(haystack) == "string") || (typeof(haystack) == "number")){
                             position = haystack.indexOf(filterValue);
@@ -524,7 +527,6 @@ var DataList = {
                     if(position != -1){
                         filteredDatas.push(element);
                         return false;
-
                     }
                 });
             });

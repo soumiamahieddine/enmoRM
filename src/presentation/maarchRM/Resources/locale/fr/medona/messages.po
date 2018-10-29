@@ -458,6 +458,12 @@ msgstr "Modifié"
 msgid "Download"
 msgstr "Télécharger"
 
+msgid "To be modified"
+msgstr "À modifier"
+
+msgid "Modified"
+msgstr "Modifié"
+
 msgid "originator_authorization_wait"
 msgstr "En attente d'autorisation du producteur"
 
@@ -690,10 +696,10 @@ msgstr "Date de production"
 msgid "Send to third party"
 msgstr "Communication à un tiers"
 
-msgid "Requester"
+msgid "Requestor"
 msgstr "Demandeur"
 
-msgid "If you desactivate this option, you agree not to communicate these archives outside the originator service."
+msgid "If you deactivate this option, you agree not to communicate these archives outside the originator service."
 msgstr "En désactivant cette option, vous vous engagez à ne pas communiquer ces archives en dehors du service producteur."
 
 msgid "Sent a derogation for"
@@ -710,3 +716,6 @@ msgstr "Conteneur"
 
 msgid "Service or organization"
 msgstr "Service ou organisation"
+
+msgid "Schema"
+msgstr "Schéma"

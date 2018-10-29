@@ -108,7 +108,7 @@
                                                 <option data-serviceURI="[?merge .serviceURI ?]"><?merge .description ?></option>
                                             </select>
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" id="btnAddPrvilege" title="Add" disabled><span class="fa fa-plus"></span></button>
+                                                <button class="btn btn-success" type="button" id="btnAddPrivilege" title="Add" disabled><span class="fa fa-plus"></span></button>
                                             </span>
                                         </div>
                                         <?merge serviceAccount.servicePrivilege.bool() ?>
@@ -254,7 +254,7 @@
     });
 
     //Add privilege
-    $("#btnAddPrvilege").on("click", function(){
+    $("#btnAddPrivilege").on("click", function(){
 
         var serviceURI = $("#selectPrivilegeURI option:selected").data('serviceuri');
         var description = $("#selectPrivilegeURI option:selected").val();
@@ -277,7 +277,7 @@
 
 
     $("#selectPrivilegeURI").on("change", function(){
-        $("#btnAddPrvilege").attr('disabled',false);
+        $("#btnAddPrivilege").attr('disabled',false);
 
     });
 
@@ -338,29 +338,28 @@
                 },
                 suggestion: function(organization) {
                     var display;
-                    if(organization.ownerOrgName) {
-                        display =
-                            "<span>"
-                            + "<span class='fa fa-user' >&nbsp;</span>"
-                            + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + organization.ownerOrgName
-                            + " > "
-                            + organization.displayName
-                            + "</span></span><br>";
-                    }
-                    else {
-                        return "";
-                    }
+                    display =
+                        "<span>"
+                        + "<span class='fa fa-user' >&nbsp;</span>"
+                        + "<span style='font-family:Helvetica, sans-serif;'>"
+                        + organization.ownerOrgName
+                        + " > "
+                        + organization.displayName
+                        + "</span></span><br>";
+
                     return display;
                 }
             },
             source: function(query, cb) {
                 organizations.search(query, function(suggestions) {
-                    console.log(suggestions);
                     var i = suggestions.length
                     while (i--) {
-                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
-                            suggestions.splice(i, 1);
+                        if (!suggestions[i].ownerOrgName) {
+                            suggestions.splice(i, 1)
+                        } else {
+                            if ($('#orgs').find('[data-orgid="' + suggestions[i].orgId + '"]').length)
+                                suggestions.splice(i, 1);
+                        }
                     }
                     cb(suggestions);
                 });

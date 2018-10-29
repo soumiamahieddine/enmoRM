@@ -159,6 +159,13 @@
         $('[title]').tooltip();
     });
 
+    $.ajaxSetup({
+        statusCode: {
+            307: function(err){
+                window.location.href = '/';
+          }
+        }
+    });
     function load(url, data)
     {
         var loading = false;
