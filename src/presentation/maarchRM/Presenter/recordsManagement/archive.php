@@ -1202,26 +1202,20 @@ class archive
         }
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-
         if (!empty($archive->descriptionObject)) {
-            
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
             } else {
-                if (isset($archive->descriptionObject)) {
-                    $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
-                } else {
-                    $descriptionHtml = '<table></table>';
-                }
+                $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
             }
-
-            if ($descriptionHtml) {
-                $node = $this->view->getElementById("metadata");
-                if ($node) {
-                    $this->view->addContent($descriptionHtml, $node);
-                }
-            }
+        } else {
+            $descriptionHtml = '<table></table>';
+        }
+        
+        $node = $this->view->getElementById("metadata");
+        if ($node) {
+            $this->view->addContent($descriptionHtml, $node);
         }
 
         $this->view->setSource('modificationPrivilege', $modificationPrivilege);
