@@ -1015,7 +1015,9 @@ class archive
     protected function addRetentionRuleLabel($childrenArchives)
     {
         foreach ($childrenArchives as $children) {
-            $children->retentionRuleLabel = \laabs::callService('recordsManagement/retentionRule/read_code_', $children->retentionRuleCode)->label;
+            if ($children->retentionRuleCode) {
+                $children->retentionRuleLabel = \laabs::callService('recordsManagement/retentionRule/read_code_', $children->retentionRuleCode)->label;
+            }
             if (isset($children->childrenArchives)) {
                 $this->addRetentionRuleLabel($children->childrenArchives);
             }
