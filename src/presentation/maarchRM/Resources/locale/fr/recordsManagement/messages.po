@@ -780,7 +780,7 @@ msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
 msgid "Final disposition must be advised for this action"
-msgstr "Un sort final doit être renseigné pour executer cette action."
+msgstr "Un sort final doit être renseigné pour exécuter cette action."
 
 msgid "Profil and data management not found"
 msgstr "Profil et données de gestion non trouvés"
