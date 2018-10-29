@@ -6,17 +6,18 @@
 
 - `Added` Compatibilité navigateur Microsoft (IE 11 / Edge)
 - `Added` Compatibilité PHP 7.2
-- `Fixed` Optimisation mémoire
+- `Fixed` Optimisation de l'utilisation de la mémoire pour la recherche dans les journaux volumineux
 
 ### IHM
 
-- `Changed` Modification de l'écran principal
-- `Added` Personnalisation de la page de connexion
-- `Fixed` Bloquer le double clic
+- `Changed` Nouvau design de l'écran principal pour la navigation, la recherche et la consultation
+- `Added` Personnalisation de la page de connexion avec une image de fonds et un style configurables
+- `Fixed` Blocage des double-clics sur les boutons
 
 ### Administration
 
-- `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication
+- `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication aux organisations et services
+
 
 ## Version 2.2
 
