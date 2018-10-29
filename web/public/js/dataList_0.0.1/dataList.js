@@ -9,9 +9,9 @@
                         buttons : button with page number
     emptyMessage    -> html to show when the list is empty
     sorting         -> array of object that define wich properties of datas can be sorted
-                       object have to two properties : the name and the label of the sortable property
+                       object have four properties : the name (fieldName), the label (label), the type (type with 'num' or 'txt' value) of the sortable property, and a "default" (with 'ASC' or 'DESC') property to sort by default 
     unsearchable    -> array of unserchable property
-    resultNumber    -> the result number html. The number will be put in the .resultNumber class
+    itemsName       -> item name to display in result number as an array. The first element is the singular form the second is the plural form
     translation     -> array with key with translation
 */
 
@@ -57,45 +57,51 @@ var DataList = {
                      '<\/div>',         
 	selectAllHTML   :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
     selectorHTML    :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
+    resultNumberHTML:"<h2 class='itemNumber' style='margin:0px 0px 0px 40px'><small><span class='resultNumber' \/><span class='itemsName'\/><\/small><\/h2>",
 
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
 
-        var row = element.children('.row:first');
+        var header = element.children('.row:first').css('padding', '0px 5px').css('border-bottom', '1px solid #DDD');
+        var footer = element.children('.footer').css('padding', '0px 5px');
         var list = $('<div/>').addClass('list').appendTo(element);
 
 
-        if (row.length == 0) {
-            row = $('<div/>').addClass('row').prependTo(element);
+        if (header.length == 0) {
+            header = $('<div/>').addClass('row').prependTo(element);
+        }
+        if (footer.length == 0) {
+            footer = $('<div/>').addClass('row footer').css('margin-top', '10px').appendTo(element);
         }
 
         this.dataList[id] = {
             element      : element,
             list         : list,
-            toolbar      : row
+            toolbar      : header,
+            footer       : footer
         };
         		
         // Build header row
-        row.prepend(this.selectAllHTML)
+        header.prepend(this.selectAllHTML)
            .prepend(this.filterList);
 
         // Build sorting input
         if (options.sorting) {
-            row.prepend(this.initSortingInput(options.sorting));
+            header.prepend(this.initSortingInput(options.sorting));
         }
 
         if(options.paginationType){
-            row.prepend(this.inputPagination);
+            footer.append(this.inputPagination);
 
         } else {
-            row.prepend(this.buttonPagination);
+            footer.append(this.buttonPagination);
         }
         
         if(!options.rowTranslation) {
             options.rowTranslation = "lines";
         }
         
-		row.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
+		header.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
            .removeClass('hide')
            .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
 		   
@@ -105,18 +111,16 @@ var DataList = {
             list.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
         }
         
-        if(!options.resultNumber) {
-            this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/> results<\/h4>";
-        } else {
-            this.dataList[id].resultNumber = $($.parseHTML(options.resultNumber)[0]);
+        this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/><\/h4>";
+        if(!options.itemsName) {
+            options.itemsName = ["result", "results"];
         }
 
-        row.before(this.dataList[id].resultNumber);
-        this.dataList[id].resultNumber = row.prev();
+        header.append(this.resultNumberHTML);
 
         if (options.translation) {
             $.each(options.translation, function(key, value) {
-                row.find('[title='+key+']').attr('title', value);
+                header.find('[title='+key+']').attr('title', value);
             })
         }
 
@@ -140,15 +144,31 @@ var DataList = {
         
 
         $.each(fields, function() {
-            $('<li/>').data('value', this.fieldName).data('order', '<').append(
-                $('<a/>').attr('href', '#').text('< '+this.label).on('click', DataList.bind_dataOrdering)
-            ).appendTo(ul);
-            $('<li/>').data('value', this.fieldName).data('order', '>').append(
-                $('<a/>').attr('href', '#').text('> '+this.label).on('click', DataList.bind_dataOrdering)
-            ).appendTo(ul);
+            var asc = '<i class="fa fa-sort-alpha-asc"\/>';
+            var desc = '<i class="fa fa-sort-alpha-desc"\/>';
+
+            if (this.type == 'num') {
+                asc = '<i class="fa fa-sort-numeric-asc"\/>';
+                desc = '<i class="fa fa-sort-numeric-desc"\/>';
+            }
+
+            var ascLi = $('<li/>').data('value', this.fieldName).data('order', '<').append(
+                            $('<a/>').attr('href', '#').html(" "+this.label).prepend(asc).on('click', DataList.bind_dataOrdering));
+
+            var descLi = $('<li/>').data('value', this.fieldName).data('order', '>').append(
+                            $('<a/>').attr('href', '#').html(" "+this.label).prepend(desc).on('click', DataList.bind_dataOrdering));
+
+            ascLi.appendTo(ul);
+            descLi.appendTo(ul);
+
+            if (this.default && this.default == "ASC") {
+                ascLi.addClass('active').attr('data-default', '');
+            }
+            if (this.default && this.default == "DESC") {
+                descLi.addClass('active').attr('data-default', '');
+            }
         });
 
-        ul.children('li:first').addClass('active');
         sortingInput.find('.btn-group').append(ul);
 
         return sortingInput;
@@ -177,24 +197,22 @@ var DataList = {
             currentRange    : options.currentRange,
             paginationType  : options.paginationType,
             unsearchable    : options.unsearchable,
+            itemsName       : options.itemsName,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             toolbar         : this.dataList[id].toolbar,
-            emptyMessage    : this.dataList[id].emptyMessage,
-            resultNumber    : this.dataList[id].resultNumber
+            footer          : this.dataList[id].footer,
+            emptyMessage    : this.dataList[id].emptyMessage
         };
 
         this.buildPaginationButtons(id);
 
         this.dataList[id].unsearchable = ['html'];
-        // if (this.dataList[id].unsearchable) {
-        //     this.dataList[id].unsearchable = ['html'];
-        // }
 
         // Order the list if an order option is selected
-        var orderSelect = this.dataList[id].element.find('.dataList-sorting select');
+        var orderSelect = this.dataList[id].element.find('.dataList-sorting li[data-default]');
         if (orderSelect.length) {
-            this.sort(id, orderSelect.val(), orderSelect.find('option:selected').data('order'));
+            this.sort(id, orderSelect.data('value'), orderSelect.data('order'));
 
         } else {
             this.buildList(id);
@@ -216,7 +234,7 @@ var DataList = {
         if (datas.length > this.dataList[id].rowMaxNumber) {
             var lastLi = pagination.find('ul > li:last-child');
             var pageLi = [];
-            var pageNumber = Math.trunc(datas.length / this.dataList[id].rowMaxNumber);
+            var pageNumber = Math.floor(datas.length / this.dataList[id].rowMaxNumber);
 
             if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
             this.dataList[id].pageNumber = pageNumber;
@@ -230,6 +248,8 @@ var DataList = {
                           .closest('ul').find('a').off().on('click', DataList.bind_pageChanging);
 
             } else {
+                pagination.find('.pageBtn').parent().remove();
+                pagination.find('.dots').remove();
                 for (var i=1; i<= pageNumber; i++) {
                     var li = $('<li/>').append($('<a/>').attr('href', '#').addClass('pageBtn').html(i));
                     lastLi.before(li);
@@ -253,7 +273,7 @@ var DataList = {
             return;
         }
 
-        var list = this.dataList[id].element.find('.datalistPagination');
+        var list = this.dataList[id].footer.find('.datalistPagination');
         list.find('.dots').remove();
         var buttons = list.find('li');
         buttons.removeClass('hide');
@@ -291,16 +311,23 @@ var DataList = {
 
         }
 
+        if (datas.length == 1) {
+            itemsName = this.dataList[id].itemsName[0];
+        } else {
+            itemsName = this.dataList[id].itemsName[1];
+        }
+        this.dataList[id].toolbar.find('.itemsName').html(" "+itemsName);
+
         this.dataList[id].list.empty();
 
         if (this.dataList[id].emptyMessage) {
             if (datas.length == 0) {
                 this.dataList[id].emptyMessage.removeClass('hide');
-                this.dataList[id].resultNumber.addClass('hide');
+                this.dataList[id].toolbar.find('.itemNumber').addClass('hide');
                 this.dataList[id].toolbar.find('.selectAll').addClass('hide');
             } else {
                 this.dataList[id].emptyMessage.addClass('hide');
-                this.dataList[id].resultNumber.removeClass('hide');
+                this.dataList[id].toolbar.find('.itemNumber').removeClass('hide');
                 this.dataList[id].toolbar.find('.selectAll').removeClass('hide');
             }
         }
@@ -317,7 +344,7 @@ var DataList = {
 	    for(var i=rowStart; i<rowEnd && i<datas.length; i++) {
 	        if (!datas[i].html) {
 	            var row = this.dataList[id].rowMerge(datas[i]);
-                row.addClass('dataListElement').prepend(this.selectorHTML);
+                row.css('padding', '0px 5px').addClass('dataListElement').prepend(this.selectorHTML);
 	            datas[i].html = row;
 	        }
 
@@ -325,7 +352,7 @@ var DataList = {
 	    }
 
         // Set the result number
-        this.dataList[id].resultNumber.find('.resultNumber').html(datas.length);
+        this.dataList[id].toolbar.find('.itemNumber .resultNumber').html(datas.length);
         
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
@@ -466,25 +493,31 @@ var DataList = {
         var a = $(this);
         var id = a.closest('.dataList').data('datalist-id');
         var filterInput = a.closest('.filterList');
-        var filterValue = filterInput.find('input').val();
+        var filterValue = filterInput.find('input').val().toLowerCase();
         var filteredDatas = [];
 
-        if(filterValue == ""){
-            filteredDatas = undefined;
-        
-        } else{
-
+        if (filterValue == "") {
+            filteredDatas = undefined;        
+        } else {
             $.each(DataList.dataList[id].datas, function(key, element) {
                 var position = -1;
                 var unsearchable = false;
-
-                $.each(element, function(key, value){
+                $.each(element, function(key, value) {
                     unsearchable = DataList.dataList[id].unsearchable.indexOf(key) != -1;
 
-                    if(!unsearchable){
+                    if (!unsearchable) {
                         var haystack = value;
-                        if (value && value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
-                            haystack = value.substring(0, 10);
+                        if (haystack) {
+                            if (typeof haystack === 'string' || haystack instanceof String) {
+                                haystack = haystack.toLowerCase();
+                            }
+                        }
+                        if (value) {
+                            if (typeof haystack === 'string' || haystack instanceof String) {
+                                if(value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}/)) {
+                                    haystack = value.substring(0, 10);
+                                }
+                            } 
                         }
                         if((typeof(haystack) == "string") || (typeof(haystack) == "number")){
                             position = haystack.indexOf(filterValue);
@@ -494,7 +527,6 @@ var DataList = {
                     if(position != -1){
                         filteredDatas.push(element);
                         return false;
-
                     }
                 });
             });

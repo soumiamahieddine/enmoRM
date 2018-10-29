@@ -181,7 +181,7 @@ trait FactoryReaderTrait
      *
      * @return array An array of objects matching the query and ordered as requested
      */
-    public function find($className, $queryString=false, $queryParams=array(), $sortingString=false, $offset=0, $length=null, $lock=false)
+    public function find($className, $queryString=false, $queryParams = array(), $sortingString=false, $offset=0, $length=null, $lock=false)
     {
         $lqlString = 'READ';
                 
@@ -243,7 +243,6 @@ trait FactoryReaderTrait
         if ($result) {
             $array = $stmt->fetchAll($className);
         }
-        //var_dump($stmt->getQueryString());
 
         return $array;
     }
@@ -465,7 +464,11 @@ trait FactoryReaderTrait
 
         $lqlString .= ' [' . $propertyName . ']';
 
+        $queryArgs = [];
         if ($queryString) {
+            if (is_array($queryString)) {
+                list($queryString, $queryArgs) = $queryString;
+            }
             $lqlString .= "(" . $queryString .")";
         } 
 
@@ -490,7 +493,7 @@ trait FactoryReaderTrait
         }
 
         /* Execute statement */
-        $result = $this->execute($stmt);
+        $result = $this->execute($stmt, $queryArgs);
         
         /* Fetch all objects */
         if ($result) {

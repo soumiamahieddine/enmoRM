@@ -91,7 +91,7 @@ class notification
     public function process()
     {
         $queryString = "status='".self::_NEW_."'";
-        $notifications = $this->sdoFactory->find("batchProcessing/notification", $queryString, null, "createdDate <");
+        $notifications = $this->sdoFactory->find("batchProcessing/notification", $queryString, [], "createdDate <");
         
         foreach ($notifications as $notification) {
             $notification->status = self::_PROCESSING_;

@@ -192,6 +192,11 @@ CREATE TABLE "recordsManagement"."archive"
   "accessRuleStartDate" date,
   "accessRuleComDate" date,
 
+  "storageRuleCode" text,
+  "storageRuleDuration" text,
+  "storageRuleStartDate" date,
+  "storageRuleEndDate" date,
+
   "classificationRuleCode" text,
   "classificationRuleDuration" text,
   "classificationRuleStartDate" date,
@@ -257,7 +262,7 @@ CREATE TABLE "recordsManagement"."archiveRelationship"
   "archiveId" text NOT NULL,
   "relatedArchiveId" text NOT NULL,
   "typeCode" text NOT NULL,
-  "description" text,
+  "description" jsonb,
 
   PRIMARY KEY ("archiveId", "relatedArchiveId", "typeCode"),
   FOREIGN KEY ("archiveId") 
@@ -302,3 +307,22 @@ PRIMARY KEY ("name")
 WITH (
   OIDS=FALSE
 );
+
+
+-- Table: "recordsManagement"."storageRule"
+
+-- DROP TABLE "recordsManagement"."storageRule";
+
+CREATE TABLE "recordsManagement"."storageRule"
+(
+  "code" text NOT NULL,
+  "duration" text NOT NULL,
+  "description" text,
+  "label" text,
+
+  PRIMARY KEY ("code")
+)
+WITH (
+  OIDS=FALSE
+);
+

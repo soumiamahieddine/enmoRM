@@ -1,7 +1,21 @@
 <li id="[?merge .folderId ?]" class="folder" data-path="[?merge .path ?]" data-orgregnumber="[?merge .ownerOrgRegNumber ?]" data-parentid="[?merge .parentFolderId ?]" data-description="[?merge .description ?]" data-closed="[?merge .closed.bool().then('true', 'false') ?]">
     <span class="folderNode" title="[?merge .description ?]">
-        <i class="fa text-primary" data-opened-icon="fa-folder-open" data-closed-icon="fa-folder" data-default-icon="fa-folder-o"></i>
-        <b><?merge .name ?></b>
+        <i class="fa" data-opened-icon="fa-caret-down" data-closed-icon="fa-caret-right" data-default-icon="">&nbsp;</i>
+        <b data-translate="no">
+            <i class="fa fa-folder"/>
+            <?merge .name ?>
+        </b>
+        <?merge filePlanPrivileges.bool() ?>
+        <div class="pull-right dropdown">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-ellipsis-v"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dLabel">
+                <li title="Add a new folder"><a class="addFolder" hef="#"><i class="fa fa-plus"/> Add a new folder</a></li>
+                <li title="Edit folder"><a class="editFolder" hef="#"><i class="fa fa-edit"/> Edit folder</a></li>
+                <li title="Delete folder"><a class="deleteFolder" hef="#"><i class="fa fa-trash"/> Delete folder</a></li>
+            </ul>
+        </div>
     </span>
 
     <?merge .subFolders.bool() ?>

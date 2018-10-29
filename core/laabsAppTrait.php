@@ -1103,19 +1103,19 @@ trait laabsAppTrait
     /**
      * Get the crypt cipher
      *
-     * @return integer The crypt cipher mcrypt constant
+     * @return string An openssl crypt cipher
      */
     public static function getCryptCipher()
     {
         if (isset($_SERVER['LAABS_CRYPT_CIPHER'])) {
-            $cipherName = LAABS_NS_SEPARATOR . (string) $_SERVER['LAABS_CRYPT_CIPHER'];
+            $cipherName = (string) $_SERVER['LAABS_CRYPT_CIPHER'];
 
-            if (defined($cipherName)) {
-                return constant($cipherName);
+            if (in_array($cipherName, openssl_get_cipher_methods())) {
+                return $cipherName;
             }
         } 
 
-        return \MCRYPT_CAST_128;
+        return "CAST5-CBC";
     }
 
     /* Array retrieval

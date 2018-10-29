@@ -13,16 +13,16 @@
     </div>
     <div class="form-group">
         <div class="dropup col-xs-12" id="customFieldAddBtn">
-            <button type="button" class="btn btn-sm btn-link pull-right" title="Add field" data-toggle="dropdown">
+            <button type="button" class="addCustomField btn btn-sm btn-link pull-right" data-type="text" title="Add field">
                 &nbsp;<i class="fa fa-plus">&nbsp;</i>Add field
             </button>
-            <ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
+            <!--ul class="dropdown-menu pull-right metadataList" aria-labelledby="dLabel">
                 <li><a href='#' class="addCustomField" data-type="text">Text</a></li>
                 <li><a href='#' class="addCustomField" data-type="name">Keyword</a></li>
                 <li><a href='#' class="addCustomField" data-type="date">Date</a></li>
                 <li><a href='#' class="addCustomField" data-type="boolean">Boolean</a></li>
                 <li><a href='#' class="addCustomField" data-type="number">Numeric</a></li>
-            </ul>
+            </ul-->
         </div>
     </div>
 </form>
@@ -58,7 +58,7 @@
 
     <div data-translate-catalog="documentManagement/documentMetadata">
         <!-- CUSTOM TEXT FIELD TEMPLATE -->
-        <div class="form-group" id="customTextFieldTemplate">
+        <!--div class="form-group" id="customTextFieldTemplate">
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
@@ -66,29 +66,42 @@
                 <input type="text" class="form-control input-sm value" placeholder="Text"/>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
-        </div>
-        
+        </div-->
+
         <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
         <div class="form-group" id="customTextareaFieldTemplate">
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
-            <div class="input-group col-md-9">
-                <textarea class="form-control input-sm value" rows="2" placeholder="Text" style="resize: none; resize: vertical"></textarea>
-                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
+                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+                </div>
             </div>
         </div>
-        
+
         <!-- CUSTOM BOOLEAN FIELD TEMPLATE -->
-        <div class="form-group" id="customBooleanFieldTemplate">
+        <!--div class="form-group" id="customBooleanFieldTemplate">
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
             <div class="input-group col-md-9">
-                <input type="checkbox" class="value"/>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                    </label>
+                    <label class="btn btn-default active">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                    </label>
+                </div>
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
-        </div>
+        </div-->
+
 
         <!-- TEXT FIELD TEMPLATE -->
         <div class="form-group" id="inputFieldTemplate">
@@ -117,7 +130,7 @@
                 </select>
             </div>
         </div>
-        
+
         <!-- BOOLEAN FIELD TEMPLATE -->
         <div class="form-group" id="booleanFieldTemplate">
             <label class="col-md-3 small control-label"></label>
@@ -127,7 +140,7 @@
                         <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
                     </label>
                     <label class="btn btn-default active">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                        <input type="radio" name="defaultValue" autocomplete="off" value="">&nbsp;
                     </label>
                     <label class="btn btn-default">
                         <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
@@ -135,17 +148,17 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- REQUIRED FIELD TEMPLATE -->
         <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
     </div>
 </div>
 
 <span  id="addBtnTpl" class="input-group-btn hide">
-    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrvilege" title="Add"><span class="fa fa-plus"></span></button>
+    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-plus"></span></button>
 </span>
 <div id="keywordTpl" class="input-group hide" name="keyword">
-    <input type="text" class="form-control input-sm" data-enumerate = "true" disabled="" />
+    <input type="text" class="form-control input-sm" data-enumerate ="true" disabled="" />
     <span class="input-group-btn">
         <button class="btn btn-danger btn-sm" type="button" name="btnDeleteKeyword" title="Delete"><span class="fa fa-trash-o"></span></button>
     </span>
@@ -164,7 +177,7 @@
     });
 
     //Delete keyword
-    $("#archivalProfileFields").on("click","[name=btnDeleteKeyword]", function(){
+    $("#archivalProfileFields").on("click","[name=btnDeleteKeyword]", function() {
         var selectId = $(this).closest("[name=keyword").find('input').attr('name');
         var val = $(this).closest("[name=keyword").find('input').val();
         $(this).closest("[name=keyword").remove();
@@ -172,21 +185,55 @@
     });
 
     //Add keyword
-    $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function(){
-        var name = $(this).data('select');
-        var val =  $('[name="'+name+'"] option:selected').text();
+    $("#archivalProfileFields").on("click",".addArchiveDescriptionKeyword", function() {
+
+        let val = null;
+        let input = null;
+        let name = $(this).data('select');
+        let inputType = $(this).data('input-type');
+
+        switch (inputType) {
+            case "select" :
+                input = $('#archivalProfileFields').find('[name="'+name+'"]').not("[disabled]");
+                let option = input.find('option:selected');
+                val =  option.text();
+                break;
+
+            case "input" :
+                input = $('#archivalProfileFields').find('input[name="'+name+'"]').not("[disabled]");
+                val =  input.val();
+                break;
+        }
+
+        var tpl = $('#keywordTpl').clone().removeClass('hide');
+
 
         if(val) {
-            var tpl = $('#keywordTpl').clone().removeClass('hide');
-
             tpl.find('input').val(val).attr('name',name);
             $('[name="list-'+name+'"]').append(tpl);
-            var select = $("#"+name);
-            select.find("option:selected").addClass('hide');
-            select.val('');
+
+            switch (inputType) {
+                case "select" :
+                    input.find("option:selected").addClass('hide');
+                    break;
+
+                case "input" :
+                    break;
+            }
+
+            input.val('');
         }
 
     });
+
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
 
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
@@ -217,8 +264,12 @@
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
-                        field.attr('data-enumerate','NOT_VALUE');
-                        field.attr('id',name);
+
+                        if (isArray) {
+                            field.attr('data-enumerate', 'NOT_VALUE');
+                        }
+
+                        field.attr('id', name);
 
                         $.each(enumeration, function (index, value) {
                             field.append($('<option>', {
@@ -257,8 +308,10 @@
                     template.find('.active').removeClass("active");
                     if (defaultVal == 1 || defaultVal == 0) {
                         template.find('[value="'+defaultVal+'"]').parent().addClass("active");
+                        template.find('[value="'+defaultVal+'"]').prop("checked", "checked");
                     } else {
                         template.find('[value=""]').parent().addClass("active");
+                        template.find('[value=""]').prop("checked", "checked");
                     }
                     break;
                 default:
@@ -280,6 +333,13 @@
                 var btnGroup  = $('#addBtnTpl').clone();
                 btnGroup.removeClass('hide');
                 btnGroup.find('button').attr('data-select',name);
+                if (enumeration) {
+                    btnGroup.find('button').attr('data-input-type',"select");
+                } else {
+                    btnGroup.find('button').attr('data-input-type',"input");
+                    template.find('input').attr('data-enumerate', 'NOT_VALUE');
+                }
+
                 template.find('div').addClass('input-group').append(btnGroup);
                 template.append('<label class="col-md-3 small control-label"></label>');
                 template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
@@ -316,11 +376,13 @@
                     break;
                 case 'boolean':
                     var template = $('#customBooleanFieldTemplate').clone();
-                    field = template.find("input").last();
-                    field.bootstrapToggle();
+                    token = guid();
+
+                    field = template.find("input[type=radio]").each(function () {
+                        $(this).attr("name", token);
+                    });
                     break;
                 default:
-                    console.log("Error invalid type");
                     return;
                     break;
             }
@@ -352,15 +414,28 @@
             $.each(inputsArchivalProfile, function() {
                 //var value = $.trim($(this).val());
                 var type = $(this).attr("data-type");
+                var inputType = $(this).attr("type");
                 var name = $(this).attr('name');
                 var required = $(this).attr('data-required');
                 var enumerate = $(this).attr('data-enumerate');
+
                 if(enumerate == 'NOT_VALUE'){
                     return;
                 }
                 switch(type) {
                     case "boolean":
-                        value = Boolean($.trim($(this).prop("checked")));
+                        if (!$(this).prop("checked")) {
+                            return;
+                        }
+
+                        switch ($(this).val()) {
+                            case "1":
+                            case "0": value = $(this).val();
+                                break;
+                            default: value = null;
+                                break;
+                        }
+
                         break;
 
                     case "date":
@@ -375,31 +450,29 @@
                         value = $.trim($(this).val());
                 }
 
+
                 if (required == "true" && (value === "" || value === null || value === undefined)) {
                     flagEmptyRequiredField = true;
                     $(this).closest(".form-group").addClass('has-error');
                     return;
-                } else if (required != "true" && (value === "" || value === null || value === undefined)) {
-                    return;
                 } else {
                     $(this).closest(".form-group").removeClass('has-error');
                 }
-                if(enumerate){
+
+                if (enumerate) {
                     if(enumerate != 'NOT_VALUE'){
 
-                        if(!descriptionObject[name]){
+                        if(!descriptionObject[name]) {
                             descriptionObject[name] = [value];
                         } else {
                             descriptionObject[name].push(value)
                         }
                     }
-                }
-                else {
-
+                } else {
                     descriptionObject[name] = value;
                 }
-
             });
+
 
             $.each(inputsCustom, function() {
                 var value = "";
@@ -408,7 +481,8 @@
 
                 switch(type) {
                     case "boolean":
-                        value = Boolean($.trim($(this).find('.value').prop("checked")));
+                        value = $(this).find("input:checked").val();
+
                         break;
 
                     case "date":
@@ -423,7 +497,7 @@
                         value = $.trim($(this).find('.value').val());
                 }
 
-                if (value === '' || value == undefined || value == null || name == ''|| name == undefined || name == null) {
+                if ((value === '' && type != "boolean") || value == undefined || value == null || name == ''|| name == undefined || name == null) {
                     $(this).closest(".form-group").addClass('has-error');
                     flagEmptyCustomField = true;
                     return;

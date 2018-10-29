@@ -63,10 +63,12 @@ class scheduling
 
         $serviceAccounts = \laabs::callService('auth/serviceAccount/readIndex');
 
-        foreach ($serviceAccounts as $serviceAccount) {
+        foreach ($serviceAccounts as $key => $serviceAccount) {
             $serviceURI = [];
             $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
-
+            if(!$serviceAccount->enabled){
+                unset($serviceAccounts[$key]);
+            }
             foreach ($privileges as $privilege) {
                 $serviceURI[] = $privilege->serviceURI;
             }

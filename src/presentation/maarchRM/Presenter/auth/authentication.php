@@ -51,16 +51,26 @@ class authentication
             \dependency\html\Document $view,
             \dependency\json\JsonObject $json,
             \dependency\localisation\TranslatorInterface $translator,
-            $logo
+            $logo, 
+            $altLogo = null,
+            $loginBackground = null
     ) {
         $this->view = $view;
 
         $this->logoUri = $logo;
 
+        if (isset($altLogo)) {
+            $this->loginLogoUri = $altLogo;
+        } else {
+            $this->loginLogoUri = $logo;
+        }
+
         $this->json = $json;
         $this->translator = $translator;
         $this->translator->setCatalog('auth/messages');
         $this->json->status = true;
+
+        $this->loginBackground = $loginBackground;
     }
 
     /**
@@ -73,7 +83,8 @@ class authentication
         $view = $this->view;
 
         $view->addContentFile("auth/userAccount/login/form.html");
-        $view->setSource('logo', $this->logoUri);
+        $view->setSource('logo', $this->loginLogoUri);
+        $view->setSource('loginBackground', $this->loginBackground);
         $view->translate();
         $view->merge();
 

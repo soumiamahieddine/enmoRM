@@ -34,7 +34,7 @@ trait archiveOutgoingTransferTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve((string)$archiveId, true);
 
         $statusChanged = $this->setStatus((string) $archive->archiveId, "transfered");
 

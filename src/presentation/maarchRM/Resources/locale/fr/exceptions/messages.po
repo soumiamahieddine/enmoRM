@@ -119,6 +119,9 @@ msgstr "Erreur d'exécution"
 msgid "Missing authentication credential"
 msgstr "Le jeton d'authentification est manquant"
 
+msgid "Service account disabled"
+msgstr "Le compte de service est désactivé"
+
 msgid "Task already exists."
 msgstr "Une tâche avec la même route existe déjà."
 
@@ -440,7 +443,12 @@ msgstr "Lien expiré"
 msgid "Invalid link"
 msgstr "Lien non valide"
 
-msgid "Zip malformed"
-msgstr "Le zip est malformé."
+msgid "Parent archive is an item and can not contain items."
+msgstr "L'archive parente est une pièce, elle ne peut contenir des pièces"
 
+msgid "The container file is non-compliant"
+msgstr "Le fichier conteneur est non conforme."
+
+msgid "Journal file cannot be written"
+msgstr "Le journal ne peut pas être écrit"
 

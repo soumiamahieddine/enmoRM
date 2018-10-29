@@ -63,7 +63,6 @@ class authentication
         if (!\laabs::isServiceClient()) {
             return true;
         }
-
         $token = null;
         if ($accountToken = \laabs::getToken('AUTH')) {
 

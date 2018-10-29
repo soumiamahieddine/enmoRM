@@ -155,7 +155,7 @@ interface userAccountInterface
      *
      * @action auth/userAccount/disable
      */
-    public function updateDisable_userAccountId_($replacingUserAccountId);
+    public function updateDisable_userAccountId_();
 
     /**
      * Enable a user Account

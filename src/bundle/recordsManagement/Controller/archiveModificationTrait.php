@@ -89,7 +89,7 @@ trait archiveModificationTrait
         }
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->getDescription($archiveId);
+            $archive = $this->retrieve($archiveId);
             $this->checkRights($archive);
 
             if (!in_array($archive->status, array("preserved"))) {
@@ -172,7 +172,7 @@ trait archiveModificationTrait
         $accessRuleReceived = $accessRule;
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->getDescription($archiveId);
+            $archive = $this->retrieve($archiveId);
             $this->checkRights($archive);
 
             if (!in_array($archive->status, array("preserved"))) {
@@ -239,7 +239,7 @@ trait archiveModificationTrait
         $archives = array();
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->getDescription($archiveId);
+            $archive = $this->retrieve($archiveId);
             $this->checkRights($archive);
 
             $archives[$archiveId] = $archive;
@@ -276,7 +276,7 @@ trait archiveModificationTrait
         $archives = array();
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->getDescription($archiveId);
+            $archive = $this->retrieve($archiveId);
             $this->checkRights($archive);
 
             $archives[$archiveId] = $archive;
@@ -311,7 +311,7 @@ trait archiveModificationTrait
      */
     public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
     {
-        $archive = $this->getDescription($archiveId);
+        $archive = $this->retrieve($archiveId);
 
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
@@ -336,7 +336,7 @@ trait archiveModificationTrait
 
         $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
 
-        if ($description) {
+        if (!empty($description)) {
             $descriptionObject = $description;
 
             if (!empty($archivalProfileDescription)) {
@@ -367,7 +367,7 @@ trait archiveModificationTrait
                 $descriptionController = $this->useDescriptionController('recordsManagement/description');
             }
             $archive->descriptionObject = $descriptionObject;
-            
+
             $descriptionController->update($archive);
         }
 
@@ -390,7 +390,7 @@ trait archiveModificationTrait
     {
         $this->archiveRelationshipController->createRelationship($archiveRelationship);
 
-        $archive = $this->getDescription($archiveRelationship->archiveId);
+        $archive = $this->retrieve($archiveRelationship->archiveId);
 
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
@@ -408,7 +408,7 @@ trait archiveModificationTrait
     {
         $this->archiveRelationshipController->deleteRelationship($archiveRelationship);
 
-        $archive = $this->getDescription($archiveRelationship->archiveId);
+        $archive = $this->retrieve($archiveRelationship->archiveId);
 
         // Life cycle journal
         $this->logRelationshipDeleting($archive, $archiveRelationship);
@@ -428,7 +428,7 @@ trait archiveModificationTrait
         $res = [];
         $res['success'] = [];
         $res['fail'] = [];
-        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", null, null, null, $limit);
+        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", [], null, null, $limit);
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));
@@ -440,7 +440,7 @@ trait archiveModificationTrait
             $descriptionController = $this->useDescriptionController('recordsManagement/description');
 
             foreach ($archivesToIndex as $archive) {
-                $archive = $this->getDescription($archive->archiveId);
+                $archive = $this->retrieve($archive->archiveId);
 
                 try {
                     $fullText = $this->digitalResourceController->getFullTextByArchiveId($archive->archiveId);

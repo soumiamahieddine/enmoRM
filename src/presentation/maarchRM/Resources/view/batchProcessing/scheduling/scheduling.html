@@ -193,6 +193,30 @@
                     <h4 class="modal-title">Logs scheduling list</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form">
+                        <div class="input-group col-md-3">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-warning" id="searchDayMinusOne">
+                                    <spans class="fa fa-angle-double-left"></spans>
+                                </button>
+                            </div>
+                            <input type="text" class="datePicker form-control" id="dateLogHistory">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-warning" id="searchDayPlusOne">
+                                    <spans class="fa fa-angle-double-right"></spans>
+                                </button>
+                            </div>
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary" style="margin-left: 5px;" id="searchLogHistory">
+                                    <spans class="fa fa-search"></spans>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div id="modalTableList">
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,6 +246,8 @@
 
 <script type="text/javascript">
 
+    var d = new Date();
+
     // Task list delete button
     $('#taskList').on('mouseenter', '.deleteTask', function() {
         $(this).addClass('text-danger');
@@ -243,6 +269,44 @@
         $(this).css('color', '');
     })
 
+    $('#searchDayMinusOne').on('click', function() {
+        if(!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')){
+            $('#dateLogHistory').datepicker('setDate', d);
+        }
+        var date = new Date($('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'));
+        date.setDate(date.getDate()-1);
+        $('#dateLogHistory').datepicker('setDate', date);
+        $('#searchLogHistory').click();
+    })
+
+    $('#searchDayPlusOne').on('click', function() {
+        if(!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')){
+            $('#dateLogHistory').datepicker('setDate', d);
+            $('#searchLogHistory').click();
+            return;
+        }
+        var date = new Date($('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'));
+        date.setDate(date.getDate()+1);
+        if(date < d) {
+            $('#dateLogHistory').datepicker('setDate', date);
+            $('#searchLogHistory').click();
+        }else{
+            $("#searchDayPlusOne").attr('disabled','disabled')
+        }
+    })
+
+    $('#searchLogHistory').on('click', function() {
+        if (!$('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd')) {
+            $('#dateLogHistory').datepicker('setDate', d);
+        }
+
+        if($('#dateLogHistory').val() == ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear()) {
+            $("#searchDayPlusOne").attr('disabled','disabled')
+        }else{
+            $("#searchDayPlusOne").removeAttr('disabled');
+        }
+        TaskList.showHistory($('#searchLogHistory').data("schedulingid"));
+    })
 
     // New schedule
     $('#scheduleNewTask').on('click', function() {
@@ -298,8 +362,13 @@
 
     // task history
     $('#taskList').on('click', '.showHistory', function(e) {
-        TaskList.showHistory($(this).closest('a'));
+        $('#searchLogHistory').data("schedulingid", $(this).closest('a').data('json').schedulingId);
+        $("#dateLogHistory").data("datepicker").setDate("yyyy-mm-dd");
+        TaskList.showHistory($(this).closest('a').data('json').schedulingId);
         e.stopPropagation();
+        if($('#dateLogHistory').val() == ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear()) {
+            $("#searchDayPlusOne").attr('disabled','disabled');
+        }
     });
 
     var TaskList = {
@@ -486,15 +555,13 @@
             });
         },
 
-        showHistory : function(a) {
-            var schedulingId = a.data('json').schedulingId;
-
+        showHistory : function(schedulingId) {
             $.ajax({
                 type        : 'GET',
-                url         : '/batchProcessing/logSchedulings/'+ schedulingId,
+                url         : '/batchProcessing/logSchedulings/'+ schedulingId + "/" +  $('#dateLogHistory').data('datepicker').getFormattedDate('yyyy-mm-dd'),
                 contentType : 'application/json',
                 success     : function (response) {
-                    $('#logSchedulingListModal').modal().find('.modal-body').html(response);
+                    $('#logSchedulingListModal').modal().find('#modalTableList').html(response);
                 }
             });
         }

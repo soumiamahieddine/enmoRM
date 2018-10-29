@@ -1,50 +1,78 @@
 <div class="container-fluid" style="padding-top: 10px">
-    <div class="row">
-        <div class="col-md-3 col-xs-12" id="leftColumn">
-        <?hinclude /filePlan/tree.html ?>
+    <div id="mainScreenWrapper" class="row">
+        <div class="col-sm-3 col-xs-12 " id="leftColumn">
+            <?hinclude /filePlan/tree.html ?>
         </div>
-        <div class="col-md-6 col-xs-12" id="middleColumn">
+        <a id="toggleLeftColumn" href="#" class="hidden-sm hidden-xs"><i class="fa fa-chevron-circle-left"/></a>
+        <div class="col-sm-9 col-xs-12" id="middleColumn">
             <div class="row">
-                <div class="pull-left" style="padding: 0px 10px; width: 40px"><button id="toggleLeftColumn" class="btn btn-sm btn-default"><i class="fa fa-arrow-left"/></button></div>
-                <div class="pull-left col-xs-1" style="width: calc(100% - 40px)">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#folderPanel" id="folderTab" data-toggle="tab"><span class="fa fa-folder-open-o">&nbsp;</span>Folder</a>
-                        </li>
-                        <li style="display: none">
-                            <a href="#importPanel" id="importTab" data-toggle="tab" ><span class="fa fa-plus">&nbsp;</span>Create</a>
-                        </li>
-                        <li style="display: none">
-                            <a href="#searchPanel" id="searchTab" data-toggle="tab">
-                                <span class="tabTitle">Search</span>
-                                <span class="fa fa-times text-danger" data-remove-tab style="cursor: pointer" title="Close"></span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" id="newSearchTabBtn" title="Search"><span class="fa fa-search-plus"></span></a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="tab-content">
-                        <?hinclude dashboard/mainScreen/search.html ?>
-                        <?hinclude dashboard/mainScreen/import.html ?>
-                        <?hinclude dashboard/mainScreen/folder.html ?>
-                        <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
-                    </div>
+                <div class="tab-content">
+                    <?hinclude dashboard/mainScreen/folder.html ?>
+                    <?hinclude dashboard/mainScreen/import.html ?>
+                    <?hinclude dashboard/mainScreen/archiveListHandeler.html ?>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-xs-12" id="rightColumn">
+        <div class="col-sm-3 col-xs-12 hidden-xs" id="rightColumn">
+            <!-- <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a> -->
+            <!--a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a-->
+            <a id="closeDetailScreen" href="#" class="pull-right"><i class="fa fa-chevron-circle-right"/></a>
+            <div id="detailScreenContent"/>
         </div>
     </div>
 </div>
 
 <style>
+    #mainScreenWrapper {
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+    }
     #middleColumn .dropdown-menu {
         max-height: 300px;
-        overflow-y: auto; 
+        overflow-y: auto;
+    }
+    #middleColumn > .row {
+        padding: 0px 10px 0px 37px;
+        transition: width 0.5s ease;
+    }
+    #leftColumn {
+        border-right: 1px solid #DDD;
+    }
+    #rightColumn {
+        position: fixed !important;
+        right: -25%;
+        background-color: white;
+        top: 50px !important;
+        z-index: 9;
+        height: calc(100vh - 50px);
+        transition: right 0.5s ease;
+        border-left: 1px solid #DDD;
+        overflow-y: auto;
+    }
+    #rightColumn.showDetails {
+        right: 0%;
+    }
+    #leftColumn {
+        min-height: calc(95vh - 80px);
+    }
+    #showMoreDetail, #closeDetailScreen, #openInNewTab {
+        font-size: 18px;
+        margin: 10px 5px;
+    }
+    #toggleLeftColumn {
+        position: absolute;
+        left: 25.5%;
+        transition: all 0.5s ease;
+        z-index: 9999;
+        font-size: 18px;
+    }
+    @media (max-width: @screen-sm-min) {
+        #rightColumn {
+            right: -100%;
+        }
     }
 </style>
-
 
 <script>
     $('#newSearchTabBtn').on("click", function() {
@@ -54,34 +82,155 @@
         SearchTab.close($(this).closest("li"));
     });
 
-    $('#toggleLeftColumn').on('click', function() {
-        var leftColumn = $('#leftColumn');
-        var rightColumn = $('#rightColumn');
-
-        if (leftColumn.hasClass('col-md-3')) {
-            leftColumn.hide("slide", { direction: "left" }, 200, function() {
-                leftColumn.removeClass("col-md-3");
-                $("#middleColumn").removeClass("col-md-6")
-                                  .addClass("col-md-7");
-                rightColumn.removeClass("col-md-3")
-                            .addClass("col-md-5");
-            });
-            
-            $(this).children('i').addClass('fa-rotate-180');
-
-        } else {
-            $("#middleColumn").removeClass("col-md-7")
-                              .addClass("col-md-6");
-            rightColumn.removeClass("col-md-5")
-                            .addClass("col-md-3");
-            leftColumn.addClass("col-md-3")
-                      .show("slide", { direction: "left" }, 200);
-            $(this).children('i').removeClass('fa-rotate-180');
-        }
-    });
-
     $('#app_maarchRM_main').ready(function() {
         $('#rightColumn').initSmoothScrolling();
     })
+
+    // File plan
+    $('#toggleLeftColumn').on('click', function() { ColumnOrganizer.toggleLeftColumn(); });
+
+    $('#rightColumn').onEvent('clearDetail.recordsManagement', function() {
+        ColumnOrganizer.closeDetailScreen();
+    });
+
+    // Detail screen
+    $('#rightColumn').onEvent("showArchiveDetails.recordsManagement", function(e, html, showMoreURI) {
+        ColumnOrganizer.showDetailsScreen(html, showMoreURI);
+    });
+    $('#rightColumn').onEvent("showDocumentDetails.recordsManagement", function(e, html, resource) {
+        ColumnOrganizer.showDetailsScreen(html);
+        if (typeof DocumentInformation.load === "function") {
+            DocumentInformation.load(resource);
+        }
+    });
+
+    $('#rightColumn').onEvent("unselectArchive.recordsManagement", function(e, html) {
+        ColumnOrganizer.closeDetailScreen();
+    });
+
+    $("#rightColumn").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+        if (!parentArchiveId) {
+            ColumnOrganizer.closeDetailScreen();
+        }
+    });
+
+    $('#closeDetailScreen').on('click', function() {
+        ColumnOrganizer.closeDetailScreen();
+    });
+
+    $('#showMoreDetail').on('click', function() {
+        ColumnOrganizer.showMoreDetail();
+    });
+
+    $('#openInNewTab').on('click', function() {
+        ColumnOrganizer.openInNewTab();
+    });
+
+
+    var ColumnOrganizer = {
+        left                : $('#leftColumn'),
+        middle              : $('#middleColumn'),
+        right               : $('#rightColumn'),
+        toogleLeftBtn       : $('#toggleLeftColumn'),
+        detailScreenContent : $('#detailScreenContent'),
+        showMoreDetailURI   : '',
+
+        toggleLeftColumn : function() {
+
+            if (this.left.is(':visible')) {
+                this.left.hide("slide", { direction: "left" }, 300);
+
+                if (this.middle.hasClass("col-sm-9")) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-12");
+                } else if (this.middle.hasClass("col-sm-6")) {
+                    this.middle.removeClass("col-sm-6").addClass("col-sm-9");
+                }
+
+                this.toogleLeftBtn.css('left', '1%').addClass('fa-rotate-180');
+
+            } else {
+                this.left.show("slide", { direction: "left" }, 300);
+
+                if (this.middle.hasClass("col-sm-12")) {
+                    this.middle.removeClass("col-sm-12").addClass("col-sm-9");
+                } else if (this.middle.hasClass('col-sm-9') && this.right.hasClass('showDetails')) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-6");
+                } else if (this.middle.hasClass('col-sm-9')) {
+                    this.middle.removeClass("col-sm-9").addClass("col-sm-12");
+                }
+                this.toogleLeftBtn.css('left', '25.5%').removeClass('fa-rotate-180');
+            }
+        },
+
+        showDetailsScreen : function(html, showMoreURI) {
+
+            if($('#detailScreenContent').hasClass('big')){
+                $("#showMoreDetail").addClass('hide');
+            }
+
+            this.detailScreenContent.empty().html(html);
+
+            if (this.detailScreenContent.hasClass('showDetails')) {
+                return true;
+            }
+
+            this.right.addClass('showDetails').removeClass('hidden-xs');
+
+            if (this.middle.hasClass('col-sm-9') && this.left.is(':visible')) {
+                this.middle.removeClass('col-sm-9').addClass('col-sm-6');
+            } else if (this.middle.hasClass('col-sm-12')) {
+                this.middle.removeClass('col-sm-12').addClass('col-sm-9');
+            }
+
+            if (showMoreURI) {
+                $('#showMoreDetail').css('display', '');
+                $('#openInNewTab').css('display', '');
+                this.showMoreDetailURI = showMoreURI;
+            }
+        },
+
+        showMoreDetail : function() {
+            $.ajax({
+                url         : this.showMoreDetailURI,
+                type        : "GET",
+                success     : function (response) {
+                    ColumnOrganizer.detailScreenContent.empty().html(response);
+                    $("#detailScreenContent").addClass("big");
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+            $('#showMoreDetail').css('display', 'none');
+            this.right.removeClass('col-sm-3').addClass('col-sm-6');
+        },
+
+        closeDetailScreen : function() {
+
+            if($('#detailScreenContent').hasClass('big')){
+                $("#detailScreenContent").removeClass('big');
+                $("#showMoreDetail").removeClass('hide');
+            }
+
+            if (!this.right.hasClass('showDetails')) {
+                return;
+            }
+            this.right.removeClass('showDetails col-sm-6').addClass('col-sm-3 hidden-xs');
+
+            if (this.middle.hasClass('col-sm-6')) {
+                this.middle.removeClass('col-sm-6').addClass('col-sm-9');
+            } else if (this.middle.hasClass('col-sm-9')) {
+                this.middle.removeClass('col-sm-9').addClass('col-sm-12');
+            }
+
+            this.showMoreDetailURI = '';
+            $('#showMoreDetail').css('display', 'none');
+            $('#openInNewTab').css('display', 'none');
+        },
+
+        openInNewTab : function() {
+            window.open(this.showMoreDetailURI,'_blank');
+        }
+    }
 
 </script>

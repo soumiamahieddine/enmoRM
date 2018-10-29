@@ -1,40 +1,98 @@
-<div class="tab-pane fade" id="importPanel">
+<div class="hide row" id="importPanel">
     <div class="col-xs-12">
         <div class="row">
             <h4 class="pull-left">
-                <span data-context-profil/>
+                <span id="import_archivalProfile"/>
                 <br/>
-                <small data-context-path/>
-                <span data-context-parentarchive>
-                    <br/>
-                    <small><span>Sub-archive of</span> <b data-context-parentname/></small>
-                </span>
-            </h4>
+                <small id="import_isSubArchive"><span>Sub-archive of </span><span id="import_parentArchiveName"><b></b></span></small>
+            </span>
+        </h4>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <?hinclude dashboard/mainScreen/archiveForm.html ?>
         </div>
-        <div class="row">
-            <div class="col-lg-8 col-md-12">
-                <?hinclude dashboard/mainScreen/archiveForm.html ?>
-            </div>
-            <div class="col-lg-4 col-md-12">
-                <?hinclude dashboard/mainScreen/documentForm.html ?>    
-            </div>
+        <div class="col-lg-4 col-md-12">
+            <?hinclude dashboard/mainScreen/documentForm.html ?>    
         </div>
-
+    </div>
         <div class="pull-right">
-            <a href="#" class="btn btn-sm bg-success" id="import"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <?merge syncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
-            <a href="#" class="small text-danger" id="cancel">Cancel</a>
+            <?merge asyncImportPrivilege.bool() ?>
+            <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
+
+            <i>&nbsp;</i>
+            <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+
+    ImportPanel = {
+        panel: $('#importPanel'),
+        load: function(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
+            $('#archiveForm [name="filePlanPosition"]').val(folderId);
+
+            this.panel.removeClass('hide');
+
+            if (!archivalProfile) {
+                archivalProfile = "";
+            }
+
+            $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
+            if(typeof archivalProfile.name === "undefined") {
+                $("#import_archivalProfile").text("");
+            } else {
+                $("#import_archivalProfile").text(archivalProfile.name);
+            }
+
+            if (!parentArchiveId) {
+                $("#archiveForm [name='parentArchiveId']").val('');
+                $('#import_isSubArchive').addClass('hide');
+            } else {
+                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
+                $('#import_parentArchiveName').find('b').text(parentArchiveName);
+            }
+
+            trigger("archiveImportStarted.recordsManagement");
+        },
+
+        save: function(e, button) {
+            ArchiveForm.send(e, button);
+        },
+        cancel: function() {
+            ArchiveForm.clear();
+            this.panel.addClass('hide');
+        }
+    }
+
+    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
+        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName);
+        if(typeof archivalProfile === "undefined"){
+            FilePlanLevelToggle.load(true);
+        } else {
+            FilePlanLevelToggle.load(false);
+        }
+    });
+
     $('#import').on('click', function(e) {
-        ArchiveForm.send(e, $(this));
+        ImportPanel.save(e, $(this));
+    });
+
+    $('#syncImport').on('click', function(e) {
+        ArchiveForm.send('sync', e, $(this));
+    });
+
+    $('#asyncImport').on('click', function(e) {
+        ArchiveForm.send('async', e, $(this));
     });
 
     $('#cancel').on('click', function(e) {
-        ArchiveForm.clear();
-        $('#folderTab').click();
+        ImportPanel.cancel();
+        trigger("archiveImportOver.recordsManagement");
     });
 </script>

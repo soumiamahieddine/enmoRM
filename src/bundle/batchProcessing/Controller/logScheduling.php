@@ -18,6 +18,7 @@
  * along with bundle batchProcessing.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\batchProcessing\Controller;
+use core\Exception;
 
 /**
  * Controller for the audit trail event
@@ -140,12 +141,30 @@ class logScheduling
     /**
      * Get event
      * @param string $schedulingId the scheduling identifier
+     * @param string $logDate      the logs date
      *
      * @return array The list of log shceduling object
      */
-    public function getLogBySchedulingId($schedulingId)
+    public function getLogs($schedulingId, $logDate)
     {
-        $logScheduling = $this->sdoFactory->find("batchProcessing/logScheduling", "schedulingId='$schedulingId'");
+        $date = \laabs::newDateTime($logDate);
+        $maxDate = $date->shift(new \DateInterval('P1D'));
+
+        $queryParams = [];
+        $queryString = [];
+
+        $queryParams['date'] = $date;
+        $queryString['date'] = "logDate >= :date";
+
+        $queryParams['maxDate'] = $maxDate;
+        $queryString['maxDate'] = "logDate < :maxDate";
+
+        $queryParams['schedulingId'] = $schedulingId;
+        $queryString['schedulingId'] = "schedulingId = :schedulingId";
+
+        $queryString = \laabs\implode(" AND ", $queryString);
+
+        $logScheduling = $this->sdoFactory->find("batchProcessing/logScheduling", $queryString, $queryParams);
 
         return $logScheduling;
     }

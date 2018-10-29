@@ -62,8 +62,6 @@ class journal
         foreach ($this->eventFormats as $eventFormat) {
             $eventFormat->format = explode(' ', $eventFormat->format);
         }
-
-        $this->journals = [];
     }
 
     /**
@@ -177,19 +175,30 @@ class journal
         $events = [];
         $logController = \laabs::newController('recordsManagement/log');
 
+        $tmpDir = \laabs::getTmpDir();
+        $journalFile = null;
+
         $journal = $logController->getByDate('lifeCycle', (string) $date);
 
         if (!$journal) {
             return $events;
         }
 
-        if (!isset($this->journals[(string) $journal->archiveId])) {
-            $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
-            $this->journals[(string) $journal->archiveId] = $journalResource->getContents();
+        $archiveController = \laabs::newController('recordsManagement/archive');
+
+        if (!\laabs\file_exists($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId)) {
+            $resources = $archiveController->getDigitalResources($journal->archiveId);
+            $journalResource = $resources[0];
+
+            if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalResource->getContents())) {
+                throw \laabs::newException("lifeCycle/journalException", "Journal file cannot be written");
+            }
+
+            $journalFile = $journalResource->getContents();
+        } else {
+            $journalFile = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
         }
 
-        $journalFile = $this->journals[(string) $journal->archiveId];
         $offset = 0;
 
         do {
@@ -231,7 +240,7 @@ class journal
             }
         }
 
-        $events = $this->sdoFactory->find('lifeCycle/event', $query, null, 'timestamp');
+        $events = $this->sdoFactory->find('lifeCycle/event', $query, [], 'timestamp');
 
         foreach ($events as $key => $event) {
             $events[$key] = $this->decodeEventFormat($event);
@@ -385,7 +394,8 @@ class journal
 
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $journalResource = $archiveController->getDigitalResources($journalReference->archiveId)[0];
+            $resources = $archiveController->getDigitalResources($journalReference->archiveId);
+            $journalResource = $resources[0];
             
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
@@ -430,7 +440,7 @@ class journal
 
             $queryString['timestamp'] = "timestamp>'$timestamp'";
 
-            $nextEvent = $this->sdoFactory->find("lifeCycle/event", implode(' and ', $queryString), null, "<timestamp", 0, 1);
+            $nextEvent = $this->sdoFactory->find("lifeCycle/event", implode(' and ', $queryString), [], "<timestamp", 0, 1);
 
             if (count($nextEvent)) {
                 $nextEvent = $nextEvent[0];
@@ -505,7 +515,7 @@ class journal
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
         if (!count($journal)) {
-            $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", null, ">timestamp");
+            $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", [], ">timestamp");
             foreach ($events as $key => $event) {
                 $events[$key] = $this->decodeEventFormat($event);
             }
@@ -518,7 +528,7 @@ class journal
 
 
         // Searching for related events not in the journal yet
-        $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId' AND timestamp>'$journal->toDate'", null, ">timestamp");
+        $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId' AND timestamp>'$journal->toDate'", [], ">timestamp");
         foreach ($events as $key => $event) {
             $events[$key] = $this->decodeEventFormat($event);
         }
@@ -761,7 +771,8 @@ class journal
             $journal = $archiveId;
             $archiveId = (string) $journal->archiveId;
         }
-        $journalResource = $archiveController->getDigitalResources($journal->archiveId)[0];
+        $resources = $archiveController->getDigitalResources($journal->archiveId);
+        $journalResource = $resources[0];
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
@@ -784,7 +795,8 @@ class journal
             return true;
         }
 
-        $nextJournalResource = $archiveController->getDigitalResources($nextJournal->archiveId)[0];
+        $resources = $archiveController->getDigitalResources($journalResource->archiveId);
+        $nextJournalResource = $resources[0];
         $nextJournalContents = $nextJournalResource->getContents();
 
         $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
@@ -895,7 +907,7 @@ class journal
                 $queryString .= "AND instanceName = '".\laabs::getInstanceName()."'";
             }
 
-            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");
+            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, [], "<timestamp");
 
         } else {
             // No previous journal, select all events
@@ -905,7 +917,7 @@ class journal
                 $queryString .= " AND eventInfo = '*$ownerOrgRegNumber*'";
             }
 
-            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, null, "<timestamp");
+            $events = $this->sdoFactory->find('lifeCycle/event', $queryString, [], "<timestamp");
             if (count($events) > 0) {
                 $newJournal->fromDate = reset($events)->timestamp;
             } else {
@@ -936,7 +948,8 @@ class journal
         if ($previousJournal) {
             $eventLine[8] = (string) $previousJournal->archiveId;
 
-            $journalResource = $archiveController->getDigitalResources($previousJournal->archiveId)[0];
+            $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
+            $journalResource = $resources[0];
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;

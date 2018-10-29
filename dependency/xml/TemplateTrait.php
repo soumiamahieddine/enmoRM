@@ -244,8 +244,9 @@ trait TemplateTrait
                 $tmpTextNode = $this->createTextNode($value);
                 $mergedValue = str_replace($pi, (string) $tmpTextNode->wholeText, $textNode->nodeValue);
 
-                //$mergedValue = str_replace($pi, (string) $value, $textNode->nodeValue);
-                $mergedValue = htmlentities($mergedValue);
+                if (empty($this->xmlVersion)) {
+                    $mergedValue = htmlentities($mergedValue);
+                }
                 $textNode->nodeValue = str_replace($pi, $value, $mergedValue);
             }
         }

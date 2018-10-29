@@ -24,12 +24,18 @@
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
+    <div class="form-group" id="fileplanLevelDiv">
+        <label class="col-md-3 control-label small">Fileplan level</label>
+        <div class="col-md-9">
+            <input type="checkbox" data-width="100" class="input-sm" id="fileplanLevelToggle">
+        </div>
+    </div>
 
     <input type="hidden" class="archiveInput" name="archivalProfileReference" id="archivalProfile"/>
     <input type="hidden" class="archiveInput" name="filePlanPosition"/>
     <input type="hidden" class="archiveInput" name="originatorOrgRegNumber"/>
     <input type="hidden" class="archiveInput" name="parentArchiveId"/>
-    <input type="hidden" class="archiveInput" name="fileplanLevel" value='file'/>
+    <input type="hidden" class="archiveInput" id="fileplanLevel" name="fileplanLevel" value='file'/>
 </form>
 
 <?hinclude dashboard/mainScreen/descriptionForm.html ?>
@@ -64,10 +70,51 @@
 </div>
 
 <div class="hide">
+    <span id="text_file"><i class='fa fa-folder'></i> File</span>
+    <span id="text_item"><i class='fa fa-file'></i> Item</span>
     <span id="message_requiredFieldOnEmptyForm">You must define at least the name, the identifier, the date of the document or a document</span>
 </div>
 
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
+
+
+    FilePlanLevelToggle = {
+        load: function (isWithoutProfile = true) {
+            if(isWithoutProfile == true) {
+
+                if($('#fileplanLevelDiv').is(":hidden")) {
+                    $('#fileplanLevelDiv').show();
+                }
+
+                $('#fileplanLevelToggle').bootstrapToggle({
+                    on: $('#text_item'),
+                    off: $('#text_file'),
+                });
+
+                $('#fileplanLevel').val("file");
+
+                if($('#fileplanLevel').val() == 'item') {
+                    $('#fileplanLevelToggle').bootstrapToggle('on');
+                    $("#contentsTabBtn").addClass('hide');
+                }
+
+
+                $('#fileplanLevelToggle').on('change', function (e) {
+                    if ($('#fileplanLevelToggle').prop('checked')) {
+                        $("#fileplanLevel").val('item');
+                        $("#contentsTabBtn").addClass('hide');
+                    } else {
+                        $("#fileplanLevel").val('file');
+                        $("#contentsTabBtn").removeClass('hide');
+                    }
+                });
+            } else {
+                $('#fileplanLevelDiv').hide();
+            }
+        }
+    };
+
     $('#app_maarchRM_main').ready(function () {
         $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
     });
@@ -81,29 +128,51 @@
     $('#retentionRule').on('change', function() {
         ArchiveForm.displayRetentionRulesInfo();
     });
-    
+
     var ArchiveForm = {
-        send : function() {
-            var archive = this.serialize();
+        send : function(type) {
 
-            if (archive < 0) {
-                return;
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
+
+                if (archive < 0) {
+                    return;
+                }
+
+                data = JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer});
+            } else {
+                url = "/transfer";
+                data = this.asyncSerialize();
+
+                if (data.message <0) {
+                    return;
+                }
+
+                data = JSON.stringify(data);
+
+                if (archive < 0) {
+                    return;
+                }
             }
-
             ajax($('#import'),
                 {
                     type        : 'POST',
-                    url         : "/archive",
-                    data        : JSON.stringify({archive : archive, zipContainer : DocumentForm.zipContainer}),
+                    url         : url,
+                    data        : data,
                     contentType : 'application/json',
                     dataType    : 'json',
                     success     : function (response) {
                         gritter.show(response.message, response.status, response.errors);
 
                         if (response.status) {
-                            ArchiveForm.clear();
-                            ArchiveFolderList.refresh();
-                            $('#folderTab').click();
+                            trigger("archiveImportOver.recordsManagement", [archive.parentArchiveId]);
+                            ImportPanel.cancel();
+                            var folder = archive.originatorOrgRegNumber;
+                            if (archive.filePlanPosition) {
+                                folder = archive.filePlanPosition;
+                            }
+                            trigger('loadFolder.filePlan', [folder]);
                         }
                     },
                     error       : function (response) {
@@ -133,13 +202,13 @@
                 $('#retentionRule').val(selectedProfile.retentionRuleCode).change().attr("disabled", "disabled");
             }
 
-            if (value == '' 
-                || selectedProfile.retentionStartDate == '' 
+            if (value == ''
+                || selectedProfile.retentionStartDate == ''
                 || selectedProfile.retentionStartDate == null) {
-                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]"); 
+                var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]");
                 retentionStartDate.data("datepicker").setDate(new Date())
                 retentionStartDate.closest(".form-group").removeClass("hide");
-                
+
             } else {
                  $("#managementMetadataForm").find("[name=retentionStartDate]").val("").closest(".form-group").addClass("hide");
             }
@@ -148,16 +217,16 @@
             var value = $('#archivalProfile').val();
 
             $('#archivalProfileFields').empty();
-            
+
             if (value == "") {
                 Metadata.acceptUserIndex(true);
                 return;
             }
-            
+
             var selectedProfile = $('#archivalProfile').data('json');
-            
+
             Metadata.acceptUserIndex(selectedProfile.acceptUserIndex);
-            
+
             $.each(selectedProfile.archiveDescription, function(key, value) {
                 Metadata.addArchiveDescription(value);
             });
@@ -173,7 +242,7 @@
             }
 
             var finalDisposition = selected.data('final-disposition');
-            
+
             var duration = selected.data('duration');
 
             if (duration === undefined) {
@@ -211,7 +280,7 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        serialize : function() {
+        syncSerialize : function() {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
@@ -227,7 +296,7 @@
                     }
                     archive[$(this).attr('name')] = value;
                 }
-            })
+            });
 
             var selectedProfile = $('#archivalProfile').data('json');
 
@@ -265,6 +334,133 @@
             return archive;
         },
 
+        asyncSerialize : function() {
+            var form = $('#archiveForm, #managementMetadataForm');
+            var inputs = form.find('.archiveInput');
+            var data = {
+                messageFile : {
+                    binaryDataObject : {},
+                    descriptiveMetadata : {}
+                },
+                attachments : [],
+                schema : "recordsManagement"
+            };
+
+            var id = Math.random().toString(36).substr(2, 9);
+            var obj = {};
+            obj[id] = {
+                archiveName                 : null,
+                originatorArchiveId         : null,
+                originatorId                : null,
+                archiveType                 : null,
+                descriptionObject           : {},
+                originatingDate             : null,
+                managementMetadata          : {
+                    storageRule             : {},
+                    accessRule              : {},
+                    appraisalRule           : {},
+                    classificationRule      : {}
+                },
+                descriptionClass            : null,
+                dataObjects                 : []
+            };
+
+            inputs.each(function() {
+                var value = $(this).val();
+
+                switch ($(this).attr('name')) {
+                    case 'archivalProfileReference' :
+                        if (value) {
+                            obj[id].managementMetadata.archivalProfile = value;
+                        }
+                        break;
+                    case 'archiveName' :
+                        if (value) {
+                            obj[id].archiveName = value;
+                        }
+                        break;
+                    case 'originatingDate' :
+                        if (value) {
+                            obj[id].originatingDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
+                    case 'originatorArchiveId' :
+                        if (value) {
+                            obj[id].originatorArchiveId = value;
+                        }
+                        break;
+                    case 'originatorOrgRegNumber' :
+                        if (value) {
+                            obj[id].originatorId = value;
+                        }
+                        break;
+                    case 'filePlanPosition' :
+                        if (value) {
+                            obj[id].folderPath = value;
+                        }
+                        break;
+                    case 'parentArchiveId' :
+                        if (value) {
+                            obj[id].parentArchiveId = value;
+                        }
+                        break;
+                    case 'retentionRuleCode' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.code = value;
+                        }
+                        break;
+                    case 'retentionStartDate' :
+                        if (value) {
+                            obj[id].managementMetadata.appraisalRule.startDate = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        }
+                        break;
+                }
+            });
+
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                obj[id].descriptionClass = selectedProfile.descriptionClass;
+                if (selectedProfile.fileplanLevel != null) {
+                    if (selectedProfile.fileplanLevel === 'file') {
+                        obj[id].archiveType = 'container';
+                    } else {
+                        obj[id].archiveType = 'item';
+                    }
+                }
+            }
+
+            if (!obj[id].archiveType) {
+                obj[id].archiveType = 'container';
+            }
+
+            obj[id].descriptionObject = Metadata.serialize($('#allFields'));
+            if (obj[id].descriptionObject === true) {
+                return -1;
+            }
+
+            data.messageFile.binaryDataObject = DocumentList.asyncSerialize();
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+                if (obj[id].archiveType === 'item' && data.messageFile.binaryDataObject==null) {
+                    gritter.show($('#documentMissing_error').text(), false);
+                    return -2;
+                }
+            }
+
+            if (!selectedProfile && !obj[id].archiveName && !obj[id].originatorArchiveId && !obj[id].originatingDate && data.messageFile.binaryDataObject == null) {
+                gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
+                return -3;
+            }
+
+            $.each(data.messageFile.binaryDataObject, function(index, value) {
+                obj[id].dataObjects.push(index);
+            });
+
+            data.messageFile.descriptiveMetadata[id] = obj[id];
+            data.messageFile = btoa(unescape(encodeURIComponent(JSON.stringify(data.messageFile))));
+            return data;
+        },
         clear : function() {
             $('#retentionRule').removeAttr("disabled");
             $('#archiveForm, #managementMetadataForm').find('.archiveInput').not('[name="filePlanPosition"],[name="originatorOrgRegNumber"]').val('').change();

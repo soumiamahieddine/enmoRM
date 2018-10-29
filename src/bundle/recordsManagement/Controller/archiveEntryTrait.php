@@ -2,18 +2,18 @@
 
 /*
  *  Copyright (C) 2017 Maarch
- * 
+ *
  *  This file is part of bundle recordsManagement.
  *  Bundle recordsManagement is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  Bundle recordsManagement is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -119,13 +119,13 @@ trait archiveEntryTrait
      * Process a zipContainer
      *
      * @param recordsManagement/archive $archive The archive
-     * 
+     *
      * @return recordsManagement/archive An archive
      */
     public function processZipContainer($archive)
     {
         $zip = $archive->digitalResources[0];
-        
+
         $zipDirectory = $this->extractZip($zip);
 
         $archive->digitalResources = [];
@@ -133,7 +133,7 @@ trait archiveEntryTrait
         $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
 
         if (!is_dir($directory)) {
-            throw new \core\Exception("Zip malformed");
+            throw new \core\Exception("The container file is non-compliant");
         }
 
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
@@ -287,7 +287,7 @@ trait archiveEntryTrait
                 }
             } else {
                 if (!empty($archive->archivalProfileReference)) {
-                    $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);   
+                    $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);
                     $archive->archiveName .= $archivalProfile->name;
                 }
                 if (!empty($archive->originatorArchiveId)) {
@@ -311,12 +311,14 @@ trait archiveEntryTrait
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
 
-        $nbArchiveObjects = count($archive->contents);
-        for ($i = 0; $i < $nbArchiveObjects; $i++) {
-            $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
-            $this->useReferences($archive->contents[$i], 'deposit');
-            $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
-            $this->completeMetadata($archive->contents[$i]);
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+            for ($i = 0; $i < $nbArchiveObjects; $i++) {
+                $archive->contents[$i]->serviceLevelReference = $archive->serviceLevelReference;
+                $this->useReferences($archive->contents[$i], 'deposit');
+                $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
+                $this->completeMetadata($archive->contents[$i]);
+            }
         }
     }
 
@@ -361,8 +363,8 @@ trait archiveEntryTrait
         if ($archive->archivalProfileReference == "") {
             return;
         }
-            
-        $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);   
+
+        $archivalProfile = $this->useArchivalProfile($archive->archivalProfileReference);
 
         if (!empty($archivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $archivalProfile->retentionRuleCode;
@@ -435,7 +437,7 @@ trait archiveEntryTrait
                     }
             }
         }
-        
+
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
@@ -581,6 +583,7 @@ trait archiveEntryTrait
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
+
                 if (($descriptionField->isArray && !is_array($value)) || (!$descriptionField->isArray && is_array($value))) {
                     throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
                 }
@@ -595,7 +598,7 @@ trait archiveEntryTrait
                 }
 
                 foreach ($valueArray as $item) {
-                    if (!in_array($item, $descriptionField->enumeration)) {
+                    if (!in_array($item, $descriptionField->enumeration)  && $archiveDescription->required) {
                         throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
                     }
                 }
@@ -620,7 +623,7 @@ trait archiveEntryTrait
             case 'date':
                 if (!is_string($value)) {
                     throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }                
+                }
                 break;
         }
     }
@@ -644,7 +647,11 @@ trait archiveEntryTrait
             throw new \core\Exception\NotFoundException("The access rule not found");
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        $nbArchiveObjects = 0;
+
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        }
 
         if ($nbArchiveObjects) {
             $containedProfiles = [];
@@ -656,13 +663,13 @@ trait archiveEntryTrait
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
                 if (empty($archive->contents[$i]->archivalProfileReference)) {
-                    if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) { 
+                    if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
                         throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                     }
                 } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
                     throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                 }
-                
+
                 $this->validateManagementMetadata($archive->contents[$i]);
             }
 
@@ -717,7 +724,7 @@ trait archiveEntryTrait
                 return;
             }
         }
-        
+
         throw new \core\Exception\BadRequestException("Invalid archive profile");
     }
 
@@ -772,7 +779,11 @@ trait archiveEntryTrait
             }
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        $nbArchiveObjects = 0;
+
+        if (!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        }
 
         for ($i = 0; $i < $nbArchiveObjects; $i++) {
             $this->validateAttachments($archive->contents[$i]);
@@ -783,7 +794,7 @@ trait archiveEntryTrait
      * Convert resources of archive
      *
      * @param recordsManagement/archive $archive The archive to convert
-     * 
+     *
      * @return void
      */
     public function convertArchive($archive)
@@ -842,7 +853,12 @@ trait archiveEntryTrait
             $this->sdoFactory->beginTransaction();
         }
 
-        $nbArchiveObjects = count($archive->contents);
+        if(!empty($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        } else {
+            $nbArchiveObjects = null;
+        }
+
 
 
         try {
@@ -850,7 +866,7 @@ trait archiveEntryTrait
             $archive->depositDate = \laabs::newTimestamp();
 
             $this->openContainers($archive, $path);
-            
+
             $this->sdoFactory->create($archive, 'recordsManagement/archive');
 
             if (!empty($archive->digitalResources)) {
@@ -950,7 +966,7 @@ trait archiveEntryTrait
         for ($i = 0; $i < $nbResources; $i++) {
             $digitalResource = $archive->digitalResources[$i];
             $digitalResource->archiveId = $archive->archiveId;
-            
+
             $this->digitalResourceController->store($digitalResource);
         }
     }

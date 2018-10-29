@@ -51,7 +51,7 @@ msgstr "Gestion des règles de conservation"
 msgctxt "interface"
 
 msgid "message"
-msgstr "Gestion de messages"
+msgstr "Gestion de bordereaux"
 msgctxt "interface"
 
 msgid "document"
@@ -241,7 +241,7 @@ msgstr "Intégrité"
 msgid "Size (octets)"
 msgstr "Taille (octets)"
 
-msgid "Preservation"
+msgid "preservation"
 msgstr "Conservation"
 
 msgid "Access entries"
@@ -779,6 +779,9 @@ msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
+msgid "Final disposition must be advised for this action"
+msgstr "Un sort final doit être renseigné pour exécuter cette action."
+
 msgid "Profil and data management not found"
 msgstr "Profil et données de gestion non trouvés"
 
@@ -864,6 +867,12 @@ msgstr "Métadonnées"
 msgid "Import"
 msgstr "Importer"
 
+msgid "Import with validation"
+msgstr "Importer avec validation"
+
+msgid "Click or drop a document"
+msgstr "Cliquer ou déposer un document"
+
 msgid "Click or drop documents"
 msgstr "Cliquez ou déposez des documents"
 
@@ -894,8 +903,8 @@ msgstr "Archive modifiée"
 msgid "Add field"
 msgstr "Ajouter un champ"
 
-msgid "Metadatas are incomplete."
-msgstr "Les métadonnées sont imcomplètes."
+msgid "Missing Label"
+msgstr "Un libellé est nécessaire avec la valeur"
 
 msgid "Label"
 msgstr "Libellé"
@@ -996,3 +1005,27 @@ msgstr "Modifier les métadonnées"
 
 msgid "Unlimited"
 msgstr "Illimitée"
+
+msgid "Messages"
+msgstr "Bordereaux"
+
+msgid "Add sub-archive"
+msgstr "Ajout de sous-archive"
+
+msgid "archive found"
+msgstr "archive trouvée"
+
+msgid "archives found"
+msgstr "archives trouvées"
+
+msgid "Results of search in"
+msgstr "Résultats de la recherche dans"
+
+msgid "Fileplan level"
+msgstr "Niveau dans le plan"
+
+msgid "Item"
+msgstr "Pièce"
+
+msgid "File"
+msgstr "Dossier"

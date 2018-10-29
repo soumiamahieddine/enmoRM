@@ -38,25 +38,6 @@ interface retrieveInterface
      */
     public function readRecordsmanagementArchivesSearchform();
 
-    /**
-     * Search form
-     *
-     * @uses recordsManagement/archives/read
-     *
-     * @return recordsManagement/welcome/folderContents
-     */
-    public function readRecordsmanagementArchivesSearch(
-        $archiveId = null,
-        $profileReference = null,
-        $status = null,
-        $archiveName = null,
-        $agreementReference = null,
-        $archiveExpired = null,
-        $finalDisposition = null,
-        $originatorOrgRegNumber = null,
-        $description = null,
-        $text = null
-    );
 
     /**
      * get form to update index
@@ -88,7 +69,7 @@ interface retrieveInterface
      * @param string $text
      *
      * @return recordsManagement/archive/search
-     * @uses recordsManagement/archives/read
+     * @uses recordsManagement/archives/readRegistry
      */
     public function readRecordsmanagementArchives(
         $archiveId = null,

@@ -91,8 +91,6 @@
                 </div>
             </div>
         </div>
-        <!-- modals for disabling user -->
-        <?hinclude auth/userAccount/admin/modalsForDisabling.html ?>
 
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
         <span class="hide" id="invalidEmail_text">Email malformed</span>
@@ -132,8 +130,8 @@
             url = "/userAccount/" + accountId;
             type = "PUT";
         }
-        
-        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.email == "") {
+
+        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "") {
             gritter.show($('#empty_text').text(), false);
             return;
         }

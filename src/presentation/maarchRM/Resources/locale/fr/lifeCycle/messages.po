@@ -206,6 +206,10 @@ msgid "info"
 msgstr "Détail"
 msgctxt "eventInfo"
 
+msgid "code"
+msgstr "Code"
+msgctxt "eventInfo"
+
 # msgid "accountId"
 # msgstr "Identifiant technique utilisateur"
 # msgctxt "eventInfo"
@@ -374,6 +378,29 @@ msgid "archivesChecked"
 msgstr "Nombre d'archives vérifiées"
 msgctxt "eventInfo"
 
+msgid "motivation"
+msgstr "Motivation"
+msgctxt "eventInfo"
+
+msgid "justification"
+msgstr "Justification"
+msgctxt "eventInfo"
+
+msgid "nomDestinataire"
+msgstr "Nom du destinataire"
+msgctxt "eventInfo"
+
+msgid "prenomDestinataire"
+msgstr "Prénom du destinataire"
+msgctxt "eventInfo"
+
+msgid "matriculeDestinataire"
+msgstr "Matricule du destinataire"
+msgctxt "eventInfo"
+
+msgid "serviceDestinataire"
+msgstr "Service du destinataire"
+msgctxt "eventInfo"
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------
@@ -475,49 +502,55 @@ msgid "recordsManagement/outgoingTransfer"
 msgstr "Transfert sortant"
 
 msgid "medona/sending"
-msgstr "Envoi d'un message"
+msgstr "Envoi d'un bordereau"
 
 msgid "medona/reception"
-msgstr "Réception d'un message"
+msgstr "Réception d'un bordereau"
 
 msgid "medona/validation"
-msgstr "Validation d'un message"
+msgstr "Validation d'un bordereau"
+
+msgid "medona/modification"
+msgstr "Modification d'un bordereau"
 
 msgid "medona/processing"
-msgstr "Traitement d'un message"
+msgstr "Traitement d'un bordereau"
 
 msgid "medona/acceptance"
-msgstr "Acceptation d'un message"
+msgstr "Acceptation d'un bordereau"
 
 msgid "medona/acknowledgement"
-msgstr "Accusé de réception"
+msgstr "Acquittement d'un bordereau"
 
 msgid "medona/rejection"
-msgstr "Rejet d'un message"
+msgstr "Rejet d'un bordereau"
 
 msgid "medona/retry"
-msgstr "Reprise d'un message"
+msgstr "Reprise d'un bordereau"
 
 msgid "medona/authorization"
-msgstr "Demande d'autorisation"
+msgstr "Demande d'autorisation d'un bordereau"
+
+msgid "medona/message"
+msgstr "Identifiant bordereau"
 
 msgid "Result"
 msgstr "Résultat"
 
 msgid "Reception of the message"
-msgstr "Réception du message"
+msgstr "Réception d'un bordereau"
 
 msgid "Processing of the message"
-msgstr "Traitement du message"
+msgstr "Traitement d'un bordereau"
 
 msgid "Deposit of archive"
 msgstr "Dépôt d'archive"
 
 msgid "Sending of the message"
-msgstr "Message envoyé"
+msgstr "Bordereau envoyé"
 
 msgid "Acceptance of the message"
-msgstr "Message accepté"
+msgstr "Bordereau accepté"
 
 msgid "Modification of retention rule"
 msgstr "Modification de la règle de conservation"

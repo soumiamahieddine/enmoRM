@@ -6,131 +6,339 @@
     file that was distributed with this source code.
 #-->
 <!-- Search field -->
-<h4 class="pull-left">
-    <span data-context-path/>
-    <br/>
-    <small data-context-description/>
-</h4>
-<div class="form-horizontal col-md-12" data-search-searchForm>
-    <div class="form-group col-md-10">
+<div class="form-horizontal" id="fullTextSearchForm" data-translate-catalog="recordsManagement/message">
+    <div class="form-group">
         <div class="input-group">
+            <div id="profileSelection" class="input-group-btn">
+                <button id="searchByProfile" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                  
+                    <span>All</span> <i class="fa fa-caret-down"/>
+                </button>
+                <ul class="dropdown-menu">
+                    <li role="presentation" class="small allProfiles">
+                        <a data-reference="all" href="#">All</a>
+                    </li>
+                    <?merge userArchivalProfiles ?>
+                    <li role="presentation" class="small [?merge .reference ?]">
+                        <a href="#" data-reference="[?merge .reference ?]">
+                            <?merge .name ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <input type="search" class="form-control" name="searchForm_inputSearch"/>
             <div class="input-group-btn">
-                <button type="button" class="btn btn-default" name="searchForm_inputSearchBtn" title="Search"><span class="fa fa-search text-primary">&nbsp;</span></button>
+                <button type="button" class="btn btn-default" id="searchForm_inputSearchBtn" title="Search">
+                    <span class="fa fa-search text-primary"/>
+                </button>
             </div>
         </div>
+        <a id="advancedSearchButton" class="pull-right" data-toggle="collapse" href="#advancedSearchPanel">Advanced search</a>
     </div>
 </div>
 
-<!-- Search profiles tabs -->
-<ul class="nav nav-tabs col-md-12" role="tablist" data-search-tab>
-    <li role="presentation" class="active small"><a href="#all" data-toggle="tab">All</a></li>
-    <li class="dropdown profileDropdown" role="presentation" class="small">
-        <a href="#" class="dropdown-toggle small" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span>Profiles</span> <i class="fa fa-caret-down"/>
-            <ul class="dropdown-menu">
-                <?merge userArchivalProfiles ?>
-                <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
-            </ul>
-        </a>
-    </li>
-    <?merge userArchivalProfiles ?>
-    <li role="presentation" class="small profileTab [?merge .reference ?]"><a href="#[?merge .reference ?]" data-index="[?merge .reference ?]"  data-descriptionClass="[?merge .descriptionClass ?]" data-toggle="tab"><?merge .name ?></a></li>
-</ul>
-<br/>
-<div class="tab-content col-md-12 advancedSearchPanel" data-search-tabContent>
-    <div role="tabpanel" class="tab-pane fade in active" id="all">
-        <br/>
-        <form class="form-horizontal" data-descriptionFields>
-            <div class="form-group col-md-12">  
+<div id="advancedSearchPanel" class="col-xs-12 collapse" data-translate-catalog="recordsManagement/messages">
+    <div class="col-xs-12">
+        <form class="form-horizontal ">
+            <div class="form-group">  
                 <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
                 <div class="input-group input-group-sm input-daterange col-md-4">
                     <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
                     <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
                     <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
                 </div>
-                <div class="col-md-5"> </div>
             </div>
-        </form>
-    </div>
-    <?merge userArchivalProfiles ?>
-    <div role="tabpanel" class="tab-pane fade" id="[?merge .reference ?]">
-        <small class="profileDropdown"><i class="text-primary"><?merge .name ?></i></small>
-        <br class="profileTab"/>
-        <form class="form-horizontal" data-descriptionFields>
-            <div class="form-group col-md-12">  
-                <label class="col-md-3 control-label text-primary"><small>Originating date</small></label>
-                <div class="input-group input-group-sm input-daterange col-md-4">
-                    <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6" name="originatingDateMin" />
-                    <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                    <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
-                </div>
-                <div class="col-md-5"> </div>
-            </div>
-            <?merge .searchFields ?>
-            <div>
-                <?merge .type.ifeq('name') ?>
+            <?merge userArchivalProfiles ?>
+            <div class="profileAdvanceSearch [?merge .reference ?] hide">
+                <?merge .searchFields ?>
                 <div>
-                    <?merge .enumeration.ifeq('') ?>
+                    <?merge .type.ifeq('name') ?>
+                    <div>
+                        <?merge .enumeration.ifeq('') ?>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <input type="text" class="advancedSearchField form-control input-xs descriptionInput" name="[?merge .name ?]" />
+                            </div>
+                        </div>
+                        <?merge .enumeration.ifne('') ?>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <select class="advancedSearchField form-control input-sm descriptionInput" name="[?merge .name ?]" data-type="select">
+                                    <option value=""></option>
+                                     <?merge .enumeration ?>
+                                    <option value="[?merge . ?]"><?merge . ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <?merge .type.ifeq('boolean') ?>
                     <div class="form-group col-md-6">
                         <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control input-xs descriptionInput" name="[?merge .name ?]" />
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-default">
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="0"><i class="fa fa-times"></i>
+                                </label>
+                                <label class="btn btn-default active">
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="" checked>&nbsp;
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" class="advancedSearchField descriptionInput" name="[?merge .name ?]" value="1"><i class="fa fa-check"></i>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <?merge .enumeration.ifne('') ?>
-                    <div class="form-group col-md-6">
-                        <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                        <div class="col-md-6">
-                            <select class="form-control input-sm descriptionInput" name="[?merge .name ?]" data-type="select">
-                                <option value=""></option>
-                                 <?merge .enumeration ?>
-                                <option value="[?merge . ?]"><?merge . ?></option>
-                            </select>
+                    <?merge .type.ifeq('number') ?>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
+                        <div class="input-group input-group-sm col-md-4">
+                            <input type="number" step="0.01" data-range="start" class="advancedSearchField amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
+                            <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                            <input type="number" step="0.01" data-range="end" class="advancedSearchField amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
                         </div>
+                        <div class="col-md-5"> </div>
                     </div>
-                </div>
-                <!--?merge .type.ifeq('boolean') ?>
-                <div class="form-group col-md-6">
-                    <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="col-md-6">
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-default">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                            </label>
-                            <label class="btn btn-default active">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="" checked>&nbsp;
-                            </label>
-                            <label class="btn btn-default">
-                                <input type="radio" name="[?merge .name ?]" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                            </label>
+                    <?merge .type.ifeq('date') ?>
+                    <div class="form-group col-md-12">  
+                        <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
+                        <div class="input-group input-group-sm input-daterange col-md-4">
+                            <input type="text" data-range='start' class="advancedSearchField form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
+                            <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+                            <input type="text" data-range='end' class="advancedSearchField form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
                         </div>
+                        <div class="col-md-5"> </div>
                     </div>
-                </div-->
-                <?merge .type.ifeq('number') ?>
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="input-group input-group-sm col-md-4">
-                        <input type="number" step="0.01" data-range="start" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
-                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                        <input type="number" step="0.01" data-range="end" class="amount form-control input-sm col-md-6 descriptionInput" name="[?merge .name ?]" />
-                    </div>
-                    <div class="col-md-5"> </div>
-                </div>
-                <?merge .type.ifeq('date') ?>
-                <div class="form-group col-md-12">  
-                    <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
-                    <div class="input-group input-group-sm input-daterange col-md-4">
-                        <input type="text" data-range='start' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
-                        <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
-                        <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
-                    </div>
-                    <div class="col-md-5"> </div>
                 </div>
             </div>
+            <br/>
+            <br/>
         </form>
     </div>
-    <br/>
 </div>
-<!-- Search results -->
-<div class="container-fluid col-md-12" data-search-result/>
+
+<style>
+#advancedSearchPanel {
+    font-size: 85%;
+    padding-bottom: 10px;
+}
+#advancedSearchPanel .form-control {
+    height: 25px;
+    font-size: 85%;
+}
+#advancedSearchPanel .input-group-addon {
+    height: 25px;
+    padding: 1px 6px;
+}
+#advancedSearchPanel .form-group {
+    margin-bottom: 5px;
+}
+#advancedSearchButton {
+    margin-top: 5px;
+}
+</style>
+
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+
+FulltextSearchForm = {
+    form               : $('#fullTextSearchForm'),
+    advancedSearchForm : $('#advancedSearchPanel'),
+
+    load : function(orgRegNumber, folderId, profiles) {
+        profileReferences = [];
+
+        $.each(profiles, function() {
+            profileReferences.push("." + this.reference);
+        });
+
+        profileReferences.push(".allProfiles");
+        this.form.data('orgregnumber', orgRegNumber).data('folderid', folderId);
+        $('#profileSelection .allProfiles > a').click();
+        this.clearForm();
+    },
+
+    loadAdvancedForm : function(archivalProfileReference) {
+        this.advancedSearchForm.find('.profileAdvanceSearch').addClass('hide');
+        this.advancedSearchForm.find('.'+archivalProfileReference).removeClass('hide')
+    },
+
+    search : function() {
+        var query = this.serialize();
+        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "") {
+            if (query.filePlanPosition) {
+                trigger('loadFolder.filePlan', [query.filePlanPosition]);
+
+            } else {
+                trigger('loadFolder.filePlan', [query.orgRegNumber]);
+            }
+            return;
+        }
+
+        ajax($('#searchForm_inputSearchBtn'),{
+            type        : 'GET',
+            url         : '/recordsManagement/archives/search',
+            data        : query,
+            dataType    : 'json',
+            success     : function (response) {
+                if (response.status) {
+                    trigger("showSearchResult.recordsManagement", [response.archives])
+                }
+            }
+        });
+
+    },
+
+    serialize : function() {
+        var advancedSearchPanel = $('#advancedSearchPanel');
+        var query = {
+            text                 : "",
+            description          : [],
+            profileReference     : "",
+            filePlanPosition     : this.form.data('folderid'),
+            orgRegNumber         : this.form.data('orgregnumber'),
+            originatingStartDate : advancedSearchPanel.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
+            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')
+        };
+
+        var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
+        if (text) {
+            query.text = text
+        }
+
+        var profileReference = $('#profileSelection').data('profileReference');
+        if (profileReference && profileReference != "all") {
+            query.profileReference = profileReference;
+        }
+
+        var originatingDateStart = advancedSearchPanel.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
+        var originatingDateStop = advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
+        if (originatingDateStart || originatingDateStop) {
+            query.originatingDate = [originatingDateStart, originatingDateStop]
+        }
+
+        if (!query.filePlanPosition) {
+            query.filePlanPosition = "";
+        }
+
+        var advancedSearchField = advancedSearchPanel.find('.advancedSearchField:visible');
+
+        advancedSearchField.each(function() {
+            var value = $(this).val();
+            var name = $(this).attr('name');
+            var type = $(this).attr('type');
+
+            if (type == "" || type == null || type == undefined) {
+                type = $(this).data('type');
+            }
+
+            switch (type) {
+                case 'select':
+                    // keyword enum
+                    if (value !== '') {
+                        query.description[name] = name+'="'+value+'"';
+                    }
+                    break;
+
+                case 'radio':
+                    // format boolean
+
+                    if (!$(this).prop("checked")) {
+                        break;
+                    }
+
+                    switch ($(this).val()) {
+                        case "1": value = "1";
+                            break;
+                        case "0": value = "0";
+                            break;
+                        default:
+                            return;
+                    }
+
+                    query.description[name] = name+'=' + value;
+                    break;
+
+                case 'text':
+                    // format dates
+                    if ($(this).hasClass('datePicker')) {
+                        if (value !== '') {
+                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                            value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+
+                            // Fill start and end values
+                            if (query.description[name] == undefined) {
+                                query.description[name] = value;
+                            } else {
+                                query.description[name] = query.description[name] +'&&'+value;
+                            }
+                        }
+                        break;
+                    }
+
+                    // Standard text (name, keywords...)
+                    if (value !== '') {
+                        query.description[name] = name+'="'+value+'"';
+                    }
+                    break;
+
+                case 'number':
+                    if (value !== '') {
+                        var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                        value = name + operation + $(this).val();
+                        
+                        // Fill start and end values
+                        if (query.description[name] == undefined) {
+                            query.description[name] = value;
+                        } else {
+                            query.description[name] = query.description[name] +'&&'+value;
+                        }
+                    }
+                    break;
+            };
+        });
+
+        var arr = [];
+        for (name in query.description) {
+            arr.push(query.description[name]);
+        }
+
+        query.description = arr.join(' && ');
+
+        return query;
+    },
+
+    clearForm : function() {
+        $('#fullTextSearchForm > input').val('');
+        this.advancedSearchForm.find('input[type=text], input[type=number], input[type=date], select').val('');
+    }
+}
+
+    $('#app_maarchRM_main').keypress(function (e) {
+        if (e.which != 13) {
+            return;
+        }
+        e.preventDefault();
+        FulltextSearchForm.search();
+    });
+
+    $('#profileSelection').on('click', 'a', function() {
+        var profileSelection = $('#profileSelection');
+        profileSelection.find('span').text($(this).text());
+        profileSelection.data('profileReference', $(this).data('reference'));
+        FulltextSearchForm.loadAdvancedForm($(this).data('reference'));
+    });
+
+    $('#searchForm_inputSearchBtn').on("click", function() {
+        FulltextSearchForm.search();
+    });
+
+    $('#profileSelection').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles) {
+        FulltextSearchForm.load(orgRegNumber, folderId, profiles);
+        FulltextSearchForm.clearForm();
+    });
+
+    $('#fullTextSearchForm').onEvent("setSearchBarClass.recordsManagement", function(e, newClass) {
+        $('#fullTextSearchForm').addClass(newClass);
+    });
+</script>

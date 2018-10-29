@@ -76,7 +76,7 @@ EOS;
 
         
 
-        if (count($this->toolbars)) {
+        if (!empty($this->toolbars)) {
             foreach ($this->toolbars as $class => $html) {
                 $scriptText .=
 <<<EOS
@@ -84,6 +84,10 @@ $('div.$class').html('$html');
 EOS;
             }
         }
+$scriptText .=
+<<<EOS
+$('[title]').tooltip();
+EOS;
 
         $script = $this->element->ownerDocument->createElement('script');
         $CdataSection = $this->element->ownerDocument->createCDataSection($scriptText);

@@ -81,6 +81,10 @@ msgid "adminRetentionRule"
 msgstr "Gérer les règles de conservation"
 msgctxt "userStory"
 
+msgid "adminStorageRule"
+msgstr "Gérer les règles de stockage"
+msgctxt "userStory"
+
 msgid "archivalAgreement"
 msgstr "Gérer les accords de versement"
 msgctxt "userStory"
@@ -103,6 +107,14 @@ msgctxt "userStory"
 
 msgid "serviceLevel"
 msgstr "Gérer les niveaux de service"
+msgctxt "userStory"
+
+msgid "archivalExport"
+msgstr "Exporter une archive"
+msgctxt "userStory"
+
+msgid "archivalRelationships"
+msgstr "Ajouter une relation à l'archive"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
