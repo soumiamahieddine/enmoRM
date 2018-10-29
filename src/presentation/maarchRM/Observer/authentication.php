@@ -116,6 +116,7 @@ class authentication
         }
 
         if (!$accountToken) {
+            \laabs::kernel()->response->code = 307;
             $userCommand->reroute('app/authentication/readUserPrompt');
 
             return false;
