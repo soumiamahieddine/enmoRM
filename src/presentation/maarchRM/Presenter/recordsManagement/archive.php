@@ -999,9 +999,15 @@ class archive
             $this->json->digitalResources = $archive->digitalResources;
         }
 
-        $codes = \laabs::callService('recordsManagement/retentionRule/read_code_', 'DIP');
+        $profiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+        $profilesName = [];
+
+        foreach ($profiles as $profile) {
+            $profilesName[$profile->reference] = $profile->name;
+        }
+
         if (isset($archive->childrenArchives)) {
-            $this->addRetentionRuleLabel($archive->childrenArchives);
+            $this->addArchivalProfileNames($archive->childrenArchives, $profilesName);
             $this->json->childrenArchives = $archive->childrenArchives;
         }
 
@@ -1012,14 +1018,14 @@ class archive
      * @param array $childrenArchives
      *
      */
-    protected function addRetentionRuleLabel($childrenArchives)
+    protected function addArchivalProfileNames($childrenArchives, $profiles)
     {
-        foreach ($childrenArchives as $children) {
-            if ($children->retentionRuleCode) {
-                $children->retentionRuleLabel = \laabs::callService('recordsManagement/retentionRule/read_code_', $children->retentionRuleCode)->label;
+        foreach ($childrenArchives as $childArchive) {
+            if (!empty($childArchive->archivalProfileReference) && isset($profiles[$childArchive->archivalProfileReference])) {
+                $childArchive->archivalProfileName = $profiles[$childArchive->archivalProfileReference];
             }
-            if (isset($children->childrenArchives)) {
-                $this->addRetentionRuleLabel($children->childrenArchives);
+            if (isset($childArchive->childrenArchives)) {
+                $this->addArchivalProfileNames($childArchive->childrenArchives, $profiles);
             }
         }
     }
@@ -1080,8 +1086,10 @@ class archive
             $descriptionsSorted = [];
 
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                $descriptionsSorted[$archiveDescription->fieldName] = $descriptions[$archiveDescription->fieldName];
-                unset($descriptions[$archiveDescription->fieldName]);
+                if (isset($descriptions[$archiveDescription->fieldName])) {
+                    $descriptionsSorted[$archiveDescription->fieldName] = $descriptions[$archiveDescription->fieldName];
+                    unset($descriptions[$archiveDescription->fieldName]);
+                }
             }
 
             if (!empty($descriptions)) {

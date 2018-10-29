@@ -194,13 +194,16 @@
                             .append($('<span>').text(childrenArchives[j].archiveName))
                             .append($('<a/>').attr('href','#').class);
 
+                    if (childrenArchives[j].archivalProfileName) {
+                        $(smalls[0]).text(childrenArchives[j].archivalProfileName);
+                    }
 
-                    if (childrenArchives[j].retentionRuleLabel) {
-                        $(smalls[0]).text(childrenArchives[j].retentionRuleLabel);
+                    if (childrenArchives[j].originatorArchiveId) {
+                        $(smalls[1]).text(' ' + childrenArchives[j].originatorArchiveId);
                     }
 
                     if (childrenArchives[j].originatingDate) {
-                        $(smalls[1]).text(childrenArchives[j].originatingDate);
+                        $(smalls[2]).text(' ' + childrenArchives[j].originatingDate);
                     }
 
                     BootstrapTree.addNode(parent, template, hidden);
