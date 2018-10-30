@@ -959,6 +959,24 @@ class organization
     }
 
     /**
+     * Read descendant services of an org
+     * @param string $parentId The parent orgId
+     *
+     * @return object[] The list of services
+     */
+    public function readDescendantServices($parentId)
+    {
+        $childrenServices = $this->sdoFactory->find('organization/organization', "parentOrgId = '$parentId' AND isOrgUnit = true");
+
+        foreach ($childrenServices as $childService) {
+            $childrenServices = array_merge($this->readDescendantServices($childService->orgId), $childrenServices);
+        }
+
+        return $childrenServices;
+    }
+
+
+    /**
      * Read parent orgs recursively
      * @param string $orgId                 Organisation identifier
      * @param array  $archivalProfileAccess The archival profile access array
