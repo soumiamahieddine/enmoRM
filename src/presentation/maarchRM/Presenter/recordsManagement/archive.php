@@ -311,12 +311,18 @@ class archive
                     $dt->appendChild($this->view->createTextNode($name));
                     $dl->appendChild($dt);
                     if(is_array($value)){
-                        foreach ($value as $metadata){
+                        foreach ($value as $metadata) {
+                            if (!is_scalar($metadata)) {
+                                $metadata = str_replace(['{', '[', '"', ']', '}'], ' ', json_encode($metadata));
+                            }
                             $dd = $this->view->createElement('dd');
                             $dd->appendChild($this->view->createTextNode($metadata));
                             $dl->appendChild($dd);
                         }
                     } else {
+                        if (!is_scalar($value)) {
+                            $value = str_replace(['{', '[', '"',']', '}'], ' ', json_encode($value));
+                        }
                         $dd = $this->view->createElement('dd');
                         $dd->appendChild($this->view->createTextNode($value));
                         $dl->appendChild($dd);
