@@ -25,7 +25,7 @@
 
 - `Added` Modification des règles de plusieurs archives sans modifier la date de départ
 - `Changed` Gestion des jetons de compte de service
-- `Changed` Ajout des routes disponibles pour les privilèges des comptes de service dans la configuration 
+- `Changed` Ajout des routes disponibles pour les privilèges des comptes de service dans la configuration
 - `Fixed` Uniformisation des formats de date
 
 ### Métadonnées
@@ -119,8 +119,7 @@
 - `Changed` Modification du format autorisé pour les identifiant d'organisation et de services, autorisant les caractères spéciaux pour permettre l'emploi des barres obliques, points, tirets et soulignements notamment
 
 ### Intégrité
-- `Added` Stratégies de contrôle d'intégrité périodique définies dans les niveaux de service, avec fréquence de contrôle et taux d'échantillonnage 
+- `Added` Stratégies de contrôle d'intégrité périodique définies dans les niveaux de service, avec fréquence de contrôle et taux d'échantillonnage
 
 ### Sécurité
 - `Changed` L'administrateur de la sécurité ne peut désormais plus choisir le mot de passe temporaire. En remplacement, l'intégration d'un client de messagerie électronique permet d'envoyer un courriel à l'utilisateur comportant un mot de passe temporaire généré par l'application
-
