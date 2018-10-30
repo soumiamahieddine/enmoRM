@@ -67,7 +67,9 @@ class csrf
         $requestToken = $this->getRequestToken();
 
         // Get account with LOCK
-        $account = $this->getAccount();
+        $this->sdoFactory->beginTransaction();
+        
+        $account = $this->getAccount(true);
         if (!$account) {
             return;
         }
@@ -95,7 +97,12 @@ class csrf
         $account->authentication->csrf = $accountTokens;
 
         // Set account and COMMIT
-        $this->updateAccount($account);
+        try {
+            $this->updateAccount($account);
+            $this->sdoFactory->commit();
+        } catch (\Exception $exception) {
+            $this->sdoFactory->rollback();
+        }
 
         return true;
     }
@@ -108,7 +115,7 @@ class csrf
      */
     public function setResponseToken(&$response)
     {
-        $account = $this->getAccount();
+        $account = $this->getAccount(false);
         if (!$account) {
             return;
         }
@@ -134,10 +141,11 @@ class csrf
 
     /**
      * Retrieves the account information with a LOCK on database
+     * @param bool $lock Lock user
      * 
      * @return auth/userAccount
      */
-    private function getAccount()
+    private function getAccount($lock=false)
     {
         $accountToken = \laabs::getToken('AUTH');
 
@@ -145,8 +153,7 @@ class csrf
             return false;
         }
 
-        $this->sdoFactory->beginTransaction();
-        $account = $this->sdoFactory->read('auth/account', $accountToken, $lock=true);
+        $account = $this->sdoFactory->read('auth/account', $accountToken, $lock);
         $account->authentication = json_decode($account->authentication);
 
         if (empty($account->authentication)) {
@@ -240,7 +247,5 @@ class csrf
         $account->authentication = json_encode($account->authentication);
 
         $this->sdoFactory->update($account, "auth/account");
-
-        $this->sdoFactory->commit();
     }
 }
