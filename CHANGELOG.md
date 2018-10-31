@@ -18,6 +18,7 @@
 
 - `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication aux organisations et services
 
+
 ## Version 2.2
 
 ### Exploitation
