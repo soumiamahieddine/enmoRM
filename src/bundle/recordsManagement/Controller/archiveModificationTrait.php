@@ -529,10 +529,10 @@ trait archiveModificationTrait
     public function addResource($archiveId, $contents, $filename=false)
     {
         // Valid URL file:// http:// data://
-        if (filter_var($contents, FILTER_VALIDATE_URL)) { 
+        if (filter_var($contents, FILTER_VALIDATE_URL)) {
             $contents = stream_get_contents($contents);
         } else if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
-            $contents = base64_decode($contents);  
+            $contents = base64_decode($contents); 
         } elseif (is_file($contents)) {
             if (empty($filename)) {
                 $filename = basename($contents);
@@ -562,11 +562,13 @@ trait archiveModificationTrait
             $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
             $this->digitalResourceController->store($digitalResource);
 
-            //$this->logAddResource($digitalResource, $archive);
+            $this->logAddResource($archive, $digitalResource, true);
         } catch (\Exception $e) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
+
+            $this->logAddResource($archive, $digitalResource, false);
 
             throw $e;
         }
