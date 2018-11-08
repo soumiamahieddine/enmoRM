@@ -50,6 +50,13 @@ class archive
     public $originatorArchiveId;
 
     /**
+     * Archiver Archive identifier
+     *
+     * @var string
+     */
+    public $archiverArchiveId;
+
+    /**
      * The archive folder id
      *
      * @var string
