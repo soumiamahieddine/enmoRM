@@ -50,6 +50,7 @@ trait archiveAccessTrait
      * @param string $depositEndDate
      * @param string $originatingStartDate
      * @param string $originatingEndDate
+     * @param string $archiverArchiveId
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -74,7 +75,8 @@ trait archiveAccessTrait
         $depositStartDate = null,
         $depositEndDate = null,
         $originatingStartDate = null,
-        $originatingEndDate = null
+        $originatingEndDate = null,
+        $archiverArchiveId = null
     ) {
         $archives = [];
 
@@ -97,6 +99,7 @@ trait archiveAccessTrait
             'depositStartDate' => $depositStartDate,
             'depositEndDate' => $depositEndDate,
             'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
+            'archiverArchiveId' => $archiverArchiveId
         ];
 
         $searchClasses = [];
@@ -682,6 +685,10 @@ trait archiveAccessTrait
         if (!empty($args['originatorArchiveId'])) {
             $queryParts['originatorArchiveId'] = "originatorArchiveId= :originatorArchiveId";
             $queryParams['originatorArchiveId'] = $args['originatorArchiveId'];
+        }
+        if (!empty($args['archiverArchiveId'])) {
+            $queryParts['archiverArchiveId'] = "archiverArchiveId= :archiverArchiveId";
+            $queryParams['archiverArchiveId'] = $args['archiverArchiveId'];
         }
         if (!empty($args['originatingDate'])) {
             if (!empty($args['originatingDate'][0]) && is_string($args['originatingDate'][0])) {
