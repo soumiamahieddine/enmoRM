@@ -305,10 +305,8 @@ trait archiveEntryTrait
             }
         }
 
-    /*    if (!empty($archive->filePlanPosition) && $archive->filePlanPosition[0] == '/') {
-            $this->manageFileplanPosition($archive);
-        }
-*/
+        $this->manageFileplanPosition($archive);
+        
         $this->completeManagementMetadata($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
@@ -333,8 +331,26 @@ trait archiveEntryTrait
      */
     protected function manageFileplanPosition($archive)
     {
-        $path = substr($archive->filePlanPosition, 1);
-        $archive->filePlanPosition = $this->filePlanController->createFromPath($path, $archive->$originatorOrgRegNumber, true);
+        // Could classify automatically regarding archival profile rule
+        if (empty($archive->filePlanPosition)) {
+            return;
+        }
+
+        // File plan position is given as a path that must be opened (create if not exists)
+        // to retrieve the folderId
+        if ($archive->filePlanPosition[0] == '/') {
+            $path = substr($archive->filePlanPosition, 1);
+            $archive->filePlanPosition = $this->filePlanController->createFromPath($path, $archive->originatorOrgRegNumber, true);
+
+            return;
+        }
+
+        // File plan position is given as a folder id, check it exists, if not move to originator root
+        try {
+            $folder = $this->filePlanController->read($archive->filePlanPosition);
+        } catch (\Exception $notFoundException) {
+            $archive->filePlanPosition = null;
+        }
     }
 
     /**
