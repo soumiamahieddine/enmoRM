@@ -104,6 +104,12 @@ class archive
     protected $servicePositionController;
 
     /**
+     * Controller for user filePlan
+     * @var filePlan/Controller/FilePlan
+     */
+    protected $filePlanController;
+
+    /**
      * Previously loaded archival profiles, indexed by reference
      * @var array
      */
@@ -208,6 +214,8 @@ class archive
         $this->servicePositionController = \laabs::newController('organization/servicePosition');
 
         $this->retentionRuleController = \laabs::newController("recordsManagement/retentionRule");
+
+        $this->filePlanController = \laabs::newController("filePlan/filePlan");
 
         $this->zip = \laabs::newService("dependency/fileSystem/plugins/zip");
 

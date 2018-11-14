@@ -305,6 +305,10 @@ trait archiveEntryTrait
             }
         }
 
+    /*    if (!empty($archive->filePlanPosition) && $archive->filePlanPosition[0] == '/') {
+            $this->manageFileplanPosition($archive);
+        }
+*/
         $this->completeManagementMetadata($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
@@ -320,6 +324,17 @@ trait archiveEntryTrait
                 $this->completeMetadata($archive->contents[$i]);
             }
         }
+    }
+
+    /**
+     * Complete fileplanPosition with a directoryPath
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function manageFileplanPosition($archive)
+    {
+        $path = substr($archive->filePlanPosition, 1);
+        $archive->filePlanPosition = $this->filePlanController->createFromPath($path, $archive->$originatorOrgRegNumber, true);
     }
 
     /**
