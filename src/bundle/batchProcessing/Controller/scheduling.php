@@ -542,7 +542,7 @@ class scheduling
         return $i;
     }
     
-    private function serviceToken($serviceAccountId) 
+    private function serviceToken($serviceAccountId)
     {
         $account = $this->sdoFactory->read("auth/account", $serviceAccountId);
 
@@ -553,7 +553,9 @@ class scheduling
         $data = new \StdClass();
         $data->accountId = $serviceAccountId;
 
-        $authToken = new \core\token($data, 0);
+        $cryptedToken = base64_decode($account->password);
+        $jsonToken = \laabs::decrypt($cryptedToken, \laabs::getCryptKey());
+        $authToken= \json_decode($jsonToken);
         $GLOBALS["TOKEN"]['AUTH'] = $authToken;
 
         if ($account->accountType == "service") {
