@@ -248,7 +248,7 @@ class organization
         }
 
         if (count($queryParts)) {
-            $query = array(implode(" AND ", $queryParts), $variables);
+            $query = implode(" AND ", $queryParts);
         }
 
         return $this->sdoFactory->find("organization/organization", $query);
