@@ -343,14 +343,13 @@ trait archiveEntryTrait
         }
 
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
-            $originator = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-            $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originator;
+            $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
+            $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originatorOrg;
         } else {
-            $originator = $this->originatorOrgs[$archive->originatorOrgRegNumber];
+            $originatorOrg = $this->originatorOrgs[$archive->originatorOrgRegNumber];
         }
 
-        $archive->originatorOwnerOrgId = $originator->ownerOrgId;
-        $originatorOrg = $this->organizationController->read($originator->ownerOrgId);
+        $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
         $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
     }
 
@@ -370,11 +369,10 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $archivalProfile->retentionRuleCode;
         }
-
         if (!empty($archivalProfile->accessRuleCode)) {
             $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
-        
+
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
