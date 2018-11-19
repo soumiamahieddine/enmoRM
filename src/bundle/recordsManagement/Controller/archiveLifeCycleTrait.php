@@ -349,7 +349,7 @@ trait archiveLifeCycleTrait
             'relatedArchiveId' => $archiveRelationship->relatedArchiveId
         );
 
-        return $this->logLifeCycleEvent('recordsManagement/deleteRelationship', $archive, $operationResult, false, $eventInfo);
+        return $this->logLifeCycleEvent('recordsManagement/deleteRelationship',$archive, $operationResult, false, $eventInfo);
     }
 
         /**
