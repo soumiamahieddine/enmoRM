@@ -50,7 +50,7 @@ class archive
     public $originatorArchiveId;
 
     /**
-     * The archive folder id
+     * The archive folder id or full directory path starting with /
      *
      * @var string
      */
@@ -118,7 +118,7 @@ class archive
      * @var string
      */
     public $retentionRuleStatus;
-    
+
     /**
      * The originating date of the archive
      *

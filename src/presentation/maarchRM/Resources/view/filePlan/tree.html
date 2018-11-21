@@ -243,11 +243,10 @@
                 .data('orgregnumber', folder.ownerOrgRegNumber)
                 .data('parentid', folder.parentFolderId)
                 .data('description', folder.description)
-                .data('closed', folder.closed)
-                .children('span')
+                .data('closed', folder.closed);
+            node.children('span')
                 .children('b')
-                .children('i')
-                .after(' '+folder.name);
+                .children('span').text(' '+folder.name);
 
             var folderElement = $("#" + folder.parentFolderId );
 
