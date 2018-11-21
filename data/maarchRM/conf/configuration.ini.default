@@ -162,7 +162,7 @@ blacklistUserStories = "[
     'adminArchive/adminStorageRule'
 ]" 
 
-csrfWhiteList = "['user/login']"
+csrfWhiteList = "['user/login', '/user/password']"
 csrfConfig = '{
         "cookieName" : "CSRF",
         "tokenLength" : 32
