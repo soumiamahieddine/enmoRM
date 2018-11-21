@@ -25,3 +25,13 @@ de celui affiché dans la barre de navigation:
 altLogo = "/presentation/img/RM.svg"
 
 ```
+
+### CSRF
+
+Modification de la configuration : 
+
+    csrfWhiteList = "['user/login', 'user/password']"
+    csrfConfig = '{
+        "cookieName" : "CSRF",
+        "tokenLength" : 32
+    }'
