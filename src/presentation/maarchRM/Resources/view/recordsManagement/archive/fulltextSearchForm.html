@@ -278,7 +278,7 @@ FulltextSearchForm = {
 
                     // Standard text (name, keywords...)
                     if (value !== '') {
-                        query.description[name] = name+'="'+value+'"';
+                        query.description[name] = name+'="'+value.trim()+'"';
                     }
                     break;
 
