@@ -315,12 +315,13 @@ FulltextSearchForm = {
 }
 
     $('#app_maarchRM_main').keypress(function (e) {
-        if (e.which != 13) {
+        if (e.which != 13 || document.getElementById("searchForm_inputSearchBtn").disabled == true) {
             return;
         }
+            
         e.preventDefault();
         FulltextSearchForm.search();
-    });
+        });
 
     $('#profileSelection').on('click', 'a', function() {
         var profileSelection = $('#profileSelection');
