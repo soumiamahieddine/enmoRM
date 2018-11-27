@@ -1122,7 +1122,7 @@ class organization
 
         if ($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN") {
             unset($userOrgs);
-            $userOrgs[] = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE")[0];
+            $userOrgs = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE");
         }
 
         foreach ($userOrgs as $userPosition) {
