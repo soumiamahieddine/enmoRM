@@ -452,3 +452,5 @@ msgstr "Le fichier conteneur est non conforme."
 msgid "Journal file cannot be written"
 msgstr "Le journal ne peut pas être écrit"
 
+msgid "You're not allowed to create an organization"
+msgstr "Vous n'êtes pas autorisé à créer une organisation"

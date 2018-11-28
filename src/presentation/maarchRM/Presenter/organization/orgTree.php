@@ -68,7 +68,7 @@ class orgTree
      */
     public function index($organizations, $orgType)
     {
-        $orgRole = \laabs::configuration('organization')['orgUnitRoles'];;
+        $orgRole = \laabs::configuration('organization')['orgUnitRoles'];
 
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
@@ -77,14 +77,14 @@ class orgTree
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
 
         // Sort archival profile by reference
-        usort($archivalProfile, function($a, $b){
+        usort($archivalProfile, function ($a, $b) {
             return strcmp($a->reference, $b->reference);
         });
 
-        if(\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes){
-            $addOrganizationRight = in_array('owner',\laabs::getToken("ORGANIZATION")->orgRoleCodes);
+        if (\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes) {
+            $addOrganizationRight = in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes);
         } else {
-            $addOrganizationRight = true;
+            $addOrganizationRight = false;
         }
 
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
@@ -106,12 +106,12 @@ class orgTree
         $this->view->translate();
 
         /*if (sizeof($organizations) != 0) {
-            $tree = $this->contructTree($organizations);
+        $tree = $this->contructTree($organizations);
 
-            if ($tree != null) {
-                $orgList = $this->view->getElementsByClass('dataTree')->item(0);
-                $orgList->appendChild($tree);
-            }
+        if ($tree != null) {
+        $orgList = $this->view->getElementsByClass('dataTree')->item(0);
+        $orgList->appendChild($tree);
+        }
         }*/
 
         return $this->view->saveHtml();
@@ -129,16 +129,16 @@ class orgTree
         /*
         $html = '';
         if (sizeof($organizations) > 0) {
-            $tree = $this->contructTree($organizations);
-            //$this->view->appendChild($tree);
-            foreach ($tree->childNodes as $branch) {
-                $html .= $this->view->saveHtml($branch);
-            }
+        $tree = $this->contructTree($organizations);
+        //$this->view->appendChild($tree);
+        foreach ($tree->childNodes as $branch) {
+        $html .= $this->view->saveHtml($branch);
+        }
         }
 
         return $html;
 
-        */
+         */
         $this->view->addContentFile("organization/orgTree.html");
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("organizations", $organizations);
@@ -199,7 +199,7 @@ class orgTree
                 $orgElement->appendChild($childrenContainer);
 
                 if (!empty($organization->organization)) {
-                     $this->mergeOrgUnits($organization, $childrenContainer, $orgFragmentTemplate, $orgUnitFragmentTemplate, $personFragmentTemplate, $serviceFragmentTemplate, $contactFragmentTemplate);
+                    $this->mergeOrgUnits($organization, $childrenContainer, $orgFragmentTemplate, $orgUnitFragmentTemplate, $personFragmentTemplate, $serviceFragmentTemplate, $contactFragmentTemplate);
                 }
 
                 if (!empty($organization->userPosition)) {
@@ -243,7 +243,6 @@ class orgTree
 
             $this->view->merge($orgUnitFragment, $orgUnit);
             $orgUnitItem = $container->appendChild($orgUnitFragment);
-
 
             if (!empty($orgUnit->organization) || isset($orgUnit->userPosition) && !empty($orgUnit->userPosition) || isset($orgUnit->servicePosition) && !empty($orgUnit->orgContact)) {
                 $childrenContainer = $this->view->createElement('ul');
@@ -325,14 +324,14 @@ class orgTree
     protected function addOrganizatonToFilePlan($organizations, $parentNode, $document)
     {
         foreach ($organizations as $organization) {
-            if(!$organization->isOrgUnit){
+            if (!$organization->isOrgUnit) {
                 $orgNode = $document->createElement('Organization', (string) $organization->displayName);
             } else {
                 $orgNode = $document->createElement('Activity');
             }
             $orgNode->setAttribute('registrationNumber', $organization->registrationNumber);
 
-            if ($organization->organization){
+            if ($organization->organization) {
                 $this->addOrganizatonToFilePlan($organization->organization, $orgNode, $document);
             }
 
@@ -355,7 +354,7 @@ class orgTree
     protected function addProfileToFilePlan($profiles, $parentNode, $document)
     {
         foreach ($profiles as $profile) {
-            if ($profile=="*") {
+            if ($profile == "*") {
                 continue;
             }
 
@@ -363,7 +362,7 @@ class orgTree
             $profileNode->setAttribute('reference', (string) $profile->reference);
             $profileNode->setAttribute('retentionRuleCode', (string) $profile->retentionRuleCode);
 
-            if ($profile->containedProfiles){
+            if ($profile->containedProfiles) {
                 $this->addProfileToFilePlan($profile->containedProfiles, $profileNode, $document);
             }
 
@@ -521,10 +520,11 @@ class orgTree
         return json_encode($organization);
     }
 
-    public function orgList($organizations){
+    public function orgList($organizations)
+    {
         $orgs = [];
-        foreach ($organizations as $org){
-            $orgs [] = $org;
+        foreach ($organizations as $org) {
+            $orgs[] = $org;
         }
 
         return json_encode($orgs);
