@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label" for="status">Status</label>
+                                <label class="col-sm-4 control-label">Status</label>
                                 <div class="btn-group col-sm-6" data-toggle="buttons" >
                                     <label class="btn btn-info active status" title="all">
                                         <input type="radio" id="all" name="status" value="all" checked>All
@@ -140,7 +140,8 @@
         clear: function() {
             this.form.find('input[type=text]').val('');
             this.form.find('select').prop('selectedIndex', 0);
-            $('#eventName').data('event-path')
+            $('#eventName').data('event-path', "");
+            $('#accountTypeahead').data('accountid', "");
             this.form.find('.wordingAll').click();
             this.form.find('.status :first').click();
 
@@ -163,6 +164,20 @@
 
     $("#reset").on("click", function () {
         EventSearchForm.clear();
+    });
+
+    $("#eventName").on("keyup", function () {
+        if (!$(this).val()) {
+            $("#eventName").val("");
+            $("#eventName").data('event-path', "");
+        }
+    });
+
+    $("#accountTypeahead").on("keyup", function () {
+        if (!$(this).val()) {
+            $('#accountTypeahead').val('');
+            $('#accountTypeahead').data('accountid', "");
+        }
     });
 
     // checkBox button
