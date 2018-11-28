@@ -305,9 +305,9 @@ trait archiveEntryTrait
             }
         }
 
-        $this->manageFileplanPosition($archive);
-        
         $this->completeManagementMetadata($archive);
+
+        $this->manageFileplanPosition($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;

@@ -52,7 +52,7 @@
                 this.fromFolder = FilePlan.selectedNode;
             }
 
-            var folderName = toFolder.find('b:first').text();
+            var folderName = toFolder.find('b:first').text().trim()
             if (folderName.length > 30)  { folderName = folderName.substring(0,27)+'...' }
 
             if (archives.length == 1) {
