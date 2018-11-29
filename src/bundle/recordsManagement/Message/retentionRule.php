@@ -31,7 +31,7 @@ class retentionRule
     /**
      * The retention rule code 
      *
-     * @var string
+     * @var name
      */
     public $code;
 
@@ -77,7 +77,7 @@ class retentionRule
      */
     public function __toString()
     {
-        return $this->code;
+        return (string) $this->code;
     }
     
 
