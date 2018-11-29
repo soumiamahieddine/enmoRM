@@ -25,7 +25,7 @@ namespace bundle\organization\Controller;
  * Control of the organization types
  *
  * @package Organization
- * @author  Cyril Vazquez <cyril.vazquez@maarch.org> 
+ * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
 class userPosition extends abstractPosition
 {
@@ -34,10 +34,9 @@ class userPosition extends abstractPosition
      *
      * @return organization/userPosition[] The list of positions
      */
-    protected function listPositions($accountUserId = null)
+    public function listPositions($accountUserId = null)
     {
-        if(!$accountUserId){
-
+        if (!$accountUserId) {
             $accountToken = \laabs::getToken('AUTH');
             $accountUserId= $accountToken->accountId;
 //            $currentOrg = \laabs::getToken('ORGANIZATION');
