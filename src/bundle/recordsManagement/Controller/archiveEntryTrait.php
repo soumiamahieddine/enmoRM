@@ -307,6 +307,8 @@ trait archiveEntryTrait
 
         $this->completeManagementMetadata($archive);
 
+        $this->manageFileplanPosition($archive);
+
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }
@@ -319,6 +321,35 @@ trait archiveEntryTrait
                 $archive->contents[$i]->fullTextIndexation = $archive->fullTextIndexation;
                 $this->completeMetadata($archive->contents[$i]);
             }
+        }
+    }
+
+    /**
+     * Complete fileplanPosition with a directoryPath
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function manageFileplanPosition($archive)
+    {
+        // Could classify automatically regarding archival profile rule
+        if (empty($archive->filePlanPosition)) {
+            return;
+        }
+
+        // File plan position is given as a path that must be opened (create if not exists)
+        // to retrieve the folderId
+        if ($archive->filePlanPosition[0] == '/') {
+            $path = substr($archive->filePlanPosition, 1);
+            $archive->filePlanPosition = $this->filePlanController->createFromPath($path, $archive->originatorOrgRegNumber, true);
+
+            return;
+        }
+
+        // File plan position is given as a folder id, check it exists, if not move to originator root
+        try {
+            $folder = $this->filePlanController->read($archive->filePlanPosition);
+        } catch (\Exception $notFoundException) {
+            $archive->filePlanPosition = null;
         }
     }
 
@@ -343,13 +374,14 @@ trait archiveEntryTrait
         }
 
         if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
-            $originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-            $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originatorOrg;
+            $originator = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
+            $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originator;
         } else {
-            $originatorOrg = $this->originatorOrgs[$archive->originatorOrgRegNumber];
+            $originator = $this->originatorOrgs[$archive->originatorOrgRegNumber];
         }
 
-        $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
+        $archive->originatorOwnerOrgId = $originator->ownerOrgId;
+        $originatorOrg = $this->organizationController->read($originator->ownerOrgId);
         $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
     }
 
@@ -369,10 +401,11 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->retentionRuleCode)) {
             $archive->retentionRuleCode = $archivalProfile->retentionRuleCode;
         }
+
         if (!empty($archivalProfile->accessRuleCode)) {
             $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
-
+        
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }

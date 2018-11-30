@@ -125,7 +125,7 @@ class archive
      * @var string
      */
     public $retentionRuleStatus;
-    
+
     /**
      * The originating date of the archive
      *

@@ -102,6 +102,10 @@ trait archiveAccessTrait
             'archiverArchiveId' => $archiverArchiveId
         ];
 
+        if (!$filePlanPosition) {
+            unset($archiveArgs['filePlanPosition']);
+        }
+
         $searchClasses = [];
         if (!$profileReference) {
             $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
@@ -181,41 +185,41 @@ trait archiveAccessTrait
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
 
-        if ($archiveId){
+        if ($archiveId) {
             $queryParts['archiveId'] = "archiveId = :archiveId";
             $queryParams['archiveId'] = $archiveId;
         } else {
-            if ($profileReference){
+            if ($profileReference) {
                 $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
                 $queryParams['archivalProfileReference'] = $profileReference;
             }
 
-            if ($status){
+            if ($status) {
                 $queryParts['status'] = "status = :status";
                 $queryParams['status'] = $status;
             }
 
-            if ($retentionRuleCode){
+            if ($retentionRuleCode) {
                 $queryParts['retentionRuleCode'] = "retentionRuleCode = :retentionRuleCode";
                 $queryParams['retentionRuleCode'] = $retentionRuleCode;
             }
 
-            if ($filePlanPosition){
+            if ($filePlanPosition) {
                 $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
                 $queryParams['filePlanPosition'] = $filePlanPosition;
             }
 
-            if ($originatorArchiveId){
+            if ($originatorArchiveId) {
                 $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
                 $queryParams['originatorArchiveId'] = $originatorArchiveId;
             }
 
-            if ($originatorOrgRegNumber){
+            if ($originatorOrgRegNumber) {
                 $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
                 $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
             }
 
-            if ($finalDisposition){
+            if ($finalDisposition) {
                 $queryParts['finalDisposition'] = "finalDisposition = :finalDisposition";
                 $queryParams['finalDisposition'] = $finalDisposition;
             }
@@ -245,19 +249,20 @@ trait archiveAccessTrait
                 $queryParams['depositEndDate'] = $depositEndDate;
                 $queryParts['depositDate'] = "depositDate <= :depositEndDate";
             }
-            if($archiveExpired){
+            if ($archiveExpired) {
                 if ($archiveExpired == "true") {
-
                     $queryParams['disposalDate'] = $currentDateString;
                     $queryParts['disposalDate'] = "disposalDate <= :disposalDate";
-                } elseif($archiveExpired == "false"){
+                } elseif ($archiveExpired == "false") {
                     $queryParams['disposalDate'] = $currentDateString;
                     $queryParts['disposalDate'] = "disposalDate >= :disposalDate";
                 }
             }
 
-            if($partialRetentionRule){
-                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+            if ($partialRetentionRule) {
+                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL 
+                OR retentionStartDate=NULL 
+                OR retentionRuleCode=NULL)";
             }
 
         }
@@ -302,23 +307,23 @@ trait archiveAccessTrait
         $queryParts['status'] = "status != :status";
         $queryParams['status'] = 'disposed';
 
-        if ($originatorOrgRegNumber){
+        if ($originatorOrgRegNumber) {
             $queryParts['originatorOrgRegNumber'] = "originatorOrgRegNumber = :originatorOrgRegNumber";
             $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
         }
 
-        if ($filePlanPosition){
+        if ($filePlanPosition) {
             $queryParts['filePlanPosition'] = "filePlanPosition = :filePlanPosition";
             $queryParams['filePlanPosition'] = $filePlanPosition;
         } else {
             $queryParts['filePlanPosition'] = "filePlanPosition = null";
         }
 
-        if ($archiveUnit == false){
+        if ($archiveUnit == false) {
             $queryParts['parentArchiveId'] = "parentArchiveId = null";
         }
 
-        if ($archiveUnit == true){
+        if ($archiveUnit == true) {
             $queryParts['parentArchiveId'] = "parentArchiveId != null";
         }
 
@@ -343,14 +348,14 @@ trait archiveAccessTrait
     /**
      * Get archive metadata
      * @param string $archiveId The archive identifier
-     *
+     * @throws
      * @return recordsManagement/archive The archive metadata
      */
     public function getMetadata($archiveId)
     {
-        if (is_scalar($archiveId)){
+        if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        }else{
+        } else {
             $archive = $archiveId;
         }
         $this->getAccessRule($archive);
@@ -377,10 +382,11 @@ trait archiveAccessTrait
      *
      * @return recordsManagement/archive
      */
-    public function getRelatedInformation($archiveId){
-        if (is_scalar($archiveId)){
+    public function getRelatedInformation($archiveId)
+    {
+        if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        }else{
+        } else {
             $archive = $archiveId;
         }
         $archive->lifeCycleEvent = $this->getArchiveLifeCycleEvent($archive->archiveId);
@@ -392,15 +398,16 @@ trait archiveAccessTrait
     /**
      * Get the children of an archive as an index
      * @param string $archiveId     The identifier of the archive or the archive itself
-     * @param bool   $loadResources Load the resources info
+     * @param bool   $loadResourcesInfo Load the resources info
      * @param bool   $loadBinary    Load the resources binary
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false){
-        if (is_scalar($archiveId)){
+    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false)
+    {
+        if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        }else{
+        } else {
             $archive = $archiveId;
         }
 
@@ -419,7 +426,10 @@ trait archiveAccessTrait
             }
         }
 
-        $archive->childrenArchives = $this->sdoFactory->find("recordsManagement/archive", "parentArchiveId='".(string) $archive->archiveId."'");
+        $archive->childrenArchives = $this->sdoFactory->find(
+            "recordsManagement/archive",
+            "parentArchiveId='".(string) $archive->archiveId."'"
+        );
 
         if ($archive->childrenArchives) {
             foreach ($archive->childrenArchives as $child) {
@@ -443,9 +453,10 @@ trait archiveAccessTrait
 
     /**
      * Retrieve an archive resource contents
+     *
      * @param string $archiveId The archive identifier
      * @param string $resId     The resource identifier
-     *
+     * @throws
      * @return digitalResource/digitalResource Archive resource contents
      */
     public function consultation($archiveId, $resId)
@@ -500,16 +511,17 @@ trait archiveAccessTrait
 
     /**
      * Retrieve an archive by its id
+     *
      * @param string $archiveId
      * @param bool   $withBinary
-     *
+     * @throws
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId, $withBinary =false)
+    public function retrieve($archiveId, $withBinary = false)
     {
-        if (is_scalar($archiveId)){
+        if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        }else{
+        } else {
             $archive = $archiveId;
         }
 
@@ -527,15 +539,15 @@ trait archiveAccessTrait
 
         $this->getParentArchive($archive);
 
-        if(!empty($archive->childrenArchives)){
-            foreach($archive->childrenArchives as $child){
+        if (!empty($archive->childrenArchives)) {
+            foreach ($archive->childrenArchives as $child) {
                 $this->retrieve($child);
             }
         }
 
         $archive->communicability = $this->accessVerification($archive);
 
-        if(\laabs::hasBundle('medona')) {
+        if (\laabs::hasBundle('medona')) {
             $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
         }
 
@@ -557,7 +569,7 @@ trait archiveAccessTrait
      * Get an archive relationship
      * @param string $archiveId The archive identifier
      *
-     * @return object recordsManagement/archiveRelationship
+     * @return array recordsManagement/archiveRelationship
      */
     public function getArchiveRelationship($archiveId)
     {
@@ -586,7 +598,10 @@ trait archiveAccessTrait
             return false;
         }
 
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
+        $userServiceOrgRegNumbers = array_merge(
+            array($currentService->registrationNumber),
+            $this->userPositionController->readDescandantService((string) $currentService->orgId)
+        );
 
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
             $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
@@ -597,7 +612,8 @@ trait archiveAccessTrait
             }
 
             // Archiver or Originator
-            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber || $userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
+            if ($userServiceOrgRegNumber == (string) $archive->archiverOrgRegNumber
+                || $userServiceOrgRegNumber == (string) $archive->originatorOrgRegNumber) {
                 return true;
             }
 
@@ -630,10 +646,11 @@ trait archiveAccessTrait
     /**
      * Get archive assert
      * @param array $args
-     * 
+     * @param array $queryParams
+     *
      * @return string Query
      */
-    public function getArchiveAssert($args,&$queryParams)
+    public function getArchiveAssert($args, &$queryParams)
     {
         // Args on archive
         $currentDate = \laabs::newDate();
@@ -672,7 +689,11 @@ trait archiveAccessTrait
             $queryParams['disposalDate'] = $currentDateString;
         }
         if (!empty($args['partialRetentionRule']) && $args['partialRetentionRule'] == "true") {
-            $queryParts['partialRetentionRule'] = "(retentionDuration=NULL OR retentionStartDate=NULL OR retentionRuleCode=NULL)";
+            $queryParts['partialRetentionRule'] = "(
+            retentionDuration=NULL 
+            OR retentionStartDate=NULL 
+            OR retentionRuleCode=NULL
+            )";
         }
         if (!empty($args['finalDisposition'])) {
             $queryParts['finalDisposition'] = "finalDisposition= :finalDisposition";
@@ -740,10 +761,8 @@ trait archiveAccessTrait
             $queryParams['depositorOrgRegNumber'] = $args['depositorOrgRegNumber'];
         }
         if (!empty($args['filePlanPosition'])) {
-            $queryParts['filePlanPosition'] = "filePlanPosition= :filePlanPosition";
-            $queryParams['filePlanPosition'] = $args['filePlanPosition'];
-        } else {
-            $queryParts['filePlanPosition'] = "filePlanPosition= null";
+            $foldersId = $this->getDescendantFolder($args['filePlanPosition']);
+            $queryParts['filePlanPosition'] = "filePlanPosition=['".implode("', '", $foldersId)."']";
         }
         if ($args['hasParent'] == true) {
             $queryParts['parentArchiveId'] = "parentArchiveId!=null";
@@ -754,9 +773,9 @@ trait archiveAccessTrait
 
         $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
 
-         if ($accessRuleAssert) {
-             $queryParts[] = $accessRuleAssert;
-         }
+        if ($accessRuleAssert) {
+            $queryParts[] = $accessRuleAssert;
+        }
 
         return implode(' and ', $queryParts);
     }
@@ -764,7 +783,7 @@ trait archiveAccessTrait
     /**
      * Get the query assert for access rule
      * @param string $currentDateString the date
-     * 
+     *
      * @return string Query
      */
     public function getAccessRuleAssert($currentDateString)
@@ -774,7 +793,10 @@ trait archiveAccessTrait
             return "true=false";
         }
 
-        $userServiceOrgRegNumbers = array_merge(array($currentService->registrationNumber), $this->userPositionController->readDescandantService((string) $currentService->orgId));
+        $userServiceOrgRegNumbers = array_merge(
+            array($currentService->registrationNumber),
+            $this->userPositionController->readDescandantService((string) $currentService->orgId)
+        );
 
         $owner = false;
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
@@ -788,7 +810,8 @@ trait archiveAccessTrait
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
-        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId."' AND (accessRuleComDate <= '$currentDateString'))";
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId
+            ."' AND (accessRuleComDate <= '$currentDateString'))";
 
         return "(".implode(" OR ", $queryParts).")";
     }
@@ -813,7 +836,8 @@ trait archiveAccessTrait
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
      *
-     * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
+     * @return array Archives ids separate by successfully updated archives ['success']
+     * and not updated archives ['error']
      */
     public function setStatus($archiveIds, $status)
     {
@@ -873,8 +897,9 @@ trait archiveAccessTrait
 
     /**
      * Check if the current user have the rights on an archive
-     * @param recordsManagement/archive $archive The archive object
      *
+     * @param recordsManagement/archive $archive The archive object
+     * @throws
      * @return boolean THe result of the operation
      */
     public function checkRights($archive)
@@ -917,7 +942,6 @@ trait archiveAccessTrait
      * @param recordsManagement/archive         $archive The archive object
      * @param recordsManagement/archivalProfile $archivalProfile The archiveProfile object
      *
-     * @return recordsManagement/accessRule[] Array of recordsManagement/accessRule object
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
@@ -976,7 +1000,8 @@ trait archiveAccessTrait
      *
      * @return message[] Array of message object
      */
-    protected function getMessageByArchiveid($archiveId) {
+    protected function getMessageByArchiveid($archiveId)
+    {
 
         $queryString = [];
         $unitIdentifiers = $this->sdoFactory->find('medona/unitIdentifier', "objectId='$archiveId'");
@@ -992,6 +1017,24 @@ trait archiveAccessTrait
         }
 
         return $messages;
+    }
+
+    /**
+     * @param string $positionId
+     *
+     * @return array $filePlanPosition
+     */
+    protected function getDescendantFolder($positionId)
+    {
+        $filePlanPosition = [];
+        $folders = $this->sdoFactory->find('filePlan/folder', "parentFolderId='".$positionId."'");
+
+        $filePlanPosition[] = $positionId;
+        foreach ($folders as $folder) {
+            $filePlanPosition = array_merge($filePlanPosition, $this->getDescendantFolder($folder->folderId));
+        }
+
+        return $filePlanPosition;
     }
 
     /**

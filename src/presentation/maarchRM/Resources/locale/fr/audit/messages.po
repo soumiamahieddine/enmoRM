@@ -1764,17 +1764,5 @@ msgstr "Réinitialisation du mot de passe"
 msgid "organization/orgContact/readCountriesCodes"
 msgstr "Lecture de la liste des pays"
 
-msgid "anadoc/procedure/readExport_archiveId_"
-msgstr "Export d'une archive"
-
-msgid "anadoc/procedure/readServices"
-msgstr "Lecture des services"
-
-msgid "anadoc/procedure/read_archiveId_"
-msgstr "Lecture d'une procedure"
-
-msgid "anadoc/procedure/read"
-msgstr "Recherche d'une procedure"
-
-msgid "anadoc/procedure/readSortingtypes"
-msgstr "Recherche d'un service"
+msgid "recordsManagement/archives/readRegistry"
+msgstr "Recherche du registre"
