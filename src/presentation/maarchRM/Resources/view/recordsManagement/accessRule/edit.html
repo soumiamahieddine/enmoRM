@@ -26,7 +26,7 @@ file that was distributed with this source code.
                 </div>
                 <div class="col-md-7">
                     <div class="form-group">
-                        <label class="col-md-4 control-label">Description</label>
+                        <label class="col-md-4 control-label">Description <span style="color: red">*</span></label>
                         <div class="col-md-8">
                             <textarea class="form-control" id="description" name="description" placeholder="Description"></textarea>
                         </div>
@@ -118,7 +118,7 @@ file that was distributed with this source code.
         save : function () {
             var accessRule = this.serialize()
 
-            if (accessRule.code == "") {
+            if (accessRule.code.trim() == "" || accessRule.description.trim() == "") {
                 gritter.show($('#empty_text').html(), false);
                 return;
             }

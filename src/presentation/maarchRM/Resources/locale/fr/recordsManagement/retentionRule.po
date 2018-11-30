@@ -32,6 +32,9 @@ msgstr "Êtes-vous sûr de vouloir supprimer la règle de conservation ?"
 msgid "Retention rule code"
 msgstr "Code de la règle"
 
+msgid "Retention rule label"
+msgstr "Nom de la règle"
+
 msgid "Retention duration"
 msgstr "Durée de conservation"
 
