@@ -53,6 +53,7 @@ interface archivesInterface
      * @param string $depositEndDate
      * @param string $originatingStartDate
      * @param string $originatingEndDate
+     * @param string $archiverArchiveId
      *
      * @action recordsManagement/archive/search
      *
@@ -78,7 +79,8 @@ interface archivesInterface
         $depositStartDate = null,
         $depositEndDate = null,
         $originatingStartDate = null,
-        $originatingEndDate = null
+        $originatingEndDate = null,
+        $archiverArchiveId = null
     );
 
     /**

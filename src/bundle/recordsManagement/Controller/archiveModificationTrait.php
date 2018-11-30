@@ -516,5 +516,68 @@ trait archiveModificationTrait
             }
         }
     }
+
+    /**
+     * Convert and store the resource
+     *
+     * @param string $archiveId The archive identifier
+     * @param string $contents  The resource contents
+     * @param string $filename  The optional filename
+     * 
+     * @return The new resource identifier
+     */
+    public function addResource($archiveId, $contents, $filename=false)
+    {
+        // Valid URL file:// http:// data://
+        if (filter_var($contents, FILTER_VALIDATE_URL)) {
+            $contents = stream_get_contents($contents);
+        } else if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
+            $contents = base64_decode($contents); 
+        } elseif (is_file($contents)) {
+            if (empty($filename)) {
+                $filename = basename($contents);
+            }
+            $contents = file_get_contents($contents);
+        }
+
+        $digitalResource = $this->digitalResourceController->createFromContents($contents, $filename);
+
+        $digitalResource->archiveId = $archiveId;
+        $digitalResource->resId = \laabs::newId();
+
+        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+
+        // Check rights ?
+
+        
+        $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+    
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
+            $this->digitalResourceController->store($digitalResource);
+
+            $this->logAddResource($archive, $digitalResource, true);
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+
+            $this->logAddResource($archive, $digitalResource, false);
+
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return $digitalResource->resId;
+    }
 }
 

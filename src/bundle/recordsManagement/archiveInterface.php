@@ -146,4 +146,13 @@ interface archiveInterface
      * @action recordsManagement/archive/convertAndStore
      */
     public function updateInteractiveconversion_resId_();
+
+    /**
+     * Add a resource to the archive
+     * @param string $contents
+     * @param string $filename
+     * 
+     * @action recordsManagement/archive/addResource
+     */
+    public function create_archiveId_Digitalresource($contents, $filename=null);
 }

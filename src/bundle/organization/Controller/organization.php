@@ -25,7 +25,7 @@ use core\Exception;
  * Control of the organization
  *
  * @package Organization
- * @author  Prosper De Laure <prosper.delaure@maarch.org> 
+ * @author  Prosper De Laure <prosper.delaure@maarch.org>
  */
 class organization
 {
@@ -184,7 +184,7 @@ class organization
      * Set positions for the organization tree
      * @param object $roots            The organization tree roots
      * @param array  $organizationList The list of organization sorted by parent organization
-     * 
+     *
      * @return object[]
      */
     protected function buildTree($roots, $organizationList)
@@ -967,6 +967,24 @@ class organization
     }
 
     /**
+     * Read descendant services of an org
+     * @param string $parentId The parent orgId
+     *
+     * @return object[] The list of services
+     */
+    public function readDescendantServices($parentId)
+    {
+        $childrenServices = $this->sdoFactory->find('organization/organization', "parentOrgId = '$parentId' AND isOrgUnit = true");
+
+        foreach ($childrenServices as $childService) {
+            $childrenServices = array_merge($this->readDescendantServices($childService->orgId), $childrenServices);
+        }
+
+        return $childrenServices;
+    }
+
+
+    /**
      * Read parent orgs recursively
      * @param string $orgId                 Organisation identifier
      * @param array  $archivalProfileAccess The archival profile access array
@@ -1027,7 +1045,7 @@ class organization
 
         $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
 
-        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='".$organization->orgId."'");
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         foreach ($archivalProfileAccesses as $archivalProfileAccess) {
@@ -1068,7 +1086,7 @@ class organization
      * Check if profile is in an organization access list
      * @param string $archivalProfileReference
      * @param string $registrationNumber
-     * 
+     *
      * @return bool the result of the operation
      */
     public function checkProfileInOrgAccess($archivalProfileReference, $registrationNumber)
@@ -1130,7 +1148,11 @@ class organization
                 $userOwnerOrgs[] = $userPosition->ownerOrgId;
             }
 
-            if (strpos($userPosition->orgRoleCodes, 'owner') !== false) {
+            if (is_string($userPosition->orgRoleCodes)) {
+                $userPosition->orgRoleCodes = \laabs::newTokenList($userPosition->orgRoleCodes);
+            }
+
+            if (in_array('owner', (array) $userPosition->orgRoleCodes) !== false) {
                 $owner = true;
                 break;
             }

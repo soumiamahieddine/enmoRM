@@ -284,6 +284,10 @@ class digitalResource
             $resource->clusterId = $this->currentCluster->clusterId;
             $resource->created = \laabs::newTimestamp();
 
+            if (!isset($resource->hash)) {
+                $this->getHash($resource);
+            }
+
             $this->sdoFactory->create($resource, 'digitalResource/digitalResource');
 
             $this->clusterController->storeResource($this->currentCluster, $resource);
