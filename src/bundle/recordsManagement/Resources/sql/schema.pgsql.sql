@@ -31,7 +31,7 @@ CREATE TABLE "recordsManagement"."retentionRule"
   "duration" text NOT NULL,
   "finalDisposition" text,
   "description" text,
-  "label" text,
+  "label" text NOT NULL,
   "implementationDate" date,
 
   PRIMARY KEY ("code")
