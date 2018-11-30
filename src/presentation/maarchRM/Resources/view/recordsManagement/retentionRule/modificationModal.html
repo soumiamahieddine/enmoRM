@@ -91,7 +91,7 @@
 <script type="text/javascript">
     
     $("#retentionRuleModal").on('keyup change', '.form-control', function () {
-        if ($('#label').val() != "" || $('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
+        if ($('#label').val().trim() != "" && $('#code').val() != "" && ($('#duration').val() != "" || $('#durationUnit').val() == '*')) {
             $("#add, #update").removeClass('hide');
             if($('#code').prop('disabled')) {
                 $('#implementationDate').css('display', '');
@@ -211,6 +211,7 @@
 
         update: function() {
 
+            
             $('#messagesModal').modal();
             $('#m_title-delete').css('display', 'none');
             $('#m_title-update').css('display', '');
@@ -221,11 +222,6 @@
                 retentionRule: EditionModal.serialize()
             };
           
-            if(parameters.retentionRule.duration == 0 || parameters.retentionRule.label.trim() == '') {
-                gritter.show($('#empty_text').html(), false);
-                return;
-            }
-            
             $('#m_yes').one('click', function () {
 
                 $.ajax({
