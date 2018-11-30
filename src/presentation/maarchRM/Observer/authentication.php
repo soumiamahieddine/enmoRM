@@ -138,24 +138,33 @@ class authentication
         \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
 
         $organization = \laabs::getToken("ORGANIZATION");
+
         $userPositionController = \laabs::newController("organization/userPosition");
         $userPositions = $userPositionController->getMyPositions();
 
         if (!empty($organization)) {
             $isUserPosition = false;
+            $default = null;
 
             foreach ($userPositions as $position) {
                 if ($position->orgId == $organization->orgId) {
                     $isUserPosition = true;
                 }
+                if ($position->default) {
+                    $default = $position;
+                }
+            }
+
+            if (!$default) {
+                $userCommand->reroute('app/authentication/readUserPrompt');
+                \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+
+                return false;
             }
 
             if (!$isUserPosition) {
-                \laabs::clearTokens();
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
-                $userCommand->reroute('app/authentication/readUserPrompt');
-
-                return false;
+                \laabs::setToken("ORGANIZATION", $default->organization, 86400);
             }
         }
 
