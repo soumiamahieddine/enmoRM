@@ -386,6 +386,7 @@ file that was distributed with this source code.
         if ($('#fileplanLevelToggle').prop('checked')) {
             $("#fileplanLevel").val('item');
             $("#contentsTabBtn").addClass('hide');
+            $("#archivalProfileNavControl").find('a').first().click();
         } else {
             $("#fileplanLevel").val('file');
             $("#contentsTabBtn").removeClass('hide');
