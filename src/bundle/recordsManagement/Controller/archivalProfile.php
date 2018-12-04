@@ -95,12 +95,12 @@ class archivalProfile
 
     /**
      * get an archival profile by reference
-     * @param string $archivalProfileReference The archival profile reference
+     * @param string $reference The archival profile reference
      * @param bool   $withRelatedProfiles      Bring back the contents profiles
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function getByReference($archivalProfileReference, $withRelatedProfiles=true)
+    public function getByReference($reference, $withRelatedProfiles=true)
     {
 
         try {
