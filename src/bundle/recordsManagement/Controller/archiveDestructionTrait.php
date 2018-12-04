@@ -32,42 +32,21 @@ trait archiveDestructionTrait
      *
      * @return bool The result of the operation
      */
-    public function dispose($archiveIds) 
+    public function dispose($archiveIds)
     {
-        $currentDate = \laabs::newTimestamp();
         $archives = [];
 
         foreach ($archiveIds as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
             $this->checkRights($archive);
 
-            if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Archive not set for destruction.");
-            }
+            $this->checkDisposalRights($archive) ;
 
-            if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
-            }
-
-            if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Disposal date not reached.");
-            }
-
-            //if finaldisposition is not null or empty
-            if (empty($archive->finalDisposition) || is_null($archive->finalDisposition)) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Final disposition must be advised for this action");
-            }
-
-            //if retention is not null or empty
-            if (empty($archive->retentionStartDate) || is_null($archive->retentionStartDate)) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Retention Start date must be advised for this action.");
-            }
-
-            $this->listChildrenArchive($archive, true);
+            $archives = $this->listChildrenArchive($archive, true);
 
             if ($archive->childrenArchives) {
                 $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
-
                 $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
             }
             $archives[] = $archive;
@@ -255,23 +234,12 @@ trait archiveDestructionTrait
         return $destroyedArchiveId;
     }
 
-    protected function checkChildren($archivesChildren) {
-        $currentDate = \laabs::newTimestamp();
+    protected function checkChildren($archivesChildren)
+    {
         $archiveIds = [];
+
         foreach ($archivesChildren as $archive) {
-            $this->checkRights($archive);
-
-            if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Archive not set for destruction.");
-            }
-
-            if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Disposal date not reached.");
-            }
-
-            if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
-                throw new \bundle\recordsManagement\Exception\notDisposableArchiveException("Children archives : Disposal date not reached.");
-            }
+            $this->checkDisposalRights($archive, true) ;
 
             if ($archive->childrenArchives) {
                 $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
@@ -282,5 +250,39 @@ trait archiveDestructionTrait
         }
 
         return $archiveIds;
+    }
+
+    public function checkDisposalRights($archive, $isChild = false)
+    {
+        $archiveIds = [];
+
+        $this->checkRights($archive);
+        $currentDate = \laabs::newTimestamp();
+
+        $beforeError = ($isChild) ? "Children archives : ": "";
+
+        if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Archive not set for destruction.");
+        }
+
+        if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
+        }
+
+        if (empty($archive->disposalDate) && (isset($archive->retentionRuleCode) || isset($archive->retentionDuration))) {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
+        }
+
+        //if finaldisposition is not null or empty
+        if (empty($archive->finalDisposition) || is_null($archive->finalDisposition)) {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Final disposition must be advised for this action");
+        }
+
+        //if retention is not null or empty
+        if (empty($archive->retentionStartDate) || is_null($archive->retentionStartDate)) {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Retention Start date must be advised for this action.");
+        }
+
+        return $archiveIds ;
     }
 }

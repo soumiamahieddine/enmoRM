@@ -776,6 +776,9 @@ msgstr "Une archive enfant n'est pas prévue pour être détruite."
 msgid "Children archives : Disposal date not reached."
 msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 
+msgid "Children archives : Final disposition must be advised for this action"
+msgstr "Archives enfants : Un sort final doit être renseigné pour exécuter cette action."
+
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
