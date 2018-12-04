@@ -43,7 +43,7 @@ trait archiveDestructionTrait
 
             $this->checkDisposalRights($archive) ;
 
-            $archives = $this->listChildrenArchive($archive, true);
+            $this->listChildrenArchive($archive, true);
 
             if ($archive->childrenArchives) {
                 $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
