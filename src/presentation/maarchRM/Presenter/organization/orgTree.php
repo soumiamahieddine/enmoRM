@@ -81,9 +81,12 @@ class orgTree
             return strcmp($a->reference, $b->reference);
         });
 
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
         if (\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes) {
             $addOrganizationRight = in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes);
-        } elseif (\laabs::getToken('AUTH')->accountId == \laabs::configuration("auth")["adminUsers"][0]) {
+        } elseif (in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             $addOrganizationRight = true;
         } else {
             $addOrganizationRight = false;
