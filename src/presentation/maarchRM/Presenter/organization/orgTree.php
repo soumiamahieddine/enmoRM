@@ -83,6 +83,8 @@ class orgTree
 
         if (\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes) {
             $addOrganizationRight = in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes);
+        } elseif (\laabs::getToken('AUTH')->accountId == \laabs::configuration("auth")["adminUsers"][0]) {
+            $addOrganizationRight = true;
         } else {
             $addOrganizationRight = false;
         }
