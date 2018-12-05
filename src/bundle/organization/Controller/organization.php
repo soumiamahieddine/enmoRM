@@ -263,7 +263,7 @@ class organization
      */
     public function create($organization)
     {
-        if (!$organization->parentOrgId) {
+        if (!$organization->parentOrgId && \laabs::getToken('AUTH')->accountId != \laabs::configuration("auth")["adminUsers"][0]) {
             if (\laabs::getToken("ORGANIZATION")) {
                 if (!in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes)) {
                     throw new \core\Exception("You're not allowed to create an organization");
