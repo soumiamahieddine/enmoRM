@@ -59,6 +59,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "acceptUserIndex" boolean default false,
   "acceptArchiveWithoutProfile" boolean default true,
   "fileplanLevel" text,
+  "processingStatuses" jsonb,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -210,6 +211,7 @@ CREATE TABLE "recordsManagement"."archive"
   "lastModificationDate" timestamp,
   
   "status" text NOT NULL,
+  "processingStatus" text,
 
   "parentArchiveId" text,
 

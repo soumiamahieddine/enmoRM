@@ -146,6 +146,12 @@ class archivalProfile
     public $accessRule;
 
     /**
+     * The processing statuses, actions and views
+     * @var object
+     */
+    public $processingStatuses;
+
+    /**
      * Get the properties
      * @return array
      */
