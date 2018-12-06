@@ -103,7 +103,7 @@ interface serviceAccountInterface
      *
      * @action auth/serviceAccount/generateToken
      */
-    public function readServicetoken_serviceAccountId_();
+    public function updateServicetoken_serviceAccountId_();
 
     /**
      * Search the service account for typehead

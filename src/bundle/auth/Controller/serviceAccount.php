@@ -266,7 +266,7 @@ class serviceAccount
         // Check userAccount exists
         $currentDate = \laabs::newTimestamp();
 
-        if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccountId))) {
+        if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccountId, "accountType" => "service"))) {
             \laabs::newController('audit/entry')->add(
                 $entryType = "auth/serviceTokenGenerationFailure",
                 $objectClass = "auth/account",
