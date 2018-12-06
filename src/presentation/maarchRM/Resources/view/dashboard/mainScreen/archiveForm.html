@@ -130,11 +130,13 @@
     });
 
     var ArchiveForm = {
-        send : function(type) {
+        send : function(type, event, button) { //
+            let url = null;
+            let data = null;
 
             if (type === 'sync') {
                 url = "/archive";
-                archive = this.syncSerialize();
+                let archive = this.syncSerialize();
 
                 if (archive < 0) {
                     return;
@@ -151,11 +153,8 @@
 
                 data = JSON.stringify(data);
 
-                if (archive < 0) {
-                    return;
-                }
             }
-            ajax($('#import'),
+            ajax($(button),
                 {
                     type        : 'POST',
                     url         : url,
