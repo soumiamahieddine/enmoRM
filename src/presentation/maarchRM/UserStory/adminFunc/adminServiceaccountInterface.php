@@ -67,11 +67,11 @@ interface adminServiceaccountInterface
      * Get a new service account
      * @param string $serviceName The service name
      *
-     * @uses auth/serviceAccount/readServicetoken_serviceAccountId_
+     * @uses auth/serviceAccount/updateServicetoken_serviceAccountId_
      * 
      * @return auth/serviceAccount/serviceToken
      */
-    public function readServiceaccount_serviceAccountId_Token();
+    public function updateServiceaccount_serviceAccountId_Token();
 
     /**
      * Update service account

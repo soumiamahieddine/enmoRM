@@ -212,7 +212,7 @@
         serviceAccount.displayName = serviceAccount.accountName;
         serviceAccount.emailAddress = '';
         serviceAccount.enabled = false;
-        orgId = $("#serviceOrgId").val();
+        var orgId = $("#serviceOrgId").val();
 
         var servicesURI = new Array();
         $("#listPrivilege").find("[name=privilegeURI]").each(function(){
@@ -283,10 +283,10 @@
 
     //Delete privilege
     $("#privilegesTab").on("click","[name=btnDeletePrvilege]", function(){
-        var serviceURI = $(this).closest("[name=privilegeURI").find('input').data('serviceuri');
+        var serviceURI = $(this).closest("[name=privilegeURI]").find('input').data('serviceuri');
 
         $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').show();
-        $(this).closest("[name=privilegeURI").remove();
+        $(this).closest("[name=privilegeURI]").remove();
     });
 
     //Cancel
@@ -299,7 +299,7 @@
         $("#tokenRegenerateModal").modal("hide");
         ajax($(this), {
             url         : "/Serviceaccount/"+ $("#serviceAccountId").val() + "/token",
-            type        : "GET",
+            type        : "PUT",
             dataType    : "json",
             success  : function(response){
                 $('#generatedToken').text(response.cookie);
