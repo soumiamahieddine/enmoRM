@@ -776,6 +776,15 @@ msgstr "Une archive enfant n'est pas prévue pour être détruite."
 msgid "Children archives : Disposal date not reached."
 msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
 
+msgid "Children archives : Final disposition must be advised for this action"
+msgstr "Archives enfants : Un sort final doit être renseigné pour exécuter cette action."
+
+msgid "There is a missing management information (date or retention rule)."
+msgstr "Il manque une information concernant la gestion de l'archive (date ou règle de conservation)."
+
+msgid "Children archives : There is a missing management information (date or retention rule)."
+msgstr "Archives enfants : Il manque une information concernant la gestion de l'archive (date ou règle de conservation)."
+
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
 
