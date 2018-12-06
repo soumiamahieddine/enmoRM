@@ -18,6 +18,7 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Controller;
+
 use core\Exception;
 
 /**
@@ -33,11 +34,15 @@ class archivalProfile
 
     protected $descriptionFields;
 
+    protected $profilesDirectory;
+
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
+     * @param bool                    $notifyModification The state of the fonction of notification modification
+     * @param string                  $profilesDirectory  The profile directory
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, $notifyModification, $profilesDirectory)
     {
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
@@ -48,6 +53,14 @@ class archivalProfile
             }
             $this->descriptionFields[$descriptionField->name] = $descriptionField;
         }
+
+        if (!is_dir($profilesDirectory) && !empty($profilesDirectory)) {
+            mkdir($profilesDirectory, 0777, true);
+        }
+
+        $this->profilesDirectory = $profilesDirectory;
+
+        $this->notifyModification = $notifyModification;
     }
 
     /**
@@ -80,7 +93,7 @@ class archivalProfile
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function read($archivalProfileId, $withRelatedProfiles=true, $recursively=false)
+    public function read($archivalProfileId, $withRelatedProfiles = true, $recursively = false)
     {
         $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', $archivalProfileId);
 
@@ -100,7 +113,7 @@ class archivalProfile
      *
      * @return recordsManagement/archivalProfile The profile object
      */
-    public function getByReference($reference, $withRelatedProfiles=true)
+    public function getByReference($reference, $withRelatedProfiles = true)
     {
 
         try {
@@ -182,6 +195,11 @@ class archivalProfile
                     $archiveDescription->descriptionField = $descriptionField;
                 }
             }
+        }
+
+        $profileFile = $this->profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference;
+        if (file_exists($profileFile.'.rng') || file_exists($profileFile.'.xsd')) {
+            $archivalProfile->profileFile = $profileFile;
         }
     }
 
@@ -308,7 +326,6 @@ class archivalProfile
             // Life cycle journal
             $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
             $this->lifeCycleJournalController->logEvent('recordsManagement/profileCreation', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
-        
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -350,13 +367,11 @@ class archivalProfile
             // Life cycle journal
             $eventItems = array('archivalProfileReference' => $archivalProfile->reference);
             $this->lifeCycleJournalController->logEvent('recordsManagement/archivalProfileModification', 'recordsManagement/archivalProfile', $archivalProfile->archivalProfileId, $eventItems);
-        
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
             }
             throw new \core\Exception("Profile already exist");
-
         }
 
         if ($transactionControl) {
@@ -383,7 +398,7 @@ class archivalProfile
         $this->deleteDetail($archivalProfile);
 
         $archivalProfileContents = $this->sdoFactory->find('recordsManagement/archivalProfileContents', "parentProfileId='$archivalProfileId' OR containedProfileId='$archivalProfileId'");
-        if($archivalProfileContents) {
+        if (!empty($archivalProfileContents)) {
             $this->sdoFactory->deleteCollection($archivalProfileContents, 'recordsManagement/archivalProfileContents');
         }
         
@@ -422,6 +437,15 @@ class archivalProfile
      */
     public function isUsed($archivalProfile)
     {
+        if (\laabs::hasBundle('medona')) {
+            $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+            $archivalAgreement = $archivalAgreementController->getByProfileReference($archivalProfile->reference);
+
+            if (!empty($archivalAgreement)) {
+                return false;
+            }
+        }
+
         return (bool) $this->sdoFactory->count('recordsManagement/archive', "archivalProfileReference = '$archivalProfile->reference'");
     }
 
@@ -447,23 +471,20 @@ class archivalProfile
 
         
         if (!empty($archivalProfile->containedProfiles)) {
-
             foreach ($archivalProfile->containedProfiles as $containedProfileId) {
                 try {
                     $profile = $this->sdoFactory->read("recordsManagement/archivalProfile", $containedProfileId);
-
                 } catch (\Exception $e) {
                     throw new \core\Exception\NotFoundException("%s can't be found.", 404, null, [$containedProfileId]);
                 }
                 
                 $archivalProfileContents = \laabs::newInstance('recordsManagement/archivalProfileContents');
-                $archivalProfileContents->parentProfileId = $archivalProfile->archivalProfileId; 
+                $archivalProfileContents->parentProfileId = $archivalProfile->archivalProfileId;
                 $archivalProfileContents->containedProfileId = $containedProfileId;
 
                 $this->sdoFactory->create($archivalProfileContents, 'recordsManagement/archivalProfileContents');
             }
         }
-
     }
 
     /**
@@ -478,6 +499,48 @@ class archivalProfile
         $this->sdoFactory->deleteChildren('recordsManagement/archivalProfileContents', $archivalProfile, 'recordsManagement/archivalProfile');
     }
 
+    /**
+     * Upload a profile file
+     * @param string $profileReference The profile reference
+     * @param string $archivalProfile  The profile binary file
+     * @param string $format           The profile file format
+     *
+     * @return boolean The result of the operation
+     */
+    public function uploadArchivalProfile($profileReference, $archivalProfile, $content, $format = 'rng')
+    {
+        $profilesDirectory = $this->profilesDirectory;
+        $profilesDirectory .= DIRECTORY_SEPARATOR.$profileReference.'.'.$format ;
+        $content = base64_decode($content);
 
+        if (!$archivalProfile->archivalProfileId) {
+            $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+            $archivalProfileController->create($archivalProfile);
+        }
 
+        file_put_contents($profilesDirectory, $content);
+
+        $archivalProfile = $this->getByReference($profileReference);
+        $archivalProfile->descriptionSchema = $profilesDirectory;
+
+        $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
+
+        return true;
+    }
+
+    /**
+     * Export profile file
+     * @param string $profileReference
+     *
+     * @return string
+     */
+    public function export($profileReference)
+    {
+        $profilesDirectory = $this->profilesDirectory;
+        $fileDirectory = $profilesDirectory.DIRECTORY_SEPARATOR.$profileReference.".rng";
+
+        $file = file_get_contents($fileDirectory);
+
+        return $file;
+    }
 }
