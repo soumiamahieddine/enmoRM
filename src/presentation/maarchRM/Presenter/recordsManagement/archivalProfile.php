@@ -167,8 +167,8 @@ class archivalProfile
 
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
-        $organizationController = \laabs::newController('organization/organization');
         $accessRules = $accessRuleController->index();
+
         foreach ($accessRules as $accessRule) {
             $completeAccessRule = $accessRuleController->edit($accessRule->code);
             $accessRule->description = $completeAccessRule->description;
@@ -179,19 +179,22 @@ class archivalProfile
                 $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
             }
         }
+
         $this->view->setSource("accessRules", $accessRules);
 
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();
+
         foreach ($retentionRules as $retentionRule) {
             if ($retentionRule->duration != null) {
                 $retentionRule->retentionDurationUnit = substr($retentionRule->duration, -1);
                 $retentionRule->retentionDuration = substr($retentionRule->duration, 1, -1);
             }
         }
+
         $this->view->setSource("retentionRules", $retentionRules);
-        $retentionRuleSlector = $this->view->getElementById("code");
-        $this->view->merge($retentionRuleSlector);
+        $retentionRuleSelector = $this->view->getElementById("code");
+        $this->view->merge($retentionRuleSelector);
 
         $this->view->setSource("profilesDirectory", $profilesDirectory);
 

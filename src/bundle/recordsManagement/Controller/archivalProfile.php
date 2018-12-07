@@ -339,7 +339,8 @@ class archivalProfile
         }
 
         try {
-            //$archivalProfile = \laabs::cast($archivalProfile, 'recordsManagement/archivalProfile');
+            $oldArchivalProfile = $this->read($archivalProfile->archivalProfileId);
+            $archivalProfile->reference = $oldArchivalProfile->reference;
 
             $this->deleteDetail($archivalProfile);
             $this->createDetail($archivalProfile);
