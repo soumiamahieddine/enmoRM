@@ -39,7 +39,6 @@ class userPosition extends abstractPosition
         if (!$accountUserId) {
             $accountToken = \laabs::getToken('AUTH');
             $accountUserId= $accountToken->accountId;
-//            $currentOrg = \laabs::getToken('ORGANIZATION');
         }
 
         if (!$accountUserId) {

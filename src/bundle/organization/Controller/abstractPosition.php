@@ -61,6 +61,7 @@ abstract class abstractPosition
 
         $organizations = [];
         $setToken = false;
+
         foreach ($positions as $position) {
             $organization = $this->sdoFactory->read('organization/organization', $position->orgId);
 
@@ -71,12 +72,14 @@ abstract class abstractPosition
                 \laabs::setToken("ORGANIZATION", $organization, 86400);
                 $setToken = true;
             }
+
             $organizations[] = $organization;
         }
 
         if (!$setToken && !$currentOrg && $organizations) {
             \laabs::setToken("ORGANIZATION", $organizations[0], 86400);
         }
+
         return $positions;
     }
 
