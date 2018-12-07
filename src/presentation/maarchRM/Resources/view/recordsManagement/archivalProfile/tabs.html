@@ -2,8 +2,8 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
         <?merge archivalProfile.type.ifeq('1').not() ?>
-        <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab"
-                role="tab" data-toggle="tab">Description</a></li>
+        <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab"
+                data-toggle="tab">Description</a></li>
         <?merge archivalProfile.type.ifeq('1').not() ?>
         <li role="presentation" id="managementTabBtn"><a href="#managementRulesTab" aria-controls="managementRulesTab"
                 role="tab" data-toggle="tab">Profile rules</a></li>
@@ -20,74 +20,7 @@
                 </div>
                 <?merge archivalProfile.type.ifeq('1').not() ?>
                 <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
-                    <div class="col-xs-12">
-                        <h5 class="text-info"><strong>Retention rule</strong></h5>
-                        <br />
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Retention rule code</label>
-                            <div class="col-md-9">
-                                <select id="code" name="retentionRuleCode" class="form-control">
-                                    <option value="">Select a retention rule code</option>
-                                    <?merge retentionRules ?>
-                                    <option value='[?merge .code ?]' data-duration="[?merge .retentionDuration ?]"
-                                        data-duration-unit='[?merge .retentionDurationUnit ?]'
-                                        data-final-disposition='[?merge .finalDisposition ?]'>
-                                        <?merge .label ?>
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-offset-4">
-                                <small>
-                                    <label>Retention duration</label> :
-                                    <span id="duration"></span>
-                                </small>
-                                <br />
-                                <small class="finalDisposition dl dl-horizontal">
-                                    <label>Final disposition</label> :
-                                    <span id="finalDisposition"></span>
-                                </small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Retention start date</label>
-                            <div class="col-md-9" id="retentionStartDate">
-                                <input type="hidden" name="retentionStartDate" value="[?merge .retentionStartDate ?]" />
-                                <select id="startDate" class="form-control">
-                                    <option value="">To be defined later </option>
-                                    <option value="originatingDate">Originating date </option>
-                                    <option value="depositDate">Deposit date </option>
-                                    <!--?merge retentionStartDateFields ?>
-                                    <span>
-                                        <option data-origin="description" value="description/[?merge .name ?]"><?merge .label ?></option>
-                                    </span-->
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12" style="border-top: 1px solid silver">
-                        <br />
-                        <h5 class="text-info"><strong>Access rule</strong></h5>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Access rule code</label>
-                            <div class="col-md-9">
-                                <select id="accessRuleCode" name="accessRuleCode" class="form-control">
-                                    <option value="">Select a access rule code</option>
-                                    <?merge accessRules ?>
-                                    <option value='[?merge .code ?]' data-json='[?merge .json ?]'>
-                                        <?merge .code ?>
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id='accessRule'>
-                            <div class="col-md-offset-4">
-                                <small>
-                                    <label>Access rule duration</label> :
-                                    <span id="accessRuleDuration"></span>
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+                    <?hinclude recordsManagement/archivalProfile/managementRulesTab.html ?>
                 </div>
                 <div role="tabpanel" class="tab-pane fade in" id="profileContentsTab">
                     <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
