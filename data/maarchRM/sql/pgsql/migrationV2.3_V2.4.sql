@@ -10,3 +10,7 @@ ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "processingStatuses
 
 -- Add columns for processing statuses on archival profiles
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "processingStatus" text;
+
+
+-- Add columns for processing statuses on org unit archival profiles access
+ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb;

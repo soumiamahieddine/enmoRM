@@ -128,6 +128,7 @@ CREATE TABLE "organization"."archivalProfileAccess"
   "archivalProfileReference" text NOT NULL,
   "originatorAccess" boolean default true,
   "serviceLevelReference" text,
+  "userAccess" jsonb,
 
   UNIQUE ("orgId", "archivalProfileReference"),
   FOREIGN KEY ("orgId")
