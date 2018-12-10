@@ -112,9 +112,9 @@
         var user = serialize();
         let error = false;
 
-        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "") {
+        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "" || user.displayName == "") {
             gritter.show($('#empty_text').text(), false);
-            error = true;
+            return;
         }
 
         if (user.emailAddress != "" && !validateEmail(user.emailAddress)) {
