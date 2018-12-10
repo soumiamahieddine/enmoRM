@@ -260,7 +260,7 @@
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
             list.empty();
-            if (withoutProfile !== 0) {
+            if (withoutProfile == 1) {
                 list.append(
                     $('<li/>').html(
                         $('<a/>').attr('href', '#')
