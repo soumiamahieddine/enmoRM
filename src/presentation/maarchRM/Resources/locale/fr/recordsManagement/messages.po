@@ -768,25 +768,25 @@ msgid "The description class does not match with the archival profile."
 msgstr "La classe description ne correspond pas aux profils d'archive."
 
 msgid "Archive not set for destruction."
-msgstr "Archive non prévue pour destruction."
+msgstr "L'archive n'est pas prévue pour être détruite."
 
 msgid "Children archives : Archive not set for destruction."
-msgstr "Une archive enfant n'est pas prévue pour être détruite."
-
-msgid "Children archives : Disposal date not reached."
-msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
-
-msgid "Children archives : Final disposition must be advised for this action"
-msgstr "Archives enfants : Un sort final doit être renseigné pour exécuter cette action."
-
-msgid "There is a missing management information (date or retention rule)."
-msgstr "Il manque une information concernant la gestion de l'archive (date ou règle de conservation)."
-
-msgid "Children archives : There is a missing management information (date or retention rule)."
-msgstr "Archives enfants : Il manque une information concernant la gestion de l'archive (date ou règle de conservation)."
+msgstr "Une sous-archive n'est pas prévue pour être détruite."
 
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "La DUA d'une des sous-archives n'est pas échue."
+
+msgid "Children archives : Final disposition must be advised for this action"
+msgstr "Le sort final d'une des sous-archives n'est pas renseignée."
+
+msgid "There is a missing management information (date or retention rule)."
+msgstr "Il manque une information concernant la gestion de la conservation de l'archive (date et/ou règle de conservation)."
+
+msgid "Children archives : There is a missing management information (date or retention rule)."
+msgstr "Il manque une information concernant la gestion de la conservation d'une des sous-archives (date et/ou règle de conservation)."
 
 msgid "Final disposition must be advised for this action"
 msgstr "Un sort final doit être renseigné pour exécuter cette action."
