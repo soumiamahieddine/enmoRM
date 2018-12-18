@@ -224,7 +224,7 @@ abstract class abstractPosition
         $userOrg = array($orgId => $ownerOrg->registrationNumber);
         $descendantOrg = $this->readDescandantOrg(array( (string) $ownerOrg->orgId => $ownerOrg->registrationNumber));
 
-        return array_merge($descendantOrg, $userOrg);;
+        return array_merge($descendantOrg, $userOrg);
     }
 
     /**
