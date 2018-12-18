@@ -65,6 +65,7 @@ class accessRule
      */
     public function index($accessRules)
     {
+        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
         $this->view->addContentFile('recordsManagement/accessRule/index.html');
         $orgUnits = \laabs::callService('organization/organization/readOrgunitList');
 
@@ -86,6 +87,7 @@ class accessRule
         }
 
         $this->view->translate();
+        $this->view->setSource('publicArchives', $publicArchives);
         $this->view->setSource("orgUnits", $orgUnits);
         $this->view->setSource("accessRule", $accessRules);
         $this->view->merge();
@@ -133,6 +135,26 @@ class accessRule
     {
         $this->json->status = $result;
         $this->json->message = "Access rule updated";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for delete method
+     * @param bool $response The result of the operation
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function delete($response)
+    {
+        $this->json->status = $response;
+
+        if ($response) {
+            $this->json->message = "Access rule deleted.";
+        } else {
+            $this->json->message = "The operation could not be completed because the access rule doesn't exist.";
+        }
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

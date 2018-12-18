@@ -70,7 +70,7 @@ file that was distributed with this source code.
 $("#addNewAccessCode").on('click', function(){
     $('#newAccessRuleTitle').show();
     $('#editAccessRuleTitle').hide();
-     $('#accessRuleModal').modal();
+    AccessRuleModal.load();
 })
 
 $(".dataTable").on('click',".editAccessRule", function(){

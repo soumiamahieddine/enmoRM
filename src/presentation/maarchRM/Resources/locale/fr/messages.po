@@ -499,6 +499,9 @@ msgstr "La clé existe déjà"
 msgid "The fields with a star are required."
 msgstr "Les champs avec une étoile sont obligatoires"
 
+msgid "Numbers are required in the field duration."
+msgstr "Le champ 'Durée de la règle de communicabilité' doit être un nombre"
+
 msgid "You don't avec any role that enables you tu use search."
 msgstr "Vous n'avez aucun rôle permettant l'utilisation de la recherche d'archive ou de document."
 

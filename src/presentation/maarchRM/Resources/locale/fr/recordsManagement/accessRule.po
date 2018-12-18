@@ -20,8 +20,20 @@ msgstr "Durée de la règle de communicabilité"
 msgid "New access code"
 msgstr "Nouveau code de communicabilité"
 
+msgid "Delete the access rule"
+msgstr "Supprimer la règle"
+
+msgid "Update the access rule"
+msgstr "Modifier la règle"
+
 msgid "Edit an access code"
 msgstr "Édition d'un code de communicabilité"
+
+msgid "Are you sure to modify this access rule ?"
+msgstr "Êtes-vous sûr de vouloir modifier la règle de communicabilité ?"
+
+msgid "Are you sure to delete this access rule ?"
+msgstr "Êtes-vous sûr de vouloir supprimer la règle de communicabilité ?"
 
 msgid "Access rules"
 msgstr "Règles de communicabilité"
@@ -49,6 +61,12 @@ msgstr "Règle de communicabilité créée"
 
 msgid "Access rule updated"
 msgstr "Règle de communicabilité modifiée"
+
+msgid "Access rule deleted."
+msgstr "Règle de communicabilité supprimée."
+
+msgid "The operation could not be completed because the access rule doesn't exist."
+msgstr "Suppression impossible ! La règle n'existe pas."
 
 msgid "Final disposition"
 msgstr "Sort final"
