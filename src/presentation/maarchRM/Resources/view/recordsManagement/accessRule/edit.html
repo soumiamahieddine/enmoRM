@@ -54,6 +54,8 @@ file that was distributed with this source code.
         <div class="pull-right">
             
             <button type="button" id="accessRuleCancelBtn" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+            <?merge publicArchives.bool().not() ?>
+            <button type="button" id="delete" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o">&nbsp;</i>Delete</button>
             <button type="button" id="save" class="btn btn-success" title="Save" data-code="">
                 <span><i class="fa fa-save">&nbsp;</i>Save</span>
             </button>
@@ -61,8 +63,29 @@ file that was distributed with this source code.
     </div>
 </div>
 
+<div class="modal fade" id="messagesModal" lang="en" data-translate-catalog="recordsManagement/accessRule">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="m_title-delete">Delete the access rule</h4>
+            </div>
+            <div class="modal-body">
+                <p id="m_text-delete">
+                    Are you sure to delete this access rule ?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="m_no" data-dismiss="modal" title="No">No</button>
+                <button type="button" class="btn btn-primary" id="m_yes" data-dismiss="modal" title="Yes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div style="display:none">
     <span id="empty_text">The fields with a star are required.</span>
+    <span id="is_number_text">Numbers are required in the field duration.</span>
 </div>
 <script>
     $("#accessRuleCancelBtn").on("click", function (){
@@ -71,6 +94,11 @@ file that was distributed with this source code.
 
     $("#save").on('click', function () {
         AccessRuleModal.save();
+    });
+
+    //delete
+    $("#delete").on('click', function () {
+        AccessRuleModal.deleteRule();
     });
 
     $("#accessRuleDurationUnit").on('change', function () {
@@ -94,6 +122,7 @@ file that was distributed with this source code.
                 $('#editAccessRuleTitle').show();
                 $('#accessRuleTitle').text(accessRule.code);
                 $('#accesRuleDuration').removeAttr('disabled');
+                $('#delete').css('display', '');
 
                 $.each(accessRule, function(key, value) {
                     if (key == "accessRuleDurationUnit" && accessRule.accessRuleDurationUnit == "Y" && accessRule.accessRuleDuration >= 9999) {
@@ -109,6 +138,20 @@ file that was distributed with this source code.
                 $('#code').prop('disabled', true);
 
                 $('#save').data('code', accessRule.code);
+            } else {
+                $('#newAccessRuleTitle').show();
+                $('#editAccessRuleTitle').hide();
+                $('#accessRuleTitle').html("");
+                $('#code').prop('disabled', false);
+                $('#delete').css('display', 'none');
+
+                $('#save').data('code', "");
+
+                if ($('#originatorAccess').hasClass('active')) $('#originatorAccess').click();
+                $('#orgRegNumber').find('option').removeClass('hide');
+
+                this.modal.find('input, textarea').val('');
+                this.modal.find('select').val('D');
             }
 
             this.modal.modal();
@@ -122,7 +165,12 @@ file that was distributed with this source code.
                 gritter.show($('#empty_text').html(), false);
                 return;
             }
-        
+
+            if (!accessRule.duration) {
+                gritter.show($('#is_number_text').html(), false);
+                return;
+            }
+
             if($("#save").data('code')) {
                 type= 'PUT';
                 url= '/accessRule/'+$("#save").data('code');
@@ -154,12 +202,48 @@ file that was distributed with this source code.
 
         },
 
+        deleteRule: function() {
+            $('#messagesModal').modal();
+            $('#m_title-delete').css('display', '');
+            $('#m_title-update').css('display', 'none');
+            $('#m_text-delete').css('display', '');
+            $('#m_text-update').css('display', 'none');
+
+            $('#m_yes').one('click', function () {
+
+                $.ajax({
+                    type        : "DELETE",
+                    url         : '/accessRule/' + $('#code').val(),
+                    contentType : 'application/json',
+                    async       : false,
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+                        if (response.status) {
+                            AccessRuleModal.close();
+
+                            $('#accessRuleModal').one('hidden.bs.modal', function () {
+                                load("/accessRules");
+                            });
+                        }
+                    },
+                    error    : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                });
+            });
+        },
+
         serialize : function() {
+            var numberRegex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
             if ($('#accessRuleDurationUnit').val() == "*") {
                 accessRuleDuration = 'P' + 9999 + 'Y';
 
-            } else if ($('#accesRuleDuration').val() == 0) {
+            } else if ($('#accesRuleDuration').val() === 0) {
                 accessRuleDuration = 0;
+
+            } else if(!numberRegex.test($('#accesRuleDuration').val())) {
+                accessRuleDuration = null;
 
             } else {
                 accessRuleDuration = 'P' + $('#accesRuleDuration').val() + $('#accessRuleDurationUnit').val();
@@ -176,8 +260,8 @@ file that was distributed with this source code.
 
         close : function () {
             this.modal.modal('hide');
-            $('#newAccessRuleTitle').removeClass('hide');
-            $('#editAccessRuleTitle').addClass('hide');
+            $('#newAccessRuleTitle').show();
+            $('#editAccessRuleTitle').hide();
             $('#accessRuleTitle').html("");
             $('#code').prop('disabled', false);
             
