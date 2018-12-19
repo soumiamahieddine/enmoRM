@@ -369,6 +369,12 @@ class archive
      */
     public $storagePath;
 
+    /**
+     * Status code for workflow and current use process
+     * @var string
+     */
+    public $processingStatus;
+
     /* ************************************************************************
      * Structure
      *********************************************************************** */

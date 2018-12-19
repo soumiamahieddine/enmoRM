@@ -51,6 +51,7 @@ trait archiveAccessTrait
      * @param string $originatingStartDate
      * @param string $originatingEndDate
      * @param string $archiverArchiveId
+     * @param string $processingStatus
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -76,7 +77,8 @@ trait archiveAccessTrait
         $depositEndDate = null,
         $originatingStartDate = null,
         $originatingEndDate = null,
-        $archiverArchiveId = null
+        $archiverArchiveId = null,
+        $processingStatus = null
     ) {
         $archives = [];
 
@@ -99,7 +101,8 @@ trait archiveAccessTrait
             'depositStartDate' => $depositStartDate,
             'depositEndDate' => $depositEndDate,
             'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
-            'archiverArchiveId' => $archiverArchiveId
+            'archiverArchiveId' => $archiverArchiveId,
+            'processingStatus' => $processingStatus
         ];
 
         if (!$filePlanPosition) {
@@ -764,11 +767,16 @@ trait archiveAccessTrait
             $foldersId = $this->getDescendantFolder($args['filePlanPosition']);
             $queryParts['filePlanPosition'] = "filePlanPosition=['".implode("', '", $foldersId)."']";
         }
-        if ($args['hasParent'] == true) {
-            $queryParts['parentArchiveId'] = "parentArchiveId!=null";
+        if (isset($args['hasParent'])) {
+            if ($args['hasParent'] == true) {
+                $queryParts['parentArchiveId'] = "parentArchiveId!=null";
+            } elseif ($args['hasParent']  === false) {
+                $queryParts['hasParent'] = "parentArchiveId=null";
+            }
         }
-        if ($args['hasParent']  === false) {
-            $queryParts['hasParent'] = "parentArchiveId=null";
+        if (!empty($args['processingStatus'])) {
+            $queryParts['processingStatus'] = "processingStatus= :processingStatus";
+            $queryParams['processingStatus'] = $args['processingStatus'];
         }
 
         $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);

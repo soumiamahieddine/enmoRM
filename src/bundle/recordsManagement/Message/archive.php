@@ -212,6 +212,12 @@ class archive
     public $status;
 
     /**
+     * Status code for workflow and current use process
+     * @var string
+     */
+    public $processingStatus;
+
+    /**
      * The parent archive identifier
      *
      * @var string

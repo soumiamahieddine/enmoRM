@@ -1038,6 +1038,30 @@ class organization
     }
 
     /**
+     * Get accesses to an archival profile for a given org and/or a given profile
+     * @param string $orgId                    The organizational unit identifier
+     * @param string $archivalProfileReference The archival profile reference
+     *
+     * @return organization/archivalProfileAccess[]
+     */
+    public function getArchivalProfileAccess($orgId=null, $archivalProfileReference=null)
+    {
+        $assert = $params = [];
+        if (!empty($orgId)) {
+            $assert[] = 'orgId=:orgId';
+            $params['orgId'] = $orgId;
+        }
+        if (!empty($archivalProfileReference)) {
+            $assert[] = 'archivalProfileReference=:archivalProfileReference';
+            $params['archivalProfileReference'] = $archivalProfileReference;
+        }
+
+        $accesses = $this->sdoFactory->find('organization/archivalProfileAccess', implode(' AND ', $assert), $params);
+
+        return $accesses;
+    }
+
+    /**
      * Get the archival profile descriptions for the given org unit
      * @param string $orgRegNumber
      *
