@@ -130,7 +130,7 @@ class archivalProfile
 
     /**
      * The processing statuses, actions and views
-     * @var object
+     * @var json
      */
     public $processingStatuses;
 }
