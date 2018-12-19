@@ -199,6 +199,18 @@ file that was distributed with this source code.
                 acceptUserIndex: $('#allowUserIndexes').prop("checked"),
                 archiveDescription: []
             }
+            //Cas d'extension Workflow
+            if ($("#workflowTab").length != 0) {
+                serializedObject.processingStatuses = {};
+                var lists = $('#processingStatuses').find("[name='processingStatus']");
+
+                lists.each(function (index, value) {
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()] =
+                        JSON.parse($(value).find("[name='statusinfo']").text().trim());
+                });
+            }
+
+            //serializedObject.processingStatuses = JSON.stringify(serializedObject.processingStatuses);
 
             if (serializedObject.retentionStartDate == '') {
                 serializedObject.retentionStartDate = null;
@@ -224,6 +236,7 @@ file that was distributed with this source code.
             return serializedObject;
         }
     }
+
 
     $("#archivalProfileCancelBtn").on("click", function () {
         load('/archivalProfiles');
