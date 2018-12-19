@@ -139,7 +139,7 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (unlink($directory . DIRECTORY_SEPARATOR . $filename)) {
+            if (is_link($directory . DIRECTORY_SEPARATOR . $filename)) {
                 throw new \core\Exception("The container file contains symbolic links");
             }
 
