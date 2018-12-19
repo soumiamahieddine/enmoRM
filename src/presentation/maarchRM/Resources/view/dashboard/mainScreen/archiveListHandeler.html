@@ -31,6 +31,7 @@
         width: 100%;
         white-space: nowrap;
         text-overflow: crop;
+        position: inherit;
     }
     .archive small {
         font-size: 10px;
@@ -95,10 +96,9 @@
     .childrenArchiveSelector {
         z-index: 8;
         padding-top: 0px;
-        width: 21px;
-        height: 22px;
         right: 5px ;
         position: relative;
+        bottom: 4px;
     }
     .childrenArchiveSelector > .btn > .fa-plus {
         padding : 0px 0px ;
@@ -120,6 +120,7 @@
                 this.selected.children('.selected').children("h5").addClass('bg-info') ;
             } else {
                 this.selected = c.closest('li');
+                this.selected.addClass('parent_li') ;
                 c.addClass('selectedChild');
                 this.selected.children('span').children('.archive-bg').addClass('bg-info') ;
                 this.selected.children('span').children('span').children('.addingNew').removeClass('hide');
