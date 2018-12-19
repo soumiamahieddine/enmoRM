@@ -623,6 +623,9 @@ msgstr "Relation modifiée"
 msgid "Relation deleted"
 msgstr "Relation supprimée"
 
+msgid "The container file contains symbolic links"
+msgstr "Le fichier conteneur contient des liens symboliques."
+
 msgid "The relation control authority and orignator already exists."
 msgstr "La relation entre l'Autorité de Contrôle et le producteur existe déjà."
 
