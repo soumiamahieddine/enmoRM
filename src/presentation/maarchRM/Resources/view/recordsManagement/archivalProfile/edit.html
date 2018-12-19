@@ -210,8 +210,6 @@ file that was distributed with this source code.
                 });
             }
 
-            //serializedObject.processingStatuses = JSON.stringify(serializedObject.processingStatuses);
-
             if (serializedObject.retentionStartDate == '') {
                 serializedObject.retentionStartDate = null;
             }
@@ -224,7 +222,6 @@ file that was distributed with this source code.
 
             serializedObject.archiveDescription = PropertiesList.serialize();
 
-
             if ($("#fileplanLevel").val() != 'item') {
                 serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
                 serializedObject.containedProfiles = ArchiveStructure.serialize();
@@ -236,7 +233,6 @@ file that was distributed with this source code.
             return serializedObject;
         }
     }
-
 
     $("#archivalProfileCancelBtn").on("click", function () {
         load('/archivalProfiles');
@@ -280,7 +276,6 @@ file that was distributed with this source code.
             }
         }
     });
-
 
 
     //add group to access rules
