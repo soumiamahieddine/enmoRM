@@ -139,6 +139,10 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
+            if (unlink($directory . DIRECTORY_SEPARATOR . $filename)) {
+                throw new \core\Exception("The container file contains symbolic links");
+            }
+
             if (\laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
                 $resource = $this->extractResource($directory, $filename);
                 $resource->setContents(base64_encode($resource->getContents()));
