@@ -116,14 +116,12 @@
             if (!c) {
                 this.selected = e;
                 e.find('.archiveInfo:first').addClass('selected');
-                this.selected.children('.addingNew').removeClass('hide');
                 this.selected.children('.selected').children("h5").addClass('bg-info') ;
             } else {
                 this.selected = c.closest('li');
                 this.selected.addClass('parent_li') ;
                 c.addClass('selectedChild');
                 this.selected.children('span').children('.archive-bg').addClass('bg-info') ;
-                this.selected.children('span').children('span').children('.addingNew').removeClass('hide');
             }
         },
 
@@ -150,8 +148,9 @@
                 success     : function (response) {
                     trigger("showArchiveDetails.recordsManagement", [response, "/archive/"+archiveId]);
                     var div = $(response).find('>div');
-                    Archive.checkRights(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
-                    Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
+                    if(Archive.checkRights(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'))) {
+                        Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
+                    }
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -259,11 +258,12 @@
         },
 
         checkRights: function (archivalProfiles, withoutProfile, fileplanLevel){
-          var button = this.selected.closest('.archiveContentTemplate').find('.addChildrenArchive');
+          var button = this.selected.closest('.archive').find('.addChildrenArchive');
           var archiveStatus = button.closest('.archive').find('.status').text();
           if (archiveStatus == 'disposed' || fileplanLevel == 'item' || (!archivalProfiles.length && withoutProfile !== 1)) {
-              return;
+              return false;
           }
+          return true
         },
 
         loadChildrenArchiveButton: function(archivalProfiles, withoutProfile) {
@@ -272,8 +272,10 @@
 
             if (Archive.selected.find(".selectedChild").attr("id")) {
                 var archiveId = Archive.selected.find(".selectedChild").attr("id");
+                Archive.selected.find(".selectedChild").siblings('.addingNew').removeClass("hide");
             } else {
                 var archiveId = button.closest('.archive').attr('id');
+                button.closest('.archive').children('.addingNew').removeClass("hide");
             }
 
             var archiveName = button.closest('.archive').find('.archiveName').text();
