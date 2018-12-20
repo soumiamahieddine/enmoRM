@@ -268,7 +268,7 @@ trait archiveDestructionTrait
         if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
             throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
         }
-        if (empty($archive->disposalDate || empty($archive->finalDisposition))) {
+        if (!isset($archive->finalDisposition) || empty($archive->disposalDate || empty($archive->finalDisposition))) {
             throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."There is a missing management information (date or retention rule).");
         }
 
