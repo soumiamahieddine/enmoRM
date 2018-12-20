@@ -786,7 +786,7 @@ msgid "There is a missing management information (date or retention rule)."
 msgstr "Il manque une information concernant la gestion de la conservation de l'archive (date et/ou règle de conservation)."
 
 msgid "Children archives : There is a missing management information (date or retention rule)."
-msgstr "Archives enfants : Il manque une information concernant la gestion de la conservation d'une des sous-archives (date et/ou règle de conservation)."
+msgstr "Il manque une information concernant la gestion de la conservation d'une des sous-archives (date et/ou règle de conservation)."
 
 msgid "Final disposition must be advised for this action"
 msgstr "Un sort final doit être renseigné pour exécuter cette action."
