@@ -888,6 +888,53 @@ trait archiveAccessTrait
     }
 
     /**
+     * Change the processing status of an archive
+     * @param mixed  $archiveIds   Identifiers of the archives to update
+     * @param string $targetStatus New processing status to set
+     *
+     * @return array Archives ids separate by successfully updated archives ['success']
+     * and not updated archives ['error']
+     */
+    public function setProcessingStatus($archiveIds, $targetStatus)
+    {
+        $conf = \laabs::configuration('recordsManagement');
+        $processingStatuses = null;
+        if (isset($conf['processingStatuses'])) {
+            $processingStatuses = $conf['processingStatuses'];
+        }
+
+        if (!is_array($archiveIds)) {
+            $archiveIds = array($archiveIds);
+        }
+
+        $res = array('success' => array(), 'error' => array());
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
+            $currentStatus = $archiveProcessingStatus->processingStatus;
+
+            if (!is_null($processingStatuses)) {
+                // Current status is unknown
+                if (!isset($processingStatuses[$currentStatus])) {
+                    $res['error'] = $archiveIds;
+                    continue;
+                }
+                // Target status is not authorized
+                if (!in_array($targetStatus, $processingStatuses[$currentStatus])) {
+                    $res['error'] = $archiveIds;
+                    continue;
+                }
+            }
+
+            $archiveProcessingStatus->processingStatus = $targetStatus;
+            $this->sdoFactory->update($archiveProcessingStatus);
+            array_push($res['success'], $archiveId);
+        }
+
+        return $res;
+    }
+
+    /**
      * Calculate the communication date of an archive
      * @param timestamp $startDate The start date
      * @param duration  $duration  The duration
