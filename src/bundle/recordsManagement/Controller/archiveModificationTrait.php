@@ -306,17 +306,27 @@ trait archiveModificationTrait
      * @param string $archiveName
      * @param string $description
      * @param date   $originatingDate
-     * 
+     *
      * @return boolean The result of the operation
      */
-    public function modifyMetadata($archiveId, $originatorArchiveId =null, $archiverArchiveId =null, $archiveName = null, $originatingDate=null,$description = null)
-    {
+    public function modifyMetadata(
+        $archiveId,
+        $originatorArchiveId = null,
+        $archiverArchiveId = null,
+        $archiveName = null,
+        $originatingDate = null,
+        $description = null,
+        $checkAccess = true
+    ) {
         $archive = $this->retrieve($archiveId);
+
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
 
         if (!empty($archive->archivalProfileReference)) {
             $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
         }
-        $this->checkRights($archive);
 
         if ($archiveName) {
             $archive->archiveName = $archiveName;
@@ -520,13 +530,14 @@ trait archiveModificationTrait
     /**
      * Convert and store the resource
      *
-     * @param string $archiveId The archive identifier
-     * @param string $contents  The resource contents
-     * @param string $filename  The optional filename
+     * @param string $archiveId   The archive identifier
+     * @param string $contents    The resource contents
+     * @param string $filename    The optional filename
+     * @param string $checkAccess Check access to archive. If false caller MUST check access before.
      * 
      * @return The new resource identifier
      */
-    public function addResource($archiveId, $contents, $filename=false)
+    public function addResource($archiveId, $contents, $filename = false, $checkAccess = true)
     {
         // Valid URL file:// http:// data://
         if (filter_var($contents, FILTER_VALIDATE_URL)) {
@@ -548,7 +559,9 @@ trait archiveModificationTrait
         $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
 
         // Check rights ?
-
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
         
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
     
