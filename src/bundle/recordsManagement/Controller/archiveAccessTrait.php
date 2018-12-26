@@ -897,12 +897,6 @@ trait archiveAccessTrait
      */
     public function setProcessingStatus($archiveIds, $targetStatus)
     {
-        $conf = \laabs::configuration('recordsManagement');
-        $processingStatuses = null;
-        if (isset($conf['processingStatuses'])) {
-            $processingStatuses = $conf['processingStatuses'];
-        }
-
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
         }
@@ -912,19 +906,6 @@ trait archiveAccessTrait
         foreach ($archiveIds as $archiveId) {
             $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
             $currentStatus = $archiveProcessingStatus->processingStatus;
-
-            if (!is_null($processingStatuses)) {
-                // Current status is unknown
-                if (!isset($processingStatuses[$currentStatus])) {
-                    $res['error'] = $archiveIds;
-                    continue;
-                }
-                // Target status is not authorized
-                if (!in_array($targetStatus, $processingStatuses[$currentStatus])) {
-                    $res['error'] = $archiveIds;
-                    continue;
-                }
-            }
 
             $archiveProcessingStatus->processingStatus = $targetStatus;
             $this->sdoFactory->update($archiveProcessingStatus);
