@@ -52,6 +52,7 @@ trait archiveAccessTrait
      * @param string $originatingEndDate
      * @param string $archiverArchiveId
      * @param string $processingStatus
+     * @param bool   $checkAccess
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -78,7 +79,8 @@ trait archiveAccessTrait
         $originatingStartDate = null,
         $originatingEndDate = null,
         $archiverArchiveId = null,
-        $processingStatus = null
+        $processingStatus = null,
+        $checkAccess = true
     ) {
         $archives = [];
 
@@ -127,7 +129,7 @@ trait archiveAccessTrait
             }
         }
         foreach ($searchClasses as $descriptionClass => $descriptionController) {
-            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
+            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess));
         }
 
         return $archives;
@@ -650,10 +652,11 @@ trait archiveAccessTrait
      * Get archive assert
      * @param array $args
      * @param array $queryParams
+     * @param bool  $checkAccess
      *
      * @return string Query
      */
-    public function getArchiveAssert($args, &$queryParams)
+    public function getArchiveAssert($args, &$queryParams, $checkAccess = true)
     {
         // Args on archive
         $currentDate = \laabs::newDate();
@@ -779,10 +782,12 @@ trait archiveAccessTrait
             $queryParams['processingStatus'] = $args['processingStatus'];
         }
 
-        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+        if ($checkAccess) {
+            $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
 
-        if ($accessRuleAssert) {
-            $queryParts[] = $accessRuleAssert;
+            if ($accessRuleAssert) {
+                $queryParts[] = $accessRuleAssert;
+            }
         }
 
         return implode(' and ', $queryParts);
