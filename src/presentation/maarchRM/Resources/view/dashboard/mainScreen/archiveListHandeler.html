@@ -1,14 +1,23 @@
 <div id="archiveContentTemplate" class="hide">
     <li>
         <span>
-            <span>
+            <span class="archive-bg">
                 <i class='fa'/>
                 <span name="archiveOrDocument">&nbsp;</span>
+                <div class="dropdown pull-right addChildrenArchive addingNew hide childrenArchiveSelector">
+                    <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fa fa-plus"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                    </ul>
+                </div>
                 <br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <small/>&nbsp;
                 <small/>&nbsp;
-                <small><i/></small>
+                <small>
+                    <i/>
+                </small>
             </span>
         </span>
     </li>
@@ -22,7 +31,7 @@
         width: 100%;
         white-space: nowrap;
         text-overflow: crop;
-        overflow: hidden;
+        position: inherit;
     }
     .archive small {
         font-size: 10px;
@@ -40,7 +49,9 @@
         padding: 0px;
         text-overflow: crop;
         width: 100%;
-        overflow: hidden;
+    }
+    .tree-l .parent_li{
+        position: inherit ;
     }
     .archiveInfo :hover, .archive .tree-l li>span:hover {
         background-color: #DDD;
@@ -79,11 +90,19 @@
     .addChildrenArchive {
         position: absolute;
         right: 10px;
-        top: inherit; /* Handled in script */
         z-index: 8;
         margin-top: 10px;
     }
-
+    .childrenArchiveSelector {
+        z-index: 8;
+        padding-top: 0px;
+        right: 5px ;
+        position: relative;
+        bottom: 4px;
+    }
+    .childrenArchiveSelector > .btn > .fa-plus {
+        padding : 0px 0px ;
+    }
 </style>
 
 <script type="text/javascript">
@@ -96,11 +115,13 @@
             this.unselect(e.closest('.dataList'));
             if (!c) {
                 this.selected = e;
-                e.addClass('bg-info').find('.archiveInfo:first').addClass('selected');
+                e.find('.archiveInfo:first').addClass('selected');
+                this.selected.children('.selected').children("h5").addClass('bg-info') ;
             } else {
                 this.selected = c.closest('li');
-                e.removeClass('bg-info');
-                c.addClass('selectedChild').closest('li').addClass('bg-info');
+                this.selected.addClass('parent_li') ;
+                c.addClass('selectedChild');
+                this.selected.children('span').children('.archive-bg').addClass('bg-info') ;
             }
         },
 
@@ -109,12 +130,10 @@
             if (multipleSelection.hasClass('fa-check-square-o')) {
                 multipleSelection.click();
             }
-
+            dataList.find('.bg-info').removeClass('bg-info') ;
             dataList.find('.multipleSelection.fa-check-square-o').click();
-
-            dataList.find('.bg-info').removeClass('bg-info')
-                    .find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
-            dataList.find('.addChildrenArchive').addClass('hide');
+            dataList.find('.selectedChild, .archiveInfo').removeClass('selected selectedChild');
+            dataList.find('.addingNew').addClass('hide');
             this.selected = null;
         },
 
@@ -129,8 +148,9 @@
                 success     : function (response) {
                     trigger("showArchiveDetails.recordsManagement", [response, "/archive/"+archiveId]);
                     var div = $(response).find('>div');
-                    Archive.checkRights(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
-                    Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
+                    if(Archive.checkRights(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'))) {
+                        Archive.loadChildrenArchiveButton(div.data('children-archive-profiles'), div.data('accept-without-profile'), div.data('fileplan-level'));
+                    }
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -241,20 +261,21 @@
           var button = this.selected.closest('.archive').find('.addChildrenArchive');
           var archiveStatus = button.closest('.archive').find('.status').text();
           if (archiveStatus == 'disposed' || fileplanLevel == 'item' || (!archivalProfiles.length && withoutProfile !== 1)) {
-              return;
+              return false;
           }
-
-          button.removeClass('hide');
+          return true
         },
 
         loadChildrenArchiveButton: function(archivalProfiles, withoutProfile) {
-            var button = this.selected.closest('.archive').find('.addChildrenArchive');
+            var button = this.selected.find('.addingNew');
             var list =  button.find('ul');
 
             if (Archive.selected.find(".selectedChild").attr("id")) {
                 var archiveId = Archive.selected.find(".selectedChild").attr("id");
+                Archive.selected.find(".selectedChild").siblings('.addingNew').removeClass("hide");
             } else {
                 var archiveId = button.closest('.archive').attr('id');
+                button.closest('.archive').children('.addingNew').removeClass("hide");
             }
 
             var archiveName = button.closest('.archive').find('.archiveName').text();
@@ -284,9 +305,7 @@
                     )
                 );
             })
-
             var position = this.selected.position();
-            button.css('top', position.top);
         }
     }
 

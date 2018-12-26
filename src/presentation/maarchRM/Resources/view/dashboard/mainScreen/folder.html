@@ -56,7 +56,7 @@
             </h5>
         </div>
         <?merge depositPrivilege.bool() ?>
-        <div class="dropdown pull-right addChildrenArchive hide">
+        <div class="dropdown pull-right addChildrenArchive addingNew hide">
             <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-plus"></span>
             </button>
@@ -151,7 +151,7 @@
                                     .attr('data-toggle', 'dropdown')
                                     .text('...');
                 var ul = $('<ul/>').addClass('dropdown-menu');
-
+                
                 var dropdown = $('<li/>').addClass('dropdown').append(dots).append(ul);
 
                 this.breadcrumb.prepend(dropdown);
@@ -407,7 +407,7 @@
                 $("#folderToolbarImport").addClass('hide');
                 return;
             }
-
+            
             if (acceptArchivesWithoutProfiles) {
                 var a = $("<a/>") 
                     .addClass("small newArchive")
