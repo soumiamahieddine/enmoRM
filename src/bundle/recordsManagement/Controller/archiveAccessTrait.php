@@ -352,11 +352,11 @@ trait archiveAccessTrait
 
     /**
      * Get archive metadata
-     * @param string $archiveId The archive identifier
-     * @throws
+     * @param string $archiveId   The archive identifier
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
      * @return recordsManagement/archive The archive metadata
      */
-    public function getMetadata($archiveId)
+    public function getMetadata($archiveId, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -365,7 +365,7 @@ trait archiveAccessTrait
         }
         $this->getAccessRule($archive);
 
-        if (!$this->accessVerification($archive)) {
+        if ($checkAccess && !$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
@@ -459,12 +459,13 @@ trait archiveAccessTrait
     /**
      * Retrieve an archive resource contents
      *
-     * @param string $archiveId The archive identifier
-     * @param string $resId     The resource identifier
-     * @throws
+     * @param string $archiveId   The archive identifier
+     * @param string $resId       The resource identifier
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
+     * 
      * @return digitalResource/digitalResource Archive resource contents
      */
-    public function consultation($archiveId, $resId)
+    public function consultation($archiveId, $resId, $checkAccess = true)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         try {
@@ -481,7 +482,7 @@ trait archiveAccessTrait
                 $this->logIntegrityCheck($archive, "Invalid resource", $digitalResource, false);
             }
 
-            if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
+            if (($checkAccess && !$this->accessVerification($archive)) || $digitalResource->archiveId != $archiveId) {
                 throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
             }
 
@@ -517,12 +518,13 @@ trait archiveAccessTrait
     /**
      * Retrieve an archive by its id
      *
-     * @param string $archiveId
-     * @param bool   $withBinary
+     * @param string $archiveId   The archive identifier
+     * @param bool   $withBinary  Retrieve contents or only metadata
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
      * @throws
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId, $withBinary = false)
+    public function retrieve($archiveId, $withBinary = false, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -550,7 +552,10 @@ trait archiveAccessTrait
             }
         }
 
-        $archive->communicability = $this->accessVerification($archive);
+        $archive->communicability = true;
+        if ($checkAccess) {
+            $archive->communicability = $this->accessVerification($archive);
+        }
 
         if (\laabs::hasBundle('medona')) {
             $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
