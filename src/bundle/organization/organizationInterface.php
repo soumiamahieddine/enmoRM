@@ -30,7 +30,7 @@ interface organizationInterface
      * @return organization/organization[] An array of organization
      *
      * @action organization/organization/index
-     * 
+     *
      */
     public function readIndex($query=null);
 
@@ -70,7 +70,7 @@ interface organizationInterface
 
     /**
      * Read an organization by his orgId
-     * 
+     *
      * @return organization/organization the organization
      *
      * @action organization/organization/read
@@ -90,7 +90,7 @@ interface organizationInterface
      * Get organizations by role
      *
      * @return organization/organization[] the organizations
-     * 
+     *
      * @action organization/organization/getOrgsByRole
      */
     public function readByrole_role_();
@@ -196,7 +196,7 @@ interface organizationInterface
      *
      * @return boolean The result of the operation
      *
-     * @action organization/organization/update
+     * @action organization/organization/updateorganization
      */
     public function update_orgId_($organization);
 
@@ -222,7 +222,7 @@ interface organizationInterface
 
     /**
      * Get an organization addresses
-     * 
+     *
      * @return contact/address[]
      *
      * @action organization/organization/getAddresses
@@ -231,7 +231,7 @@ interface organizationInterface
 
     /**
      * Get an organization communications
-     * 
+     *
      * @return contact/communication[]
      *
      * @action organization/organization/getCommunications
@@ -240,7 +240,7 @@ interface organizationInterface
 
     /**
      * Get an organization contacts
-     * 
+     *
      * @return contact/contact[]
      *
      * @action organization/organization/getContacts
@@ -251,7 +251,7 @@ interface organizationInterface
      * Add an organization contact
      * @param object $contact
      * @param string $isSelf
-     * 
+     *
      * @return bool
      *
      * @action organization/organization/addContact
@@ -259,20 +259,33 @@ interface organizationInterface
     public function create_orgId_Contact($contact, $isSelf);
 
     /**
+     * Create an organization archival profile access
+     *
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @action organization/organization/createArchivalprofileaccess
+     *
+     * @return  organization/archivalProfileAccess
+     */
+    public function createArchivalprofileaccess($archivalProfileAccess);
+
+    /**
      * Add an organization archival profile access
-     * @param array $archivalProfileAccess The archival profile access array
-     * 
-     * @return bool
+     *
+     * @param organization/archivalProfileAccess $archivalProfileAccess
      *
      * @action organization/organization/updateArchivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess
      */
-    public function update_orgId_Archivalprofileaccess($archivalProfileAccess);
+    public function updateArchivalprofileaccess($archivalProfileAccess);
 
     /**
      * Get the profiles by orgRegNumber
+     *
      * @param string $orgRegNumber
      * @param string $originatorAccess
-     * 
+     *
      * @return array
      * @action organization/organization/getOrgUnitArchivalProfiles
      */

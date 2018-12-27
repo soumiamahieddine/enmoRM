@@ -987,37 +987,61 @@ class organization
         return $childrenServices;
     }
 
-
     /**
-     * Read parent orgs recursively
-     * @param string $orgId                 Organisation identifier
-     * @param array  $archivalProfileAccess The archival profile access array
+     * Create archivalProfileAccess entry
      *
-     * @return bool The result of the operation
+     * @param  organization/archivalProfileAccess  $archivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess  $archivalProfileAccess
      */
-    public function updateArchivalProfileAccess($orgId, $archivalProfileAccess)
+    public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
-
-        $org = $this->sdoFactory->read('organization/organization', $orgId);
-
+        if (null ==! $this->getArchivalProfileAccess($archivalProfileAccess->orgId, $archivalProfileAccess->archivalProfileReference)) {
+            throw new \core\Exception("Organization Archival Profile Access already exists.");
+        }
+        $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
         try {
             if (!$org->isOrgUnit) {
                 throw new \core\Exception("Organization Archival Profile Access can't be update ");
             }
-
         } catch (\Exception $e) {
             throw $e;
         }
-
-        foreach ($archivalProfileAccess as $access) {
-            $access = (object)$access;
-            $access->orgId = $orgId;
-
-            $this->sdoFactory->create($access, "organization/archivalProfileAccess");
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        if (!$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
+            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile does not exists");
         }
 
-        return true;
+        try {
+            $archivalProfileAccess = $this->sdoFactory->create($archivalProfileAccess, 'organization/archivalProfileAccess');
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return $archivalProfileAccess;
+    }
+
+    /**
+     * Read parent orgs recursively
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess $archivalProfileAccess
+     */
+    public function updateArchivalProfileAccess($archivalProfileAccess)
+    {
+        if (!$this->sdoFactory->exists(
+            'organization/archivalProfileAccess',
+            [
+                'orgId' => $archivalProfileAccess->orgId,
+                'archivalProfileReference' => $archivalProfileAccess->archivalProfileReference
+            ]
+        )) {
+            throw new \core\Exception("Organization Archival Profile Access can't be update ");
+        }
+
+        $this->sdoFactory->update($archivalProfileAccess, "organization/archivalProfileAccess");
+
+        return $archivalProfileAccess;
     }
 
     /**
