@@ -129,15 +129,16 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * @param string $description The search args on description object
      * @param string $text        The search args on text
      * @param array  $archiveArgs The search args on archive std properties
-     * 
+     * @param bool   $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     *
      * @return array The result of the research
      */
-    public function search($description=null, $text=null, array $archiveArgs=[])
+    public function search($description = null, $text = null, array $archiveArgs = [], $checkAccess = true)
     {
         $queryParams = [];
         $queryParts = ['(description!=null and text!=null)'];
 
-        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs,$queryParams);
+        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs, $queryParams, $checkAccess);
 
         // Json
         if (!empty($description)) {
