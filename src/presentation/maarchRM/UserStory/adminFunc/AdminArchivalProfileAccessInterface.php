@@ -29,7 +29,7 @@ interface AdminArchivalProfileAccessInterface
      * Get the organizations' index
      *
      * @return organization/orgTree/index
-     * 
+     *
      * @uses organization/organization/readTree
      * @uses organization/orgType/readList
      */
@@ -39,7 +39,7 @@ interface AdminArchivalProfileAccessInterface
      * Get the organizations' index
      *
      * @return organization/orgTree/getTree
-     * 
+     *
      * @uses organization/organization/readTree
      */
     public function readOrganizationtree();
@@ -53,12 +53,26 @@ interface AdminArchivalProfileAccessInterface
      */
     public function readOrganization_orgId_();
 
-     /**
-     * Add a user position to an organization
-     * 
-     * @return organization/orgTree/udapteArchivalProfileAccess
+    /**
+     * Add a new archival profile
      *
-     * @uses organization/organization/update_orgId_Archivalprofileaccess
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @uses organization/organization/createArchivalprofileaccess
+     *
+     * @return organization/orgTree/udapteArchivalProfileAccess
      */
-    public function updateOrganization_orgId_Archivalprofileaccess($archivalProfileAccess);
+    public function createArchivalprofileaccess($archivalProfileAccess);
+
+
+     /**
+     * Edit an archival profile
+     *
+     * @param organization/archivalProfileAccess
+     *
+     * @uses organization/organization/updateArchivalprofileaccess
+     *
+     * @return organization/orgTree/udapteArchivalProfileAccess
+     */
+    public function updateArchivalprofileaccess($archivalProfileAccess);
 }

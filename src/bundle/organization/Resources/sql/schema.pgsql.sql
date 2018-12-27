@@ -130,7 +130,7 @@ CREATE TABLE "organization"."archivalProfileAccess"
   "serviceLevelReference" text,
   "userAccess" jsonb,
 
-  UNIQUE ("orgId", "archivalProfileReference"),
+  PRIMARY KEY ("orgId", "archivalProfileReference"),
   FOREIGN KEY ("orgId")
       REFERENCES "organization"."organization" ("orgId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
