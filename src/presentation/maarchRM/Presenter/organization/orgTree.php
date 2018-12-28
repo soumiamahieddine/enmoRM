@@ -506,7 +506,7 @@ class orgTree
     public function createArchivalProfileAccess()
     {
         $this->json->status = true;
-        $this->json->message = "Archival profiles access created.";
+        $this->json->message = "Archival profiles access created";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
@@ -520,7 +520,7 @@ class orgTree
     public function updateArchivalProfileAccess()
     {
         $this->json->status = true;
-        $this->json->message = "Archival profiles access updated.";
+        $this->json->message = "Archival profiles access updated";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();
@@ -534,7 +534,7 @@ class orgTree
     public function deleteArchivalProfileAccess()
     {
         $this->json->status = true;
-        $this->json->message = "Archival profiles access deleted.";
+        $this->json->message = "Archival profiles access deleted";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

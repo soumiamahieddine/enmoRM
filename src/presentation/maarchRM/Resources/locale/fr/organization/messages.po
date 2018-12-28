@@ -354,3 +354,12 @@ msgstr "Niveaux de service par défaut"
 
 msgid "Service level"
 msgstr "Niveaux de service "
+
+msgid "Archival profiles access created"
+msgstr "Profil d'archive enregistré"
+
+msgid "Archival profiles access updated"
+msgstr "Profil d'archive mis à jour"
+
+msgid "Archival profiles access deleted"
+msgstr "Profil d'archive supprimé"
