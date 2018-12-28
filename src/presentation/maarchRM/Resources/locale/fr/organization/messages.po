@@ -363,3 +363,6 @@ msgstr "Profil d'archive mis à jour"
 
 msgid "Archival profiles access deleted"
 msgstr "Profil d'archive supprimé"
+
+msgid "Select a profile"
+msgstr "Selectionnez un profil"
