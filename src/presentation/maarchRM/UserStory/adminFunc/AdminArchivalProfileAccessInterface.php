@@ -54,25 +54,34 @@ interface AdminArchivalProfileAccessInterface
     public function readOrganization_orgId_();
 
     /**
-     * Add a new archival profile
+     * Add a new archival profile access
      *
      * @param organization/archivalProfileAccess $archivalProfileAccess
      *
      * @uses organization/organization/createArchivalprofileaccess
      *
-     * @return organization/orgTree/udapteArchivalProfileAccess
+     * @return organization/orgTree/createArchivalProfileAccess
      */
     public function createArchivalprofileaccess($archivalProfileAccess);
 
 
      /**
-     * Edit an archival profile
+     * Edit an archival profile access
      *
      * @param organization/archivalProfileAccess
      *
      * @uses organization/organization/updateArchivalprofileaccess
      *
-     * @return organization/orgTree/udapteArchivalProfileAccess
+     * @return organization/orgTree/updateArchivalProfileAccess
      */
     public function updateArchivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Delete an archival profile access with its org id and archival profile reference
+     *
+     * @uses  organization/organization/deleteArchivalprofileaccess_orgId__archivalProfileReference_
+     *
+     * @return organization/orgTree/deleteArchivalProfileAccess
+     */
+    public function deleteArchivalprofileaccess_orgId__archivalProfileReference_();
 }

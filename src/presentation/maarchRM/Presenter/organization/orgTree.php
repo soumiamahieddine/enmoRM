@@ -499,14 +499,42 @@ class orgTree
     }
 
     /**
-     * Serializer JSON for udapteArchivalProfileAccess method
+     * Serializer JSON for createArchivalProfileAccess method
      *
      * @return object JSON object with a status and message parameters
      */
-    public function udapteArchivalProfileAccess()
+    public function createArchivalProfileAccess()
+    {
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access created.";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for updateArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function updateArchivalProfileAccess()
     {
         $this->json->status = true;
         $this->json->message = "Archival profiles access updated.";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON deleteArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function deleteArchivalProfileAccess()
+    {
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access deleted.";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

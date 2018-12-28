@@ -707,6 +707,8 @@ class organization
         return $userPosition;
     }
 
+
+
     /**
      * Add a service position to an organization
      * @param string $orgId            The organization identifier
@@ -1046,19 +1048,32 @@ class organization
 
     /**
      * Delete an archival pofile accesss from every organization
-     * @param array  $archivalProfileReference The archival profile reference
      *
-     * @return bool The result of the operation
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @return bool Is archivalProfileAccess deleted
      */
-    public function deleteArchivalProfileAccess($archivalProfileReference)
+    public function deleteArchivalProfileAccess($orgId, $archivalProfileReference)
     {
-        $archivalProfileAccess = $this->sdoFactory->find("organization/archivalProfileAccess", "archivalProfileReference='$archivalProfileReference'");
-
-        if ($archivalProfileAccess) {
-            return $this->sdoFactory->deleteCollection($archivalProfileAccess, "organization/archivalProfileAccess");
+        if (!$this->sdoFactory->exists(
+            'organization/archivalProfileAccess',
+            [
+                'orgId' => $orgId,
+                'archivalProfileReference' => $archivalProfileReference
+            ]
+        )) {
+            throw new \core\Exception("Organization Archival Profile Access can't be delete");
         }
 
-        return false;
+        $archivalProfileAccess = $this->sdoFactory->read(
+            "organization/archivalProfileAccess",
+            [
+                'orgId' => $orgId,
+                'archivalProfileReference' => $archivalProfileReference
+            ]
+        );
+
+        return $this->sdoFactory->delete($archivalProfileAccess);
     }
 
     /**
