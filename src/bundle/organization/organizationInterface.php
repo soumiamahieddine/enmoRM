@@ -32,7 +32,7 @@ interface organizationInterface
      * @action organization/organization/index
      *
      */
-    public function readIndex($query=null);
+    public function readIndex($query = null);
 
     /**
      * Tree of organizations
@@ -56,7 +56,7 @@ interface organizationInterface
      *
      * @action organization/organization/search
      */
-    public function readSearch($name=null, $businessType=null, $orgRoleCode=null, $orgTypeCode=null, $registrationNumber=null, $taxIdentifier=null);
+    public function readSearch($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null);
 
     /**
      * Create an organization
@@ -279,6 +279,17 @@ interface organizationInterface
      * @return organization/archivalProfileAccess
      */
     public function updateArchivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Add an organization archival profile access
+     *
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @action organization/organization/deleteArchivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess
+     */
+    public function deleteArchivalprofileaccess_orgId__archivalProfileReference_();
 
     /**
      * Get the profiles by orgRegNumber
