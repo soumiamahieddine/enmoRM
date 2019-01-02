@@ -3,14 +3,16 @@
         <br/>
         <div class="col-md-12">
             <div class="col-md-10">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label">Accept archives without profile</label>
-                    <input type="checkbox" id="acceptArchviesWithoutProfile" name="acceptArchviesWithoutProfile" data-toggle="toggle"> 
-                </div>
+                    <input type="checkbox" id="acceptArchviesWithoutProfile" name="acceptArchviesWithoutProfile" data-toggle="toggle">
+                </div> -->
                 <div class="form-group">
                     <label>Archival profile</label>
                     <select class="form-control" id="profileReference">
                         <option value=""></option>
+                        <option value="*">Accept archives without profile</option>
+                        <option disabled="disabled">----</option>
                         <?merge archivalProfile ?>
                         <option value="[?merge .reference ?]"><?merge .name ?></option>
                     </select>
@@ -18,25 +20,28 @@
                 <div class="form-group">
                     <label>Service level</label>
                     <select class="form-control" id="serviceLevelReference">
-                    <option value="">Default service level</option>
+                        <option value="">Default service level</option>
                         <?merge serviceLevel ?>
                         <option value="[?merge .reference ?]"><?merge .reference ?></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <span class="pull-right">
-                        <button class="btn btn-success" id="addAccessEntrie" type="button"><i class="fa fa-plus">&nbsp;</i>Add</button>
-                    </span>
-                </div>
-                <br/><br/>
-            </div>
-            <div class="col-md-12">
-                <ul class="list-group" id="accessEntries">
-                </ul>
-            </div>
-            <div class="col-md-12">
+                        <button class="btn btn-success" id="addArchivalProfile" type="button" style="display: none;"><i
+                            class="fa fa-plus">&nbsp;</i>Add</button>
+                            <button class="btn btn-warning" id="updateArchivalProfile" type="button" style="display: none;"><i
+                                class="fa fa-edit">&nbsp;</i>Save</button>
+                            </span>
+                        </div>
+                        <br/><br/>
+                    </div>
+                    <div class="col-md-12">
+                        <ul class="list-group" id="accessEntries">
+                        </ul>
+                    </div>
+            <!-- <div class="col-md-12">
                 <button class="btn hide btn-success pull-right" id="saveArchivalProfileAccess" type="button"><i class="fa fa-save">&nbsp;</i>Save</button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -44,140 +49,216 @@
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
 
-var ArchivalProfileAccessForm = {
-    load: function(profileAccess) {
-        if (profileAccess) {
-            $.each(profileAccess, function() {
-                if (this.archivalProfileReference == '*') {
-                    $('#acceptArchviesWithoutProfile').bootstrapToggle('on');
-                } else {
+    var ArchivalProfileAccessForm = {
+        load: function(profileAccess) {
+            if (profileAccess) {
+                $.each(profileAccess, function() {
                     ArchivalProfileAccessForm.addToList(this);
-                }
-            })
-        }
+                })
+            }
+        },
 
-        $('#saveArchivalProfileAccess').addClass('hide');
-    },
+        save: function (type) {
+            var archivalProfileAccess = [];
+            var profileAccess = this.serialize();
 
-    add: function() {
-        var archivalProfileAccess = {
-            orgId                    : $("#modifyOrganization").data('organization').orgId,
-            archivalProfileReference : $('#profileReference').val(),
-            originatorAccess         : true,
-            serviceLevelReference    : $('#serviceLevelReference').val()
-        }
-
-        if (!archivalProfileAccess.archivalProfileReference) {
-            return;
-        }
-
-        $('#saveArchivalProfileAccess').removeClass('hide');
-        this.addToList(archivalProfileAccess);
-    },
-
-    addToList: function(profileAccess) {
-        var slectedOption = $('#profileReference').find('option[value="'+profileAccess.archivalProfileReference+'"]');
-        var slectedOptionServiceLevel = $('#serviceLevelReference').find('option[value="'+profileAccess.serviceLevelReference+'"]');
-
-        var slectedOptions = slectedOption.text()+' ( '+slectedOptionServiceLevel.text()+' )';
-
-        if(!slectedOptionServiceLevel.text()){
-            slectedOptions = slectedOption.text();
-        }
-
-        var li = $('<li/>').addClass('list-group-item clearfix')
-                           .data('json', profileAccess)
-                           .html(slectedOptions);
-
-        var span = $('<span/>').addClass('pull-right').appendTo(li);
-
-        /*
-        if (profileAccess.originatorAccess) {
-            $('<a/>').addClass('btn btn-default btn-xs disabled')
-                     .attr('aria-label', "Originator")
-                     .attr('href','#')
-                     .html($("#originatorAccess").text())
-                     .appendTo(span);
-        }
-        */
-
-        $('<a/>').attr('href','#')
-                 .addClass('text-danger removeProfileAccess')
-                 .html(
-                    $('<i/>').addClass("fa fa-times fa-fw")
-                 )
-                 .appendTo(span);
-          
-        li.appendTo($("#accessEntries"));
-
-        slectedOption.addClass('hide');
-        $('#profileReference').val('');
-    },
-
-    removefromList: function(li) {
-        $('#saveArchivalProfileAccess').removeClass('hide');
-        $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
-        li.remove();
-    },
-
-    save: function() {
-        var archivalProfileAccess = [];
-
-        if ($('#acceptArchviesWithoutProfile').prop("checked")) {
-            var profileAccess = {
-                orgId                    : $("#modifyOrganization").data('organization').orgId,
-                archivalProfileReference : '*',
-                originatorAccess         : true,
-                serviceLevelReference    : '*'
+            if (!profileAccess.archivalProfileReference) {
+                return;
             }
 
             archivalProfileAccess.push(profileAccess);
+
+            $('#checkboxes_holder').find('li').each(function () {
+                archivalProfileAccess.push($(this).data('json'));
+            });
+
+            json_archival = JSON.stringify({'archivalProfileAccess': archivalProfileAccess[0]});
+
+            $.ajax({
+                type: type,
+                url: '/archivalprofileaccess',
+                data: json_archival,
+                dataType: 'json',
+                contentType: 'application/json',
+                async: true,
+                success: function (response) {
+                    if (response.status === true) {
+                        ArchivalProfileAccessForm.addToList(profileAccess);
+                    }
+                    gritter.show(response.message, response.status, response.errors);
+                    $('#saveArchivalProfileAccess').addClass('hide');
+                },
+                error: function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        add: function() {
+            var archivalProfileAccess = {
+                orgId                    : $("#modifyOrganization").data('organization').orgId,
+                archivalProfileReference : $('#profileReference').val(),
+                originatorAccess         : true,
+                serviceLevelReference    : $('#serviceLevelReference').val()
+            }
+
+            if (!archivalProfileAccess.archivalProfileReference) {
+                return;
+            }
+
+            $('#saveArchivalProfileAccess').removeClass('hide');
+            this.addToList(archivalProfileAccess);
+        },
+
+        addToList: function(profileAccess) {
+            var selectedOption = $('#profileReference').find('option[value="' + profileAccess.archivalProfileReference + '"]');
+            var selectedOptionServiceLevel = $('#serviceLevelReference').find('option[value="' + profileAccess.serviceLevelReference + '"]');
+
+            var selectedOptions = selectedOption.text()+' ( ' + selectedOptionServiceLevel.text() + ' )';
+
+            if(!selectedOptionServiceLevel.text()){
+                selectedOptions = selectedOption.text();
+            }
+
+            var li = $('<li/>').addClass('list-group-item clearfix')
+            .data('json', profileAccess)
+            .html(selectedOptions);
+
+            var span = $('<span/>').addClass('pull-right').appendTo(li);
+
+            $('<a/>').attr('href','#')
+            .addClass('text-danger removeProfileAccess')
+            .html(
+                $('<i/>').addClass("fa fa-times fa-fw")
+                )
+            .appendTo(span);
+
+            li.appendTo($("#accessEntries"));
+
+            selectedOption.addClass('hide');
+            $('#profileReference').val('');
+        },
+
+        delete: function (orgId, archivalProfileReference, li) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/archivalprofileaccess',
+                data: JSON.stringify({orgId: orgId, archivalProfileReference: archivalProfileReference}),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    ArchivalProfileAccessForm.removeFromList(li);
+                    $('#checkboxes_holder').empty();
+                    $('#addArchivalProfile').hide();
+                    $('#profileReference').val("");
+                },
+                error: function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        close: function () {
+            $('#profileReference').val('').find('.hide').removeClass('hide');
+            $('#accessEntries').find('li').remove();
+            //$('#acceptArchviesWithoutProfile').bootstrapToggle('off');
+        },
+
+        retrieveUserAccess: function () {
+            var userAccesses = [];
+            var status_inputs = $('#checkboxes_holder').find("input[type='checkbox']");
+
+            status_inputs.each(function (key, status_input) {
+                if (status_input.checked === true) {
+                    var userAccess = {};
+
+                    if (this.name === 'processingStatus') {
+                        userAccess.status = Object.keys($(this).data('json'))[0];
+                        var action = [];
+                        var action_inputs = $(this).siblings('ul').find("input[type='checkbox']");
+                        action_inputs.each(function (action_key, action_input) {
+                            if (action_input.checked === true) {
+                                if (action_input.name === 'action') {
+                                    action.push(Object.keys($(this).data('json'))[0])
+                                }
+                            }
+                        });
+
+                        userAccess.action = action;
+                    }
+                    if (!$.isEmptyObject(userAccess)) {
+                        userAccesses.push(userAccess);
+                    }
+                }
+            });
+
+            return userAccesses
+        },
+
+        removeFromList: function(li) {
+            $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
+            li.remove();
+        },
+
+        serialize: function () {
+            var archivalProfileReference = $('#profileReference').val();
+            var object = {
+                orgId: $("#modifyOrganization").data('organization').orgId,
+                archivalProfileReference: archivalProfileReference,
+                originatorAccess: true,
+                serviceLevelReference: null,
+                userAccess: null
+            };
+
+            if (archivalProfileReference !== "*") {
+                object.originatorAccess = $('#isOriginatorAgency').prop('checked');
+                object.serviceLevelReference = $('#serviceLevelReference').val();
+                object.userAccess = ArchivalProfileAccessForm.retrieveUserAccess();
+            }
+
+            return object;
+        }
+    }
+
+    $('#addArchivalProfile').on('click', function () {
+        ArchivalProfileAccessForm.save('POST');
+    });
+
+    $('#updateArchivalProfile').on('click', function () {
+        ArchivalProfileAccessForm.save('PUT');
+    });
+
+    $('#accessEntries').on('click', 'li', function () {
+        var archivalProfileAccess = $(this).data('json');
+
+        if (archivalProfileAccess.archivalProfileReference !== '*') {
+            $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
+            $('#updateArchivalProfile').show();
         }
 
-        $('#accessEntries').find('li').each(function() {
-            archivalProfileAccess.push($(this).data('json'));
-        })
+        if (archivalProfileAccess.originatorAccess) {
+            $('#isOriginatorAgency').bootstrapToggle('on');
+            $('#serviceLevelReference').parent().show();
+        } else {
+            $('#isOriginatorAgency').bootstrapToggle('off');
+            $('#serviceLevelReference').parent().hide();
+        }
 
-        ajax($('#saveArchivalProfileAccess'), {
-            type        : 'PUT',
-            url         : '/organization/'+$("#modifyOrganization").data('organization').orgId+'/archivalProfileAccess',
-            data        : {archivalProfileAccess: archivalProfileAccess},
-            dataType    : 'json',
-            contenttype : 'application/json',
-            async       : true,
-            success     : function(response) {
-                gritter.show(response.message, response.status, response.errors);
-                $('#saveArchivalProfileAccess').addClass('hide');
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
-    },
+        $('#accessEntries li').removeClass('active');
+        $(this).addClass('active');
+        $('#addArchivalProfile').hide();
+    });
 
-    close: function() {
-        $('#profileReference').val('').find('.hide').removeClass('hide');
-        $('#saveArchivalProfileAccess').addClass('hide');
-        $('#accessEntries').find('li').remove();
-        $('#acceptArchviesWithoutProfile').bootstrapToggle('off');
-    }
-}
+    $('#accessEntries').on('click', '.removeProfileAccess', function (e) {
+        var archivalProfileAccess = $(this).parents('li').data('json');
+        ArchivalProfileAccessForm.delete(archivalProfileAccess.orgId, archivalProfileAccess.archivalProfileReference, $(this).closest('li'));
+        e.stopPropagation();
+    });
 
-$('#addAccessEntrie').on('click', function() {
-    ArchivalProfileAccessForm.add();
-});
-
-$('#accessEntries').on('click', '.removeProfileAccess', function() {
-    ArchivalProfileAccessForm.removefromList($(this).closest('li'));
-});
-
-$('#saveArchivalProfileAccess').on('click', function() {
-    ArchivalProfileAccessForm.save();
-})
-
-$('#acceptArchviesWithoutProfile').on('change', function() {
-    $('#saveArchivalProfileAccess').removeClass('hide');
-
-})
+    $('#profileReference').change(function () {
+        var profile = {archivalProfileReference: $('#profileReference').val()};
+        $('#addArchivalProfile').show();
+    });
 
 </script>

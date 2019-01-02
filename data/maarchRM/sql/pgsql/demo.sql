@@ -10,7 +10,7 @@ INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
     ('ADMIN', 'Administrateur', 'Groupe administrateur', true),
     ('CORRESPONDANT_ARCHIVES', 'Archiviste', 'Correspondant d''archives', true),
-    ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true); 
+    ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true);
 
 -- PRIVILEGE
 INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
@@ -24,7 +24,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
     ('ADMIN', 'adminFunc/adminUseraccount'),
     ('ADMIN', 'adminFunc/contact'),
     ('ADMIN', 'journal/audit'),
-    
+
     ('CORRESPONDANT_ARCHIVES', 'adminArchive/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveRetrieval/*'),
     ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
@@ -49,7 +49,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
 ('ADMIN', 'superadmin');
 
-    
+
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
 ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de communicabilité de l''archive %6$s'),
@@ -265,35 +265,35 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "c
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '1');
 INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '68');
 
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'COUA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'PRVN');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'PRVIF');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'ETAR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'RELCC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CG', 'CTRF');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DCLTVA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DOSC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'DOSB');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('AC', 'NOTSER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('SAM', 'PM');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('SAM', 'RAPFOR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DRH', 'DOSIP');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('ES', 'DOSETU');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'DCRN');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICCR');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'LETC');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'FICI');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'NOTSER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'COUA');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('DG', 'BORT');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'FICDG');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPAMI');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPAE');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'RAPER');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CAICG', 'COUABID');
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference") VALUES ('CC', 'FACVEN');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'COUA', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'PRVN', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'PRVIF', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'ETAR', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'RELCC', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CG', 'CTRF', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('AC', 'DCLTVA', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('AC', 'DOSC', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('AC', 'DOSB', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('AC', 'FICDG', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('AC', 'NOTSER', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('SAM', 'PM', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('SAM', 'RAPFOR', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DRH', 'DOSIP', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('ES', 'DOSETU', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'FICDG', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'DCRN', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'FICCR', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'LETC', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'FICI', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'NOTSER', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'COUA', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DG', 'BORT', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CAICG', 'FICDG', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CAICG', 'RAPAMI', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CAICG', 'RAPAE', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CAICG', 'RAPER', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CAICG', 'COUABID', true, '', '{}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('CC', 'FACVEN', true, '', '{}');
 
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('1', 'org', false, 0);
 INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", "required", "position") VALUES ('2', 'org', false, 0);
