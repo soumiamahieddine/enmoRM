@@ -283,13 +283,14 @@ interface organizationInterface
     /**
      * Add an organization archival profile access
      *
-     * @param organization/archivalProfileAccess $archivalProfileAccess
+     * @param string $orgId                    id of organization of archivalProfileAccess to delete
+     * @param string $archivalProfileReference archival profile reference of archivalProfileAccess
      *
      * @action organization/organization/deleteArchivalProfileAccess
      *
      * @return organization/archivalProfileAccess
      */
-    public function deleteArchivalprofileaccess_orgId__archivalProfileReference_();
+    public function deleteArchivalprofileaccess($orgId, $archivalProfileReference);
 
     /**
      * Get the profiles by orgRegNumber

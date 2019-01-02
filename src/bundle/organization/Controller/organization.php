@@ -1010,7 +1010,12 @@ class organization
             throw $e;
         }
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        if (!$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
+
+        if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
+            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access");
+        }
+
+        if ($archivalProfileAccess->archivalProfileReference !== '*' && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
             throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile does not exists");
         }
 
@@ -1271,8 +1276,6 @@ class organization
         }
 
         return $originators;
-
-
     }
 
     /**
@@ -1313,7 +1316,7 @@ class organization
         foreach ($userOrgUnits as $userOrgUnit) {
             foreach ($orgUnits as $orgUnit) {
                 if (
-                    // Owner = all originators
+                // Owner = all originators
                 $owner
                     // Archiver = all originators fo the same org
                 || ($archiver && $orgUnit->ownerOrgId == $userOrgUnit->ownerOrgId)

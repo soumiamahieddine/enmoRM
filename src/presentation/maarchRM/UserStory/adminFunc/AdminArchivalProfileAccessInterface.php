@@ -68,7 +68,7 @@ interface AdminArchivalProfileAccessInterface
      /**
      * Edit an archival profile access
      *
-     * @param organization/archivalProfileAccess
+     * @param organization/archivalProfileAccess $archivalProfileAccess
      *
      * @uses organization/organization/updateArchivalprofileaccess
      *
@@ -79,9 +79,12 @@ interface AdminArchivalProfileAccessInterface
     /**
      * Delete an archival profile access with its org id and archival profile reference
      *
-     * @uses  organization/organization/deleteArchivalprofileaccess_orgId__archivalProfileReference_
+     * @param string $orgId                    id of organization of archivalProfileAccess to delete
+     * @param string $archivalProfileReference archival profile reference of archivalProfileAccess
+     *
+     * @uses organization/organization/deleteArchivalprofileaccess
      *
      * @return organization/orgTree/deleteArchivalProfileAccess
      */
-    public function deleteArchivalprofileaccess_orgId__archivalProfileReference_();
+    public function deleteArchivalprofileaccess($orgId, $archivalProfileReference);
 }
