@@ -1034,7 +1034,7 @@ class organization
      *
      * @return organization/archivalProfileAccess $archivalProfileAccess
      */
-    public function updateArchivalProfileAccess($archivalProfileAccess)
+    public function updateArchivalprofileaccess($archivalProfileAccess)
     {
         if (!$this->sdoFactory->exists(
             'organization/archivalProfileAccess',

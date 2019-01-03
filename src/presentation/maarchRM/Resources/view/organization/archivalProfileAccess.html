@@ -1,12 +1,11 @@
 <div class="panel-group" id="profile_accordion" role="tablist" aria-multiselectable="true">
     <div class="row">
         <br/>
-        <div class="col-md-12">
+        <div class="col-md-12" >
+            <div class="form-group" id="originatorAgencyHolder" style="display: none;">
+                <input type="checkbox" checked id="isOriginatorAgency" name="isOriginatorAgency" data-toggle="toggle" data-width="150">
+            </div>
             <div class="col-md-10">
-                <!-- <div class="form-group">
-                    <label">Accept archives without profile</label>
-                    <input type="checkbox" id="acceptArchviesWithoutProfile" name="acceptArchviesWithoutProfile" data-toggle="toggle">
-                </div> -->
                 <div class="form-group">
                     <label>Archival profile</label>
                     <select class="form-control" id="profileReference">
@@ -29,19 +28,16 @@
                     <span class="pull-right">
                         <button class="btn btn-success" id="addArchivalProfile" type="button" style="display: none;"><i
                             class="fa fa-plus">&nbsp;</i>Add</button>
-                            <button class="btn btn-warning" id="updateArchivalProfile" type="button" style="display: none;"><i
+                        <button class="btn btn-warning" id="updateArchivalProfile" type="button" style="display: none;"><i
                                 class="fa fa-edit">&nbsp;</i>Save</button>
-                            </span>
-                        </div>
-                        <br/><br/>
-                    </div>
-                    <div class="col-md-12">
-                        <ul class="list-group" id="accessEntries">
-                        </ul>
-                    </div>
-            <!-- <div class="col-md-12">
-                <button class="btn hide btn-success pull-right" id="saveArchivalProfileAccess" type="button"><i class="fa fa-save">&nbsp;</i>Save</button>
-            </div> -->
+                    </span>
+                </div>
+                <br/><br/>
+            </div>
+            <div class="col-md-12">
+                <ul class="list-group" id="accessEntries">
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -114,7 +110,7 @@
             var selectedOption = $('#profileReference').find('option[value="' + profileAccess.archivalProfileReference + '"]');
             var selectedOptionServiceLevel = $('#serviceLevelReference').find('option[value="' + profileAccess.serviceLevelReference + '"]');
 
-            var selectedOptions = selectedOption.text()+' ( ' + selectedOptionServiceLevel.text() + ' )';
+            var selectedOptions = selectedOption.text();
 
             if(!selectedOptionServiceLevel.text()){
                 selectedOptions = selectedOption.text();
@@ -122,7 +118,8 @@
 
             var li = $('<li/>').addClass('list-group-item clearfix')
             .data('json', profileAccess)
-            .html(selectedOptions);
+            .html(selectedOptions)
+            .prop('title', selectedOptionServiceLevel.text());
 
             var span = $('<span/>').addClass('pull-right').appendTo(li);
 
@@ -162,7 +159,6 @@
         close: function () {
             $('#profileReference').val('').find('.hide').removeClass('hide');
             $('#accessEntries').find('li').remove();
-            //$('#acceptArchviesWithoutProfile').bootstrapToggle('off');
         },
 
         retrieveUserAccess: function () {
@@ -237,7 +233,7 @@
             $('#updateArchivalProfile').show();
         }
 
-        if (archivalProfileAccess.originatorAccess) {
+        if (archivalProfileAccess.originatorAccess || archivalProfileAccess.originatorAccess === null) {
             $('#isOriginatorAgency').bootstrapToggle('on');
             $('#serviceLevelReference').parent().show();
         } else {
@@ -253,6 +249,7 @@
     $('#accessEntries').on('click', '.removeProfileAccess', function (e) {
         var archivalProfileAccess = $(this).parents('li').data('json');
         ArchivalProfileAccessForm.delete(archivalProfileAccess.orgId, archivalProfileAccess.archivalProfileReference, $(this).closest('li'));
+        $('#serviceLevelReference').parent().show();
         e.stopPropagation();
     });
 
