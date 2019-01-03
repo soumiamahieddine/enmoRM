@@ -1,0 +1,28 @@
+<script>
+    $('#accessEntries').on('click', 'li', function () {
+        var archivalProfileAccess = $(this).data('json');
+
+        if (archivalProfileAccess.archivalProfileReference !== '*') {
+            $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
+            $('#updateArchivalProfile').show();
+        }
+
+        if (archivalProfileAccess.originatorAccess) {
+            $('#serviceLevelReference').parent().show();
+        } else {
+            $('#serviceLevelReference').parent().hide();
+        }
+        $('#serviceLevelReference').parent().show();
+
+        $('#accessEntries li').removeClass('active');
+        $(this).addClass('active');
+        $('#addArchivalProfile').hide();
+    });
+
+    $('#profileReference').change(function () {
+        var profile = {archivalProfileReference: $('#profileReference').val()};
+        $('#addArchivalProfile').show();
+        $('#updateArchivalProfile').hide();
+        $('#accessEntries li').removeClass('active');
+    });
+</script>
