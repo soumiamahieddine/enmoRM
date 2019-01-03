@@ -96,6 +96,11 @@ class orgTree
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
 
+
+        $commonJsAccesses = $this->view->createDocumentFragment();
+        $commonJsAccesses->appendHtmlFile("organization/commonJsAccesses.html");
+        $this->view->appendChild($commonJsAccesses);
+
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("adminUser", $adminUser);
         $this->view->setSource("adminContact", $adminContact);

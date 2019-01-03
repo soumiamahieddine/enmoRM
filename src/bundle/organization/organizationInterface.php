@@ -274,7 +274,7 @@ interface organizationInterface
      *
      * @param organization/archivalProfileAccess $archivalProfileAccess
      *
-     * @action organization/organization/updateArchivalProfileAccess
+     * @action organization/organization/updateArchivalprofileaccess
      *
      * @return organization/archivalProfileAccess
      */
