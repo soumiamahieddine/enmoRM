@@ -691,7 +691,7 @@ msgid "medona/archiveDelivery/readSearch"
 msgstr "Recherche de bordereaux de communication"
 
 msgid "medona/archiveDelivery/updateRequestderogation_messageId_"
-msgstr "Envoie en déragotion d'une demande de communication"
+msgstr "Envoi en dérogation d'une demande de communication"
 
 msgid "medona/archiveDelivery/readRequestReplyList"
 msgstr "Lecture des réponses aux demandes de communication"
@@ -1558,7 +1558,7 @@ msgid "recordsManagement/Code/createGenerate"
 msgstr "Génération d'un code à barre"
 
 msgid "organization/userPosition/readDescendantprofiles"
-msgstr "Lecture des profils d'archivage accordés à un utilisitateur"
+msgstr "Lecture des profils d'archivage accordés à un utilisateur"
 
 msgid "organization/organization/update_orgId_Archivalprofileaccess"
 msgstr "Mise à jour des profils d'archive d'un service producteur"
@@ -1633,7 +1633,7 @@ msgid "Info"
 msgstr "Informations"
 
 msgid "User already exist"
-msgstr "L'utilisateur existe déjà."
+msgstr "L'utilisateur existe déjà"
 
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
