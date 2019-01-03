@@ -318,7 +318,7 @@ trait archiveModificationTrait
         $description = null,
         $checkAccess = true
     ) {
-        $archive = $this->retrieve($archiveId);
+        $archive = $this->retrieve($archiveId, $withData = false, $checkAccess);
 
         if ($checkAccess) {
             $this->checkRights($archive);
