@@ -79,6 +79,11 @@
                 async: true,
                 success: function (response) {
                     if (response.status === true) {
+                        $.each($('#accessEntries li'), function() {
+                            if($(this).data('json').archivalProfileReference === profileAccess.archivalProfileReference) {
+                                ArchivalProfileAccessForm.removeFromList($(this).closest('li'));
+                            }
+                        });
                         ArchivalProfileAccessForm.addToList(profileAccess);
                     }
                     gritter.show(response.message, response.status, response.errors);
