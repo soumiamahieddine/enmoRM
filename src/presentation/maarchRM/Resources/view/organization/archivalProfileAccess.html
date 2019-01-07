@@ -38,6 +38,7 @@
         </div>
     </div>
 </div>
+<span class="hidden" id="errorEmptyArchivalProfileField" data-translate-catalog="organization/archivalProfileAccess">Archival Profile field cannot be empty</span>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
@@ -60,6 +61,7 @@
             var profileAccess = this.serialize();
 
             if (!profileAccess.archivalProfileReference) {
+                gritter.show($('#errorEmptyArchivalProfileField').text(), false);
                 return;
             }
 
@@ -88,6 +90,7 @@
                         ArchivalProfileAccessForm.addToList(profileAccess);
                         window.scrollTo(0, 0);
                     }
+                    console.log(response);
                     gritter.show(response.message, response.status, response.errors);
                     $('#saveArchivalProfileAccess').addClass('hide');
                 },
