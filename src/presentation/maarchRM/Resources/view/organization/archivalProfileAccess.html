@@ -81,10 +81,11 @@
                     if (response.status === true) {
                         $.each($('#accessEntries li'), function() {
                             if($(this).data('json').archivalProfileReference === profileAccess.archivalProfileReference) {
-                                ArchivalProfileAccessForm.removeFromList($(this).closest('li'));
+                                ArchivalProfileAccessForm.removeFromList($(this).closest('li'), false);
                             }
                         });
                         ArchivalProfileAccessForm.addToList(profileAccess);
+                        window.scrollTo(0, 0);
                     }
                     gritter.show(response.message, response.status, response.errors);
                     $('#saveArchivalProfileAccess').addClass('hide');
@@ -93,22 +94,6 @@
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                 }
             });
-        },
-
-        add: function() {
-            var archivalProfileAccess = {
-                orgId                    : $("#modifyOrganization").data('organization').orgId,
-                archivalProfileReference : $('#profileReference').val(),
-                originatorAccess         : true,
-                serviceLevelReference    : $('#serviceLevelReference').val()
-            }
-
-            if (!archivalProfileAccess.archivalProfileReference) {
-                return;
-            }
-
-            $('#saveArchivalProfileAccess').removeClass('hide');
-            this.addToList(archivalProfileAccess);
         },
 
         addToList: function(profileAccess) {
@@ -139,7 +124,6 @@
             li.appendTo($("#accessEntries"));
 
             selectedOption.addClass('hide');
-            $('#profileReference').val('');
         },
 
         delete: function (orgId, archivalProfileReference, li) {
@@ -198,8 +182,10 @@
             return userAccesses
         },
 
-        removeFromList: function(li) {
-            $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
+        removeFromList: function(li, removeFromSelect = true) {
+            if (removeFromSelect) {
+                $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
+            }
             li.remove();
         },
 
@@ -257,11 +243,6 @@
         ArchivalProfileAccessForm.delete(archivalProfileAccess.orgId, archivalProfileAccess.archivalProfileReference, $(this).closest('li'));
         $('#serviceLevelReference').parent().show();
         e.stopPropagation();
-    });
-
-    $('#profileReference').change(function () {
-        var profile = {archivalProfileReference: $('#profileReference').val()};
-        $('#addArchivalProfile').show();
     });
 
 </script>
