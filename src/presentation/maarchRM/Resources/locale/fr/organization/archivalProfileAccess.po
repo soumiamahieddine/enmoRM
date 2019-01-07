@@ -1,0 +1,5 @@
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Archival profiles list"
+msgstr "Liste des profils d'archive"
