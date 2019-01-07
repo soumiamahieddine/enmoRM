@@ -104,7 +104,7 @@ msgid "recordsManagement/archive/read_archiveId_Exists"
 msgstr "Check archive's existence"
 
 msgid "recordsManagement/archive/read_archiveId_Retentionrule"
-msstr "Read archive's retention rules"
+msgstr "Read archive's retention rules"
 
 msgid "recordsManagement/archive/readAccessrule_archiveId_"
 msgstr "Read archive's access rule"
@@ -130,10 +130,8 @@ msgstr "Read relationship by archive"
 msgid "recordsManagement/archives/read"
 msgstr "Read all archives"
 
-#TODO verif
 msgid "recordsManagement/archives/readList"
-msgstr "Read file plan" 
-msgstr "Lecture du plan de classements"
+msgstr "Read fileplan"
 
 msgid "recordsManagement/archives/updateFreeze"
 msgstr "Freeze an archive"
@@ -156,7 +154,6 @@ msgstr "Read all access rules"
 msgid "recordsManagement/archives/updateAccessrule"
 msgstr "Update an access rule"
 
-#TODO verif
 msgid "recordsManagement/archives/createDelivery"
 msgstr "Archive's communication request"
 
@@ -208,11 +205,8 @@ msgstr "Move an archive into a folder"
 msgid "recordsManagement/archives/udpateMovearchivetofolder"
 msgstr "Move archives into a folder"
 
-#TODO verif
 msgid "recordsManagement/archives/deleteDisposearchives"
-msgstr "Delete all disposable archives"
 msgstr "Delete all archives flagged for destuction"
-msgstr "Suppression des archives marquées pour destruction"
 
 msgid "recordsManagement/descriptionClass/readIndex"
 msgstr "Listing of description models"
@@ -316,10 +310,8 @@ msgstr "Read all life cycle logs"
 msgid "lifeCycle/journal/read_journalId_"
 msgstr "Read life cycle log"
 
-#TODO verif
 msgid "lifeCycle/journal/createChainjournal"
-msgstr "Chaining of life cycle logs"
-msgstr "Chaînage des journaux du cycle de vie"
+msgstr "Chaining of life cycle"
 
 msgid "lifeCycle/journal/checkIntegrity"
 msgstr "Check life cycle logs integrity"
@@ -399,10 +391,8 @@ msgstr "Storage of authorization messages"
 msgid "medona/archiveAuthorization/update_messageId_Archive"
 msgstr "Storage of authorization message"
 
-#TODO verif
 msgid "medona/archiveAuthorization/deleteMessagedirectorypurge"
 msgstr "Automatic deletion of authorization request messages in the temporary storage"
-msgstr "Suppression automatique des bordereaux de demande d'autorisation dans le support de stockage temporaire"
 
 msgid "medona/archiveDelivery/readIncominglist"
 msgstr "List of delivery request messages received"
@@ -461,10 +451,8 @@ msgstr "Read delivery history"
 msgid "medona/archiveDelivery/read_messageId_exportArchive"
 msgstr "Download delivered archive"
 
-#TODO verif
 msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
-msgstr "Delivery request messages automatic elimination in the temporary storage medium" 
-msgstr "Suppression automatique des bordereaux de demande de communication dans le support de stockage temporaire"
+msgstr "Automatic deletion of Delivery request messages in the temporary storage"
 
 msgid "medona/archiveDelivery/readIncominglist"
 msgstr "List delivery request messages received"
@@ -492,7 +480,6 @@ msgstr "Number of destruction request messages"
 
 msgid "medona/archiveDestruction/updateRequestvalidation_messageId_"
 msgstr "Validate destruction request"
-msgstr "Validation de la demande de destruction"
 
 msgid "medona/archiveDestruction/updateRequestrejection"
 msgstr "Reject destruction request"
@@ -530,7 +517,6 @@ msgstr "Read destruction history"
 msgid "medona/archiveDestruction/updateDisposearchives"
 msgstr "Label archives for destruction"
 
-#TODO verif
 msgid "medona/archiveModification/updateFreeze"
 msgstr "Freeze archive with update message generated"
 
@@ -590,16 +576,12 @@ msgstr "Number of restitution request messages"
 
 msgid "medona/archiveRestitution/updateRequestacceptance_messageId_"
 msgstr "Accept restitution request message"
-msgstr "Acceptation d'un bordereau de demande de restitution"
 
 msgid "medona/archiveRestitution/updateRequestreplyacceptance_messageId_"
 msgstr "Accept restitution request message"
 
-#TODO verif les 2 suivants
-
 msgid "medona/archiveRestitution/updateRequestreplyrejection"
 msgstr "Reject restitution request message"
-msgstr "Rejet d'un bordereau de demande de restitution"
 
 msgid "medona/archiveRestitution/updateRequestrejection"
 msgstr "Reject restitution request message"
@@ -870,7 +852,6 @@ msgstr "Read all roles (organization)"
 
 msgid "auth/roleMember/readIndex"
 msgstr "Read all members of all roles"
-msgstr "Lecture des membres de tous les rôles"
 
 msgid "auth/role/readIndex"
 msgstr "Read all roles"
@@ -971,7 +952,6 @@ msgstr "Read account's service positions"
 msgid "organization/servicePosition/read_serviceAccountId_"
 msgstr "Read account's current position"
 
-#TODO verif
 msgid "organization/servicePosition/readOrgs"
 msgstr "Read service account's available organizations"
 
@@ -1011,10 +991,8 @@ msgstr "Edit user's password"
 msgid "auth/publicUserStory/read"
 msgstr "Read all public users"
 
-#TODO verif
 msgid "auth/role/readNewrole"
 msgstr "Prepare new role"
-msgstr "Préparation à la création d'un nouveau rôle"
 
 msgid "auth/role/read_roleId_"
 msgstr "Read role"
@@ -1340,10 +1318,8 @@ msgstr "Create file plan"
 msgid "filePlan/filePlan/update"
 msgstr "Update file plan"
 
-#TODO verif
 msgid "filePlan/filePlan/updateMove_folderId_"
-msgstr "Update folder's location in file plan"
-msgstr "Modification d'un emplacement dossier dans le plan de classement"
+msgstr "Update folder's location in fileplan"
 
 msgid "filePlan/filePlan/delete_folder_"
 msgstr "Delete folder in file plan"
@@ -1503,7 +1479,6 @@ msgstr "Validate transfer seda 1.0 message's first draft"
 
 msgid "medona/archiveTransfer/readOutgoingtransferHistory"
 msgstr "Read outgoing transfer's history"
-msgstr "Lecture de l'historique de transfert sortant"
 
 msgid "medona/archiveTransfer/readOutgoingtransferProcessList"
 msgstr "Read outgoing transfers to finalize"
