@@ -46,6 +46,10 @@
             if (profileAccess) {
                 $.each(profileAccess, function() {
                     ArchivalProfileAccessForm.addToList(this);
+                });
+
+                $.each($('#accessEntries li'), function() {
+                    $(this).removeClass('active');
                 })
             }
         },
@@ -113,6 +117,7 @@
             }
 
             var li = $('<li/>').addClass('list-group-item clearfix')
+            .addClass('active')
             .data('json', profileAccess)
             .html(selectedOptions)
             .prop('title', selectedOptionServiceLevel.text());
