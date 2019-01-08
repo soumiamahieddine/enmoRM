@@ -1357,12 +1357,28 @@ trait laabsAppTrait
     /**
      * The app version
      *
-     * @return String
+     * @return array
      */
     public static function getVersion()
     {
-        return file_get_contents('../VERSION.md');
+        $versions = [];
+        $version = new \stdClass();
+        $version->name = 'Maarch RM';
+        $version->number = file_get_contents('../VERSION.md');
+        $versions[] = $version;
 
+        $extensions = scandir('ext/');
+        foreach ($extensions as $extension) {
+            $versionPath = 'ext' . DIRECTORY_SEPARATOR . $extension . DIRECTORY_SEPARATOR . 'VERSION.md';
+            if (file_exists($versionPath)) {
+                $version = new \stdClass();
+                $version->name = ucfirst($extension);
+                $version->number = file_get_contents($versionPath);
+                $versions[] = $version;
+            }
+        }
+
+        return $versions;
     }
 
     /**
