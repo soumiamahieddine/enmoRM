@@ -142,10 +142,27 @@
                 <div class="text-center">
                     <img class="img-responsive" style="max-height:64px; margin: 0 auto;" src="/presentation/img/RM.svg"/>
                     <br/>
-                    <p class='lead'>Version <?merge .version ?></p>
+                    <h2>Versions</h2>
+                    <p class='lead'>
+                        <?merge .versions[0].name ?> - <?merge .versions[0].number ?>
+                    </p>
+                    <?merge .versions.count().ifgte(2) ?>
+                    <span>
+                        <h4>Extension(s)</h4>
+                        <p class="lead">
+                            <?merge .versions ?>
+                            <span>
+                                <?merge .name.ifne('Maarch RM') ?>
+                                <span>
+                                    <?merge .name ?> - <?merge .number ?>
+                                    <br>
+                                </span>
+                            </span>
+                        </p>
+                    </span>
                 </div>
                 <p>
-                    <pre style="overflow-y:scroll; height: 400px; ">
+                <pre style="overflow-y:scroll; height: 400px; ">
                         <?merge .licence ?>
                     </pre>
                 </p>
