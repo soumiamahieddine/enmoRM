@@ -1046,6 +1046,12 @@ class organization
             throw new \core\Exception("Organization Archival Profile Access can't be update ");
         }
 
+        if ($archivalProfileAccess->archivalProfileReference === '*') {
+            if (!$archivalProfileAccess->originatorAccess) {
+                throw new \core\Exception("User cannot be associated with archival profile when archival without profiles is selected");
+            }
+        }
+
         $this->sdoFactory->update($archivalProfileAccess, "organization/archivalProfileAccess");
 
         return $archivalProfileAccess;

@@ -2,10 +2,14 @@
     $('#accessEntries').on('click', 'li', function () {
         var archivalProfileAccess = $(this).data('json');
 
-        if (archivalProfileAccess.archivalProfileReference !== '*') {
-            $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
-            $('#updateArchivalProfile').show();
+        $('#originatorAgencyHolder').show();
+        if (archivalProfileAccess.archivalProfileReference === '*') {
+            $('#originatorAgencyHolder').hide();
+            $('isOriginatorAgency').prop('checked', true);
         }
+
+        $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
+        $('#updateArchivalProfile').show();
 
         if (archivalProfileAccess.originatorAccess) {
             $('#serviceLevelReference').parent().show();
