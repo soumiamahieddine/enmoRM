@@ -25,10 +25,10 @@
                     </select>
                 </div>
                 <div class="form-group text-right">
-                        <button class="btn btn-success" id="addArchivalProfile" type="button" style="display: none;"><i
-                            class="fa fa-plus">&nbsp;</i>Add</button>
-                        <button class="btn btn-warning" id="updateArchivalProfile" type="button" style="display: none;"><i
-                                class="fa fa-edit">&nbsp;</i>Save</button>
+                    <button class="btn btn-success" id="addArchivalProfile" type="button" style="display: none;"><i
+                        class="fa fa-plus">&nbsp;</i>Add</button>
+                    <button class="btn btn-warning" id="updateArchivalProfile" type="button" style="display: none;"><i
+                        class="fa fa-edit">&nbsp;</i>Save</button>
                 </div>
             </div>
             <div class="col-md-12">
@@ -90,9 +90,9 @@
                         ArchivalProfileAccessForm.addToList(profileAccess);
                         window.scrollTo(0, 0);
                     }
-                    console.log(response);
                     gritter.show(response.message, response.status, response.errors);
-                    $('#saveArchivalProfileAccess').addClass('hide');
+                    $('#addArchivalProfile').addClass('hide');
+                    $('#updateArchivalProfile').addClass('show');
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
