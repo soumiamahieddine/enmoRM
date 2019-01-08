@@ -57,21 +57,19 @@
         },
 
         save: function (type) {
-            var archivalProfileAccess = [];
-            var profileAccess = this.serialize();
+            var archivalProfileAccess = this.serialize();
 
-            if (!profileAccess.archivalProfileReference) {
+            if (!archivalProfileAccess.archivalProfileReference) {
                 gritter.show($('#errorEmptyArchivalProfileField').text(), false);
                 return;
             }
 
-            archivalProfileAccess.push(profileAccess);
-
             $('#checkboxes_holder').find('li').each(function () {
-                archivalProfileAccess.push($(this).data('json'));
+                if (typeof $(this).data('json') !== "undefined") {
+                    archivalProfileAccess.push($(this).data('json'));
+                }
             });
-
-            json_archival = JSON.stringify({'archivalProfileAccess': archivalProfileAccess[0]});
+            json_archival = JSON.stringify({'archivalProfileAccess': archivalProfileAccess});
 
             $.ajax({
                 type: type,
@@ -83,11 +81,11 @@
                 success: function (response) {
                     if (response.status === true) {
                         $.each($('#accessEntries li'), function() {
-                            if($(this).data('json').archivalProfileReference === profileAccess.archivalProfileReference) {
+                            if($(this).data('json').archivalProfileReference === archivalProfileAccess.archivalProfileReference) {
                                 ArchivalProfileAccessForm.removeFromList($(this).closest('li'), false);
                             }
                         });
-                        ArchivalProfileAccessForm.addToList(profileAccess);
+                        ArchivalProfileAccessForm.addToList(archivalProfileAccess);
                         window.scrollTo(0, 0);
                     }
                     gritter.show(response.message, response.status, response.errors);
@@ -156,7 +154,7 @@
         },
 
         retrieveUserAccess: function () {
-            var userAccesses = [];
+            var userAccesses = {processingStatuses: {}};
             var status_inputs = $('#checkboxes_holder').find("input[type='checkbox']");
 
             status_inputs.each(function (key, status_input) {
@@ -164,21 +162,18 @@
                     var userAccess = {};
 
                     if (this.name === 'processingStatus') {
-                        userAccess.status = Object.keys($(this).data('json'))[0];
-                        var action = [];
+                        var statusId = Object.keys($(this).data('json'))[0];
+                        var action = {};
                         var action_inputs = $(this).siblings('ul').find("input[type='checkbox']");
                         action_inputs.each(function (action_key, action_input) {
                             if (action_input.checked === true) {
                                 if (action_input.name === 'action') {
-                                    action.push(Object.keys($(this).data('json'))[0])
+                                    action[Object.keys($(this).data('json'))[0]] = {};
                                 }
                             }
                         });
 
-                        userAccess.action = action;
-                    }
-                    if (!$.isEmptyObject(userAccess)) {
-                        userAccesses.push(userAccess);
+                        userAccesses.processingStatuses[statusId] = {actions: action };
                     }
                 }
             });
