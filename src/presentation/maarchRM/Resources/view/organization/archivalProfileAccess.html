@@ -216,27 +216,6 @@
         ArchivalProfileAccessForm.save('PUT');
     });
 
-    $('#accessEntries').on('click', 'li', function () {
-        var archivalProfileAccess = $(this).data('json');
-
-        if (archivalProfileAccess.archivalProfileReference !== '*') {
-            $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
-            $('#updateArchivalProfile').show();
-        }
-
-        if (archivalProfileAccess.originatorAccess || archivalProfileAccess.originatorAccess === null) {
-            $('#isOriginatorAgency').bootstrapToggle('on');
-            $('#serviceLevelReference').parent().show();
-        } else {
-            $('#isOriginatorAgency').bootstrapToggle('off');
-            $('#serviceLevelReference').parent().hide();
-        }
-
-        $('#accessEntries li').removeClass('active');
-        $(this).addClass('active');
-        $('#addArchivalProfile').hide();
-    });
-
     $('#accessEntries').on('click', '.removeProfileAccess', function (e) {
         var archivalProfileAccess = $(this).parents('li').data('json');
         ArchivalProfileAccessForm.delete(archivalProfileAccess.orgId, archivalProfileAccess.archivalProfileReference, $(this).closest('li'));
@@ -247,6 +226,7 @@
     $('#organizationInfo_profileTab').on('click', function() {
         $('#profileReference').val('');
         $('#accessEntries li').removeClass('active');
+        $('#serviceLevelReference').val('');
     });
 
 </script>
