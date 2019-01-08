@@ -90,7 +90,7 @@
                     }
                     gritter.show(response.message, response.status, response.errors);
                     $('#addArchivalProfile').addClass('hide');
-                    $('#updateArchivalProfile').addClass('show');
+                    $('#updateArchivalProfile').show();
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
@@ -242,6 +242,11 @@
         ArchivalProfileAccessForm.delete(archivalProfileAccess.orgId, archivalProfileAccess.archivalProfileReference, $(this).closest('li'));
         $('#serviceLevelReference').parent().show();
         e.stopPropagation();
+    });
+
+    $('#organizationInfo_profileTab').on('click', function() {
+        $('#profileReference').val('');
+        $('#accessEntries li').removeClass('active');
     });
 
 </script>
