@@ -196,7 +196,7 @@ interface organizationInterface
      *
      * @return boolean The result of the operation
      *
-     * @action organization/organization/updateorganization
+     * @action organization/organization/update
      */
     public function update_orgId_($organization);
 
