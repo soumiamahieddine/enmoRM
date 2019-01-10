@@ -113,7 +113,7 @@ msgid "recordsManagement/archive/updateIndex"
 msgstr "Update archive's index"
 
 msgid "recordsManagement/archive/updateInteractiveconversion_resId_"
-msgstr "Interactive conversion of a ressource" 
+msgstr "Interactive conversion of a ressource"
 
 msgid "recordsManagement/archiveRelationship/newRelationship"
 msgstr "Prepare an archive's relationship"
@@ -158,7 +158,7 @@ msgid "recordsManagement/archives/createDelivery"
 msgstr "Archive's communication request"
 
 msgid "recordsManagement/archives/updateSetforrestitution"
-msgstr "Update archive for restitution" 
+msgstr "Update archive for restitution"
 
 msgid "recordsManagement/archives/updateDisposearchives"
 msgstr "Update archive repository"
@@ -185,7 +185,7 @@ msgid "recordsManagement/archives/updateCancelDestruction"
 msgstr "Cancel archives destruction"
 
 msgid "recordsManagement/archives/updateDocumentsconversion"
-msgstr "Flag documents to convert" 
+msgstr "Flag documents to convert"
 
 msgid "recordsManagement/archives/readIntegritycheck"
 msgstr "Check archives integrity"
@@ -1067,7 +1067,7 @@ msgid "auth/serviceAccount/updateDisable_serviceAccountId_"
 msgstr "Deactivate service account"
 
 msgid "auth/serviceAccount/readServicetoken_serviceAccountId_"
-msgstr "Generate service account token" 
+msgstr "Generate service account token"
 
 msgid "auth/serviceAccount/readQuery_query_"
 msgstr "Account services auto completion"
@@ -1463,7 +1463,7 @@ msgid "seda/ArchiveTransferComposition/readLanguageCodes"
 msgstr "Read language codes for message composer"
 
 msgid "seda/ArchiveTransferComposition/read_messageId_"
-msgstr "Read transfer seda 1.0 message's first draft" 
+msgstr "Read transfer seda 1.0 message's first draft"
 
 msgid "seda/ArchiveTransferComposition/delete_messageId_"
 msgstr "Delete transfer seda 1.0 message's first draft"
@@ -1472,7 +1472,7 @@ msgid "seda/ArchiveTransferComposition/readDraft"
 msgstr "Read all transfer seda 1.0 message's first drafts"
 
 msgid "seda/ArchiveTransferComposition/delete_messageId_document"
-msgstr "Delete document in transfer seda 1.0 message's first draft" 
+msgstr "Delete document in transfer seda 1.0 message's first draft"
 
 msgid "seda/ArchiveTransferComposition/updateGeneratedraft_messageId_"
 msgstr "Validate transfer seda 1.0 message's first draft"
@@ -1536,3 +1536,15 @@ msgstr "L'utilisateur existe déjà"
 
 msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
+
+msgid "organization/organization/createArchivalprofileaccess"
+msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
+
+msgid "organization/organization/updateArchivalprofileaccess"
+msgstr "Mise à jour d'une association d'un profil d'archive à un service"
+
+msgid "organization/orgTree/deleteArchivalProfileAccess"
+msgstr "Suppression d'une association d'un profil d'archive à un service"
+
+msgid "organization/orgTree/readList"
+msgstr "Retrieve list of organization's type"
