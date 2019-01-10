@@ -3,20 +3,9 @@
         var archivalProfileAccess = $(this).data('json');
 
         $('#originatorAgencyHolder').show();
-        if (archivalProfileAccess.archivalProfileReference === '*') {
-            $('#originatorAgencyHolder').hide();
-            $('isOriginatorAgency').prop('checked', true);
-        }
 
         $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
         $('#updateArchivalProfile').show();
-
-        if (archivalProfileAccess.originatorAccess) {
-            $('#serviceLevelReference').parent().show();
-        } else {
-            $('#serviceLevelReference').parent().hide();
-        }
-        $('#serviceLevelReference').parent().show();
 
         $('#accessEntries li').removeClass('active');
         $(this).addClass('active');
