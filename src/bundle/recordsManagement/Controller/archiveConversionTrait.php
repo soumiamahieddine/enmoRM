@@ -54,6 +54,11 @@ trait archiveConversionTrait
 
                 $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
                 $this->digitalResourceController->store($convertedResource);
+
+                // TimeStanp the last modification date at conversion
+                $archive->lastModificationDate = \laabs::newTimestamp();
+                $this->sdoFactory->update($archive, 'recordsManagement/archive');
+
                 $status = true;
             }
 
@@ -147,6 +152,7 @@ trait archiveConversionTrait
         }
 
         if ($transactionControl) {
+            var_dump($archive);exit();
             $this->sdoFactory->commit();
         }
 
