@@ -100,6 +100,9 @@ trait archiveEntryTrait
         // Validate metadata
         $this->validateCompliance($archive);
 
+        // Set ProcessingStatuses
+        $this->checkProcessingStatus($archive);
+
         // Check format conversion
         $this->convertArchive($archive);
 
@@ -519,6 +522,21 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
+    }
+
+    /**
+     * Check and set the processing status
+     *
+     * @param recordsManagement/archive $archive The archive to setting
+     */
+    public function checkProcessingStatus($archive)
+    {
+        $processingStatus = $archive->processingStatus;
+        $status="Nouveau";
+
+        $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+        
+        $profiles = get_object_vars($archivalProfile);
     }
 
     /**
