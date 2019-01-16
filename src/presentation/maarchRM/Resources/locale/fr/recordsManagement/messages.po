@@ -1038,3 +1038,6 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Last modification date"
+msgstr "Date de dernière modification"
