@@ -175,6 +175,8 @@
                         });
 
                         userAccesses.processingStatuses[statusId] = {actions: action };
+                    } else if (this.name === 'history') {
+                        userAccesses.history = {};
                     }
                 }
             });
