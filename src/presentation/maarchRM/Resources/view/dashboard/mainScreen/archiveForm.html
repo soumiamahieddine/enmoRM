@@ -69,6 +69,27 @@
     </form>
 </div>
 
+<div class="panel-heading" role="tab">
+    <strong>
+        <a data-toggle="collapse" href="#management">Processing statuses</a>
+    </strong>
+</div>
+<div id="processingStatusesDiv" class="panel-collapse collapse in">
+    <form id="processingStatusesForm" class="form-horizontal">
+        <div id="processingStatuses" class="form-group">
+            <label class="col-md-3 control-label small">Processing status</label>
+        </div>
+    </form>
+</div>
+
+<div id="processingStatuses"></div>
+
+<!-- SELECT STATUS TEMPLATE-->
+<div id="selectStatusTemplate" class="col-md-6 hide">
+    <select class="form-control input-sm">
+    </select>
+</div>
+
 <div class="hide">
     <span id="text_file"><i class='fa fa-folder'></i> File</span>
     <span id="text_item"><i class='fa fa-file'></i> Item</span>
@@ -123,6 +144,7 @@
     $('#archivalProfile').on('change', function() {
         ArchiveForm.loadProfile();
         ArchiveForm.displayArchiveDescription();
+        ArchiveForm.displayArchiveProcessingStatuses();
     });
 
     $('#retentionRule').on('change', function() {
@@ -190,12 +212,6 @@
                 selectedProfile = dataJson;
             }
 
-            /*if (value == '' || value == null) {
-                $('#requireArchiveName').removeClass("hide");
-            } else {
-                $('#requireArchiveName').addClass("hide");
-            }*/
-
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
                 $('#retentionRule').val('').removeAttr("disabled").change();
             } else {
@@ -230,6 +246,42 @@
             $.each(selectedProfile.archiveDescription, function(key, value) {
                 Metadata.addArchiveDescription(value);
             });
+        },
+
+        displayArchiveProcessingStatuses : function() {
+
+            var value = $('#archivalProfile').val();
+
+            $('#archivalProfileFields').empty();
+
+            var selectedProfile = $('#archivalProfile').data('json');
+
+            var statuses = selectedProfile.processingStatuses;
+
+            var target = $("#processingStatuses");
+
+            template = $('#selectStatusTemplate').clone();
+            field = template.find('select');
+            field.attr('id', "processingStatus");
+
+            field.append($('<option>', {
+                    value: "",
+                    text: "Select a status..."
+                }));
+            field.val("Select a status...");
+
+            $.each(statuses, function (id, datas) {
+                field.append($('<option>', {
+                    value: id,
+                    text: datas.label
+                }));
+                if(typeof datas.default != 'undefined') {
+                    field.val(datas.label); ;
+                }
+            });
+            template.removeClass("hide");
+            template.appendTo(target);
+
         },
         displayRetentionRulesInfo : function() {
             var value = $('#retentionRule').val();
@@ -469,4 +521,36 @@
             Metadata.clear($('#allFields'));
         }
     }
+
+    // var Process = {
+    //     addProcessingStatuses : function(status) {
+    //         var target = $("#processingStatuses");
+    //         var id = status;
+    //         var label = status.label;
+
+    //         template = $('#selectStatusTemplate').clone();
+    //         field = template.find('select');
+
+    //         field.attr('id', "processingStatus");
+
+    //         field.append($('<option>', {
+    //                 value: "",
+    //                 text: "Select a status..."
+    //             }));
+    //         field.val("Select a status...");
+
+    //         $.each(status, function (id, datas) {
+    //             field.append($('<option>', {
+    //                 value: id,
+    //                 text: datas.label
+    //             }));
+    //             if(typeof datas.default != 'undefined') {
+    //                 field.val(datas.label); ;
+    //             }
+    //         });
+    //         template.removeClass("hide");
+    //         template.appendTo(target);
+            
+    //     }
+    // }
 </script>

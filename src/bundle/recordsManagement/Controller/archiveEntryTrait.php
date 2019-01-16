@@ -100,9 +100,6 @@ trait archiveEntryTrait
         // Validate metadata
         $this->validateCompliance($archive);
 
-        // Set ProcessingStatuses
-        $this->checkProcessingStatus($archive);
-
         // Check format conversion
         $this->convertArchive($archive);
 
@@ -522,6 +519,7 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
+        $this->validateProcessingStatus($archive);
     }
 
     /**
@@ -529,14 +527,34 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to setting
      */
-    public function checkProcessingStatus($archive)
+    public function validateProcessingStatus($archive)
     {
         $processingStatus = $archive->processingStatus;
-        $status="Nouveau";
-
-        $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+        $statuses = json_decode($this->currentArchivalProfile->processingStatuses);
         
-        $profiles = get_object_vars($archivalProfile);
+        // Recovery Initial and Default statuses if exists ...
+        $initialStatuses = [];
+        if (!empty($statuses)) {
+            foreach ($statuses as $procstatus => $datas) {
+                if ($datas->type == "Initial") {
+                    $initialStatuses[$procstatus]=$datas;
+                }
+            }
+        }
+
+        // Set default status if not set & if exist default in profile
+        if (empty($processingStatus)) {
+            foreach ($initialStatuses as $status => $datas) {
+                if (isset($type->default)) {
+                    $archive->processingStatus = $status;
+                    break;
+                }
+            }
+        } else {
+            if (!array_key_exists($processingStatus, $initialStatuses)) {
+                throw new \core\Exception\BadRequestException('The processing status isn\'t Initial');
+            }
+        }
     }
 
     /**
