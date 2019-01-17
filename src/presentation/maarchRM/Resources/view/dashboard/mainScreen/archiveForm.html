@@ -68,26 +68,24 @@
         </div>
     </form>
 </div>
-
-<div class="panel-heading" role="tab">
-    <strong>
-        <a data-toggle="collapse" href="#management">Processing statuses</a>
-    </strong>
-</div>
-<div id="processingStatusesDiv" class="panel-collapse collapse in">
-    <form id="processingStatusesForm" class="form-horizontal">
-        <div id="processingStatuses" class="form-group">
-            <label class="col-md-3 control-label small">Processing status</label>
-        </div>
-    </form>
-</div>
-
-<div id="processingStatuses"></div>
-
-<!-- SELECT STATUS TEMPLATE-->
-<div id="selectStatusTemplate" class="col-md-6 hide">
-    <select class="form-control input-sm">
-    </select>
+<div id="processingStatuses" class="hide">
+    <div class="panel-heading" role="tab">
+        <strong>
+            <a data-toggle="collapse" href="#processingStatusesDiv">Processing statuses</a>
+        </strong>
+    </div>
+    <div id="processingStatusesDiv" class="panel-collapse collapse in">
+        <form id="processingStatusesForm" class="form-horizontal">
+            <div id="processingStatusesGroup" class="form-group">
+                <label class="col-md-3 control-label small">Processing status</label>
+                <div id="processingStatus">
+                    <div id="selectStatus" class="col-md-6 hide">
+                        <select class="form-control input-sm archiveInput" name="processingStatus"></select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="hide">
@@ -249,39 +247,39 @@
         },
 
         displayArchiveProcessingStatuses : function() {
-
-            var value = $('#archivalProfile').val();
-
-            $('#archivalProfileFields').empty();
-
             var selectedProfile = $('#archivalProfile').data('json');
 
+            $('#selectStatus').find(".archiveInput").empty();
             var statuses = selectedProfile.processingStatuses;
 
-            var target = $("#processingStatuses");
+            if (statuses != null) {
+                $(processingStatuses).removeClass("hide");
 
-            template = $('#selectStatusTemplate').clone();
-            field = template.find('select');
-            field.attr('id', "processingStatus");
+                template = $('#selectStatus');
+                field = template.find('select');
+                field.attr('id', "processingStatus");
 
-            field.append($('<option>', {
-                    value: "",
-                    text: "Select a status..."
-                }));
-            field.val("Select a status...");
-
-            $.each(statuses, function (id, datas) {
                 field.append($('<option>', {
-                    value: id,
-                    text: datas.label
-                }));
-                if(typeof datas.default != 'undefined') {
-                    field.val(datas.label); ;
-                }
-            });
-            template.removeClass("hide");
-            template.appendTo(target);
+                        value: "",
+                        text: "Select a status"
+                    }));
+                field.val("Select a status...");
 
+                $.each(statuses, function (id, config) {
+                    if (config.type == "Initial") {
+                        field.append($('<option>', {
+                            value: id,
+                            text: config.label
+                        }));
+                    }
+                    if(typeof config.default != 'undefined') {
+                        field.val(config.label); ;
+                    }
+                });
+                template.removeClass("hide");
+            } else {
+                $(processingStatuses).addClass("hide");
+            }
         },
         displayRetentionRulesInfo : function() {
             var value = $('#retentionRule').val();
@@ -333,7 +331,7 @@
             $('#retentionRuleText').text(retentionRuleText);
         },
         syncSerialize : function() {
-            var form = $('#archiveForm, #managementMetadataForm');
+            var form = $('#archiveForm, #managementMetadataForm, #processingStatusesForm');
             var inputs = form.find('.archiveInput');
             var archive = {
                 digitalResources : [],
@@ -382,7 +380,6 @@
                 gritter.show($("#message_requiredFieldOnEmptyForm").text(), false);
                 return -3;
             }
-
             return archive;
         },
 
@@ -414,6 +411,7 @@
                     classificationRule      : {}
                 },
                 descriptionClass            : null,
+                processingStatus            : null,
                 dataObjects                 : []
             };
 
@@ -459,6 +457,11 @@
                     case 'retentionRuleCode' :
                         if (value) {
                             obj[id].managementMetadata.appraisalRule.code = value;
+                        }
+                        break;
+                    case 'processingStatus' :
+                        if (value) {
+                            obj[id].processingStatus = value;
                         }
                         break;
                     case 'retentionStartDate' :
@@ -521,36 +524,4 @@
             Metadata.clear($('#allFields'));
         }
     }
-
-    // var Process = {
-    //     addProcessingStatuses : function(status) {
-    //         var target = $("#processingStatuses");
-    //         var id = status;
-    //         var label = status.label;
-
-    //         template = $('#selectStatusTemplate').clone();
-    //         field = template.find('select');
-
-    //         field.attr('id', "processingStatus");
-
-    //         field.append($('<option>', {
-    //                 value: "",
-    //                 text: "Select a status..."
-    //             }));
-    //         field.val("Select a status...");
-
-    //         $.each(status, function (id, datas) {
-    //             field.append($('<option>', {
-    //                 value: id,
-    //                 text: datas.label
-    //             }));
-    //             if(typeof datas.default != 'undefined') {
-    //                 field.val(datas.label); ;
-    //             }
-    //         });
-    //         template.removeClass("hide");
-    //         template.appendTo(target);
-            
-    //     }
-    // }
 </script>
