@@ -535,17 +535,17 @@ trait archiveEntryTrait
         // Recovery Initial and Default statuses if exists ...
         $initialStatuses = [];
         if (!empty($statuses)) {
-            foreach ($statuses as $procstatus => $datas) {
-                if ($datas->type == "Initial") {
-                    $initialStatuses[$procstatus]=$datas;
+            foreach ($statuses as $procstatus => $config) {
+                if ($config->type == "Initial") {
+                    $initialStatuses[$procstatus]=$config;
                 }
             }
         }
 
-        // Set default status if not set & if exist default in profile
-        if (empty($processingStatus)) {
-            foreach ($initialStatuses as $status => $datas) {
-                if (isset($type->default)) {
+        // Set default processing status if not set & if exist default in profile
+        if (!isset($processingStatus) || empty($processingStatus)) {
+            foreach ($initialStatuses as $status => $config) {
+                if (isset($config->default)) {
                     $archive->processingStatus = $status;
                     break;
                 }
