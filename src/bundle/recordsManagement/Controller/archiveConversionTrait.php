@@ -152,7 +152,6 @@ trait archiveConversionTrait
         }
 
         if ($transactionControl) {
-            var_dump($archive);exit();
             $this->sdoFactory->commit();
         }
 
