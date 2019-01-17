@@ -1038,3 +1038,9 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Processing statuses"
+msgstr "Statut du flux de travail"
+
+msgid "Processing status"
+msgstr "Statut initial du flux de travail"
