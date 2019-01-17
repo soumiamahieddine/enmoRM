@@ -91,6 +91,7 @@
 <div class="hide">
     <span id="text_file"><i class='fa fa-folder'></i> File</span>
     <span id="text_item"><i class='fa fa-file'></i> Item</span>
+    <span id="text_defaultStatus"></i>Select a workflow status</span>
     <span id="message_requiredFieldOnEmptyForm">You must define at least the name, the identifier, the date of the document or a document</span>
 </div>
 
@@ -261,7 +262,7 @@
 
                 field.append($('<option>', {
                         value: "",
-                        text: "Select a status"
+                        text: $("#text_defaultStatus").text()
                     }));
                 field.val("Select a status...");
 
