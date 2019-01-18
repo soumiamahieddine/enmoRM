@@ -536,7 +536,7 @@ trait archiveEntryTrait
         $initialStatuses = [];
         if (!empty($statuses)) {
             foreach ($statuses as $procstatus => $config) {
-                if ($config->type == "Initial") {
+                if ($config->type == "initial") {
                     $initialStatuses[$procstatus]=$config;
                 }
             }
@@ -552,7 +552,7 @@ trait archiveEntryTrait
             }
         } else {
             if (!array_key_exists($processingStatus, $initialStatuses)) {
-                throw new \core\Exception\BadRequestException('The processing status isn\'t Initial');
+                throw new \core\Exception\BadRequestException('The processing status isn\'t initial');
             }
         }
     }
