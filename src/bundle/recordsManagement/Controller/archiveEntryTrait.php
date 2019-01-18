@@ -545,7 +545,7 @@ trait archiveEntryTrait
         // Set default processing status if not set & if exist default in profile
         if (!isset($processingStatus) || empty($processingStatus)) {
             foreach ($initialStatuses as $status => $config) {
-                if (isset($config->default)) {
+                if ($config->default == true) {
                     $archive->processingStatus = $status;
                     break;
                 }
