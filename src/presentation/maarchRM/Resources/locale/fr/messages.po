@@ -602,6 +602,5 @@ msgstr "Action invalide"
 msgid "Text"
 msgstr "Texte"
 
-msgid "Select a workflow status"
-msgstr "Sélectionnez un statut du flux de travail"
-
+msgid "No workflow status"
+msgstr "Pas de statut de workflow"
