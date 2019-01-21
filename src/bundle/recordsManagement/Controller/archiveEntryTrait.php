@@ -552,7 +552,7 @@ trait archiveEntryTrait
             }
         } else {
             if (!array_key_exists($processingStatus, $initialStatuses)) {
-                throw new \core\Exception\BadRequestException('The processing status isn\'t initial');
+                throw new \core\Exception\BadRequestException("The processing status isn't initial");
             }
         }
     }
