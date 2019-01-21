@@ -603,4 +603,4 @@ msgid "Text"
 msgstr "Texte"
 
 msgid "No workflow status"
-msgstr "Pas de statut de workflow"
+msgstr "Pas de statut de traitement"
