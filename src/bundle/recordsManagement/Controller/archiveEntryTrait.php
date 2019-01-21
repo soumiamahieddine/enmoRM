@@ -936,9 +936,11 @@ trait archiveEntryTrait
             $this->sdoFactory->commit();
 
             // TimeStamp last modification date of the parent archive.
-            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-            $parentArchive->lastModificationDate = \laabs::newTimestamp();
-            $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
+            if (!empty($archive->parentArchiveId)) {
+                $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+                $parentArchive->lastModificationDate = \laabs::newTimestamp();
+                $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
+            }
         }
 
         $this->logDeposit($archive);
