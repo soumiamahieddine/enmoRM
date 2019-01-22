@@ -767,6 +767,9 @@ msgstr "Permission non accordée : vous devez choisir une unité organisationnel
 msgid "The description class does not match with the archival profile."
 msgstr "La classe description ne correspond pas aux profils d'archive."
 
+msgid "The processing status isn't initial"
+msgstr "Le statut de traitement choisi n'est pas de type initial"
+
 msgid "Archive not set for destruction."
 msgstr "L'archive n'est pas prévue pour être détruite."
 
@@ -1038,3 +1041,9 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Processing statuses"
+msgstr "Statuts du flux de travail"
+
+msgid "Processing status"
+msgstr "Statut initial du flux de travail"
