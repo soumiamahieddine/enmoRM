@@ -24,6 +24,9 @@
                         <option value="[?merge .reference ?]"><?merge .reference ?></option>
                     </select>
                 </div>
+                <div>
+                <div class="form-group" id="extensions"></div>
+                </div>
                 <div class="form-group text-right">
                     <button class="btn btn-success" id="addArchivalProfile" type="button" style="display: none;"><i
                         class="fa fa-plus">&nbsp;</i>Add</button>
@@ -155,28 +158,41 @@
         },
 
         retrieveUserAccess: function () {
-            var userAccesses = {processingStatuses: {}};
-            var status_inputs = $('#checkboxes_holder').find("input[type='checkbox']");
+            var userAccesses = {processingStatuses: {}, subProfile: {}};
+            var status_inputs = $('#actionsListStatus').find('#checkboxes_holder').find("input[type='checkbox']");
+            $.merge(status_inputs, $('#subProfile').find('#checkboxes_holder').find("input[type='checkbox']"));
 
             status_inputs.each(function (key, status_input) {
                 if (status_input.checked === true) {
-                    var userAccess = {};
-
-                    if (this.name === 'processingStatus') {
-                        var statusId = Object.keys($(this).data('json'))[0];
-                        var action = {};
-                        var action_inputs = $(this).siblings('ul').find("input[type='checkbox']");
-                        action_inputs.each(function (action_key, action_input) {
-                            if (action_input.checked === true) {
-                                if (action_input.name === 'action') {
-                                    action[Object.keys($(this).data('json'))[0]] = {};
+                    switch (this.name) {
+                        case 'processingStatus' :
+                            var statusId = Object.keys($(this).data('json'))[0];
+                            var action = {};
+                            var action_inputs = $(this).siblings('ul').find("input[type='checkbox']");
+                            action_inputs.each(function (action_key, action_input) {
+                                if (action_input.checked === true) {
+                                    if (action_input.name === 'action') {
+                                        action[Object.keys($(this).data('json'))[0]] = {};
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        userAccesses.processingStatuses[statusId] = {actions: action };
-                    } else if (this.name === 'history') {
-                        userAccesses.history = {};
+                            userAccesses.processingStatuses[statusId] = {actions: action };
+                            break;
+                        case 'history' :
+                            userAccesses.history = {};
+                            break;
+                        case 'subProfile' :
+                            var subProfileId = $(this).data('json').reference;
+                            userAccesses.subProfile[subProfileId] = {};
+                            var subProfileChildren_inputs = $(this).siblings('ul').find("input[type='checkbox']");
+                            subProfileChildren_inputs.each(function (subProfileChildren_key, subProfileChildren_input) {
+                                if (subProfileChildren_input.checked === true) {
+                                    var subProfileChildren_reference = $(this).data('json').reference;
+                                    userAccesses.subProfile[subProfileId][subProfileChildren_reference] = {};
+                                }
+                            });
+                            break;
                     }
                 }
             });
