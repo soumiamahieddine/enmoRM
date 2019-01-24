@@ -6,6 +6,10 @@
     <div class="col-xs-12 text-center">
         <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="">View</button>
     </div>
+    <!--TODO add condition d'apparition du bouton  - si versement LRRPPN alors hide ?-->
+    <div class="col-xs-12 text-center" style="margin-bottom: 5px;">
+        <button type="button" id="deleteResource" class="btn btn-link btn-sm" title2="Delete"><i class ="fa fa-trash">&nbsp;</i>Delete</button>
+    </div>
     <div class="col-xs-12">
         <table>
             <tr>
@@ -151,6 +155,9 @@
 
     $("#viewResource").on("click", function() {
         window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
+    });
+    $("#deleteResource").on("click", function(){
+        // TODO voir comment j'appelle la bonne fonction
     });
 
 </script>

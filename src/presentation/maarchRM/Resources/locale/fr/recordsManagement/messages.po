@@ -749,6 +749,12 @@ msgstr "%1$s restitution(s) ne sont pas annulée(s)."
 msgid "%1$s destruction(s) can not be canceled.'"
 msgstr "%1$s destruction(s) ne sont pas annulée(s)."
 
+msgid "%1$s resource(s) can\'t be deleted."
+msgstr "la ressource %1$s ne peut pas être supprimée." 
+
+msgid "%1$s resource(s) deleted."
+msgstr "%1$s ressource(s) supprimée(s)"
+
 msgid "Restitution message created"
 msgstr "Message de restitution créé."
 

@@ -712,7 +712,6 @@ class archive
     {
         if ($result) {
              $this->json->message = 'Archive updated';
-
         } else {
              $this->json->message = 'Archive not updated';
         }
@@ -1021,6 +1020,32 @@ class archive
     }
 
     /**
+     * Delete a digital Resource
+     * @param array $result
+     *
+     * @return string
+     */
+    public function deleteResource($result)
+    {
+        $success = count($result['success']);
+        $echec = count($result['error']);
+
+        $this->json->message = '%1$s resource(s) deleted.';
+        $this->json->message = $this->translator->getText($this->json->message);
+        $this->json->message = sprintf($this->json->message, $success);
+
+        if ($echec > 0) {
+            $message = '%1$s resource(s) can\'t be deleted.';
+            $message = $this->translator->getText($message);
+            $message = sprintf($message, $echec);
+
+            $this->json->message .= ' '.$message;
+        }
+
+        return $this->json->save();
+    }
+
+    /**
      * @param array $childrenArchives
      *
      */
@@ -1085,7 +1110,7 @@ class archive
         $table = $this->view->createElement('table');
 
         if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
-            usort($archivalProfile->archiveDescription, function($a, $b) {
+            usort($archivalProfile->archiveDescription, function ($a, $b) {
                 return $a->position > $b->position;
             });
 
@@ -1232,7 +1257,7 @@ class archive
         if (!isset($this->archivalProfiles[$reference])) {
             try {
                 $this->archivalProfiles[$reference] = \laabs::callService('recordsManagement/archivalProfile/readProfiledescription_archivalProfileReference_', $reference);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return null;
             }
         }
@@ -1272,9 +1297,8 @@ class archive
     {
         if ($archive->status == "disposed") {
             $archive->digitalResources = null;
-
-        } elseif(isset($archive->digitalResources)) {
-            foreach ($archive->digitalResources as $key =>$digitalResource) {
+        } elseif (isset($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $key => $digitalResource) {
                 $archive->digitalResources[$key]->json = json_encode($digitalResource);
                 $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
 
@@ -1299,7 +1323,7 @@ class archive
         $this->setDigitalResources($archive);
 
         foreach ($archive->childrenArchives as $key => $child) {
-            if(!is_null($child->archivalProfileReference)) {
+            if (!is_null($child->archivalProfileReference)) {
                 $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
 
                 if (!isset($childrenByProfiles[$archivalProfile->name])) {
@@ -1308,9 +1332,8 @@ class archive
 
                 $child->archivalProfileName = $archivalProfile->name;
                 $childrenByProfiles[$child->archivalProfileName][] = $child;
-            }
-            else{
-                if(!isset($childrenByProfiles["noProfile"])){
+            } else {
+                if (!isset($childrenByProfiles["noProfile"])) {
                     $childrenByProfiles["noProfile"] = [];
                 }
                 $childrenByProfiles["noProfile"][] = $child;
@@ -1363,7 +1386,6 @@ class archive
                 foreach ($userService->orgRoleCodes as $orgRoleCode) {
                     if ($orgRoleCode == 'owner') {
                         $owner = true;
-
                         break;
                     }
                 }

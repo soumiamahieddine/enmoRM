@@ -204,6 +204,24 @@ trait archiveLifeCycleTrait
     }
 
     /**
+     * delete a digital resource
+     * @param recordsManagement/archive                  $archive   	  The archive
+     * @param digitalResource/digitalResource  		     $digitalResource The resource
+     * @param bool                                       $operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logDestructionResource($archive, $digitalResource, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent(
+            'recordsManagement/destructionResource',
+            $archive,
+            $operationResult,
+            $digitalResource
+        );
+    }
+
+    /**
      * Log an archive restitution
      * @param recordsManagement/archive $archive         The archive
      * @param bool                      $operationResult The operation result

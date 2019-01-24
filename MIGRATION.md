@@ -35,3 +35,9 @@ Modification de la configuration :
         "cookieName" : "CSRF",
         "tokenLength" : 32
     }'
+
+# Migration 2.3 vers 2.4
+
+# Evenement
+
+Ajout de l'évènement recordsManagement/destructionResource dans la table "lieCycle.eventFormat" qui permet la suppression d'une ressource détenu dans une archive.
