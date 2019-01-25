@@ -93,7 +93,10 @@
                     }
                     gritter.show(response.message, response.status, response.errors);
                     $('#addArchivalProfile').addClass('hide');
-                    $('#updateArchivalProfile').show();
+                    $('#updateArchivalProfile').removeClass('hide');
+                    $('#profileReference').val("");
+                    $('#serviceLevelReference').val("");
+                    $('#actionsListStatus').addClass("hide");
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
@@ -112,7 +115,6 @@
             }
 
             var li = $('<li/>').addClass('list-group-item clearfix')
-            .addClass('active')
             .data('json', profileAccess)
             .html(selectedOptions)
             .prop('title', selectedOptionServiceLevel.text());
@@ -142,8 +144,8 @@
                     gritter.show(response.message, response.status, response.errors);
                     ArchivalProfileAccessForm.removeFromList(li);
                     $('#checkboxes_holder').empty();
-                    $('#addArchivalProfile').hide();
-                    $('#updateArchivalProfile').hide();
+                    $('#addArchivalProfile').addClass("hide");
+                    $('#updateArchivalProfile').addClass("hide");
                     $('#profileReference').val("");
                 },
                 error: function (response) {
@@ -248,4 +250,9 @@
         $('#serviceLevelReference').val('');
     });
 
+    $('#profileReference').on('change', function () {
+        if ($('#profileReference').val() !== '') {
+            $('#addArchivalProfile').removeClass("hide");
+        }
+    })
 </script>
