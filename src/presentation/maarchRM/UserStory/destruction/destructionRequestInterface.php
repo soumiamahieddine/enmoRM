@@ -50,5 +50,5 @@ interface destructionRequestInterface
      * @uses recordsManagement/archive/delete_archiveId_Digitalresource
      * @return recordsManagement/archive/deleteResource
      */
-    public function delete_archiveId_digitalResource($resIds);
+    public function delete_archiveId_Digitalresource($resIds);
 }

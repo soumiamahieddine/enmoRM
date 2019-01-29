@@ -214,7 +214,7 @@ trait archiveLifeCycleTrait
     public function logDestructionResource($archive, $digitalResource, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/destructionResource',
+            'recordsManagement/resourceDestruction',
             $archive,
             $operationResult,
             $digitalResource
