@@ -182,9 +182,9 @@
     // This event refresh view after a click on deleteResource
     $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
     {
-        console.log("event OK");
-        //TODO close window after click.
-        //DocumentInformation.load($("#deleteResource").data("archiveid"));
+        $('#modalArchiveInfo').one('hidden.bs.modal', function(e){
+                $('#'+$('#deleteResource').data("archiveid")).find('.viewArchive').click();
+            }).modal('hide');
     });
 
 </script>
