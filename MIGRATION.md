@@ -40,4 +40,4 @@ Modification de la configuration :
 
 # Evenement
 
-Ajout de l'évènement recordsManagement/destructionResource dans la table "lieCycle.eventFormat" qui permet la suppression d'une ressource détenu dans une archive.
+Ajout de l'évènement recordsManagement/resourceDestruction dans la table "lifeCycle.eventFormat" qui permet la suppression d'une ressource détenue dans une archive.
