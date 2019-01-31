@@ -78,7 +78,7 @@
                 hint: true,
                 highlight: true,
                 minLength: 2
-            }, 
+            },
             {
                 name: 'users',
                 displayKey: 'displayName',
@@ -87,9 +87,9 @@
                         return "<span class='well well-sm'>"+$('#no_user_found_text').text()+"</span>";
                     },
                     suggestion: function(user) {
-                        var display = 
+                        var display =
                             "<span>"
-                                + "<span style='font-family:Helvetica, sans-serif;'>" 
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
                                 + user.displayName
                                 + "</span></span><br>";
 
@@ -145,7 +145,7 @@
             var suggestion = $('#organization_userTypeahead').data('user');
             var accountId = suggestion.accountId
             var orgId = $('#modifyOrganization').data('organization').orgId;
-            var userFunction = $('#organization_userPositionForm').find('input[name="function"]').val();
+            var userFunction = $('#organizationInfo_users').find('input[name="function"]').val();
 
             $.ajax({
                 url         : "/organization/"+orgId+"/userPosition/"+accountId,
@@ -158,7 +158,7 @@
                     if (response.status) {
                         UsersForm.addUserToScreen(accountId, suggestion.displayName, userFunction);
                         $('#organization_userTypeahead').val('').removeData('user');
-                        $('#organization_userPositionForm').find('[name="function"]').val('');
+                        $('#organizationInfo_users').find('[name="function"]').val('');
                         $('#organization_addUserPosition').prop('disabled', false);
                     }
                 },
@@ -197,7 +197,7 @@
                 .addClass('list-group-item clearfix')
                 .appendTo(positionList)
                 .text(displayName);
-            
+
             if ($('#organization_userTypeahead').length) {
                 var span = $('<span/>')
                     .addClass('pull-right')
