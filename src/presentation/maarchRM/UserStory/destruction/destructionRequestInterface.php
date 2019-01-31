@@ -28,7 +28,7 @@ interface destructionRequestInterface
     /**
      * Flag archives for disposal
      * @param array  $archiveIds The archives ids
-     * 
+     *
      * @uses recordsManagement/archives/updateDisposearchives
      * @return recordsManagement/archive/dispose
      */
@@ -42,5 +42,13 @@ interface destructionRequestInterface
      * @return recordsManagement/archive/cancelDestruction
      */
     public function updateRecordsmanagementCanceldestruction($archiveIds);
+
+    /**
+     * Resource destruction
+     * @param array $resIds Id List of resource
+     *
+     * @uses recordsManagement/archive/delete_archiveId_Digitalresource
+     * @return recordsManagement/archive/deleteResource
+     */
+    public function delete_archiveId_Digitalresource($resIds);
 }
-  

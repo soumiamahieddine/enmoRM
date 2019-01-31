@@ -154,5 +154,13 @@ interface archiveInterface
      * 
      * @action recordsManagement/archive/addResource
      */
-    public function create_archiveId_Digitalresource($contents, $filename=null);
+    public function create_archiveId_Digitalresource($contents, $filename = null);
+
+    /**
+     * Remove a resource to the archive
+     * @param array $resIds
+     *
+     * @action recordsManagement/archive/deleteResource
+     */
+    public function delete_archiveId_Digitalresource($resIds);
 }

@@ -274,4 +274,31 @@ trait archiveDestructionTrait
 
         return $archiveIds ;
     }
+    
+    public function deleteResource($archiveId, $resIds)
+    {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        
+        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+            && !in_array("owner", $currentService->orgRoleCodes)) {
+            return false ;
+        }
+        $destructResources = [];
+        $destructResources['error'] = [];
+        $destructResources['success'] = [];
+
+        foreach ($resIds as $resId) {
+            try {
+                $digitalResource = $this->digitalResourceController->info($resId);
+                $this->digitalResourceController->delete($resId);
+                $destructResources['success'][] = $resId;
+                $this->logDestructionResource($archive, $digitalResource);
+            } catch (\Exception $e) {
+                $destructResources['error'][] = $resId;
+                $this->logDestructionResource($archive, $digitalResource, false);
+            }
+        }
+        return $destructResources;
+    }
 }

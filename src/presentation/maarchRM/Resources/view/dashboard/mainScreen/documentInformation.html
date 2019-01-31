@@ -4,8 +4,11 @@
         <i class="infoIcon fa fa-file-o"/>
     </div>
     <div class="col-xs-12 text-center">
-        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="">View</button>
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid=""><i class ="fa-eye fa">&nbsp;</i>View</button>
+            <?merge destructionPrivilege.bool() ?>
+        <button href="#" type="button" id="deleteResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="" title2="Delete"><i class ="fa fa-trash">&nbsp;</i>Delete</button>
     </div>
+
     <div class="col-xs-12">
         <table>
             <tr>
@@ -69,6 +72,8 @@
             resource.created = resource.created.substring(0, 19);
             DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
             DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
+            DocumentInformation.form.find("#deleteResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#deleteResource").data("archiveid", resource.archiveId);
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
@@ -117,7 +122,7 @@
             }
 
             if (resource.metadata) {
-
+                // TODO ?
             }
 
             var displayableFormat = $('#preview').data('format');
@@ -151,6 +156,35 @@
 
     $("#viewResource").on("click", function() {
         window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
+    });
+
+    $("#deleteResource").on("click", function(){
+        var resources = {
+                resIds           : [$(this).data('resid')]
+            }
+
+            ajax($('#deleteResource'), {
+                type: "DELETE",
+                url: '/' + $(this).data("archiveid") + '/digitalResource',
+                data: JSON.stringify(resources),
+                dataType: 'json',
+                contentType: 'application/json',
+                success     : function (response) {
+                    gritter.show(response.message, true);
+                    trigger('deleteResourceDone.recordsManagement');
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+    });
+
+    // This event refresh view after a click on deleteResource
+    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
+    {
+        $('#modalArchiveInfo').one('hidden.bs.modal', function(e){
+                $('#'+$('#deleteResource').data("archiveid")).find('.viewArchive').click();
+            }).modal('hide');
     });
 
 </script>
