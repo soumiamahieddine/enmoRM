@@ -60,6 +60,7 @@
         },
 
         save: function (type) {
+            console.log(this);
             var archivalProfileAccess = this.serialize();
 
             if (!archivalProfileAccess.archivalProfileReference) {
@@ -93,11 +94,12 @@
                     }
                     gritter.show(response.message, response.status, response.errors);
                     $('#addArchivalProfile').addClass('hide');
-                    $('#updateArchivalProfile').removeClass('hide');
+                    //$('#updateArchivalProfile').removeClass('hide');
                     $('#profileReference').val("");
                     $('#serviceLevelReference').val("");
                     $('#actionsListStatus').addClass("hide");
                     $('#subProfile').addClass("hide");
+                    $('#updateArchivalProfile').addClass('hide');
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
