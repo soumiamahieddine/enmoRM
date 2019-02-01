@@ -97,6 +97,7 @@
                     $('#profileReference').val("");
                     $('#serviceLevelReference').val("");
                     $('#actionsListStatus').addClass("hide");
+                    $('#subProfile').addClass("hide");
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
@@ -147,6 +148,8 @@
                     $('#addArchivalProfile').addClass("hide");
                     $('#updateArchivalProfile').addClass("hide");
                     $('#profileReference').val("");
+                    $('#actionsListStatus').addClass("hide");
+                    $('#subProfile').addClass("hide");
                 },
                 error: function (response) {
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
