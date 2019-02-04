@@ -337,7 +337,7 @@ trait archiveAccessTrait
         if ($accessRuleAssert) {
             $queryParts[] = $accessRuleAssert;
         }
-
+        
         $queryString = \laabs\implode(' AND ', $queryParts);
         $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
 
@@ -364,6 +364,7 @@ trait archiveAccessTrait
             $archive = $archiveId;
         }
         $this->getAccessRule($archive);
+        $this->checkRights($archive);
 
         if ($checkAccess && !$this->accessVerification($archive)) {
             throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
@@ -394,6 +395,8 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
+        $this->checkRights($archive);
+
         $archive->lifeCycleEvent = $this->getArchiveLifeCycleEvent($archive->archiveId);
         $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
 
@@ -453,6 +456,10 @@ trait archiveAccessTrait
      */
     public function getDigitalResources($archiveId)
     {
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        $this->checkRights($archive);
+
         return $this->digitalResourceController->getResourcesByArchiveId($archiveId);
     }
 
@@ -468,6 +475,9 @@ trait archiveAccessTrait
     public function consultation($archiveId, $resId, $checkAccess = true)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        $this->checkRights($archive);
+
         try {
             $digitalResource = $this->digitalResourceController->retrieve($resId);
 
@@ -531,6 +541,7 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
+        $this->checkRights($archive);
 
         $this->getMetadata($archive);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
@@ -826,6 +837,7 @@ trait archiveAccessTrait
 
         $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        $queryParts['user'] = "userOrgRegNumbers = '*".$currentService->registrationNumber."*'";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
         $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId

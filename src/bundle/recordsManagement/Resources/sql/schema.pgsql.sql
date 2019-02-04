@@ -176,6 +176,7 @@ CREATE TABLE "recordsManagement"."archive"
   "originatorOwnerOrgRegNumber" text,
   "depositorOrgRegNumber" text,
   "archiverOrgRegNumber" text,
+  "userOrgRegNumbers" text,
 
   "archivalProfileReference" text,
   "archivalAgreementReference" text,

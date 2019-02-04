@@ -10,6 +10,7 @@ ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "processingStatuses
 
 -- Add columns for processing statuses on archival profiles
 ALTER TABLE "recordsManagement"."archive" ADD COLUMN "processingStatus" text;
+ALTER TABLE "recordsManagement"."archive" ADD COLUMN "userOrgRegNumbers" text;
 
 
 -- DROP constraint on orgid and add primary key constraint on couple (orgid and archivalprofilereference)

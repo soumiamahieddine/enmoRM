@@ -283,6 +283,13 @@ class archive
      */
     public $archiverOrgRegNumber;
 
+    /**
+     * Registration number of user organisation
+     *
+     * @var tokenList
+     */
+    public $userOrgRegNumbers;
+
     /* ************************************************************************
      * Life Cycle
      *********************************************************************** */
