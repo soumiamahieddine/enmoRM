@@ -494,36 +494,34 @@ trait archiveModificationTrait
      * Update archive with changed retention rule
      * @param int $limit The maximum number of archive to update
      */
-    public function updateArchiveRetentionRule($limit = 1000) {
+    public function updateArchiveRetentionRule($limit = 1000)
+    {
         $archives = $this->sdoFactory->find('recordsManagement/archive', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
         $retentionRules = [];
 
-        if($archives) {
-            foreach ($archives as $archive) {
+        foreach ($archives as $archive) {
+            $retentionRule = new \stdClass();
+            $retentionRule->archiveId = $archive->archiveId;
+            $retentionRule->previousStartDate = $archive->retentionStartDate;
+            $retentionRule->previousDuration = $archive->retentionDuration;
+            $retentionRule->previousFinalDisposition = $archive->finalDisposition;
 
-                $retentionRule = new \stdClass();
-                $retentionRule->archiveId = $archive->archiveId;
-                $retentionRule->previousStartDate = $archive->retentionStartDate;
-                $retentionRule->previousDuration = $archive->retentionDuration;
-                $retentionRule->previousFinalDisposition = $archive->finalDisposition;
-
-                if (!isset($retentionRules[$archive->retentionRuleCode])) {
-                    $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
-                }
-
-                $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
-                $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
-
-                $retentionRule->retentionStartDate = $archive->retentionStartDate;
-                $retentionRule->retentionDuration = $archive->retentionDuration;
-                $retentionRule->finalDisposition = $archive->finalDisposition;
-
-                $archive->retentionRuleStatus = "current";
-                $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
-
-                // Life cycle journal
-                $this->logRetentionRuleModification($archive, $retentionRule, true);
+            if (!isset($retentionRules[$archive->retentionRuleCode])) {
+                $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
             }
+
+            $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;
+            $archive->disposalDate = $this->calculateDate($archive->retentionStartDate, $archive->retentionDuration);
+
+            $retentionRule->retentionStartDate = $archive->retentionStartDate;
+            $retentionRule->retentionDuration = $archive->retentionDuration;
+            $retentionRule->finalDisposition = $archive->finalDisposition;
+
+            $archive->retentionRuleStatus = "current";
+            $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
+
+            // Life cycle journal
+            $this->logRetentionRuleModification($archive, $retentionRule, true);
         }
     }
 
@@ -534,7 +532,7 @@ trait archiveModificationTrait
      * @param string $contents    The resource contents
      * @param string $filename    The optional filename
      * @param string $checkAccess Check access to archive. If false caller MUST check access before.
-     * 
+     *
      * @return The new resource identifier
      */
     public function addResource($archiveId, $contents, $filename = false, $checkAccess = true)
@@ -543,7 +541,7 @@ trait archiveModificationTrait
         if (filter_var($contents, FILTER_VALIDATE_URL)) {
             $contents = stream_get_contents($contents);
         } else if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
-            $contents = base64_decode($contents); 
+            $contents = base64_decode($contents);
         } elseif (is_file($contents)) {
             if (empty($filename)) {
                 $filename = basename($contents);
@@ -592,5 +590,29 @@ trait archiveModificationTrait
 
         return $digitalResource->resId;
     }
-}
 
+    /**
+     * Update user access
+     * @param string $archiveId         The archive unit identifier
+     * @param array  $userOrgRegNumbers The user org registration numbers
+     * @param string $checkAccess       Check access to archive. If false caller MUST check access before.
+     *
+     * @return bool
+     */
+    public function updateUserOrgRegNumbers($archiveId, array $userOrgRegNumbers, $checkAccess = true)
+    {
+        $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+
+        // Check rights ?
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
+
+        $archiveUserOrgRegNumbers = \laabs::newInstance('recordsManagement/archiveUserOrgRegNumbers');
+        $archiveUserOrgRegNumbers->archiveId = $archiveId;
+        $archiveUserOrgRegNumbers->userOrgRegNumbers = \laabs::newTokenList($userOrgRegNumbers);
+        $archiveUserOrgRegNumbers->lastModificationDate = \laabs::newTimestamp();
+
+        $this->sdoFactory->update($archiveUserOrgRegNumbers);
+    }
+}
