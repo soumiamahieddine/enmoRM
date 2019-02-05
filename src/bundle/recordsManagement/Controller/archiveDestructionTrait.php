@@ -261,14 +261,19 @@ trait archiveDestructionTrait
 
         $beforeError = ($isChild) ? "Children archives : ": "";
 
+        if (isset(\laabs::configuration("recordsManagement")['actionWithoutRetentionRule'])) {
+            $actionWithoutRetentionRule = \laabs::configuration("recordsManagement")['actionWithoutRetentionRule'];
+        } else {
+            $actionWithoutRetentionRule = "preserve";
+        }
+
         if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
             throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Archive not set for destruction.");
         }
-
         if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
             throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
         }
-        if (!isset($archive->finalDisposition) || empty($archive->disposalDate || empty($archive->finalDisposition))) {
+        if ((!isset($archive->finalDisposition) || empty($archive->finalDisposition) || empty($archive->disposalDate)) && $actionWithoutRetentionRule == "preserve") {
             throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."There is a missing management information (date or retention rule).");
         }
 
