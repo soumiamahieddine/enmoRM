@@ -173,6 +173,9 @@ msgstr "Télécharger le journal (csv)"
 msgid "Path"
 msgstr "Route"
 
+msgid "Show the certificate"
+msgstr "Voir l'attestation"
+
 msgid "remoteIp"
 msgstr "Ip distant"
 
