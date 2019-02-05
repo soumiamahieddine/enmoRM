@@ -31,7 +31,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'SubSequence.php';
 
 /**
  * The PRONOM Droid internal signature identification tool
- * 
+ *
  * @author Cyril Vazquez Maarch <cyril.vazquez@maarch.org>
  */
 class Droid
@@ -88,7 +88,7 @@ class Droid
      * The format objects by mimetype
      * @var array
      */
-    public $mimetypes = array();   
+    public $mimetypes = array();
 
     /**
      * The format objects by extension
@@ -188,7 +188,7 @@ class Droid
     /**
      * Get the format by Puid
      * @param string $puid
-     * 
+     *
      * @return object
      */
     public function getFormatByPuid($puid)
@@ -237,11 +237,11 @@ class Droid
     /**
      *  Try to match a droid format with the filename
      * @param string $filename The filename of the resource
-     * 
+     *
      * @return object The format
      */
     public function match($filename)
-    {                     
+    {
         $matchedFormats = array();
 
         $finfo = new finfo();
@@ -255,7 +255,10 @@ class Droid
 
         // No format detected
         if (count($matchedFormats) == 0) {
-            return;
+            switch ($mimetype) {
+                case 'text/plain':
+                    return $this->getFormatByPuid('x-fmt/111');
+            }
         }
 
         // Apply priorities if more than 1 format found
@@ -270,7 +273,7 @@ class Droid
     /**
      * Match a file extension
      * @param string $extension
-     * 
+     *
      * @return array The possible formats
      */
     public function matchExtension($extension)
@@ -290,7 +293,7 @@ class Droid
     /**
      * Match a content mimetype
      * @param string $mimetype
-     * 
+     *
      * @return array The possible formats
      */
     public function matchMimetype($mimetype)
@@ -311,11 +314,11 @@ class Droid
      * Match a content against internal signatures
      * @param string $filename
      * @param array  $formats
-     * 
+     *
      * @return array The possible formats
      */
     public function matchInternalSignature($filename, $formats=array())
-    {               
+    {
         $matchedFormats = array();
 
         //if (empty($formats)) {
@@ -327,7 +330,7 @@ class Droid
 
         // Loop on possible formats
         foreach ($formats as $formatId => $format) {
-            // If format has no internal signature, continue to the next one 
+            // If format has no internal signature, continue to the next one
             if (count($format->internalSignatureIds) == 0) {
                 continue;
             }
@@ -336,7 +339,7 @@ class Droid
             foreach ($format->internalSignatureIds as $internalSignatureId) {
                 //if ($internalSignatureId != '750') continue;
                 $internalSignature = $this->internalSignatures[(integer) $internalSignatureId];
-                
+
                 if ($internalSignature->match($contents)) {
                     // Add the format to the matched formats
                     $matchedFormats[$formatId] = $format;
@@ -370,14 +373,14 @@ class Droid
     /**
      * Get the contents to match
      * @param string $filename
-     * 
+     *
      * @return string
      */
     public static function getContents($filename)
     {
         $pcreBackTrackLimit = ini_get('pcre.backtrack_limit');
         $filesize = filesize($filename);
-        
+
         if ($filesize > $pcreBackTrackLimit) {
             $size = floor(($pcreBackTrackLimit / 2));
             $contents = file_get_contents($filename, false, null, 0, $size) . file_get_contents($filename, false, null, ($filesize-$size), $size);
@@ -392,7 +395,7 @@ class Droid
      * Match filename as a container. Requires a uncompress command line
      * @param string $filename
      * @param string $containerType
-     * 
+     *
      * @return array The matched formats
      */
     protected function matchContainer($filename, $containerType)
@@ -415,13 +418,13 @@ class Droid
             }
             throw new Exception($message, 0, new Exception($command));
         }*/
-        
+
         $matchedFormats = array();
         $containerSignatures = $this->containerTypes[$containerType];
         foreach ($containerSignatures as $containerSignature) {
 
             if ($containerSignature->match($tmpdir)) {
-                
+
                 $puid = $this->fileFormatMappings[$containerSignature->id];
 
                 $format = $this->getFormatByPuid($puid);
@@ -432,7 +435,7 @@ class Droid
         }
 
         return $matchedFormats;
-    } 
+    }
 
     protected function applyPriorities($formats)
     {
@@ -459,13 +462,13 @@ class Droid
         // If no signature file path given, retrieve the last one in default signature files directory
         if (!$signatureFile) {
             $signatureFiles = glob($this->signatureDir . DIRECTORY_SEPARATOR . 'DROID_SignatureFile_V*.xml');
-            
+
             rsort($signatureFiles);
 
             if (count($signatureFiles) == 0) {
                 throw new Exception("No DROID signature file found in " . $this->signatureDir);
             }
-            
+
             $signatureFile = $signatureFiles[0];
         }
 
@@ -478,11 +481,11 @@ class Droid
         // Get the version
         $this->signatureFileVersion = $signatureDocument->documentElement->getAttribute('Version');
         $this->signatureFileDate = $signatureDocument->documentElement->getAttribute('DateCreated');
-   
-        
+
+
         // Get cache file name
         $signatureCacheFilename = $this->cacheDir . DIRECTORY_SEPARATOR . 'signature_' . $this->signatureFileVersion;
-        
+
         // If the cache exists for the signature file version, reload from cache, else parse the new file and cache the result
         if (is_file($signatureCacheFilename)) {
             $this->loadSignatureCache($signatureCacheFilename);
@@ -500,7 +503,7 @@ class Droid
         // If no container  signature file path given, retrieve the last one in default signature files directory
         if (!$containerSignatureFile) {
             $containerSignatureFiles = glob($this->signatureDir . DIRECTORY_SEPARATOR . 'container-signature-*.xml');
-            
+
             rsort($containerSignatureFiles);
 
             if (count($containerSignatureFiles) == 0) {
@@ -522,7 +525,7 @@ class Droid
 
         // Get cache file name
         $containerSignatureCacheFilename = $this->cacheDir . DIRECTORY_SEPARATOR . 'container_' . $this->containerSignatureFileVersion;
-        
+
         // If the cache exists for the signature file version, reload from cache, else parse the new file and cache the result
         if (is_file($containerSignatureCacheFilename)) {
             $this->loadContainerSignatureCache($containerSignatureCacheFilename);
@@ -567,8 +570,8 @@ class Droid
 
         foreach ($internalSignatureElements as $internalSignatureElement) {
             $internalSignature = new InternalSignature($internalSignatureElement);
-           
-            $this->internalSignatures[(integer) $internalSignature->id] = $internalSignature;            
+
+            $this->internalSignatures[(integer) $internalSignature->id] = $internalSignature;
         }
 
         $formatElements = $signatureDocument->getElementsByTagName("FileFormat");
@@ -578,14 +581,14 @@ class Droid
 
             $this->formats[$format->id] = $format;
 
-            $this->puids[$format->puid] = $format->id; 
+            $this->puids[$format->puid] = $format->id;
 
             foreach ($format->mimetypes as $mimetype) {
-                $this->mimetypes[$mimetype][] = $format->id; 
+                $this->mimetypes[$mimetype][] = $format->id;
             }
 
             foreach ($format->extensions as $extension) {
-                $this->extensions[$extension][] = $format->id; 
+                $this->extensions[$extension][] = $format->id;
             }
         }
 
@@ -609,13 +612,13 @@ class Droid
         $triggerPuidElements = $containerSignatureDocument->getElementsByTagName("TriggerPuid");
 
         foreach ($triggerPuidElements as $triggerPuidElement) {
-            $this->triggerPuids[$triggerPuidElement->getAttribute("ContainerType")] = $triggerPuidElement->getAttribute("Puid");            
+            $this->triggerPuids[$triggerPuidElement->getAttribute("ContainerType")] = $triggerPuidElement->getAttribute("Puid");
         }
 
         $fileFormatMappingElements = $containerSignatureDocument->getElementsByTagName("FileFormatMapping");
 
         foreach ($fileFormatMappingElements as $fileFormatMappingElement) {
-            $this->fileFormatMappings[$fileFormatMappingElement->getAttribute("signatureId")] = $fileFormatMappingElement->getAttribute("Puid");            
+            $this->fileFormatMappings[$fileFormatMappingElement->getAttribute("signatureId")] = $fileFormatMappingElement->getAttribute("Puid");
         }
 
         $containerSignatureElements = $containerSignatureDocument->getElementsByTagName("ContainerSignature");
