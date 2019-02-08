@@ -350,6 +350,12 @@ msgstr "Conversion interactive d'une ressource"
 msgid "recordsManagement/archiveRelationship/newRelationship"
 msgstr "Préparation à la création d'une nouvelle relation"
 
+msgid "recordsManagement/archive/create_archiveId_Digitalresource"
+msgstr "Création d'un document numérique au sein d'une archive"
+
+msgid "recordsManagement/archive/delete_archiveId_Digitalresource"
+msgstr "Suppression d'un document numérique au sein d'une archive"
+
 msgid "recordsManagement/archiveRelationship/createRelationship"
 msgstr "Création d'une relation entre deux archives"
 
@@ -439,7 +445,6 @@ msgstr "Déplacement de plusieurs archives dans un dossier"
 
 msgid "recordsManagement/archives/deleteDisposearchives"
 msgstr "Suppression des archives marquées pour destruction"
-
 
 msgid "recordsManagement/descriptionClass/readIndex"
 msgstr "Liste des modèles de description"
@@ -1373,6 +1378,9 @@ msgstr "Modification du mot de passe utilisateur"
 
 msgid "auth/userAccount/updateGeneratePassword"
 msgstr "Génération d'un mot de passe utilisateur"
+
+msgid "auth/serviceAccount/updateServicetoken_serviceAccountId_"
+msgstr "Modification du nom du compte de service"
 
 msgid "contact/communicationMean/readIndex"
 msgstr "Lecture de tous les moyens de communication"
