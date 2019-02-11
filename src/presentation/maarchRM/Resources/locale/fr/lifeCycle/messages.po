@@ -427,7 +427,7 @@ msgid "recordsManagement/restitution"
 msgstr "Restitution"
 
 msgid "recordsManagement/destruction"
-msgstr "Élimination"
+msgstr "Éliminée"
 
 msgid "recordsManagement/export"
 msgstr "Export"
@@ -451,7 +451,7 @@ msgid "recordsManagement/integrity"
 msgstr "Test de conformité"
 
 msgid "recordsManagement/depositNewResource"
-msgstr "Dépôt d'une nouvelle pièce"
+msgstr "Dépôt d'un nouveau document"
 
 msgid "recordsManagement/delivery"
 msgstr "Communication"
@@ -679,7 +679,7 @@ msgid "recordsManagement/destructionRequestCancel"
 msgstr "Annuler la demande de d'élimination de l'archive"
 
 msgid "recordsManagement/resourceDestruction"
-msgstr "Destruction d'une pièce"
+msgstr "Destruction d'un document"
 
 msgid "Account name"
 msgstr "Nom du compte"
