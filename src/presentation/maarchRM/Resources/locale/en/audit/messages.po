@@ -1309,6 +1309,16 @@ msgstr "Read description field"
 msgid "recordsManagement/descriptionField/update"
 msgstr "Update description field"
 
+
+msgid "recordsManagement/archive/create_archiveId_Digitalresource"
+msgstr "Create digital resource inside an archive"
+
+msgid "recordsManagement/archive/delete_archiveId_Digitalresource"
+msgstr "Delete digital resource inside an archive"
+
+msgid "auth/serviceAccount/updateServicetoken_serviceAccountId_"
+msgstr "Update service account's name"
+
 msgid "filePlan/filePlan/readTree"
 msgstr "Read file plan"
 
