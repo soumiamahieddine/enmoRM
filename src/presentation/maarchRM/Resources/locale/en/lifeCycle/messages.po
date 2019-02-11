@@ -37,3 +37,18 @@ msgstr "Address"
 
 msgid "depositorOrgRegNumber"
 msgstr "Depositor identifier"
+
+msgid "recordsManagement/export"
+msgstr "Export"
+
+msgid "recordsManagement/search"
+msgstr "Search"
+	
+msgid "recordsManagement/depositNewResource"
+msgstr "Deposit new resource"
+
+msgid "recordsManagement/metadataConsultation"
+msgstr "Metadata consultation"
+
+msgid "recordsManagement/resourceDestruction"
+msgstr "Delete resource"
