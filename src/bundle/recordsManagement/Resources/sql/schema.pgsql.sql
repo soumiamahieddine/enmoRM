@@ -119,6 +119,7 @@ CREATE TABLE "recordsManagement"."archiveDescription"
   "position" integer,
   "isImmutable" boolean default false,
   "isRetained" boolean default true,
+  "isInList" boolean default false,
 
   PRIMARY KEY ("archivalProfileId", "fieldName"),
   FOREIGN KEY ("archivalProfileId")

@@ -19,3 +19,6 @@ ALTER TABLE "organization"."archivalProfileAccess" ADD CONSTRAINT  archivalProfi
 
 -- Add columns for processing statuses on org unit archival profiles access
 ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb;
+
+-- Add columns for display or not in workflow list the archive descriptions
+ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isInList" boolean default false;

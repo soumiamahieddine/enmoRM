@@ -1114,6 +1114,7 @@ class archive
             $label = $archivalProfileField = null;
             $type = 'text';
             $isImmutable = false;
+            $isInList = false;
 
             if ($archivalProfile) {
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -1122,6 +1123,7 @@ class archive
                         $archivalProfileField = true;
                         $type = $archiveDescription->descriptionField->type;
                         $isImmutable = $archiveDescription->isImmutable;
+                        $isInList = $archiveDescription->isInList;
                     }
                 }
             }

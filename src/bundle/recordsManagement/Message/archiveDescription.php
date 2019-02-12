@@ -56,5 +56,10 @@ class archiveDescription
     /**
      * @var boolean
      */
+    public $isInList;
+
+    /**
+     * @var boolean
+     */
     public $isRetained;
 }
