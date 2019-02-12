@@ -3,6 +3,7 @@
         var archivalProfileAccess = $(this).data('json');
 
         $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
+        $('#serviceLevelReference').val(archivalProfileAccess.serviceLevelReference);
         $('#updateArchivalProfile').show();
 
         $('#accessEntries li').removeClass('active');
