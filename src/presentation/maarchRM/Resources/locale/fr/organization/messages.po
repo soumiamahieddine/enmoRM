@@ -356,13 +356,13 @@ msgid "Service level"
 msgstr "Niveaux de service "
 
 msgid "Archival profiles access created"
-msgstr "Profil d'archive enregistré"
+msgstr "Liaison ajoutée"
 
 msgid "Archival profiles access updated"
-msgstr "Profil d'archive mis à jour"
+msgstr "Liaison modifiée"
 
 msgid "Archival profiles access deleted"
-msgstr "Profil d'archive supprimé"
+msgstr "Liaison supprimée"
 
 msgid "Select a profile"
 msgstr "Selectionnez un profil"
