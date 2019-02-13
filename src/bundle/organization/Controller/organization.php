@@ -1117,13 +1117,17 @@ class organization
      *
      * @return recordsManagement/archivalProfile[] Array of recordsManagement/archivalProfile object
      */
-    public function getOrgUnitArchivalProfiles($orgRegNumber)
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess = null)
     {
         $orgUnitArchivalProfiles = [];
 
         $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
 
-        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='".$organization->orgId."'");
+        if ($originatorAccess) {
+            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'");
+        } else {
+            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+        }
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         foreach ($archivalProfileAccesses as $archivalProfileAccess) {

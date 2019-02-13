@@ -301,7 +301,7 @@ interface organizationInterface
      * @return array
      * @action organization/organization/getOrgUnitArchivalProfiles
      */
-    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
+    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=null);
 
     /**
      * Get the user postions by accountId

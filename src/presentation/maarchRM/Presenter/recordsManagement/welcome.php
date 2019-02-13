@@ -370,7 +370,7 @@ class welcome
 
     protected function getOrgUnitArchivalProfiles($orgUnit)
     {
-        $orgUnit->archivalProfiles = \laabs::callService('organization/organization/readOrgunitprofiles', $orgUnit->registrationNumber);
+        $orgUnit->archivalProfiles = \laabs::callService('organization/organization/readOrgunitprofiles', $orgUnit->registrationNumber, true);
 
         foreach ($orgUnit->archivalProfiles as $i => $archivalProfile) {
             if ($archivalProfile == "*") {
