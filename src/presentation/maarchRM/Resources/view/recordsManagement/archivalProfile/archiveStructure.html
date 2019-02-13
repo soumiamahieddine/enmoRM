@@ -2,9 +2,9 @@
 	<br/>
 	<form class="form-horizontal">
 		<div class="form-group">
-	        <label class="col-md-6 control-label">Accept archives without profile</label>
+	        <label id="toggleText" class="col-md-6 control-label">Accept archives without profile</label>
 	        <div class="col-md-6">
-	            <input type="checkbox" id="acceptArchiveWithoutProfile" name="acceptArchiveWithoutProfile" data-toggle="toggle"> 
+	            <input type="checkbox" class="disableToggle" name="acceptArchiveWithoutProfile" id="acceptArchiveWithoutProfile" data-toggle="toggle" > 
 	        </div>
 	    </div>
 	    <div id="subProfile">
@@ -83,6 +83,15 @@
 
 		removeProfile: function(li) {
 			var profileId = li.data('profileid');
+			
+			// if profileList is empty we disable toggle button & set value to 'ON'
+			if ($(li).siblings().length === 0) {
+				if($('#acceptArchiveWithoutProfile').prop("checked") === false) {
+					$('#acceptArchiveWithoutProfile').bootstrapToggle('on');
+				}
+				$('.disableToggle').prop('disabled', true);
+				$('#toggleText').css({'color':'grey'});
+			}
 			li.remove();
 
 			this.select.find('option[value="'+profileId+'"]').removeClass('hide');
@@ -135,16 +144,22 @@
 	 	$.each(select.data('contained-profiles'), function(key, profile) {
 	 		ArchiveStructure.addProfile(profile);
 	 	});
-
-
+		 
+		// if profileList is empty we disable toggle button & set value to 'ON'
+		if (select.data('contained-profiles').length === 0) {
+			$('#acceptArchiveWithoutProfile').bootstrapToggle("on");
+			$('#toggleText').css({'color':'grey'});
+			$('.disableToggle').prop('disabled', true);
+		}
 	 	select.removeAttr('data-contained-profiles').removeAttr('data-profile-list');
 
 	});
 
 	$('#addProfile').on('click', function() {
-
 		if (ArchiveStructure.select.val() != '') {
 			ArchiveStructure.addProfile(ArchiveStructure.select.find('option:selected').data('json'));
+			$('.disableToggle').prop('disabled', false);
+			$('#toggleText').css({'color':'#333333'});
 		}
 	});
 
