@@ -519,7 +519,9 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
-        $this->validateProcessingStatus($archive);
+        if (isset($archive->processingStatus)) {
+            $this->validateProcessingStatus($archive);
+        }
     }
 
     /**
