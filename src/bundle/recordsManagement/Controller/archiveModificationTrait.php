@@ -96,9 +96,7 @@ trait archiveModificationTrait
                 array_push($res['error'], $archiveId);
 
                 $operationResult = false;
-
             } else {
-
                 $retentionRule = clone($retentionRuleReceived);
 
                 $retentionRule->archiveId = $archiveId;
@@ -390,6 +388,7 @@ trait archiveModificationTrait
             
         return $res;
     }
+
     /**
      * Add a relationship to the archive
      * @param recordsManagement/archiveRelationship $archiveRelationship The relationship of the archive
@@ -400,7 +399,7 @@ trait archiveModificationTrait
     {
         $this->archiveRelationshipController->createRelationship($archiveRelationship);
 
-        $archive = $this->retrieve($archiveRelationship->archiveId);
+        $archive = $this->retrieve($archiveRelationship->archiveId, $withBinary = false, $checkAccess = false);
 
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
@@ -418,7 +417,7 @@ trait archiveModificationTrait
     {
         $this->archiveRelationshipController->deleteRelationship($archiveRelationship);
 
-        $archive = $this->retrieve($archiveRelationship->archiveId);
+        $archive = $this->retrieve($archiveRelationship->archiveId, $withBinary = false, $checkAccess = false);
 
         // Life cycle journal
         $this->logRelationshipDeleting($archive, $archiveRelationship);
