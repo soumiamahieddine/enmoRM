@@ -105,6 +105,15 @@ class Json
     }
 
     /**
+     * Check value
+     * @param string $name  The name of property
+     */
+    public function __isset($name)
+    {
+        return isset($this->value->$name);
+    }
+
+    /**
      * Set value
      * @param string $name  The name of property
      * @param mixed  $value The value to set
