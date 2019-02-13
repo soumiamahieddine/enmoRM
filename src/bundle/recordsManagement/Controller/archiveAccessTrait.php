@@ -845,7 +845,7 @@ trait archiveAccessTrait
 
         $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
-        $queryParts['user'] = "(userOrgRegNumbers = '".$currentService->registrationNumber."' OR userOrgRegNumbers = '".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber."')";
+        $queryParts['user'] = "(userOrgRegNumbers = '".$currentService->registrationNumber."' OR userOrgRegNumbers = '".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber."')";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
         $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId
