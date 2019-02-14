@@ -801,9 +801,16 @@ trait archiveAccessTrait
                 $queryParts['hasParent'] = "parentArchiveId=null";
             }
         }
-        if (!empty($args['processingStatus'])) {
-            $queryParts['processingStatus'] = "processingStatus= :processingStatus";
-            $queryParams['processingStatus'] = $args['processingStatus'];
+        
+        if (isset($args['processingStatus'])) {
+            if ($args['processingStatus'] === true) {
+                $queryParts['processingStatus'] = "processingStatus!=null";
+            } elseif ($args['processingStatus'] === false) {
+                $queryParts['processingStatus'] = "processingStatus=null";
+            } elseif (is_string($args['processingStatus'])) {
+                $queryParts['processingStatus'] = "processingStatus= :processingStatus";
+                $queryParams['processingStatus'] = $args['processingStatus'];
+            }
         }
 
         if ($checkAccess) {
