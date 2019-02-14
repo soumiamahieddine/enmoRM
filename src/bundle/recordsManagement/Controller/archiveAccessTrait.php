@@ -799,7 +799,7 @@ trait archiveAccessTrait
                 $queryParts['processingStatus'] = "processingStatus!=null";
             } elseif ($args['processingStatus'] === false) {
                 $queryParts['processingStatus'] = "processingStatus=null";
-            } else {
+            } elseif (is_string($args['processingStatus'])) {
                 $queryParts['processingStatus'] = "processingStatus= :processingStatus";
                 $queryParams['processingStatus'] = $args['processingStatus'];
             }
