@@ -113,7 +113,35 @@
             });
          },
 
-         loadEditMetadata: function (archiveId) {
+         loadDescription: function(archiveId) {
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archiveInfo/" + archiveId,
+                dataType    : 'html',
+                success     : function (response) {
+                    $('#archiveInformationDiv').empty().html(response);
+                }
+            });
+        },
+
+        loadResourceDescription: function(resource) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    $('#archiveInformationDiv').html(response);
+                    DocumentInformation.load(resource);
+                    if ($('#canDeleteResource').val() == '1') {                
+                        DocumentInformation.form.find("#deleteResource").removeClass('hide');
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            });
+        },
+
+        loadEditMetadata: function (archiveId) {
              $.ajax({
                  type: "GET",
                  url: "/recordsManagement/archiveDescription/" + archiveId + "/getEditMetadata",

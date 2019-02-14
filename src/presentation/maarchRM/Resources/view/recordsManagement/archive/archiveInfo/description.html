@@ -1,0 +1,194 @@
+<div class="row">
+    <div id="archiveDescriptiveMetadata"
+            data-archive-id="[?merge archive.archiveId ?]"
+            data-originator-archive-id="[?merge archive.originatorArchiveId ?]"
+            data-archiver-archive-id="[?merge archive.archiverArchiveId ?]"
+            data-classification="[?merge archive.classificationLevel ?]"
+            data-commentaire="[?merge archive.descriptionObject.Commentaires ?]">
+
+        <h4 class="text-center text-info archivalProfileName">
+            <?merge archive.archivalProfileName ?>
+        </h4>
+        <div class="pull-right">
+            <?merge modificationPrivilege.bool() ?>
+            <button type="button" class="btn btn-link btn-sm" id="editMetadata" title2="Edit"><i class="fa fa-edit">&nbsp;</i>Modifier</button>
+            <?merge archivalExportPrivilege.bool() ?>
+            <button type="button" class="btn btn-link btn-sm" id="archivalExport" title2="Export"><i class="fa fa-download">&nbsp;</i>Exporter</button>
+        </div>
+
+        <span id="metadataForm_error" class="hide">Les métadonnées ne sont pas complètes.</span>
+        <span class="hide" id="no_service_found_meta_text">Aucun service correspondant</span>
+        <span class="hide" id="no_sorting_found_meta_text">Aucun classement correspondant</span>
+        <span class="hide" id="long_comment_text">Le commentaire est trop long.</span>
+    </div>
+</div>
+<style type="text/css">
+    #archiveDescriptionTable td{
+        white-space: normal !important;
+    }
+    #archiveDescriptionTable th, #archiveDescriptionTable td{
+        vertical-align: top;
+    }
+</style>
+<!--script type="text/javascript">
+    var today = new Date();
+    var yyyy = today.getFullYear();
+
+    $('#archiveDescriptionForm').find('[name="annee"]').attr("max", yyyy);
+
+    $('#archivalExport').on('click', function() {
+        var archiveId = $('#archiveDescriptiveMetadata').data('archive-id');
+        window.open('/Exportarchive/'+archiveId, '_blank');
+    });
+
+    MetadataForm = {
+        metadata: $('#archiveDescriptiveMetadata'),
+        form: $('#archiveDescriptionForm'),
+
+        save: function() {
+            archiveObject = {
+                archiveId           : this.metadata.data('archive-id'),
+                typeClassement      : this.form.find('[name="typeClassement"]').data('value'),
+                numArchive          : this.form.find('[name="numArchive"]').val(),
+                annee               : this.form.find('[name="annee"]').val(),
+                archivalOrg         : this.form.find('[name="archivalOrg"]').data('value'),
+                classificationLevel : this.form.find('[name="classificationLevel"]').val(),
+                comment             : this.form.find('[name="commentaires"]').val()
+            }
+
+            if (archiveObject.comment.length >= 250) {
+                gritter.show($('#long_comment_text').text(), false);
+                return;
+
+            }
+            if (!archiveObject.archiveId || !archiveObject.typeClassement || !archiveObject.numArchive || !archiveObject.annee || !archiveObject.archivalOrg) {
+                gritter.show($('#metadataForm_error').text(), false);
+                return;
+            }
+
+            ajax($('#validateMetadata'), {
+                type: 'PUT',
+                url: '/recordsManagement/archive/metadata',
+                data: JSON.stringify(archiveObject),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (response) {
+                    gritter.show(response.message, true);
+                    trigger("showDetails.archive", [archiveObject.archiveId]);
+                }
+            });
+        },
+
+        load: function() {
+            archiveDescriptionTable = $('#archiveDescriptionTable');
+            archiveDescriptionTable.addClass('hide');
+            $('#archiveDescriptionFaits').addClass('hide');
+            $('#archiveDescriptionForm').removeClass('hide');
+
+            $('#archiveDescriptionForm').find('[name="archivalOrg"]').data('value', archiveDescriptionTable.find('.archivalOrg').data('value'));
+            $('#archiveDescriptionForm').find('[name="archivalOrg"]').val(archiveDescriptionTable.find('.archivalOrg').text());
+            $('#archiveDescriptionForm').find('[name="typeClassement"]').val(archiveDescriptionTable.find('.typeClassement').text());
+            $('#archiveDescriptionForm').find('[name="typeClassement"]').data('value', archiveDescriptionTable.find('.typeClassement').data('value'));
+            $('#archiveDescriptionForm').find('[name="numArchive"]').val(archiveDescriptionTable.find('.numArchive').text());
+            $('#archiveDescriptionForm').find('[name="annee"]').val(archiveDescriptionTable.find('.annee').text());
+            $('#archiveDescriptionForm').find('[name="classificationLevel"]').val($('#classificationLevel').data('value'));
+            $('#archiveDescriptionForm').find('[name="commentaires"]').val(archiveDescriptionTable.find('.commentaires').text());
+        },
+
+        close: function() {
+            $('#archiveDescriptionTable').removeClass('hide');
+            $('#archiveDescriptionFaits').removeClass('hide');
+            $('#archiveDescriptionForm').addClass('hide');
+        }
+    };
+
+    $('#editMetadata').on('click', function() {
+        MetadataForm.load();
+    });
+
+    $('#cancelMetadata').on('click', function(e) {
+        e.preventDefault();
+        MetadataForm.close();
+    });
+
+    $('#validateMetadata').on('click', function(e) {
+        e.preventDefault();
+        MetadataForm.save();
+    });
+
+
+    $('#archiveDescriptiveMetadata').ready(function() {
+        $('#archiveDescriptiveMetadata').find('.serviceRef').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name: 'services',
+                displayKey: 'name',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>"+$('#no_service_found_meta_text').text()+"</span>";
+                    },
+                    suggestion: function(services) {
+                        var display;
+                        display =
+                            "<span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + services.name
+                            + "</span></span><br>";
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    services.search(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $(this).data("value", suggestion.id);
+        });
+
+        $('#archiveDescriptiveMetadata').find('.sortingTypeRef').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name: 'sortingTypes',
+                displayKey: 'name',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>"+$('#no_sorting_found_meta_text').text()+"</span>";
+                    },
+                    suggestion: function(sortingTypes) {
+                        var display;
+                        display =
+                            "<span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + sortingTypes.id
+                            + '-'
+                            + sortingTypes.name
+                            + "</span></span><br>";
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    sortingTypes.search(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $(this).data("value", suggestion.id);
+        });
+    });
+
+</script-->

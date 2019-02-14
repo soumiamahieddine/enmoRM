@@ -1,0 +1,128 @@
+<div class="tree-l" id="archiveTree">
+    <input type="hidden" id="canAddResource" value="[?merge canAddResource ?]"/>
+    <input type="hidden" id="canDeleteResource" value="[?merge canDeleteResource ?]"/>
+    <ul>
+        <li class="archive" data-archive-id="[?merge archive.archiveId ?]">
+            <span class="node-default">
+                <i id="rootArchiveTreeOpenner" class="fa" data-closed-icon="fa-caret-right" data-opened-icon="fa-caret-down">&nbsp;</i>
+                <b class="archiveName"><i class="fa fa-folder">&nbsp;</i><?merge archive.archiveName ?></b>
+            </span>
+            <ul>
+                <?merge archive.childrenArchives /recordsManagement/archive/archiveTree/archiveNodeTemplate.html ?>
+                <?merge archive.digitalResources /recordsManagement/archive/archiveTree/archiveContentTemplate.html ?>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<style>
+    #archiveTree b {
+        font-weight: 500;
+    }
+    #archiveTree .archivalProfile > span > span {
+        color: grey;
+    }
+
+    #archiveTree li > span {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    $("#modalArchiveInfo").on('click', ".editMetadata", function () {
+       archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
+    });
+    // View relate archive
+    $("#modalArchiveInfo").onEvent('showDetails.archive', function (e, archiveId) {
+        archiveInfoModal.loadDescription(archiveId);
+    })
+
+    $("#modalArchiveInfo").onEvent('viewRelated.archive', function (e, archiveId) {
+        archiveInfoModal.load(archiveId);
+    })
+
+    $('#modalArchiveInfo').onEvent('showDetails.digitalResource', function(e, resource){
+        archiveInfoModal.loadResourceDescription(resource);
+    })
+
+    $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
+        archiveDocumentViewer.load(archiveId, resId);
+    })
+
+
+    // Show life cycle event
+    $("#modalArchiveInfo").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    })
+
+    // Show document
+    $("#modalArchiveInfo").on('click', '.showDigitalResource', function () {
+        var resId = $(this).data('res-id');
+        var archiveId = $(this).data('archive-id');
+        archiveDocumentViewer.loadResource(archiveId, resId);
+    })
+
+    // Show document
+    $("#modalArchiveInfo").on('click', '[data-convertresource]', function () {
+        var resId = $(this).data('convertresource');
+        var archiveId = $(this).data('archive-id');
+
+        $.ajax({
+            type        : "PUT",
+            url         : "/recordsManagement/InteractiveConversion/" + resId,
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status && response.result != false) {
+                    archiveInfoModal.close();
+                    $('#modalArchiveInfo').one('hidden.bs.modal', function () {
+                        archiveInfoModal.load(archiveId);
+                    });
+                    $('#modalArchiveInfo').one('shown.bs.modal', function () {
+                        $("#modalArchiveInfo").find('[href=#digitalResourcesTab]').tab("show");
+                    });
+                }
+            }
+        });
+    })
+    
+    ArchiveTree = {
+        selected: null,
+        select: function(e) {
+            this.unselect();
+            var li = e.closest('li')
+
+            if(e.hasClass('archiveName')) {
+                li.children('span').removeClass('node-default').addClass('node-warning');
+
+                trigger("showDetails.archive", li.data('archive-id'));
+                this.selected = li;
+
+            } else if (e.hasClass('documentName')) {
+                e.addClass('node-warning');
+                trigger("showDetails.digitalResource", li.data('json'));
+                this.selected = li;
+            }
+        },
+
+        unselect: function() {
+            if (this.selected == null) {
+                return;
+            }
+            if (this.selected.find('.archiveName').length) {
+                this.selected.children('span').removeClass('node-warning').addClass('node-default');
+            } else if (this.selected.find('.documentName').length) {
+                this.selected.find('small:first').removeClass('node-warning');
+            }
+        }
+    }
+
+    $('#archiveTree').on('click', '.archiveName, .documentName', function() {
+        ArchiveTree.select($(this));
+    })
+
+    $('#archiveTree').ready(function() {
+        BootstrapTree.init($('#archiveTree'));
+        $("#rootArchiveTreeOpenner").click().siblings('.archiveName').click();
+    })
+</script>

@@ -258,175 +258,26 @@ class archive
      */
     public function getDescription($archive)
     {
-        $currentService = \laabs::getToken("ORGANIZATION");
-
+        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive, true);
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
-        $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
-        if (!empty($archive->archivalProfileReference)) {
-            $archivalProfile = $archivalProfileController->getByReference($archive->archivalProfileReference);
+        // Relationships
+        $this->setArchiveTree($archive);
 
-            $archive->archivalProfileName = $archivalProfile->name;
-        }
+        // Managment metadata
+        $this->setManagementMetadatas($archive);
 
-        $editDescription = false;
-        if (isset($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = $presenter->read($archive->descriptionObject);
+        // Descriptive metadata
+        $this->getDescriptiveMetadatas($archive);
 
-                $hasModificationMetadata = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-                $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-                if (
-                    (in_array('owner', $currentService->orgRoleCodes)
-                        || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
-                            && in_array('archiver', $currentService->orgRoleCodes)))
-                    && $hasModificationMetadata
-                    && (!is_null($archive->messages) && $archive->messages[0]->schema != 'seda2')
-                    && $archive->descriptionClass != "recordsManagement/log"
-                    && $archive->status === "preserved"
-                    && $publicArchives) {
+        // Relationships
+        $this->setArchiveRelationships($archive);
 
-                    $editDescription = true;
-                }
-
-                $node = $this->view->getElementById("descriptionTab");
-                $this->view->addContent($descriptionHtml, $node);
-                
-            } else {
-                $dl = $this->view->createElement('dl');
-                $dl->setAttribute('class', "dl dl-horizontal");
-
-                foreach ($archive->descriptionObject as $name => $value) {
-                    if (!empty($archive->archivalProfileReference)) {
-                        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                            if ($archiveDescription->fieldName == $name) {
-                                $name = $archiveDescription->descriptionField->label;
-                                break;
-                            }
-                        }
-                    }
-
-                    $dt = $this->view->createElement('dt');
-                    $dt->appendChild($this->view->createTextNode($name));
-                    $dl->appendChild($dt);
-                    if(is_array($value)){
-                        foreach ($value as $metadata) {
-                            if (!is_scalar($metadata)) {
-                                $metadata = str_replace(['{', '[', '"', ']', '}'], ' ', json_encode($metadata));
-                            }
-                            $dd = $this->view->createElement('dd');
-                            $dd->appendChild($this->view->createTextNode($metadata));
-                            $dl->appendChild($dd);
-                        }
-                    } else {
-                        if (!is_scalar($value)) {
-                            $value = str_replace(['{', '[', '"',']', '}'], ' ', json_encode($value));
-                        }
-                        $dd = $this->view->createElement('dd');
-                        $dd->appendChild($this->view->createTextNode($value));
-                        $dl->appendChild($dd);
-                    }
-                }
-
-                $node = $this->view->getElementById("descriptionTab");
-                $node->appendChild($dl);
-
-            }
-        }
-
-        $checkRetentionRule = false;
-        if (isset($archive->retentionDuration) || isset($archive->retentionRuleCode) || isset($archive->retentionStartDate) || isset($archive->finalDisposition)) {
-            $checkRetentionRule = true;
-        }
-
-        if (isset($archive->retentionDuration)) {
-            $archive->retentionDurationUnit = substr($archive->retentionDuration, -1);
-            $archive->retentionDuration = substr($archive->retentionDuration, 1, -1);
-        }
-
-        $checkAccesRule = false;
-        if (isset($archive->accessRuleDuration) || isset($archive->accessRuleCode) || isset($archive->accessRuleStartDate) || isset($archive->accessRuleComDate)) {
-            $checkAccesRule = true;
-        }
-
-        if (isset($archive->accessRuleDuration)) {
-            $archive->accessRuleDurationUnit = substr($archive->accessRuleDuration, -1);
-            $archive->accessRuleDuration = substr($archive->accessRuleDuration, 1, -1);
-        }
-        $archiveController = \laabs::newController("recordsManagement/archive");
-        $archive->visible = $archiveController->accessVerification($archive->archiveId);
-
-        $archive->relatedArchives = (
-            !empty($archive->relationships['parentRelationships'])
-            || !empty($archive->relationships['childrenRelationships'])
-        );
-
-        if ($archive->relatedArchives) {
-            $archive->parentRelationships = $archive->relationships['parentRelationships'];
-            $archive->childrenRelationships = $archive->relationships['childrenRelationships'];
-        }
-        $archive->relationships = (
-            !empty($archive->parentRelationships)
-            || !empty($archive->childrenRelationships)
-            || !empty($archive->parentArchive)
-            || !empty($archive->childrenArchives)
-        );
-
-        if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
-            $archive->digitalResources = null;
-        } else {
-            foreach ($archive->digitalResources as $digitalResource) {
-
-                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
-
-                if (!isset($digitalResource->relatedResource)) {
-                    $digitalResource->relatedResource = [];
-                    continue;
-                }
-                foreach ($digitalResource->relatedResource as $relatedResource) {
-                    $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
-                    $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
-                }
-            }
-        }
-
-        $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
-
-        if(\laabs::hasBundle('medona')) {
-            if (isset($archive->messages)) {
-                foreach ($archive->messages as $message) {
-                    $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
-
-                    $currentService = \laabs::getToken("ORGANIZATION");
-
-                    $message->isVisible = false;
-                    if (!in_array('owner', $currentService->orgRoleCodes)) {
-                        if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
-                            $message->isVisible = true;
-                        }
-                    } else {
-                        $message->isVisible = true;
-                    }
-                }
-            }
-        }
-
-        $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(3);
-        $dataTable->setSorting(array(array(2, 'desc')));
-
-        $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(2);
-        $dataTable->setSorting(array(array(0, 'desc')));
+        // Message
+        $this->checkMessage($archive);
 
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
-        $this->view->setSource("editDescription", $editDescription);
-        $this->view->setSource("checkRetentionRule", $checkRetentionRule);
-        $this->view->setSource("checkAccessRule", $checkAccesRule);
 
         $this->view->translate();
         $this->view->merge();
@@ -1244,7 +1095,7 @@ class archive
             $descriptionHtml = '<table></table>';
         }
         
-        $node = $this->view->getElementById("metadata");
+        $node = $this->view->getElementById("archiveDescriptiveMetadata");
         if ($node) {
             $this->view->addContent($descriptionHtml, $node);
         }
@@ -1344,6 +1195,51 @@ class archive
         }
 
         $archive->childrenArchives = $childrenByProfiles;
+    }
+
+    protected function setArchiveRelationships($archive)
+    {
+        $childrenRelationships = [];
+        $parentRelationships = [];
+        $relationshipTypes = [];
+
+        if (!empty($archive->childrenRelationships)) {
+            foreach ($archive->childrenRelationships as $relationship) {
+                $childrenRelationships[] = $relationship;
+                $relationshipTypes[$relationship->typeCode]=true;
+            }
+            $archive->childrenRelationships = $childrenRelationships;
+        }
+
+        if (!empty($archive->parentRelationships)) {
+            foreach ($archive->parentRelationships as $relationship) {
+                $parentRelationships[] = $relationship;
+                $relationshipTypes[$relationship->typeCode]=true;
+            }
+            $archive->parentRelationships = $parentRelationships;
+        }
+
+        $archive->relationshipTypes = array_keys($relationshipTypes);
+    }
+
+    protected function checkMessage($archive)
+    {
+        if (isset($archive->messages)) {
+            foreach ($archive->messages as $message) {
+                $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
+
+                $currentService = \laabs::getToken("ORGANIZATION");
+
+                $message->isVisible = false;
+                if (isset($currentService->orgRoleCodes) &&  !in_array('owner', $currentService->orgRoleCodes)) {
+                    if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
+                        $message->isVisible = true;
+                    }
+                } else {
+                    $message->isVisible = true;
+                }
+            }
+        }
     }
 
     /**
