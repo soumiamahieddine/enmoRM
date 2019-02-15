@@ -147,20 +147,7 @@ class HttpResponse
     {
         http_response_code($this->code);
 
-        if (!headers_sent()) {
-            $this->setHeader('Content-Length', strlen($this->body));
-            
-            if (!isset($this->headers['Content-Type'])) {
-                $this->guessContentType();
-            }
-
-            if (isset($this->contentCount)) {
-                $this->setHeader('X-Laabs-Content-Count', $this->contentCount);
-            }
-
-            $this->setHeader('X-Laabs-Content-Type', $this->contentType);
-            $this->setHeader('X-Laabs-Content-Language', $this->language);
-        
+        if (!headers_sent()) {        
             foreach ($this->headers as $field => $value) {
                 header($field . ": " . $value);
             }
