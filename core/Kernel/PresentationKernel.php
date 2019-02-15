@@ -420,9 +420,8 @@ class PresentationKernel
 
         $contentType = $mimeType.'; charset: '.$encoding;
 
-        if (strtok($mimeType, "/") == "text") {
+        if ($mimeType == "text/plain") {
             $laabsContentTypes = \laabs::getContentTypes();
-            $laabsContentType = 'text';
             foreach ($this->request->accept as $acceptedMimeType => $priority) {
                 if (isset($laabsContentTypes[$acceptedMimeType])) {
                     $laabsContentType = $laabsContentTypes[$acceptedMimeType];
