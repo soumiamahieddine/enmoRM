@@ -42,6 +42,11 @@
     $("#modalArchiveInfo").on('click', ".editMetadata", function () {
        archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
     });
+    
+    $("#modalArchiveInfo").onEvent('showDetails.archive', function (e, archiveId) {
+        archiveInfoModal.loadDescription(archiveId);
+    })
+    
     // View relate archive
     $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
         archiveInfoModal.load($(this).data('archiveid'));
