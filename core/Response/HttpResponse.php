@@ -67,49 +67,6 @@ class HttpResponse
         return $this->getHeader('Content-Type');
     }
 
-    public function guessContentType()
-    {
-        $finfo = new \finfo();
-        $type = $finfo->buffer($this->body, FILEINFO_MIME_TYPE);
-
-        if (strtok($type, "/") == "text") {
-            switch(strtolower($this->contentType)) {
-                case 'css':
-                case 'less':
-                    $type = "text/css";
-                    break;
-
-                case 'js':
-                    $type = "application/javascript";
-                    break;
-
-                case 'csv':
-                    $type = "text/csv";
-                    break;
-            }
-        }
-
-        $encoding = $finfo->buffer($this->body, FILEINFO_MIME_ENCODING);
-        $contentType = $type . "; charset=" . $encoding;
-        $this->setContentType($contentType);
-    }
-
-    /**
-     * Guess the request content type
-     */
-    public function guessResponseType()
-    {
-        $contentTypes = \laabs::getContentTypes();
-
-        $contentType = $this->headers['Content-Type'];
-        $mimeType = strtok($contentType, ";");
-        if (isset($contentTypes[$mimeType])) {
-            $this->type = $contentTypes[$mimeType];
-        } else { 
-            throw new \Exception("Could not find a request content handler for the request content type '$contentType'");
-        }
-    }
-
     public function setGzip($bool)
     {
         if ($bool) {
