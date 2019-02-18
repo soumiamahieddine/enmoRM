@@ -203,12 +203,15 @@ file that was distributed with this source code.
             if ($("#workflowTab").length != 0) {
                 serializedObject.processingStatuses = {};
                 var lists = $('#processingStatuses').find("[name='processingStatus']");
-
                 lists.each(function (index, value) {
                     serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()] =
                         JSON.parse($(value).find("[name='statusinfo']").text().trim());
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()].position =
+                        index;
+
                 });
             }
+
 
             if (serializedObject.retentionStartDate == '') {
                 serializedObject.retentionStartDate = null;
