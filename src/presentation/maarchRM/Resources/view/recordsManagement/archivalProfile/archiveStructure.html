@@ -4,7 +4,7 @@
 		<div class="form-group">
 	        <label id="toggleText" class="col-md-6 control-label">Accept archives without profile</label>
 	        <div class="col-md-6">
-	            <input type="checkbox" class="disableToggle" name="acceptArchiveWithoutProfile" id="acceptArchiveWithoutProfile" data-toggle="toggle" > 
+	            <input type="checkbox" class="disableToggle" name="acceptArchiveWithoutProfile" id="acceptArchiveWithoutProfile" data-toggle="toggle" >
 	        </div>
 	    </div>
 	    <div id="subProfile">
@@ -36,7 +36,7 @@
     	<div class="modal-content">
       		<div class="modal-body">
       			<br/>
-        		<h4>Do you want to save the changes before leaving this screen ?</h4> 
+        		<h4>Do you want to save the changes before leaving this screen ?</h4>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -83,7 +83,7 @@
 
 		removeProfile: function(li) {
 			var profileId = li.data('profileid');
-			
+
 			// if profileList is empty we disable toggle button & set value to 'ON'
 			if ($(li).siblings().length === 0) {
 				if($('#acceptArchiveWithoutProfile').prop("checked") === false) {
@@ -129,7 +129,7 @@
 	 	$.each(select.data('profile-list'), function(key, profile) {
 			profileList.push(profile);
 	 	});
-	 	
+
 	 	profileList.sort(function (a, b) {
             var aVal = a.reference;
             var bVal = b.reference;
@@ -144,10 +144,12 @@
 	 	$.each(select.data('contained-profiles'), function(key, profile) {
 	 		ArchiveStructure.addProfile(profile);
 	 	});
-		 
+
 		// if profileList is empty we disable toggle button & set value to 'ON'
 		if (select.data('contained-profiles').length === 0) {
-			$('#acceptArchiveWithoutProfile').bootstrapToggle("on");
+			if ($('#acceptArchiveWithoutProfile').hasClass("on")) {
+				$('#acceptArchiveWithoutProfile').bootstrapToggle("on");
+			}
 			$('#toggleText').css({'color':'grey'});
 			$('.disableToggle').prop('disabled', true);
 		}
