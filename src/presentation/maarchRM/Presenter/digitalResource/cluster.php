@@ -77,46 +77,11 @@ class cluster
                     $maxSize = $repository->maxSize;
                 }
             }
-
-
-            if ($maxSize != 0) {
-                if ($cluster->size->gbSize > 0) {
-                    $cluster->stat = round(($cluster->size->gbSize + $cluster->size->bSize / 1073741824) * 100 / $maxSize);
-                } else {
-                    $cluster->stat = round($cluster->size->bSize * 100 / ($maxSize * 1073741824));
-                }
-
-                $cluster->statColor = 'success';
-
-                if ($cluster->stat >= 90) {
-                    $cluster->statColor = 'danger';
-                } elseif ($cluster->stat >= 70) {
-                    $cluster->statColor = 'warning';
-                }
-            }
-
-            $cluster->size->value = '0';
-            $cluster->size->unit = 'b';
-
-            if ($cluster->size->gbSize == 0) {
-                if ($cluster->size->bSize > 1048576 ) {
-                    $cluster->size->value = (string) round($cluster->size->bSize / 1048576, 2);
-                    $cluster->size->unit = 'Mb';
-
-                } elseif ($cluster->size->bSize > 1024) {
-                    $cluster->size->value = (string) round($cluster->size->bSize / 1024, 2);
-                    $cluster->size->unit = 'Kb';
-                }
-            } else {
-                $cluster->size->value = (string) round($cluster->size->gbSize + $cluster->size->bSize / 1073741824, 2);
-                $cluster->size->unit = 'Gb';
-            }
-
         }
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
-        $dataTable->setUnsortableColumns(4);
+        $dataTable->setUnsortableColumns(-1);
 
         $this->view->translate();
 
