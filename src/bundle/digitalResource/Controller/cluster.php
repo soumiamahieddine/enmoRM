@@ -57,20 +57,6 @@ class cluster
         $clusters = $this->sdoFactory->find('digitalResource/cluster');
         foreach ($clusters as $cluster) {
             $cluster->clusterRepository = $this->sdoFactory->readChildren("digitalResource/clusterRepository", $cluster);
-            $cluster->size = new \stdClass();
-
-            $cluster->size->bSize = 0;
-            $cluster->size->gbSize = 0;
-
-            $digitalResources = $this->sdoFactory->readChildren('digitalResource/digitalResource', $cluster);
-            foreach ($digitalResources as $digitalResource) {
-                $cluster->size->bSize += $digitalResource->size;
-
-                if ($cluster->size->bSize >= 1073741824) {
-                    $cluster->size->gbSize ++;
-                    $cluster->size->bSize -= 1073741824;
-                }
-            }
         }
 
         return $clusters;
