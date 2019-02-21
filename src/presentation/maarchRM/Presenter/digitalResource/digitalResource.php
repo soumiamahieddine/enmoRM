@@ -30,13 +30,17 @@ class digitalResource
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
     public $view;
 
+    protected $translator;
+
     /**
      * Constuctor of registered mail html serializer
      * @param \dependency\html\Document $view The view
      */
-    public function __construct(\dependency\html\Document $view)
+    public function __construct(\dependency\html\Document $view, \dependency\localisation\TranslatorInterface $translator)
     {
         $this->view = $view;
+        $this->translator = $translator;
+        $this->translator->setCatalog('digitalResource/conversionRule');
     }
 
     /**
@@ -91,8 +95,9 @@ class digitalResource
 
         $url = \laabs::createPublicResource($contents);
 
+        $oldBrowserWarningText = $this->translator->getText("Old Browser download");
         $this->view->addContent(
-            '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"></object>'
+            '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"><p>' . $oldBrowserWarningText . '</p></object>'
         );
 
         return $this->view->saveHtml();
