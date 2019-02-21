@@ -850,8 +850,17 @@ trait archiveEntryTrait
             return;
         }
 
-        $nbResources = count($archive->digitalResources);
-        $nbArchiveObjects = count($archive->contents);
+        if (isset($archive->digitalResources)) {
+            $nbResources = count($archive->digitalResources);
+        } else {
+            $nbResources = 0;
+        }
+
+        if (isset($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        } else {
+            $nbArchiveObjects = 0;
+        }
 
         for ($i = 0; $i < $nbResources; $i++) {
             $convertedResource = $this->convertResource($archive, $archive->digitalResources[$i]);
