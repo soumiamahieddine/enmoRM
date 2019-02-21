@@ -1,7 +1,7 @@
 <div class="table-responsive" data-translate-catalog="lifeCycle/messages">
     <table class="table table-condensed dataTable" >
         <thead>
-        <th>Date</th>
+        <th id="dateColumn">Date</th>
         <th>Description</th>
         <th/>
         </thead>
@@ -25,3 +25,11 @@
         </tbody>
     </table>
 </div>
+
+<script>
+   /* TODO search/find a better solution to sort table by descending date...
+    test.removeClass('sorting_asc').removeClass('sorting').addClass('sorting_desc');
+    test.attr('aria-sort','descending');
+    test.attr('aria-label','Date hohohoho: activer pour trier la colonne en ascendant');*/
+    $("#dateColumn").click();
+</script>

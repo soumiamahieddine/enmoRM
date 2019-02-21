@@ -3,7 +3,6 @@
 -- Set label as not null for retention rules
 ALTER TABLE "recordsManagement"."retentionRule" ALTER COLUMN "label" SET NOT NULL ;
 
-
 -- Add columns for processing statuses on archival profiles
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "processingStatuses" jsonb;
 
@@ -22,3 +21,6 @@ ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb
 
 -- Add columns for display or not in workflow list the archive descriptions
 ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isInList" boolean default false;
+
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de la ressource %9$s');

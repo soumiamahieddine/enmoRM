@@ -128,6 +128,8 @@ trait archiveModificationTrait
                 }
 
                 $retentionRule->retentionRuleStatus = "current";
+                
+                $retentionRule->lastModificationDate = \laabs::newTimestamp();
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
 
@@ -198,6 +200,8 @@ trait archiveModificationTrait
                 } elseif (!empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleStartDate)) {
                     $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
                 }
+
+                $accessRule->lastModificationDate = \laabs::newTimestamp();
 
                 $this->sdoFactory->update($accessRule, 'recordsManagement/archive');
 
@@ -341,6 +345,8 @@ trait archiveModificationTrait
         if ($originatingDate) {
             $archive->originatingDate = $originatingDate;
         }
+
+        $archive->lastModificationDate = \laabs::newTimestamp();
 
         $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
 

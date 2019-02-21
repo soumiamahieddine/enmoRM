@@ -912,7 +912,8 @@ trait archiveAccessTrait
                 array_push($res['error'], $archiveId);
             } else {
                 $archiveStatus->status = $status;
-
+                $archiveStatus->lastModificationDate = \laabs::newTimestamp();
+                
                 $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
                 $this->setStatus($childrenArchives, $status);
 

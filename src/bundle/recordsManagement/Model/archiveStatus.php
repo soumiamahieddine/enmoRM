@@ -46,5 +46,10 @@ class archiveStatus
      */
     public $status;
 
+    /**
+     * @var timestamp
+     */
+    public $lastModificationDate;
+
 
 } // END class archive 

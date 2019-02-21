@@ -252,7 +252,7 @@ class organization
             $query = implode(" AND ", $queryParts);
         }
 
-        return $this->sdoFactory->find("organization/organization", $query);
+        return $this->sdoFactory->find("organization/organization", $query, $variables);
     }
 
     /**

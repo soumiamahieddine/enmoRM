@@ -50,7 +50,7 @@ class userAccount
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
-        $this->currentAccount = \laabs::getToken('AUTH');
+        //$this->currentAccount = \laabs::getToken('AUTH');
     }
 
     /**
@@ -160,7 +160,6 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
-
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();
@@ -493,7 +492,7 @@ class userAccount
             return false;
         }
 
-        $accountToken = $this->currentAccount;
+        $accountToken =\laabs::getToken('AUTH');
 
         if (!$accountToken) {
             $userPrivileges = \laabs::configuration('auth')['publicUserStory'];

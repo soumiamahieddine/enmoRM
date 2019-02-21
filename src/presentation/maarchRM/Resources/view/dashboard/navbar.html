@@ -319,7 +319,7 @@
     function ajaxEnd(activeButtons, button, icon) {
         activeButtons.removeAttr('disabled');
         if (icon) {
-            button.find('.fa:first').removeClass('fa-spinner fa-spin').addClass(icon);
+            button.find('.fa:first').addClass(icon).removeClass('fa-spinner fa-spin');
         }
 
     }

@@ -182,6 +182,7 @@
 		$('#saveBeforeChange').one('click', function() {
 			$('#saveProfileModal').on('hide.bs.modal', function() {
 				ArchivalProfile.save(href);
+				$('#saveProfileModal').removeClass('fade in');
 			})
 		});
 

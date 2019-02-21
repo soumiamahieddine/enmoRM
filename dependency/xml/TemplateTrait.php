@@ -238,18 +238,22 @@ trait TemplateTrait
             $this->parsedTexts[$nodeValue] = $instructions;
         }
 
+        $values = [];
         foreach ($instructions as $pi => $instr) {
             $value = $this->getData($instr, $source);
             if (is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString'))) {
                 $tmpTextNode = $this->createTextNode($value);
-                $mergedValue = str_replace($pi, (string) $tmpTextNode->wholeText, $textNode->nodeValue);
+                $mergedValue = (string) $tmpTextNode->wholeText;
 
                 if (empty($this->xmlVersion)) {
                     $mergedValue = htmlentities($mergedValue);
                 }
-                $textNode->nodeValue = str_replace($pi, $value, $mergedValue);
+                
+                $values[] = $mergedValue;
             }
         }
+
+        $textNode->nodeValue = str_replace(array_keys($instructions), $values, $textNode->nodeValue);
 
         // If text is in an attribute that is empty, remove attribute
         if ($textNode->nodeType == XML_ATTRIBUTE_NODE && empty($textNode->value)) {

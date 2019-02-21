@@ -80,6 +80,14 @@ abstract class abstractPosition
             \laabs::setToken("ORGANIZATION", $organizations[0], 86400);
         }
 
+        usort($positions, function ($pos1, $pos2) {
+            if ($pos1->organization->orgName == $pos2->organization->orgName) {
+                return 0;
+            }
+
+            return ($pos1->organization->orgName > $pos2->organization->orgName) ? +1 : -1;
+        });
+
         return $positions;
     }
 

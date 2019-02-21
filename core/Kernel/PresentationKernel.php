@@ -55,9 +55,9 @@ class PresentationKernel
         /* Initalize components app/dependecy/bundle */
         self::$instance->attachObservers();
 
-        \core\Observer\Dispatcher::notify(LAABS_REQUEST, self::$instance->request);
-
         try {
+            \core\Observer\Dispatcher::notify(LAABS_REQUEST, self::$instance->request);
+
             /* Establish routes (input, action, output) */
             self::$instance->setRoutes();
 
