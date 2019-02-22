@@ -160,19 +160,20 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                 
                 $textAsserts[] = "text @@ to_tsquery('$token')";
             }
-
             $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';*/
+            $text = \laabs::normalize($text);
             $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
+
             $tokens = \laabs\explode(' ', $text);
             foreach ($tokens as $i => $token) {
                 $tokens[$i] = $token.':*';
             }
-            $queryParts[] = "<?SQL text @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
+            $queryParts[] = "<?SQL translate(text, 'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ', 'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU') @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
         }
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString,$queryParams);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
 
         foreach ($archiveUnits as $archiveUnit) {
             if (!empty($archiveUnit->description)) {
