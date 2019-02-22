@@ -96,6 +96,11 @@ class orgTree
         $adminUser = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgUser");
         $adminContact = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrgContact");
 
+
+        $commonJsAccesses = $this->view->createDocumentFragment();
+        $commonJsAccesses->appendHtmlFile("organization/commonJsAccesses.html");
+        $this->view->getElementById('profile_accordion')->appendChild($commonJsAccesses);
+
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("adminUser", $adminUser);
         $this->view->setSource("adminContact", $adminContact);
@@ -499,14 +504,42 @@ class orgTree
     }
 
     /**
-     * Serializer JSON for udapteArchivalProfileAccess method
+     * Serializer JSON for createArchivalProfileAccess method
      *
      * @return object JSON object with a status and message parameters
      */
-    public function udapteArchivalProfileAccess()
+    public function createArchivalProfileAccess()
     {
         $this->json->status = true;
-        $this->json->message = "Archival profiles access updated.";
+        $this->json->message = "Archival profiles access created";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON for updateArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function updateArchivalProfileAccess()
+    {
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access updated";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Serializer JSON deleteArchivalProfileAccess method
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function deleteArchivalProfileAccess()
+    {
+        $this->json->status = true;
+        $this->json->message = "Archival profiles access deleted";
         $this->json->message = $this->translator->getText($this->json->message);
 
         return $this->json->save();

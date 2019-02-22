@@ -395,5 +395,88 @@ class PresentationKernel
         }
 
         $this->response->setBody($content);
+
+        if (empty($this->response->getContentType())) {
+            $this->guessResponseType();
+        }
+
+        if (empty($this->response->getHeader('Content-Language'))) {
+            $this->guessResponseLanguage();
+        }
+
+        $this->response->setHeader('Content-Length', strlen($this->response->body));
     }
+
+        /**
+     * Guess the response content type from body or the request "Accept"
+     * @return string The ContentType code or "text" as a default value
+     */
+    protected function guessResponseType()
+    {
+        
+        $finfo = new \finfo();
+        $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
+        $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
+
+        $contentType = $mimeType.'; charset: '.$encoding;
+
+        if ($mimeType == "text/plain") {
+            $laabsContentTypes = \laabs::getContentTypes();
+            $laabsContentType = 'text';
+            foreach ($this->request->accept as $acceptedMimeType => $priority) {
+                if (isset($laabsContentTypes[$acceptedMimeType])) {
+                    $laabsContentType = $laabsContentTypes[$acceptedMimeType];
+
+                    break;
+                }
+            }
+
+            switch (strtolower($laabsContentType)) {
+                case 'css':
+                case 'less':
+                    $contentType = "text/css";
+                    break;
+
+                case 'js':
+                case 'json':
+                    $contentType = "application/javascript";
+                    break;
+
+                case 'csv':
+                    $contentType = "text/csv";
+                    break;
+
+                case 'html':
+                    $contentType = "text/html";
+                    break;
+            }
+        }
+
+        $this->response->setContentType($contentType);
+    }
+
+     /**
+     * Guess the response content language from the request "AcceptLanguage"
+     * @return string The ContentLanguage code or "en" as a default value
+     */
+    protected function guessResponseLanguage()
+    {
+        $contentLanguages = \laabs::getContentLanguages();
+        $requestAcceptLangs = $this->request->acceptLanguage;
+        $contentLanguage = 'en';
+
+        if (!empty($requestAcceptLangs)) {
+            foreach ($requestAcceptLangs as $locale => $proprity) {
+                if (isset($contentLanguages[$locale])) {
+                    $contentLanguage = $contentLanguages[$locale];
+
+                    break;
+                }
+            }
+        }
+
+        $this->response->setHeader('Content-Language', $contentLanguage);
+    }
+
+
 }

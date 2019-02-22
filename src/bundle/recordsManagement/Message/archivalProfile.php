@@ -127,4 +127,10 @@ class archivalProfile
      * @var array
      */
     public $containedProfiles = array();
+
+    /**
+     * The processing statuses, actions and views
+     * @var json
+     */
+    public $processingStatuses;
 }

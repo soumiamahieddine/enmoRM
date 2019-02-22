@@ -601,3 +601,6 @@ msgstr "Action invalide"
 
 msgid "Text"
 msgstr "Texte"
+
+msgid "No workflow status"
+msgstr "Pas de statut de traitement"

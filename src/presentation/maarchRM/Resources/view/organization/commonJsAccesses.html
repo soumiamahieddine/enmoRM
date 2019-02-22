@@ -1,0 +1,19 @@
+<script>
+    $('#accessEntries').on('click', 'li', function () {
+        var archivalProfileAccess = $(this).data('json');
+
+        $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
+        $('#serviceLevelReference').val(archivalProfileAccess.serviceLevelReference);
+        $('#updateArchivalProfile').show();
+
+        $('#accessEntries li').removeClass('active');
+        $(this).addClass('active');
+        $('#addArchivalProfile').hide();
+    });
+
+    $('#profileReference').change(function () {
+        $('#addArchivalProfile').show();
+        $('#updateArchivalProfile').hide();
+        $('#accessEntries li').removeClass('active');
+    });
+</script>

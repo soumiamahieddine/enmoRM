@@ -6,7 +6,7 @@ DELETE FROM "organization"."organization";
 DELETE FROM "organization"."orgType";
 
 -- Organization unit types
-INSERT INTO "organization"."orgType"("code", "name") VALUES 
+INSERT INTO "organization"."orgType"("code", "name") VALUES
 ('Collectivite', 'Collectivité'),
 ('Societe', 'Société'),
 ('Direction', 'Direction d''une entreprise ou d''une collectivité'),
@@ -14,7 +14,7 @@ INSERT INTO "organization"."orgType"("code", "name") VALUES
 ('Division', 'Division d''une entreprise');
 
 -- Organizations
-INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES 
+INSERT INTO "organization"."organization"( "orgId", "orgName", "displayName", "parentOrgId", "ownerOrgId", "orgRoleCodes", "registrationNumber", "isOrgUnit") VALUES
 ('ACME', 'ACME','Archivage Conversation et Mémoire Electronique ', NULL, NULL, NULL, 'regNum_ACME', false),
     ('DSI', 'DSI','Direction des Systèmes d’Information', 'ACME', 'ACME', NULL, 'regNum_DSI', true),
         ('ADMINSYS', 'Admin Sys','Administration Système', 'DSI', 'ACME', 'owner', 'regNum_ADMINSYS', true),
@@ -38,7 +38,7 @@ INSERT INTO "organization"."servicePosition" ("serviceAccountId", "orgId") VALUE
 ('System', 'CPT');
 
 -- Organization service position
-INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess") VALUES
-('CPTCLI', 'FacturesClients', true),
-('CPTFOUR', 'FacturesFournisseurs', true),
-('RH', 'DossierPersonnel', true);
+INSERT INTO "organization"."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES
+('CPTCLI', 'FacturesClients', true, '', '{}'),
+('CPTFOUR', 'FacturesFournisseurs', true, '', '{}'),
+('RH', 'DossierPersonnel', true, '', '{}');

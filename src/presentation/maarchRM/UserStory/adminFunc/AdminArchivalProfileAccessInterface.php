@@ -29,7 +29,7 @@ interface AdminArchivalProfileAccessInterface
      * Get the organizations' index
      *
      * @return organization/orgTree/index
-     * 
+     *
      * @uses organization/organization/readTree
      * @uses organization/orgType/readList
      */
@@ -39,7 +39,7 @@ interface AdminArchivalProfileAccessInterface
      * Get the organizations' index
      *
      * @return organization/orgTree/getTree
-     * 
+     *
      * @uses organization/organization/readTree
      */
     public function readOrganizationtree();
@@ -53,12 +53,38 @@ interface AdminArchivalProfileAccessInterface
      */
     public function readOrganization_orgId_();
 
-     /**
-     * Add a user position to an organization
-     * 
-     * @return organization/orgTree/udapteArchivalProfileAccess
+    /**
+     * Add a new archival profile access
      *
-     * @uses organization/organization/update_orgId_Archivalprofileaccess
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @uses organization/organization/createArchivalprofileaccess
+     *
+     * @return organization/orgTree/createArchivalProfileAccess
      */
-    public function updateOrganization_orgId_Archivalprofileaccess($archivalProfileAccess);
+    public function createArchivalprofileaccess($archivalProfileAccess);
+
+
+     /**
+     * Edit an archival profile access
+     *
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @uses organization/organization/updateArchivalprofileaccess
+     *
+     * @return organization/orgTree/updateArchivalProfileAccess
+     */
+    public function updateArchivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Delete an archival profile access with its org id and archival profile reference
+     *
+     * @param string $orgId                    id of organization of archivalProfileAccess to delete
+     * @param string $archivalProfileReference archival profile reference of archivalProfileAccess
+     *
+     * @uses organization/organization/deleteArchivalprofileaccess
+     *
+     * @return organization/orgTree/deleteArchivalProfileAccess
+     */
+    public function deleteArchivalprofileaccess($orgId, $archivalProfileReference);
 }

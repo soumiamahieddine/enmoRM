@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle organization.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\organization\Model;
+namespace bundle\organization\Message;
 
 /**
  * Class model that represents an acces to profile for a given org unit
@@ -25,8 +25,6 @@ namespace bundle\organization\Model;
  * @package organization
  * @author  Proser DE LAURE (Maarch) <prosper.delaure@maarch.org>
  *
- * @fkey [orgId] organization/organization [orgId]
- * @key [orgId, archivalProfileReference]
  */
 class archivalProfileAccess
 {

@@ -190,8 +190,8 @@ trait TemplateDataTrait
                     break;
                 }
                 $callback = $this->functions[$func];
+                array_shift($params);
                 array_unshift($params, $source);
-                array_unshift($params, $this);
                 $value = @call_user_func_array($callback, $params);
                 break;
 

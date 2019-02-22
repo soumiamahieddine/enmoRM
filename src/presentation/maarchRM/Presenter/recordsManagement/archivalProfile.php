@@ -216,6 +216,18 @@ class archivalProfile
         } else {
             $archivalProfile->type = 1;
         }
+
+        if ($archivalProfile->type != 2) {
+            $profileFileTab = $this->view->createDocumentFragment();
+            $profileFileTab->appendHtmlFile("recordsManagement/archivalProfile/profileUploadTab.html");
+
+            $this->view->getElementById('archivalProfileNavControl')->appendChild($profileFileTab);
+
+            $profileFileForm = $this->view->createDocumentFragment();
+            $profileFileForm->appendHtmlFile("recordsManagement/archivalProfile/profileUpload.html");
+            
+            $this->view->getElementById('archivalProfileNavTabs')->appendChild($profileFileForm);
+        }
     }
 
     /**
@@ -370,5 +382,31 @@ class archivalProfile
                 $this->listProperties($childClass, $properties, $dateProperties, $qualifiedName);
             }*/
         }
+    }
+
+    /**
+     * Serializer JSON for uploadArchivalProfile method
+     *
+     * @return string
+     **/
+    public function uploadArchivalProfile()
+    {
+        $this->json->message = "Archival profile uploaded";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Export method
+     * @param resource $file The file
+     *
+     * @return resource
+     */
+    public function export($file)
+    {
+        \laabs::setResponseType("application/file");
+
+        return $file;
     }
 }
