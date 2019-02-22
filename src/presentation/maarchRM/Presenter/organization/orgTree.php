@@ -75,6 +75,7 @@ class orgTree
         $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
+        $publicArchives = \laabs::configuration("presentation.maarchRM")["publicArchives"];
 
         // Sort archival profile by reference
         usort($archivalProfile, function ($a, $b) {
@@ -112,6 +113,7 @@ class orgTree
         $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->setSource("serviceLevel", $serviceLevel);
         $this->view->setSource("addOrganizationRight", $addOrganizationRight);
+        $this->view->setSource("publicArchives", $publicArchives);
         $this->view->merge();
         $this->view->translate();
 
