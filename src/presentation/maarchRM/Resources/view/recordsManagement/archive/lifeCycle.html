@@ -27,9 +27,9 @@
 </div>
 
 <script>
-   /* TODO search/find a better solution to sort table by descending date...
-    test.removeClass('sorting_asc').removeClass('sorting').addClass('sorting_desc');
-    test.attr('aria-sort','descending');
-    test.attr('aria-label','Date hohohoho: activer pour trier la colonne en ascendant');*/
-    $("#dateColumn").click();
+   /* TODO search/find a better solution to sort table by descending date...*/
+    var order = $("#dateColumn");
+    if (order.hasClass('sorting_asc')){
+        $("#dateColumn").click();
+    }
 </script>
