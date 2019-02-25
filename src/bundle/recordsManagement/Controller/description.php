@@ -138,7 +138,9 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $queryParams = [];
         $queryParts = ['(description!=null and text!=null)'];
 
-        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs, $queryParams, $checkAccess);
+        if (!empty($archiveAssert = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs, $queryParams, $checkAccess))) {
+            $queryParts[] = $archiveAssert;
+        }
 
         // Json
         if (!empty($description)) {
@@ -149,28 +151,28 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
         // Fulltext
         if (!empty($text)) {
-            /*$lexer = new \core\Language\lexer();
-            $tokens = $lexer->tokenize($text, false);
+            $specialChars = implode('', array_keys(\laabs::NORMALIZATION_MAP));
+            $translateChars = implode('', \laabs::NORMALIZATION_MAP);
+            $textPropertyExpr = "translate(text, '".$specialChars."', '".$translateChars."')";
 
-            foreach ($tokens as $token) {
-                if (($token[0] == '"' && $token[strlen($token)-1] == '"')
-                    || ($token[0] == "'" && $token[strlen($token)-1] == "'")) {
-                    $token = substr($token, 1, -1);
-                }
-                
-                $textAsserts[] = "text @@ to_tsquery('$token')";
-            }
-            $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';*/
-            $text = \laabs::normalize($text);
-            $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
+            $tsQueryTokens = $likeQueryTokens = $textQueryParts = [];
 
-            $tokens = \laabs\explode(' ', $text);
+            $protectedText = preg_replace('/[^\w\-\_\*]+/', ' ', \laabs::normalize($text));
+            $tokens = \laabs\explode(' ', $protectedText);
             foreach ($tokens as $i => $token) {
-                $tokens[$i] = $token.':*';
+                if (strpos($token, '*') !== false) {
+                    $textQueryParts[] = "lower(".$textPropertyExpr.") like lower('%".str_replace("*", "%", $token)."')";
+                } else {
+                    $tsQueryTokens[] = $token;
+                }
             }
-            $queryParts[] = "<?SQL translate(text, 'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ', 'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU') @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
+            if (!empty($tsQueryTokens)) {
+                $textQueryParts[] = $textPropertyExpr." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
+            }
+            
+            $queryParts[] = '<?SQL '. implode(' AND ', $textQueryParts).' ?>';
         }
-
+        //var_dump($queryParts);exit;
         $queryString = \laabs\implode(' and ', $queryParts);
 
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
