@@ -1,0 +1,6 @@
+# lifeCycle/messages
+# Language: en
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Old Browser download"
+msgstr "Unfortunately, your browser is too old to be able to visualise this resource. Update your browser with a newer version to display it, you are still able to download it"
