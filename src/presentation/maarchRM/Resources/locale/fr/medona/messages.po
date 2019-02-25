@@ -410,6 +410,12 @@ msgstr "Détruire"
 msgid "Not active"
 msgstr "Non activé"
 
+msgid "template"
+msgstr "Modèle"
+
+msgid "new"
+msgstr "Nouveau"
+
 msgid "sent"
 msgstr "Envoyé"
 
@@ -463,6 +469,12 @@ msgstr "À modifier"
 
 msgid "Modified"
 msgstr "Modifié"
+
+msgid "transferable"
+msgstr "En cours de transfert"
+
+msgid "validating"
+msgstr "En cours de validation"
 
 msgid "originator_authorization_wait"
 msgstr "En attente d'autorisation du producteur"
@@ -657,7 +669,7 @@ msgid "Retry the process"
 msgstr "Reprendre le traitement"
 
 msgid "processing"
-msgstr "En cours"
+msgstr "En cours de traitement"
 
 msgid "Organization"
 msgstr "Organisation"
