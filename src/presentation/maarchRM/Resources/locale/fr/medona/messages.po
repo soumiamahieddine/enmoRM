@@ -730,4 +730,4 @@ msgid "Month(s)"
 msgstr "Mois"
 
 msgid "Year(s)"
-msgstr "Ans(s)"
+msgstr "An(s)"
