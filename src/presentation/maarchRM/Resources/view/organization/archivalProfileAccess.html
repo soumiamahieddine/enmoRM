@@ -256,16 +256,8 @@
         $('#serviceLevelReference').val('');
     });
 
-    $('#profileReference').on('change', function () {
-        if ($('#profileReference').val() !== '') {
-            $('#addArchivalProfile').show();
-        }
-        
-        // if select on 'autoriser les profils sans archives' alors on cache le toggle button
-        if ($('#profileReference').val() === '*') {
-            $('#originatorAgencyHolder').hide();
-        } else {
-            $('#originatorAgencyHolder').show();
-        }
-    })
+    $('#organizationInfo_profileTab').on('click', function() {
+        $('#updateArchivalProfile').addClass('hide');
+        $('#addArchivalProfile').addClass('hide');
+    });
 </script>
