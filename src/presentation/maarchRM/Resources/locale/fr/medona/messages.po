@@ -731,3 +731,6 @@ msgstr "Mois"
 
 msgid "Year(s)"
 msgstr "An(s)"
+
+msgid "Unlimited"
+msgstr "Illimitée"
