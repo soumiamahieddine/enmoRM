@@ -84,6 +84,7 @@ file that was distributed with this source code.
             <span id="empty_text">The fields with a star are required.</span>
             <span id="text_file"><i class='fa fa-folder'></i> File</span>
             <span id="text_item"><i class='fa fa-file'></i> Item</span>
+            <span id="identifier_format_error">Le format de l'identifiant n'est pas accepté</span>
         </div>
     </div>
 </div>
@@ -166,6 +167,14 @@ file that was distributed with this source code.
                 return;
             }
 
+            //RegExp identifier field ( = ArchivalProfile.reference)
+            var reg =/^[A-Za-z][A-Za-z0-9_-]*$/;
+            var identifier = parameters.archivalProfile.reference;
+            if (!reg.test(identifier)) {
+                gritter.show($("#identifier_format_error").text(), false);
+                return;
+            }
+
             ajax($('#save'), {
                 url: url,
                 type: type,
@@ -186,6 +195,7 @@ file that was distributed with this source code.
         },
 
         serialize: function () {
+            var errors = [];
             serializedObject = {
                 archivalProfileId: $('#archivalProfileId').val(),
                 reference: $('#reference').val(),
@@ -211,7 +221,6 @@ file that was distributed with this source code.
 
                 });
             }
-
 
             if (serializedObject.retentionStartDate == '') {
                 serializedObject.retentionStartDate = null;
