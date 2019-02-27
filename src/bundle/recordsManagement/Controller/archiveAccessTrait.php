@@ -994,7 +994,7 @@ trait archiveAccessTrait
         }
 
         // ARCHIVER access
-        if ($archive->archiverOrgRegNumber != $currentUserService->registrationNumber) {
+        if ($archive->archiverOrgRegNumber === $currentUserService->registrationNumber) {
             return true;
         }
 
