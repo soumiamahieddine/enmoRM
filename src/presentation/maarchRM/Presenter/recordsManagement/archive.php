@@ -292,10 +292,30 @@ class archive
 
                 $node = $this->view->getElementById("descriptionTab");
                 $this->view->addContent($descriptionHtml, $node);
-                
             } else {
                 $dl = $this->view->createElement('dl');
                 $dl->setAttribute('class', "dl dl-horizontal");
+                
+                usort($archivalProfile->archiveDescription, function ($a, $b) {
+                    return $a->position > $b->position;
+                });
+
+                $descriptionsSorted = new \stdClass ;
+
+                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                    $fieldName = $archiveDescription->fieldName;
+                    if (isset($archive->descriptionObject->$fieldName)) {
+                        $descriptionsSorted->$fieldName = $archive->descriptionObject->$fieldName;
+                        unset($archive->descriptionObject->$fieldName);
+                    }
+                }
+
+                if (!empty($archive->descriptionObject)) {
+                    foreach ($archive->descriptionObject as $name => $value) {
+                        $descriptionsSorted->$name = $value;
+                    }
+                }
+                $archive->descriptionObject = $descriptionsSorted;
 
                 foreach ($archive->descriptionObject as $name => $value) {
                     if (!empty($archive->archivalProfileReference)) {
@@ -327,6 +347,7 @@ class archive
                         $dd->appendChild($this->view->createTextNode($value));
                         $dl->appendChild($dd);
                     }
+
                 }
 
                 $node = $this->view->getElementById("descriptionTab");
