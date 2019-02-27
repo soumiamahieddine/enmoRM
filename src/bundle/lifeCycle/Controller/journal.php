@@ -514,7 +514,7 @@ class journal
         // Open the journal to start with
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
-        if (!count($journal)) {
+        if (!isset($journal)) {
             $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", [], ">timestamp");
             foreach ($events as $key => $event) {
                 $events[$key] = $this->decodeEventFormat($event);
