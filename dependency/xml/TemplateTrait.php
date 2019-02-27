@@ -494,7 +494,7 @@ trait TemplateTrait
             $DOMNode = $pi->ownerDocument->importNode($DOMNode, true);
         }
 
-        $pi->parentNode->insertBefore($DOMNode, $pi);
+        $pi->parentNode->replaceChild($DOMNode, $pi);
         
         return true;
     }
