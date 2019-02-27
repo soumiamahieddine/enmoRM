@@ -182,13 +182,20 @@ trait TemplateTrait
                     case $value instanceof \DOMNode :
                         return $this->mergeNode($pi, $instr, $value);
 
+                    case $value instanceof \core\Type\Date:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatDate($value));
+
+                    case $value instanceof \core\Type\Timestamp:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatTimestamp($value));
+
+                    case $value instanceof \core\Type\DateTime:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatDateTime($value));
+
                     // If value is an object but no form : merge string version if possible
                     case method_exists($value, '__toString'):
-                        return $this->mergeText($pi, $instr, (string) $value);                    
+                        return $this->mergeText($pi, $instr, (string) $value);
                 }
-
         }
-
     }
 
     protected function mergeForms()

@@ -85,6 +85,10 @@ eventInfo = {
                     var e = $(this)
                     var name = e.attr('name');
 
+                    if (name == 'timestamp') {
+                        response[name] = formatDateTime(response[name]);
+                    }
+
                     e.html(response[name]);
                     delete response[name];
                 });
