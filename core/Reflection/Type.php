@@ -76,7 +76,9 @@ class Type
         parent::__construct($classname);
 
         if ($parentClass = $this->getParentClass()) {
-            $this->inherit($parentClass->getName());
+            if ($typeName = \laabs::getClassName($parentClass->getName())) {
+                $this->inherit($typeName);
+            }
             $this->extension = \laabs::getClassName($parentClass->name);
         }
         
@@ -165,9 +167,8 @@ class Type
 
     }
 
-    protected function inherit($className)
+    protected function inherit($typeName)
     {
-        $typeName = \laabs::getClassName($className);
 
         $type = \laabs::getClass($typeName);
 
