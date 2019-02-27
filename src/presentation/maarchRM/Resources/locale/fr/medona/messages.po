@@ -734,3 +734,15 @@ msgstr "Service ou organisation"
 
 msgid "Schema"
 msgstr "Schéma"
+
+msgid "Day(s)"
+msgstr "Jour(s)"
+
+msgid "Month(s)"
+msgstr "Mois"
+
+msgid "Year(s)"
+msgstr "An(s)"
+
+msgid "Unlimited"
+msgstr "Illimitée"
