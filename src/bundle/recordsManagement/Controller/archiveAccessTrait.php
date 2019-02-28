@@ -989,7 +989,7 @@ trait archiveAccessTrait
         $userServices[] = $currentUserService->registrationNumber;
         
         // OWNER access
-        if (is_array($currentUserService->orgRoleCodes) && in_array("owner", $currentUserService->orgRoleCodes)) {
+        if (\laabs\in_array('owner', $currentUserService->orgRoleCodes)) {
             return true;
         }
 
@@ -999,14 +999,14 @@ trait archiveAccessTrait
         }
 
         // ORIGINATOR ACCESS
-        if (in_array($archive->originatorOrgRegNumber, $userServices)) {
+        if (\laabs\in_array($archive->originatorOrgRegNumber, $userServices)) {
             return true;
         }
 
         // USER ACCESS
         if (!empty($archive->userOrgRegNumbers)) {
             foreach ($archive->userOrgRegNumbers as $userOrgRegNumber) {
-                if (in_array($userOrgRegNumber, $userServices)) {
+                if (\laabs\in_array($userOrgRegNumber, $userServices)) {
                     return true;
                 }
             }
