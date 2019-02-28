@@ -1038,7 +1038,7 @@ class archive
 
         if (isset($archive->contents)) {
             $this->addArchivalProfileNames($archive->contents, $profilesName);
-            $this->json->childrenArchives = $archive->contents;
+            $this->json->contents = $archive->contents;
         }
 
         return $this->json->save();
@@ -1080,8 +1080,8 @@ class archive
             if (!empty($childArchive->archivalProfileReference) && isset($profiles[$childArchive->archivalProfileReference])) {
                 $childArchive->archivalProfileName = $profiles[$childArchive->archivalProfileReference];
             }
-            if (isset($childArchive->childrenArchives)) {
-                $this->addArchivalProfileNames($childArchive->childrenArchives, $profiles);
+            if (isset($childArchive->contents)) {
+                $this->addArchivalProfileNames($childArchive->contents, $profiles);
             }
         }
     }
