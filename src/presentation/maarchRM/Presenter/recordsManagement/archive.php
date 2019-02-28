@@ -163,7 +163,11 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    $archive->hasRights = $archiveController->checkRights($archive);
+                    if ($archive->status == 'disposed' || $archive->status == 'error' || $archive->status == 'restituted' || $archive->status == 'transfered') {
+                        $archive->hasRights = false;
+                    } else {
+                        $archive->hasRights = $archiveController->checkRights($archive);
+                    }
                 } catch(\Exception $e) {
                     $archive->hasRights = false;
                 }
