@@ -45,8 +45,8 @@ trait archiveDestructionTrait
 
             $this->listChildrenArchive($archive, true);
 
-            if ($archive->childrenArchives) {
-                $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
+            if ($archive->contents) {
+                $archiveChildrenIds = $this->checkChildren($archive->contents);
                 $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
             }
             $archives[] = $archive;
@@ -241,8 +241,8 @@ trait archiveDestructionTrait
         foreach ($archivesChildren as $archive) {
             $this->checkDisposalRights($archive, true) ;
 
-            if ($archive->childrenArchives) {
-                $archiveChildrenIds = $this->checkChildren($archive->childrenArchives);
+            if ($archive->contents) {
+                $archiveChildrenIds = $this->checkChildren($archive->contents);
                 $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
             }
 

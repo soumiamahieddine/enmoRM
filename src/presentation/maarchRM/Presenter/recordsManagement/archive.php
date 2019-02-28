@@ -395,7 +395,7 @@ class archive
             !empty($archive->parentRelationships)
             || !empty($archive->childrenRelationships)
             || !empty($archive->parentArchive)
-            || !empty($archive->childrenArchives)
+            || !empty($archive->contents)
         );
 
         if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
@@ -1036,9 +1036,9 @@ class archive
             $profilesName[$profile->reference] = $profile->name;
         }
 
-        if (isset($archive->childrenArchives)) {
-            $this->addArchivalProfileNames($archive->childrenArchives, $profilesName);
-            $this->json->childrenArchives = $archive->childrenArchives;
+        if (isset($archive->contents)) {
+            $this->addArchivalProfileNames($archive->contents, $profilesName);
+            $this->json->childrenArchives = $archive->contents;
         }
 
         return $this->json->save();
@@ -1349,7 +1349,7 @@ class archive
         // Digital resources
         $this->setDigitalResources($archive);
 
-        foreach ($archive->childrenArchives as $key => $child) {
+        foreach ($archive->contents as $key => $child) {
             if (!is_null($child->archivalProfileReference)) {
                 $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
 
@@ -1366,11 +1366,11 @@ class archive
                 $childrenByProfiles["noProfile"][] = $child;
             }
             // Digital resources
-            $this->setDigitalResources($archive->childrenArchives[$key]);
-            $this->setArchiveTree($archive->childrenArchives[$key]);
+            $this->setDigitalResources($archive->contents[$key]);
+            $this->setArchiveTree($archive->contents[$key]);
         }
 
-        $archive->childrenArchives = $childrenByProfiles;
+        $archive->contents = $childrenByProfiles;
     }
 
     /**

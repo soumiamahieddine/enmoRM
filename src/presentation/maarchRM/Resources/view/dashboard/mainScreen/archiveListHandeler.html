@@ -165,7 +165,7 @@
                 dataType    : 'json',
                 success     : function (response) {
                     archive.find('.archiveContent').removeClass('hide').find('ul').html('');
-                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.childrenArchives, false);
+                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -229,11 +229,11 @@
                     BootstrapTree.addNode(parent, template, hidden);
 
                     var children = null;
-                    if (childrenArchives[j].childrenArchives) {
-                        children = childrenArchives[j].childrenArchives;
+                    if (childrenArchives[j].contents) {
+                        children = childrenArchives[j].contents;
                     }
 
-                    Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].childrenArchives, false);
+                    Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
 
