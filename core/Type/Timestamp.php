@@ -41,7 +41,7 @@ class Timestamp
      */
     public function jsonSerialize()
     {
-        return (string) $this->format("Y-m-d H:i:s.u");
+        return (string) $this->format();
     }
 
 
