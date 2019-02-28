@@ -47,7 +47,7 @@ class DateTimeFormatter
      *
      * @return void
      **/
-    public function __construct($dateFormat = false, $dateTimeFormat = false, $timestampFormat = false, $timezone = false, $locale = false)
+    public function __construct($dateFormat = 'Y-m-d', $dateTimeFormat = 'Y-m-d H:i:s (P)', $timestampFormat = 'd-m-Y\TH:i:s.u\Z', $timezone = 'Europe/Paris', $locale = false)
     {
         $this->dateFormat = $dateFormat;
         $this->dateTimeFormat = $dateTimeFormat;
