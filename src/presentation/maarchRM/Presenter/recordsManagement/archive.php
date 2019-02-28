@@ -295,27 +295,31 @@ class archive
             } else {
                 $dl = $this->view->createElement('dl');
                 $dl->setAttribute('class', "dl dl-horizontal");
-                
-                usort($archivalProfile->archiveDescription, function ($a, $b) {
-                    return $a->position > $b->position;
-                });
 
-                $descriptionsSorted = new \stdClass ;
+                if (isset($archivalProfile)) {
+                    usort($archivalProfile->archiveDescription, function ($a, $b) {
+                        return $a->position > $b->position;
+                    });
 
-                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                    $fieldName = $archiveDescription->fieldName;
-                    if (isset($archive->descriptionObject->$fieldName)) {
-                        $descriptionsSorted->$fieldName = $archive->descriptionObject->$fieldName;
-                        unset($archive->descriptionObject->$fieldName);
+                    $descriptionsSorted = new \stdClass;
+
+                    foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                        $fieldName = $archiveDescription->fieldName;
+                        if (isset($archive->descriptionObject->$fieldName)) {
+                            $descriptionsSorted->$fieldName = $archive->descriptionObject->$fieldName;
+                            unset($archive->descriptionObject->$fieldName);
+                        }
                     }
-                }
 
-                if (!empty($archive->descriptionObject)) {
-                    foreach ($archive->descriptionObject as $name => $value) {
-                        $descriptionsSorted->$name = $value;
+                    if (!empty($archive->descriptionObject)) {
+                        foreach ($archive->descriptionObject as $name => $value) {
+                            $descriptionsSorted->$name = $value;
+                        }
                     }
+
+                    $archive->descriptionObject = $descriptionsSorted;
+
                 }
-                $archive->descriptionObject = $descriptionsSorted;
 
                 foreach ($archive->descriptionObject as $name => $value) {
                     if (!empty($archive->archivalProfileReference)) {
