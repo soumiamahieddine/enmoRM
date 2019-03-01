@@ -418,7 +418,7 @@ class PresentationKernel
         $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
         $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
 
-        $contentType = $mimeType.'; charset: '.$encoding;
+        $contentType = $mimeType;
 
         if ($mimeType == "text/plain") {
             $laabsContentTypes = \laabs::getContentTypes();
