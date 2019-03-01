@@ -151,7 +151,7 @@ class archiveFilePlanPosition
         // ChildrenArchives
         $childrenArchives = $this->sdoFactory->find("recordsManagement/archiveFilePlanPosition", "parentArchiveId='".(string) $archive->archiveId."'", [], '< archiveName');
         foreach ($childrenArchives as $childArchive) {
-            $archive->childrenArchives[] = $this->listArchiveContents($childArchive);
+            $archive->contents[] = $this->listArchiveContents($childArchive);
         }
 
         return $archive;
