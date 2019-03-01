@@ -260,12 +260,12 @@ abstract class AbstractKernel
      * Send response to client
      * @access protected
      */
-    protected function sendResponse()
+    public function sendResponse()
     {
         // Buffer will return void if "LAABS_CLEAN_BUFFER" directive set for app
         $this->useBuffer();
 
-        if (!is_scalar($this->response->body)) {
+        if (!is_null($this->response->body) && !is_scalar($this->response->body)) {
             throw new \core\Exception("Response content can not be displayed");
         }
 

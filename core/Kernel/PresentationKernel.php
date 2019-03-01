@@ -60,7 +60,7 @@ class PresentationKernel
 
             /* Establish routes (input, action, output) */
             self::$instance->setRoutes();
-
+        
             self::$instance->parseRequest();
 
             /* Call Command */
