@@ -38,6 +38,24 @@ Modification de la configuration :
 
 # Migration 2.3 vers 2.4
 
-# Evenement
+## Evenement
 
 Ajout de l'évènement recordsManagement/resourceDestruction dans la table "lifeCycle.eventFormat" qui permet la suppression d'une ressource détenue dans une archive.
+
+## Configuration
+
+Rajout des options dateTimeFormat, timestampFormat, timezone dans les paramètres dependency.localisation
+
+[dependency.localisation]
+@Adapter                        = Gettext
+lang                            = fr
+dateFormat                      = d-m-Y
+dateTimeFormat                  = "Y-m-d H:i:s \(P\)"
+timestampFormat                 = "Y-m-d H:i:s \(P\)"
+timezone                        = Europe/Paris
+
+Ces paramètres vous permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. Les dates continuent d'être enregistré en format UTC sur le serveur.
+dateTimeFormat vous permet de modifier le format d'affichage des objets dateTime en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
+timestampFormat vous permet de modifier le format d'affichage des objets timeStamp en suivant le formalisme d'affichage php.
+timeZone vous permet de modifier le fuseau horaire affiché.
+Si ces paramètres ne sont pas renseignés, les formats affichés correspondra aux valeurs renseignés dans le fichier vhost LAABS_DATE_FORMAT et LAABS_TIMESTAMP_FORMAT pour respectivement dateTime et timeStamp. Le format par défaut pour le fuseau horaire est UTC
