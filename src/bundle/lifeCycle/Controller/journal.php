@@ -314,7 +314,7 @@ class journal
      *
      * @return object[] The result of the request
      */
-    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = null, $numberOfResult = 300)
+    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = ">timestamp", $numberOfResult = 300)
     {
         $query = array();
         $queryParams = array();
@@ -398,7 +398,7 @@ class journal
             $archiveController = \laabs::newController('recordsManagement/archive');
             $resources = $archiveController->getDigitalResources($journalReference->archiveId);
             $journalResource = $resources[0];
-            
+
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
 
@@ -866,7 +866,7 @@ class journal
         }
 
         $journalArray[] = $this->processChaining();
-        
+
         if (count($journalArray) == 1) {
             $journalArray = $journalArray[0];
         }
@@ -876,7 +876,7 @@ class journal
 
     /**
      * process the chaining of the last journal
-     * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     * @param string $ownerOrgRegNumber The journal owner organization registration number
      *
      * @return string The chained journal file name
      */
