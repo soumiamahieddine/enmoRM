@@ -337,8 +337,9 @@ class archive
 
                     $dt = $this->view->createElement('dt');
                     $dt->appendChild($this->view->createTextNode($name));
+                    $dt->setAttribute('style', 'word-wrap:break-word');
                     $dl->appendChild($dt);
-                    if(is_array($value)){
+                    if (is_array($value)) {
                         foreach ($value as $metadata) {
                             if (!is_scalar($metadata)) {
                                 $metadata = str_replace(['{', '[', '"', ']', '}'], ' ', json_encode($metadata));
@@ -353,14 +354,13 @@ class archive
                         }
                         $dd = $this->view->createElement('dd');
                         $dd->appendChild($this->view->createTextNode($value));
+                        $dd->setAttribute('style', 'word-wrap:break-word');
                         $dl->appendChild($dd);
                     }
-
                 }
 
                 $node = $this->view->getElementById("descriptionTab");
                 $node->appendChild($dl);
-
             }
         }
 
@@ -422,7 +422,7 @@ class archive
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
 
-        if(\laabs::hasBundle('medona')) {
+        if (\laabs::hasBundle('medona')) {
             if (isset($archive->messages)) {
                 foreach ($archive->messages as $message) {
                     $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
@@ -944,7 +944,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * Wrong archive infos exceptions
      * @param object $exception The exception
@@ -1196,7 +1196,7 @@ class archive
 
             // table header column
             $th = $this->view->createElement('th', $label);
-            $tr->appendChild($th); 
+            $tr->appendChild($th);
             $th->setAttribute('title', $label);
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
@@ -1242,7 +1242,7 @@ class archive
                 $valueNode = $this->view->createTextNode($value);
             }
 
-            
+
             $td->appendChild($valueNode);
         }
 
@@ -1274,7 +1274,7 @@ class archive
         } else {
             $descriptionHtml = '<table></table>';
         }
-        
+
         $node = $this->view->getElementById("metadata");
         if ($node) {
             $this->view->addContent($descriptionHtml, $node);
