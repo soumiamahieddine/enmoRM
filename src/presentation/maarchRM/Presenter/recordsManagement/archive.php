@@ -255,6 +255,25 @@ class archive
     }
 
     /**
+     * Returns the presenter for archive description object, or null
+     * @param string $descriptionClass
+     * 
+     * @return object
+     */
+    protected function getPresenter($descriptionClass)
+    {
+        // Try to find a bundle controller, else fallback to default
+        try {
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionClass);
+
+            return \laabs::newPresenter($descriptionClass);
+        } catch (\exception $exception) {
+            // Return null;
+        }
+    }
+
+    /**
      * Get archive description
      * @param archive $archive
      *
@@ -275,14 +294,12 @@ class archive
 
         $editDescription = false;
         if (isset($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
+            if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
 
                 $hasModificationMetadata = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
                 $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-                if (
-                    (in_array('owner', $currentService->orgRoleCodes)
+                if ((in_array('owner', $currentService->orgRoleCodes)
                         || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
                             && in_array('archiver', $currentService->orgRoleCodes)))
                     && $hasModificationMetadata
@@ -290,7 +307,6 @@ class archive
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
-
                     $editDescription = true;
                 }
 
@@ -483,9 +499,8 @@ class archive
             }
         }
 
-        if (isset($archive->descriptionClass)) {
-            $editMetadataPresenter = \laabs::newPresenter($archive->descriptionClass);
-            $archive = $editMetadataPresenter->getEditMetadata($archive, $languageCodes);
+        if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
+            $archive = $presenter->getEditMetadata($archive, $languageCodes);
         }
 
         if ($archive->descriptionClass != "archivesPubliques/content") {
@@ -1265,8 +1280,7 @@ class archive
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
         if (!empty($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
+            if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);

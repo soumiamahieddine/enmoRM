@@ -1069,12 +1069,8 @@ trait archiveEntryTrait
      */
     protected function storeDescriptiveMetadata($archive)
     {
-        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
-
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        
         $descriptionController->create($archive);
     }
 

@@ -241,11 +241,7 @@ class archive
             $this->useServiceLevel($operation);
         }
 
-        if (!empty($archive->descriptionClass)) {
-            $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $this->useDescriptionController('recordsManagement/description');
-        }
+        $this->useDescriptionController($archive->descriptionClass);
     }
 
     /**
@@ -331,6 +327,19 @@ class archive
      */
     public function useDescriptionController($descriptionClass)
     {
+        // Default description class
+        if (empty($descriptionClass)) {
+            $descriptionClass = 'recordsManagement/description';
+        } else {
+            // Try to find a bundle controller, else fallback to default
+            try {
+                $bundle = \laabs::bundle(strtok($descriptionClass, LAABS_URI_SEPARATOR));
+                $controller = $bundle->getController(strtok(''));
+            } catch (\exception $exception) {
+                $descriptionClass = 'recordsManagement/description';
+            }
+        }
+
         if (!isset($this->descriptionControllers[$descriptionClass])) {
             $this->currentDescriptionController = \laabs::newController($descriptionClass);
 

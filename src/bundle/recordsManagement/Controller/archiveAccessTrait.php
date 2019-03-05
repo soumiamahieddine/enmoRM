@@ -369,11 +369,7 @@ trait archiveAccessTrait
             $this->checkRights($archive);
         }
 
-        if (!empty($archive->descriptionClass)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
 
