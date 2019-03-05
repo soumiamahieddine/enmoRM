@@ -5,15 +5,17 @@
         $('#profileReference').val(archivalProfileAccess.archivalProfileReference);
         $('#serviceLevelReference').val(archivalProfileAccess.serviceLevelReference);
         $('#updateArchivalProfile').show();
+        $('#updateArchivalProfile').removeClass('hide');
 
         $('#accessEntries li').removeClass('active');
         $(this).addClass('active');
-        $('#addArchivalProfile').hide();
+        $('#addArchivalProfile').addClass('hide');
     });
 
-    $('#profileReference').change(function () {
+    $('#profileReference').on('change', function () {
         $('#addArchivalProfile').show();
-        $('#updateArchivalProfile').hide();
+        $('#addArchivalProfile').removeClass('hide');
+        $('#updateArchivalProfile').addClass('hide');
         $('#accessEntries li').removeClass('active');
     });
 </script>
