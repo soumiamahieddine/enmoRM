@@ -1216,7 +1216,7 @@ class archive
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
 
-            if  ($isImmutable) {
+            if ($isImmutable) {
                 $th->setAttribute('data-immutable', 'immutable');
             }
 
@@ -1254,7 +1254,12 @@ class archive
 
                 $valueNode = $this->view->createTextNode($textValue);
             } else {
-                $valueNode = $this->view->createTextNode($value);
+                if (is_string($value)) {
+                    $valueNode = $this->view->createTextNode($value);
+                } else {
+                    // TODO ! Manage the object array for SEDA 2 descriptions
+                    $valueNode = $this->view->createTextNode('');
+                }
             }
 
 
