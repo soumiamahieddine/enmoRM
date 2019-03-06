@@ -375,11 +375,8 @@ trait archiveModificationTrait
                 }
             }
 
-            if (!empty($archive->descriptionClass)) {
-                $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            } else {
-                $descriptionController = $this->useDescriptionController('recordsManagement/description');
-            }
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+            
             $archive->descriptionObject = $descriptionObject;
 
             $descriptionController->update($archive);
