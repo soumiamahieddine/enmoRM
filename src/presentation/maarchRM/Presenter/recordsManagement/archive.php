@@ -256,9 +256,9 @@ class archive
 
     /**
      * Returns the presenter for archive description object, or null
-     * @param string $descriptionClass
+     * @param string $descriptionClass The name of the description class used by archive
      * 
-     * @return object
+     * @return object|null
      */
     protected function getPresenter($descriptionClass)
     {
@@ -269,7 +269,7 @@ class archive
 
             return \laabs::newPresenter($descriptionClass);
         } catch (\exception $exception) {
-            // Return null;
+            return null;
         }
     }
 
