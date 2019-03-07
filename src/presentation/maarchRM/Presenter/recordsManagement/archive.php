@@ -255,6 +255,25 @@ class archive
     }
 
     /**
+     * Returns the presenter for archive description object, or null
+     * @param string $descriptionClass The name of the description class used by archive
+     * 
+     * @return object|null
+     */
+    protected function getPresenter($descriptionClass)
+    {
+        // Try to find a bundle controller, else fallback to default
+        try {
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionClass);
+
+            return \laabs::newPresenter($descriptionClass);
+        } catch (\exception $exception) {
+            return null;
+        }
+    }
+
+    /**
      * Get archive description
      * @param archive $archive
      *
@@ -275,14 +294,12 @@ class archive
 
         $editDescription = false;
         if (isset($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
+            if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
 
                 $hasModificationMetadata = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
                 $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-                if (
-                    (in_array('owner', $currentService->orgRoleCodes)
+                if ((in_array('owner', $currentService->orgRoleCodes)
                         || ($currentService->registrationNumber === $archive->archiverOrgRegNumber
                             && in_array('archiver', $currentService->orgRoleCodes)))
                     && $hasModificationMetadata
@@ -290,7 +307,6 @@ class archive
                     && $archive->descriptionClass != "recordsManagement/log"
                     && $archive->status === "preserved"
                     && $publicArchives) {
-
                     $editDescription = true;
                 }
 
@@ -337,8 +353,9 @@ class archive
 
                     $dt = $this->view->createElement('dt');
                     $dt->appendChild($this->view->createTextNode($name));
+                    $dt->setAttribute('style', 'word-wrap:break-word');
                     $dl->appendChild($dt);
-                    if(is_array($value)){
+                    if (is_array($value)) {
                         foreach ($value as $metadata) {
                             if (!is_scalar($metadata)) {
                                 $metadata = str_replace(['{', '[', '"', ']', '}'], ' ', json_encode($metadata));
@@ -353,14 +370,13 @@ class archive
                         }
                         $dd = $this->view->createElement('dd');
                         $dd->appendChild($this->view->createTextNode($value));
+                        $dd->setAttribute('style', 'word-wrap:break-word');
                         $dl->appendChild($dd);
                     }
-
                 }
 
                 $node = $this->view->getElementById("descriptionTab");
                 $node->appendChild($dl);
-
             }
         }
 
@@ -422,7 +438,7 @@ class archive
 
         $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
 
-        if(\laabs::hasBundle('medona')) {
+        if (\laabs::hasBundle('medona')) {
             if (isset($archive->messages)) {
                 foreach ($archive->messages as $message) {
                     $message->type = $this->view->translator->getText($message->type, false, "recordsManagement/messages");
@@ -483,9 +499,8 @@ class archive
             }
         }
 
-        if (isset($archive->descriptionClass)) {
-            $editMetadataPresenter = \laabs::newPresenter($archive->descriptionClass);
-            $archive = $editMetadataPresenter->getEditMetadata($archive, $languageCodes);
+        if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
+            $archive = $presenter->getEditMetadata($archive, $languageCodes);
         }
 
         if ($archive->descriptionClass != "archivesPubliques/content") {
@@ -944,7 +959,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * Wrong archive infos exceptions
      * @param object $exception The exception
@@ -1196,12 +1211,12 @@ class archive
 
             // table header column
             $th = $this->view->createElement('th', $label);
-            $tr->appendChild($th); 
+            $tr->appendChild($th);
             $th->setAttribute('title', $label);
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
 
-            if  ($isImmutable) {
+            if ($isImmutable) {
                 $th->setAttribute('data-immutable', 'immutable');
             }
 
@@ -1239,10 +1254,15 @@ class archive
 
                 $valueNode = $this->view->createTextNode($textValue);
             } else {
-                $valueNode = $this->view->createTextNode($value);
+                if (is_string($value)) {
+                    $valueNode = $this->view->createTextNode($value);
+                } else {
+                    // TODO ! Manage the object array for SEDA 2 descriptions
+                    $valueNode = $this->view->createTextNode('');
+                }
             }
 
-            
+
             $td->appendChild($valueNode);
         }
 
@@ -1265,8 +1285,7 @@ class archive
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
         if (!empty($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
+            if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
                 $descriptionHtml = $presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
@@ -1274,7 +1293,7 @@ class archive
         } else {
             $descriptionHtml = '<table></table>';
         }
-        
+
         $node = $this->view->getElementById("metadata");
         if ($node) {
             $this->view->addContent($descriptionHtml, $node);
