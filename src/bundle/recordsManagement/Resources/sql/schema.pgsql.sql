@@ -253,8 +253,8 @@ CREATE INDEX
 
 CREATE INDEX
   ON "recordsManagement"."archive"
-  USING gin
-  (to_tsvector('french'::regconfig, "text"));
+  USING gin (to_tsvector('french'::regconfig, translate("text", 'ÀÁÂÃÄÅàáâãäåÆæÞþČčĆćÇçĐđÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØðòóôõöøœŒŔŕŠšßÙÚÛÜùúûÝýÿŽž'::text, 'AAAAAAaaaaaaAEaeBbCcCcCcDjdjEEEEeeeeIIIIiiiiNnOOOOOOooooooooeOERrSsSsUUUUuuuYyyZz'::text)));
+
 
 
 -- Table: "recordsManagement"."archiveRelationship"
