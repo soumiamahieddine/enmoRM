@@ -222,6 +222,34 @@ class archive
      *
      * @return string
      */
+    public function getArchiveDetails($archive)
+    {
+        $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
+
+        // Managment metadata
+        $this->setManagementMetadatas($archive);
+
+        // Descriptive metadata
+        $this->getDescriptiveMetadatas($archive);
+
+        // Relationships
+        $this->setArchiveRelationships($archive);
+
+        $this->view->setSource("archive", $archive);
+
+        $this->view->translate();
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+
+    /**
+     * Get archive description
+     * @param archive $archive
+     *
+     * @return string
+     */
     public function getArchiveInfo($archive)
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
