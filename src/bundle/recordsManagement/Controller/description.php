@@ -151,28 +151,36 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
         // Fulltext
         if (!empty($text)) {
+            $tsQueryTokens = $textQueryParts = [];
+
+            // Normalize SQL expression for special chars, MUST FIT WITH INDEX
             $specialChars = implode('', array_keys(\laabs::NORMALIZATION_MAP));
             $translateChars = implode('', \laabs::NORMALIZATION_MAP);
             $textPropertyExpr = "translate(text, '".$specialChars."', '".$translateChars."')";
 
-            $tsQueryTokens = $likeQueryTokens = $textQueryParts = [];
-
+            // Normalize searched text
             $protectedText = preg_replace('/[^\w\-\_\*]+/', ' ', \laabs::normalize($text));
+            
+            // Divide tokens with or without wildcrards for LIKE or TS
             $tokens = \laabs\explode(' ', $protectedText);
             foreach ($tokens as $i => $token) {
+                // LIKE tokens directly add a WHERE assert expression, case insensitive
                 if (strpos($token, '*') !== false) {
                     $textQueryParts[] = "lower(".$textPropertyExpr.") like lower('%".str_replace("*", "%", $token)."')";
                 } else {
                     $tsQueryTokens[] = $token;
                 }
             }
+
+            // If at least one TS token, add search expression
             if (!empty($tsQueryTokens)) {
-                $textQueryParts[] = $textPropertyExpr." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
+                $tsVectorExpression = "to_tsvector('french'::regconfig, ".$textPropertyExpr.")";
+                $textQueryParts[] = $tsVectorExpression." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
             }
             
             $queryParts[] = '<?SQL '. implode(' AND ', $textQueryParts).' ?>';
         }
-        //var_dump($queryParts);exit;
+
         $queryString = \laabs\implode(' and ', $queryParts);
 
         $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
