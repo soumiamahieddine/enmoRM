@@ -138,7 +138,9 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $queryParams = [];
         $queryParts = ['(description!=null and text!=null)'];
 
-        $queryParts[] = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs, $queryParams, $checkAccess);
+        if (!empty($archiveAssert = \laabs::newController('recordsManagement/archive')->getArchiveAssert($archiveArgs, $queryParams, $checkAccess))) {
+            $queryParts[] = $archiveAssert;
+        }
 
         // Json
         if (!empty($description)) {
@@ -149,30 +151,59 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
         // Fulltext
         if (!empty($text)) {
-            /*$lexer = new \core\Language\lexer();
-            $tokens = $lexer->tokenize($text, false);
+            $tsQueryTokens = $textQueryParts = [];
 
-            foreach ($tokens as $token) {
-                if (($token[0] == '"' && $token[strlen($token)-1] == '"')
-                    || ($token[0] == "'" && $token[strlen($token)-1] == "'")) {
-                    $token = substr($token, 1, -1);
-                }
-                
-                $textAsserts[] = "text @@ to_tsquery('$token')";
-            }
+            // Normalize SQL expression for special chars, MUST FIT WITH INDEX
+            $specialChars = implode('', array_keys(\laabs::NORMALIZATION_MAP));
+            $translateChars = implode('', \laabs::NORMALIZATION_MAP);
+            $textPropertyExpr = "translate(text, '".$specialChars."', '".$translateChars."')";
 
-            $queryParts[] = '<?SQL '.implode(' and ', $textAsserts).' ?>';*/
-            $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
-            $tokens = \laabs\explode(' ', $text);
+            // Normalize searched text
+            $protectedText = preg_replace('/[^\w\-\_\*]+/', ' ', \laabs::normalize($text));
+            
+            // Divide tokens with or without wildcrards for LIKE or TS
+            $tokens = \laabs\explode(' ', $protectedText);
             foreach ($tokens as $i => $token) {
-                $tokens[$i] = $token.':*';
+                // LIKE tokens directly add a WHERE assert expression, case insensitive
+                if (strpos($token, '*') !== false) {
+                    if (mb_strlen(str_replace("*", "", $token)) <= 3) {
+                        continue;
+                    }
+                    $sqlToken = str_replace("*", "%", $token);
+                    
+                    // No wildcard at the beginning, add one with space
+                    if ($sqlToken[0] != '%') {
+                        $sqlToken = '% '.$sqlToken;
+                        $textPropertyExpr = "' '::text||".$textPropertyExpr;
+                    }
+                    // No wildcard at the end, add one with space
+                    if ($sqlToken[strlen($sqlToken)-1] != '%') {
+                        $sqlToken = $sqlToken.' %';
+                        $textPropertyExpr = $textPropertyExpr."||' '::text";
+                    }
+
+                    $textQueryParts[] = $textPropertyExpr." ilike '".$sqlToken."'";
+                } else {
+                    $tsQueryTokens[] = $token;
+                }
             }
-            $queryParts[] = "<?SQL text @@ to_tsquery('".implode(' & ', $tokens)."') ?>";
+
+            // If at least one TS token, add search expression
+            if (!empty($tsQueryTokens)) {
+                $tsVectorExpression = "to_tsvector('french'::regconfig, ".$textPropertyExpr.")";
+                $textQueryParts[] = $tsVectorExpression." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
+            }
+
+            if (!empty($textQueryParts)) {
+                $queryParts[] = '<?SQL '. implode(' AND ', $textQueryParts).' ?>';
+            } else {
+                $queryParts[] = '1=0';
+            }
         }
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString,$queryParams);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
 
         foreach ($archiveUnits as $archiveUnit) {
             if (!empty($archiveUnit->description)) {

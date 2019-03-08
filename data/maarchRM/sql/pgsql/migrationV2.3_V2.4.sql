@@ -14,7 +14,7 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "userOrgRegNumbers" text;
 
 -- DROP constraint on orgid and add primary key constraint on couple (orgid and archivalprofilereference)
 ALTER TABLE "organization"."archivalProfileAccess" DROP CONSTRAINT "archivalProfileAccess_orgId_archivalProfileReference_key";
-ALTER TABLE "organization"."archivalProfileAccess" ADD CONSTRAINT  archivalProfileAccess_key PRIMARY KEY ("orgId", "archivalProfileReference");
+ALTER TABLE "organization"."archivalProfileAccess" PRIMARY KEY ("orgId", "archivalProfileReference");
 
 -- Add columns for processing statuses on org unit archival profiles access
 ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb;
@@ -24,3 +24,10 @@ ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isInList" boole
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
 ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de la ressource %9$s');
+
+-- New search index for special chars
+DROP INDEX "recordsManagement"."archive_to_tsvector_idx";
+CREATE INDEX "archive_to_tsvector_idx"
+  ON "recordsManagement"."archive"
+  USING gin
+  (to_tsvector('french'::regconfig, translate(text, 'ÀÁÂÃÄÅàáâãäåÆæÞþČčĆćÇçĐđÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØðòóôõöøœŒŔŕŠšßÙÚÛÜùúûÝýÿŽž'::text, 'AAAAAAaaaaaaAEaeBbCcCcCcDjdjEEEEeeeeIIIIiiiiNnOOOOOOooooooooeOERrSsSsUUUUuuuYyyZz'::text)));
