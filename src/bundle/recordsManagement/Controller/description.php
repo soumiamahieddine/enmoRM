@@ -170,10 +170,19 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                         continue;
                     }
                     $sqlToken = str_replace("*", "%", $token);
+                    
+                    // No wildcard at the beginning, add one with space
                     if ($sqlToken[0] != '%') {
                         $sqlToken = '% '.$sqlToken;
+                        $textPropertyExpr = "' '::text||".$textPropertyExpr;
                     }
-                    $textQueryParts[] = "lower(".$textPropertyExpr.") like lower('".$sqlToken."')";
+                    // No wildcard at the end, add one with space
+                    if ($sqlToken[strlen($sqlToken)-1] != '%') {
+                        $sqlToken = $sqlToken.' %';
+                        $textPropertyExpr = $textPropertyExpr."||' '::text";
+                    }
+
+                    $textQueryParts[] = $textPropertyExpr." ilike '".$sqlToken."'";
                 } else {
                     $tsQueryTokens[] = $token;
                 }
