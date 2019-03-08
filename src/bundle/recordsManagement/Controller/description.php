@@ -166,7 +166,14 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             foreach ($tokens as $i => $token) {
                 // LIKE tokens directly add a WHERE assert expression, case insensitive
                 if (strpos($token, '*') !== false) {
-                    $textQueryParts[] = "lower(".$textPropertyExpr.") like lower('%".str_replace("*", "%", $token)."')";
+                    if (mb_strlen(str_replace("*", "", $token)) <= 3) {
+                        continue;
+                    }
+                    $sqlToken = str_replace("*", "%", $token);
+                    if ($sqlToken[0] != '%') {
+                        $sqlToken = '% '.$sqlToken;
+                    }
+                    $textQueryParts[] = "lower(".$textPropertyExpr.") like lower('".$sqlToken."')";
                 } else {
                     $tsQueryTokens[] = $token;
                 }
@@ -177,8 +184,12 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                 $tsVectorExpression = "to_tsvector('french'::regconfig, ".$textPropertyExpr.")";
                 $textQueryParts[] = $tsVectorExpression." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
             }
-            
-            $queryParts[] = '<?SQL '. implode(' AND ', $textQueryParts).' ?>';
+
+            if (!empty($textQueryParts)) {
+                $queryParts[] = '<?SQL '. implode(' AND ', $textQueryParts).' ?>';
+            } else {
+                $queryParts[] = '1=0';
+            }
         }
 
         $queryString = \laabs\implode(' and ', $queryParts);
