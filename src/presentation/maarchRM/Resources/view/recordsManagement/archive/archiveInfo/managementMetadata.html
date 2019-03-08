@@ -1,7 +1,7 @@
 <div id="managementInfo" data-translate-catalog="recordsManagement/messages">
     <table>
         <tr class="originator">
-            <th title2="Originator">Originator</th>
+            <th title2="Originator" style="padding-right: 55px;">Originator</th>
             <td title2='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
         </tr>
         <tr class="archiveId">
@@ -46,22 +46,22 @@
     <table>
         <?merge archive.accessRuleComDate.bool() ?>
         <tr>
-            <th title2="Communication date">Communication date</th>
+            <th title2="Communication date" style="padding-right: 20px;">Communication date</th>
             <td id="accessRuleComDate" title2="[?merge archive.accessRuleComDate ?]"><?merge archive.accessRuleComDate ?></td>
         </tr>
         <?merge archive.lastCheckDate.bool() ?>
         <tr>
-            <th title2="Last check date">Last check date</th>
+            <th title2="Last check date" style="padding-right: 20px;">Last check date</th>
             <td id="lastCheckDate" title2="[?merge archive.lastCheckDate ?]"><?merge archive.lastCheckDate ?></td>
         </tr>
         <?merge archive.lastDeliveryDate.bool() ?>
         <tr>
-            <th title2="Last delivery date">Last delivery date</th>
+            <th title2="Last delivery date" style="padding-right: 20px;">Last delivery date</th>
             <td id="lastDeliveryDate" title2="[?merge archive.lastDeliveryDate ?]"><?merge archive.lastDeliveryDate ?></td>
         </tr>
         <?merge archive.lastModificationDate.bool() ?>
         <tr>
-            <th title2="Last modification date">Last modification date</th>
+            <th title2="Last modification date" style="padding-right: 20px;">Last modification date</th>
             <td id="lastModificationDate" title2="[?merge archive.lastModificationDate ?]"><?merge archive.lastModificationDate ?></td>
         </tr>
     </table>

@@ -1,51 +1,52 @@
-<div class="panel-group" id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
-    <ul class="nav nav-tabs nav-justified">
-        <li id="archiveInfo_managementMetadataTab">
+<div id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
+    <ul class="nav nav-tabs nav-justified" id="detailTabs">
+        <li role="presentation" id="archiveInfo_managementMetadataTab">
             <a href="#managementMetadataTab" data-toggle="tab">Management metadata</a>
         </li>
-        <li id="archiveInfo_descriptionTab" class="active">
+        <li role="presentation" id="archiveInfo_descriptionTab" class="active">
             <a href="#descriptionTab" data-toggle="tab">Description</a>
         </li>
-        <li id="organizationInfo_lifeCycleTab">
+        <li role="presentation" id="organizationInfo_lifeCycleTab" >
             <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
         </li>
-        <li id="organizationInfo_relationshipTab">
+        <li role="presentation" id="organizationInfo_relationshipTab">
             <a href="#relationshipTab" data-toggle="tab">Relationships</a>
         </li>
     </ul>
     <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
-        <div class="tab-pane" id="managementMetadataTab" style="padding:14px">
+        <div role="tabpanel" class="tab-pane fade in" id="managementMetadataTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
         </div>
-        <div class="tab-pane active" id="descriptionTab" style="padding:14px">
+        <div role="tabpanel" class="tab-pane active" id="descriptionTab" style="padding:20px">
             <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
         </div>
-        <div class="tab-pane" id="lifeCycleTab" style="padding:14px">
+        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/lifeCycle.html ?>
         </div>
-        <div class="tab-pane" id="relationshipTab" style="padding:14px">
-
+        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:10px">
+            <?hinclude /recordsManagement/archive/archiveInfo/relationships.html ?>
         </div>
     </div>
 </div>
 
 <style type="text/css">
-    #archiveInfos .panel-heading {
-        padding:0px 15px !important;
+    #organizationInfo_lifeCycleTab, #archiveInfo_managementMetadataTab, #relationshipTab {
+        border:none !important;
+        padding: 0px;
+        overflow: hidden;
     }
-    #descriptiveMetadata table, #managementInfo table {
-        table-layout:fixed;
+    #archiveInfo_descriptionTab{
+        height:50px;
+        padding:0px;
+    }
+    #detailTabs{
+        border-bottom: none;
+    }
+    #archiveInfos{
         width:100%;
     }
-    #descriptiveMetadata table th, #managementInfo table th {
-        width: 40%;
-        text-align: right;
-    }
-    #descriptiveMetadata table td, #descriptiveMetadata table th,
-    #managementInfo table td, #managementInfo table th {
-        padding: 0 5px 0 5px ;
-        text-overflow: crop;
-        overflow: hidden;
+    #archiveInfos ul > li > a{
+        height:60px;
     }
     #descriptiveMetadata .archivalProfileName {
         font-size: 16px !important;

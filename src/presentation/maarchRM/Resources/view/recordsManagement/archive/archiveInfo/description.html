@@ -6,9 +6,9 @@
             data-classification="[?merge archive.classificationLevel ?]"
             data-commentaire="[?merge archive.descriptionObject.Commentaires ?]">
 
-        <h4 class="text-center text-info archivalProfileName">
+        <h5 class="text-center text-info archivalProfileName">
             <?merge archive.archivalProfileName ?>
-        </h4>
+        </h5>
         <div class="pull-right">
             <?merge modificationPrivilege.bool() ?>
             <button type="button" class="btn btn-link btn-sm" id="editMetadata" title2="Edit"><i class="fa fa-edit">&nbsp;</i>Modifier</button>
