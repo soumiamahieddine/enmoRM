@@ -1045,21 +1045,22 @@ class archive
             // table header column
             $th = $this->view->createElement('th', $label);
             $tr->appendChild($th); 
-            $th->setAttribute('title', $label);
+            $th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
 
-            if  ($isImmutable) {
+            if ($isImmutable) {
                 $th->setAttribute('data-immutable', 'immutable');
             }
 
             // Table data column
             $td = $this->view->createElement('td');
+            $td->setAttribute('style', 'padding-left:6em');
 
             $tr->appendChild($td);
 
             if (!empty($value) && !is_array($value)) {
-                $th->setAttribute('title', $value);
+                $th->setAttribute('title2', $value); // title doesn't display properly this way
             }
 
             if ($type == "date") {
