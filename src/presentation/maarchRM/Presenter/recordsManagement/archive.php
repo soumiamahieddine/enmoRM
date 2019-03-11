@@ -1048,6 +1048,7 @@ class archive
             $th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
+            $th->setAttribute('style', 'padding-left: 1em');
 
             if ($isImmutable) {
                 $th->setAttribute('data-immutable', 'immutable');
@@ -1055,7 +1056,7 @@ class archive
 
             // Table data column
             $td = $this->view->createElement('td');
-            $td->setAttribute('style', 'padding-left:6em');
+            $td->setAttribute('style', 'padding-left:10em');
 
             $tr->appendChild($td);
 

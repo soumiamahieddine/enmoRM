@@ -1,1 +1,205 @@
-TO DO
+<div class="row">
+    <form class="form-horizontal" id="newArchiveRelationsipForm" data-parentarchiveid="[?merge archive.archiveId ?]" data-currentarchiveid="[?merge archive.archiveId ?]">
+        <div class="form-group">
+            <label class="col-sm-3 control-label small">Type de liaison<span class="compulsory"> *</span></label>
+            <div class="col-sm-5">
+                <select class="input-sm form-control" name="relationshipType">
+                    <option value=""></option>
+                    <option value="affaire">affaire</option>
+                    <option value="chainage">chainage</option>
+                </select>
+            </div>
+        </div>
+        <hr/>
+        <div id="relationshipNomDossier" class="form-group hide">
+            <label class="col-sm-3 control-label small">Nom de dossier<span class="compulsory"> *</span></label>
+            <div class="col-sm-5">
+                <input type="text" class="input-sm form-control" name="nomDossier" placeholder="Nom de dossier"/>
+            </div>
+        </div>
+        <div id="relationshipChainage" class="form-group hide">
+            <label class="col-sm-3 control-label small">Chainage<span class="compulsory"> *</span></label>
+            <div class="col-sm-5">
+                <select class="input-sm form-control" name="chainage">
+                    <option value=""></option>
+                    <option value="Autre infraction">Autre infraction</option>
+                    <option value="Procédure chainée">Procédure chainée</option>
+                    <option value="Procédure élucidante">Procédure élucidante</option>
+                    <option value="Procédure élucidée">Procédure élucidée</option>
+                    <option value="Procédure origine">Procédure origine</option>
+                    <option value="Procédure reprise">Procédure reprise</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label small">Procédure à lier<span class="compulsory"> *</span></label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input type="text" class="input-sm form-control" name="procedureALier" placeholder="Procédure à lier" readonly=""readonly/>
+                    <span class="input-group-btn">
+                        <button id="searchProcedureForLinking" class="btn btn-default btn-sm" type="button"><i class="fa fa-search"/></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="pull-right">
+            <button type="button" class="btn btn-sm btn-warning" id="cancelRelationship" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+            <button type="button" class="btn btn-sm btn-danger hide" id="deleteRelationship" title="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</button>
+            <button type="button" class="btn btn-sm btn-success" id="validateRelationship" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+        </div>
+    <form>
+</div>
+
+<span id="relationshipType_Error" class="hide">Le type de liaison est manquant.</span>
+<span id="procedureALier_Error" class="hide">La procédure à lier est manquante.</span>
+<span id="chainage_Error" class="hide">Le chaînage est manquant.</span>
+<span id="nomDossier_Error" class="hide">Le nom de dossier est manquant.</span>
+
+<style>
+    .compulsory {
+        color:red;
+    }
+</style>
+
+<script type="text/javascript">
+    RelationshipForm = {
+        form: $('#newArchiveRelationsipForm'),
+        requestType: 'POST',
+
+        load: function(archiveId, relatedProcedure, typeCode, nomDossier, chainage) {
+            this.form.find('[name="relationshipType"]').val(typeCode).change().prop('disabled', true);
+            this.form.find('[name="nomDossier"]').val(nomDossier);
+            this.form.find('[name="chainage"]').val(chainage);
+            this.form.find('[name="procedureALier"]').val(relatedProcedure).prop('disabled', true);
+            $('#searchProcedureForLinking').prop('disabled', true);
+            this.form.data('parentarchiveid', archiveId);
+
+            $('#deleteRelationship').removeClass('hide');
+            this.requestType = 'PUT';
+        },
+
+        save: function() {
+            relationshipObject = this.serialize();
+
+            if (relationshipObject == -1) {
+                return;
+            }
+
+            ajax($('#validateRelationship, #deleteRelationship, #cancelRelationship'), {
+                url         : '/procedureRelationship',
+                type        : RelationshipForm.requestType,
+                data        : JSON.stringify(relationshipObject),
+                dataType    : 'json',
+                contentType : 'application/json',
+                success     : function(response) {
+                    gritter.show(response.message, response.status, response.errors);
+                    if (response.status) {
+                        RelationshipForm.close();
+                        trigger("relationshipAdded.archive", [RelationshipForm.form.data('currentarchiveid'), relationshipObject]);
+                    }
+                },
+                error       : function(response) {
+                    var error = JSON.parse(response.responseText);
+                    gritter.show(error.message, false);
+                }
+            });
+        },
+
+        delete: function() {
+            this.requestType="DELETE";
+            this.save();
+        },
+
+        serialize: function() {
+            object = {
+                relationshipType : this.form.find('[name="relationshipType"]').val(),
+                procedureALier   : this.form.find('[name="procedureALier"]').val(),
+                chainage         : this.form.find('[name="chainage"]').val(),
+                nomDossier       : this.form.find('[name="nomDossier"]').val(),
+                archiveId        : this.form.data('parentarchiveid')
+            };
+
+            errors = [];
+
+            if(object.relationshipType=="") {
+                errors.push($('#relationshipType_Error').text());
+            }
+
+            if(object.procedureALier=="") {
+                errors.push($('#procedureALier_Error').text());
+            }
+
+            if (object.relationshipType == "chainage" && object.chainage == "") {
+                errors.push($('#chainage_error').text());
+            }
+            if (object.relationshipType == "affaire" && object.nomDossier == "") {
+                errors.push($('#nomDossier_Error').text());
+            }
+
+            if (errors.length) {
+
+                gritter.show(errors.join('<br/>', false));
+                return -1;
+            }
+
+            return object;
+        },
+
+        close: function() {
+            $('#newArchiveRelationsipForm').find('input, select').val('');
+            trigger("closeRelationshipForm.archive");
+
+            this.form.find('input, select').val('');
+            this.requestType='POST';
+            archiveId = this.form.data('currentarchiveid');
+            this.form.data('parentarchiveid', archiveId);
+            this.form.find('[name="procedureALier"]').prop('disabled', false);
+            this.form.find('[name="relationshipType"]').prop('disabled', false);
+            $('#searchProcedureForLinking').prop('disabled', false);
+
+            $('#relationshipNomDossier').addClass('hide');
+            $('#relationshipChainage').addClass('hide');
+            $('#deleteRelationship').addClass('hide');
+        }
+    };
+
+    $('#searchProcedureForLinking').on('click', function() {
+        $('#searchProcedureModal').modal('show');
+    });
+
+    $('#newArchiveRelationsipForm').onEvent('procedureFoundFormModal.procedure', function(e, procedureNumber) {
+        $('#newArchiveRelationsipForm').find('[name="procedureALier"]').val(procedureNumber);
+    });
+
+    $('#newArchiveRelationsipForm').onEvent('loadRelationship.archiveRelationship', function(e, procedureNumber) {
+        $('#newArchiveRelationsipForm').find('[name="procedureALier"]').val(procedureNumber);
+    });
+
+    $('#newArchiveRelationsipForm').onEvent('loadRelationship.archiveRelationship', function(e, archiveId, relatedProcedure, typeCode, nomDossier, chainage) {
+        RelationshipForm.load(archiveId, relatedProcedure, typeCode, nomDossier, chainage);
+    });
+
+    $('#newArchiveRelationsipForm').on('change', '[name="relationshipType"]', function() {
+        if ($(this).val() == 'chainage') {
+            $('#relationshipChainage').removeClass('hide');
+            $('#relationshipNomDossier').addClass('hide');
+        } else {
+            $('#relationshipChainage').addClass('hide');
+            $('#relationshipNomDossier').removeClass('hide');
+        }
+    });
+
+    $('#cancelRelationship').on('click', function() {
+        RelationshipForm.close();
+    });
+
+    $('#validateRelationship').on('click', function() {
+        RelationshipForm.save();
+    });
+
+    $('#deleteRelationship').on('click', function() {
+        RelationshipForm.delete();
+    });
+</script>
+
