@@ -10,8 +10,8 @@
             <?merge archive.archivalProfileName ?>
         </h4>
         <div class="pull-right">
-            <?merge modificationPrivilege.bool() ?>
-            <button type="button" class="btn btn-link btn-sm" id="editMetadata" title2="Edit"><i class="fa fa-edit">&nbsp;</i>Modifier</button>
+            <!--<?merge modificationPrivilege.bool() ?>
+            <button type="button" class="btn btn-link btn-sm" id="editMetadata" title2="Edit"><i class="fa fa-edit">&nbsp;</i>Modifier</button>-->
             <?merge archivalExportPrivilege.bool() ?>
             <button type="button" class="btn btn-link btn-sm" id="archivalExport" title2="Export"><i class="fa fa-download">&nbsp;</i>Exporter</button>
         </div>
@@ -31,7 +31,7 @@
     }
     
 </style>
-<!--script type="text/javascript">
+<script type="text/javascript">
     var today = new Date();
     var yyyy = today.getFullYear();
 
@@ -192,4 +192,4 @@
         });
     });
 
-</script-->
+</script>
