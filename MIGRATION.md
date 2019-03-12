@@ -46,6 +46,7 @@ Ajout de l'évènement recordsManagement/resourceDestruction dans la table "life
 
 Rajout des options dateTimeFormat, timestampFormat, timezone dans les paramètres dependency.localisation
 
+```
 [dependency.localisation]
 @Adapter                        = Gettext
 lang                            = fr
@@ -53,9 +54,10 @@ dateFormat                      = d-m-Y
 dateTimeFormat                  = "Y-m-d H:i:s \(P\)"
 timestampFormat                 = "Y-m-d H:i:s \(P\)"
 timezone                        = Europe/Paris
+```
 
-Ces paramètres vous permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. Les dates continuent d'être enregistré en format UTC sur le serveur.
-dateTimeFormat vous permet de modifier le format d'affichage des objets dateTime en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
-timestampFormat vous permet de modifier le format d'affichage des objets timeStamp en suivant le formalisme d'affichage php.
-timeZone vous permet de modifier le fuseau horaire affiché.
-Si ces paramètres ne sont pas renseignés, les formats affichés correspondra aux valeurs renseignés dans le fichier vhost LAABS_DATE_FORMAT et LAABS_TIMESTAMP_FORMAT pour respectivement dateTime et timeStamp. Le format par défaut pour le fuseau horaire est UTC
+Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. 
+Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date et heure en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
+Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
+Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
+Si ces paramètres sont ignorés, les valeurs par défaut sont chargées par le logiciel, correspondant à un format respectant le standard ISO8601.
