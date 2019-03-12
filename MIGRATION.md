@@ -38,6 +38,26 @@ Modification de la configuration :
 
 # Migration 2.3 vers 2.4
 
-# Evenement
+## Evenement
 
 Ajout de l'évènement recordsManagement/resourceDestruction dans la table "lifeCycle.eventFormat" qui permet la suppression d'une ressource détenue dans une archive.
+
+## Configuration
+
+Rajout des options dateTimeFormat, timestampFormat, timezone dans les paramètres dependency.localisation
+
+```
+[dependency.localisation]
+@Adapter                        = Gettext
+lang                            = fr
+dateFormat                      = d-m-Y
+dateTimeFormat                  = "Y-m-d H:i:s \(P\)"
+timestampFormat                 = "Y-m-d H:i:s \(P\)"
+timezone                        = Europe/Paris
+```
+
+Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. 
+Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date et heure en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
+Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
+Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
+Si ces paramètres sont ignorés, les valeurs par défaut sont chargées par le logiciel, correspondant à un format respectant le standard ISO8601.

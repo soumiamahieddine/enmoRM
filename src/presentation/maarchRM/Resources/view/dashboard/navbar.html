@@ -131,6 +131,7 @@
         </div>
     </div>
 </nav>
+<span class="hide" id="localisationDateTimeFormat"><?merge .localisation['dateTimeFormat'] ?></span>
 
 <div class="modal fade" id="aboutModal" lang="en">
     <div class="modal-dialog">
@@ -322,6 +323,13 @@
             button.find('.fa:first').addClass(icon).removeClass('fa-spinner fa-spin');
         }
 
+    }
+
+    function formatDateTime(datetime)
+    {
+        var format = "[?merge .localisation['dateTimeFormat'] ?]";
+
+        return datetime;
     }
 
     // Event triggering system

@@ -1230,8 +1230,8 @@ class archive
             }
 
             if ($type == "date") {
-                $textValue = \laabs::newDate($value);
-                $textValue = $textValue->format("d/m/Y");
+                $dateObject = \laabs::newDate($value);
+                $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
 
                 $valueNode = $this->view->createTextNode($textValue);
             } elseif ($type == 'boolean') {
@@ -1279,10 +1279,6 @@ class archive
     {
         $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
 
-        if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
-        }
-
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
         if (!empty($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
@@ -1319,8 +1315,6 @@ class archive
     {
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
-
-        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
 
         if (isset($archive->retentionDuration)) {
             $archive->retentionDurationUnit = substr($archive->retentionDuration, -1);

@@ -20,32 +20,39 @@
 namespace dependency\localisation;
 /**
  * Date formatter
- * 
+ *
  * @package Localisation
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
- */ 
+ */
 class DateTimeFormatter
 {
     /* Constants */
 
     /* Properties */
     protected $dateFormat;
-
+    protected $dateTimeFormat;
+    protected $timestampFormat;
+    protected $timezone;
     protected $locale;
 
 
     /* Methods */
     /**
      * Constructor
-     * @param string $outputFormat The default output format for dates
-     * @param string $locale       The target locale
+     * @param string $dateFormat      The default output format for dates
+     * @param string $dateTimeFormat  The default output format for date-times (without microseconds)
+     * @param string $timestampFormat The default output format for timestamps
+     * @param string $timezone        The default timezone
+     * @param string $locale          The target locale
      *
      * @return void
-     * @author 
      **/
-    public function __construct($dateFormat=false, $locale=false)
+    public function __construct($dateFormat = 'Y-m-d', $dateTimeFormat = 'Y-m-d H:i:s \(P\)', $timestampFormat = 'Y-m-d\TH:i:s.u\Z', $timezone = 'UTC', $locale = false)
     {
         $this->dateFormat = $dateFormat;
+        $this->dateTimeFormat = $dateTimeFormat;
+        $this->timestampFormat = $timestampFormat;
+        $this->timezone = $timezone;
 
         if ($locale) {
             $this->setLocale($locale);
@@ -60,6 +67,51 @@ class DateTimeFormatter
     {
         setlocale(\LC_TIME, $locale);
         $this->locale = $locale;
+    }
+
+    /**
+     * Formats a timestamp string from a dateTime object
+     * @param \DateTime $dateTime
+     * 
+     * @return string
+     */
+    public function formatTimestamp(\DateTime $dateTime)
+    {
+        $formattedDateTime = clone($dateTime);
+
+        if (!empty($this->timezone)) {
+            $formattedDateTime->setTimezone(new \core\Type\TimeZone($this->timezone));
+        }
+
+        return $formattedDateTime->format($this->timestampFormat);
+    }
+
+    /**
+     * Formats a dateTime string from a dateTime object
+     * @param \DateTime $dateTime
+     * 
+     * @return string
+     */
+    public function formatDateTime(\DateTime $dateTime)
+    {
+        $formattedDateTime = clone($dateTime);
+
+        if (!empty($this->timezone)) {
+            $formattedDateTime->setTimezone(new \core\Type\TimeZone($this->timezone));
+        }
+
+        return $formattedDateTime->format($this->dateTimeFormat);
+    }
+
+    /**
+     * Formats a date string from a dateTime object
+     * @param \DateTime $dateTime
+     *
+     * @return string
+     */
+    public function formatDate(\DateTime $dateTime)
+    {
+        return $dateTime->format($this->dateFormat);
     }
 
     /**
