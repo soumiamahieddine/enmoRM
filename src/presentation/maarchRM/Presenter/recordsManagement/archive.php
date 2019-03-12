@@ -1125,7 +1125,7 @@ class archive
             $descriptionHtml = '<table></table>';
         }
         
-        $node = $this->view->getElementById("archiveDescriptiveMetadata");
+        $node = $this->view->getElementById("metadata");
         if ($node) {
             $this->view->addContent($descriptionHtml, $node);
         }
