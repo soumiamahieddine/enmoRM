@@ -3,7 +3,7 @@
         <thead>
         <th id="dateColumn">Date</th>
         <th>Description</th>
-        <th/>
+        <th style="opacity: 0;"/>
         </thead>
         <tbody>
             <?merge archive.lifeCycleEvent ?>
@@ -15,9 +15,9 @@
                     <?merge .description ?>
                 </td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-warning btn-sm showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
-                            <span class="fa fa-fw fa-eye">&nbsp;</span>
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-warning showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
+                            <span class="fa fa-fw fa-eye pull-right">&nbsp;</span>
                         </button>
                     </div>
                 </td>
@@ -27,9 +27,7 @@
 </div>
 
 <script>
-   /* TODO search/find a better solution to sort table by descending date...
-    test.removeClass('sorting_asc').removeClass('sorting').addClass('sorting_desc');
-    test.attr('aria-sort','descending');
-    test.attr('aria-label','Date hohohoho: activer pour trier la colonne en ascendant');*/
+
+   // TODO search/find a better solution to sort table by descending date...
     $("#dateColumn").click();
 </script>

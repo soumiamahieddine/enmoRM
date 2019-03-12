@@ -56,7 +56,7 @@
         </tr>
         <?merge archive.lastDeliveryDate.bool() ?>
         <tr>
-            <th title2="Last delivery date">Last delivery date</th>
+            <th  title2="Last delivery date">Last delivery date</th>
             <td id="lastDeliveryDate" title2="[?merge archive.lastDeliveryDate ?]"><?merge archive.lastDeliveryDate ?></td>
         </tr>
         <?merge archive.lastModificationDate.bool() ?>
@@ -70,13 +70,11 @@
 <button type="button" class="btn btn-default btn-sm pull-right" id="cancelManagementEdition" title2="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
 
 <style>
-#datePart tr th{
-    padding-right: 0.5em;
-}
-#managementInfo table tr td{
-    font-size: 0.9em;
+
+#lastCheckDate, #lastDeliveryDate, #lastModificationDate, #accessRuleComDate{
+    padding-left: 10rem;
 }
 #originatorField{
-    padding-right: 10em;
+    padding-right: 10rem;
 }
 </style>

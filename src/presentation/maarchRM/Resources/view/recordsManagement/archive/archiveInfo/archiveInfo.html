@@ -1,12 +1,13 @@
 <div id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
-    <ul class="nav nav-tabs nav-justified" id="detailTabs">
-        <li role="presentation" id="archiveInfo_managementMetadataTab">
+        <!-- The attribute ondrop + ondragstart make tabs undraggable -->
+    <ul class="nav nav-tabs nav-justified" id="detailTabs" ondragstart="return false;" ondrop="return false;">
+        <li role="presentation" id="archiveInfo_managementMetadataTab" >
             <a href="#managementMetadataTab" data-toggle="tab">Management metadata</a>
         </li>
         <li role="presentation" id="archiveInfo_descriptionTab" class="active">
             <a href="#descriptionTab" data-toggle="tab">Description</a>
         </li>
-        <li role="presentation" id="organizationInfo_lifeCycleTab" >
+        <li role="presentation" id="organizationInfo_lifeCycleTab"> 
             <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
         </li>
         <li role="presentation" id="organizationInfo_relationshipTab">
@@ -35,7 +36,7 @@
         overflow: hidden;
     }
     #detailTabs{
-        border-bottom: none;
+        border-bottom: none;     
     }
     #archiveInfos{
         width:100%;
