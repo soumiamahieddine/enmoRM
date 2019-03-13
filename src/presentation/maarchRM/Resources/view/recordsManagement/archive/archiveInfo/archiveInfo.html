@@ -1,11 +1,11 @@
 <div id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
-        <!-- The attribute ondrop + ondragstart make tabs undraggable -->
+        <!-- The attributes ondrop + ondragstart make tabs undraggable -->
     <ul class="nav nav-tabs nav-justified" id="detailTabs" ondragstart="return false;" ondrop="return false;">
-        <li role="presentation" id="archiveInfo_managementMetadataTab" >
-            <a href="#managementMetadataTab" data-toggle="tab">Management metadata</a>
-        </li>
         <li role="presentation" id="archiveInfo_descriptionTab" class="active">
             <a href="#descriptionTab" data-toggle="tab">Description</a>
+        </li>
+        <li role="presentation" id="archiveInfo_managementMetadataTab" >
+            <a href="#managementMetadataTab" data-toggle="tab">Management metadata</a>
         </li>
         <li role="presentation" id="organizationInfo_lifeCycleTab"> 
             <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
@@ -15,16 +15,17 @@
         </li>
     </ul>
     <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+        <div role="tabpanel" class="tab-pane active" id="descriptionTab" style="padding:14px">
+            <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+        </div>
         <div role="tabpanel" class="tab-pane fade in" id="managementMetadataTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
         </div>
-        <div role="tabpanel" class="tab-pane active" id="descriptionTab" style="padding:20px">
-            <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
-        </div>
-        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:14px">
+        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:2px">
             <?hinclude /recordsManagement/archive/lifeCycle.html ?>
         </div>
-        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:14px">
+        <?merge archive.relationships.bool() ?>
+        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:2px">
             <?hinclude /recordsManagement/archive/archiveInfo/relationships.html ?>
         </div>
     </div>
