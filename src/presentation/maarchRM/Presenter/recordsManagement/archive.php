@@ -1254,7 +1254,7 @@ class archive
 
                 $valueNode = $this->view->createTextNode($textValue);
             } else {
-                if (is_string($value)) {
+                if (is_string($value) || is_numeric($value)) {
                     $valueNode = $this->view->createTextNode($value);
                 } else {
                     // TODO ! Manage the object array for SEDA 2 descriptions
