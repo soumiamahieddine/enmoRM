@@ -23,7 +23,8 @@ ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb
 ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isInList" boolean default false;
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
-('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de la ressource %9$s');
+('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de la ressource %9$s'),
+('recordsManagement/updateRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', FALSE, 'Relation mise à jour avec l''archive %6$s');
 
 -- New search index for special chars
 DROP INDEX "recordsManagement"."archive_to_tsvector_idx";
