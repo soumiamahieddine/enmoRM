@@ -36,14 +36,27 @@ trait archiveRestitutionTrait
             $archiveIds = array($archiveIds);
         }
 
+        $archives = [];
+        $archiveChildrenIds = [];
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-            $this->checkRights($archive);
+            $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
         }
 
-        $canditates = $this->setStatus($archiveIds, 'restituable');
+        foreach ($archiveChildrenIds as $archiveChildrenId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+            $this->checkRights($archive);
 
-        return $canditates;
+            $this->listChildrenArchive($archive, true);
+
+            $archives[] = $archive;
+        }
+
+        $archiveList = $this->setStatus($archiveIds, 'restituable');
+        foreach ($archives as $archive) {
+            $this->logRestitutionRequest($archive);
+        }
+
+        return $archiveList;
     }
 
     /**
@@ -56,11 +69,15 @@ trait archiveRestitutionTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve((string)$archiveId, true);
-        
-        // Life cycle journal
-        $this->logRestitution($archive);
+        $archiveChildrenIds = [];
+        $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
 
+        foreach ($archiveChildrenIds as $archiveChildrenId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+            $this->logRestitution($archive);
+        }
+
+        $archive = $this->retrieve((string)$archiveId, true);
         return $archive;
     }
 
@@ -83,7 +100,12 @@ trait archiveRestitutionTrait
      */
     public function cancelRestitution($archiveIds)
     {
-        return $this->setStatus($archiveIds, 'preserved');
+        $archiveList = $this->setStatus($archiveIds, 'preserved');
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->logRestitutionRequest($archive);
+        }
+        return $archiveList;
     }
 
     /**

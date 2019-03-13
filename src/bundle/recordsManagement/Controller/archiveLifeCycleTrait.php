@@ -222,6 +222,30 @@ trait archiveLifeCycleTrait
     }
 
     /**
+     * Log an archive restitution request
+     * @param recordsManagement/archive $archive   	     The archive
+     * @param bool  					$operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logRestitutionRequest($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/restitutionRequest', $archive, $operationResult);
+    }
+
+    /**
+     * Log an archive restitution request cancel
+     * @param recordsManagement/archive $archive   	     The archive
+     * @param bool  					$operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logRestitutionRequestCancel($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/restitutionRequestCanceling', $archive, $operationResult);
+    }
+
+    /**
      * Log an archive restitution
      * @param recordsManagement/archive $archive         The archive
      * @param bool                      $operationResult The operation result
