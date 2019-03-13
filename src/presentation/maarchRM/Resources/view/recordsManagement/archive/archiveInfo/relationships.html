@@ -1,107 +1,35 @@
-<?merge archive.relationshipTypes.bool() ?>
+<?merge archive.relationships.bool() ?>
 <div class="col-xs-12">
-    <div class="panel panel-primary">
-        <div class="panel-heading clearfix">
-            <div class="pull-left">
-                <h4>Relations table</h4>
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table id="relationshipsTable" class="table table-condensed table-striped dataTable">
-                <thead>
+    <div class="table-responsive">
+        <table id="relationshipsTable" class="table table-condensed table-striped dataTable">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Related archive</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+                <tbody>
+                    <?merge archive.relationships ?>
                     <tr>
-                        <th>Archive</th>
-                        <th>Type</th>
-                        <th>Related archive</th>
-                        <th>Description</th>
+                        <td>
+                            <?merge .typeCode ?>
+                        </td>
+                        <td data-sort="[?merge .relatedArchiveId ?]">
+                            <?merge .relatedArchiveName ?>
+                        </td>
+                        <td>
+                            <?merge .description ?>
+                        </td>
+                        <td class='pull-right'>
+                            <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
+                                data-archiveid='[?merge .relatedArchiveId ?]'>
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                    <tbody>
-                        <?merge archive.childrenRelationships ?>
-                        <tr>
-                            <td><i class="fa fa-thumb-tack" style="font-size:25px">&nbsp;</i></td>
-                            <td>
-                                <?merge .typeCode ?>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
-                                    data-archiveid='[?merge .relatedArchiveId ?]'>
-                                    <i class="fa fa-info-circle"></i>&nbsp;
-                                    <?merge .relatedArchiveId ?>
-                                </button>
-                            </td>
-                            <td>
-                                <?merge .description ?>
-                            </td>
-                        </tr>
-                        <?merge archive.parentRelationships ?>
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
-                                    data-archiveid='[?merge .archiveId ?]'>
-                                    <i class="fa fa-info-circle"></i>&nbsp;
-                                    <?merge .archiveId ?>
-                                </button>
-                            </td>
-                            <td>
-                                <?merge .typeCode ?>
-                            </td>
-                            <td><i class="fa fa-thumb-tack" style="font-size:25px">&nbsp;</i></td>
-                            <td>
-                                <?merge .description ?>
-                            </td>
-                        </tr>
-                    </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="col-xs-12">
-    <div class="dataTree tree">
-        <?merge archive.parentArchive.bool() ?>
-        <ul role="tree">
-            <li>
-                <span class="btn btn-warning btn-sm viewRelatedArchive" title="[?merge archive.parentArchive.archiveName ?]"
-                    data-archiveid="[?merge archive.parentArchive.archiveId ?]" title="Show the archive info">
-                    <i class="fa fa-file-archive-o"></i>&nbsp;
-                    <?merge archive.parentArchive.archiveId ?></span>&nbsp;
-                    <i class="small">
-                    <?merge archive.parentArchive.archiveName ?>
-                    </i>
-                <ul>
-                    <li>
-                        <span class="btn btn-default disabled btn-sm" title="[?merge archive.archiveName ?]"
-                            data-archiveid="[?merge archive.archiveId ?]" title="Show the archive info">
-                            <i class="fa fa-file-archive-o"></i>&nbsp;
-                            <?merge archive.archiveId ?></span>&nbsp;<i class="small">
-                            <?merge archive.archiveName ?></i>
-                        <?merge archive.contents.count().bool() ?>
-                        <ul>
-                            <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
-                        </ul>
-                    </li>
-                </ul>
-
-            </li>
-        </ul>
-
-        <?merge archive.parentArchive.bool().not() ?>
-        <ul role="tree">
-            <?merge archive.contents.count().bool() ?>
-            <span class="btn btn-default btn-sm disabled" title="[?merge archive.archiveName ?]" data-archiveid="[?merge archive.archiveId ?]"
-                title="Show the archive info">
-                <i class="fa fa-file-archive-o"></i>&nbsp;
-                <?merge archive.archiveId ?>
-            </span>&nbsp;
-            <?merge archive.contents.count().bool() ?>
-            <i class="small">
-                <?merge archive.archiveName ?></i>
-            <?merge archive.contents.count().bool() ?>
-            <ul>
-                <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
-            </ul>
-        </ul>
-
+                </tbody>
+        </table>
     </div>
 </div>

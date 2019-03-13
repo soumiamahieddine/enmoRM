@@ -1229,26 +1229,30 @@ class archive
 
     protected function setArchiveRelationships($archive)
     {
-        $childrenRelationships = [];
-        $parentRelationships = [];
-        $relationshipTypes = [];
+        $relationships = [];
 
         if (!empty($archive->relationships["childrenRelationships"])) {
-            foreach ($archive->relationships["childrenRelationships"] as $relationship) {
-                $childrenRelationships[] = $relationship;
-                $relationshipTypes[$relationship->typeCode]=true;
+            foreach ($archive->relationships["childrenRelationships"] as $childRelationship) {
+                $relationship = new \stdClass();
+                $relationship->relatedArchiveId = $childRelationship->relatedArchiveId;
+                $relationship->relatedArchiveName = $childRelationship->relatedArchiveName;
+                $relationship->description = $childRelationship->description;
+                $relationship->typeCode = $childRelationship->typeCode;
             }
-            $archive->childrenRelationships = $childrenRelationships;
+            $relationships[] = $relationship;
         }
 
         if (!empty($archive->relationships["parentRelationships"])) {
-            foreach ($archive->relationships["parentRelationships"] as $relationship) {
-                $parentRelationships[] = $relationship;
-                $relationshipTypes[$relationship->typeCode]=true;
+            foreach ($archive->relationships["parentRelationships"] as $parentRelationship) {
+                $relationship = new \stdClass();
+                $relationship->relatedArchiveId = $parentRelationship->archiveId;
+                $relationship->relatedArchiveName = $parentRelationship->relatedArchiveName;
+                $relationship->description = $parentRelationship->description;
+                $relationship->typeCode = $parentRelationship->typeCode;
             }
-            $archive->parentRelationships = $parentRelationships;
+            $relationships[] = $relationship;
         }
-        $archive->relationshipTypes = array_keys($relationshipTypes);
+        $archive->relationships = $relationships;
     }
 
     protected function checkMessage($archive)
