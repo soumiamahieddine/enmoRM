@@ -1,20 +1,10 @@
 <div class="row">
-    <div id="archiveDescriptiveMetadata"
+    <div id="metadata"
             data-archive-id="[?merge archive.archiveId ?]"
             data-originator-archive-id="[?merge archive.originatorArchiveId ?]"
             data-archiver-archive-id="[?merge archive.archiverArchiveId ?]"
             data-classification="[?merge archive.classificationLevel ?]"
             data-commentaire="[?merge archive.descriptionObject.Commentaires ?]">
-
-        <h4 class="text-center text-info archivalProfileName">
-            <?merge archive.archivalProfileName ?>
-        </h4>
-        <div class="pull-right">
-            <!--<?merge modificationPrivilege.bool() ?>
-            <button type="button" class="btn btn-link btn-sm" id="editMetadata" title2="Edit"><i class="fa fa-edit">&nbsp;</i>Modifier</button>-->
-            <?merge archivalExportPrivilege.bool() ?>
-            <button type="button" class="btn btn-link btn-sm" id="archivalExport" title2="Export"><i class="fa fa-download">&nbsp;</i>Exporter</button>
-        </div>
 
         <span id="metadataForm_error" class="hide">Les métadonnées ne sont pas complètes.</span>
         <span class="hide" id="no_service_found_meta_text">Aucun service correspondant</span>
@@ -38,12 +28,12 @@
     $('#archiveDescriptionForm').find('[name="annee"]').attr("max", yyyy);
 
     $('#archivalExport').on('click', function() {
-        var archiveId = $('#archiveDescriptiveMetadata').data('archive-id');
+        var archiveId = $('#metadata').data('archive-id');
         window.open('/Exportarchive/'+archiveId, '_blank');
     });
 
     MetadataForm = {
-        metadata: $('#archiveDescriptiveMetadata'),
+        metadata: $('#metadata'),
         form: $('#archiveDescriptionForm'),
 
         save: function() {
@@ -118,8 +108,8 @@
     });
 
 
-    $('#archiveDescriptiveMetadata').ready(function() {
-        $('#archiveDescriptiveMetadata').find('.serviceRef').typeahead(
+    $('#metadata').ready(function() {
+        $('#metadata').find('.serviceRef').typeahead(
             {
                 hint: true,
                 highlight: true,
@@ -154,7 +144,7 @@
             $(this).data("value", suggestion.id);
         });
 
-        $('#archiveDescriptiveMetadata').find('.sortingTypeRef').typeahead(
+        $('#metadata').find('.sortingTypeRef').typeahead(
             {
                 hint: true,
                 highlight: true,

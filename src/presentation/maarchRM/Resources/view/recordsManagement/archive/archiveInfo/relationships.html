@@ -1,94 +1,107 @@
-<div id="archiveRelationshipsTable" class="col-xs-12">
-    <div class="col-xs-12">
-        <?merge archive.relationshipTypes.inarray('affaire').bool() ?>
-        <div>
-            <h4><small><i class="fa fa-hashtag"/> Affaire </small></h4>
-            <div class="col-xs-12">
-                <?merge archive.childrenRelationships.bool() ?>
-                <div>
-                    <?merge archive.childrenRelationships ?>
-                    <div class="col-xs-12 [?merge .typeCode.ifeq('chainage').then('hide', '') ?]">
-                        <a class="viewRelatedArchive" data-archiveid="[?merge .relatedArchiveId ?]" href="#"><?merge .description.nomDossier ?> - <?merge .archive.originatorArchiveId ?></a>
-                        &nbsp; &nbsp;<?merge modificationPrivilege.bool() ?><a href="#" data-archiveid="[?merge .archiveId ?]" data-procedurealier="[?merge .archive.originatorArchiveId ?]" data-typecode="[?merge .typeCode ?]" data-dossier="[?merge .description.nomDossier ?]" class="editRelationship"><i class="fa fa-edit"/></a>
-                    </div>
-                </div>
-                <?merge archive.parentRelationships.bool() ?>
-                <div>
-                    <?merge archive.parentRelationships ?>
-                    <div class="col-xs-12 [?merge .typeCode.ifeq('chainage').then('hide', '') ?]">
-                        <a class="viewRelatedArchive" data-archiveid="[?merge .archiveId ?]" href="#"><?merge .description.nomDossier ?> - <?merge .archive.originatorArchiveId ?></a>
-                        &nbsp; &nbsp;<?merge modificationPrivilege.bool() ?><a href="#" data-archiveid="[?merge .archiveId ?]" data-procedurealier="[?merge .parentArchive.originatorArchiveId ?]" data-typecode="[?merge .typeCode ?]" data-dossier="[?merge .description.nomDossier ?]" class="editRelationship"><i class="fa fa-edit"/></a>
-                    </div>
-                </div>
+<!--?merge archive.relatedArchives.bool() ?-->
+<div class="col-xs-12">
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">
+                <h4></h4>
             </div>
         </div>
-        <?merge archive.relationshipTypes.inarray('chainage').bool() ?>
-        <div>
-            <h4><small><i class="fa fa-hashtag"/> Chainage </small></h4>
-            <div class="col-xs-12">
-                <?merge archive.childrenRelationships.bool() ?>
-                <div>
-                    <?merge archive.childrenRelationships ?>
-                    <div class="col-xs-12 [?merge .typeCode.ifeq('affaire').then('hide', '') ?]">
-                        <a class="viewRelatedArchive" data-archiveid="[?merge .relatedArchiveId ?]" href="#"><?merge .description.chainage ?> - <?merge .archive.originatorArchiveId ?></a>
-                        &nbsp; &nbsp;<?merge modificationPrivilege.bool() ?><a href="#" data-archiveid="[?merge .archiveId ?]" data-procedurealier="[?merge .archive.originatorArchiveId ?]" data-typecode="[?merge .typeCode ?]" data-chainage="[?merge .description.chainage ?]" class="editRelationship"><i class="fa fa-edit"/></a>
-                    </div>
-                </div>
-                <?merge archive.parentRelationships.bool() ?>
-                <div>
-                    <?merge archive.parentRelationships ?>
-                    <div class="col-xs-12 [?merge .typeCode.ifeq('affaire').then('hide', '') ?]">
-                        <a class="viewRelatedArchive" data-archiveid="[?merge .archiveId ?]" href="#"><?merge .description.chainage ?> - <?merge .archive.originatorArchiveId ?></a>
-                        &nbsp; &nbsp;<?merge modificationPrivilege.bool() ?><a href="#" data-archiveid="[?merge .archiveId ?]" data-procedurealier="[?merge .parentArchive.originatorArchiveId ?]" data-typecode="[?merge .typeCode ?]" data-chainage="[?merge .description.chainage ?]" class="editRelationship"><i class="fa fa-edit"/></a>
-                    </div>
-                </div>
-            </div>
+        <div class="table-responsive">
+            <table id="relationshipsTable" class="table table-condensed table-striped dataTable">
+                <thead>
+                    <tr>
+                        <th>Archive</th>
+                        <th>Type</th>
+                        <th>Related archive</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <?merge archive.childrenRelationships ?>
+                        <tr>
+                            <td><i class="fa fa-thumb-tack" style="font-size:25px">&nbsp;</i></td>
+                            <td>
+                                <?merge .typeCode ?>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
+                                    data-archiveid='[?merge .relatedArchiveId ?]'>
+                                    <i class="fa fa-info-circle"></i>&nbsp;
+                                    <?merge .relatedArchiveId ?>
+                                </button>
+                            </td>
+                            <td>
+                                <?merge .description ?>
+                            </td>
+                        </tr>
+                        <?merge archive.parentRelationships ?>
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
+                                    data-archiveid='[?merge .archiveId ?]'>
+                                    <i class="fa fa-info-circle"></i>&nbsp;
+                                    <?merge .archiveId ?>
+                                </button>
+                            </td>
+                            <td>
+                                <?merge .typeCode ?>
+                            </td>
+                            <td><i class="fa fa-thumb-tack" style="font-size:25px">&nbsp;</i></td>
+                            <td>
+                                <?merge .description ?>
+                            </td>
+                        </tr>
+                    </tbody>
+            </table>
         </div>
-        <?merge modificationPrivilege.bool() ?>
-        <button id="addArchiveRelationship" class="btn btn-sm btn-default pull-right">
-            <i class="fa fa-plus"> </i>
-            Ajouter une relation
-        </button>
     </div>
 </div>
 
-<div id="archiveRelationshipForm" class="col-xs-12 hide">
-    <?hinclude recordsManagement/archive/archiveInfo/relationshipForm.html ?>
+<div class="col-xs-12">
+    <div class="dataTree tree">
+        <?merge archive.parentArchive.bool() ?>
+        <ul role="tree">
+            <li>
+                <span class="btn btn-warning btn-sm viewRelatedArchive" title="[?merge archive.parentArchive.archiveName ?]"
+                    data-archiveid="[?merge archive.parentArchive.archiveId ?]" title="Show the archive info">
+                    <i class="fa fa-file-archive-o"></i>&nbsp;
+                    <?merge archive.parentArchive.archiveId ?></span>&nbsp;
+                    <i class="small">
+                    <?merge archive.parentArchive.archiveName ?>
+                    </i>
+                <ul>
+                    <li>
+                        <span class="btn btn-default disabled btn-sm" title="[?merge archive.archiveName ?]"
+                            data-archiveid="[?merge archive.archiveId ?]" title="Show the archive info">
+                            <i class="fa fa-file-archive-o"></i>&nbsp;
+                            <?merge archive.archiveId ?></span>&nbsp;<i class="small">
+                            <?merge archive.archiveName ?></i>
+                        <?merge archive.contents.count().bool() ?>
+                        <ul>
+                            <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
+                        </ul>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
+
+        <?merge archive.parentArchive.bool().not() ?>
+        <ul role="tree">
+            <?merge archive.contents.count().bool() ?>
+            <span class="btn btn-default btn-sm disabled" title="[?merge archive.archiveName ?]" data-archiveid="[?merge archive.archiveId ?]"
+                title="Show the archive info">
+                <i class="fa fa-file-archive-o"></i>&nbsp;
+                <?merge archive.archiveId ?>
+            </span>&nbsp;
+            <?merge archive.contents.count().bool() ?>
+            <i class="small">
+                <?merge archive.archiveName ?></i>
+            <?merge archive.contents.count().bool() ?>
+            <ul>
+                <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
+            </ul>
+        </ul>
+
+    </div>
 </div>
-
-<style type="text/css">
-    #archiveRelationshipsTable .viewRelatedArchive {
-        cursor: pointer;
-    }
-</style>
-
-<script type="text/javascript">
-    $('#addArchiveRelationship').on('click', function() {
-        $('#archiveRelationshipsTable').addClass('hide');
-        $('#archiveRelationshipForm').removeClass('hide');
-    });
-
-    $('#archiveRelationshipForm').onEvent('closeRelationshipForm.archive', function() {
-        $('#archiveRelationshipForm').addClass('hide');
-        $('#archiveRelationshipsTable').removeClass('hide');
-    });
-
-    $('#archiveRelationshipForm').onEvent('relationshipAdded.archive', function(e, archiveId, relationship) {
-        trigger('showDetails.archive', archiveId);
-    })
-    $("#archiveRelationshipsTable").on('click', ".viewRelatedArchive", function (e) {
-        e.preventDefault();
-        trigger('viewRelated.archive', $(this).data('archiveid'));
-        $('.modal').scrollTop(0);
-    });
-
-    $("#archiveRelationshipsTable").on('click', ".editRelationship", function (e) {
-        e.preventDefault();
-        btn = $(this);
-        trigger('loadRelationship.archiveRelationship', [btn.data('archiveid'), btn.data('procedurealier'), btn.data('typecode'), btn.data('dossier'), btn.data('chainage')]);
-
-        $('#archiveRelationshipsTable').addClass('hide');
-        $('#archiveRelationshipForm').removeClass('hide');
-    });
-
-</script>

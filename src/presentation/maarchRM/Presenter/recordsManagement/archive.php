@@ -164,7 +164,7 @@ class archive
 
                 try {
                     $archive->hasRights = $archiveController->checkRights($archive);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $archive->hasRights = false;
                 }
             }
@@ -703,7 +703,7 @@ class archive
         $this->translator->setCatalog('recordsManagement/messages');
         $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
         $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, $success,($echec+$success));
+        $this->json->message = sprintf($this->json->message, $success, ($echec+$success));
 
         return $this->json->save();
     }
@@ -1044,7 +1044,7 @@ class archive
 
             // table header column
             $th = $this->view->createElement('th', $label);
-            $tr->appendChild($th); 
+            $tr->appendChild($th);
             $th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
@@ -1124,7 +1124,7 @@ class archive
         } else {
             $descriptionHtml = '<table></table>';
         }
-        
+
         $node = $this->view->getElementById("metadata");
         if ($node) {
             $this->view->addContent($descriptionHtml, $node);
