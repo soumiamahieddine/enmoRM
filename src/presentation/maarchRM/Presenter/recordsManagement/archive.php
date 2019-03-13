@@ -1233,22 +1233,21 @@ class archive
         $parentRelationships = [];
         $relationshipTypes = [];
 
-        if (!empty($archive->childrenRelationships)) {
-            foreach ($archive->childrenRelationships as $relationship) {
+        if (!empty($archive->relationships["childrenRelationships"])) {
+            foreach ($archive->relationships["childrenRelationships"] as $relationship) {
                 $childrenRelationships[] = $relationship;
                 $relationshipTypes[$relationship->typeCode]=true;
             }
             $archive->childrenRelationships = $childrenRelationships;
         }
 
-        if (!empty($archive->parentRelationships)) {
-            foreach ($archive->parentRelationships as $relationship) {
+        if (!empty($archive->relationships["parentRelationships"])) {
+            foreach ($archive->relationships["parentRelationships"] as $relationship) {
                 $parentRelationships[] = $relationship;
                 $relationshipTypes[$relationship->typeCode]=true;
             }
             $archive->parentRelationships = $parentRelationships;
         }
-
         $archive->relationshipTypes = array_keys($relationshipTypes);
     }
 

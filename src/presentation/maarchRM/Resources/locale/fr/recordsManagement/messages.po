@@ -1047,3 +1047,6 @@ msgstr "Dossier"
 
 msgid "Last modification date"
 msgstr "Date de mise à jour"
+
+msgid "Relations table"
+msgstr "Tableau de relations"
