@@ -394,8 +394,6 @@
                     .removeClass('hide')
                     .data('json', task);
 
-            console.log(task);
-            
             a.find('.statusSpan')
              .append("<input type='checkbox' class='status' name='status' data-toggle='toggle'>");
             if (task.status=='scheduled') {
