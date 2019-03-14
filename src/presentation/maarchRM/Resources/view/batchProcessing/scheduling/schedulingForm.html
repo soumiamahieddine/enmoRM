@@ -4,7 +4,6 @@
             <br/>
             <br/>
             <input type="hidden" name="schedulingId">
-
             <div class="form-group">
                 <label class="col-lg-3 control-label">Name<span style="color:red">&nbsp;*</span></label>
                 <div class="col-lg-7">
@@ -514,7 +513,6 @@
             if (!scheduling.parameters) {
                 scheduling.parameters = [];
             }
-
             $.each(scheduling.parameters, function(key,value){
                 let li = $('<li/>')
                         .attr('parameters', value)
@@ -681,6 +679,12 @@
                 });
             }
             
+            if ($(".active").find(".statusSpan").find(".toggle").hasClass("off")) {
+                scheduling.status = "paused";
+            } else {
+                scheduling.status = "scheduled";
+            }
+
             scheduling.weekDays = [];
             this.form.find('.weekDay.active').find('input').each(function() {
                 scheduling.weekDays.push($(this).val());

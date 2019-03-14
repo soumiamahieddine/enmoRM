@@ -87,7 +87,7 @@
                                 <button class="btn btn-xs btn-default executeNow pull-right" title="Execute"><i class="fa fa-chevron-right">&nbsp;</i>Execute</button>
                             </p>
                         </span>
-                        <span class="col-xs-2 text-right">
+                        <span class="col-xs-2 text-right statusSpan">
                             <input type="checkbox" class="status" name="status" data-toggle="toggle" checked="[?merge .status.ifeq('scheduled').then('checked') ?]">
                         </span>
                         <span class="col-xs-1 text-right">
@@ -145,13 +145,7 @@
                             <button class="btn btn-xs btn-default executeNow pull-right" title="Execute"><i class="fa fa-chevron-right" /> Execute</button>
                         </p>
                     </span>
-                    <span class="col-xs-2 text-right">
-                        <input type="checkbox" class="status" name="status" data-toggle="toggle" checked="[?merge .status.ifeq('paused').then('Off', 'On') ?]">
-
-                        <!--h4>
-	                    	<span class="playTask text-success" title="Play"><i class="fa fa-play"/></span>
-	                    	<span class="pauseTask text-muted" title="Pause"><i class="fa fa-pause"/></span>
-	                    </h4-->
+                    <span class="col-xs-2 text-right statusSpan">
                     </span>
                     <span class="col-xs-1 text-right">
                         <div class="deleteTask" title="delete"><i class="fa fa-times"></i></div>
@@ -394,13 +388,20 @@
         },
 
         mergeValues: function(task) {
-            
             a = $('#scheduleTemplate')
                     .find('a')
                     .clone()
                     .removeClass('hide')
                     .data('json', task);
-            
+
+            a.find('.statusSpan')
+             .append("<input type='checkbox' class='status' name='status' data-toggle='toggle'>");
+            if (task.status=='scheduled') {
+                a.find('.statusSpan').find('.status').bootstrapToggle('on');
+            } else {
+                a.find('.statusSpan').find('.status').bootstrapToggle('off');
+            }
+
             a.find('.schedulingName')
              .text(task.name);
             a.find('.taskName')
@@ -471,7 +472,6 @@
             	a.find('.taskParameters').removeClass('hide');
             	a.find('.parametersList').text(task.parameters.join(' '));
             }
-
             return a;
         },
  
