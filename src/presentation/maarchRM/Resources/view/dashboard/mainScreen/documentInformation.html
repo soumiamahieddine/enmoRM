@@ -67,7 +67,6 @@
     DocumentInformation = {
         form: $('#resourceInformation'),
         load: function (resource) {
-            resource.created = resource.created.substring(0, 19);
             DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
             DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
             DocumentInformation.form.find("#deleteResource").data("resid", resource.resId);

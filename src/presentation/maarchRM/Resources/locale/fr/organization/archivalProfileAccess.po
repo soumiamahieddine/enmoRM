@@ -1,0 +1,8 @@
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Archival profiles list"
+msgstr "Liste des profils d'archive"
+
+msgid "Archival Profile field cannot be empty"
+msgstr "Le champ profil d'archive ne peut être vide"

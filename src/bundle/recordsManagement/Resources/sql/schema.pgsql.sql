@@ -59,6 +59,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "acceptUserIndex" boolean default false,
   "acceptArchiveWithoutProfile" boolean default true,
   "fileplanLevel" text,
+  "processingStatuses" jsonb,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
@@ -118,6 +119,7 @@ CREATE TABLE "recordsManagement"."archiveDescription"
   "position" integer,
   "isImmutable" boolean default false,
   "isRetained" boolean default true,
+  "isInList" boolean default false,
 
   PRIMARY KEY ("archivalProfileId", "fieldName"),
   FOREIGN KEY ("archivalProfileId")
@@ -175,6 +177,7 @@ CREATE TABLE "recordsManagement"."archive"
   "originatorOwnerOrgRegNumber" text,
   "depositorOrgRegNumber" text,
   "archiverOrgRegNumber" text,
+  "userOrgRegNumbers" text,
 
   "archivalProfileReference" text,
   "archivalAgreementReference" text,
@@ -210,6 +213,7 @@ CREATE TABLE "recordsManagement"."archive"
   "lastModificationDate" timestamp,
   
   "status" text NOT NULL,
+  "processingStatus" text,
 
   "parentArchiveId" text,
 
@@ -249,8 +253,8 @@ CREATE INDEX
 
 CREATE INDEX
   ON "recordsManagement"."archive"
-  USING gin
-  (to_tsvector('french'::regconfig, "text"));
+  USING gin (to_tsvector('french'::regconfig, translate("text", 'ÀÁÂÃÄÅàáâãäåÆæÞþČčĆćÇçĐđÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØðòóôõöøœŒŔŕŠšßÙÚÛÜùúûÝýÿŽž'::text, 'AAAAAAaaaaaaAEaeBbCcCcCcDjdjEEEEeeeeIIIIiiiiNnOOOOOOooooooooeOERrSsSsUUUUuuuYyyZz'::text)));
+
 
 
 -- Table: "recordsManagement"."archiveRelationship"

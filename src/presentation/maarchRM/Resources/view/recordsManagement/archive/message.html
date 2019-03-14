@@ -15,9 +15,7 @@
                 <td>
                     <?merge .type ?>
                 </td>
-                <td>
-                    <?merge .date ?>
-                </td>
+                <td data-sort="[?merge .date.format('YmdHisu') ?]" ><?merge .date ?></td>
                 <td>
 
                     <div class="btn-group pull-right">

@@ -65,23 +65,17 @@ class authentication
         switch (true) {
             case ($accountToken = \laabs::getToken('TEMP-AUTH')):
                 if (!$this->sdoFactory->exists('auth/account', $accountToken->accountId)) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 if (!isset($userCommand->service[0]) || ($userCommand->service[0] != "auth/authentication/update_userName_Password")) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 break;
 
             // Token authentication
             case ($accountToken = \laabs::getToken('AUTH')):
                 if (!$this->sdoFactory->exists('auth/account', $accountToken->accountId)) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 break;
 
@@ -116,10 +110,7 @@ class authentication
         }
 
         if (!$accountToken) {
-            \laabs::kernel()->response->code = 307;
-            $userCommand->reroute('app/authentication/readUserPrompt');
-
-            return false;
+            $this->redirectToLogin();
         }
 
         // Read user account information
@@ -156,10 +147,9 @@ class authentication
             }
 
             if (!$default) {
-                $userCommand->reroute('app/authentication/readUserPrompt');
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
 
-                return false;
+                $this->redirectToLogin();
             }
 
             if (!$isUserPosition) {
@@ -169,5 +159,15 @@ class authentication
         }
 
         return $account;
+    }
+
+    protected function redirectToLogin()
+    {
+        \laabs::kernel()->response->code = 307;
+        \laabs::kernel()->response->setHeader('Location', '/user/prompt');
+        \laabs::kernel()->sendResponse();
+        \laabs::kernel()->end();
+
+        exit;
     }
 }

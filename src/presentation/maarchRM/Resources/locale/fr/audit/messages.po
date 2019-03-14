@@ -1777,3 +1777,15 @@ msgstr "Lecture de la liste des pays"
 
 msgid "recordsManagement/archives/readRegistry"
 msgstr "Recherche du registre"
+
+msgid "organization/organization/createArchivalprofileaccess"
+msgstr "New profile access to services association created"
+
+msgid "organization/organization/updateArchivalprofileaccess"
+msgstr "Relationships between a service and an archival profile updated"
+
+msgid "organization/orgTree/deleteArchivalProfileAccess"
+msgstr "Relationships between a service and an archival profile deleted"
+
+msgid "organization/orgTree/readList"
+msgstr "Charge la liste des types d'organisation"

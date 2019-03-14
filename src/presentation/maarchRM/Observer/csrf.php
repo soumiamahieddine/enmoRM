@@ -56,7 +56,7 @@ class csrf
      * @param \core\Reflection\Command $userCommand
      * @param array                    $args
      *
-     * @subject LAABS_USER_COMMAND
+     * @-subject LAABS_USER_COMMAND
      */
     public function check(&$userCommand, array &$args = null)
     {

@@ -51,6 +51,8 @@ trait archiveAccessTrait
      * @param string $originatingStartDate
      * @param string $originatingEndDate
      * @param string $archiverArchiveId
+     * @param string $processingStatus
+     * @param bool   $checkAccess
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -76,7 +78,9 @@ trait archiveAccessTrait
         $depositEndDate = null,
         $originatingStartDate = null,
         $originatingEndDate = null,
-        $archiverArchiveId = null
+        $archiverArchiveId = null,
+        $processingStatus = null,
+        $checkAccess = true
     ) {
         $archives = [];
 
@@ -99,7 +103,8 @@ trait archiveAccessTrait
             'depositStartDate' => $depositStartDate,
             'depositEndDate' => $depositEndDate,
             'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
-            'archiverArchiveId' => $archiverArchiveId
+            'archiverArchiveId' => $archiverArchiveId,
+            'processingStatus' => $processingStatus
         ];
 
         if (!$filePlanPosition) {
@@ -124,7 +129,7 @@ trait archiveAccessTrait
             }
         }
         foreach ($searchClasses as $descriptionClass => $descriptionController) {
-            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs));
+            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess));
         }
 
         return $archives;
@@ -332,7 +337,7 @@ trait archiveAccessTrait
         if ($accessRuleAssert) {
             $queryParts[] = $accessRuleAssert;
         }
-
+        
         $queryString = \laabs\implode(' AND ', $queryParts);
         $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
 
@@ -347,11 +352,11 @@ trait archiveAccessTrait
 
     /**
      * Get archive metadata
-     * @param string $archiveId The archive identifier
-     * @throws
+     * @param string $archiveId   The archive identifier
+     * 
      * @return recordsManagement/archive The archive metadata
      */
-    public function getMetadata($archiveId)
+    public function getMetadata($archiveId, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -360,16 +365,11 @@ trait archiveAccessTrait
         }
         $this->getAccessRule($archive);
 
-        if (!$this->accessVerification($archive)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        if ($checkAccess) {
+            $this->checkRights($archive);
         }
 
-
-        if (!empty($archive->descriptionClass)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
 
@@ -378,17 +378,23 @@ trait archiveAccessTrait
 
     /**
      * Get the related information of an archive
-     * @param string $archiveId The identifier of the archive or the archive itself
-     *
+     * @param string $archiveId   The identifier of the archive or the archive itself
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
+     * 
      * @return recordsManagement/archive
      */
-    public function getRelatedInformation($archiveId)
+    public function getRelatedInformation($archiveId, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } else {
             $archive = $archiveId;
         }
+
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
+
         $archive->lifeCycleEvent = $this->getArchiveLifeCycleEvent($archive->archiveId);
         $archive->relationships = $this->getArchiveRelationship($archive->archiveId);
 
@@ -397,13 +403,13 @@ trait archiveAccessTrait
 
     /**
      * Get the children of an archive as an index
-     * @param string $archiveId     The identifier of the archive or the archive itself
+     * @param string $archiveId         The identifier of the archive or the archive itself
      * @param bool   $loadResourcesInfo Load the resources info
-     * @param bool   $loadBinary    Load the resources binary
+     * @param bool   $loadBinary        Load the resources binary
      *
      * @return array recordsManagement/archive
      */
-    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false)
+    public function listChildrenArchive($archiveId, $loadResourcesInfo = false, $loadBinary = false, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -426,13 +432,13 @@ trait archiveAccessTrait
             }
         }
 
-        $archive->childrenArchives = $this->sdoFactory->find(
+        $archive->contents = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archive->archiveId."'"
         );
 
-        if ($archive->childrenArchives) {
-            foreach ($archive->childrenArchives as $child) {
+        if ($archive->contents) {
+            foreach ($archive->contents as $child) {
                 $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary);
             }
         }
@@ -442,26 +448,39 @@ trait archiveAccessTrait
 
     /**
      * Retrieve an archive resource contents
-     * @param string $archiveId The archive identifier
-     *
+     * @param string $archiveId   The archive identifier
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
+     * 
      * @return digitalResource/digitalResource[] Array of digitalResource/digitalResource object
      */
-    public function getDigitalResources($archiveId)
+    public function getDigitalResources($archiveId, $checkAccess = true)
     {
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
+
         return $this->digitalResourceController->getResourcesByArchiveId($archiveId);
     }
 
     /**
      * Retrieve an archive resource contents
      *
-     * @param string $archiveId The archive identifier
-     * @param string $resId     The resource identifier
-     * @throws
+     * @param string $archiveId   The archive identifier
+     * @param string $resId       The resource identifier
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
+     * 
      * @return digitalResource/digitalResource Archive resource contents
      */
-    public function consultation($archiveId, $resId)
+    public function consultation($archiveId, $resId, $checkAccess = true)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
+
         try {
             $digitalResource = $this->digitalResourceController->retrieve($resId);
 
@@ -476,7 +495,7 @@ trait archiveAccessTrait
                 $this->logIntegrityCheck($archive, "Invalid resource", $digitalResource, false);
             }
 
-            if (!$this->accessVerification($archive) || $digitalResource->archiveId != $archiveId) {
+            if (($checkAccess && !$this->accessVerification($archive)) || $digitalResource->archiveId != $archiveId) {
                 throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
             }
 
@@ -512,12 +531,13 @@ trait archiveAccessTrait
     /**
      * Retrieve an archive by its id
      *
-     * @param string $archiveId
-     * @param bool   $withBinary
+     * @param string $archiveId   The archive identifier
+     * @param bool   $withBinary  Retrieve contents or only metadata
+     * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
      * @throws
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId, $withBinary = false)
+    public function retrieve($archiveId, $withBinary = false, $checkAccess = true)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -525,7 +545,11 @@ trait archiveAccessTrait
             $archive = $archiveId;
         }
 
-        $this->getMetadata($archive);
+        if ($checkAccess) {
+            $this->checkRights($archive);
+        }
+
+        $this->getMetadata($archive, $checkAccess);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
 
         if (!empty($archive->archiverOrgRegNumber)) {
@@ -534,18 +558,21 @@ trait archiveAccessTrait
         if (!empty($archive->depositorOrgRegNumber)) {
             $archive->depositorOrg = $this->organizationController->getOrgByRegNumber($archive->depositorOrgRegNumber);
         }
-        $this->getRelatedInformation($archive);
-        $this->listChildrenArchive($archive, true, $withBinary);
+        $this->getRelatedInformation($archive, $checkAccess);
+        $this->listChildrenArchive($archive, true, $withBinary, $checkAccess);
 
         $this->getParentArchive($archive);
 
-        if (!empty($archive->childrenArchives)) {
-            foreach ($archive->childrenArchives as $child) {
-                $this->retrieve($child);
+        if (!empty($archive->contents)) {
+            foreach ($archive->contents as $child) {
+                $this->retrieve($child, $withBinary, $checkAccess);
             }
         }
 
-        $archive->communicability = $this->accessVerification($archive);
+        $archive->communicability = true;
+        if ($checkAccess) {
+            $archive->communicability = $this->accessVerification($archive);
+        }
 
         if (\laabs::hasBundle('medona')) {
             $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
@@ -655,10 +682,11 @@ trait archiveAccessTrait
      * Get archive assert
      * @param array $args
      * @param array $queryParams
+     * @param bool  $checkAccess
      *
      * @return string Query
      */
-    public function getArchiveAssert($args, &$queryParams)
+    public function getArchiveAssert($args, &$queryParams, $checkAccess = true)
     {
         // Args on archive
         $currentDate = \laabs::newDate();
@@ -752,12 +780,10 @@ trait archiveAccessTrait
             $queryParts['depositDate'] = "depositDate <= :depositEndDate AND depositDate >= :depositStartDate";
             $queryParams['depositEndDate'] = $args['depositEndDate'];
             $queryParams['depositStartDate'] = $args['depositStartDate'];
-
         } elseif (!empty($args['depositStartDate'])) {
             $args['depositStartDate'] = $args['depositStartDate']->format('Y-m-d').'T00:00:00';
             $queryParts['depositDate'] = "depositDate >= :depositStartDate";
             $queryParams['depositStartDate'] = $args['depositStartDate'];
-
         } elseif (!empty($args['depositEndDate'])) {
             $args['depositEndDate'] = $args['depositEndDate']->format('Y-m-d').'T23:59:59';
             $queryParts['depositDate'] = "depositDate <= :depositEndDate";
@@ -772,17 +798,31 @@ trait archiveAccessTrait
             $foldersId = $this->getDescendantFolder($args['filePlanPosition']);
             $queryParts['filePlanPosition'] = "filePlanPosition=['".implode("', '", $foldersId)."']";
         }
-        if ($args['hasParent'] == true) {
-            $queryParts['parentArchiveId'] = "parentArchiveId!=null";
+        if (isset($args['hasParent'])) {
+            if ($args['hasParent'] == true) {
+                $queryParts['parentArchiveId'] = "parentArchiveId!=null";
+            } elseif ($args['hasParent']  === false) {
+                $queryParts['hasParent'] = "parentArchiveId=null";
+            }
         }
-        if ($args['hasParent']  === false) {
-            $queryParts['hasParent'] = "parentArchiveId=null";
+        
+        if (isset($args['processingStatus'])) {
+            if ($args['processingStatus'] === true) {
+                $queryParts['processingStatus'] = "processingStatus!=null";
+            } elseif ($args['processingStatus'] === false) {
+                $queryParts['processingStatus'] = "processingStatus=null";
+            } elseif (is_string($args['processingStatus'])) {
+                $queryParts['processingStatus'] = "processingStatus= :processingStatus";
+                $queryParams['processingStatus'] = $args['processingStatus'];
+            }
         }
 
-        $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
+        if ($checkAccess) {
+            $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
 
-        if ($accessRuleAssert) {
-            $queryParts[] = $accessRuleAssert;
+            if ($accessRuleAssert) {
+                $queryParts[] = $accessRuleAssert;
+            }
         }
 
         return implode(' and ', $queryParts);
@@ -816,6 +856,7 @@ trait archiveAccessTrait
 
         $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
         $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
+        $queryParts['user'] = "(userOrgRegNumbers = '".$currentService->registrationNumber."' OR userOrgRegNumbers = '".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber."')";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
         $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId
@@ -889,6 +930,34 @@ trait archiveAccessTrait
     }
 
     /**
+     * Change the processing status of an archive
+     * @param mixed  $archiveIds   Identifiers of the archives to update
+     * @param string $targetStatus New processing status to set
+     *
+     * @return array Archives ids separate by successfully updated archives ['success']
+     * and not updated archives ['error']
+     */
+    public function setProcessingStatus($archiveIds, $targetStatus)
+    {
+        if (!is_array($archiveIds)) {
+            $archiveIds = array($archiveIds);
+        }
+
+        $res = array('success' => array(), 'error' => array());
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
+            $currentStatus = $archiveProcessingStatus->processingStatus;
+
+            $archiveProcessingStatus->processingStatus = $targetStatus;
+            $this->sdoFactory->update($archiveProcessingStatus);
+            array_push($res['success'], $archiveId);
+        }
+
+        return $res;
+    }
+
+    /**
      * Calculate the communication date of an archive
      * @param timestamp $startDate The start date
      * @param duration  $duration  The duration
@@ -913,37 +982,44 @@ trait archiveAccessTrait
      */
     public function checkRights($archive)
     {
-        $accountToken = \laabs::getToken('AUTH');
-        $userAccountController = \laabs::newController('auth/userAccount');
-        $account = $userAccountController->edit($accountToken->accountId);
-
-
-        $currentOrganization = \laabs::getToken("ORGANIZATION");
-
-        $positionController = \laabs::newController('organization/userPosition');
-
-        $descandantServices = $positionController->readDescandantService($currentOrganization->orgId);
-
-        $descandantRegNumber = [];
-        $descandantRegNumber[] = $currentOrganization->registrationNumber;
-
-        foreach ($descandantServices as $descandantService) {
-            $descandantRegNumber[] = $descandantService;
-        }
-
-        if (!$currentOrganization) {
+        $currentUserService = \laabs::getToken("ORGANIZATION");
+        
+        if (!$currentUserService) {
             return false;
         }
 
-        if (is_array($currentOrganization->orgRoleCodes) && in_array("owner", $currentOrganization->orgRoleCodes)) {
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $userServices = array_values($userPositionController->readDescandantService($currentUserService->orgId));
+        $userServices[] = $currentUserService->registrationNumber;
+        
+        // OWNER access
+        if (!is_null($currentUserService->orgRoleCodes)
+            && \laabs\in_array('owner', $currentUserService->orgRoleCodes)) {
             return true;
         }
 
-        if (!in_array($archive->originatorOrgRegNumber, $descandantRegNumber) && ($archive->archiverOrgRegNumber != $currentOrganization->registrationNumber)) {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        // ARCHIVER access
+        if (!is_null($currentUserService->orgRoleCodes)
+            && \laabs\in_array('archiver', $currentUserService->orgRoleCodes)
+            && $archive->archiverOrgRegNumber === $currentUserService->registrationNumber) {
+            return true;
         }
 
-        return true;
+        // ORIGINATOR ACCESS
+        if (\laabs\in_array($archive->originatorOrgRegNumber, $userServices)) {
+            return true;
+        }
+
+        // USER ACCESS
+        if (!empty($archive->userOrgRegNumbers)) {
+            foreach ($archive->userOrgRegNumbers as $userOrgRegNumber) {
+                if (\laabs\in_array($userOrgRegNumber, $userServices)) {
+                    return true;
+                }
+            }
+        }
+
+        throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
     }
 
     /**

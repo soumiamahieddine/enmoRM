@@ -60,8 +60,15 @@
         </div>
     </div>
 </div>
-
 <script>
+
+$(document).on('show.bs.modal', '.modal', function () {
+    var zIndex = 1040 + (10 * $('.modal:visible').length);
+    $(this).css('z-index', zIndex);
+    setTimeout(function() {
+        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+    }, 0);
+});
 
 $('#showEventCertificate').on('click', function(){
     eventCertificate.load($(this).data('url'));
@@ -84,6 +91,10 @@ eventInfo = {
                 $.each(element, function() {
                     var e = $(this)
                     var name = e.attr('name');
+
+                    if (name == 'timestamp') {
+                        response[name] = formatDateTime(response[name]);
+                    }
 
                     e.html(response[name]);
                     delete response[name];

@@ -5,6 +5,8 @@
  */
 namespace laabs;
 
+use core\Type\ArrayObject;
+
 /**
  *  Symbolic links creation for Windows systems
  *  @param string $target The path to target file/dir
@@ -596,4 +598,25 @@ function rmdir($dirname, $recurse = true)
     \rmdir($dirname);
 
     return true;
+}
+
+/**
+ * Checks if a value exists in an array
+ *
+ * @param $value
+ * @param $object
+ *
+ * @return bool
+ */
+function in_array($value, $object)
+{
+    if ($object instanceof \ArrayObject) {
+        $object = $object->getArrayCopy();
+    }
+
+    if (\in_array($value, $object)) {
+        return true;
+    }
+
+    return false;
 }

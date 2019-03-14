@@ -38,7 +38,7 @@ class archivalProfile
      * The reference
      *
      * @var string
-     * @pattern #^[A-Za-z][A-Za-z0-9_.@-]*$#
+     * @pattern #^[A-Za-z][A-Za-z0-9_-]*$#
      * @notempty
      */
     public $reference;
@@ -127,4 +127,10 @@ class archivalProfile
      * @var array
      */
     public $containedProfiles = array();
+
+    /**
+     * The processing statuses, actions and views
+     * @var json
+     */
+    public $processingStatuses;
 }

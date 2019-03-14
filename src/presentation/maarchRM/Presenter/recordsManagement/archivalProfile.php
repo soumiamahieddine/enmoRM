@@ -99,7 +99,6 @@ class archivalProfile
         $archivalProfile->containedProfiles = json_encode($archivalProfile->containedProfiles);
 
         if ($archivalProfile) {
-
             $this->getProfileType($archivalProfile);
 
             $requiredProperties = array();
@@ -370,5 +369,31 @@ class archivalProfile
                 $this->listProperties($childClass, $properties, $dateProperties, $qualifiedName);
             }*/
         }
+    }
+
+    /**
+     * Serializer JSON for uploadArchivalProfile method
+     *
+     * @return string
+     **/
+    public function uploadArchivalProfile()
+    {
+        $this->json->message = "Archival profile uploaded";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Export method
+     * @param resource $file The file
+     *
+     * @return resource
+     */
+    public function export($file)
+    {
+        \laabs::setResponseType("application/file");
+
+        return $file;
     }
 }

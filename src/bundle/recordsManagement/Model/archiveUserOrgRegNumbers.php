@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2019 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -17,49 +17,37 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\recordsManagement\Message;
+namespace bundle\recordsManagement\Model;
 /**
- * Class model that represents an archival profile
+ * View to get/set archive user org access
  *
  * @package RecordsManagement
- * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
+ * @author  Cyril Vazquez (Maarch) <cyril.vazquez@maarch.org>
  *
+ * @pkey [archiveId]
+ *
+ * @substitution recordsManagement/archive
  */
-class archiveDescription
+class archiveUserOrgRegNumbers
 {
     /**
-     * The name of the property
+     * The archive identifier
      *
-     * @var string
+     * @var id
+     * @xvalue generate-id
+     * @notempty
      */
-    public $fieldName;
+    public $archiveId;
 
     /**
-     * The status of the property (required or not)
+     * The user org registration numbers
      *
-     * @var boolean
+     * @var tokenList
      */
-    public $required;
+    public $userOrgRegNumbers;
 
     /**
-     * The position of field
-     *
-     * @var integer
+     * @var timestamp
      */
-    public $position;
-
-    /**
-     * @var boolean
-     */
-    public $isImmutable;
-
-    /**
-     * @var boolean
-     */
-    public $isInList;
-
-    /**
-     * @var boolean
-     */
-    public $isRetained;
+    public $lastModificationDate;
 }

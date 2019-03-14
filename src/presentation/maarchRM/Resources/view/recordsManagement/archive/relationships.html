@@ -56,9 +56,9 @@
                         <li>
                             <span class="btn btn-default disabled btn-sm" title="[?merge archive.archiveName ?]" data-archiveid="[?merge archive.archiveId ?]" title="Show the archive info">
                             <i class="fa fa-file-archive-o"></i>&nbsp;<?merge archive.archiveId ?></span>&nbsp;<i class="small"><?merge archive.archiveName ?></i>
-                            <?merge archive.childrenArchives.count().bool() ?>
+                            <?merge archive.contents.count().bool() ?>
                             <ul>
-                               <?merge archive.childrenArchives /recordsManagement/archive/childArchiveNode.html ?>
+                               <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
                             </ul>
                         </li>
                     </ul>
@@ -68,15 +68,15 @@
 
         <?merge archive.parentArchive.bool().not() ?>
         <ul role="tree">
-            <?merge archive.childrenArchives.count().bool() ?>
+            <?merge archive.contents.count().bool() ?>
             <span class="btn btn-default btn-sm disabled" title="[?merge archive.archiveName ?]" data-archiveid="[?merge archive.archiveId ?]" title="Show the archive info">
                 <i class="fa fa-file-archive-o"></i>&nbsp;<?merge archive.archiveId ?>
             </span>&nbsp;
-            <?merge archive.childrenArchives.count().bool() ?>
+            <?merge archive.contents.count().bool() ?>
             <i class="small"><?merge archive.archiveName ?></i>
-            <?merge archive.childrenArchives.count().bool() ?>
+            <?merge archive.contents.count().bool() ?>
             <ul>
-               <?merge archive.childrenArchives /recordsManagement/archive/childArchiveNode.html ?>
+               <?merge archive.contents /recordsManagement/archive/childArchiveNode.html ?>
             </ul>
         </ul>
 

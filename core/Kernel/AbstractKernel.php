@@ -213,7 +213,7 @@ abstract class AbstractKernel
      * @param string $responseType     The contentType definition code used for response
      * @param string $responseLanguage The ContentLanguage definition code for response
      */
-    protected function getResponse($responseType=false, $responseLanguage=false)
+    protected function getResponse($responseType=null, $responseLanguage=null)
     {
         switch($this->request->mode) {
             case 'http':
@@ -230,17 +230,9 @@ abstract class AbstractKernel
         }
 
         /* Get response type */
-        if (!$responseType) {
-            $this->guessResponseType();
-        } else {
-            $this->response->setType($responseType);
-            $mimeType = array_search($responseType, \laabs::getContentTypes());
-        }
-
+        $this->response->setType($responseType);
+        
         /* Get response lang */
-        if (!$responseLanguage) {
-            $responseLanguage = $this->guessResponseLanguage();
-        }
         $this->response->setLanguage($responseLanguage);
 
         \core\Observer\Dispatcher::notify(LAABS_RESPONSE, $this->response);
@@ -265,61 +257,16 @@ abstract class AbstractKernel
 
 
     /**
-     * Guess the response content type from the request "Accept"
-     * @return string The ContentType code or "text" as a default value
-     */
-    protected function guessResponseType()
-    {
-        $contentTypes = \laabs::getContentTypes();
-        $requestAccepts = $this->request->accept;
-
-        foreach ($requestAccepts as $mimetype => $priority) {
-            if (isset($contentTypes[$mimetype])) {
-                $this->response->setType($contentTypes[$mimetype]);
-                if ($this->response->mode == 'http') {
-                    $this->response->setContentType($mimetype);
-                }
-
-                return;
-            }
-        }
-    }
-
-    /**
-     * Guess the response content language from the request "AcceptLanguage"
-     * @return string The ContentLanguage code or "en" as a default value
-     */
-    protected function guessResponseLanguage()
-    {
-        $contentLanguages = \laabs::getContentLanguages();
-        $requestAcceptLangs = $this->request->acceptLanguage;
-
-        if (!empty($requestAcceptLangs)) {
-            foreach ($requestAcceptLangs as $locale => $proprity) {
-                if (isset($contentLanguages[$locale])) {
-                    return $contentLanguages[$locale];
-                }
-            }
-        }
-
-        return 'en';
-    }
-
-    /**
      * Send response to client
      * @access protected
      */
-    protected function sendResponse()
+    public function sendResponse()
     {
         // Buffer will return void if "LAABS_CLEAN_BUFFER" directive set for app
         $this->useBuffer();
 
-        if (!is_scalar($this->response->body)) {
+        if (!is_null($this->response->body) && !is_scalar($this->response->body)) {
             throw new \core\Exception("Response content can not be displayed");
-        }
-
-        if ($this->response->mode == 'http') {
-            $this->response->setHeader("X-Laabs-ResponseDelay", \laabs::requestDelay());
         }
 
         $this->response->send();

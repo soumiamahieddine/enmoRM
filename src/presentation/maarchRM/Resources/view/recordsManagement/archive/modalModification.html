@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
-                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="cancelEdit" class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
                 <button id="save" class="btn btn-success" data-archiveIds="" title="Save"><i class="fa fa-check">&nbsp;</i>OK</button>
             </div>
         </div>
@@ -65,6 +65,11 @@
 </style>
 
 <script>
+    // empty description / reference fields when the user press cancel
+    $("#cancelEdit").on('click', function () {
+        ModificationModal.modal.find('input, textarea').val('');
+    });
+
     $("#accessRuleCode").on('change', function () {
         ModificationModal.loadAccessCode();
     });

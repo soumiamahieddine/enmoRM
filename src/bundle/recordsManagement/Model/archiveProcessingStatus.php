@@ -17,49 +17,34 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\recordsManagement\Message;
+namespace bundle\recordsManagement\Model;
+
 /**
- * Class model that represents an archival profile
+ * Class model that represents an archive
  *
  * @package RecordsManagement
- * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
+ * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
  *
+ * @substitution recordsManagement/archive
+ *
+ * @pkey [archiveId]
  */
-class archiveDescription
+class archiveProcessingStatus
 {
     /**
-     * The name of the property
+     * The archive identifier
+     *
+     * @var string
+     * @notempty
+     */
+    public $archiveId;
+
+    /**
+     * The processing status
      *
      * @var string
      */
-    public $fieldName;
+    public $processingStatus;
 
-    /**
-     * The status of the property (required or not)
-     *
-     * @var boolean
-     */
-    public $required;
 
-    /**
-     * The position of field
-     *
-     * @var integer
-     */
-    public $position;
-
-    /**
-     * @var boolean
-     */
-    public $isImmutable;
-
-    /**
-     * @var boolean
-     */
-    public $isInList;
-
-    /**
-     * @var boolean
-     */
-    public $isRetained;
 }

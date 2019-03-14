@@ -163,8 +163,12 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    $archive->hasRights = $archiveController->checkRights($archive);
-                } catch (\Exception $e) {
+                    if ($archive->status == 'disposed' || $archive->status == 'error' || $archive->status == 'restituted' || $archive->status == 'transfered') {
+                        $archive->hasRights = false;
+                    } else {
+                        $archive->hasRights = $archiveController->checkRights($archive);
+                    }
+                } catch(\Exception $e) {
                     $archive->hasRights = false;
                 }
             }
@@ -279,6 +283,25 @@ class archive
     }
 
     /**
+     * Returns the presenter for archive description object, or null
+     * @param string $descriptionClass The name of the description class used by archive
+     * 
+     * @return object|null
+     */
+    protected function getPresenter($descriptionClass)
+    {
+        // Try to find a bundle controller, else fallback to default
+        try {
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionClass);
+
+            return \laabs::newPresenter($descriptionClass);
+        } catch (\exception $exception) {
+            return null;
+        }
+    }
+
+    /**
      * Get archive description
      * @param archive $archive
      *
@@ -333,9 +356,8 @@ class archive
             }
         }
 
-        if (isset($archive->descriptionClass)) {
-            $editMetadataPresenter = \laabs::newPresenter($archive->descriptionClass);
-            $archive = $editMetadataPresenter->getEditMetadata($archive, $languageCodes);
+        if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
+            $archive = $presenter->getEditMetadata($archive, $languageCodes);
         }
 
         if ($archive->descriptionClass != "archivesPubliques/content") {
@@ -794,7 +816,7 @@ class archive
 
         return $this->json->save();
     }
-    
+
     /**
      * Wrong archive infos exceptions
      * @param object $exception The exception
@@ -890,9 +912,9 @@ class archive
             $profilesName[$profile->reference] = $profile->name;
         }
 
-        if (isset($archive->childrenArchives)) {
-            $this->addArchivalProfileNames($archive->childrenArchives, $profilesName);
-            $this->json->childrenArchives = $archive->childrenArchives;
+        if (isset($archive->contents)) {
+            $this->addArchivalProfileNames($archive->contents, $profilesName);
+            $this->json->contents = $archive->contents;
         }
 
         return $this->json->save();
@@ -934,8 +956,8 @@ class archive
             if (!empty($childArchive->archivalProfileReference) && isset($profiles[$childArchive->archivalProfileReference])) {
                 $childArchive->archivalProfileName = $profiles[$childArchive->archivalProfileReference];
             }
-            if (isset($childArchive->childrenArchives)) {
-                $this->addArchivalProfileNames($childArchive->childrenArchives, $profiles);
+            if (isset($childArchive->contents)) {
+                $this->addArchivalProfileNames($childArchive->contents, $profiles);
             }
         }
     }
@@ -1018,6 +1040,7 @@ class archive
             $label = $archivalProfileField = null;
             $type = 'text';
             $isImmutable = false;
+            $isInList = false;
 
             if ($archivalProfile) {
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -1026,6 +1049,7 @@ class archive
                         $archivalProfileField = true;
                         $type = $archiveDescription->descriptionField->type;
                         $isImmutable = $archiveDescription->isImmutable;
+                        $isInList = $archiveDescription->isInList;
                     }
                 }
             }
@@ -1064,8 +1088,8 @@ class archive
             }
 
             if ($type == "date") {
-                $textValue = \laabs::newDate($value);
-                $textValue = $textValue->format("d/m/Y");
+                $dateObject = \laabs::newDate($value);
+                $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
 
                 $valueNode = $this->view->createTextNode($textValue);
             } elseif ($type == 'boolean') {
@@ -1088,10 +1112,15 @@ class archive
 
                 $valueNode = $this->view->createTextNode($textValue);
             } else {
-                $valueNode = $this->view->createTextNode($value);
+                if (is_string($value) || is_numeric($value)) {
+                    $valueNode = $this->view->createTextNode($value);
+                } else {
+                    // TODO ! Manage the object array for SEDA 2 descriptions
+                    $valueNode = $this->view->createTextNode('');
+                }
             }
 
-            
+
             $td->appendChild($valueNode);
         }
 
@@ -1113,10 +1142,6 @@ class archive
     protected function getDescriptiveMetadatas($archive)
     {
         $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
-
-        if ($archive->originatingDate) {
-            $archive->originatingDate = $archive->originatingDate->format('d/m/Y');
-        }
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
         if (!empty($archive->descriptionObject)) {
@@ -1155,8 +1180,6 @@ class archive
     {
         $originatorOrg = \laabs::callService('organization/organization/readByregnumber', $archive->originatorOrgRegNumber);
         $archive->originatorOrgName = $originatorOrg->displayName;
-
-        $archive->depositDate = $archive->depositDate->format('Y-m-d H:i:s');
 
         if (isset($archive->retentionDuration)) {
             $archive->retentionDurationUnit = substr($archive->retentionDuration, -1);
@@ -1208,7 +1231,7 @@ class archive
         // Digital resources
         $this->setDigitalResources($archive);
 
-        foreach ($archive->childrenArchives as $key => $child) {
+        foreach ($archive->contents as $key => $child) {
             if (!is_null($child->archivalProfileReference)) {
                 $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
 
@@ -1225,11 +1248,11 @@ class archive
                 $childrenByProfiles["noProfile"][] = $child;
             }
             // Digital resources
-            $this->setDigitalResources($archive->childrenArchives[$key]);
-            $this->setArchiveTree($archive->childrenArchives[$key]);
+            $this->setDigitalResources($archive->contents[$key]);
+            $this->setArchiveTree($archive->contents[$key]);
         }
 
-        $archive->childrenArchives = $childrenByProfiles;
+        $archive->contents = $childrenByProfiles;
     }
 
     protected function setArchiveRelationships($archive)

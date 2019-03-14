@@ -278,6 +278,8 @@ class journal
         $eventObject->eventType = $this->translator->getText($event->eventType);
         $this->json->load($eventObject);
 
+        $this->json->formatDateTimes();
+
         return $this->json->save();
     }
     

@@ -212,6 +212,12 @@ class archive
     public $status;
 
     /**
+     * Status code for workflow and current use process
+     * @var string
+     */
+    public $processingStatus;
+
+    /**
      * The parent archive identifier
      *
      * @var string
@@ -274,6 +280,13 @@ class archive
      * @var string
      */
     public $archiverOrgRegNumber;
+
+    /**
+     * Registration number of user organisation
+     *
+     * @var tokenList
+     */
+    public $userOrgRegNumbers;
 
     /**
      * The archive description level

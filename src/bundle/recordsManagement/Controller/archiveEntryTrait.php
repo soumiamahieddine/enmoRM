@@ -519,6 +519,44 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
+        if (isset($archive->processingStatus)) {
+            $this->validateProcessingStatus($archive);
+        }
+    }
+
+    /**
+     * Check and set the processing status
+     *
+     * @param recordsManagement/archive $archive The archive to setting
+     */
+    public function validateProcessingStatus($archive)
+    {
+        $processingStatus = $archive->processingStatus;
+        $statuses = json_decode($this->currentArchivalProfile->processingStatuses);
+        
+        // Recovery Initial and Default statuses if exists ...
+        $initialStatuses = [];
+        if (!empty($statuses)) {
+            foreach ($statuses as $procstatus => $config) {
+                if ($config->type == "initial") {
+                    $initialStatuses[$procstatus]=$config;
+                }
+            }
+        }
+
+        // Set default processing status if not set & if exist default in profile
+        if (!isset($processingStatus) || empty($processingStatus)) {
+            foreach ($initialStatuses as $status => $config) {
+                if ($config->default === true) {
+                    $archive->processingStatus = $status;
+                    return ;
+                }
+            }
+        } else {
+            if (!array_key_exists($processingStatus, $initialStatuses)) {
+                throw new \core\Exception\BadRequestException("The processing status isn't initial");
+            }
+        }
     }
 
     /**
@@ -850,8 +888,17 @@ trait archiveEntryTrait
             return;
         }
 
-        $nbResources = count($archive->digitalResources);
-        $nbArchiveObjects = count($archive->contents);
+        if (isset($archive->digitalResources)) {
+            $nbResources = count($archive->digitalResources);
+        } else {
+            $nbResources = 0;
+        }
+
+        if (isset($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        } else {
+            $nbArchiveObjects = 0;
+        }
 
         for ($i = 0; $i < $nbResources; $i++) {
             $convertedResource = $this->convertResource($archive, $archive->digitalResources[$i]);
@@ -1022,12 +1069,8 @@ trait archiveEntryTrait
      */
     protected function storeDescriptiveMetadata($archive)
     {
-        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
-
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        
         $descriptionController->create($archive);
     }
 

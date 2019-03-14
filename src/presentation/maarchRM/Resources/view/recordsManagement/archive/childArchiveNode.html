@@ -1,9 +1,9 @@
 <li>
     <span class="btn btn-info btn-sm viewRelatedArchive" title="[?merge .archiveName ?]" data-archiveid="[?merge .archiveId ?]" title="Show the archive info">
         <i class="fa fa-file-archive-o"></i>&nbsp;<?merge .archiveId ?></span>&nbsp;<i class="small"><?merge .archiveName ?></i>
-        <?merge .childrenArchives.count().bool() ?>
+        <?merge .contents.count().bool() ?>
         <ul>
-           <?merge .childrenArchives /recordsManagement/archive/childArchiveNode.html ?>
+           <?merge .contents /recordsManagement/archive/childArchiveNode.html ?>
         </ul>
     </span>
 </li>
