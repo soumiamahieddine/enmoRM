@@ -446,6 +446,25 @@ trait archiveAccessTrait
         return $archive;
     }
 
+    public function listChildrenArchiveId($archiveId)
+    {
+        $archiveIds = [];
+        $archiveIds[] = $archiveId;
+
+        $archives = $this->sdoFactory->find(
+            "recordsManagement/archive",
+            "parentArchiveId='".(string) $archiveId."'"
+        );
+
+        foreach ($archives as $archive) {
+            $archiveIds[] = $archive->archiveId;
+
+            array_merge($archiveIds, $this->listChildrenArchiveId($archive->archiveId));
+        }
+
+        return $archiveIds;
+    }
+
     /**
      * Retrieve an archive resource contents
      * @param string $archiveId   The archive identifier
