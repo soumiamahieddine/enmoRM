@@ -286,7 +286,7 @@ class archive
     /**
      * Registration number of user organisation
      *
-     * @var tokenList
+     * @var tokenlist
      */
     public $userOrgRegNumbers;
 
