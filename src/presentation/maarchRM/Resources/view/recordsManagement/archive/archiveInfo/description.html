@@ -1,22 +1,21 @@
 <div class="row" data-translate-catalog="recordsManagement/messages">
-    <table>
+    <table id="archiveDescriptionTable">
         <?merge archive.archiveName.bool() ?>
         <tr class="archiveName">
-            <th title2="Name" style="padding-right:10rem; padding-left:1em;">Name</th>
+            <th title2="Name">Name</th>
             <td title2='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></td>
         </tr>
         <?merge archive.originatorArchiveId.bool() ?>
         <tr class="originatorArchiveId">
-            <th title2="Originator archive identifier" style="padding-right:10rem; padding-left:1em;">Originator archive identifier</th>
-            <td title2='[?merge archive.originatorArchiveId ?]'><?merge archive.originatorArchiveId ?></td>
+            <th title2="Originator archive identifier">Originator archive identifier</th>
+            <td title2='[?merge archive.originatorArchiveId ?]' ><?merge archive.originatorArchiveId ?></td>
         </tr>
         <?merge archive.originatingDate.bool() ?>
         <tr class="originatingDate">
-            <th title2="Originating date" style="padding-right:10rem; padding-left:1em;">Originating date</th>
+            <th title2="Originating date">Originating date</th>
             <td title2='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
         </tr>
     </table>
-    <h4 id="metadataTitle">Descriptive metadatas</h4>
     <div id="metadata"
             data-archive-id="[?merge archive.archiveId ?]"
             data-originator-archive-id="[?merge archive.originatorArchiveId ?]"
@@ -31,21 +30,25 @@
     </div>
 </div>
 <style type="text/css">
-    #archiveDescriptionTable td{
+    #archiveDescriptionTable tr td{
         white-space: normal !important;
+        padding-left:10rem;
     }
-    #archiveDescriptionTable th, #archiveDescriptionTable td{
+    #archiveDescriptionTable tr th, #archiveDescriptionTable tr td{
         vertical-align: top;
     }
-    #metadata{
+    #archiveDescriptionTable tr th{
+        padding-left:1em;
+    }
+    #metadata tr th{
         padding-left:1em;
     }
     #metadataTitle {
-        text-align: center;
-        padding:5px 1px;
-        color: #31708f;
-        border-top:1px solid grey;
-        border-bottom:1px solid grey;
+        border-top:1px solid #31708f;
+        width:97%;
+    }
+    #metadata tr td {
+        padding-left:13rem !important;
     }
     
 </style>

@@ -10,6 +10,7 @@
         <li role="presentation" id="organizationInfo_lifeCycleTab"> 
             <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
         </li>
+        <?merge archive.relationships.bool() ?>
         <li role="presentation" id="organizationInfo_relationshipTab">
             <a href="#relationshipTab" data-toggle="tab">Relationships</a>
         </li>
@@ -43,7 +44,7 @@
         width:100%;
     }
     #archiveInfos ul > li > a{
-        height:4em;
+        height:3em;
     }
     #descriptiveMetadata .archivalProfileName {
         font-size: 16px !important;

@@ -1048,7 +1048,6 @@ class archive
             $th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
-            $th->setAttribute('style', 'padding-right: 12rem');
 
             if ($isImmutable) {
                 $th->setAttribute('data-immutable', 'immutable');
@@ -1056,6 +1055,7 @@ class archive
 
             // Table data column
             $td = $this->view->createElement('td');
+            $td->setAttribute('style', 'padding: 0 5px 0 5px');
 
             $tr->appendChild($td);
 
@@ -1095,7 +1095,13 @@ class archive
             $td->appendChild($valueNode);
         }
 
-        return $this->view->saveHTML($table);
+        $htmlString = $this->view->saveHTML($table);
+        // On rajoute la coupure si l'archive contient des métadonnées descriptives
+        if ($table->childNodes->length > 0) {
+            $htmlString = '<hr id="metadataTitle"/>'.$htmlString;
+        }
+
+        return $htmlString;
     }
 
     /**
@@ -1116,7 +1122,7 @@ class archive
         if (!empty($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = $presenter->read($archive->descriptionObject);
+                $descriptionHtml = '<h5 id="metadataTitle"></h5>'.$presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
             }
