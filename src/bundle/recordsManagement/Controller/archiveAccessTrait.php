@@ -981,7 +981,7 @@ trait archiveAccessTrait
         }
 
         $userPositionController = \laabs::newController('organization/userPosition');
-        $userServices = $userPositionController->readDescandantService($currentUserService->orgId);
+        $userServices = array_values($userPositionController->readDescandantService($currentUserService->orgId));
         $userServices[] = $currentUserService->registrationNumber;
         
         // OWNER access
