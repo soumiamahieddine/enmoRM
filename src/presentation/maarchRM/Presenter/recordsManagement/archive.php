@@ -1252,7 +1252,7 @@ class archive
             $this->setArchiveTree($archive->contents[$key]);
         }
 
-        $archive->contents = $childrenByProfiles;
+        //$archive->contents = $childrenByProfiles;
     }
 
     protected function setArchiveRelationships($archive)

@@ -133,7 +133,7 @@
                         dataType    : 'html',
                         success     : function(response) {
                             $("#preview").removeClass('hide').html(response);
-                            $('#preview').find('object').css('height', '100vh').css('width', '100%');
+                            $('#preview').find('object').css('height', '70vh').css('width', '100%');
                             if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
                                 $('#preview').find('object').attr('height', '300');
                             }
