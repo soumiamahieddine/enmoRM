@@ -239,6 +239,9 @@ class archive
         // Relationships
         $this->setArchiveRelationships($archive);
 
+        // Message
+        $this->checkMessage($archive);
+
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
@@ -1292,11 +1295,11 @@ class archive
                 $currentService = \laabs::getToken("ORGANIZATION");
 
                 $message->isVisible = false;
-                if (isset($currentService->orgRoleCodes) &&  !in_array('owner', $currentService->orgRoleCodes)) {
-                    if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
-                        $message->isVisible = true;
-                    }
-                } else {
+                if (isset($currentService->orgRoleCodes) && \laabs\in_array('owner', $currentService->orgRoleCodes)) {
+                    $message->isVisible = true;
+                }
+
+                if ($message->senderOrgRegNumber === $currentService->registrationNumber || $message->recipientOrgRegNumber === $currentService->registrationNumber) {
                     $message->isVisible = true;
                 }
             }

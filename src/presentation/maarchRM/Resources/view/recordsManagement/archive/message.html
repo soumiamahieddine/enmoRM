@@ -20,7 +20,7 @@
                 </td>
                 <td>
                     <div class="btn-group pull-right">
-                        <!--<?merge .isVisible.not().then('false') @disabled?>-->
+                        <?merge .isVisible.not().then('disabled') @disabled ?>
                         <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
                             <span class="fa fa-eye">&nbsp;</span>
                         </button>
