@@ -1,0 +1,52 @@
+<div id="archiveInfos" role="tablist" data-translate-catalog="recordsManagement/messages" aria-multiselectable="true">
+        <!-- The attributes ondrop + ondragstart make tabs undraggable -->
+    <ul class="nav nav-tabs nav-justified" id="detailTabs" ondragstart="return false;" ondrop="return false;">
+        <li role="presentation" id="archiveInfo_descriptionTab" class="active">
+            <a href="#descriptionTab" data-toggle="tab">Description</a>
+        </li>
+        <li role="presentation" id="archiveInfo_managementMetadataTab" >
+            <a href="#managementMetadataTab" data-toggle="tab">Management metadata</a>
+        </li>
+        <li role="presentation" id="organizationInfo_lifeCycleTab"> 
+            <a href="#lifeCycleTab" data-toggle="tab">Life cycle</a>
+        </li>
+        <?merge archive.relationships.bool() ?>
+        <li role="presentation" id="organizationInfo_relationshipTab">
+            <a href="#relationshipTab" data-toggle="tab">Relationships</a>
+        </li>
+    </ul>
+    <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
+        <div role="tabpanel" class="tab-pane active" id="descriptionTab" style="padding:14px">
+            <?hinclude /recordsManagement/archive/archiveInfo/description.html ?>
+        </div>
+        <div role="tabpanel" class="tab-pane fade in" id="managementMetadataTab" style="padding:14px">
+            <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
+        </div>
+        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:2px">
+            <?hinclude /recordsManagement/archive/lifeCycle.html ?>
+        </div>
+        <?merge archive.relationships.bool() ?>
+        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:2px">
+            <?hinclude /recordsManagement/archive/archiveInfo/relationships.html ?>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    #organizationInfo_lifeCycleTab, #organizationInfo_relationshipTab, #archiveInfo_descriptionTab, #archiveInfo_managementMetadataTab, #relationshipTab {
+        padding: 0px;
+        overflow: hidden;
+    }
+    #detailTabs{
+        border-bottom: none;     
+    }
+    #archiveInfos{
+        width:100%;
+    }
+    #archiveInfos ul > li > a{
+        height:3em;
+    }
+    #descriptiveMetadata .archivalProfileName {
+        font-size: 16px !important;
+    }
+</style>

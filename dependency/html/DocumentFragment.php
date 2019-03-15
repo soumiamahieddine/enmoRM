@@ -48,6 +48,7 @@ class DocumentFragment
 
         // Save all nodes append to wrapper into XML to re-append it (XML parser this time... because it is the only parser available on fragment)
         $children = $hdoc->getElementById($htmlWrapperId)->childNodes;
+        $result = false;
         foreach ($children as $child) {
             $childHtml = $hdoc->saveXml($child, LIBXML_NOEMPTYTAG + LIBXML_NOXMLDECL);
             $childHtml = str_replace("?>", ">", $childHtml);

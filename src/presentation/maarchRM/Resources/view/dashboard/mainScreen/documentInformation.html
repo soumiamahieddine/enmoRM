@@ -1,6 +1,6 @@
 <div id="resourceInformation" class="row">
     <div class="col-xs-12 text-center">
-        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]" style="height: 300px"/>
+        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]"/>
         <i class="infoIcon fa fa-file-o"/>
     </div>
     <div class="col-xs-12 text-center">
@@ -41,7 +41,6 @@
 <style type="text/css">
     #resourceInformation {
         font-size: 12px;
-        padding-top: 50px;
         min-height: calc(95vh - 80px);
     }
     #resourceInformation table {
@@ -129,12 +128,12 @@
 
                 if (resource.mimetype.match(mimetype)) {
                     $.ajax({
-                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        url         : '/'+$("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
                         type        : "GET",
                         dataType    : 'html',
                         success     : function(response) {
                             $("#preview").removeClass('hide').html(response);
-                            $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
+                            $('#preview').find('object').css('height', '100vh').css('width', '100%');
                             if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
                                 $('#preview').find('object').attr('height', '300');
                             }
