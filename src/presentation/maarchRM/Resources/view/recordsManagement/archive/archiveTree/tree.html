@@ -37,8 +37,9 @@
             var li = e.closest('li')
 
             if(e.hasClass('archiveName')) {
+                $("#archiveNameH3").text(e.text());
                 li.children('span').removeClass('node-default').addClass('node-warning');
-
+                
                 trigger("showDetails.archive", li.data('archive-id'));
                 this.selected = li;
 
