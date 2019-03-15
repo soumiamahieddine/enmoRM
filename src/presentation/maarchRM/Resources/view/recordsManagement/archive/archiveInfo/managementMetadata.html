@@ -1,82 +1,158 @@
-<div id="managementInfo" data-translate-catalog="recordsManagement/messages">
-    <table id="textPart">
-        <tr class="originator">
-            <th id="originatorField" title2="Originator">Originator</th>
-            <td title2='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
-        </tr>
-        <tr class="archiveId">
-            <th title2="Identifier">Identifier</th>
-            <td title2='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
-        </tr>
-        <tr>
-            <th title2="Deposit date">Deposit date</th>
-            <td title2='[?merge archive.depositDate ?]'><?merge archive.depositDate ?></td>
-        </tr>
-        <tr id="disposalDate">
-            <th title2="Disposal date">Disposal date</th>
-            <td title2='[?merge archive.disposalDate ?]'><?merge archive.disposalDate ?></td>
-        </tr>
-        <tr id="finalDisposition">
-            <th title2="Final disposition">Final disposition</th>
-            <td title2='[?merge archive.finalDisposition ?]'><?merge archive.finalDisposition ?></td>
-        </tr>
-        <tr>
-            <th title2="Status">Status</th>
-            <td title2='[?merge archive.status ?]'><?merge archive.statusDesc ?></td>
-        </tr>
-        <tr id="retentionRuleSelect" style="border:0px solid transparent; display: none">
-        <input id="inputRetentionRuleCode" class="hide" value="[?merge archive.retentionRuleCode ?]"/>
-            <th title2="Retention rule">Retention rule</th>
-            <td>
-                <select id="retentionRuleCode" name="retentionRuleCode" class="col-xs-12">
-                    <option value=''>Select a retention rule</option>
-                    <?merge retentionRules ?>
-                    <option value='[?merge .code ?]' data-duration="[?merge .durationText ?]" data-finaldisposition="[?merge .finalDisposition ?]"><?merge .label ?></option>
-                </select>
-            </td>
-        </tr>
-        <tr id="startDate" style="border:0px solid transparent; display: none">
-            <th title2="Start date">Start date</th>
-            <td>
-                <input type="text" class="datePicker startDate col-xs-12" name="startDate" placeholder="Start date" value="[?merge archive.retentionStartDate ?]"/>
-            </td>
-        </tr>
-    </table>
+<div class="row" data-translate-catalog="recordsManagement/messages">
+    <div id="sidebarModal" class="sidebar-offcanvas col-sm-12">
+        <div class="table-responsive">
+            <br/>
+            <table class="table table-condensed table-striped table-condensed">
+                <tbody>
+                    <tr>
+                        <td><strong>Archive identifier</strong></td>
+                        <td id="archiveId"><?merge archive.archiveId ?></td>
+                    </tr>
+                    <?merge archive.originatorArchiveId.bool() ?>
+                    <tr>
+                        <td><strong>Originator archive identifier</strong></td>
+                        <td><?merge archive.originatorArchiveId ?></td>
+                    </tr>
+                    <?merge archive.archiveName.bool() ?>
+                    <tr>
+                        <td><strong>Archive name</strong></td>
+                        <td><?merge archive.archiveName ?></td>
+                    </tr>
+                    <?merge archive.archivalAgreementReference.bool() ?>
+                    <tr>
+                        <td><strong>Archival agreement</strong></td>
+                        <td><?merge archive.archivalAgreementReference ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profile</strong></td>
+                        <td><?merge archive.archivalProfileReference ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Service level</strong></td>
+                        <td><?merge archive.serviceLevelReference ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Originator</strong></td>
+                        <td><?merge archive.originatorOrg.displayName ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Archiver</strong></td>
+                        <td><?merge archive.archiverOrg.displayName ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Depositor</strong></td>
+                        <td><?merge archive.depositorOrg.displayName ?></td>
+                    </tr>
+                    <?merge checkRetentionRule.bool() ?>
+                    <tr>
+                        <td><strong>Disposal rule</strong></td>
+                        <td>
+                            <span>
+                                <b data-translate-context="archiveInformation">Code </b>:&nbsp;<?merge archive.retentionRuleCode ?>
+                                <br/>
+                            </span>
 
-    <table id="datePart">
-        <?merge archive.accessRuleComDate.bool() ?>
-        <tr>
-            <th title2="Communication date">Communication date</th>
-            <td id="accessRuleComDate" title2="[?merge archive.accessRuleComDate ?]"><?merge archive.accessRuleComDate ?></td>
-        </tr>
-        <?merge archive.lastCheckDate.bool() ?>
-        <tr>
-            <th title2="Last check date">Last check date</th>
-            <td id="lastCheckDate" title2="[?merge archive.lastCheckDate ?]"><?merge archive.lastCheckDate ?></td>
-        </tr>
-        <?merge archive.lastDeliveryDate.bool() ?>
-        <tr>
-            <th title2="Last delivery date">Last delivery date</th>
-            <td id="lastDeliveryDate" title2="[?merge archive.lastDeliveryDate ?]"><?merge archive.lastDeliveryDate ?></td>
-        </tr>
-        <?merge archive.lastModificationDate.bool() ?>
-        <tr>
-            <th title2="Last modification date">Last modification date</th>
-            <td id="lastModificationDate" title2="[?merge archive.lastModificationDate ?]"><?merge archive.lastModificationDate ?></td>
-        </tr>
-    </table>
+
+                            <?merge archive.retentionDuration.ifgte(9999) ?>
+                            <div>
+                                <b>DUA</b>&nbsp;:&nbsp;<span>Unlimited</span>
+                                <i class="fa fa-info-circle " style="color: #b43d3d" id="descriptionLevelText" aria-hidden="true" title="Durée légale ou pratique de conservation des données et/ou documents, au terme de laquelle leur sort final est appliqué."></i><br/>
+                            </div>
+                            <?merge archive.retentionDuration.iflte(9998) ?>
+                            <div>
+                                <b>DUA</b>&nbsp;:
+                                <?merge archive.retentionDuration ?>&nbsp;
+                                <?merge archive.retentionDurationUnit.ifeq('Y') ?><span>Year(s)</span>
+                                <?merge archive.retentionDurationUnit.ifeq('M') ?><span>Month(s)</span>
+                                <?merge archive.retentionDurationUnit.ifeq('D') ?><span>Day(s)</span>
+                                <i class="fa fa-info-circle " style="color: #b43d3d" id="descriptionLevelText" aria-hidden="true" title="Durée légale ou pratique de conservation des données et/ou documents, au terme de laquelle leur sort final est appliqué."></i><br/>
+                            </div>
+                            <br/>
+
+                            <?merge archive.finalDisposition.ifeq('destruction') ?>
+                            <span>
+                                <b>Final disposition</b>&nbsp;:&nbsp; Destruction<br/>
+                            </span>
+                            
+                            <?merge archive.finalDisposition.ifeq('preservation') ?>
+                            <span>
+                                <b>Final disposition</b>&nbsp;:&nbsp; <span>Preservation</span><br/>
+                            </span>
+
+                            <b>Start date</b>&nbsp;:&nbsp;<?merge archive.retentionStartDate ?>
+                            <br/>
+                            
+                            <span>
+                                <b>DUA Due date</b>&nbsp;:&nbsp;<?merge archive.disposalDate ?>&nbsp;
+                            </span>
+
+
+                        </td>
+                    </tr>
+                    <?merge checkAccessRule.bool() ?>
+                    <tr>
+                        <td><strong>Access rule</strong></td>
+                        <td>                       
+                            <b>Code</b>&nbsp;:&nbsp;<?merge archive.accessRuleCode ?>
+                            <br/>
+                            
+                            <span>
+                                <?merge archive.accessRuleDuration.ifgte(9999) ?>
+                                <div>
+                                    <b>Duration</b>&nbsp;:&nbsp;<span>Unlimited</span>
+                                </div>
+                                <?merge archive.accessRuleDuration.iflte(9998) ?>
+                                <div>
+                                    <b>Duration</b>&nbsp;:
+                                    <?merge archive.accessRuleDuration ?>&nbsp;
+                                    <?merge archive.accessRuleDurationUnit.ifeq('Y') ?><span>Year(s)</span>
+                                    <?merge archive.accessRuleDurationUnit.ifeq('M') ?><span>Month(s)</span>
+                                    <?merge archive.accessRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
+                                </div>
+                            </span>
+                            
+                            <b>Start date</b>&nbsp;:&nbsp;<?merge archive.accessRuleStartDate ?>
+                            <br/>
+                            
+                            <span>
+                                <b>Communication date</b>&nbsp;:&nbsp;<?merge archive.accessRuleComDate ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <?merge archive.classificationLevel.bool() ?>
+                    <tr>
+                        <td><strong>Classification rule</strong></td>
+                        <td>
+                            <b>Level</b>:&nbsp;<?merge archive.classificationLevel ?>
+                            <br/>
+                            <b>Owner</b>:&nbsp;<?merge archive.classificationOwner ?>
+                            <br/>
+                            <b>Start date</b>:&nbsp;<?merge archive.classificationRuleStartDate ?>
+                            <br/>
+                            <b>Classification rule code</b>:&nbsp;<?merge archive.classificationRuleCode ?>
+                            <br/>
+                            <span>
+                                <b>Duration</b>:&nbsp;
+                                <?merge archive.classificationRuleDuration ?>&nbsp;
+                                <?merge archive.classificationRuleDurationUnit.ifeq('Y') ?><span>Year(s)</span>
+                                <?merge archive.classificationRuleDurationUnit.ifeq('M') ?><span>Month(s)</span>
+                                <?merge archive.classificationRuleDurationUnit.ifeq('D') ?><span>Day(s)</span>
+                                <br/>
+                            </span>
+                            <?merge archive.classificationEndDate.bool() ?>
+                            <span>
+                                <b>Declassification date</b>:&nbsp;<?merge archive.classificationEndDate ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td><?merge archive.statusDesc ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<button type="button" class="btn btn-default btn-sm pull-right" id="saveManagementMetadata" title2="Save" style="border:0px solid transparent; display: none"><i class="fa fa-check" style="color: green"></i></button>
-<button type="button" class="btn btn-default btn-sm pull-right" id="cancelManagementEdition" title2="Cancel" style="border:0px solid transparent; display: none" ><i class="fa fa-reply" style="color: red"></i></button>
-
-<style>
-#datePart tr td {
-    padding-left: 12rem;
-}
-#datePart tr th{
-    width: auto;
-}
-#textPart tr td{
-    padding-left: 12rem;
-}
-</style>
+<span class="hide" id="destruction_text">Destruction</span>
+<span class="hide" id="preservation_text">Preservation</span>
