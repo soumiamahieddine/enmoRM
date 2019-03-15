@@ -1127,7 +1127,7 @@ class archive
         $htmlString = $this->view->saveHTML($table);
         // On rajoute la coupure si l'archive contient des métadonnées descriptives
         if ($table->childNodes->length > 0) {
-            $htmlString = '<hr id="metadataTitle"/>'.$htmlString;
+            $htmlString = '<br/>'.$htmlString;
         }
 
         return $htmlString;
@@ -1147,7 +1147,7 @@ class archive
         if (!empty($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = '<h5 id="metadataTitle"></h5>'.$presenter->read($archive->descriptionObject);
+                $descriptionHtml = '<br/>'.$presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
             }
@@ -1252,7 +1252,7 @@ class archive
             $this->setArchiveTree($archive->contents[$key]);
         }
 
-        $archive->contents = $childrenByProfiles;
+        //$archive->contents = $childrenByProfiles;
     }
 
     protected function setArchiveRelationships($archive)
