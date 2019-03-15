@@ -14,6 +14,10 @@
         <li role="presentation" id="organizationInfo_relationshipTab">
             <a href="#relationshipTab" data-toggle="tab">Relationships</a>
         </li>
+        <?merge archive.messages.bool() ?>
+        <li role="presentation" id="organizationInfo_messageTab">
+            <a href="#messageTab" data-toggle="tab">Message</a>
+        </li>
     </ul>
     <div class="panel panel-primary tab-content" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
         <div role="tabpanel" class="tab-pane active" id="descriptionTab" style="padding:14px">
@@ -22,18 +26,20 @@
         <div role="tabpanel" class="tab-pane fade in" id="managementMetadataTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
         </div>
-        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:2px">
+        <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/lifeCycle.html ?>
         </div>
-        <?merge archive.relationships.bool() ?>
-        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:2px">
+        <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/archiveInfo/relationships.html ?>
+        </div>
+        <div role="tabpanel" class="tab-pane fade in" id="messageTab" style="padding:14px">
+            <?hinclude /recordsManagement/archive/message.html ?>
         </div>
     </div>
 </div>
 
 <style type="text/css">
-    #organizationInfo_lifeCycleTab, #organizationInfo_relationshipTab, #archiveInfo_descriptionTab, #archiveInfo_managementMetadataTab, #relationshipTab {
+    #archiveInfos ul > li {
         padding: 0px;
         overflow: hidden;
     }
