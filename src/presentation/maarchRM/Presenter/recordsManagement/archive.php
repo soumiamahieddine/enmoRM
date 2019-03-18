@@ -1015,6 +1015,7 @@ class archive
         $descriptions = get_object_vars($descriptions);
 
         $table = $this->view->createElement('table');
+        $table->setAttribute('class', "table table-condensed table-striped");
 
         if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
             usort($archivalProfile->archiveDescription, function ($a, $b) {
@@ -1075,7 +1076,7 @@ class archive
             // table header column
             $th = $this->view->createElement('th', $label);
             $tr->appendChild($th);
-            $th->setAttribute('title2', $label); // title doesn't display properly this way
+            //$th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
 
@@ -1090,7 +1091,7 @@ class archive
             $tr->appendChild($td);
 
             if (!empty($value) && !is_array($value)) {
-                $th->setAttribute('title2', $value); // title doesn't display properly this way
+                //$th->setAttribute('title2', $value); // title doesn't display properly this way
             }
 
             if ($type == "date") {

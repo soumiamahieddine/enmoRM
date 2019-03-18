@@ -1,21 +1,23 @@
-<div class="table-responsive" data-translate-catalog="recordsManagement/messages">
-    <table id="archiveDescriptionTable" class="table table-condensed">
-        <?merge archive.archiveName.bool() ?>
-        <tr class="archiveName">
-            <td title2="Name"><strong>Name</strong></td>
-            <td title2='[?merge archive.archiveName ?]'><?merge archive.archiveName ?></strong></td>
-        </tr>
-        <?merge archive.originatorArchiveId.bool() ?>
-        <tr class="originatorArchiveId">
-            <td title2="Originator archive identifier"><strong>Originator archive identifier</strong></td>
-            <td title2='[?merge archive.originatorArchiveId ?]' ><?merge archive.originatorArchiveId ?></td>
-        </tr>
-        <?merge archive.originatingDate.bool() ?>
-        <tr class="originatingDate">
-            <td title2="Originating date"><strong>Originating date</strong></td>
-            <td title2='[?merge archive.originatingDate ?]'><?merge archive.originatingDate ?></td>
-        </tr>
-    </table>
+<div data-translate-catalog="recordsManagement/messages">
+    <div>
+        <table id="archiveDescriptionTable" class="table table-condensed">
+            <?merge archive.archiveName.bool() ?>
+            <tr class="archiveName">
+                <td><strong>Name</strong></td>
+                <td><?merge archive.archiveName ?></strong></td>
+            </tr>
+            <?merge archive.originatorArchiveId.bool() ?>
+            <tr class="originatorArchiveId">
+                <td><strong>Originator archive identifier</strong></td>
+                <td><?merge archive.originatorArchiveId ?></td>
+            </tr>
+            <?merge archive.originatingDate.bool() ?>
+            <tr class="originatingDate">
+                <td><strong>Originating date</strong></td>
+                <td><?merge archive.originatingDate ?></td>
+            </tr>
+        </table>
+    </div>
     <div id="metadata"
             data-archive-id="[?merge archive.archiveId ?]"
             data-originator-archive-id="[?merge archive.originatorArchiveId ?]"
