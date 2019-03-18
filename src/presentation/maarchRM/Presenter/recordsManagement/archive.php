@@ -244,6 +244,9 @@ class archive
 
         $this->view->setSource("archive", $archive);
 
+        $this->view->getElementById('lifeCycleTable')->plugin['dataTable']->setSortingColumn(1, 1);
+        $this->view->getElementById('messageTable')->plugin['dataTable']->setSortingColumn(1, 1);
+
         $this->view->translate();
         $this->view->merge();
 
