@@ -269,10 +269,6 @@ conversionServices = "[
     }
 ]"
 
-; Path to Clam antivirus executable
-clamScan = "C:\Program Files (x86)\ClamWin\bin\clamscan.exe"
-clamDb = "C:\ProgramData\.clamwin\db"
-
 tikaJarFile = "%laabsDirectory%/dependency/fileSystem/plugins/tika/tika-app-1.16.jar"
 
 ;zipExecutable = "C:\Program Files\7-Zip\7z.exe"
