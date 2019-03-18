@@ -47,6 +47,12 @@ INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountTyp
 INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ppacioli', 'ppacioli', 'Paolo PACIOLI', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paolo', 'PACIOLI', 'M.', NULL, NULL, NULL, NULL);
 INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('kkrach', 'kkrach', 'Kevin KRACH', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:03.559857', '127.0.0.1', NULL, 'Kevin', 'KRACH', 'M.', NULL, NULL, NULL, NULL);
 
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('ADMIN', 'Administrateur technique', 'Groupe des administrateurs techniques du système', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3au-0037-nz1f8t', 'Responsable d''activité', 'Groupe des responsables de service et des activités', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3c1-1bc0-zh5adq', 'Producteur', 'Groupe des producteurs, versants', true);
+
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'workflow/*');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveDeposit/*');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/checkIntegrity');
@@ -79,12 +85,6 @@ INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIV
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'destruction/*');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
-
-INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('ADMIN', 'Administrateur technique', 'Groupe des administrateurs techniques du système', true);
-INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', true);
-INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', true);
-INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3au-0037-nz1f8t', 'Responsable d''activité', 'Groupe des responsables de service et des activités', true);
-INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3c1-1bc0-zh5adq', 'Producteur', 'Groupe des producteurs, versants', true);
 
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'aalambic');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'bbain');
