@@ -528,9 +528,8 @@ trait archiveEntryTrait
         }
 
         // Recovery Initial and Default statuses if exists ...
-        $defaultStatus = false;
         foreach ($processingStatuses as $code => $processingStatus) {
-            if ($processingStatus->default = true) {
+            if ($processingStatus->default == true) {
                 $archive->processingStatus = $code;
             }
         }
