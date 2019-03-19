@@ -311,6 +311,8 @@ trait archiveEntryTrait
 
         $this->completeManagementMetadata($archive);
 
+        $this->completeProcessingStatus($archive);
+
         $this->manageFileplanPosition($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
@@ -509,6 +511,31 @@ trait archiveEntryTrait
     }
 
     /**
+     * Complete processing status
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function completeProcessingStatus($archive)
+    {
+        if (!empty($archive->processingStatus) || !isset($archive->archivalProfileReference)) {
+            return;
+        }
+
+        $processingStatuses = json_decode($this->currentArchivalProfile->processingStatuses);
+
+        if (empty($processingStatuses)) {
+            return;
+        }
+
+        // Recovery Initial and Default statuses if exists ...
+        foreach ($processingStatuses as $code => $processingStatus) {
+            if ($processingStatus->default == true) {
+                $archive->processingStatus = $code;
+            }
+        }
+    }
+
+    /**
      * Validate the archive compliance
      *
      * @param recordsManagement/archive $archive The archive to validate
@@ -519,9 +546,7 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
-        if (isset($archive->processingStatus)) {
-            $this->validateProcessingStatus($archive);
-        }
+        $this->validateProcessingStatus($archive);
     }
 
     /**
@@ -531,31 +556,20 @@ trait archiveEntryTrait
      */
     public function validateProcessingStatus($archive)
     {
-        $processingStatus = $archive->processingStatus;
-        $statuses = json_decode($this->currentArchivalProfile->processingStatuses);
-        
-        // Recovery Initial and Default statuses if exists ...
-        $initialStatuses = [];
-        if (!empty($statuses)) {
-            foreach ($statuses as $procstatus => $config) {
-                if ($config->type == "initial") {
-                    $initialStatuses[$procstatus]=$config;
-                }
-            }
+        if (empty($archive->processingStatus) || !isset($this->currentArchivalProfile)) {
+            return;
         }
 
-        // Set default processing status if not set & if exist default in profile
-        if (!isset($processingStatus) || empty($processingStatus)) {
-            foreach ($initialStatuses as $status => $config) {
-                if ($config->default === true) {
-                    $archive->processingStatus = $status;
-                    return ;
-                }
-            }
-        } else {
-            if (!array_key_exists($processingStatus, $initialStatuses)) {
-                throw new \core\Exception\BadRequestException("The processing status isn't initial");
-            }
+        $processingStatuses = json_decode($this->currentArchivalProfile->processingStatuses);
+
+        if (!isset($processingStatuses->{$archive->processingStatus})) {
+            throw new \core\Exception\BadRequestException("The processing status isn't initial");
+        }
+
+        $archiveProcessingStatus = $processingStatuses->{$archive->processingStatus};
+
+        if ($archiveProcessingStatus->type != 'initial') {
+            throw new \core\Exception\BadRequestException("The processing status isn't initial");
         }
     }
 

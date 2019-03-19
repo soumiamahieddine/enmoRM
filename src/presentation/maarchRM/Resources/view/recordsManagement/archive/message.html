@@ -1,27 +1,29 @@
 <div id="messagesTable" class="table-responsive" >
-    <table class="table table-condensed dataTable" id="messageTable">
+    <table class="table table-condensed table-striped dataTable" id="messageTable">
         <thead>
-        <th data-translate-context="message">Reference</th>
-        <th>Type</th>
-        <th>Date</th>
-        <th/>
+            <th>Date</th>
+            <th data-translate-context="message">Reference</th>
+            <th>Type</th>   
+            <th style="opacity:0;cursor:initial;"/>
         </thead>
         <tbody>
             <?merge archive.messages ?>
             <tr>
+                <td>
+                    <?merge .date ?>
+                </td>
                 <td >
                     <?merge .reference ?>
                 </td>
                 <td>
                     <?merge .type ?>
                 </td>
-                <td data-sort="[?merge .date.format('YmdHisu') ?]" ><?merge .date ?></td>
+                
                 <td>
-
                     <div class="btn-group pull-right">
-                        <?merge .isVisible.not().then('false') @disabled?>
-                        <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
-                            <span class="fa fa-eye">&nbsp;</span>
+                        <?merge .isVisible.not().then('disabled') @disabled ?>
+                        <button type="button" class="btn btn-success btn-sm viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
+                            <i class="fa fa-fw fa-eye">&nbsp;</i>
                         </button>
                     </div>
                 </td>
@@ -31,9 +33,9 @@
 </div>
 
 <script>
-    $('#messagesTable').ready(function() {
+    /*$('#messagesTable').ready(function() {
         $('#messagesTable').find('.dataTable-footer:first').remove();
-    });
+    });*/
 
     $("#messagesTable").on('click', '.viewMessage', function() {
         $.ajax({

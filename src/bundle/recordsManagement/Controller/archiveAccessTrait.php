@@ -446,6 +446,25 @@ trait archiveAccessTrait
         return $archive;
     }
 
+    public function listChildrenArchiveId($archiveId)
+    {
+        $archiveIds = [];
+        $archiveIds[] = $archiveId;
+
+        $archives = $this->sdoFactory->find(
+            "recordsManagement/archive",
+            "parentArchiveId='".(string) $archiveId."'"
+        );
+
+        foreach ($archives as $archive) {
+            $archiveIds[] = $archive->archiveId;
+
+            array_merge($archiveIds, $this->listChildrenArchiveId($archive->archiveId));
+        }
+
+        return $archiveIds;
+    }
+
     /**
      * Retrieve an archive resource contents
      * @param string $archiveId   The archive identifier
@@ -602,7 +621,15 @@ trait archiveAccessTrait
     {
         $res = [];
         $res['childrenRelationships'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
+        foreach ($res['childrenRelationships'] as $childRelationship) {
+            $relatedArchiveInfo = $this->read($childRelationship->relatedArchiveId);
+            $childRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+        }
         $res['parentRelationships'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
+        foreach ($res['parentRelationships'] as $parentRelationship) {
+            $relatedArchiveInfo = $this->read($parentRelationship->archiveId);
+            $parentRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+        }
 
         return $res;
     }
@@ -981,7 +1008,7 @@ trait archiveAccessTrait
         }
 
         $userPositionController = \laabs::newController('organization/userPosition');
-        $userServices = $userPositionController->readDescandantService($currentUserService->orgId);
+        $userServices = array_values($userPositionController->readDescandantService($currentUserService->orgId));
         $userServices[] = $currentUserService->registrationNumber;
         
         // OWNER access

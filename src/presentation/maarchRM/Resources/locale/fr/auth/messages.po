@@ -365,8 +365,8 @@ msgstr "Activé"
 msgid "Administrator"
 msgstr "Administrateur"
 
-msgid "Select a role"
-msgstr "Sélectionner un rôle"
+msgid "No role"
+msgstr "Aucun rôle"
 
 msgid "Add a role"
 msgstr "Ajouter un rôle"

@@ -81,7 +81,8 @@ class archiveRelationship
      * 
      * @return string
      */
-    public function getByArchiveId($archiveRelationships) {
+    public function getByArchiveId($archiveRelationships)
+    {
         
         $this->view->addContentFile("recordsManagement/archiveRelationship/relationshipTable.html");
         $this->view->setSource("archiveRelationships", $archiveRelationships);

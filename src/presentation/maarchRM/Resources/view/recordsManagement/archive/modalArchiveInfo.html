@@ -1,7 +1,7 @@
 <!-- ARCHIVE DESCRIPTION -->
 <div class="modal fade" id="modalArchiveInfo" data-backdrop="true" data-keyboard="static" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content" id="modalArchiveInfo_content">
+    <div class="modal-dialog modal-lg" style="width:calc(100% - 25vh);">
+        <div class="modal-content" id="modalArchiveInfo_content" style="min-height:40vh;">
         </div>
     </div>
 </div>
@@ -42,6 +42,11 @@
     $("#modalArchiveInfo").on('click', ".editMetadata", function () {
        archiveInfoModal.loadEditMetadata($(this).data('archiveid'));
     });
+    
+    $("#modalArchiveInfo").onEvent('showDetails.archive', function (e, archiveId) {
+        archiveInfoModal.loadDescription(archiveId);
+    })
+    
     // View relate archive
     $("#modalArchiveInfo").on('click', ".viewRelatedArchive", function () {
         archiveInfoModal.load($(this).data('archiveid'));
@@ -113,7 +118,35 @@
             });
          },
 
-         loadEditMetadata: function (archiveId) {
+         loadDescription: function(archiveId) {
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archiveInfo/" + archiveId,
+                dataType    : 'html',
+                success     : function (response) {
+                    $('#archiveInformationDiv').empty().html(response);
+                }
+            });
+        },
+
+        loadResourceDescription: function(resource) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    $('#archiveInformationDiv').html(response);
+                    DocumentInformation.load(resource);
+                    if ($('#canDeleteResource').val() == '1') {                
+                        DocumentInformation.form.find("#deleteResource").removeClass('hide');
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            });
+        },
+
+        loadEditMetadata: function (archiveId) {
              $.ajax({
                  type: "GET",
                  url: "/recordsManagement/archiveDescription/" + archiveId + "/getEditMetadata",
@@ -151,4 +184,15 @@
         }
     }
 
+    $("#modalArchiveInfo").onEvent('viewRelated.archive', function (e, archiveId) {
+        archiveInfoModal.load(archiveId);
+    })
+
+    $('#modalArchiveInfo').onEvent('showDetails.digitalResource', function(e, resource){
+        archiveInfoModal.loadResourceDescription(resource);
+    })
+
+    $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
+        archiveDocumentViewer.load(archiveId, resId);
+    })
 </script>

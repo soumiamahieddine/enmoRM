@@ -1,12 +1,7 @@
 DELETE FROM "batchProcessing"."scheduling";
 
 --scheduling
-INSERT INTO "batchProcessing"."scheduling"
-("schedulingId", "name", "executedBy", "taskId", "frequency","parameters","lastExecution","nextExecution","status") VALUES
-('chainJournalAudit', 'Chaînage audit', 'System', '01', '00;00;;;;;;;',null,null,null,'paused'),
-('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
-('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
-('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
-('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused'),
-('fulltext', 'Extraction plein texte', 'System', '06', '00;05;;;;;;;', null,null,null,'paused'),
-('updateArchiveRetentionRule', 'Mise à jour de la durée d''utilité administrative', 'System', '07', '00;06;;;;;;;', null,null,null,'paused');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:16:46.83441', '2019-03-15 19:00:00', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('deleteArchive', 'Destruction', '04', '00;19;;;;;;;', NULL, 'System', '2019-03-14 17:17:10.155329', '2019-03-15 18:00:00', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled');

@@ -36,8 +36,13 @@ trait archiveDestructionTrait
     {
         $archives = [];
 
+        $archiveChildrenIds = [];
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+        }
+
+        foreach ($archiveChildrenIds as $archiveChildrenId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
 
             $this->checkRights($archive);
 
@@ -45,10 +50,6 @@ trait archiveDestructionTrait
 
             $this->listChildrenArchive($archive, true);
 
-            if ($archive->contents) {
-                $archiveChildrenIds = $this->checkChildren($archive->contents);
-                $archiveIds = array_merge($archiveIds, $archiveChildrenIds);
-            }
             $archives[] = $archive;
         }
 

@@ -32,6 +32,22 @@ interface appInterface
      * @uses  recordsManagement/archive/readMetadata_archiveId_
      */
     public function readArchive_archiveId_();
+    
+    /**
+     * View the archive
+     *
+     * @return recordsManagement/archive/getDescription The recordsManagement/archive object
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readRecordsmanagementArchivedescription_archiveId_();
+
+    /**
+     * View the archive
+     *
+     * @return recordsManagement/archive/getArchiveDetails
+     * @uses  recordsManagement/archiveDescription/read_archiveId_
+     */
+    public function readRecordsmanagementArchiveinfo_archiveId_();
 
     /**
      * Retrieve archive contents
