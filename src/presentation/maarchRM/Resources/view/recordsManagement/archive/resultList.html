@@ -18,10 +18,10 @@
                     <tr>
                         <th><input type="checkbox" id="archiveList_selectAll"/></th>
                         <th>Archive name</th>
-                        <th>Deposit date</th>
                         <th>Identifier</th>
                         <th>Originator</th>
                         <th>Profile</th>
+                        <th>Deposit date</th>
                         <th>Disposal date</th>
                         <th>Status</th>
                         <th style="min-width:150px;"></th>
@@ -40,10 +40,10 @@
                                 value="[?merge .archiveId ?]"/>
                         </td>
                         <td class="archiveName"><?merge .archiveName ?></td>
-                        <td><span class="hidden"><?merge .depositDate.format('Ymd') ?></span><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td><?merge .archiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
                         <td class="profile"><?merge .archivalProfileReference ?></td>
+                        <td><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td>
