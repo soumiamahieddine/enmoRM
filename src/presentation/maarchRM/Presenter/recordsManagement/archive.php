@@ -248,9 +248,9 @@ class archive
         $messageDataTable->setPaginationType("full_numbers");
         $messageDataTable->setSorting(array(array(0, 'desc')));
 
-        $messageDataTable = $this->view->getElementById('lifeCycleTable')->plugin['dataTable'];
-        $messageDataTable->setPaginationType("full_numbers");
-        $messageDataTable->setSorting(array(array(0, 'desc')));
+        $lifeCycleDataTable = $this->view->getElementById('lifeCycleTable')->plugin['dataTable'];
+        $lifeCycleDataTable->setPaginationType("full_numbers");
+        $lifeCycleDataTable->setSorting(array(array(0, 'desc')));
 
         $this->view->translate();
         $this->view->merge();
