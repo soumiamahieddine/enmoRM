@@ -1,7 +1,7 @@
 <div id="messagesTable" class="table-responsive" >
     <table class="table table-condensed table-striped dataTable" id="messageTable">
         <thead>
-            <th>Date</th>
+            <th id="messageDate">Date</th>
             <th data-translate-context="message">Reference</th>
             <th>Type</th>   
             <th style="opacity:0;cursor:initial;"/>
@@ -36,6 +36,11 @@
     /*$('#messagesTable').ready(function() {
         $('#messagesTable').find('.dataTable-footer:first').remove();
     });*/
+
+    // TODO search/find a better solution to sort table by descending date...
+    if ($('#messageDate').hasClass('sorting_asc')){
+        $('#messageDate').click();
+    }
 
     $("#messagesTable").on('click', '.viewMessage', function() {
         $.ajax({
