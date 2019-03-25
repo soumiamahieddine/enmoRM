@@ -244,8 +244,13 @@ class archive
 
         $this->view->setSource("archive", $archive);
 
-        $this->view->getElementById('lifeCycleTable')->plugin['dataTable']->setSortingColumn(1, 1);
-        $this->view->getElementById('messageTable')->plugin['dataTable']->setSortingColumn(1, 1);
+        $messageDataTable = $this->view->getElementById('messageTable')->plugin['dataTable'];
+        $messageDataTable->setPaginationType("full_numbers");
+        $messageDataTable->setSorting(array(array(0, 'desc')));
+
+        $messageDataTable = $this->view->getElementById('lifeCycleTable')->plugin['dataTable'];
+        $messageDataTable->setPaginationType("full_numbers");
+        $messageDataTable->setSorting(array(array(0, 'desc')));
 
         $this->view->translate();
         $this->view->merge();
