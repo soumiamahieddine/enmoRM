@@ -50,7 +50,6 @@ class userAccount
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
-        //$this->currentAccount = \laabs::getToken('AUTH');
     }
 
     /**
@@ -492,7 +491,7 @@ class userAccount
             return false;
         }
 
-        $accountToken =\laabs::getToken('AUTH');
+        $accountToken = \laabs::getToken('AUTH');
 
         if (!$accountToken) {
             $userPrivileges = \laabs::configuration('auth')['publicUserStory'];
