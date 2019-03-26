@@ -33,10 +33,6 @@
 </div>
 
 <script>
-    /*$('#messagesTable').ready(function() {
-        $('#messagesTable').find('.dataTable-footer:first').remove();
-    });*/
-
     $("#messagesTable").on('click', '.viewMessage', function() {
         $.ajax({
             url      : "/medona/message/" + $(this).data('message-id'),
