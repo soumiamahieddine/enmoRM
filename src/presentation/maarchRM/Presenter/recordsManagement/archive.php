@@ -177,12 +177,12 @@ class archive
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(7);
-        $dataTable->setUnsearchableColumns(7);
+        $dataTable->setUnsortableColumns(8);
+        $dataTable->setUnsearchableColumns(8);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
-        $dataTable->setSorting(array(array(1, 'desc')));
+        $dataTable->setSorting(array(array(5, 'desc')));
 
         $this->readPrivilegesOnArchives();
 
@@ -296,7 +296,7 @@ class archive
     /**
      * Returns the presenter for archive description object, or null
      * @param string $descriptionClass The name of the description class used by archive
-     * 
+     *
      * @return object|null
      */
     protected function getPresenter($descriptionClass)
@@ -1100,9 +1100,11 @@ class archive
             }
 
             if ($type == "date") {
-                $dateObject = \laabs::newDate($value);
-                $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
-
+                $textValue = "";
+                if (!empty($value)) {
+                    $dateObject = \laabs::newDate($value);
+                    $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
+                }
                 $valueNode = $this->view->createTextNode($textValue);
             } elseif ($type == 'boolean') {
                 $valueNode = $this->view->createElement('i');
