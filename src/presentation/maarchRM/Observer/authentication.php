@@ -154,7 +154,7 @@ class authentication
 
             if (!$isUserPosition) {
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
-                \laabs::setToken("ORGANIZATION", $default->organization, 86400);
+                \laabs::setToken("ORGANIZATION", $default->organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
             }
         }
 

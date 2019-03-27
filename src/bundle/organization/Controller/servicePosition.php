@@ -44,7 +44,7 @@ class servicePosition extends abstractPosition
 
         $positions =  $this->sdoFactory->find('organization/servicePosition', "serviceAccountId = '".$accountToken->accountId."'");
 
-        \laabs::setToken("ORGANIZATION", $positions[0], 86400);
+        \laabs::setToken("ORGANIZATION", $positions[0], \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
 
         return $positions;
     }
