@@ -444,7 +444,7 @@ trait archiveModificationTrait
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));
-            $stopWords = preg_replace('/[\r\n]/', " ",$stopWords);
+            $stopWords = preg_replace('/[\r\n]/', " ", $stopWords);
             $stopWords = explode(" ", $stopWords);
         }
 
@@ -457,7 +457,7 @@ trait archiveModificationTrait
                 try {
                     $fullText = $this->digitalResourceController->getFullTextByArchiveId($archive->archiveId);
                     $fullText = strtolower($fullText);
-                    $fullText = preg_replace('/[.,\/#!?$%\^&\*;:{}=\-_\'`~()\r\n]|\s+/'," ", $fullText);
+                    $fullText = preg_replace('/[.,\/#!?$%\^&\*;:{}=\-_\'`~()\r\n]|\s+/', " ", $fullText);
 
                     if (isset($stopWords)) {
                         $fullTextArray = explode(" ", $fullText);
@@ -473,7 +473,7 @@ trait archiveModificationTrait
 
                     $operationResult = true;
 
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
