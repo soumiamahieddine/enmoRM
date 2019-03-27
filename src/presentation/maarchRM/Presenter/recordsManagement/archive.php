@@ -177,12 +177,12 @@ class archive
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(7);
-        $dataTable->setUnsearchableColumns(7);
+        $dataTable->setUnsortableColumns(8);
+        $dataTable->setUnsearchableColumns(8);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
-        $dataTable->setSorting(array(array(1, 'desc')));
+        $dataTable->setSorting(array(array(5, 'desc')));
 
         $this->readPrivilegesOnArchives();
 
