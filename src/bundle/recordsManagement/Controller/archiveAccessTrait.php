@@ -1002,7 +1002,8 @@ trait archiveAccessTrait
     public function checkRights($archive)
     {
         $currentUserService = \laabs::getToken("ORGANIZATION");
-        
+        $currentDate = \laabs::newDate();
+
         if (!$currentUserService) {
             return false;
         }
@@ -1026,6 +1027,12 @@ trait archiveAccessTrait
 
         // ORIGINATOR ACCESS
         if (\laabs\in_array($archive->originatorOrgRegNumber, $userServices)) {
+            return true;
+        }
+
+        // COMMUNICATION ACCESS
+        if (!is_null($archive->accessRuleComDate)
+            && ($archive->accessRuleComDate <= $currentDate)) {
             return true;
         }
 
