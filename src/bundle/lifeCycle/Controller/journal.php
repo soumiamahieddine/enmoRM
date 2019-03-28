@@ -765,6 +765,7 @@ class journal
     {
         $logController = \laabs::newController('recordsManagement/log');
         $archiveController = \laabs::newController('recordsManagement/archive');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         // Read journal
         if (is_scalar($archiveId) || get_class($archiveId) == 'core\Type\Id') {
@@ -774,7 +775,7 @@ class journal
             $archiveId = (string) $journal->archiveId;
         }
         $resources = $archiveController->getDigitalResources($journal->archiveId);
-        $journalResource = $resources[0];
+        $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
@@ -797,11 +798,11 @@ class journal
             return true;
         }
 
-        $resources = $archiveController->getDigitalResources($journalResource->archiveId);
-        $nextJournalResource = $resources[0];
+        $resources = $archiveController->getDigitalResources($nextJournal->archiveId);
+        $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $nextJournalContents = $nextJournalResource->getContents();
 
-        $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
+        $chainEvent = str_getcsv(strtok($nextJournalContents, "\n"));
 
         // For older version compatibility
         if (count($chainEvent) < 7) {
@@ -886,6 +887,7 @@ class journal
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
         $archiveController = \laabs::newController('recordsManagement/archive');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         $newJournal = \laabs::newInstance('recordsManagement/log');
         $newJournal->archiveId = \laabs::newId();
@@ -951,7 +953,7 @@ class journal
             $eventLine[8] = (string) $previousJournal->archiveId;
 
             $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
-            $journalResource = $resources[0];
+            $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;
