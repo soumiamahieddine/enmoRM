@@ -163,6 +163,9 @@ class authentication
 
     protected function redirectToLogin()
     {
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
+
         \laabs::kernel()->response->code = 307;
         \laabs::kernel()->response->setHeader('Location', '/user/prompt');
         \laabs::kernel()->sendResponse();

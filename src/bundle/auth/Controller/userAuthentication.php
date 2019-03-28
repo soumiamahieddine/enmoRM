@@ -217,6 +217,7 @@ class userAuthentication
      */
     public function logout()
     {
-        \laabs::clearTokens();
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
     }
 }
