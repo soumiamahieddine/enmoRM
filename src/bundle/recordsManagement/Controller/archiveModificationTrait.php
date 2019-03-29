@@ -334,17 +334,13 @@ trait archiveModificationTrait
             $archive->archiveName = $archiveName;
         }
         
-        if ($originatorArchiveId) {
-            $archive->originatorArchiveId = $originatorArchiveId;
-        }
+        $archive->originatorArchiveId = $originatorArchiveId;
 
         if ($archiverArchiveId) {
             $archive->archiverArchiveId = $archiverArchiveId;
         }
 
-        if ($originatingDate) {
-            $archive->originatingDate = $originatingDate;
-        }
+        $archive->originatingDate = $originatingDate;
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
