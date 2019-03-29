@@ -563,7 +563,7 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
-
+        
         if ($checkAccess) {
             $this->checkRights($archive);
         }
@@ -999,10 +999,10 @@ trait archiveAccessTrait
      * @throws
      * @return boolean THe result of the operation
      */
-    public function checkRights($archive)
+    public function checkRights($archive, $CommunicationRequest = false)
     {
         $currentUserService = \laabs::getToken("ORGANIZATION");
-        $currentDate = \laabs::newDate();
+        // $currentDate = \laabs::newDate();
 
         if (!$currentUserService) {
             return false;
@@ -1031,10 +1031,11 @@ trait archiveAccessTrait
         }
 
         // COMMUNICATION ACCESS
-        if (!is_null($archive->accessRuleComDate)
-            && ($archive->accessRuleComDate <= $currentDate)) {
-            return true;
-        }
+        // if (!is_null($archive->accessRuleComDate)
+        //     && $CommunicationRequest
+        //     && ($archive->accessRuleComDate <= $currentDate)) {
+        //     return true;
+        // }
 
         // USER ACCESS
         if (!empty($archive->userOrgRegNumbers)) {
