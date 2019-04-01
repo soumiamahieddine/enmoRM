@@ -30,4 +30,4 @@ job_php-7.3:
     - chmod +x /usr/local/bin/phpunit
     - phpunit --coverage-text --colors=never -c phpunit.xml
   only:
-    - release/2.4
+    - feat/gitlab_ci
