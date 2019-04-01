@@ -320,9 +320,8 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive, true);
         $this->view->addContentFile("recordsManagement/archive/description.html");
-
+        
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -337,13 +336,13 @@ class archive
 
         // Message
         $this->checkMessage($archive);
-
+        
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
         $this->view->merge();
-
+        
         return $this->view->saveHtml();
     }
 

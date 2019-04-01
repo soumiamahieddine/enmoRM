@@ -416,9 +416,9 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
-
-        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
-
+        
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess);
+        
         if ($archive->digitalResources) {
             if ($loadBinary) {
                 foreach ($archive->digitalResources as $i => $digitalResource) {
@@ -556,7 +556,7 @@ trait archiveAccessTrait
      * @throws
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId, $withBinary = false, $checkAccess = true)
+    public function retrieve($archiveId, $withBinary = false, $checkAccess = true, $isCommunication = false)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
@@ -564,13 +564,16 @@ trait archiveAccessTrait
             $archive = $archiveId;
         }
         
-        if ($checkAccess) {
+        if ($isCommunication) {
+            $this->checkRights($archive, $isCommunication);
+            $checkAccess = false;
+        } else {
             $this->checkRights($archive);
         }
-
+        
         $this->getMetadata($archive, $checkAccess);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-
+        
         if (!empty($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
         }
@@ -999,10 +1002,10 @@ trait archiveAccessTrait
      * @throws
      * @return boolean THe result of the operation
      */
-    public function checkRights($archive, $CommunicationRequest = false)
+    public function checkRights($archive, $isCommunication = false)
     {
         $currentUserService = \laabs::getToken("ORGANIZATION");
-        // $currentDate = \laabs::newDate();
+        $currentDate = \laabs::newDate();
 
         if (!$currentUserService) {
             return false;
@@ -1031,11 +1034,11 @@ trait archiveAccessTrait
         }
 
         // COMMUNICATION ACCESS
-        // if (!is_null($archive->accessRuleComDate)
-        //     && $CommunicationRequest
-        //     && ($archive->accessRuleComDate <= $currentDate)) {
-        //     return true;
-        // }
+        if (!is_null($archive->accessRuleComDate)
+            && ($isCommunication)
+            && ($archive->accessRuleComDate <= $currentDate)) {
+            return true;
+        }
 
         // USER ACCESS
         if (!empty($archive->userOrgRegNumbers)) {
