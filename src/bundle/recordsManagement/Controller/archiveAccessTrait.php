@@ -492,12 +492,12 @@ trait archiveAccessTrait
      * 
      * @return digitalResource/digitalResource Archive resource contents
      */
-    public function consultation($archiveId, $resId, $checkAccess = true)
+    public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($checkAccess) {
-            $this->checkRights($archive);
+            $this->checkRights($archive, $isCommunication);
         }
 
         try {

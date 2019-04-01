@@ -93,7 +93,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/consultation
      */
-    public function readConsultation_archiveId_Digitalresource_resId_();
+    public function readConsultation_archiveId_Digitalresource_resId_($isCommunication = false);
 
     /**
      * Retrieve an archive by its id
