@@ -431,18 +431,18 @@ trait archiveAccessTrait
                 }
             }
         }
-
+        
         $archive->contents = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archive->archiveId."'"
         );
-
+        
         if ($archive->contents) {
             foreach ($archive->contents as $child) {
-                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary);
+                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary, $checkAccess);
             }
         }
-
+        
         return $archive;
     }
 
@@ -582,12 +582,12 @@ trait archiveAccessTrait
         }
         $this->getRelatedInformation($archive, $checkAccess);
         $this->listChildrenArchive($archive, true, $withBinary, $checkAccess);
-
+        
         $this->getParentArchive($archive);
 
         if (!empty($archive->contents)) {
             foreach ($archive->contents as $child) {
-                $this->retrieve($child, $withBinary, $checkAccess);
+                $this->retrieve($child, $withBinary, $checkAccess, $isCommunication);
             }
         }
 
