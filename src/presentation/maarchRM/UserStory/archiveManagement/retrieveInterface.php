@@ -69,7 +69,7 @@ interface retrieveInterface
      * @param string $text
      *
      * @return recordsManagement/archive/search
-     * @uses recordsManagement/archives/readRegistry
+     * @uses recordsManagement/archives/read
      */
     public function readRecordsmanagementArchives(
         $archiveId = null,
