@@ -58,7 +58,7 @@ functional-test:cypress-e2e:
   image: cypress/base:10
   stage: test
   script:
-    - npm ci
+    - $(npm bin)/cypress install
     - $(npm bin)/cypress verify
     - $(npm bin)/cypress run
   artifacts:
