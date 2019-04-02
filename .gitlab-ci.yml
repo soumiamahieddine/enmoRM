@@ -28,9 +28,9 @@ job_php-7.3:
     - cp -R /builds/maarch/maarchRM/ /var/www/maarchRM/
     - mv /var/www/maarchRM/ /var/www/laabs/
     - cd /var/www/laabs
-    - cp data/maarchRM/conf/vhost.conf.default laabs/data/maarchRM/conf/vhost.conf
-    - cp data/maarchRM/conf/configuration.ini.default laabs/data/maarchRM/conf/configuration.ini
-    - cp data/maarchRM/conf/confvars.ini.default laabs/data/maarchRM/conf/confvars.ini
+    - cp data/maarchRM/conf/vhost.conf.default data/maarchRM/conf/vhost.conf
+    - cp data/maarchRM/conf/configuration.ini.default data/maarchRM/conf/configuration.ini
+    - cp data/maarchRM/conf/confvars.ini.default data/maarchRM/conf/confvars.ini
     - mkdir -p /var/www/laabs/data/maarchRM/repository/archives_1 /var/www/laabs/data/maarchRM/repository/archives_2
     - chown -R maarch:www-data /var/www
     - chmod -R 775 /var/www
