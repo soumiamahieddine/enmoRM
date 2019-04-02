@@ -34,6 +34,7 @@ job_php-7.3:
     - mkdir -p /var/www/laabs/data/maarchRM/repository/archives_1 /var/www/laabs/data/maarchRM/repository/archives_2
     - chown -R maarch:www-data /var/www
     - chmod -R 775 /var/www
+    - cd /etc/apache2/sites-available/
     - touch maarchRM.conf
     - echo "Include /var/www/laabs/data/maarchRM/conf/vhost.conf" >> maarchRM.conf
     - a2ensite maarchRM.conf
