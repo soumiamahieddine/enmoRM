@@ -6,7 +6,7 @@ variables:
   POSTGRES_USER: maarch
   POSTGRES_PASSWORD: ""
   npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
-  CYPRESS_CACHE_FOLDER: /builds/cypress-io/cypress-example-docker-gitlab/cache/Cypress
+  CYPRESS_CACHE_FOLDER:  ~/.cache/Cypress
 
 
 stages:
@@ -54,18 +54,12 @@ job_build_php-7.3:
   except:
     - master
 
-job_build_cypress:
-  image: cypress/base:10
-  stage: build
-  script:
-    - npm install --save-dev cypress
-    - $(npm bin)/cypress verify
-  when: on_success
-
-job_cypress:
+functional-test:cypress-e2e:
   image: cypress/base:10
   stage: test
   script:
+    - npm ci
+    - $(npm bin)/cypress verify
     - $(npm bin)/cypress run
   artifacts:
     expire_in: 1 week
