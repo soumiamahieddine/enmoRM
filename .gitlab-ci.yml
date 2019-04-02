@@ -58,7 +58,7 @@ job_build_cypress:
   image: cypress/base:10
   stage: build
   script:
-    - npm ci
+    - npm install --save-dev cypress
     - $(npm bin)/cypress verify
   when: on_success
 
@@ -67,6 +67,8 @@ job_cypress:
   stage: test
   script:
     - $(npm bin)/cypress run
+  variables:
+    CI_DEBUG_TRACE: "true"
   artifacts:
     expire_in: 1 week
     when: always
