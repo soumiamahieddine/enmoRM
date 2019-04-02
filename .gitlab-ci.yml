@@ -5,22 +5,32 @@ variables:
   POSTGRES_DB: "maarchRM"
   POSTGRES_USER: maarch
   POSTGRES_PASSWORD: ""
+  npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
+  CYPRESS_CACHE_FOLDER: /builds/cypress-io/cypress-example-docker-gitlab/cache/Cypress
+
 
 stages:
+  - build
   - test
 
-before_script:
-  - apt-get update > /dev/null
-  - mkdir -p /usr/share/man/man1
-  - mkdir -p /usr/share/man/man7
-  - apt-get install cron -yqq > /dev/null
-  - apt-get install libreoffice -yqq > /dev/null
-  - bash ci/docker_install_php.sh > /dev/null
-  - bash ci/docker_install_database.sh > /dev/null
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
 
 job_php-7.3:
   image: php:7.3-apache
-  stage: test
+  stage: build
+  before_script:
+    - apt-get update > /dev/null
+    - mkdir -p /usr/share/man/man1
+    - mkdir -p /usr/share/man/man7
+    - apt-get install cron -yqq > /dev/null
+    - apt-get install libreoffice -yqq > /dev/null
+    - bash ci/docker_install_php.sh > /dev/null
+    - bash ci/docker_install_database.sh > /dev/null
   script:
     - useradd -m -g www-data maarch
     - export APACHE_RUN_USER=maarch
@@ -41,6 +51,19 @@ job_php-7.3:
     - a2dissite 000-default.conf
     - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
     - chmod +x /usr/local/bin/phpunit
-    # - phpunit --coverage-text --colors=never -c phpunit.xml
-  only:
-    - feat/gitlab_ci
+    - npm ci
+    - $(npm bin)/cypress verify
+  except:
+    - master
+
+job_cypress:
+  image: cypress/base:10
+  stage: test
+  script:
+    - $(npm bin)/cypress run
+  artifacts:
+    expire_in: 1 week
+    when: always
+    paths:
+      - cypress/screenshots
+      - cypress/videos
