@@ -42,7 +42,7 @@ job_build_php-7.3:
     - cp data/maarchRM/conf/configuration.ini.default data/maarchRM/conf/configuration.ini
     - cp data/maarchRM/conf/confvars.ini.default data/maarchRM/conf/confvars.ini
     - >
-      sed -i -e 's"baseUrl" : "http://maarchrm"!"baseUrl" : "http://localhost"!' /var/www/laabs/cypress.json
+      sed -i -e 's!"baseUrl" : "http://maarchrm"!"baseUrl" : "http://localhost"!' /var/www/laabs/cypress.json
     - mkdir -p /var/www/laabs/data/maarchRM/repository/archives_1 /var/www/laabs/data/maarchRM/repository/archives_2
     - chown -R maarch:www-data /var/www
     - chmod -R 775 /var/www
