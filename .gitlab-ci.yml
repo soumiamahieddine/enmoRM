@@ -20,7 +20,7 @@ cache:
     - cache/Cypress
     - node_modules
 
-job_php-7.3:
+job_build_php-7.3:
   image: php:7.3-apache
   stage: build
   before_script:
@@ -51,10 +51,16 @@ job_php-7.3:
     - a2dissite 000-default.conf
     - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
     - chmod +x /usr/local/bin/phpunit
-    - npm ci
-    - $(npm bin)/cypress verify
   except:
     - master
+
+job_build_cypress:
+  image: cypress/base:10
+  stage: build
+  script:
+    - npm ci
+    - $(npm bin)/cypress verify
+  when: on_success
 
 job_cypress:
   image: cypress/base:10
