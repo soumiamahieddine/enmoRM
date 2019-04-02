@@ -1,8 +1,7 @@
 
 DROP SCHEMA IF EXISTS "batchProcessing" CASCADE;
 
-CREATE SCHEMA "batchProcessing"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "batchProcessing";
 
 -- Table: "batchProcessing"."scheduling"
 

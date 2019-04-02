@@ -1,7 +1,6 @@
 DROP SCHEMA IF EXISTS "digitalResource" CASCADE;
 
-CREATE SCHEMA "digitalResource"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "digitalResource";
 
 
 -- Table: "digitalResource"."cluster"
