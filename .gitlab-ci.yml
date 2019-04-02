@@ -67,8 +67,6 @@ job_cypress:
   stage: test
   script:
     - $(npm bin)/cypress run
-  variables:
-    CI_DEBUG_TRACE: "true"
   artifacts:
     expire_in: 1 week
     when: always
