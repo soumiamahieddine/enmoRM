@@ -416,9 +416,9 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
-
-        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
-
+        
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess);
+        
         if ($archive->digitalResources) {
             if ($loadBinary) {
                 foreach ($archive->digitalResources as $i => $digitalResource) {
@@ -431,18 +431,18 @@ trait archiveAccessTrait
                 }
             }
         }
-
+        
         $archive->contents = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archive->archiveId."'"
         );
-
+        
         if ($archive->contents) {
             foreach ($archive->contents as $child) {
-                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary);
+                $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary, $checkAccess);
             }
         }
-
+        
         return $archive;
     }
 
@@ -492,12 +492,12 @@ trait archiveAccessTrait
      * 
      * @return digitalResource/digitalResource Archive resource contents
      */
-    public function consultation($archiveId, $resId, $checkAccess = true)
+    public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false)
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($checkAccess) {
-            $this->checkRights($archive);
+            $this->checkRights($archive, $isCommunication);
         }
 
         try {
@@ -556,21 +556,24 @@ trait archiveAccessTrait
      * @throws
      * @return recordsManagement/archive object
      */
-    public function retrieve($archiveId, $withBinary = false, $checkAccess = true)
+    public function retrieve($archiveId, $withBinary = false, $checkAccess = true, $isCommunication = false)
     {
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } else {
             $archive = $archiveId;
         }
-
-        if ($checkAccess) {
+        
+        if ($isCommunication) {
+            $this->checkRights($archive, $isCommunication);
+            $checkAccess = false;
+        } else {
             $this->checkRights($archive);
         }
-
+        
         $this->getMetadata($archive, $checkAccess);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-
+        
         if (!empty($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
         }
@@ -579,12 +582,12 @@ trait archiveAccessTrait
         }
         $this->getRelatedInformation($archive, $checkAccess);
         $this->listChildrenArchive($archive, true, $withBinary, $checkAccess);
-
+        
         $this->getParentArchive($archive);
 
         if (!empty($archive->contents)) {
             foreach ($archive->contents as $child) {
-                $this->retrieve($child, $withBinary, $checkAccess);
+                $this->retrieve($child, $withBinary, $checkAccess, $isCommunication);
             }
         }
 
@@ -999,7 +1002,7 @@ trait archiveAccessTrait
      * @throws
      * @return boolean THe result of the operation
      */
-    public function checkRights($archive)
+    public function checkRights($archive, $isCommunication = false)
     {
         $currentUserService = \laabs::getToken("ORGANIZATION");
         $currentDate = \laabs::newDate();
@@ -1032,6 +1035,7 @@ trait archiveAccessTrait
 
         // COMMUNICATION ACCESS
         if (!is_null($archive->accessRuleComDate)
+            && ($isCommunication)
             && ($archive->accessRuleComDate <= $currentDate)) {
             return true;
         }
