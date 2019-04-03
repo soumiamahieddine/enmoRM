@@ -36,25 +36,42 @@ trait archiveRestitutionTrait
             $archiveIds = array($archiveIds);
         }
 
+        $resChildren = array('success' => array(), 'error' => array());
+
         $archives = [];
         $archiveChildrenIds = [];
+
         foreach ($archiveIds as $archiveId) {
-            $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+            $children = $this->listChildrenArchiveId($archiveId);
+            // Unset first element (it's the parent ID)
+            unset($children[0]);
+
+            foreach ($children as $child) {
+                // If one of children is unable to change status, the parent is on error
+                // and unset of the archivesIds to not change status
+                if (!$this->checkStatus($child, 'restituable')) {
+                    array_push($resChildren['error'], $archiveId);
+                    unset($archiveIds[array_search($archiveId, $archiveIds)]);
+                    break;
+                } else {
+                    $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+                }
+            }
         }
 
         foreach ($archiveChildrenIds as $archiveChildrenId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
             $this->checkRights($archive);
-
-            $this->listChildrenArchive($archive, true);
-
+            
             $archives[] = $archive;
         }
-
-        $archiveList = $this->setStatus($archiveIds, 'restituable');
+        
         foreach ($archives as $archive) {
             $this->logRestitutionRequest($archive);
         }
+
+        $archiveList = $this->setStatus($archiveIds, 'restituable');
+        $archiveList = array_merge_recursive($archiveList, $resChildren);
 
         return $archiveList;
     }
