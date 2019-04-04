@@ -1049,7 +1049,7 @@ class archive
                 continue;
             }
 
-            $label = $archivalProfileField = null;
+            $label = $customField = null;
             $type = 'text';
             $isImmutable = false;
             $isInList = false;
@@ -1058,10 +1058,11 @@ class archive
                 foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                     if ($archiveDescription->fieldName == $name) {
                         $label = $archiveDescription->descriptionField->label;
-                        $archivalProfileField = true;
                         $type = $archiveDescription->descriptionField->type;
                         $isImmutable = $archiveDescription->isImmutable;
                         $isInList = $archiveDescription->isInList;
+                    } else {
+                        $customField = true;
                     }
                 }
             }
@@ -1074,8 +1075,8 @@ class archive
             $tr = $this->view->createElement('tr');
             $table->appendChild($tr);
 
-            if ($archivalProfileField) {
-                $tr->setAttribute('class', "archivalProfileField");
+            if ($customField) {
+                $tr->setAttribute('class', "customField");
             }
 
             // table header column
@@ -1159,8 +1160,7 @@ class archive
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
         if (!empty($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
+            if (!empty($archive->descriptionClass && $presenter = $this->getPresenter($archive->descriptionClass))) {
                 $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);

@@ -1,4 +1,5 @@
 <div id="archiveInformation" data-translate-catalog="recordsManagement/messages" class="row" data-fileplan-level="[?merge archive.fileplanLevel ?]" data-children-archive-profiles="[?merge archivalProfileList.json() ?]" data-accept-without-profile="[?merge acceptArchiveWithoutProfile ?]" >
+    <!-- Used on mais screen -->
     <input class="archiveInformationId hide" value="[?merge archive.archiveId ?]">
     <input class="archiveName hide" value="[?merge archive.archiveName ?]">
     <input class="originatorArchiveId hide" value="[?merge archive.originatorArchiveId ?]">
@@ -342,13 +343,13 @@
                               .html('')
                               .append($('#inputOriginatingDate').datepicker('setDate', $('#archiveInformation').find('.originatingDate').val()));
 
-            if ($('#metadata').data('descriptionclass') != undefined) {
+            /*if ($('#metadata').data('descriptionclass') != undefined) {
                 return;
-            }
+            }*/
             $('#metadata').find('tr').each(function(i, e) {
                 var label = $(e).children('th');
                 var value = $(e).children('td');
-                var customField = null;
+                var input = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
                 customLabel.removeAttr('id').val(label.text()).attr('name', label.attr('name'));
@@ -357,54 +358,65 @@
 
                 switch(label.data('type')) {
                     case 'boolean' :
-                        customField = $("#inputCustomBooleanField").clone();
+                        input = $("#inputCustomBooleanField").clone();
                         if(label.data('immutable')) {
-                            customField.prop('disabled', true);
+                            input.prop('disabled', true);
                         }
                         var intValue = value.find('i').data('value');
-                        booleanInput = customField.find('input[value="'+intValue+'"]');
+                        booleanInput = input.find('input[value="'+intValue+'"]');
                         break;
                     case 'number':
-                        customField = $("#inputCustomNumericField").clone();
+                        input = $("#inputCustomNumericField").clone();
                         if(label.data('immutable')) {
-                            customField.prop('disabled', true);
+                            input.prop('disabled', true);
                         }
-                        customField.val(value.html());
+                        input.val(value.html());
                         break;
                     case 'date':
-                        customField = $("#inputCustomField").clone();
-                        customField.datepicker(DatePickerParams).datepicker('setDate', value.html());
+                        input = $("#inputCustomField").clone();
+                        input.datepicker(DatePickerParams).datepicker('setDate', value.html());
                         if(label.data('immutable')) {
-                            customField.prop('disabled', true);
+                            input.prop('disabled', true);
                         }
-                        customField.datepicker({
+                        input.datepicker({
                             language:$('#wrapper').attr('lang'),
                             autoclose:true
                         }).datepicker('setDate', value.html());
                         break;
-                    case 'name_array':
-                        customField = $("#inputCustomField").clone();
-                        customField.data("array", value.data("array"));
-                        customField.val(value.html());
-                        customField.prop('disabled', true);
+                    case 'array':
+                        // Add data-itemtype to manage arrays
+                        input = $("#inputCustomField").clone();
+                        input.data("array", value.data("array"));
+                        input.val(value.html());
+                        input.prop('disabled', true);
                         break;
+                    case 'object':
+                        // Add data-itemtype to manage arrays
+                        input = $("#inputCustomField").clone();
+                        input.data("array", value.data("object"));
+                        input.val(value.html());
+                        input.prop('disabled', true);
+                        break;
+
                     default :
-                            customField = $("#inputCustomField").clone();
+                            input = $("#inputCustomField").clone();
                             if(label.data('immutable')) {
-                                customField.prop('disabled', true);
+                                input.prop('disabled', true);
                             }
-                            customField.val(value.text());
+                            input.val(value.text());
                 }
                 
-                value.html('').append(customField.removeAttr('id'));
+                value.html('').append(input.removeAttr('id'));
+
+                // Disable input for archival profile field labels
+                if(!$(e).hasClass('customField')) {
+                    $(e).find('th input').prop('disabled', true);
+                }
 
                 if (booleanInput && booleanInput.length) {
                     booleanInput.click();
                 }
             });
-
-
-            $('#metadata').find('.archivalProfileField').find('th input').prop('disabled', true);
         },
 
         saveMetadata: function() {
@@ -420,8 +432,11 @@
                 var value = null;
 
                 switch (type) {
-                    case "name_array" :
+                    case "array" :
                         value = valueInput.data("array");
+                        break;
+                    case "object" :
+                        value = valueInput.data("object");
                         break;
                     case "name" :
                     case "text" :
@@ -443,9 +458,11 @@
                         }
                         break;
                     default:
+                        value = valueInput.val();
+                        break;
                 }
 
-                if ($(e).hasClass('archivalProfileField')) {
+                if (!$(e).hasClass('customField')) {
                     descriptionFields[name] = value;
                 } else if (label != '' && value != '') {
                     descriptionFields[label] = value;
