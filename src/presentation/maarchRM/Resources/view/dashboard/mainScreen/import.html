@@ -18,7 +18,7 @@
     </div>
         <div class="pull-right">
             <?merge syncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Importa</a>
             <i>&nbsp;</i>
             <?merge asyncImportPrivilege.bool() ?>
             <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
@@ -84,7 +84,10 @@
     });
 
     $('#syncImport').on('click', function(e) {
+        $(this).attr("disabled", "disabled");
         ArchiveForm.send('sync', e, $(this));
+      //  $(this).removeAttr("disabled");
+        setTimeout('$("#syncImport").removeAttr("disabled")', 1500);
     });
 
     $('#asyncImport').on('click', function(e) {
