@@ -1,19 +1,14 @@
-# Docker images provided by https://github.com/cypress-io/cypress-docker-images
-services:
-  - docker:dind
-# first, install Cypress, then run all tests (in parallel)
+#services:
+#  - docker:dind
+
 stages:
   - test
   - push
 
-# to cache both npm modules and Cypress binary we use environment variables
-# to point at the folders we can list as paths in "cache" job settings
 variables:
   npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
   CYPRESS_CACHE_FOLDER: /builds/cypress-io/cypress-example-docker-gitlab/cache/Cypress
 
-# cache using branch name
-# https://gitlab.com/help/ci/caching/index.md
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
@@ -21,8 +16,6 @@ cache:
     - cache/Cypress
     - node_modules
 
-# two jobs that run after "install" job finishes
-# NPM dependencies and Cypress binary should be already installed
 functional-test:cypress:
   image: cypress/base:10
   stage: test
@@ -39,13 +32,56 @@ functional-test:cypress:
       - cypress/screenshots
       - cypress/videos
 
-build-dockerhub:
-  stage: push
+phpstan:
+  image: jakzal/phpqa
+  stage: tests
+  script: phpstan analyse --level 2 -c ./ci/phpstan.neon src
+  allow_failure: true
+
+php-metrics:
+  image: jakzal/phpqa
+  stage: tests
+  script: phpmetrics --report-html=var/php-metrics src
+  artifacts:
+    paths:
+      - var/php-metrics/
+  allow_failure: true
+
+php-phpmd:
+  image: jakzal/phpqa
+  stage: tests
+  script: phpmd src text ./ci/phpmd.xml
+  artifacts:
+    paths:
+      - var/phpmd.html
+  allow_failure: true
+
+php-deprecation-detector:
+  image: jakzal/phpqa
+  stage: tests
   script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build dockerfile/version/ -t "$CI_REGISTRY_IMAGE"
-    - docker push "$CI_REGISTRY_IMAGE"
-  only:
-    - feat/gitlab_ci
-  except:
-    - schedules
+    - deprecation-detector check src vendor
+  allow_failure: true
+
+php-cs-fixer:
+  image: jakzal/phpqa
+  stage: tests
+  script:
+    - ci/php-cs-fixer.sh
+  artifacts:
+    paths:
+      - var/patch.diff
+    expire_in: 24 hrs
+    when: on_failure
+  allow_failure: true
+
+#build-dockerhub:
+#  stage: push
+#  script:
+#    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#    - docker build dockerfile/version/ -t "$CI_REGISTRY_IMAGE"
+#    - docker push "$CI_REGISTRY_IMAGE"
+#  only:
+#    - feat/gitlab_ci
+#  except:
+#    - schedules
