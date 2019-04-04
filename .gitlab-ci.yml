@@ -44,7 +44,7 @@ php-metrics:
 php-phpmd:
   image: jakzal/phpqa
   stage: tests
-  script: phpmd src text phpmd.xml
+  script: phpmd src html phpmd.xml
   artifacts:
     paths:
       - var/phpmd.html
@@ -54,14 +54,14 @@ php-deprecation-detector:
   image: jakzal/phpqa
   stage: tests
   script:
-    - deprecation-detector check src vendor
+    - deprecation-detector check src vendor/
   allow_failure: true
 
 php-cs-fixer:
   image: jakzal/phpqa
   stage: tests
   script:
-    - ci/php-cs-fixer.sh
+    - ./php-cs-fixer.sh
   artifacts:
     paths:
       - var/patch.diff
