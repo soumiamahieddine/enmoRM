@@ -20,21 +20,14 @@ cache:
     - cache/Cypress
     - node_modules
 
-# this job installs NPM dependencies and Cypress
-install:
-  image: cypress/base:10
-  stage: build
-
-  script:
-    - npm ci
-    - $(npm bin)/cypress verify
-
 # two jobs that run after "install" job finishes
 # NPM dependencies and Cypress binary should be already installed
 cypress-e2e:
   image: cypress/base:10
   stage: test
   script:
+    - npm ci
+    - $(npm bin)/cypress verify
     - $(npm bin)/cypress run
   artifacts:
     expire_in: 1 week
@@ -47,6 +40,8 @@ cypress-e2e-chrome:
   image: cypress/browsers:chrome67
   stage: test
   script:
+    - npm ci
+    - $(npm bin)/cypress verify
     - $(npm bin)/cypress run --browser chrome
   artifacts:
     expire_in: 1 week
