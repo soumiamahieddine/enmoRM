@@ -35,17 +35,3 @@ cypress-e2e:
     paths:
       - cypress/screenshots
       - cypress/videos
-
-cypress-e2e-chrome:
-  image: cypress/browsers:chrome67
-  stage: test
-  script:
-    - npm ci
-    - $(npm bin)/cypress verify
-    - $(npm bin)/cypress run --browser chrome
-  artifacts:
-    expire_in: 1 week
-    when: always
-    paths:
-      - cypress/screenshots
-      - cypress/videos
