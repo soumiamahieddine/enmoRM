@@ -32,12 +32,6 @@ functional-test:cypress:
       - cypress/screenshots
       - cypress/videos
 
-phpstan:
-  image: jakzal/phpqa
-  stage: tests
-  script: phpstan analyse --level 2 -c ./ci/phpstan.neon src
-  allow_failure: true
-
 php-metrics:
   image: jakzal/phpqa
   stage: tests
@@ -50,7 +44,7 @@ php-metrics:
 php-phpmd:
   image: jakzal/phpqa
   stage: tests
-  script: phpmd src text ./ci/phpmd.xml
+  script: phpmd src text
   artifacts:
     paths:
       - var/phpmd.html
@@ -74,6 +68,7 @@ php-cs-fixer:
     expire_in: 24 hrs
     when: on_failure
   allow_failure: true
+
 
 #build-dockerhub:
 #  stage: push
