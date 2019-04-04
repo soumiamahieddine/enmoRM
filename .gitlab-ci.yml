@@ -2,7 +2,6 @@
 
 # first, install Cypress, then run all tests (in parallel)
 stages:
-  - build
   - test
 
 # to cache both npm modules and Cypress binary we use environment variables
@@ -22,13 +21,15 @@ cache:
 
 # two jobs that run after "install" job finishes
 # NPM dependencies and Cypress binary should be already installed
-cypress-e2e:
+functional-test:cypress:
   image: cypress/base:10
   stage: test
   script:
     - npm ci
     - $(npm bin)/cypress verify
     - $(npm bin)/cypress run
+  only:
+    - schedules
   artifacts:
     expire_in: 1 week
     when: always
