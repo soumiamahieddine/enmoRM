@@ -2,7 +2,7 @@
 #  - docker:dind
 
 stages:
-  - test
+  - tests
   - push
 
 variables:
@@ -18,7 +18,7 @@ cache:
 
 functional-test:cypress:
   image: cypress/base:10
-  stage: test
+  stage: tests
   script:
     - npm ci
     - $(npm bin)/cypress verify
