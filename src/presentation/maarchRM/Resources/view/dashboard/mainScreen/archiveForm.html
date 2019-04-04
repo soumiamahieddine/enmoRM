@@ -164,7 +164,7 @@
                     dataType    : 'json',
                     success     : function (response) {
                         gritter.show(response.message, response.status, response.errors);
-                        $("#syncImport").attr("disabled", false);
+
                         if (response.status) {
                             trigger("archiveImportOver.recordsManagement", [archive.parentArchiveId]);
                             ImportPanel.cancel();
@@ -177,6 +177,9 @@
                     },
                     error       : function (response) {
                         gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    },
+                    complete : function(response){
+                        $("#syncImport").attr("disabled", false);
                     }
                     
                 }
