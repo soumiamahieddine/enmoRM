@@ -1,8 +1,10 @@
 # Docker images provided by https://github.com/cypress-io/cypress-docker-images
-
+services:
+  - docker:dind
 # first, install Cypress, then run all tests (in parallel)
 stages:
   - test
+  - push
 
 # to cache both npm modules and Cypress binary we use environment variables
 # to point at the folders we can list as paths in "cache" job settings
@@ -36,3 +38,15 @@ functional-test:cypress:
     paths:
       - cypress/screenshots
       - cypress/videos
+
+build-dockerhub:
+  stage:
+    - push
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build dockerfile/version/ -t "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - feat/gitlab_ci
+  except:
+    - schedules
