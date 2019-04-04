@@ -1,18 +1,18 @@
-services:
-  - postgres:9.4
+# Docker images provided by https://github.com/cypress-io/cypress-docker-images
 
-variables:
-  POSTGRES_DB: "maarchRM"
-  POSTGRES_USER: maarch
-  POSTGRES_PASSWORD: ""
-  npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
-  CYPRESS_CACHE_FOLDER:  ~/.cache/Cypress
-
-
+# first, install Cypress, then run all tests (in parallel)
 stages:
   - build
   - test
 
+# to cache both npm modules and Cypress binary we use environment variables
+# to point at the folders we can list as paths in "cache" job settings
+variables:
+  npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
+  CYPRESS_CACHE_FOLDER: /builds/cypress-io/cypress-example-docker-gitlab/cache/Cypress
+
+# cache using branch name
+# https://gitlab.com/help/ci/caching/index.md
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
@@ -20,52 +20,34 @@ cache:
     - cache/Cypress
     - node_modules
 
-job_build_php-7.3:
-  image: php:7.3-apache
+# this job installs NPM dependencies and Cypress
+install:
+  image: cypress/base:10
   stage: build
-  before_script:
-    - apt-get update > /dev/null
-    - mkdir -p /usr/share/man/man1
-    - mkdir -p /usr/share/man/man7
-    - apt-get install cron -yqq > /dev/null
-    - apt-get install libreoffice -yqq > /dev/null
-    - bash ci/docker_install_php.sh > /dev/null
-    - bash ci/docker_install_database.sh > /dev/null
-  script:
-    - useradd -m -g www-data maarch
-    - export APACHE_RUN_USER=maarch
-    - mkdir -p /var/www/html/
-    - cp -R /builds/maarch/maarchRM/ /var/www/maarchRM/
-    - mv /var/www/maarchRM/ /var/www/laabs/
-    - cd /var/www/laabs
-    - cp data/maarchRM/conf/vhost.conf.default data/maarchRM/conf/vhost.conf
-    - cp data/maarchRM/conf/configuration.ini.default data/maarchRM/conf/configuration.ini
-    - cp data/maarchRM/conf/confvars.ini.default data/maarchRM/conf/confvars.ini
-    - >
-      sed -i -e 's!"baseUrl" : "http://maarchrm"!"baseUrl" : "http://localhost"!' /var/www/laabs/cypress.json
-    - mkdir -p /var/www/laabs/data/maarchRM/repository/archives_1 /var/www/laabs/data/maarchRM/repository/archives_2
-    - chown -R maarch:www-data /var/www
-    - chmod -R 775 /var/www
-    - cd /etc/apache2/sites-available/
-    - touch maarchRM.conf
-    - echo "Include /var/www/laabs/data/maarchRM/conf/vhost.conf" >> maarchRM.conf
-    - a2ensite maarchRM.conf
-    - a2dissite 000-default.conf
-    - a2enmod rewrite
-    - a2enmod env
-    - service apache2 start
-    - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
-    - chmod +x /usr/local/bin/phpunit
-  except:
-    - master
 
-functional-test:cypress-e2e:
+  script:
+    - npm ci
+    - $(npm bin)/cypress verify
+
+# two jobs that run after "install" job finishes
+# NPM dependencies and Cypress binary should be already installed
+cypress-e2e:
   image: cypress/base:10
   stage: test
   script:
-    - $(npm bin)/cypress install
-    - $(npm bin)/cypress verify
     - $(npm bin)/cypress run
+  artifacts:
+    expire_in: 1 week
+    when: always
+    paths:
+      - cypress/screenshots
+      - cypress/videos
+
+cypress-e2e-chrome:
+  image: cypress/browsers:chrome67
+  stage: test
+  script:
+    - $(npm bin)/cypress run --browser chrome
   artifacts:
     expire_in: 1 week
     when: always
