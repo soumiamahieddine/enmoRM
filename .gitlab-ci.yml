@@ -40,8 +40,7 @@ functional-test:cypress:
       - cypress/videos
 
 build-dockerhub:
-  stage:
-    - push
+  stage: push
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker build dockerfile/version/ -t "$CI_REGISTRY_IMAGE"
