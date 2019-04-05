@@ -19,18 +19,17 @@ cache:
     - cache/Cypress
     - node_modules
 
-before_script:
-  - apt-get update > /dev/null
-  - mkdir -p /usr/share/man/man1
-  - mkdir -p /usr/share/man/man7
-  - apt-get install cron -yqq > /dev/null
-  - apt-get install libreoffice -yqq > /dev/null
-  - bash ci/docker_install_php.sh > /dev/null
-  - bash ci/docker_install_database.sh > /dev/null
-
 unit-tests:php-7.3:
   image: php:7.3-apache
   stage: tests
+  before_script:
+    - apt-get update > /dev/null
+    - mkdir -p /usr/share/man/man1
+    - mkdir -p /usr/share/man/man7
+    - apt-get install cron -yqq > /dev/null
+    - apt-get install libreoffice -yqq > /dev/null
+    - bash ci/docker_install_php.sh > /dev/null
+    - bash ci/docker_install_database.sh > /dev/null
   script:
     - useradd -m -g www-data maarch
     - export APACHE_RUN_USER=maarch
@@ -61,6 +60,14 @@ unit-tests:php-7.3:
 unit-tests:php-7.2:
   image: php:7.2-apache
   stage: tests
+  before_script:
+    - apt-get update > /dev/null
+    - mkdir -p /usr/share/man/man1
+    - mkdir -p /usr/share/man/man7
+    - apt-get install cron -yqq > /dev/null
+    - apt-get install libreoffice -yqq > /dev/null
+    - bash ci/docker_install_php.sh > /dev/null
+    - bash ci/docker_install_database.sh > /dev/null
   script:
     - useradd -m -g www-data maarch
     - export APACHE_RUN_USER=maarch
@@ -91,6 +98,14 @@ unit-tests:php-7.2:
 unit-tests:php-7.1:
   image: php:7.1-apache
   stage: tests
+  before_script:
+    - apt-get update > /dev/null
+    - mkdir -p /usr/share/man/man1
+    - mkdir -p /usr/share/man/man7
+    - apt-get install cron -yqq > /dev/null
+    - apt-get install libreoffice -yqq > /dev/null
+    - bash ci/docker_install_php.sh > /dev/null
+    - bash ci/docker_install_database.sh > /dev/null
   script:
     - useradd -m -g www-data maarch
     - export APACHE_RUN_USER=maarch
@@ -121,6 +136,14 @@ unit-tests:php-7.1:
 unit-tests:php-7.0:
   image: php:7.0-apache
   stage: tests
+  before_script:
+    - apt-get update > /dev/null
+    - mkdir -p /usr/share/man/man1
+    - mkdir -p /usr/share/man/man7
+    - apt-get install cron -yqq > /dev/null
+    - apt-get install libreoffice -yqq > /dev/null
+    - bash ci/docker_install_php.sh > /dev/null
+    - bash ci/docker_install_database.sh > /dev/null
   script:
     - useradd -m -g www-data maarch
     - export APACHE_RUN_USER=maarch
