@@ -44,7 +44,7 @@ php-metrics:
 php-phpmd:
   image: jakzal/phpqa
   stage: tests
-  script: phpmd src html phpmd.xml
+  script: phpmd --report-html=/var/phpmd src html phpmd.xml
   artifacts:
     paths:
       - var/phpmd.html
