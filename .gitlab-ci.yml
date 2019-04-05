@@ -56,13 +56,14 @@ php-deprecation-detector:
   image: jakzal/phpqa
   stage: tests
   script:
-    - deprecation-detector check --help
+    - deprecation-detector check src vendor/
   allow_failure: true
 
 php-cs-fixer:
   image: jakzal/phpqa
   stage: tests
   script:
+    - ls -l 
     - ./php-cs-fixer.sh
   artifacts:
     paths:
