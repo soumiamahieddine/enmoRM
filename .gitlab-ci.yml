@@ -6,6 +6,9 @@ stages:
   - push
 
 variables:
+  POSTGRES_DB: "maarchRM"
+  POSTGRES_USER: maarch
+  POSTGRES_PASSWORD: ""
   npm_config_cache: /builds/cypress-io/cypress-example-docker-gitlab/.npm
   CYPRESS_CACHE_FOLDER: /builds/cypress-io/cypress-example-docker-gitlab/cache/Cypress
 
@@ -55,7 +58,7 @@ unit-tests:php-7.3:
     - master
 
 unit-tests:php-7.2:
-  image: php:7.3-apache
+  image: php:7.2-apache
   stage: tests
   script:
     - useradd -m -g www-data maarch
@@ -84,7 +87,7 @@ unit-tests:php-7.2:
     - master
 
 unit-tests:php-7.1:
-  image: php:7.3-apache
+  image: php:7.1-apache
   stage: tests
   script:
     - useradd -m -g www-data maarch
@@ -113,7 +116,7 @@ unit-tests:php-7.1:
     - master
 
 unit-tests:php-7.0:
-  image: php:7.3-apache
+  image: php:7.0-apache
   stage: tests
   script:
     - useradd -m -g www-data maarch
