@@ -46,10 +46,10 @@ php-phpmd:
   stage: tests
   script:
     - mkdir var/
-    - phpmd src html phpmd.xml --reportfile var/phpmd.html
+    - phpmd src xml phpmd.xml --reportfile var/phpmd.xml
   artifacts:
     paths:
-      - var/phpmd.html
+      - var/phpmd.xml
   allow_failure: true
 
 php-deprecation-detector:
