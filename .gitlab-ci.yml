@@ -63,7 +63,8 @@ php-cs-fixer:
   image: jakzal/phpqa
   stage: tests
   script:
-    - ls -l 
+    - cd ci
+    - ls -l
     - ./php-cs-fixer.sh
   artifacts:
     paths:
