@@ -44,7 +44,7 @@
                 <i class="fileplanLevel">&nbsp;</i>
                 <span class="archiveName"></span>
                 <span class="status hidden"></span>
-                    <i class = "fa fa-plus-circle pull-right addResource" title="Add resource"></i>
+                <!-- <i class = "fa fa-plus-circle pull-right addResource" title="Add resource"></i> -->
                 <br/>
                 &nbsp;
                 <small/>
@@ -86,7 +86,8 @@
     <span id="next_text">Next</span>
     <span id="last_text">Last</span>
     <span id="withoutProfile_text">Without profile</span>
-
+    <span id="archiveProfiles">Ajouter une sous archive</span>
+    <span id="archiveResource">Ajouter une ressource</span>
 </div>
 
 <div class="modal fade" id="newArchiveModal" tabindex="-1" role="dialog">
@@ -514,7 +515,7 @@
     })
 
 
-    $('#middleColumn').on('click', '.addResource', function() {
+    $('#middleColumn').on('click', '.newResource', function() {
         var parentArchiveId = $(this).closest('.archive').attr('id');
         $('#newArchiveModal').modal();
         console.log(parentArchiveId);
