@@ -44,10 +44,10 @@ php-metrics:
 php-phpmd:
   image: jakzal/phpqa
   stage: tests
-  script: phpmd src html phpmd.xml --reportfile var/phpmd.html
+  script: phpmd src html phpmd.xml --reportfile phpmd.html
   artifacts:
     paths:
-      - var/phpmd.html
+      - phpmd.html
   allow_failure: true
 
 php-deprecation-detector:
