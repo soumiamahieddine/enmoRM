@@ -90,7 +90,7 @@
     <span id="archiveResource">Ajouter une ressource</span>
 </div>
 
-<div class="modal fade" id="newArchiveModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="newResourceModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="container-fluid">
@@ -517,8 +517,9 @@
 
     $('#middleColumn').on('click', '.newResource', function() {
         var parentArchiveId = $(this).closest('.archive').attr('id');
-        $('#newArchiveModal').modal();
-        console.log(parentArchiveId);
+        $("#resourceArchiveId").text(parentArchiveId);
+        $('#newResourceModal').modal();
+        $("#importResourcePanel").removeClass("hide");
     })
 
 </script>

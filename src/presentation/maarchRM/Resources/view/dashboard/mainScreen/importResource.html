@@ -1,114 +1,98 @@
-<p>toto</p>
-<div class="hide row" id="importPanel">
+<div class="row" id="importResourcePanel">
     <div class="col-xs-12">
         <div class="row">
-            <h4 class="pull-left">
-                <span id="import_archivalProfile"/>
-                <br/>
-                <small class="hide" id="import_isSubArchive"><span>Sub-archive of </span><span id="import_parentArchiveName"><b></b></span></small>
-            </span>
-        </h4>
+            <h4 class="pull-left"></h4>
     </div>
     <div class="row">
-        <div class="col-lg-8 col-md-12">
-            <?hinclude dashboard/mainScreen/archiveForm.html ?>
-        </div>
         <div class="col-lg-4 col-md-12">
-            <?hinclude dashboard/mainScreen/documentForm.html ?>
+            <?hinclude dashboard/mainScreen/resourceForm.html ?>
         </div>
     </div>
+        <span id="resourceArchiveId" class="hidden"></span>
         <div class="pull-right">
-            <a href="#" class="btn btn-sm btn-success" id="addItem"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <a href="#" class="btn btn-sm btn-success" id="addResource"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
-            <!--?merge syncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
-            <?merge asyncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm btn-warning hide" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a-->
-
-            <i>&nbsp;</i>
-            <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
+            <a href="#" class="btn btn-sm btn-danger small" id="cancelResource"><i class="fa fa-times">&nbsp;</i>Cancel</a>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
 
-    ImportPanel = {
-        panel: $('#importPanel'),
-        load: function(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
-            $('#archiveForm [name="originatorOrgRegNumber"]').val(orgRegNumber);
-            $('#archiveForm [name="filePlanPosition"]').val(folderId);
+    ResourcePanel = {
+        send : function(type, event, button) { //
+            let url = null;
+            let data = null;
+            let archive = null;
 
-            this.panel.removeClass('hide');
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
 
-            if (!archivalProfile) {
-                archivalProfile = "";
-            }
+                if (archive < 0) {
+                    return;
+                }
 
-            $("#archiveForm [name='archivalProfileReference']").val(archivalProfile.reference).data("json", archivalProfile).change();
-            if(typeof archivalProfile.name === "undefined") {
-                $("#import_archivalProfile").text("");
+                data = JSON.stringify({archive : archive, zipContainer : ResourceForm.zipContainer});
             } else {
-                $("#import_archivalProfile").text(archivalProfile.name);
-            }
+                url = "/transfer";
+                data = this.asyncSerialize();
 
-            if (!parentArchiveId) {
-                $("#archiveForm [name='parentArchiveId']").val('');
-                $('#import_isSubArchive').addClass('hide');
-            } else {
-                $("#archiveForm [name='parentArchiveId']").val(parentArchiveId);
-                $('#import_parentArchiveName').find('b').text(parentArchiveName);
-            }
-            $('#document_XMLDropZone').removeClass('hide');
+                if (data.message <0) {
+                    return;
+                }
 
-            if (typeof this.documentFileInput != 'undefined') {
-                this.documentFileInput.data('base64', '').val('');
-            }
+                data = JSON.stringify(data);
 
-            trigger("archiveImportStarted.recordsManagement");
+            }
+            ajax($(button),
+                {
+                    type        : 'POST',
+                    url         : url,
+                    data        : data,
+                    contentType : 'application/json',
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+
+                        if (response.status) {
+                            trigger("archiveImportOver.recordsManagement", [archive.parentArchiveId]);
+                            ImportPanel.cancel();
+                            var folder = archive.originatorOrgRegNumber;
+                            if (archive.filePlanPosition) {
+                                folder = archive.filePlanPosition;
+                            }
+                            trigger('loadFolder.filePlan', [folder]);
+                        }
+                    },
+                    error       : function (response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                }
+            );
         },
 
         save: function(e, button) {
-            ArchiveForm.send(e, button);
+            $('#newResourceModal').modal("hide");
+            // ArchiveForm.send(e, button);
         },
+
         cancel: function() {
-            ArchiveForm.clear();
-            this.panel.addClass('hide');
+            resourceList.clear();
+            $('#newResourceModal').modal("hide");
         }
     }
 
-    $("#importPanel").onEvent('newArchiveForm.recordsManagement', function(e, archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName) {
-        ImportPanel.load(archivalProfile, orgRegNumber, folderId, parentArchiveId, parentArchiveName);
-        if(typeof archivalProfile === "undefined"){
-            FilePlanLevelToggle.load(true);
-        } else {
-            FilePlanLevelToggle.load(false);
-        }
-    });
-
-    $('#import').on('click', function(e) {
-        ImportPanel.save(e, $(this));
-    });
-
-    $('#syncImport').on('click', function(e) {
-        ArchiveForm.send('sync', e, $(this));
-    });
-
-    $('#asyncImport').on('click', function(e) {
-        ArchiveForm.send('async', e, $(this));
-    });
-
-    $("#addItem").on('click', function() {
-        digitalResource = DocumentList.serialize();
-
-        var archiveId = $('#newArchiveModal').find('input[name=parentArchiveId]').val();
+    $("#addResource").on('click', function() {
+        digitalResource = resourceList.serialize();
+        var archiveId = $("#resourceArchiveId").text();
 
         var basename = digitalResource[0].fileName.substr( (digitalResource[0].fileName.lastIndexOf('.') +1) );
 
         var data = {
             contents : digitalResource[0].handler,
-            filename : $('#newArchiveModal').find('input[name=archiveName]').val() + '.' + basename
+            filename : $('#resourceList').find('td[name=fileName]').text()
         };
         $.ajax({
             url         : archiveId+'/digitalResource',
@@ -117,7 +101,7 @@
             data        : JSON.stringify(data),
             dataType    :'json',
             success     : function (response) {
-                ImportPanel.cancel();
+                ResourcePanel.cancel();
                 trigger("archiveImportOver.recordsManagement", [archiveId]);
             },
             error       : function(response) {
@@ -128,8 +112,8 @@
         return;
     });
 
-    $('#cancel').on('click', function(e) {
-        ImportPanel.cancel();
+    $('#cancelResource').on('click', function(e) {
+        ResourcePanel.cancel();
         trigger("archiveImportOver.recordsManagement");
     });
 </script>
