@@ -241,7 +241,7 @@ class cluster
      * @param object $cluster
      * @param string $path
      * @param mixed  $metadata
-     * 
+     *
      * @return String[] Array of ressource container on the cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
@@ -293,6 +293,14 @@ class cluster
      */
     public function rollbackStorage($resource)
     {
+        // if (!empty($resource->address) && !is_null($resource->address)) {
+        //     if (count($resource->address) > 0) {
+        //         foreach ($resource->address as $address) {
+        //             $this->repositoryController->rollbackStorage($address);
+        //         }
+        //     }
+        // }
+
         if (count($resource->address)) {
             foreach ($resource->address as $address) {
                 $this->repositoryController->rollbackStorage($address);

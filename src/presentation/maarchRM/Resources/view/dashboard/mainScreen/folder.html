@@ -44,6 +44,7 @@
                 <i class="fileplanLevel">&nbsp;</i>
                 <span class="archiveName"></span>
                 <span class="status hidden"></span>
+                    <i class = "fa fa-plus-circle pull-right addResource" title="Add resource"></i>
                 <br/>
                 &nbsp;
                 <small/>
@@ -85,8 +86,30 @@
     <span id="next_text">Next</span>
     <span id="last_text">Last</span>
     <span id="withoutProfile_text">Without profile</span>
-    
+
 </div>
+
+<div class="modal fade" id="newArchiveModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close closeModal" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h2> Import </h2>
+                </div>
+                <div class="modal-body">
+                    <?hinclude dashboard/mainScreen/importResource.html ?>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <style type="text/css">
     #welcomMessage i{
         font-size: 40px;
@@ -151,11 +174,11 @@
                                     .attr('data-toggle', 'dropdown')
                                     .text('...');
                 var ul = $('<ul/>').addClass('dropdown-menu');
-                
+
                 var dropdown = $('<li/>').addClass('dropdown').append(dots).append(ul);
 
                 this.breadcrumb.prepend(dropdown);
-                
+
                 i=path.length-1;
 
                 while(this.breadcrumb.height() > height && i>=0) {
@@ -251,7 +274,7 @@
 
 
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
-            
+
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
@@ -389,7 +412,7 @@
             cancel: ".fa"
             })
         },
-        
+
         refresh: function() {
             trigger('loadFolder.filePlan', [this.orgRegNumber]);
         },
@@ -407,9 +430,9 @@
                 $("#folderToolbarImport").addClass('hide');
                 return;
             }
-            
+
             if (acceptArchivesWithoutProfiles) {
-                var a = $("<a/>") 
+                var a = $("<a/>")
                     .addClass("small newArchive")
                     .data("reference", '')
                     .attr('style', "cursor: pointer;")
@@ -425,7 +448,7 @@
                     .data("json", archivalProfiles[i])
                     .attr('style', "cursor: pointer;")
                     .text(archivalProfiles[i].name);
-                
+
                 $("<li/>").append(a).appendTo(dropdown);
             }
         }
@@ -442,7 +465,7 @@
     $("#folderPanel").on('click', '.newArchive', function() {
         NewArchive.loadImportForm($(this));
     });
-    
+
     // Actions on list
     $("#folderContentList").on('click', ".dataList-sorting", function() {
         ArchiveFolderList.initDragNDrop();
@@ -488,6 +511,13 @@
 
     $('#folderBreadcrumb').onEvent("archiveImportOver.recordsManagement", function() {
         FolderBreadcrumb.unlockNavigation();
+    })
+
+
+    $('#middleColumn').on('click', '.addResource', function() {
+        var parentArchiveId = $(this).closest('.archive').attr('id');
+        $('#newArchiveModal').modal();
+        console.log(parentArchiveId);
     })
 
 </script>
