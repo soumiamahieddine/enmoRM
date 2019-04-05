@@ -46,17 +46,17 @@ php-phpmd:
   stage: tests
   script:
     - mkdir var/
-    - phpmd src xml phpmd.xml --reportfile var/phpmd.xml --ignore-violations-on-exit
+    - phpmd src html phpmd.xml --reportfile var/phpmd.html --ignore-violations-on-exit
   artifacts:
     paths:
-      - var/phpmd.xml
+      - var/phpmd.html
   allow_failure: true
 
 php-deprecation-detector:
   image: jakzal/phpqa
   stage: tests
   script:
-    - deprecation-detector check src vendor/
+    - deprecation-detector check --help
   allow_failure: true
 
 php-cs-fixer:
