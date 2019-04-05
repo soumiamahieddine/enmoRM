@@ -46,7 +46,7 @@ php-phpmd:
   stage: tests
   script:
     - mkdir var/
-    - phpmd src xml phpmd.xml --reportfile var/phpmd.xml
+    - phpmd src xml phpmd.xml --reportfile var/phpmd.xml --ignore-violations-on-exit
   artifacts:
     paths:
       - var/phpmd.xml
