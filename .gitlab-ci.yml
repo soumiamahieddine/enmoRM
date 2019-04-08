@@ -196,6 +196,8 @@ syntax-test:php-metrics:
   script: phpmetrics --report-html=var/php-metrics src
   except:
     - schedules
+  only:
+    - develop
   artifacts:
     paths:
       - var/php-metrics/
@@ -206,9 +208,11 @@ syntax-test:php-phpmd:
   stage: tests
   script:
     - mkdir var/
-    - phpmd src html phpmd.xml --reportfile var/phpmd.html --ignore-violations-on-exit
+    - phpmd src html phpmd.xml --reportfile var/phpmd.html --exclude --ignore-violations-on-exit
   except:
     - schedules
+  only:
+    - develop
   artifacts:
     paths:
       - var/phpmd.html
@@ -222,6 +226,8 @@ syntax-test:php-deprecation-detector:
     - deprecation-detector check src vendor/
   except:
     - schedules
+  only:
+    - develop
   allow_failure: true
 
 
