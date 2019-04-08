@@ -42,7 +42,7 @@ trait archiveRestitutionTrait
         $archiveChildrenIds = [];
 
         foreach ($archiveIds as $archiveId) {
-            $children = $this->listChildrenArchiveId($archiveId);
+            $children = $childrenWithParent = $this->listChildrenArchiveId($archiveId);
             // Unset first element (it's the parent ID)
             unset($children[0]);
 
@@ -54,7 +54,7 @@ trait archiveRestitutionTrait
                     unset($archiveIds[array_search($archiveId, $archiveIds)]);
                     break;
                 } else {
-                    $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+                    $archiveChildrenIds = array_merge($archiveChildrenIds, $childrenWithParent);
                 }
             }
         }

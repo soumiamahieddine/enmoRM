@@ -369,6 +369,9 @@ trait archiveAccessTrait
             $this->checkRights($archive);
         }
 
+        var_dump($this->listChildrenArchiveId($archiveId));
+        exit();
+
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
@@ -448,18 +451,16 @@ trait archiveAccessTrait
 
     public function listChildrenArchiveId($archiveId)
     {
-        $archiveIds = [];
         $archiveIds[] = $archiveId;
-
+        
         $archives = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archiveId."'"
         );
 
         foreach ($archives as $archive) {
-            $archiveIds[] = $archive->archiveId;
-
-            array_merge($archiveIds, $this->listChildrenArchiveId($archive->archiveId));
+            $archiveId = (string)$archive->archiveId;
+            $archiveIds = array_merge($archiveIds, $this->listChildrenArchiveId($archiveId));
         }
 
         return $archiveIds;
