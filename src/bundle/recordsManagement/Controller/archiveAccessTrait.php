@@ -369,9 +369,6 @@ trait archiveAccessTrait
             $this->checkRights($archive);
         }
 
-        var_dump($this->listChildrenArchiveId($archiveId));
-        exit();
-
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
         $archive->descriptionObject = $descriptionController->read($archive->archiveId);
@@ -452,7 +449,7 @@ trait archiveAccessTrait
     public function listChildrenArchiveId($archiveId)
     {
         $archiveIds[] = $archiveId;
-        
+
         $archives = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archiveId."'"
