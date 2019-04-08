@@ -8,7 +8,7 @@
 The Naming Ruleset contains a collection of rules about names - too long, too short, and so forth.
     </description>
 
-    <rule name="ShortVariable"
+    <!--rule name="ShortVariable"
           since="0.2"
           message="Avoid variables with short names like {0}. Configured minimum length is {1}."
           class="PHPMD\Rule\Naming\ShortVariable"
@@ -34,9 +34,9 @@ class Something {
 }
             ]]>
         </example>
-    </rule>
+    </rule-->
 
-    <rule name="LongVariable"
+    <!--rule name="LongVariable"
           since="0.2"
           message="Avoid excessively long variable names like {0}. Keep variable name length under {1}."
           class="PHPMD\Rule\Naming\LongVariable"
@@ -62,7 +62,7 @@ class Something {
 }
 ]]>
         </example>
-    </rule>
+    </rule-->
 
     <rule name="ShortMethodName"
           since="0.2"
