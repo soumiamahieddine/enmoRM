@@ -865,7 +865,6 @@ trait archiveAccessTrait
             $this->userPositionController->readDescandantService((string) $currentService->orgId)
         );
 
-        $owner = false;
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
             $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
             if (isset($userService->orgRoleCodes) && $userService->orgRoleCodes->contains('owner')) {
@@ -966,8 +965,6 @@ trait archiveAccessTrait
 
         foreach ($archiveIds as $archiveId) {
             $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
-            $currentStatus = $archiveProcessingStatus->processingStatus;
-
             $archiveProcessingStatus->processingStatus = $targetStatus;
             $this->sdoFactory->update($archiveProcessingStatus);
             array_push($res['success'], $archiveId);
@@ -1056,7 +1053,6 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        $accessRules = array();
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {

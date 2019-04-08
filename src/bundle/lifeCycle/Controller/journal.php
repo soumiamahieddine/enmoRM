@@ -176,8 +176,6 @@ class journal
         $logController = \laabs::newController('recordsManagement/log');
 
         $tmpDir = \laabs::getTmpDir();
-        $journalFile = null;
-
         $journal = $logController->getByDate('lifeCycle', (string) $date);
 
         if (!$journal) {
@@ -718,11 +716,11 @@ class journal
 
             $logController = \laabs::newController('recordsManagement/log');
 
-            $nexJournal = $logController->getNextJournal($this->currentJournalId);
+            $nextJournal = $logController->getNextJournal($this->currentJournalId);
 
             if (isset($nextJournal)) {
-                $this->openJournal($nexJournal->archiveId);
-                $journalId = $nexJournal->archiveId;
+                $this->openJournal($nextJournal->archiveId);
+                $journalId = $nextJournal->archiveId;
             }
         }
 
@@ -1067,7 +1065,7 @@ class journal
                 if (isset($eventArray[$i])) {
                     $event->{$item} = $eventArray[$i];
                 } else {
-                    $event->{$value} = null;
+                    $event->{$item} = null;
                 }
                 $i++;
             }

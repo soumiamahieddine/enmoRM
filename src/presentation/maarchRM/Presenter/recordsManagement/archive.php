@@ -269,8 +269,6 @@ class archive
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive);
-
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -303,9 +301,6 @@ class archive
     {
         // Try to find a bundle controller, else fallback to default
         try {
-            $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionClass);
-
             return \laabs::newPresenter($descriptionClass);
         } catch (\exception $exception) {
             return null;
@@ -320,7 +315,6 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive, true);
         $this->view->addContentFile("recordsManagement/archive/description.html");
 
         // Relationships
@@ -881,7 +875,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = $url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
 
         return $this->json->save();
     }

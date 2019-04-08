@@ -330,14 +330,6 @@ class archive
         // Default description class
         if (empty($descriptionClass)) {
             $descriptionClass = 'recordsManagement/description';
-        } else {
-            // Try to find a bundle controller, else fallback to default
-            try {
-                $bundle = \laabs::bundle(strtok($descriptionClass, LAABS_URI_SEPARATOR));
-                $controller = $bundle->getController(strtok(''));
-            } catch (\exception $exception) {
-                $descriptionClass = 'recordsManagement/description';
-            }
         }
 
         if (!isset($this->descriptionControllers[$descriptionClass])) {

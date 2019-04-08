@@ -73,11 +73,6 @@ trait archiveDestructionTrait
 
         $result = $this->setStatus($archiveId, 'disposed');
 
-        $eventItems = array(
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-        );
-
         $this->logElimination($archive);
 
         return $result;

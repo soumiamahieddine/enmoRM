@@ -126,7 +126,13 @@ class cluster
             $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
         } catch (\Exception $e) {
             $this->sdoFactory->rollback();
-            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not created.", 404, null, [$clusterId]);
+            throw \laabs::newException(
+                "digitalResource/clusterException",
+                "Cluster %s not created.",
+                404,
+                null,
+                [$cluster->clusterId]
+            );
         }
         $this->sdoFactory->commit();
 
@@ -250,7 +256,7 @@ class cluster
             throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
         }
 
-        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
+        foreach ($cluster->clusterRepository as $clusterRepository) {
             if ($clusterRepository->repository == null || !is_readable($clusterRepository->repository->repositoryUri)) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }

@@ -180,7 +180,7 @@ trait archiveComplianceTrait
 
         $archives = $this->sdoFactory->find("recordsManagement/archive", "archiveId=['".implode("', '", $archiveIds)."']");
 
-        foreach ($archives as $key => $archive) {
+        foreach ($archives as $archive) {
             if ($this->checkArchiveIntegrity($archive)) {
                 $res['success'][] = (string) $archive->archiveId;
             } else {

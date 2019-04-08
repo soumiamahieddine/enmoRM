@@ -389,10 +389,6 @@ class log implements archiveDescriptionInterface
 
     private function resolveLogFilePlan($path, $values)
     {
-        if (!$path) {
-            $pattern = $this->storePath;
-        }
-
         $values = is_array($values) ? $values : get_object_vars($values);
 
         if (preg_match_all("/\<[^\>]+\>/", $path, $variables)) {

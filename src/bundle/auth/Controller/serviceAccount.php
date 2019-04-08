@@ -268,10 +268,10 @@ class serviceAccount
 
         if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccountId, "accountType" => "service"))) {
             \laabs::newController('audit/entry')->add(
-                $entryType = "auth/serviceTokenGenerationFailure",
-                $objectClass = "auth/account",
-                $objectId = "",
-                $message = "Connection failure, unknow service ".$serviceAccountId
+                "auth/serviceTokenGenerationFailure",
+                "auth/account",
+                "",
+                "Connection failure, unknow service ".$serviceAccountId
             );
             throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid service name.');
         }

@@ -68,7 +68,7 @@ class userManagement
     /**
      * View edit user profil
      * @param user/userInformation $user User object to display
-     * 
+     *
      * @return string The html view string
      */
     public function editUserInformation($user)
@@ -81,11 +81,6 @@ class userManagement
          //loading of the picture
         if ($user->picture != null) {
             $content = stream_get_contents($user->picture);
-
-            ob_start();
-            //imagepng($user->picture);
-            $contents = ob_get_contents();
-            ob_end_clean();
 
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_buffer($finfo,$content, FILEINFO_MIME_TYPE);

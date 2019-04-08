@@ -135,11 +135,9 @@ EOD
     public function search($events)
     {
         $this->view->addContentFile("audit/result.html");
-        $translator = $this->view->translator;
 
         $conf = \laabs::configuration('audit');
-        if ($conf && array_key_exists('separateInstance', $conf))
-        {        
+        if ($conf && array_key_exists('separateInstance', $conf)) {
             $multipleInstance = !(bool) $conf['separateInstance'];
         } else {
             $multipleInstance = false;
@@ -168,7 +166,7 @@ EOD
     /**
      * Get event
      * @param audit/event $event Object event
-     * 
+     *
      * @return audit/event $event Object event
      */
     public function getevent($event)
@@ -177,7 +175,7 @@ EOD
 
         $this->view->translate();
 
-        if(isset($event->info )) {
+        if (isset($event->info)) {
             foreach (json_decode($event->info) as $name => $value) {
                 $nameTraduction = $this->view->translator->getText($name, false, "audit/messages");
                 $event->info2[] = array('name'=> $nameTraduction, 'value'=> $value);
@@ -200,7 +198,6 @@ EOD
                 }
 
                 $event->output = $output;
-            
             } elseif (is_string($event->output)) {
                 $event->output = [$this->view->translator->getText($event->output, false, "audit/messages")];
             }
