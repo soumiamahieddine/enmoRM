@@ -20,14 +20,28 @@
 namespace bundle\recordsManagement;
 /**
  *
- * @author  Alexandre Morin <alexandre.morin@maarch.org> 
+ * @author Cyril Vazquez <cyril.vazqure@maarch.org> 
  */
-interface descriptionClassInterface 
+interface descriptionClassInterface
 {
     /**
-     * Get the description class
+     * Get the description classes
      *
      * @action recordsManagement/descriptionClass/index
      */
     public function readIndex();
+
+    /**
+     * Get the description class
+     *
+     * @action recordsManagement/descriptionClass/read
+     */
+    public function read_name_();
+
+    /**
+     * Get the description class properties
+     *
+     * @action recordsManagement/descriptionClass/getDescriptionFields
+     */
+    public function read_name_Descriptionfields();
 }

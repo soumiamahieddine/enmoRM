@@ -27,26 +27,140 @@ namespace bundle\recordsManagement\Controller;
  */
 class descriptionClass
 {
-    protected $sdoFactory;
+    protected $descriptionSchemes;
 
     /**
      * Constructor
-     * @param \dependency\sdo\Factory $sdoFactory
+     * @param array $descriptionSchemes
      *
      * @return void
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct($descriptionSchemes)
     {
-        $this->sdoFactory = $sdoFactory;
+        $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
     }
 
     /**
-     * Get the description class
+     * Get the description classes
      *
      * @return array The list of organization's roles
      */
     public function index()
     {
-        return $this->sdoFactory->find('recordsManagement/descriptionClass');
+        return $this->descriptionSchemes;
+    }
+
+    /**
+     * Get the description class
+     * @param string $name
+     *
+     * @return object
+     */
+    public function read($name)
+    {
+        if (isset($this->descriptionSchemes[$name])) {
+            return $this->descriptionSchemes[$name];
+        }
+    }
+
+    /**
+     * Get the description class properties
+     * @param string $name
+     *
+     * @return array
+     */
+    public function getDescriptionFields($name)
+    {
+        if (!isset($this->descriptionSchemes[$name])) {
+            return [];
+        }
+
+        $fields = [];
+
+        $descriptionSchemeConfig = $this->descriptionSchemes[$name];
+        switch ($descriptionSchemeConfig->type) {
+            case 'php':
+                $descriptionScheme = \laabs::getClass($descriptionSchemeConfig->uri);
+                $keyfields = [];
+                if ($key = $descriptionScheme->getPrimaryKey()) {
+                    $keyfields = $key->getFields();
+                }
+                foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
+                    if (in_array($descriptionSchemeProperty->name, $keyfields)) {
+                        continue;
+                    }
+
+                    $fields[$descriptionSchemeProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionSchemeProperty);
+                }
+                break;
+        }
+
+        //var_dump($fields);
+        return $fields;
+    }
+
+    protected function getDescriptionFieldFromPhpClass($schemeProperty)
+    {
+        $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+        $descriptionField->name = $schemeProperty->name;
+
+        if (!empty($schemeProperty->summary)) {
+            $descriptionField->label = $schemeProperty->summary;
+        } else {
+            $descriptionField->label = $schemeProperty->name;
+        }
+
+        $type = $schemeProperty->getType();
+        $descriptionField->default = $schemeProperty->getDefault();
+
+        if (isset($schemeProperty->enumeration)) {
+            $descriptionField->enumeration = $schemeProperty->enumeration;
+        }
+
+        switch (true) {
+            case substr($type, -2) == []:
+                $descriptionField->type = 'array';
+                $descriptionField->itemType = susbtr($type, 0, -2);
+                break;
+
+            case $type == 'string':
+                if (isset($schemeProperty->tags['scheme'])
+                    || isset($schemeProperty->tags['uses'])
+                    || isset($schemeProperty->enumeration)
+                    || isset($schemeProperty->index)) {
+                    $descriptionField->type = 'name';
+                } else {
+                    $descriptionField->type = 'text';
+                }
+                break;
+
+            case $type == 'int':
+            case $type == 'integer':
+            case $type == 'float':
+            case $type == 'real':
+            case $type == 'double':
+                $descriptionField->type = 'number';
+                break;
+
+            case $type == 'bool':
+            case $type == 'boolean':
+                $descriptionField->type = 'boolean';
+                break;
+
+            case $type == 'timestamp':
+            case $type == 'datetime':
+            case $type == 'date':
+                $descriptionField->type = 'date';
+                break;
+
+            case strpos('/', $type) !== false:
+                $descriptionField->type = 'object';
+                break;
+
+            default:
+                $descriptionField->type = $type;
+        }
+
+        return $descriptionField;
     }
 }

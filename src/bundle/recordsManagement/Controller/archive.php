@@ -74,6 +74,12 @@ class archive
     protected $archivalProfileController;
 
     /**
+     * Controller for description schemes
+     * @var recordsManagement/Controller/descriptionClass
+     */
+    protected $descriptionClassController;
+
+    /**
      * Controller for service levels
      * @var recordsManagement/Controller/serviceLevel
      */
@@ -200,6 +206,8 @@ class archive
         $this->archiveRelationshipController = \laabs::newController("recordsManagement/archiveRelationship");
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+
+        $this->descriptionClassController = \laabs::newController("recordsManagement/descriptionClass");
 
         $this->serviceLevelController = \laabs::newController("recordsManagement/serviceLevel");
 

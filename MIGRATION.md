@@ -93,3 +93,34 @@ Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileTy
   * `1` indique des profils de versement de type MEDONA et inhibe la gestion des accès aux profils dans l'organigramme
   * `2` indique des profils d'archive avec description des métadonnées et règles de gestion et active la gestion des accès aux profils dans l'organigramme
   * `3` indique des profils mixtes (MEDONA et description interne) et active la gestion des accès aux profils dans l'organigramme
+
+
+## Branchement des schémas de description
+
+Dans la section `[recordsManagement]`, la directive `descriptionSchemes` permet de définir
+les schémas de description en lieu et place des entrées de la table `recordsManagement.descriptionClass` 
+qui doit être supprimée.
+
+A chaque identifiant de schéma de description (éventuellement précédemment inscrit dans la table) correspond un élément 
+de configuration qui fournit :
+
+  * le libellé affiché
+  * le format de description : classe php, schema json, schéma XML
+  * le nom du schéma
+  * les URIs des différents services utilisés par l'application pour la gestion des données, 
+    la recherche, la transformation, la présentation, etc.
+
+```
+descriptionSchemes = "{
+  'seda2' : {
+    'name' : 'SEDA 2',
+    'type' : 'php',
+    'uri' : 'seda2/Content',
+    'services' : {
+      'manage' : '',
+      'search' : '',
+      'present' : ''
+    }
+  }
+}"
+```
