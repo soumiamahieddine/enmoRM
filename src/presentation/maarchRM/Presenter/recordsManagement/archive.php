@@ -234,7 +234,7 @@ class archive
         $this->setManagementMetadatas($archive);
 
         // Descriptive metadata
-        $this->getDescriptiveMetadatas($archive);
+        $this->setDescriptiveMetadatas($archive);
 
         // Relationships
         $this->setArchiveRelationships($archive);
@@ -278,7 +278,7 @@ class archive
         $this->setManagementMetadatas($archive);
 
         // Descriptive metadata
-        $this->getDescriptiveMetadatas($archive);
+        $this->setDescriptiveMetadatas($archive);
 
         $this->getChildrenArchivesProfiles($archive);
 
@@ -291,25 +291,6 @@ class archive
         $this->view->merge();
 
         return $this->view->saveHtml();
-    }
-
-    /**
-     * Returns the presenter for archive description object, or null
-     * @param string $descriptionClass The name of the description class used by archive
-     *
-     * @return object|null
-     */
-    protected function getPresenter($descriptionClass)
-    {
-        // Try to find a bundle controller, else fallback to default
-        try {
-            $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionClass);
-
-            return \laabs::newPresenter($descriptionClass);
-        } catch (\exception $exception) {
-            return null;
-        }
     }
 
     /**
@@ -330,7 +311,7 @@ class archive
         $this->setManagementMetadatas($archive);
 
         // Descriptive metadata
-        $this->getDescriptiveMetadatas($archive);
+        $this->setDescriptiveMetadatas($archive);
 
         // Relationships
         $this->setArchiveRelationships($archive);
@@ -1015,56 +996,131 @@ class archive
         }
     }
 
-    protected function setDescription($descriptions, $archivalProfile = null)
-    {
-        $descriptions = get_object_vars($descriptions);
+    /**
+     * Get archive description
+     * @param archive $archive
+     *
+     * @return string
+     */
+    protected function setDescriptiveMetadatas($archive)
+    { 
+        if (!empty($archive->descriptionObject)) {
+            $descriptionHtml = $this->getDescriptionHtml($archive);
 
-        $table = $this->view->createElement('table');
-        $table->setAttribute('class', "table table-condensed table-striped");
-
-        if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
-            usort($archivalProfile->archiveDescription, function ($a, $b) {
-                return $a->position > $b->position;
-            });
-
-            $descriptionsSorted = [];
-
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if (isset($descriptions[$archiveDescription->fieldName])) {
-                    $descriptionsSorted[$archiveDescription->fieldName] = $descriptions[$archiveDescription->fieldName];
-                    unset($descriptions[$archiveDescription->fieldName]);
-                }
+            $node = $this->view->getElementById("metadata");
+            if ($node) {
+                $this->view->addContent($descriptionHtml, $node);
             }
-
-            if (!empty($descriptions)) {
-                foreach ($descriptions as $name => $value) {
-                    $descriptionsSorted[$name] = $value;
-                }
-            }
-            $descriptions = $descriptionsSorted;
         }
 
+        $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
+        
+        $this->view->setSource('modificationPrivilege', $modificationPrivilege);
+    }
+
+    protected function getDescriptionHtml($archive)
+    {
+        $presenterClass = $this->getDescriptionPresenterClass($archive->descriptionClass);
+
+        if (!empty($presenterClass)) {
+            $presenter = $this->getPresenter($presenterClass);
+
+            return $presenter->read($archive->descriptionObject);
+        } else {
+            return $this->setDescription($archive);
+        }
+    }
+
+    /**
+     * Returns the presenter for archive description object, or null
+     * @param string $descriptionClass The name of the description class used by archive
+     *
+     * @return object|null
+     */
+    protected function getPresenter($descriptionClass)
+    {
+        try {
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionClass);
+
+            return \laabs::newPresenter($descriptionClass);
+        } catch (\exception $exception) {
+            return null;
+        }
+    }
+
+
+    protected function getDescriptionPresenterClass($descriptionScheme)
+    {
+        // Default description class
+        if (empty($descriptionScheme)) {
+            return;
+        } 
+
+        $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionClass/read_name_', $descriptionScheme);
+        if (empty($descriptionSchemeConfig)) {
+            return;
+        }
+
+        if (!isset($descriptionSchemeConfig->services->presenter)) {
+            return;
+        }
+
+        try {
+            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->services->controller, LAABS_URI_SEPARATOR));
+            $controller = $bundle->getController(strtok(''));
+
+            return $descriptionSchemeConfig->services->presenter;
+        } catch (\exception $exception) {
+            return;
+        }
+        
+    }
+
+    protected function setDescription($archive)
+    {
+        $descriptionSchemeProperties = $archivalProfileFields = [];
+        
+        $archivalProfile = $this->loadArchivalprofile($archive->archivalProfileReference);
+        if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
+            $descriptions = $this->sortDescriptionProperties(get_object_vars($archive->descriptionObject), $archivalProfile);
+
+            foreach ($archivalProfile->archiveDescription as $archiveDescriptionField) {
+                $archivalProfileFields[$archiveDescriptionField->fieldName] = $archiveDescriptionField;
+            }
+        }
+
+        if (!empty($archive->descriptionClass)) {
+            $descriptionSchemeProperties = \laabs::callService('recordsManagement/descriptionClass/read_name_Descriptionfields', $archive->descriptionClass);
+        }
+        
+        $table = $this->view->createElement('table');
+        $table->setAttribute('class', "table table-condensed table-striped");
+        
         foreach ($descriptions as $name => $value) {
             if (\gettype($value) == 'object') {
                 continue;
             }
 
-            $label = $customField = null;
+            $label = null;
             $type = 'text';
             $isImmutable = false;
             $isInList = false;
+            $customField = false;
 
-            if ($archivalProfile) {
-                foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                    if ($archiveDescription->fieldName == $name) {
-                        $label = $archiveDescription->descriptionField->label;
-                        $type = $archiveDescription->descriptionField->type;
-                        $isImmutable = $archiveDescription->isImmutable;
-                        $isInList = $archiveDescription->isInList;
-                    } else {
-                        $customField = true;
-                    }
-                }
+            if (isset($archivalProfileFields[$name])) {
+                $descriptionField = $archivalProfileFields[$name]->descriptionField;
+
+                $label = $descriptionField->label;
+                $type = $descriptionField->type;
+
+                $isImmutable = $archivalProfileFields[$name]->isImmutable;
+                $isInList = $archivalProfileFields[$name]->isInList;
+            } elseif (isset($descriptionSchemeProperties[$name])) {
+                $label = $descriptionSchemeProperties[$name]->label;
+                $type = $descriptionSchemeProperties[$name]->type;
+            } else {
+                $customField = true;
             }
 
             if (empty($label)) {
@@ -1148,33 +1204,28 @@ class archive
         return $htmlString;
     }
 
-    /**
-     * Get archive description
-     * @param archive $archive
-     *
-     * @return string
-     */
-    protected function getDescriptiveMetadatas($archive)
+    protected function sortDescriptionProperties($descriptions, $archivalProfile)
     {
-        $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
+        usort($archivalProfile->archiveDescription, function ($a, $b) {
+            return $a->position > $b->position;
+        });
 
-        $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-        if (!empty($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass && $presenter = $this->getPresenter($archive->descriptionClass))) {
-                $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
-            } else {
-                $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
+        $descriptionsSorted = [];
+
+        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            if (isset($descriptions[$archiveDescription->fieldName])) {
+                $descriptionsSorted[$archiveDescription->fieldName] = $descriptions[$archiveDescription->fieldName];
+                unset($descriptions[$archiveDescription->fieldName]);
             }
-        } else {
-            $descriptionHtml = '<table></table>';
         }
 
-        $node = $this->view->getElementById("metadata");
-        if ($node) {
-            $this->view->addContent($descriptionHtml, $node);
+        if (!empty($descriptions)) {
+            foreach ($descriptions as $name => $value) {
+                $descriptionsSorted[$name] = $value;
+            }
         }
-
-        $this->view->setSource('modificationPrivilege', $modificationPrivilege);
+        
+        return $descriptionsSorted;
     }
 
     protected function loadArchivalProfile($reference)
