@@ -35,6 +35,7 @@ class archivalProfile
     protected $descriptionFields;
 
     protected $profilesDirectory;
+    protected $descriptionSchemesController;
 
     /**
      * Constructor
@@ -46,6 +47,7 @@ class archivalProfile
     {
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
+        $this->descriptionSchemesController = \laabs::newController('recordsManagement/descriptionClass');
 
         foreach (\Laabs::newController('recordsManagement/descriptionField')->index() as $descriptionField) {
             if (!empty($descriptionField->enumeration)) {
@@ -177,28 +179,18 @@ class archivalProfile
                 $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
             }
         } else {
-            $reflectionClass = \laabs::getClass($archivalProfile->descriptionClass);
+            $descriptionScheme = $this->descriptionSchemesController->read($archivalProfile->descriptionClass);
+            switch ($descriptionScheme->type) {
+                case 'php':
+                    $scheme = \laabs::getClass($descriptionScheme->uri);
+                    break;
+            }
 
+            $descriptionFields = $this->descriptionSchemesController->getDescriptionFields($archivalProfile->descriptionClass);
+            
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if ($reflectionClass->hasProperty($archiveDescription->fieldName)) {
-                    $reflectionProperty = $reflectionClass->getProperty($archiveDescription->fieldName);
-
-                    $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
-                    $descriptionField->name = $reflectionProperty->name;
-                    if (isset($reflectionProperty->tags['label'])) {
-                        $descriptionField->label = $reflectionProperty->tags['label'][0];
-                    } else {
-                        $descriptionField->label = $reflectionProperty->name;
-                    }
-
-                    $descriptionField->type = $reflectionProperty->getType();
-
-                    $descriptionField->enumeration = $reflectionProperty->getEnumeration();
-                    if ($descriptionField->enumeration) {
-                        $descriptionField->type = 'name';
-                    }
-
-                    $archiveDescription->descriptionField = $descriptionField;
+                if (isset($descriptionFields[$archiveDescription->fieldName])) {
+                    $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
                 }
             }
         }

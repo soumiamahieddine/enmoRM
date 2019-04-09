@@ -107,21 +107,29 @@ class archivalProfile
             }
 
             // Description by class
-            $descriptionClasses = \laabs::callService('recordsManagement/descriptionClass/readIndex');
-            if (is_array($descriptionClasses)) {
-                foreach ($descriptionClasses as $descriptionClass) {
-                    //try {
-                    $class = \laabs::getClass($descriptionClass->name);
-                    $properties = array();
-                    $dateProperties = array();
+            $descriptionSchemes = \laabs::callService('recordsManagement/descriptionClass/readIndex');
+            $descriptionClasses = [];
+            foreach ($descriptionSchemes as $name => $descriptionScheme) {
+                $descriptionClasses[] = $descriptionClass = new \stdClass();
+                $descriptionClass->label = $descriptionScheme->label;
+                $descriptionClass->name = $name;
+                switch ($descriptionScheme->type) {
+                    case 'php':
+                        $class = \laabs::getClass($descriptionScheme->uri);
+                        $dateProperties = [];
+                        $properties = \laabs::callService('recordsManagement/descriptionClass/read_name_Descriptionfields', $name);
+                        foreach ($properties as $descriptionField) {
+                            if ($descriptionField->type == 'date') {
+                                array_push($dateProperties, $descriptionField);
+                            }
+                        }
 
-                    $this->listProperties($class, $properties, $dateProperties);
+                        $properties = json_encode($properties);
+                        $dateProperties = json_encode($dateProperties);
 
-                    $properties = json_encode($properties);
-                    $dateProperties = json_encode($dateProperties);
-
-                    $descriptionClass->dateProperties = $dateProperties;
-                    $descriptionClass->properties = $properties;
+                        $descriptionClass->dateProperties = $dateProperties;
+                        $descriptionClass->properties = $properties;
+                        break;
                 }
             }
 
@@ -316,59 +324,6 @@ class archivalProfile
         $response->setHeader("Content-Disposition", "inline;");
 
         return $barcode;
-    }
-
-    /**
-     * List properties method
-     * @param type $class           The class to get properties from
-     * @param type &$properties     The existing list, to be completed
-     * @param type &$dateProperties The date properties
-     * @param type $containerClass  The container class
-     */
-
-    protected function listProperties($class, &$properties, &$dateProperties, $containerClass = '')
-    {
-        $keyfields = [];
-        if ($key = $class->getPrimaryKey()) {
-            $keyfields = $key->getFields();
-        }
-        foreach ($class->getProperties() as $property) {
-            if (in_array($property->name, $keyfields)) {
-                continue;
-            }
-
-            $descriptionProperty = \laabs::newInstance('recordsManagement/descriptionField');
-            $descriptionProperty->name = $property->name;
-
-            if (isset($property->tags['label'])) {
-                $descriptionProperty->label = $property->tags['label'][0];
-            } else {
-                $descriptionProperty->label = $descriptionProperty->name;
-            }
-
-            $type = $property->getType();
-            $descriptionProperty->type = $type;
-
-            if ($containerClass) {
-                $qualifiedName = $containerClass.LAABS_URI_SEPARATOR.$property->name;
-            } else {
-                $qualifiedName = $property->name;
-            }
-            
-            if (in_array(strtolower($type), ['date', 'datetime', 'timestamp'])) {
-                array_push($dateProperties, $descriptionProperty);
-            }
-
-            array_push($properties, $descriptionProperty);
-            /*if (!$property->isScalar()) {
-                if ($property->isArray()) {
-                    $type = substr($type, 0, -2);
-                }
-                $childClass = \laabs::getClass($type);
-                var_dump($type);
-                $this->listProperties($childClass, $properties, $dateProperties, $qualifiedName);
-            }*/
-        }
     }
 
     /**
