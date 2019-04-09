@@ -362,11 +362,7 @@ trait archiveModificationTrait
             if (!empty($archive->archivalProfileReference)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
-                if (!empty($this->currentArchivalProfile->descriptionClass)) {
-                    $this->validateDescriptionClass($descriptionObject, $this->currentArchivalProfile);
-                } else {
-                    $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
-                }
+                $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);

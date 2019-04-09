@@ -584,60 +584,13 @@ trait archiveEntryTrait
             return;
         }
 
-        if (!empty($this->currentArchivalProfile->descriptionClass)) {
-            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
-            $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
-        } else {
-            $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
-        }
-    }
-
-    /**
-     * Check if an object matches an archival profile definition
-     *
-     * @param mixed                             $object          The metadata object to check
-     * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
-     *
-     * @return boolean The result of the validation
-     */
-    protected function validateDescriptionClass($object, $archivalProfile)
-    {
-        if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
-        foreach ($archivalProfile->archiveDescription as $description) {
-            $fieldName = explode(LAABS_URI_SEPARATOR, $description->fieldName);
-            $propertiesList = array($object);
-
-            foreach ($fieldName as $name) {
-                $newPropertiesList = array();
-                foreach ($propertiesList as $propertyValue) {
-                    if (isset($propertyValue->{$name})) {
-                        if (is_array($propertyValue->{$name})) {
-                            foreach ($propertyValue->{$name} as $value) {
-                                $newPropertiesList[] = $value;
-                            }
-                        } else {
-                            $newPropertiesList[] = $propertyValue->{$name};
-                        }
-                    } else {
-                        $newPropertiesList[] = null;
-                    }
-                }
-                $propertiesList = $newPropertiesList;
-            }
-
-            foreach ($propertiesList as $propertyValue) {
-                if ($description->required && $propertyValue == null) {
-                    throw new \core\Exception\BadRequestException('The description class does not match with the archival profile.');
-                }
-            }
-        }
+        $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
     }
 
     protected function validateDescriptionModel($object, $archivalProfile)
     {
+        $descriptionScheme = $this->descriptionClassController->read($archivalProfile->descriptionClass);
+
         $names = [];
 
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
@@ -647,7 +600,7 @@ trait archiveEntryTrait
             if (isset($object->{$name})) {
                 $value = $object->{$name};
             }
-            $this->validateDescriptionMetadata($value, $archiveDescription);
+            $this->validateDescriptionField($value, $archiveDescription);
         }
 
         foreach ($object as $name => $value) {
@@ -657,7 +610,7 @@ trait archiveEntryTrait
         }
     }
 
-    protected function validateDescriptionMetadata($value, $archiveDescription)
+    protected function validateDescriptionField($value, $archiveDescription)
     {
         if (is_null($value)) {
             if ($archiveDescription->required) {
@@ -956,8 +909,6 @@ trait archiveEntryTrait
         } else {
             $nbArchiveObjects = null;
         }
-
-
 
         try {
             $archive->status = 'preserved';

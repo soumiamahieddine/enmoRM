@@ -329,34 +329,50 @@ class archive
 
     /**
      * Select a description controller
-     * @param string $descriptionClass
+     * @param string $descriptionScheme
      *
      * @return object descriptionClass controller
      */
-    public function useDescriptionController($descriptionClass)
+    public function useDescriptionController($descriptionScheme)
     {
-        // Default description class
-        if (empty($descriptionClass)) {
-            $descriptionClass = 'recordsManagement/description';
-        } else {
-            // Try to find a bundle controller, else fallback to default
-            try {
-                $bundle = \laabs::bundle(strtok($descriptionClass, LAABS_URI_SEPARATOR));
-                $controller = $bundle->getController(strtok(''));
-            } catch (\exception $exception) {
-                $descriptionClass = 'recordsManagement/description';
-            }
-        }
+        $controllerClass = $this->getDescriptionControllerClass($descriptionScheme);
 
-        if (!isset($this->descriptionControllers[$descriptionClass])) {
-            $this->currentDescriptionController = \laabs::newController($descriptionClass);
+        if (!isset($this->descriptionControllers[$descriptionScheme])) {
+            $this->currentDescriptionController = \laabs::newController($controllerClass);
 
-            $this->descriptionControllers[$descriptionClass] = $this->currentDescriptionController;
+            $this->descriptionControllers[$descriptionScheme] = $this->currentDescriptionController;
         } else {
-            $this->currentDescriptionController = $this->descriptionControllers[$descriptionClass];
+            $this->currentDescriptionController = $this->descriptionControllers[$descriptionScheme];
         }
 
         return $this->currentDescriptionController;
+    }
+
+    protected function getDescriptionControllerClass($descriptionScheme)
+    {
+        // Default description class
+        if (empty($descriptionScheme)) {
+            return 'recordsManagement/description';
+        } 
+
+        $descriptionSchemeConfig = $this->descriptionClassController->read($descriptionScheme);
+        if (empty($descriptionSchemeConfig)) {
+            return 'recordsManagement/description';
+        }
+
+        if (!isset($descriptionSchemeConfig->services->controller)) {
+            return 'recordsManagement/description';
+        }
+
+        try {
+            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->services->controller, LAABS_URI_SEPARATOR));
+            $controller = $bundle->getController(strtok(''));
+
+            return $descriptionSchemeConfig->services->controller;
+        } catch (\exception $exception) {
+            return 'recordsManagement/description';
+        }
+        
     }
 
     /**
