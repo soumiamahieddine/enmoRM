@@ -176,6 +176,8 @@ INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALU
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Restitution de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', 'Modification de la règle de conservation de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Dégel de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Destruction de la ressource %9$s', FALSE);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', 'Dépôt d''une nouvelle pièce dans l''archive %6$s', FALSE);
 
 INSERT INTO organization."orgType" (code, name) VALUES ('Collectivite', 'Collectivité');
 INSERT INTO organization."orgType" (code, name) VALUES ('Societe', 'Société');
