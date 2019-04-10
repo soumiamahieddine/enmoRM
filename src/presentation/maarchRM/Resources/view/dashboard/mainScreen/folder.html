@@ -85,11 +85,8 @@
     <span id="next_text">Next</span>
     <span id="last_text">Last</span>
     <span id="withoutProfile_text">Without profile</span>
-    <span id="archiveProfiles">Ajouter une sous archive</span>
-    <span id="archiveResource">Ajouter une ressource</span>
+
 </div>
-
-
 <style type="text/css">
     #welcomMessage i{
         font-size: 40px;
@@ -493,16 +490,5 @@
         FolderBreadcrumb.unlockNavigation();
     })
 
-
-    $('#middleColumn').on('click', '.newResource', function() {
-        if ($(this).closest("div").siblings(".archive").attr('id')){
-            var parentArchiveId = $(this).closest("div").siblings(".archive").attr('id');
-        } else {
-            var parentArchiveId = $(this).closest('.archive').attr('id');
-        }
-        $("#resourceArchiveId").text(parentArchiveId);
-        $('#newResourceModal').modal();
-        $("#importResourcePanel").removeClass("hide");
-    })
 
 </script>
