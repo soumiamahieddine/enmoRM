@@ -7,7 +7,7 @@
 #-->
 <div id="resourceForm" class="row">
     <form>
-        <input type="file" id="resource_filesBrowser" class="hide" multiple=""/>
+        <input type="file" id="resource_filesBrowser" class="hide"/>
         <div id="resource_XMLDropZone">
             <i class="fa fa-file-text fileIcon">&nbsp;</i>
             <h5>Click or drop documents</h5>
@@ -72,8 +72,6 @@
                 } else if (ResourceForm.zipContainer) {
                     ResourceForm.disabledZipContainter();
                 }
-                
-
                 resourceList.addDocument(fileObject);
             };
         },
@@ -116,6 +114,7 @@
 
                 this.table.show();
             }
+            $("#resource_XMLDropZone").addClass("hide");
         },
 
         removeDocument: function(button) {
@@ -125,6 +124,7 @@
             if (this.list.find("tr").length == 0) {
                 this.table.hide();
             }
+            $("#resource_XMLDropZone").removeClass("hide");
         },
 
         clear: function() {
@@ -222,9 +222,7 @@
         e.stopPropagation();
         $('#resource_XMLDropZone').css('opacity', '0.5');
 
-        for (var i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
-            ResourceForm.upload(e.originalEvent.dataTransfer.files[i]);
-        }
+        ResourceForm.upload(e.originalEvent.dataTransfer.files[0]);
     });
 
     // Files browser
@@ -233,9 +231,7 @@
     });
 
     $('#resource_filesBrowser').on('change', function() {
-        for (var i = 0; i < $(this).context.files.length; i++) {
-            ResourceForm.upload($(this).context.files[i]);
-        }
+        ResourceForm.upload($(this).context.files[0]);
         ResourceForm.reset();
     });
 

@@ -103,20 +103,6 @@
     .childrenArchiveSelector > .btn > .fa-plus {
         padding : 0px 0px ;
     }
-
-    .addingNew > .dropdown-menu {
-        min-width: 180px;
-    }
-
-    .addingNew > .dropdown-menu > li > span {
-        white-space: nowrap;
-        padding : 0px 10px ;
-    }
-
-    .newResource {
-        cursor: pointer;
-    }
-
 </style>
 
 <script type="text/javascript">
@@ -295,24 +281,6 @@
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
             list.empty();
-
-            // Add children archive : 
-            list.append(
-                $('<li/>').html(
-                    $('<span/>').addClass('newResource')
-                                .data('parent-archive-id', archiveId)
-                                .data('parent-archive-name', archiveName)
-                                .text($('#archiveResource').text())
-                )
-            );
-
-            list.append(
-                $('<li/>').html(
-                    $('<span/>').addClass('titleNewArchive')
-                                .text($('#archiveProfiles').text())
-                )
-            );
-
             if (withoutProfile == 1) {
                 list.append(
                     $('<li/>').html(
@@ -337,7 +305,6 @@
                     )
                 );
             })
-            
             var position = this.selected.position();
         }
     }

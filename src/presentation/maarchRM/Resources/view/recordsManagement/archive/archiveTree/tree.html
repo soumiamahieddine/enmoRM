@@ -1,6 +1,9 @@
 <div class="tree-l" id="archiveTree">
     <input type="hidden" id="canAddResource" value="[?merge canAddResource ?]"/>
     <input type="hidden" id="canDeleteResource" value="[?merge canDeleteResource ?]"/>
+    <div class="row">
+        <?hinclude recordsManagement/archive/archiveTree/subArchiveButton.html ?>
+    </div>
     <ul>
         <li class="archive" data-archive-id="[?merge archive.archiveId ?]">
             <span class="node-default">

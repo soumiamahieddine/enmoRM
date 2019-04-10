@@ -1,0 +1,20 @@
+<?merge canAddResource ?>
+<div class="dropdown pull-right addResourceArchive" data-toggle="modal" data-translate-catalog="recordsManagement/messages">
+    <button class="btn btn-default newArchive" aria-haspopup="true" aria-expanded="false"
+                data-parent-archive-name="[?merge archive.archiveName ?]"
+                data-parent-archive-id="[?merge archive.archiveId ?]"
+                data-parent-orgregnumber="[?merge archive.orgRegNumber ?]"
+                data-parent-fileplanposition="[?merge archive.filePlanPosition ?]"
+                data-json="[?merge .json ?]">
+        <span><i class="fa fa-plus"/> <span>Ajouter une pièce</span></span>
+    </button>
+</div>
+
+<script type="text/javascript">
+    $(".addResourceArchive").on('click', '.newArchive', function() {
+        parentArchiveId = $(this).data("parent-archive-id");
+        $("#resourceArchiveId").text(parentArchiveId);
+        $('#newResourceModal').modal();
+        $("#importResourcePanel").removeClass("hide");
+    })
+</script>

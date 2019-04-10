@@ -9,7 +9,7 @@
         </div>
     </div>
         <span id="resourceArchiveId" class="hidden"></span>
-        <div class="pull-right">
+        <div class="pull-left">
             <a href="#" class="btn btn-sm btn-success" id="addResource"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
             <i>&nbsp;</i>
@@ -75,7 +75,6 @@
 
         save: function(e, button) {
             $('#newResourceModal').modal("hide");
-            // ArchiveForm.send(e, button);
         },
 
         cancel: function() {
@@ -90,17 +89,17 @@
 
         var data = {
             contents : digitalResource[0].handler,
-            filename : $('#resourceList').find('td[name=fileName]').text()
+            filename : digitalResource[0].fileName
         };
         $.ajax({
-            url         : archiveId+'/digitalResource',
+            url         : '/'+archiveId+'/digitalResource',
             type        : 'POST',
             contentType : "application/json",
             data        : JSON.stringify(data),
             dataType    :'json',
             success     : function (response) {
                 ResourcePanel.cancel();
-                trigger("archiveImportOver.recordsManagement", [archiveId]);
+                archiveInfoModal.reload(archiveId);
             },
             error       : function(response) {
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
