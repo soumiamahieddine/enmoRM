@@ -748,4 +748,4 @@ msgid "Unlimited"
 msgstr "Illimitée"
 
 msgid "Unit Identifier"
-msgstr "Archives liées"
+msgstr "Archive(s) liée(s)"
