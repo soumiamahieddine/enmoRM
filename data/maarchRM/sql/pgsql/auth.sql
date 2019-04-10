@@ -64,7 +64,7 @@ INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'workflow/*');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveDeposit/*');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveManagement/filePlan');
-INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveManagement/modify');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveManagement/modifyDescription');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminAuthorization');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminOrgUser');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminOrganization');
@@ -86,7 +86,7 @@ INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIV
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
 INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
 
-INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'aalambic');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'aalambic');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'bbain');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ccamus');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ddaull');
@@ -117,7 +117,7 @@ INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'bblier');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'bboule');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'cchaplin');
-INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'ccordy');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ccordy');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'ccox');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'ddenis');
 INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'eerina');
