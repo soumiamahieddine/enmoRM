@@ -154,7 +154,7 @@ class authentication
 
             if (!$isUserPosition) {
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
-                \laabs::setToken("ORGANIZATION", $default->organization, 86400);
+                \laabs::setToken("ORGANIZATION", $default->organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
             }
         }
 
@@ -163,6 +163,9 @@ class authentication
 
     protected function redirectToLogin()
     {
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
+
         \laabs::kernel()->response->code = 307;
         \laabs::kernel()->response->setHeader('Location', '/user/prompt');
         \laabs::kernel()->sendResponse();

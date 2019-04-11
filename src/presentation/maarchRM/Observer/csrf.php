@@ -56,7 +56,7 @@ class csrf
      * @param \core\Reflection\Command $userCommand
      * @param array                    $args
      *
-     * @-subject LAABS_USER_COMMAND
+     * @subject LAABS_USER_COMMAND
      */
     public function check(&$userCommand, array &$args = null)
     {
@@ -71,6 +71,8 @@ class csrf
         
         $account = $this->getAccount(true);
         if (!$account) {
+            $this->sdoFactory->rollback();
+
             return;
         }
         $accountTokens = $account->authentication->csrf;
@@ -145,15 +147,19 @@ class csrf
      * 
      * @return auth/userAccount
      */
-    private function getAccount($lock=false)
+    private function getAccount($lock = false)
     {
         $accountToken = \laabs::getToken('AUTH');
 
         if (!$accountToken) {
-            return false;
+            $accountToken = \laabs::getToken('TEMP-AUTH');
+
+            if (!$accountToken) {
+                return false;
+            }
         }
 
-        $account = $this->sdoFactory->read('auth/account', $accountToken, $lock);
+        $account = $this->sdoFactory->read('auth/account', $accountToken->accountId, $lock);
         $account->authentication = json_decode($account->authentication);
 
         if (empty($account->authentication)) {

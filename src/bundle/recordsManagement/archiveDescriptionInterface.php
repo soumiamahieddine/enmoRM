@@ -32,6 +32,6 @@ interface archiveDescriptionInterface
      * 
      * @action recordsManagement/archive/retrieve
      */
-    public function read_archiveId_();
+    public function read_archiveId_($isCommunication = false);
 
 }

@@ -480,6 +480,8 @@
 
                     if (response.status) {
                         Archive.getInfo(ArchiveInformation.archiveId);
+
+                        $("#searchForm_inputSearchBtn").click()
                     }
                 },
                 error       : function (response) {

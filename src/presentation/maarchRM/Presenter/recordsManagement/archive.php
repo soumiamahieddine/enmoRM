@@ -177,12 +177,12 @@ class archive
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(7);
-        $dataTable->setUnsearchableColumns(7);
+        $dataTable->setUnsortableColumns(8);
+        $dataTable->setUnsearchableColumns(8);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
-        $dataTable->setSorting(array(array(1, 'desc')));
+        $dataTable->setSorting(array(array(5, 'desc')));
 
         $this->readPrivilegesOnArchives();
 
@@ -244,6 +244,14 @@ class archive
 
         $this->view->setSource("archive", $archive);
 
+        $messageDataTable = $this->view->getElementById('messageTable')->plugin['dataTable'];
+        $messageDataTable->setPaginationType("full_numbers");
+        $messageDataTable->setSorting(array(array(0, 'desc')));
+
+        $lifeCycleDataTable = $this->view->getElementById('lifeCycleTable')->plugin['dataTable'];
+        $lifeCycleDataTable->setPaginationType("full_numbers");
+        $lifeCycleDataTable->setSorting(array(array(0, 'desc')));
+
         $this->view->translate();
         $this->view->merge();
 
@@ -288,7 +296,7 @@ class archive
     /**
      * Returns the presenter for archive description object, or null
      * @param string $descriptionClass The name of the description class used by archive
-     * 
+     *
      * @return object|null
      */
     protected function getPresenter($descriptionClass)
@@ -312,9 +320,8 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive, true);
         $this->view->addContentFile("recordsManagement/archive/description.html");
-
+        
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -329,13 +336,13 @@ class archive
 
         // Message
         $this->checkMessage($archive);
-
+        
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
         $this->view->merge();
-
+        
         return $this->view->saveHtml();
     }
 
@@ -1012,6 +1019,7 @@ class archive
         $descriptions = get_object_vars($descriptions);
 
         $table = $this->view->createElement('table');
+        $table->setAttribute('class', "table table-condensed table-striped");
 
         if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
             usort($archivalProfile->archiveDescription, function ($a, $b) {
@@ -1072,7 +1080,7 @@ class archive
             // table header column
             $th = $this->view->createElement('th', $label);
             $tr->appendChild($th);
-            $th->setAttribute('title2', $label); // title doesn't display properly this way
+            //$th->setAttribute('title2', $label); // title doesn't display properly this way
             $th->setAttribute('name', $name);
             $th->setAttribute('data-type', $type);
 
@@ -1087,13 +1095,15 @@ class archive
             $tr->appendChild($td);
 
             if (!empty($value) && !is_array($value)) {
-                $th->setAttribute('title2', $value); // title doesn't display properly this way
+                //$th->setAttribute('title2', $value); // title doesn't display properly this way
             }
 
             if ($type == "date") {
-                $dateObject = \laabs::newDate($value);
-                $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
-
+                $textValue = "";
+                if (!empty($value)) {
+                    $dateObject = \laabs::newDate($value);
+                    $textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
+                }
                 $valueNode = $this->view->createTextNode($textValue);
             } elseif ($type == 'boolean') {
                 $valueNode = $this->view->createElement('i');
@@ -1129,9 +1139,9 @@ class archive
 
         $htmlString = $this->view->saveHTML($table);
         // On rajoute la coupure si l'archive contient des métadonnées descriptives
-        if ($table->childNodes->length > 0) {
+        /*if ($table->childNodes->length > 0) {
             $htmlString = '<br/>'.$htmlString;
-        }
+        }*/
 
         return $htmlString;
     }
@@ -1150,7 +1160,7 @@ class archive
         if (!empty($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = '<br/>'.$presenter->read($archive->descriptionObject);
+                $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
             }

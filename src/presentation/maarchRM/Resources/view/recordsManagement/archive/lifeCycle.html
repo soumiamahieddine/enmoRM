@@ -1,9 +1,9 @@
 <div class="table-responsive" data-translate-catalog="lifeCycle/messages">
-    <table class="table table-condensed table-striped dataTable" >
+    <table id="lifeCycleTable" class="table table-condensed table-striped dataTable" >
         <thead>
-        <th id="dateColumn">Date</th>
-        <th>Description</th>
-        <th style="opacity: 0;cursor:initial;"/>
+            <th>Date</th>
+            <th>Description</th>
+            <th style="opacity: 0;cursor:initial;"/>
         </thead>
         <tbody>
             <?merge archive.lifeCycleEvent ?>
@@ -14,20 +14,14 @@
                 <td data-type="[?merge .eventType ?]">
                     <?merge .description ?>
                 </td>
-                <td style="padding-right:1em;" class="btn-group pull-right">
-                    <button type="button" class="btn btn-success btn-sm showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
-                        <i class="fa fa-fw fa-eye">&nbsp;</i>
-                    </button>
+                <td>
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-success btn-sm showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
+                            <i class="fa fa-fw fa-eye">&nbsp;</i>
+                        </button>
+                    </div>
                 </td>
             </tr>                                    
         </tbody>
     </table>
 </div>
-
-<script>
-
-// TODO search/find a better solution to sort table by descending date...
-if ($('#dateColumn').hasClass('sorting_asc')){
-    $('#dateColumn').click();
-}
-</script>

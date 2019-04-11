@@ -263,7 +263,7 @@
             if (!parameters == -1) {
                 return;
             }
-
+            
             parameters.archiveIds = $("#save").data('archiveids');
 
             if(!parameters.archiveIds) {
@@ -275,7 +275,7 @@
             } else {
                 type = 'PUT';
             }
-
+            
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,
