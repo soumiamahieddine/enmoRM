@@ -335,6 +335,8 @@ class Document extends \dependency\xml\Document
             }
         }
 
+        $layoutData->localisation = \laabs::configuration()['dependency.localisation']->getArrayCopy();
+
         if ($layoutData) {
             $this->merge($this, $layoutData);
         }

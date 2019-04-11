@@ -11,13 +11,15 @@ file that was distributed with this source code.
             <div class="page-header">
                 <?merge archivalProfile.archivalProfileId.ifeq('') ?>
                 <h1>
-                    <i class="fa fa-cubes"></i> New profile <small><?merge archivalProfile.reference ?></small>
+                    <i class="fa fa-cubes"></i> New profile <small>
+                        <?merge archivalProfile.reference ?></small>
                 </h1>
                 <?merge archivalProfile.archivalProfileId.ifne('') ?>
                 <h1>
                     <i class="fa fa-cubes"></i>
                     Edit a profile
-                    <small><?merge archivalProfile.reference ?></small>
+                    <small>
+                        <?merge archivalProfile.reference ?></small>
                 </h1>
             </div>
         </div>
@@ -25,13 +27,13 @@ file that was distributed with this source code.
             <?merge archivalProfile ?>
             <form class="form-horizontal" id="archivalProfile_form">
                 <div class="row">
-                    <div class="col-md-6">
-                        <br/>
+                    <div id="fieldsPart" class="col-md-9">
+                        <br />
                         <input type="hidden" id="archivalProfileId" name="archivalProfileId">
                         <div class="form-group">
                             <label class="col-md-3 control-label">Identifier <span style="color: red">*</span></label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference">
+                                <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference" disabled="[?merge archivalProfile.reference.ifne('').then('disabled') ?]"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -56,100 +58,7 @@ file that was distributed with this source code.
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab" data-toggle="tab">Description</a></li>
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation" id="managementTabBtn"><a href="#managementRulesTab" aria-controls="managementRulesTab" role="tab" data-toggle="tab">Profile rules</a></li>
-                            <?merge archivalProfile.type.ifeq('1').not() ?>
-                            <li role="presentation" id="contentsTabBtn"><a href="#profileContentsTab" aria-controls="profileContentsTab" role="tab" data-toggle="tab">Archive structure</a></li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
-                            <div class="panel-body">
-                                <div class="tab-content" id="archivalProfileNavTabs">
-                                    <div role="tabpanel" class="tab-pane fade in" id="descriptionTab">
-                                        <?hinclude recordsManagement/archivalProfile/descriptionTab.html ?>
-                                    </div>
-                                    <?merge archivalProfile.type.ifeq('1').not() ?>
-                                    <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
-                                        <div class="col-xs-12">
-                                            <h5 class="text-info"><strong>Retention rule</strong></h5>
-                                            <br/>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Retention rule code</label>
-                                                <div class="col-md-9">
-                                                    <select id="code" name="retentionRuleCode" class="form-control">
-                                                        <option value="">Select a retention rule code</option>
-                                                        <?merge retentionRules ?>
-                                                        <option value='[?merge .code ?]'
-                                                                data-duration="[?merge .retentionDuration ?]"
-                                                                data-duration-unit='[?merge .retentionDurationUnit ?]'
-                                                                data-final-disposition='[?merge .finalDisposition ?]'>
-                                                            <?merge .label ?>
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-offset-4">
-                                                    <small>
-                                                        <label>Retention duration</label> :
-                                                        <span id="duration"></span>
-                                                    </small>
-                                                    <br/>
-                                                    <small class="finalDisposition dl dl-horizontal">
-                                                        <label>Final disposition</label> :
-                                                        <span id="finalDisposition"></span>
-                                                    </small>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Retention start date</label>
-                                                <div class="col-md-9" id="retentionStartDate">
-                                                    <input type="hidden" name="retentionStartDate" value="[?merge .retentionStartDate ?]"/>
-                                                    <select id="startDate" class="form-control">
-                                                        <option value="">To be defined later </option>
-                                                        <option value="originatingDate" >Originating date </option>
-                                                        <option value="depositDate" >Deposit date </option>
-                                                        <!--?merge retentionStartDateFields ?>
-                                                        <span>
-                                                            <option data-origin="description" value="description/[?merge .name ?]"><?merge .label ?></option>
-                                                        </span-->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12" style="border-top: 1px solid silver">
-                                            <br/>
-                                            <h5 class="text-info"><strong>Access rule</strong></h5>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Access rule code</label>
-                                                <div class="col-md-9">
-                                                    <select id="accessRuleCode" name="accessRuleCode" class="form-control">
-                                                        <option value="">Select a access rule code</option>
-                                                        <?merge accessRules ?>
-                                                        <option value='[?merge .code ?]' data-json = '[?merge .json ?]'><?merge .code ?></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div id='accessRule' >
-                                                <div class="col-md-offset-4">
-                                                    <small>
-                                                        <label>Access rule duration</label> :
-                                                        <span id="accessRuleDuration"></span>
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane fade in" id="profileContentsTab">
-                                        <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <?hinclude recordsManagement/archivalProfile/tabs.html ?>
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">
@@ -175,66 +84,94 @@ file that was distributed with this source code.
             <span id="empty_text">The fields with a star are required.</span>
             <span id="text_file"><i class='fa fa-folder'></i> File</span>
             <span id="text_item"><i class='fa fa-file'></i> Item</span>
+            <span id="identifier_format_error">Le format de l'identifiant n'est pas accepté</span>
         </div>
     </div>
 </div>
+<style>
+    #tabPanes {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: none;
+    }
 
+    #description {
+        resize: vertical;
+    }
 
+    #fieldsPart {
+        margin-bottom: 3%;
+    }
+
+    #archivalProfileNavControl {
+        font-size: 18px;
+    }
+</style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
-
     var ArchivalProfile = {
-        loadRetentionRule: function() {
+        loadRetentionRule: function () {
             var retentionRule = $('#code').find(":selected");
             var duration = retentionRule.data('duration');
             var durationUnit = retentionRule.data('duration-unit');
             var finalDisposition = retentionRule.data("final-disposition");
             if (finalDisposition) {
-                if(duration >= 9999 && durationUnit == "Y"){
+                if (duration >= 9999 && durationUnit == "Y") {
                     $('#duration').text($('#text_I').html());
-                    $('.finalDisposition').css('display','none');
+                    $('.finalDisposition').css('display', 'none');
                     $('#finalDisposition').html('');
-                } else if(durationUnit) {
-                    $('.finalDisposition').css('display','');
+                } else if (durationUnit) {
+                    $('.finalDisposition').css('display', '');
                     $('#duration').text(duration + ' ' + $('#text_' + durationUnit).html());
                     $('#finalDisposition').text($('#text_' + finalDisposition).html());
                 }
             } else {
-                $('.finalDisposition').css('display','');
+                $('.finalDisposition').css('display', '');
                 $('#duration').html('');
                 $('#finalDisposition').html('');
             }
         },
 
-        loadAccessCode: function() {
+        loadAccessCode: function () {
             var accessRuleCode = $('#accessRuleCode').find(":selected").data('json');
             var accessRuleTable = $('#accessRuleTable');
 
             if (accessRuleCode) {
-                var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1, 1);
+                var accessRuleDurationUnit = accessRuleCode.duration.substr(accessRuleCode.duration.length - 1,
+                    1);
                 var accessRuleDuration = (accessRuleCode.duration.split(accessRuleDurationUnit))[0].split("P");
                 $('#accessRule').css("display", 'block');
-                $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit).html());
+                $('#accessRuleDuration').text(accessRuleDuration[1] + ' ' + $('#text_' + accessRuleDurationUnit)
+                    .html());
             } else {
                 $('#accessRule').css("display", 'none');
             }
         },
 
-        save: function(returnUrl) {
+        save: function (returnUrl) {
             var parameters = {
-                archivalProfile : this.serialize()
+                archivalProfile: this.serialize()
             };
 
-            if($("#contain").data('archivalprofileid')) {
-                type= 'PUT';
-                url= '/archivalProfile/'+$("#contain").data('archivalprofileid');
+            if ($("#contain").data('archivalprofileid')) {
+                type = 'PUT';
+                url = '/archivalProfile/' + $("#contain").data('archivalprofileid');
             } else {
-                type= 'POST';
-                url='/archivalProfile';
+                type = 'POST';
+                url = '/archivalProfile';
             }
 
-            if(parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" || parameters.archivalProfile.retentionStartDate == "") {
+            if (parameters.archivalProfile.reference == "" || parameters.archivalProfile.name == "" ||
+                parameters.archivalProfile.retentionStartDate == "") {
                 gritter.show($("#empty_text").text(), false);
+                return;
+            }
+
+            //RegExp identifier field ( = ArchivalProfile.reference)
+            var reg =/^[A-Za-z][A-Za-z0-9_-]*$/;
+            var identifier = parameters.archivalProfile.reference;
+            if (!reg.test(identifier)) {
+                gritter.show($("#identifier_format_error").text(), false);
                 return;
             }
 
@@ -247,22 +184,22 @@ file that was distributed with this source code.
                 success: function (response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-
                         load(returnUrl);
                     }
                 },
-                error    : function(response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                error: function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status,
+                        response.responseJSON.errors);
                 }
             });
         },
 
-        serialize: function() {
+        serialize: function () {
             serializedObject = {
                 archivalProfileId: $('#archivalProfileId').val(),
                 reference: $('#reference').val(),
                 name: $('#name').val(),
-                fileplanLevel : $("#fileplanLevel").val(),
+                fileplanLevel: $("#fileplanLevel").val(),
                 descriptionClass: $('#descriptionClass').val(),
                 retentionStartDate: $('#startDate option:selected').val(),
                 description: $('#description').val(),
@@ -271,19 +208,30 @@ file that was distributed with this source code.
                 acceptUserIndex: $('#allowUserIndexes').prop("checked"),
                 archiveDescription: []
             }
+            //Cas d'extension Workflow
+            if ($("#workflowTab").length != 0) {
+                serializedObject.processingStatuses = {};
+                var lists = $('#processingStatuses').find("[name='processingStatus']");
+                lists.each(function (index, value) {
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()] =
+                        JSON.parse($(value).find("[name='statusinfo']").text().trim());
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()].position =
+                        index;
 
-            if(serializedObject.retentionStartDate ==''){
+                });
+            }
+
+            if (serializedObject.retentionStartDate == '') {
                 serializedObject.retentionStartDate = null;
             }
-            if(serializedObject.accessRuleCode ==''){
+            if (serializedObject.accessRuleCode == '') {
                 serializedObject.accessRuleCode = null;
             }
-            if(serializedObject.retentionRuleCode ==''){
+            if (serializedObject.retentionRuleCode == '') {
                 serializedObject.retentionRuleCode = null;
             }
 
             serializedObject.archiveDescription = PropertiesList.serialize();
-
 
             if ($("#fileplanLevel").val() != 'item') {
                 serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
@@ -297,17 +245,17 @@ file that was distributed with this source code.
         }
     }
 
-    $("#archivalProfileCancelBtn").on("click", function (){
+    $("#archivalProfileCancelBtn").on("click", function () {
         load('/archivalProfiles');
     });
 
     $("#contain").ready(function () {
         $('#fileplanLevelToggle').bootstrapToggle({
-          on: $('#text_item'),
-          off: $('#text_file'),
+            on: $('#text_item'),
+            off: $('#text_file'),
         });
 
-        if($('#fileplanLevel').val() == 'item') {
+        if ($('#fileplanLevel').val() == 'item') {
             $('#fileplanLevelToggle').bootstrapToggle('on');
             $("#contentsTabBtn").addClass('hide');
         }
@@ -317,7 +265,7 @@ file that was distributed with this source code.
         ArchivalProfile.loadRetentionRule();
         ArchivalProfile.loadAccessCode();
 
-        $('input, select, textarea').on('change', function() {
+        $('input, select, textarea').on('change', function () {
             $('#contain').data('not-saved', true);
         })
 
@@ -327,7 +275,7 @@ file that was distributed with this source code.
 
         var currentRetentionStartDate = $('#retentionStartDate > input').val();
         if (datesProperties) {
-            for(var i = 0; i < datesProperties.length; i++) {
+            for (var i = 0; i < datesProperties.length; i++) {
                 let element = $(datesProperties[i]);
                 var value = element.val();
                 if (value == currentRetentionStartDate && (element.css('display') != 'none')) {
@@ -341,7 +289,6 @@ file that was distributed with this source code.
     });
 
 
-
     //add group to access rules
     $("#contain").on('click', '#addGroup', function () {
 
@@ -350,7 +297,8 @@ file that was distributed with this source code.
         var newTr = tr.clone();
 
         $("#addGroup").prop('disabled', true);
-        newTr.data('objectid', group.objectId).data('objectclass', group.objectClass).addClass('profileAccessElement').find('input').css('display', '');
+        newTr.data('objectid', group.objectId).data('objectclass', group.objectClass).addClass(
+            'profileAccessElement').find('input').css('display', '');
         newTr.find('.groupName:first').text(group.displayName);
 
         $('#groupTypeahead').val('');
@@ -386,10 +334,10 @@ file that was distributed with this source code.
         if ($('#fileplanLevelToggle').prop('checked')) {
             $("#fileplanLevel").val('item');
             $("#contentsTabBtn").addClass('hide');
+            $("#archivalProfileNavControl").find('a').first().click();
         } else {
             $("#fileplanLevel").val('file');
             $("#contentsTabBtn").removeClass('hide');
         }
     });
-
 </script>

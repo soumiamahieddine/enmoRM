@@ -4,104 +4,135 @@ DELETE FROM "auth"."servicePrivilege";
 DELETE FROM "auth"."role";
 DELETE FROM "auth"."account";
 
-INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES
-    ('user', 'superadmin', 'Super', 'Admin', 'M.', 'super admin', 'superadmin', 'info@maarch.org', '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae',true,false,null,false,0,null,null,null),
-    ('user', 'bblier', 'BLIER', 'Bernard', 'M.', 'Bernard BLIER', 'bblier', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'aastier', 'ASTIER', 'Alexandre', 'M.', 'Alexandre ASTIER', 'aastier', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'rreynolds', 'REYNOLDS', 'Ryan', 'M.', 'Ryan REYNOLDS', 'rreynolds', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'aadams', 'ADAMS', 'Amy', 'Mme.', 'Amy ADAMS', 'aadams', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ppreboist', 'PREBOIST', 'Paul', 'M.', 'Paul PREBOIST', 'ppreboist', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ccox', 'COX', 'Courtney', 'Mme.', 'Courtney COX', 'ccox', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'sstone', 'STONE', 'Sharon', 'Mme.', 'Sharon STONE', 'sstone', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'cchaplin', 'CHAPLIN', 'Charlie', 'M.', 'Charlie CHAPLIN', 'cchaplin', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'sstallone', 'STALLONE', 'Sylvester', 'M.', 'Sylvester STALLONE', 'sstallone', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'rrenaud', 'RENAUD', 'Robert', 'M.', 'M.', 'Renaud RENAUD', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ccordy', 'CORDY', 'Chloé', 'Mme.', 'Chloé CORDY', 'ccordy', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ssissoko', 'SISSOKO', 'Sylvain', 'M.', 'Sylvain SISSOKO', 'ssissoko', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'nnataliy', 'NATALY', 'Nancy', 'Mme.', 'Nancy NATALY', 'nnataliy', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ddur', 'DUR', 'Dominique', 'M.', 'Dominique DUR', 'ddur', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'jjane', 'JANE', 'Jenny', 'Mme.', 'Jenny JANE', 'jjane', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'eerina', 'ERINA', 'Edith', 'Mme.', 'Edith ERINA', 'eerina', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'kkaar', 'KAAR', 'Katy', 'Mme.', 'Katy KAAR', 'kkaar', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ppetit', 'PETIT', 'Patricia', 'Mme.', 'Patricia PETIT', 'ppetit', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'aackermann', 'ACKERMANN', 'Amanda', 'Mme.', 'Amanda ACKERMANN', 'aackermann', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ppruvost', 'PRUVOST', 'Pierre', 'M.', 'Pierre PRUVOST', 'ppruvost', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ttong', 'TONG', 'Tony', 'M.', 'Tony TONG', 'ttong', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'sstar', 'STAR', 'Suzanne', 'Mme.', 'Suzanne STAR', 'sstar', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ssaporta', 'SAPORTA', 'Sabrina', 'Mme.', 'Sabrina SAPORTA', 'ssaporta', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ccharles', 'CHARLES', 'Charlotte', 'Mme.', 'Charlotte CHARLES', 'ccharles', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'mmanfred', 'MANFRED', 'Martin', 'M.', 'Martin MANFRED', 'mmanfred', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'jjonasz', 'JONASZ', 'Jean', 'M.', 'Jean JONASZ', 'jjonasz', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ggrand', 'GRAND', 'George', 'M.', 'George GRAND', 'ggrand', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ccamus', 'CAMUS', 'Cyril', 'M.', 'Cyril CAMUS', 'ccamus', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'hhier', 'HIER', 'Hubert', 'M.', 'Hubert HIER', 'hhier', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ttule', 'TULE', 'Thierry', 'M.', 'Thierry TULE', 'ttule', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'kkrach', 'KRACH', 'Kevin', 'M.', 'Kevin KRACH', 'kkrach', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ddenis', 'DENIS', 'Didier', 'M.', 'Didier DENIS', 'ddenis', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'aalambic', 'ALAMBIC', 'Alain', 'M.', 'Alain ALAMBIC', 'aalambic', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ppacioli', 'PACIOLI', 'Paolo', 'M.', 'Paolo PACIOLI', 'ppacioli', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'vvictoire', 'VICTOIRE', 'Victor', 'M.', 'Victor VICTOIRE', 'vvictoire', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'ddaull', 'DAULL', 'Denis', 'M.', 'Denis DAULL', 'ddaull', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'bboule', 'BOULE', 'Bruno', 'M.', 'Bruno BOULE', 'bboule', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null),
-    ('user', 'bbain', 'BAIN', 'Barbara', 'Mme.', 'Barbara BAIN', 'bbain', 'info@maarch.org', 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d',true,false,null,false,0,null,null,null);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ccordy', 'ccordy', 'Chloé CORDY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Chloé', 'CORDY', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ccox', 'ccox', 'Courtney COX', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Courtney', 'COX', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ddur', 'ddur', 'Dominique DUR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Dominique', 'DUR', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('eerina', 'eerina', 'Edith ERINA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Edith', 'ERINA', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('jjane', 'jjane', 'Jenny JANE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jenny', 'JANE', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('kkaar', 'kkaar', 'Katy KAAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Katy', 'KAAR', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('aastier', 'aastier', 'Alexandre ASTIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:19:10.46925', '127.0.0.1', NULL, 'Alexandre', 'ASTIER', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('aackermann', 'aackermann', 'Amanda ACKERMANN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Amanda', 'ACKERMANN', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('aadams', 'aadams', 'Amy ADAMS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:20:33.964708', '127.0.0.1', NULL, 'Amy', 'ADAMS', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('cchaplin', 'cchaplin', 'Charlie CHAPLIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlie', 'CHAPLIN', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ppetit', 'ppetit', 'Patricia PETIT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Patricia', 'PETIT', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ppreboist', 'ppreboist', 'Paul PREBOIST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paul', 'PREBOIST', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ppruvost', 'ppruvost', 'Pierre PRUVOST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Pierre', 'PRUVOST', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('rrenaud', 'rrenaud', 'Robert RENAUD', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Robert', 'RENAUD', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('rreynolds', 'rreynolds', 'Ryan REYNOLDS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Ryan', 'REYNOLDS', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ssaporta', 'ssaporta', 'Sabrina SAPORTA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sabrina', 'SAPORTA', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ssissoko', 'ssissoko', 'Sylvain SISSOKO', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvain', 'SISSOKO', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('sstallone', 'sstallone', 'Sylvester STALLONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvester', 'STALLONE', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('sstar', 'sstar', 'Suzanne STAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Suzanne', 'STAR', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ttong', 'ttong', 'Tony TONG', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Tony', 'TONG', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ccharles', 'ccharles', 'Charlotte CHARLES', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlotte', 'CHARLES', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('nnataly', 'nnataly', 'Nancy NATALY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 11:07:45.462923', '127.0.0.1', NULL, 'Nancy', 'NATALY', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('sstone', 'sstone', 'Sharon STONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:27.732025', '127.0.0.1', NULL, 'Sharon', 'STONE', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, '2019-03-15 07:43:51.395555', '127.0.0.1', NULL, 'Admin', 'Super', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('bblier', 'bblier', 'Bernard BLIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 13:26:01.022593', '127.0.0.1', NULL, 'Bernard', 'BLIER', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ttule', 'ttule', 'Thierry TULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Thierry', 'TULE', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('SystemDepositor', 'Systeme versant', 'Systeme versant', 'service', '', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim/ilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z/r0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '87eda47a7218326af0e3f4eaad7c2c22', '2019-03-19 07:56:55.287696', NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('System', 'Systeme', 'Systeme', 'service', '', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9OXNeNIrej2+v3UMzAsF3PSzDUlZ73kPvgqbQmZvza0eZO062uQu57Rdah9z3mdbTh6NBiiR8FQTnW6eVgQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '63ce15235abe97db0182e6857c1da763', '2019-03-19 07:54:33.464846', NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ggrand', 'ggrand', 'George GRAND', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 07:57:01.613677', '127.0.0.1', NULL, 'George', 'GRAND', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('bbain', 'bbain', 'Barbara BAIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Barbara', 'BAIN', 'Mme.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('workflow_pod5l0-232e-0aggqt', 'bbardot', 'Brigitte BARDOT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', true, '2019-03-14 15:55:48.901327', false, NULL, 0, NULL, NULL, NULL, 'Brigitte', 'BARDOT', 'Mme', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('bboule', 'bboule', 'Bruno BOULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Bruno', 'BOULE', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ccamus', 'ccamus', 'Cyril CAMUS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Cyril', 'CAMUS', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ddaull', 'ddaull', 'Denis DAULL', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Denis', 'DAULL', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ddenis', 'ddenis', 'Didier DENIS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Didier', 'DENIS', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('aalambic', 'aalambic', 'Alain ALAMBIC', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 13:32:20.964652', '127.0.0.1', NULL, 'Alain', 'ALAMBIC', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('hhier', 'hhier', 'Hubert HIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Hubert', 'HIER', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('jjonasz', 'jjonasz', 'Jean JONASZ', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jean', 'JONASZ', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('mmanfred', 'mmanfred', 'Martin MANFRED', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Martin', 'MANFRED', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('ppacioli', 'ppacioli', 'Paolo PACIOLI', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paolo', 'PACIOLI', 'M.', NULL, NULL, NULL, NULL);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences) VALUES ('kkrach', 'kkrach', 'Kevin KRACH', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:03.559857', '127.0.0.1', NULL, 'Kevin', 'KRACH', 'M.', NULL, NULL, NULL, NULL);
 
-INSERT INTO "auth"."account" ("accountType", "accountId", "displayName", "accountName", "emailAddress", "enabled") VALUES
-    ('service', 'System', 'Système', 'Systeme', 'info@maarch.org', true),
-    ('service', 'SystemDepositor', 'Système versant', 'Systeme versant', 'info@maarch.org', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('ADMIN', 'Administrateur technique', 'Groupe des administrateurs techniques du système', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3au-0037-nz1f8t', 'Responsable d''activité', 'Groupe des responsables de service et des activités', true);
+INSERT INTO auth.role ("roleId", "roleName", description, enabled) VALUES ('workflow_pod3c1-1bc0-zh5adq', 'Producteur', 'Groupe des producteurs, versants', true);
 
--- ROLE
-INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
-    ('ADMIN', 'Administrateur', 'Groupe administrateur', true),
-    ('CORRESPONDANT_ARCHIVES', 'Archiviste', 'Correspondant d''archives', true),
-    ('UTILISATEUR', 'Utilisateur', 'Groupe utilisateur', true); 
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'workflow/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveDeposit/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/checkIntegrity');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/filePlan');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/modifyDescription');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/modify');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'archiveManagement/retrieve');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3au-0037-nz1f8t', 'destruction/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'workflow/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveDeposit/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveManagement/filePlan');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'archiveManagement/modify');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminAuthorization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminOrgUser');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminOrganization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminServiceaccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/adminUseraccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminFunc/batchScheduling');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'adminTech/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN', 'journal/audit');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminAuthorization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgUser');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminUseraccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'destruction/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
 
--- servicePrivilege
-INSERT INTO "auth"."servicePrivilege"("accountId", "serviceURI") VALUES
-    ('System', 'recordsManagement/archives/deleteDisposablearchives'),
-    ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch'),
-    ('System', 'audit/event/createChainjournal'),
-    ('System', 'lifeCycle/journal/createChainjournal'),
-    ('System', 'recordsmanagement/archivecompliance/readperiodic'),
-    ('System', 'batchProcessing/scheduling/updateProcess'),
-    ('System', 'recordsManagement/archives/updateArchivesretentionrule');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'aalambic');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'bbain');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ccamus');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ddaull');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ddur');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ggrand');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'hhier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'jjane');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'jjonasz');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'kkaar');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'kkrach');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'mmanfred');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ppacioli');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ppetit');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ppreboist');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'rrenaud');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'rreynolds');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ssaporta');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ssissoko');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'sstar');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ttong');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'ttule');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'vvictoire');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3c1-1bc0-zh5adq', 'workflow_pod5l0-232e-0aggqt');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('ADMIN', 'superadmin');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'aackermann');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'aadams');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'aastier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'bblier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'bboule');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'cchaplin');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'ccordy');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'ccox');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'ddenis');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'eerina');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'nnataly');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'ppruvost');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'sstallone');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('workflow_pod3au-0037-nz1f8t', 'sstone');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'ccharles');
 
-
--- roleMember
-INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
-    ('ADMIN', 'superadmin'),
-    ('CORRESPONDANT_ARCHIVES', 'bblier'),
-    ('UTILISATEUR', 'aastier'),
-    ('UTILISATEUR', 'sstallone'),
-    ('UTILISATEUR', 'rreynolds'),
-    ('UTILISATEUR', 'aadams'),
-    ('UTILISATEUR', 'ccox'),
-    ('UTILISATEUR', 'sstone'),
-    ('UTILISATEUR', 'cchaplin');
-
-
--- privilege
-INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
-    ('ADMIN', 'adminTech/*'),
-    ('ADMIN', 'adminFunc/AdminArchivalProfileAccess'),
-    ('ADMIN', 'adminFunc/adminAuthorization'),
-    ('ADMIN', 'adminFunc/adminOrgContact'),
-    ('ADMIN', 'adminFunc/adminOrgUser'),
-    ('ADMIN', 'adminFunc/adminOrganization'),
-    ('ADMIN', 'adminFunc/adminServiceaccount'),
-    ('ADMIN', 'adminFunc/adminUseraccount'),
-    ('ADMIN', 'adminFunc/contact'),
-    ('ADMIN', 'journal/audit'),
-	
-    ('CORRESPONDANT_ARCHIVES', 'adminArchive/*'),
-    ('CORRESPONDANT_ARCHIVES', 'archiveRetrieval/*'),
-    ('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
-    ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/*'),
-    ('CORRESPONDANT_ARCHIVES', 'adminFunc/batchScheduling'),
-    ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal'),
-    ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive'),
-
-    ('UTILISATEUR', 'archiveRetrieval/*'),
-    ('UTILISATEUR', 'archiveDeposit/*'),
-    ('UTILISATEUR', 'archiveManagement/modify'),
-    ('UTILISATEUR', 'archiveManagement/modifyDescription'),
-    ('UTILISATEUR', 'adminArchive/filePlan');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('SystemDepositor', 'recordsManagement/archive/create');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'audit/event/createChainjournal');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'batchProcessing/scheduling/updateProcess');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'lifeCycle/journal/createChainjournal');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsmanagement/archivecompliance/readperiodic');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/deleteDisposablearchives');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateArchivesretentionrule');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateIndexfulltext');

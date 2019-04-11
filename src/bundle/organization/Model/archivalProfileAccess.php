@@ -59,4 +59,11 @@ class archivalProfileAccess
      * @var string
      */
     public $serviceLevelReference;
+
+    /**
+     * The user access
+     *
+     * @var json
+     */
+    public $userAccess;
 }

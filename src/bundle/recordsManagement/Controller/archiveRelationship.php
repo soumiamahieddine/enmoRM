@@ -31,7 +31,13 @@ class archiveRelationship
 {
 
     protected $sdoFactory;
-    
+
+    /**
+     * Controller for life cycle journal events
+     * @var recordsManagement/Controller/lifeCycleJournal
+     */
+    protected $lifeCycleJournalController;
+
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
@@ -39,6 +45,7 @@ class archiveRelationship
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->lifeCycleJournalController = \laabs::newController("lifeCycle/journal");
     }
 
     /**
@@ -61,22 +68,48 @@ class archiveRelationship
         if (!$this->sdoFactory->exists("recordsManagement/archive", $archiveRelationship->relatedArchiveId)) {
             throw new \bundle\recordsManagement\Exception\unknownArchive($archiveRelationship->relatedArchiveId);
         }
-        
-        $this->sdoFactory->create($archiveRelationship, "recordsManagement/archiveRelationship");
+
+        try {
+            $this->sdoFactory->create($archiveRelationship, "recordsManagement/archiveRelationship");
+        } catch (Exception $e) {
+            throw new \Exception("Error Processing Request", 1);
+        }
+
+        $this->logEvent($archiveRelationship, 'recordsManagement/addRelationship');
 
         return $archiveRelationship;
+    }
+
+    public function update($archiveRelationship)
+    {
+        try {
+            $relation = $this->sdoFactory->update($archiveRelationship, "recordsManagement/archiveRelationship");
+        } catch (Exception $e) {
+            throw new \Exception("Error Processing Request", 1);
+        }
+
+        $this->logEvent($archiveRelationship, 'recordsManagement/updateRelationship');
+
+        return $relation;
     }
 
     /**
      * Delete a relationship
      * @param recordsManagement/archiveRelationship $archiveRelationship The archive relationship object
      *
-     * @return recordsManagement/archiveRelationship The archiveRelationship
+     * @return boolean The archiveRelationship
      */
     public function delete($archiveRelationship)
     {
-        $archiveRelationship = \laabs::castCollection(get_object_vars($archiveRelationship), 'recordsManagement/archiveRelationship');
-        $this->sdoFactory->delete($archiveRelationship);
+        //$archiveRelationship = \laabs::castCollection(get_object_vars($archiveRelationship), 'recordsManagement/archiveRelationship');
+
+        try {
+            $this->sdoFactory->delete($archiveRelationship);
+        } catch (Exception $e) {
+            throw new \Exception("Error Processing Request", 1);
+        }
+
+        $this->logEvent($archiveRelationship, 'recordsManagement/deleteRelationship');
 
         return true;
     }
@@ -117,8 +150,58 @@ class archiveRelationship
         return $archiveRelationships;
     }
 
+    public function getUniqueRelationship($archiveId, $relatedArchiveId)
+    {
+        return $this->sdoFactory->find("recordsManagement/archiveRelationship", "archiveId='$archiveId' AND relatedArchiveId='$relatedArchiveId'")[0];
+    }
+
     protected function decodeDescription($relationship)
     {
         $relationship->description = json_decode($relationship->description);
+    }
+
+    protected function logEvent($archiveRelationship, $event)
+    {
+        $archiveController = \laabs::newController('recordsManagement/archive');
+        $archive = $archiveController->read($archiveRelationship->archiveId);
+        $relatedArchive = $archiveController->read($archiveRelationship->relatedArchiveId);
+
+        $archiveEventInfo = [
+            'resId' => (string) $archiveRelationship->archiveId,
+            'hashAlgorithm' => '',
+            'hash' => '',
+            'address' => '',
+            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
+            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
+            'relatedArchiveId' => (string) $archiveRelationship->relatedArchiveId
+        ];
+
+        $relatedArchiveEventInfo = [
+            'resId' => (string) $archiveRelationship->relatedArchiveId,
+            'hashAlgorithm' => '',
+            'hash' => '',
+            'address' => '',
+            'originatorOrgRegNumber' => $relatedArchive->originatorOrgRegNumber,
+            'archiverOrgRegNumber' => $relatedArchive->archiverOrgRegNumber,
+            'relatedArchiveId' => (string) $archiveRelationship->archiveId
+        ];
+
+        // Add relationship for archive to link
+        $this->lifeCycleJournalController->logEvent(
+            $event,
+            'recordsManagement/archive',
+            $archiveRelationship->archiveId,
+            array_merge($archiveEventInfo, get_object_vars($archive)),
+            true
+        );
+
+        // Add relationship event for archive which is link with archive source
+        $this->lifeCycleJournalController->logEvent(
+            $event,
+            'recordsManagement/archive',
+            $archiveRelationship->relatedArchiveId,
+            array_merge($relatedArchiveEventInfo, get_object_vars($relatedArchive)),
+            true
+        );
     }
 }

@@ -260,6 +260,9 @@ msgstr "Non autorisé : Vous devez vous positionner dans un service pour effectu
 msgid "The description class does not match with the archival profile."
 msgstr "La classe de description ne correspond pas au profil d'archive."
 
+msgid "The processing status isn't initial"
+msgstr "Le statut de traitement choisi n'est pas de type initial"
+
 msgid "Archive not set for destruction."
 msgstr "L'archive n'est pas prévue pour être détruite."
 

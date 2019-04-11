@@ -33,13 +33,21 @@ class JsonObject
     protected $storage;
 
     /**
+     * @var dependency\Localisation\DateTimeFormatter
+     */
+    public $dateTimeFormatter;
+
+
+    /**
      * Constructor 
      * @param string $type    The type (scalar, class, array, typed array) of data to store
      * @param int    $Options A bitmask of json options
+     * @param object $dateTimeFormatter The localisation/dateTimeFormatter object to format the dates of the document
      */
-    public function __construct($type=false, $Options=0)
+    public function __construct($type=false, $Options=0, \dependency\localisation\DateTimeFormatter $dateTimeFormatter = null)
     {
         $this->options = $Options;
+        $this->dateTimeFormatter = $dateTimeFormatter;
 
         if ($type) {
             $this->storage = \laabs::cast(null, $type);
@@ -217,6 +225,67 @@ class JsonObject
                 break;
 
             default:
+        }
+    }
+
+    public function formatDateTimes($value = null, $depth=0)
+    {
+        if (is_null($value)) {
+            $value = $this->storage;
+        }
+
+        if ($depth >= 100) {
+            return;
+        } else {
+            $depth++;
+        }
+        
+        // Get type of value
+        $type = gettype($value);
+        //var_dump($type);
+        
+        switch(true) {
+            // If value is scalar, merge text before Pi
+            case $type == 'string':
+            case $type == 'integer':
+            case $type == 'double':
+            case $type == 'boolean':
+            case $type == 'NULL':
+                return $value;
+
+            case $type == 'array':
+                foreach ($value as $key => $item) {
+                    $value[$key] = $this->formatDateTimes($item, $depth++);
+                }
+                return $value;
+
+            case $type == 'object' :
+                switch (true) {
+                    // ArrayObject -> merge array
+                    case ($value instanceof \ArrayAccess && $value instanceof \Iterator) :
+                        foreach ($value as $key => $item) {
+                            $value[$key] = $this->formatDateTimes($item, $depth++);
+                        }
+
+                        return $value;
+
+                    case $value instanceof \core\Type\Date:
+                        return $this->dateTimeFormatter->formatDate($value);
+
+                    case $value instanceof \core\Type\Timestamp:
+                        return $this->dateTimeFormatter->formatTimestamp($value);
+
+                    case $value instanceof \core\Type\DateTime:
+                         return $this->dateTimeFormatter->formatDateTime($value);
+
+                    default:
+                        foreach ($value as $key => $item) {
+                            $value->{$key} = $this->formatDateTimes($item, $depth++);
+                        }
+
+                        return $value;
+
+                }
         }
     }
 

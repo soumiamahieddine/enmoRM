@@ -1,11 +1,13 @@
 <div id="resourceInformation" class="row">
     <div class="col-xs-12 text-center">
-        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]" style="height: 300px"/>
+        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]"/>
         <i class="infoIcon fa fa-file-o"/>
     </div>
     <div class="col-xs-12 text-center">
-        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid="">View</button>
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid=""><i class ="fa-eye fa">&nbsp;</i>View</button>
+        <button type="button" id="deleteResource" class="btn btn-link btn-sm hide" data-resid="" data-archiveid="" title2="Delete"><i class ="fa fa-trash">&nbsp;</i>Delete</button>
     </div>
+
     <div class="col-xs-12">
         <table>
             <tr>
@@ -39,7 +41,6 @@
 <style type="text/css">
     #resourceInformation {
         font-size: 12px;
-        padding-top: 50px;
         min-height: calc(95vh - 80px);
     }
     #resourceInformation table {
@@ -66,9 +67,10 @@
     DocumentInformation = {
         form: $('#resourceInformation'),
         load: function (resource) {
-            resource.created = resource.created.substring(0, 19);
             DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
             DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
+            DocumentInformation.form.find("#deleteResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#deleteResource").data("archiveid", resource.archiveId);
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
@@ -117,7 +119,7 @@
             }
 
             if (resource.metadata) {
-
+                // TODO ?
             }
 
             var displayableFormat = $('#preview').data('format');
@@ -126,12 +128,13 @@
 
                 if (resource.mimetype.match(mimetype)) {
                     $.ajax({
-                        url         : $("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        url         : '/'+$("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
+                        data        : {isCommunication:1},
                         type        : "GET",
                         dataType    : 'html',
                         success     : function(response) {
                             $("#preview").removeClass('hide').html(response);
-                            $('#preview').find('object').css('max-height', '300px').css('max-width', '300px');
+                            $('#preview').find('object').css('height', '70vh').css('width', '100%');
                             if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
                                 $('#preview').find('object').attr('height', '300');
                             }
@@ -150,7 +153,36 @@
     }
 
     $("#viewResource").on("click", function() {
-        window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid"));
+        window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid")+"?isCommunication=1");
+    });
+
+    $("#deleteResource").on("click", function(){
+        var resources = {
+                resIds           : [$(this).data('resid')]
+            }
+
+            ajax($('#deleteResource'), {
+                type: "DELETE",
+                url: '/' + $(this).data("archiveid") + '/digitalResource',
+                data: JSON.stringify(resources),
+                dataType: 'json',
+                contentType: 'application/json',
+                success     : function (response) {
+                    gritter.show(response.message, true);
+                    trigger('deleteResourceDone.recordsManagement');
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+    });
+
+    // This event refresh view after a click on deleteResource
+    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
+    {
+        $('#modalArchiveInfo').one('hidden.bs.modal', function(e){
+                $('#'+$('#deleteResource').data("archiveid")).find('.viewArchive').click();
+            }).modal('hide');
     });
 
 </script>

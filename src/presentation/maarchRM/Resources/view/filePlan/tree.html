@@ -33,7 +33,6 @@
         cursor: pointer;
         width: 100%;
         white-space: nowrap;
-        text-overflow: ellipsis;
     }
     .folderNode > b, .orgNode > b {
         font-weight: normal;
@@ -41,12 +40,16 @@
         float: left;
         width: calc(100% - 30px);
         overflow-x: hidden;
-        text-overflow: ellipsis;
     }
     .folderNode > i, .orgNode > i {
         font-size: 16px;
         float: left;
         width: 10px;
+    }
+    .folderNode .tooltip {
+        display: inline-block;
+        white-space: normal;
+        word-break: break-all;
     }
     .orgNode:hover, .folderNode:hover {
         background-color: #DDD;

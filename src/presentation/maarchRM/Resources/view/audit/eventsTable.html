@@ -18,7 +18,7 @@
                     <tbody>
                         <?merge events ?>
                         <tr class="auditEvent small" data-json="[?merge .json() ?]" data-event="[?merge .eventDate ?]#[?merge .eventType ?]#[?merge .userName ?]#[?merge .message ?]">
-                            <td><?merge .eventDate.format('Y-m-d H:i:s') ?></td>
+                            <td><?merge .eventDate ?></td>
                             <td><?merge .userName ?></td>
                             <td><?merge .message ?></td>
                         </tr>

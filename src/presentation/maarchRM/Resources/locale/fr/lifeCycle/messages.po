@@ -429,6 +429,12 @@ msgstr "Restitution"
 msgid "recordsManagement/destruction"
 msgstr "Éliminée"
 
+msgid "recordsManagement/export"
+msgstr "Export"
+
+msgid "recordsManagement/search"
+msgstr "Recherche"
+
 msgid "recordsManagement/profileCreation"
 msgstr "Création de profil"
 
@@ -443,6 +449,9 @@ msgstr "Test de conformité"
 
 msgid "recordsManagement/integrity"
 msgstr "Test de conformité"
+
+msgid "recordsManagement/depositNewResource"
+msgstr "Dépôt d'un nouveau document"
 
 msgid "recordsManagement/delivery"
 msgstr "Communication"
@@ -482,6 +491,9 @@ msgstr "Demande d'élimination"
 
 msgid "recordsManagement/destructionRequestCanceling"
 msgstr "Annulation de demande d'élimination"
+
+msgid "recordsManagement/metadataConsultation"
+msgstr "Consultation de métadonnées"
 
 msgid "recordsManagement/metadataModification"
 msgstr "Modification de métadonnées"
@@ -661,10 +673,13 @@ msgid "Archival profile"
 msgstr "Profil d'archive"
 
 msgid "recordsManagement/depositOfLinkedResource"
-msgstr "Déposer une ressource liée"
+msgstr "Dépôt d'une ressource liée"
 
 msgid "recordsManagement/destructionRequestCancel"
 msgstr "Annuler la demande de d'élimination de l'archive"
+
+msgid "recordsManagement/resourceDestruction"
+msgstr "Destruction d'un document"
 
 msgid "Account name"
 msgstr "Nom du compte"

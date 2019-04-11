@@ -196,12 +196,16 @@
         padding: 0 5px 0 5px ;
         text-overflow: crop;
         overflow: hidden;
-        white-space: nowrap;
+     /*   white-space: nowrap;*/
 
     }
     #archiveInformation .infoIcon {
         font-size: 80px; 
         margin-bottom: 10px;
+    }
+    #metadataTitle {
+        border-top:1px solid #31708f;
+        margin: 1.5em 0;
     }
 </style>
 
@@ -476,6 +480,8 @@
 
                     if (response.status) {
                         Archive.getInfo(ArchiveInformation.archiveId);
+
+                        $("#searchForm_inputSearchBtn").click()
                     }
                 },
                 error       : function (response) {

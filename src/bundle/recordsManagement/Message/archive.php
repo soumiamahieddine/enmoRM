@@ -50,7 +50,14 @@ class archive
     public $originatorArchiveId;
 
     /**
-     * The archive folder id or full directory path starting with /
+     * Archiver Archive identifier
+     *
+     * @var string
+     */
+    public $archiverArchiveId;
+
+    /**
+     * The archive folder id
      *
      * @var string
      */
@@ -205,6 +212,12 @@ class archive
     public $status;
 
     /**
+     * Status code for workflow and current use process
+     * @var string
+     */
+    public $processingStatus;
+
+    /**
      * The parent archive identifier
      *
      * @var string
@@ -267,6 +280,13 @@ class archive
      * @var string
      */
     public $archiverOrgRegNumber;
+
+    /**
+     * Registration number of user organisation
+     *
+     * @var tokenList
+     */
+    public $userOrgRegNumbers;
 
     /**
      * The archive description level

@@ -21,6 +21,7 @@
                         <th>Identifier</th>
                         <th>Originator</th>
                         <th>Profile</th>
+                        <th>Deposit date</th>
                         <th>Disposal date</th>
                         <th>Status</th>
                         <th style="min-width:150px;"></th>
@@ -42,6 +43,7 @@
                         <td><?merge .archiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
                         <td class="profile"><?merge .archivalProfileReference ?></td>
+                        <td><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td>

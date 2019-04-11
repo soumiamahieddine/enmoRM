@@ -728,8 +728,8 @@ msgstr "%1$s restitution(s) annulée(s)."
 msgid "%1$s destruction(s) canceled."
 msgstr "%1$s destruction(s) annulée(s)."
 
-msgid "%1$s archive(s) can not be flagged."
-msgstr "%1$s archive(s) ne sont pas marquée(s)."
+msgid "%1$s archive(s) can not be flagged because an action is already in progress on this(these) archive(s) (or on one of its/their objects)."
+msgstr "%1$s archive(s) n'est(ne sont) pas marquée(s) car une action est déjà en cours sur cette(ces) archive(s) (ou sur l'un de leurs objets)."
 
 msgid "%1$s archive(s) can not be modified."
 msgstr "%1$s archive(s) ne sont pas modifiée(s)."
@@ -749,6 +749,12 @@ msgstr "%1$s restitution(s) ne sont pas annulée(s)."
 msgid "%1$s destruction(s) can not be canceled.'"
 msgstr "%1$s destruction(s) ne sont pas annulée(s)."
 
+msgid "%1$s resource(s) can\'t be deleted."
+msgstr "la ressource %1$s ne peut pas être supprimée." 
+
+msgid "%1$s resource(s) deleted."
+msgstr "%1$s ressource(s) supprimée(s)"
+
 msgid "Restitution message created"
 msgstr "Message de restitution créé."
 
@@ -767,17 +773,29 @@ msgstr "Permission non accordée : vous devez choisir une unité organisationnel
 msgid "The description class does not match with the archival profile."
 msgstr "La classe description ne correspond pas aux profils d'archive."
 
+msgid "The processing status isn't initial"
+msgstr "Le statut de traitement choisi n'est pas de type initial"
+
 msgid "Archive not set for destruction."
-msgstr "Archive non prévue pour destruction."
+msgstr "L'archive n'est pas prévue pour être détruite."
 
 msgid "Children archives : Archive not set for destruction."
-msgstr "Une archive enfant n'est pas prévue pour être détruite."
-
-msgid "Children archives : Disposal date not reached."
-msgstr "Archives enfants : date de fin d'utilisation non-atteinte."
+msgstr "Une sous-archive n'est pas prévue pour être détruite."
 
 msgid "Disposal date not reached."
 msgstr "DUA non échue."
+
+msgid "Children archives : Disposal date not reached."
+msgstr "La DUA d'une des sous-archives n'est pas échue."
+
+msgid "Children archives : Final disposition must be advised for this action"
+msgstr "Le sort final d'une des sous-archives n'est pas renseigné."
+
+msgid "There is a missing management information (date or retention rule)."
+msgstr "Il manque une information concernant la gestion de la conservation de l'archive (date et/ou règle de conservation)."
+
+msgid "Children archives : There is a missing management information (date or retention rule)."
+msgstr "Il manque une information concernant la gestion de la conservation d'une des sous-archives (date et/ou règle de conservation)."
 
 msgid "Final disposition must be advised for this action"
 msgstr "Un sort final doit être renseigné pour exécuter cette action."
@@ -1029,3 +1047,12 @@ msgstr "Pièce"
 
 msgid "File"
 msgstr "Dossier"
+
+msgid "Processing statuses"
+msgstr "Statuts du flux de travail"
+
+msgid "Processing status"
+msgstr "Statut initial du flux de travail"
+
+msgid "Last modification date"
+msgstr "Date de mise à jour"

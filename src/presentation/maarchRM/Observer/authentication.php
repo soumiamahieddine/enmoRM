@@ -65,23 +65,17 @@ class authentication
         switch (true) {
             case ($accountToken = \laabs::getToken('TEMP-AUTH')):
                 if (!$this->sdoFactory->exists('auth/account', $accountToken->accountId)) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 if (!isset($userCommand->service[0]) || ($userCommand->service[0] != "auth/authentication/update_userName_Password")) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 break;
 
             // Token authentication
             case ($accountToken = \laabs::getToken('AUTH')):
                 if (!$this->sdoFactory->exists('auth/account', $accountToken->accountId)) {
-                    $userCommand->reroute('app/authentication/readUserPrompt');
-
-                    return false;
+                    $this->redirectToLogin();
                 }
                 break;
 
@@ -116,10 +110,7 @@ class authentication
         }
 
         if (!$accountToken) {
-            \laabs::kernel()->response->code = 307;
-            $userCommand->reroute('app/authentication/readUserPrompt');
-
-            return false;
+            $this->redirectToLogin();
         }
 
         // Read user account information
@@ -138,27 +129,48 @@ class authentication
         \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
 
         $organization = \laabs::getToken("ORGANIZATION");
+
         $userPositionController = \laabs::newController("organization/userPosition");
         $userPositions = $userPositionController->getMyPositions();
 
         if (!empty($organization)) {
             $isUserPosition = false;
+            $default = null;
 
             foreach ($userPositions as $position) {
                 if ($position->orgId == $organization->orgId) {
                     $isUserPosition = true;
                 }
+                if ($position->default) {
+                    $default = $position;
+                }
+            }
+
+            if (!$default) {
+                \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
+
+                $this->redirectToLogin();
             }
 
             if (!$isUserPosition) {
-                \laabs::clearTokens();
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
-                $userCommand->reroute('app/authentication/readUserPrompt');
-
-                return false;
+                \laabs::setToken("ORGANIZATION", $default->organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
             }
         }
 
         return $account;
+    }
+
+    protected function redirectToLogin()
+    {
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
+
+        \laabs::kernel()->response->code = 307;
+        \laabs::kernel()->response->setHeader('Location', '/user/prompt');
+        \laabs::kernel()->sendResponse();
+        \laabs::kernel()->end();
+
+        exit;
     }
 }

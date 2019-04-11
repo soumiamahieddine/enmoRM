@@ -386,7 +386,8 @@ class Presentation
         $observerClasses = Extensions::extendedClasses(
             LAABS_PRESENTATION . LAABS_URI_SEPARATOR 
             . $this->name . LAABS_URI_SEPARATOR 
-            . LAABS_OBSERVER
+            . LAABS_OBSERVER,
+            true
         );
         foreach ($observerClasses as $observerClass) {
             $observerName = \laabs\basename($observerClass);

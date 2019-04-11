@@ -24,6 +24,7 @@ TRUNCATE "digitalResource"."address" CASCADE;
 TRUNCATE "digitalResource"."clusterRepository" CASCADE;
 TRUNCATE "digitalResource"."cluster" CASCADE;
 TRUNCATE "digitalResource"."repository" CASCADE;
+TRUNCATE "digitalResource"."conversionRule" CASCADE;
 
  -- FilePlan
 DELETE FROM "filePlan"."folder";

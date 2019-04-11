@@ -131,6 +131,7 @@
         </div>
     </div>
 </nav>
+<span class="hide" id="localisationDateTimeFormat"><?merge .localisation['dateTimeFormat'] ?></span>
 
 <div class="modal fade" id="aboutModal" lang="en">
     <div class="modal-dialog">
@@ -142,10 +143,27 @@
                 <div class="text-center">
                     <img class="img-responsive" style="max-height:64px; margin: 0 auto;" src="/presentation/img/RM.svg"/>
                     <br/>
-                    <p class='lead'>Version <?merge .version ?></p>
+                    <h2>Versions</h2>
+                    <p class='lead'>
+                        <?merge .versions[0].name ?> - <?merge .versions[0].number ?>
+                    </p>
+                    <?merge .versions.count().ifgte(2) ?>
+                    <span>
+                        <h4>Extension(s)</h4>
+                        <p class="lead">
+                            <?merge .versions ?>
+                            <span>
+                                <?merge .name.ifne('Maarch RM') ?>
+                                <span>
+                                    <?merge .name ?> - <?merge .number ?>
+                                    <br>
+                                </span>
+                            </span>
+                        </p>
+                    </span>
                 </div>
                 <p>
-                    <pre style="overflow-y:scroll; height: 400px; ">
+                <pre style="overflow-y:scroll; height: 400px; ">
                         <?merge .licence ?>
                     </pre>
                 </p>
@@ -264,11 +282,11 @@
                 beforeSend();
             }
             
-            activeButtons.prop('disabled', true);
+            activeButtons.attr('disabled', true);
             if (icon) {
                 button.find('.fa:first').removeClass(icon).addClass('fa fa-spinner fa-spin');
             }
-        }
+        };
 
         var ajaxComplete = request.complete;
         request.complete = function() {
@@ -279,7 +297,7 @@
             loading = setTimeout(function() {
                 ajaxEnd(activeButtons, button, icon);
             })
-        }
+        };
 
         var errorFunction = request.error;
         request.error = function(response) {
@@ -288,23 +306,30 @@
             } catch (err) {
                 gritter.show($('#executionError').text(), false);
             }
-        }
+        };
 
         request.statusCode = {
             500: function() {
                 gritter.show($('#executionError').text(), false);
             }
-      }
+        };
 
         return $.ajax(request);
     }
 
     function ajaxEnd(activeButtons, button, icon) {
-        activeButtons.prop('disabled', false);
+        activeButtons.removeAttr('disabled');
         if (icon) {
-            button.find('.fa:first').removeClass('fa-spinner fa-spin').addClass(icon);
+            button.find('.fa:first').addClass(icon).removeClass('fa-spinner fa-spin');
         }
 
+    }
+
+    function formatDateTime(datetime)
+    {
+        var format = "[?merge .localisation['dateTimeFormat'] ?]";
+
+        return datetime;
     }
 
     // Event triggering system

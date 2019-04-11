@@ -185,30 +185,32 @@ class journal
         }
 
         $archiveController = \laabs::newController('recordsManagement/archive');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         if (!\laabs\file_exists($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId)) {
             $resources = $archiveController->getDigitalResources($journal->archiveId);
             $journalResource = $resources[0];
 
-            if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalResource->getContents())) {
+            $journalContents = $digitalResourceController->contents($journalResource->resId);
+
+            if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalContents)) {
                 throw \laabs::newException("lifeCycle/journalException", "Journal file cannot be written");
             }
 
-            $journalFile = $journalResource->getContents();
         } else {
-            $journalFile = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
+            $journalContents = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
         }
 
         $offset = 0;
 
         do {
-            $offset = strpos($journalFile, (string) $needle, $offset);
+            $offset = strpos($journalContents, (string) $needle, $offset);
 
             if ($offset) {
-                $journalLength = strlen($journalFile);
-                $startOffset = strrpos($journalFile, "\n", -$journalLength + $offset) + 1;
-                $endOffset = strpos($journalFile, "\n", $startOffset);
-                $eventLine = substr($journalFile, $startOffset, $endOffset - $startOffset);
+                $journalLength = strlen($journalContents);
+                $startOffset = strrpos($journalContents, "\n", -$journalLength + $offset) + 1;
+                $endOffset = strpos($journalContents, "\n", $startOffset);
+                $eventLine = substr($journalContents, $startOffset, $endOffset - $startOffset);
 
                 $events[] = $this->getEventFromLine($eventLine);
                 $offset = $endOffset;
@@ -312,7 +314,7 @@ class journal
      *
      * @return object[] The result of the request
      */
-    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = null, $numberOfResult = 300)
+    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = ">timestamp", $numberOfResult = 300)
     {
         $query = array();
         $queryParams = array();
@@ -396,7 +398,7 @@ class journal
             $archiveController = \laabs::newController('recordsManagement/archive');
             $resources = $archiveController->getDigitalResources($journalReference->archiveId);
             $journalResource = $resources[0];
-            
+
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
 
@@ -514,7 +516,7 @@ class journal
         // Open the journal to start with
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
-        if (!count($journal)) {
+        if (!isset($journal)) {
             $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", [], ">timestamp");
             foreach ($events as $key => $event) {
                 $events[$key] = $this->decodeEventFormat($event);
@@ -763,6 +765,7 @@ class journal
     {
         $logController = \laabs::newController('recordsManagement/log');
         $archiveController = \laabs::newController('recordsManagement/archive');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         // Read journal
         if (is_scalar($archiveId) || get_class($archiveId) == 'core\Type\Id') {
@@ -772,7 +775,7 @@ class journal
             $archiveId = (string) $journal->archiveId;
         }
         $resources = $archiveController->getDigitalResources($journal->archiveId);
-        $journalResource = $resources[0];
+        $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
@@ -795,11 +798,11 @@ class journal
             return true;
         }
 
-        $resources = $archiveController->getDigitalResources($journalResource->archiveId);
-        $nextJournalResource = $resources[0];
+        $resources = $archiveController->getDigitalResources($nextJournal->archiveId);
+        $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $nextJournalContents = $nextJournalResource->getContents();
 
-        $chainEvent = explode(',', strtok($nextJournalContents, "\n"));
+        $chainEvent = str_getcsv(strtok($nextJournalContents, "\n"));
 
         // For older version compatibility
         if (count($chainEvent) < 7) {
@@ -864,7 +867,7 @@ class journal
         }
 
         $journalArray[] = $this->processChaining();
-        
+
         if (count($journalArray) == 1) {
             $journalArray = $journalArray[0];
         }
@@ -874,7 +877,7 @@ class journal
 
     /**
      * process the chaining of the last journal
-     * @param string $ownerOrgRegNumber The journal owner organization registration number 
+     * @param string $ownerOrgRegNumber The journal owner organization registration number
      *
      * @return string The chained journal file name
      */
@@ -884,6 +887,7 @@ class journal
         $timestampFileName = null;
         $logController = \laabs::newController('recordsManagement/log');
         $archiveController = \laabs::newController('recordsManagement/archive');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         $newJournal = \laabs::newInstance('recordsManagement/log');
         $newJournal->archiveId = \laabs::newId();
@@ -949,7 +953,7 @@ class journal
             $eventLine[8] = (string) $previousJournal->archiveId;
 
             $resources = $archiveController->getDigitalResources($previousJournal->archiveId);
-            $journalResource = $resources[0];
+            $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
 
             $eventLine[9] = (string) $journalResource->hashAlgorithm;
             $eventLine[10] = (string) $journalResource->hash;

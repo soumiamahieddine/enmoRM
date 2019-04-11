@@ -111,16 +111,6 @@ class scheduling
             $scheduledTask->frequencyUnit = $frequency[6];
             $scheduledTask->endMinutes = $frequency[7];
             $scheduledTask->endHours = $frequency[8];
-
-            if($scheduledTask->lastExecution) {
-                $scheduledTask->lastExecution = \laabs::newDateTime($scheduledTask->lastExecution)->setTimezone(timezone_open(date_default_timezone_get()));
-                $scheduledTask->lastExecution = $scheduledTask->lastExecution->format("Y-m-d H:i:s P");
-            }
-
-            if($scheduledTask->nextExecution) {
-                $scheduledTask->nextExecution = \laabs::newDateTime($scheduledTask->nextExecution)->setTimezone(timezone_open(date_default_timezone_get()));
-                $scheduledTask->nextExecution = $scheduledTask->nextExecution->format("Y-m-d H:i:s P");
-            }
             
             $scheduledTask->json = json_encode($scheduledTask);
         }

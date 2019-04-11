@@ -182,13 +182,20 @@ trait TemplateTrait
                     case $value instanceof \DOMNode :
                         return $this->mergeNode($pi, $instr, $value);
 
+                    case $value instanceof \core\Type\Date:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatDate($value));
+
+                    case $value instanceof \core\Type\Timestamp:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatTimestamp($value));
+
+                    case $value instanceof \core\Type\DateTime:
+                        return $this->mergeText($pi, $instr, $this->dateTimeFormatter->formatDateTime($value));
+
                     // If value is an object but no form : merge string version if possible
                     case method_exists($value, '__toString'):
-                        return $this->mergeText($pi, $instr, (string) $value);                    
+                        return $this->mergeText($pi, $instr, (string) $value);
                 }
-
         }
-
     }
 
     protected function mergeForms()
@@ -238,18 +245,22 @@ trait TemplateTrait
             $this->parsedTexts[$nodeValue] = $instructions;
         }
 
+        $values = [];
         foreach ($instructions as $pi => $instr) {
             $value = $this->getData($instr, $source);
             if (is_scalar($value) || is_null($value) || (is_object($value) && method_exists($value, '__toString'))) {
                 $tmpTextNode = $this->createTextNode($value);
-                $mergedValue = str_replace($pi, (string) $tmpTextNode->wholeText, $textNode->nodeValue);
+                $mergedValue = (string) $tmpTextNode->wholeText;
 
                 if (empty($this->xmlVersion)) {
                     $mergedValue = htmlentities($mergedValue);
                 }
-                $textNode->nodeValue = str_replace($pi, $value, $mergedValue);
+                
+                $values[] = $mergedValue;
             }
         }
+
+        $textNode->nodeValue = str_replace(array_keys($instructions), $values, $textNode->nodeValue);
 
         // If text is in an attribute that is empty, remove attribute
         if ($textNode->nodeType == XML_ATTRIBUTE_NODE && empty($textNode->value)) {
@@ -490,7 +501,7 @@ trait TemplateTrait
             $DOMNode = $pi->ownerDocument->importNode($DOMNode, true);
         }
 
-        $pi->parentNode->insertBefore($DOMNode, $pi);
+        $pi->parentNode->replaceChild($DOMNode, $pi);
         
         return true;
     }

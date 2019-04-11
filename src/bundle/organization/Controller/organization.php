@@ -252,7 +252,7 @@ class organization
             $query = implode(" AND ", $queryParts);
         }
 
-        return $this->sdoFactory->find("organization/organization", $query);
+        return $this->sdoFactory->find("organization/organization", $query, $variables);
     }
 
     /**
@@ -707,6 +707,8 @@ class organization
         return $userPosition;
     }
 
+
+
     /**
      * Add a service position to an organization
      * @param string $orgId            The organization identifier
@@ -971,52 +973,142 @@ class organization
     }
 
     /**
-     * Read parent orgs recursively
-     * @param string $orgId                 Organisation identifier
-     * @param array  $archivalProfileAccess The archival profile access array
+     * Read descendant services of an org
+     * @param string $parentId The parent orgId
      *
-     * @return bool The result of the operation
+     * @return object[] The list of services
      */
-    public function updateArchivalProfileAccess($orgId, $archivalProfileAccess)
+    public function readDescendantServices($parentId)
     {
-        $this->sdoFactory->deleteChildren("organization/archivalProfileAccess", array("orgId" => $orgId), 'organization/organization');
+        $childrenServices = $this->sdoFactory->find('organization/organization', "parentOrgId = '$parentId' AND isOrgUnit = true");
 
-        $org = $this->sdoFactory->read('organization/organization', $orgId);
+        foreach ($childrenServices as $childService) {
+            $childrenServices = array_merge($this->readDescendantServices($childService->orgId), $childrenServices);
+        }
 
+        return $childrenServices;
+    }
+
+    /**
+     * Create archivalProfileAccess entry
+     *
+     * @param  organization/archivalProfileAccess  $archivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess  $archivalProfileAccess
+     */
+    public function createArchivalprofileaccess($archivalProfileAccess)
+    {
+        if (null ==! $this->getArchivalProfileAccess($archivalProfileAccess->orgId, $archivalProfileAccess->archivalProfileReference)) {
+            throw new \core\Exception("Organization Archival Profile Access already exists.");
+        }
+        $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
         try {
             if (!$org->isOrgUnit) {
                 throw new \core\Exception("Organization Archival Profile Access can't be update ");
             }
-
         } catch (\Exception $e) {
             throw $e;
         }
+        $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
-        foreach ($archivalProfileAccess as $access) {
-            $access = (object)$access;
-            $access->orgId = $orgId;
-
-            $this->sdoFactory->create($access, "organization/archivalProfileAccess");
+        if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
+            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access");
         }
 
-        return true;
+        if ($archivalProfileAccess->archivalProfileReference !== '*' && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
+            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile does not exists");
+        }
+
+        try {
+            $archivalProfileAccess = $this->sdoFactory->create($archivalProfileAccess, 'organization/archivalProfileAccess');
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return $archivalProfileAccess;
+    }
+
+    /**
+     * Read parent orgs recursively
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess $archivalProfileAccess
+     */
+    public function updateArchivalprofileaccess($archivalProfileAccess)
+    {
+        if (!$this->sdoFactory->exists(
+            'organization/archivalProfileAccess',
+            [
+                'orgId' => $archivalProfileAccess->orgId,
+                'archivalProfileReference' => $archivalProfileAccess->archivalProfileReference
+            ]
+        )) {
+            throw new \core\Exception("Organization Archival Profile Access can't be update ");
+        }
+
+        if ($archivalProfileAccess->archivalProfileReference === '*') {
+            if (!$archivalProfileAccess->originatorAccess) {
+                throw new \core\Exception("User cannot be associated with archival profile when archival without profiles is selected");
+            }
+        }
+
+        $this->sdoFactory->update($archivalProfileAccess, "organization/archivalProfileAccess");
+
+        return $archivalProfileAccess;
     }
 
     /**
      * Delete an archival pofile accesss from every organization
-     * @param array  $archivalProfileReference The archival profile reference
      *
-     * @return bool The result of the operation
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @return bool Is archivalProfileAccess deleted
      */
-    public function deleteArchivalProfileAccess($archivalProfileReference)
+    public function deleteArchivalProfileAccess($orgId, $archivalProfileReference)
     {
-        $archivalProfileAccess = $this->sdoFactory->find("organization/archivalProfileAccess", "archivalProfileReference='$archivalProfileReference'");
-
-        if ($archivalProfileAccess) {
-            return $this->sdoFactory->deleteCollection($archivalProfileAccess, "organization/archivalProfileAccess");
+        if (!$this->sdoFactory->exists(
+            'organization/archivalProfileAccess',
+            [
+                'orgId' => $orgId,
+                'archivalProfileReference' => $archivalProfileReference
+            ]
+        )) {
+            throw new \core\Exception("Organization Archival Profile Access can't be delete");
         }
 
-        return false;
+        $archivalProfileAccess = $this->sdoFactory->read(
+            "organization/archivalProfileAccess",
+            [
+                'orgId' => $orgId,
+                'archivalProfileReference' => $archivalProfileReference
+            ]
+        );
+
+        return $this->sdoFactory->delete($archivalProfileAccess);
+    }
+
+    /**
+     * Get accesses to an archival profile for a given org and/or a given profile
+     * @param string $orgId                    The organizational unit identifier
+     * @param string $archivalProfileReference The archival profile reference
+     *
+     * @return organization/archivalProfileAccess[]
+     */
+    public function getArchivalProfileAccess($orgId=null, $archivalProfileReference=null)
+    {
+        $assert = $params = [];
+        if (!empty($orgId)) {
+            $assert[] = 'orgId=:orgId';
+            $params['orgId'] = $orgId;
+        }
+        if (!empty($archivalProfileReference)) {
+            $assert[] = 'archivalProfileReference=:archivalProfileReference';
+            $params['archivalProfileReference'] = $archivalProfileReference;
+        }
+
+        $accesses = $this->sdoFactory->find('organization/archivalProfileAccess', implode(' AND ', $assert), $params);
+
+        return $accesses;
     }
 
     /**
@@ -1025,13 +1117,17 @@ class organization
      *
      * @return recordsManagement/archivalProfile[] Array of recordsManagement/archivalProfile object
      */
-    public function getOrgUnitArchivalProfiles($orgRegNumber)
+    public function getOrgUnitArchivalProfiles($orgRegNumber, $originatorAccess = null)
     {
         $orgUnitArchivalProfiles = [];
 
         $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
 
-        $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+        if ($originatorAccess) {
+            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'");
+        } else {
+            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+        }
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         foreach ($archivalProfileAccesses as $archivalProfileAccess) {
@@ -1134,7 +1230,11 @@ class organization
                 $userOwnerOrgs[] = $userPosition->ownerOrgId;
             }
 
-            if (strpos($userPosition->orgRoleCodes, 'owner') !== false) {
+            if (is_string($userPosition->orgRoleCodes)) {
+                $userPosition->orgRoleCodes = \laabs::newTokenList($userPosition->orgRoleCodes);
+            }
+
+            if (in_array('owner', (array) $userPosition->orgRoleCodes) !== false) {
                 $owner = true;
                 break;
             }
@@ -1186,8 +1286,6 @@ class organization
         }
 
         return $originators;
-
-
     }
 
     /**
@@ -1228,7 +1326,7 @@ class organization
         foreach ($userOrgUnits as $userOrgUnit) {
             foreach ($orgUnits as $orgUnit) {
                 if (
-                    // Owner = all originators
+                // Owner = all originators
                 $owner
                     // Archiver = all originators fo the same org
                 || ($archiver && $orgUnit->ownerOrgId == $userOrgUnit->ownerOrgId)

@@ -26,7 +26,7 @@ abstract class AbstractResponse
 
     public $language;
 
-    public $headers;
+    public $headers = [];
 
     public $body;
 

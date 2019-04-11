@@ -204,6 +204,48 @@ trait archiveLifeCycleTrait
     }
 
     /**
+     * delete a digital resource
+     * @param recordsManagement/archive                  $archive   	  The archive
+     * @param digitalResource/digitalResource  		     $digitalResource The resource
+     * @param bool                                       $operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logDestructionResource($archive, $digitalResource, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent(
+            'recordsManagement/resourceDestruction',
+            $archive,
+            $operationResult,
+            $digitalResource
+        );
+    }
+
+    /**
+     * Log an archive restitution request
+     * @param recordsManagement/archive $archive   	     The archive
+     * @param bool  					$operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logRestitutionRequest($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/restitutionRequest', $archive, $operationResult);
+    }
+
+    /**
+     * Log an archive restitution request cancel
+     * @param recordsManagement/archive $archive   	     The archive
+     * @param bool  					$operationResult The operation result
+     *
+     * @return mixed The created event or the list of created event
+     */
+    public function logRestitutionRequestCancel($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/restitutionRequestCanceling', $archive, $operationResult);
+    }
+
+    /**
      * Log an archive restitution
      * @param recordsManagement/archive $archive         The archive
      * @param bool                      $operationResult The operation result
@@ -356,13 +398,13 @@ trait archiveLifeCycleTrait
      * Log an archive integrity checking
      * @param recordsManagement/archive       $archive         The archive
      * @param string                          $info            The information
-     * @param digitalResource/digitalResource $resource        The resouce
+     * @param digitalResource/digitalResource $resource        The resource
      * @param bool                            $operationResult The operation result
      *
      * @return mixed The created event or the list of created event
      */
     public function logIntegrityCheck($archive, $info, $resource = null, $operationResult = true)
-    { 
+    {
         $currentOrganization = \laabs::getToken("ORGANIZATION");
         $archive->digitalResources = null;
 
@@ -371,6 +413,34 @@ trait archiveLifeCycleTrait
             'info' => $info,
         );
 
-        return $this->logLifeCycleEvent('recordsManagement/integrityCheck',$archive, $operationResult, $resource, $eventInfo);
+        return $this->logLifeCycleEvent('recordsManagement/integrityCheck', $archive, $operationResult, $resource, $eventInfo);
+    }
+
+    /**
+     * Log a deposit of a new digital resource onto an existing archive
+     * @param recordsManagement/archive       $archive         The archive
+     * @param digitalResource/digitalResource $resource        The resource
+     * @param bool                            $operationResult The operation result
+     */
+    public function logAddResource($archive, $resource, $operationResult = true)
+    {
+        $currentOrganization = \laabs::getToken("ORGANIZATION");
+        $archive->digitalResources = null;
+
+        $eventInfo = array(
+            'depositorOrgRegNumber' => $currentOrganization->registrationNumber,
+        );
+
+        return $this->logLifeCycleEvent('recordsManagement/depositNewResource', $archive, $operationResult, $resource, $eventInfo);
+    }
+
+    /**
+     * Log a deposit of a new digital resource onto an existing archive
+     * @param recordsManagement/archive       $archive  The archive
+     * @param bool                            $operationResult The operation result
+     */
+    public function logMetadataConsultation($archive, $operationResult = true)
+    {
+        return $this->logLifeCycleEvent('recordsManagement/metadataConsultation', $archive, $operationResult);
     }
 }

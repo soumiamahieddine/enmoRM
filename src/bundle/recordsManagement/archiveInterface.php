@@ -93,7 +93,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/consultation
      */
-    public function readConsultation_archiveId_Digitalresource_resId_();
+    public function readConsultation_archiveId_Digitalresource_resId_($isCommunication = false);
 
     /**
      * Retrieve an archive by its id
@@ -146,4 +146,21 @@ interface archiveInterface
      * @action recordsManagement/archive/convertAndStore
      */
     public function updateInteractiveconversion_resId_();
+
+    /**
+     * Add a resource to the archive
+     * @param string $contents
+     * @param string $filename
+     * 
+     * @action recordsManagement/archive/addResource
+     */
+    public function create_archiveId_Digitalresource($contents, $filename = null);
+
+    /**
+     * Remove a resource to the archive
+     * @param array $resIds
+     *
+     * @action recordsManagement/archive/deleteResource
+     */
+    public function delete_archiveId_Digitalresource($resIds);
 }

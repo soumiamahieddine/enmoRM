@@ -1,0 +1,31 @@
+<div class="col-md-9 col-md-offset-1">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs nav-justified" role="tablist" id="archivalProfileNavControl">
+        <?merge archivalProfile.type.ifeq('1').not() ?>
+        <li role="presentation" id="descriptionTabBtn"><a href="#descriptionTab" aria-controls="descriptionTab" role="tab"
+                data-toggle="tab">Description</a></li>
+        <?merge archivalProfile.type.ifeq('1').not() ?>
+        <li role="presentation" id="managementTabBtn"><a href="#managementRulesTab" aria-controls="managementRulesTab"
+                role="tab" data-toggle="tab">Profile rules</a></li>
+        <?merge archivalProfile.type.ifeq('1').not() ?>
+        <li role="presentation" id="contentsTabBtn"><a href="#profileContentsTab" aria-controls="profileContentsTab"
+                role="tab" data-toggle="tab">Archive structure</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div id="tabPanes" class="panel panel-primary">
+        <div class="panel-body">
+            <div class="tab-content" id="archivalProfileNavTabs">
+                <div role="tabpanel" class="tab-pane fade in" id="descriptionTab">
+                    <?hinclude recordsManagement/archivalProfile/descriptionTab.html ?>
+                </div>
+                <?merge archivalProfile.type.ifeq('1').not() ?>
+                <div role="tabpanel" class="tab-pane fade" id="managementRulesTab">
+                    <?hinclude recordsManagement/archivalProfile/managementRulesTab.html ?>
+                </div>
+                <div role="tabpanel" class="tab-pane fade in" id="profileContentsTab">
+                    <?hinclude recordsManagement/archivalProfile/archiveStructure.html ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -311,6 +311,8 @@ trait archiveEntryTrait
 
         $this->completeManagementMetadata($archive);
 
+        $this->completeProcessingStatus($archive);
+
         $this->manageFileplanPosition($archive);
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
@@ -509,6 +511,31 @@ trait archiveEntryTrait
     }
 
     /**
+     * Complete processing status
+     *
+     * @param recordsManagement/archive $archive The archive to complete
+     */
+    protected function completeProcessingStatus($archive)
+    {
+        if (!empty($archive->processingStatus) || !isset($archive->archivalProfileReference)) {
+            return;
+        }
+
+        $processingStatuses = json_decode($this->currentArchivalProfile->processingStatuses);
+
+        if (empty($processingStatuses)) {
+            return;
+        }
+
+        // Recovery Initial and Default statuses if exists ...
+        foreach ($processingStatuses as $code => $processingStatus) {
+            if ($processingStatus->default == true) {
+                $archive->processingStatus = $code;
+            }
+        }
+    }
+
+    /**
      * Validate the archive compliance
      *
      * @param recordsManagement/archive $archive The archive to validate
@@ -519,6 +546,31 @@ trait archiveEntryTrait
         $this->validateArchiveDescriptionObject($archive);
         $this->validateManagementMetadata($archive);
         $this->validateAttachments($archive);
+        $this->validateProcessingStatus($archive);
+    }
+
+    /**
+     * Check and set the processing status
+     *
+     * @param recordsManagement/archive $archive The archive to setting
+     */
+    public function validateProcessingStatus($archive)
+    {
+        if (empty($archive->processingStatus) || !isset($this->currentArchivalProfile)) {
+            return;
+        }
+
+        $processingStatuses = json_decode($this->currentArchivalProfile->processingStatuses);
+
+        if (!isset($processingStatuses->{$archive->processingStatus})) {
+            throw new \core\Exception\BadRequestException("The processing status isn't initial");
+        }
+
+        $archiveProcessingStatus = $processingStatuses->{$archive->processingStatus};
+
+        if ($archiveProcessingStatus->type != 'initial') {
+            throw new \core\Exception\BadRequestException("The processing status isn't initial");
+        }
     }
 
     /**
@@ -850,8 +902,17 @@ trait archiveEntryTrait
             return;
         }
 
-        $nbResources = count($archive->digitalResources);
-        $nbArchiveObjects = count($archive->contents);
+        if (isset($archive->digitalResources)) {
+            $nbResources = count($archive->digitalResources);
+        } else {
+            $nbResources = 0;
+        }
+
+        if (isset($archive->contents)) {
+            $nbArchiveObjects = count($archive->contents);
+        } else {
+            $nbArchiveObjects = 0;
+        }
 
         for ($i = 0; $i < $nbResources; $i++) {
             $convertedResource = $this->convertResource($archive, $archive->digitalResources[$i]);
@@ -934,6 +995,13 @@ trait archiveEntryTrait
 
         if ($transactionControl) {
             $this->sdoFactory->commit();
+
+            // TimeStamp last modification date of the parent archive.
+            if (!empty($archive->parentArchiveId)) {
+                $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+                $parentArchive->lastModificationDate = \laabs::newTimestamp();
+                $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
+            }
         }
 
         $this->logDeposit($archive);
@@ -1015,12 +1083,8 @@ trait archiveEntryTrait
      */
     protected function storeDescriptiveMetadata($archive)
     {
-        if (!empty($archive->descriptionClass) && isset($archive->descriptionObject)) {
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        } else {
-            $descriptionController = $this->useDescriptionController('recordsManagement/description');
-        }
-
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        
         $descriptionController->create($archive);
     }
 

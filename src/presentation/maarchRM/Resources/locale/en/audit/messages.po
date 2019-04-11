@@ -1,0 +1,1560 @@
+msgid "recordsManagement/accessRule/readIndex"
+msgstr "Read access rules index"
+
+msgid "recordsManagement/accessRule/read_code_"
+msgstr "Read access rule"
+
+msgid "recordsManagement/accessRule/create"
+msgstr "Create access rule"
+
+msgid "recordsManagement/accessRule/update"
+msgstr "Update access rule"
+
+msgid "recordsManagement/accessRule/delete_code_"
+msgstr "Delete access rule"
+
+msgid "recordsManagement/archivalProfile/readIndex"
+msgstr "Read archival profile's index"
+
+msgid "recordsManagement/archivalProfile/readNew"
+msgstr "Read new archival profile"
+
+msgid "recordsManagement/archivalProfile/read_archivalProfileId_"
+msgstr "Read archival profile"
+
+msgid "recordsManagement/archivalProfile/readByreference_reference_"
+msgstr "Read archival profile by reference"
+
+msgid "recordsManagement/archivalProfile/readProfiledescription_archivalProfileReference_"
+msgstr "Read archival profile's description"
+
+msgid "recordsManagement/archivalProfile/create"
+msgstr "Create archival profile"
+
+msgid "recordsManagement/archivalProfile/update"
+msgstr "Update archival profile"
+
+msgid "recordsManagement/archivalProfile/delete_archivalProfileId_"
+msgstr "Delete archival profile"
+
+msgid "recordsManagement/archivalProfile/createArchivalprofileUpload_profileReference_"
+msgstr "Upload archival profile"
+
+msgid "recordsManagement/archivalProfile/readExport_profileName_"
+msgstr "Export archival profile's name"
+
+msgid "recordsManagement/archiveCompliance/readPeriodic"
+msgstr "Periodic check of archive's integrity"
+
+msgid "recordsManagement/archiveDescription/read_archiveId_"
+msgstr "Read archive's description"
+
+msgid "recordsManagement/archive/readDocument_docId_"
+msgstr "Read archive's document"
+
+msgid "recordsManagement/archive/readDigitalresources_archiveId_"
+msgstr "Read archive's digital ressources"
+
+msgid "recordsManagement/archive/readMetadata_archiveId_"
+msgstr "Read archive's metadata"
+
+msgid "recordsManagement/archive/readListchildrenarchive_archiveId_"
+msgstr "Read archive's children archives"
+
+msgid "recordsManagement/archive/readRelatedinformation_archiveId_"
+msgstr "Read archive's related informations"
+
+msgid "recordsManagement/archive/readContents_archiveId_"
+msgstr "Read archive's document content"
+
+msgid "recordsManagement/archive/read_archiveId_Exists"
+msgstr "Verify an archive's existence"
+
+msgid "recordsManagement/archive/createDeliverybydescription"
+msgstr "Create archive by description"
+
+msgid "recordsManagement/archive/read_archiveId_Retentionrule"
+msgstr "Read archive by retention rules"
+
+msgid "recordsManagement/archive/readAccessrule_archiveId_"
+msgstr "Read access rule by archive"
+
+msgid "recordsManagement/archive/readContentsbyoriginatorarchiveid"
+msgstr "Read archive's content by originatorArchiveId"
+
+msgid "recordsManagement/archive/create"
+msgstr "Create archive"
+
+msgid "recordsManagement/archive/createArchivebatch"
+msgstr "Create archive from script"
+
+msgid "recordsManagement/archive/readDocument_docId_"
+msgstr "Read document"
+
+msgid "recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_"
+msgstr "Read digital ressource"
+
+msgid "recordsManagement/archive/read_archiveId_"
+msgstr "Read archive"
+
+msgid "recordsManagement/archive/readContents_archiveId__resId_"
+msgstr "Read archive's content"
+
+msgid "recordsManagement/archive/read_archiveId_Exists"
+msgstr "Check archive's existence"
+
+msgid "recordsManagement/archive/read_archiveId_Retentionrule"
+msgstr "Read archive's retention rules"
+
+msgid "recordsManagement/archive/readAccessrule_archiveId_"
+msgstr "Read archive's access rule"
+
+msgid "recordsManagement/archive/updateIndex"
+msgstr "Update archive's index"
+
+msgid "recordsManagement/archive/updateInteractiveconversion_resId_"
+msgstr "Interactive conversion of a ressource"
+
+msgid "recordsManagement/archiveRelationship/newRelationship"
+msgstr "Prepare an archive's relationship"
+
+msgid "recordsManagement/archiveRelationship/createRelationship"
+msgstr "Create relationship between two archives"
+
+msgid "recordsManagement/archiveRelationship/deleteRelationship"
+msgstr "Delete relationship between two archives"
+
+msgid "recordsManagement/archiveRelationship/getByArchiveId"
+msgstr "Read relationship by archive"
+
+msgid "recordsManagement/archives/read"
+msgstr "Read all archives"
+
+msgid "recordsManagement/archives/readList"
+msgstr "Read fileplan"
+
+msgid "recordsManagement/archives/updateFreeze"
+msgstr "Freeze an archive"
+
+msgid "recordsManagement/archives/updateUnfreeze"
+msgstr "Unfreeze an archive"
+
+msgid "recordsManagement/archives/readRetentionrule"
+msgstr "Read retention rule of one or many archives"
+
+msgid "recordsManagement/archives/updateRetentionrule"
+msgstr "Update retention rule of one or many archives"
+
+msgid "recordsManagement/archives/updateArchivesretentionrule"
+msgstr "Update archival retention rule"
+
+msgid "recordsManagement/archives/readAccessrule"
+msgstr "Read all access rules"
+
+msgid "recordsManagement/archives/updateAccessrule"
+msgstr "Update an access rule"
+
+msgid "recordsManagement/archives/createDelivery"
+msgstr "Archive's communication request"
+
+msgid "recordsManagement/archives/updateSetforrestitution"
+msgstr "Update archive for restitution"
+
+msgid "recordsManagement/archives/updateDisposearchives"
+msgstr "Update archive repository"
+
+msgid "recordsManagement/archives/cancelDestruction"
+msgstr "Cancel archive destruction"
+
+msgid "recordsManagement/archives/updateDocumentsconversion"
+msgstr "Conversion request for an archive"
+
+msgid "recordsManagement/archives/updateDocumentsconvert_documentId_"
+msgstr "Conversion request for a document"
+
+msgid "recordsManagement/archives/readIntegritycheck"
+msgstr "Check archive's integrity"
+
+msgid "recordsManagement/archives/readFind"
+msgstr "Read all archives for research"
+
+msgid "recordsManagement/archives/deleteDisposablearchives"
+msgstr "Delete all disposable archives"
+
+msgid "recordsManagement/archives/updateCancelDestruction"
+msgstr "Cancel archives destruction"
+
+msgid "recordsManagement/archives/updateDocumentsconversion"
+msgstr "Flag documents to convert"
+
+msgid "recordsManagement/archives/readIntegritycheck"
+msgstr "Check archives integrity"
+
+msgid "recordsManagement/archives/readFolder"
+msgstr "Read archives by file plan position"
+
+msgid "recordsManagement/archives/updateMetadata"
+msgstr "Update archive's metadatas"
+
+msgid "recordsManagement/archives/readArchivecontents_archive_"
+msgstr "Read archive's content"
+
+msgid "recordsManagement/archives/udpateMovearchivestofolder"
+msgstr "Move an archive into a folder"
+
+msgid "recordsManagement/archives/udpateMovearchivetofolder"
+msgstr "Move archives into a folder"
+
+msgid "recordsManagement/archives/deleteDisposearchives"
+msgstr "Delete all archives flagged for destuction"
+
+msgid "recordsManagement/descriptionClass/readIndex"
+msgstr "Listing of description models"
+
+msgid "recordsManagement/log/find"
+msgstr "Listing of application logs"
+
+msgid "recordsManagement/log/read"
+msgstr "Read application logs"
+
+msgid "recordsManagement/log/create"
+msgstr "Generate application log"
+
+msgid "recordsManagement/log/update"
+msgstr "Update application log"
+
+msgid "recordsManagement/log/delete"
+msgstr "Delete application log"
+
+msgid "recordsManagement/log/form"
+msgstr "Search application logs"
+
+msgid "recordsManagement/log/contents_type__archiveId__resourceId_"
+msgstr "Read log's content"
+
+msgid "recordsManagement/retentionRule/readIndex"
+msgstr "Read all retention rules"
+
+msgid "recordsManagement/retentionRule/create"
+msgstr "Create retention rule"
+
+msgid "recordsManagement/retentionRule/read_code_"
+msgstr "Read retention rule"
+
+msgid "recordsManagement/retentionRule/update"
+msgstr "Update retention rule"
+
+msgid "recordsManagement/retentionRule/delete_code_"
+msgstr "Delete retention rule"
+
+msgid "recordsManagement/storageRule/readIndex"
+msgstr "Read all storage rules"
+
+msgid "recordsManagement/storageRule/create"
+msgstr "Create storage rule"
+
+msgid "recordsManagement/storageRule/read_code_"
+msgstr "Read storage rule"
+
+msgid "recordsManagement/storageRule/update"
+msgstr "Update storage rule"
+
+msgid "recordsManagement/storageRule/delete_code_"
+msgstr "Delete storage rule"
+
+msgid "recordsManagement/serviceLevel/readIndex"
+msgstr "Read all service levels"
+
+msgid "recordsManagement/serviceLevel/read"
+msgstr "Prepare new service level"
+
+msgid "recordsManagement/serviceLevel/create"
+msgstr "Create service level"
+
+msgid "recordsManagement/serviceLevel/read_serviceLevelId_"
+msgstr "Read service level"
+
+msgid "recordsManagement/serviceLevel/update"
+msgstr "Update service level"
+
+msgid "recordsManagement/serviceLevel/delete_serviceLevelId_"
+msgstr "Delete service level"
+
+msgid "recordsManagement/serviceLevel/updateSetdefault_serviceLevelId_"
+msgstr "Set default service level"
+
+msgid "recordsManagement/serviceLevel/read_Default"
+msgstr "Read default service level"
+
+msgid "recordsManagement/log/createDepositjournal"
+msgstr "Generate deposit log"
+
+msgid "recordsManagement/archivalProfile/readArchivalprofileExport_profileReference_"
+msgstr "Export profile"
+
+msgid "documentManagement/fulltext/read"
+msgstr "Read full-text"
+
+msgid "lifeCycle/event/read_eventId_"
+msgstr "Read life cycle event"
+
+msgid "lifeCycle/event/readEventtypelist"
+msgstr "List of event types"
+
+msgid "lifeCycle/event/readSearch"
+msgstr "Read all life cycle events"
+
+msgid "lifeCycle/journal/readList"
+msgstr "Read all life cycle logs"
+
+msgid "lifeCycle/journal/read_journalId_"
+msgstr "Read life cycle log"
+
+msgid "lifeCycle/journal/createChainjournal"
+msgstr "Chaining of life cycle"
+
+msgid "lifeCycle/journal/checkIntegrity"
+msgstr "Check life cycle logs integrity"
+
+msgid "medona/archivalAgreement/readIndex"
+msgstr "Read all archival agreements"
+
+msgid "medona/archivalAgreement/readNewagreement"
+msgstr "Prepare new archival agreement"
+
+msgid "medona/archivalAgreement/read_archivalAgreementId_"
+msgstr "Read archival agreement"
+
+msgid "medona/archivalAgreement/create"
+msgstr "Create archival agreement"
+
+msgid "medona/archivalAgreement/update"
+msgstr "Update archival agreement"
+
+msgid "medona/archivalAgreement/delete_archivalAgreementId_"
+msgstr "Delete archival agreement"
+
+msgid "medona/archiveAuthorization/readIncominglist"
+msgstr "List of authorization messages sent"
+
+msgid "medona/archiveAuthorization/readCommunicationoutgoinglist"
+msgstr "List of delivery messages sent"
+
+msgid "medona/archiveAuthorization/readCommunicationincominglist"
+msgstr "List of delivery messages received"
+
+msgid "medona/archiveAuthorization/readCommunicationcount"
+msgstr "Number of authorization delivery messages"
+
+msgid "medona/archiveAuthorization/readDestructionoutgoinglist"
+msgstr "List of destruction authorization messages sent"
+
+msgid "medona/archiveAuthorization/readDestructionincominglist"
+msgstr "List of destruction authorization messages received"
+
+msgid "medona/archiveAuthorization/readDestructioncount"
+msgstr "Number of destruction authorization messages"
+
+msgid "medona/archiveAuthorization/updateOriginatingagencyrequestacceptance_messageId_"
+msgstr "Validate authorization request by originator"
+
+msgid "medona/archiveAuthorization/updateOriginatingagencyrequestrejection"
+msgstr "Reject an authorization by originator"
+
+msgid "medona/archiveAuthorization/updateControlauthorityrequestacceptance_messageId_"
+msgstr "Validate authorization request by control authority"
+
+msgid "medona/archiveAuthorization/updateControlauthorityrequestrejection"
+msgstr "Reject authorization request by control authority"
+
+msgid "medona/archiveAuthorization/read_messageId_"
+msgstr "Read authorization request"
+
+msgid "medona/archiveAuthorization/read_messageId_Export"
+msgstr "Export authorization message"
+
+msgid "medona/archiveAuthorization/read_messageId_Attachment_attachmentId_"
+msgstr "Read authorization message attachement"
+
+msgid "medona/archiveAuthorization/updateEndtransaction_messageId_"
+msgstr "End transaction of authorization request"
+
+msgid "medona/archiveAuthorization/readCount"
+msgstr "Number of authorization messages"
+
+msgid "medona/archiveAuthorization/readSearch"
+msgstr "Search authorization messages"
+
+msgid "medona/archiveAuthorization/updateArchive"
+msgstr "Storage of authorization messages"
+
+msgid "medona/archiveAuthorization/update_messageId_Archive"
+msgstr "Storage of authorization message"
+
+msgid "medona/archiveAuthorization/deleteMessagedirectorypurge"
+msgstr "Automatic deletion of authorization request messages in the temporary storage"
+
+msgid "medona/archiveDelivery/readIncominglist"
+msgstr "List of delivery request messages received"
+
+msgid "medona/archiveDelivery/readOutgoinglist"
+msgstr "List of delivery request messages sent"
+
+msgid "medona/archiveDelivery/readCount"
+msgstr "Number of delivery request messages"
+
+msgid "medona/archiveDelivery/updateSendauthorizationrequest_messageId_"
+msgstr "Authorization request for a delivery request"
+
+msgid "medona/archiveDelivery/updateRequestacceptance_messageId_"
+msgstr "Accept delivery request"
+
+msgid "medona/archiveDelivery/updateRequestrejection"
+msgstr "Reject delivery request"
+
+msgid "medona/archiveDelivery/updateRequestvalisation_messageId_"
+msgstr "Validate delivery request"
+
+msgid "medona/archiveDelivery/readSearchoutgoing"
+msgstr "Read all delivery requests received"
+
+msgid "medona/archiveDelivery/updateProcessBatch"
+msgstr "Delivery requests processing"
+
+msgid "medona/archiveDelivery/readValidate"
+msgstr "Read all delivery requests validated"
+
+msgid "medona/archiveDelivery/read_messageId_"
+msgstr "Read delivery request"
+
+msgid "medona/archiveDelivery/read_messageId_Export"
+msgstr "Export delivery request"
+
+msgid "medona/archiveDelivery/read_messageId_Attachment_attachmentId_"
+msgstr "Read delivery request's attachement"
+
+msgid "medona/archiveDelivery/updateEndtransaction_messageId_"
+msgstr "Delivery request's end of transaction"
+
+msgid "medona/archiveDelivery/updateArchive"
+msgstr "Storage of delivery requests"
+
+msgid "medona/archiveDelivery/update_messageId_Archive"
+msgstr "Storage of a delivery request"
+
+msgid "medona/archiveDelivery/createDelivery"
+msgstr "Create delivery request"
+
+msgid "medona/archiveDelivery/readHistory"
+msgstr "Read delivery history"
+
+msgid "medona/archiveDelivery/read_messageId_exportArchive"
+msgstr "Download delivered archive"
+
+msgid "medona/archiveDelivery/deleteMessagedirectorypurge"
+msgstr "Automatic deletion of Delivery request messages in the temporary storage"
+
+msgid "medona/archiveDelivery/readIncominglist"
+msgstr "List delivery request messages received"
+
+msgid "medona/archiveDelivery/readSearch"
+msgstr "Search delivery messages"
+
+msgid "medona/archiveDelivery/updateRequestderogation_messageId_"
+msgstr "Delivery request's sending derogation"
+
+msgid "medona/archiveDelivery/readRequestReplyList"
+msgstr "Read replies to delivery requests"
+
+msgid "medona/archiveDelivery/readRequestList"
+msgstr "Read delivery request list"
+
+msgid "medona/archiveDestruction/readIncominglist"
+msgstr "List destruction request messages received"
+
+msgid "medona/archiveDestruction/readOutgoinglist"
+msgstr "List destruction request messages sent"
+
+msgid "medona/archiveDestruction/readCount"
+msgstr "Number of destruction request messages"
+
+msgid "medona/archiveDestruction/updateRequestvalidation_messageId_"
+msgstr "Validate destruction request"
+
+msgid "medona/archiveDestruction/updateRequestrejection"
+msgstr "Reject destruction request"
+
+msgid "medona/archiveDestruction/updateProcessall"
+msgstr "Processing destruction requests"
+
+msgid "medona/archiveDestruction/read_messageId_"
+msgstr "Read destruction request"
+
+msgid "medona/archiveDestruction/read_messageId_Export"
+msgstr "Export destruction request message"
+
+msgid "medona/archiveDestruction/read_messageId_Attachment_attachmentId_"
+msgstr "Read destruction message's attachement"
+
+msgid "medona/archiveDestruction/updateEndtransaction_messageId_"
+msgstr "Destruction request's end of transaction"
+
+msgid "medona/archiveDestruction/readSearch"
+msgstr "Read all destruction requests received"
+
+msgid "medona/archiveDestruction/updateArchive"
+msgstr "Destruction requests storage"
+
+msgid "medona/archiveDestruction/update_messageId_Archive"
+msgstr "Destruction request storage"
+
+msgid "medona/archiveDestruction/deleteMessagedirectorypurge"
+msgstr "Destruction request messages automatic elimination in the temporary storage medium"
+
+msgid "medona/archiveDestruction/readHistory"
+msgstr "Read destruction history"
+
+msgid "medona/archiveDestruction/updateDisposearchives"
+msgstr "Label archives for destruction"
+
+msgid "medona/archiveModification/updateFreeze"
+msgstr "Freeze archive with update message generated"
+
+msgid "medona/archiveModification/updateUnfreeze"
+msgstr "Unfreeze archive with update message generated"
+
+msgid "medona/archiveModification/updateRetentionrule"
+msgstr "Update retention rule with update message generated"
+
+msgid "medona/archiveModification/updateAccessrule"
+msgstr "Update access rule with update message generated"
+
+msgid "medona/archiveNotification/deleteMessagedirectorypurge"
+msgstr "Notification request messages automatic elimination in the temporary storage medium"
+
+msgid "medona/archiveNotification/readList"
+msgstr "List notification messages"
+
+msgid "medona/archiveNotification/readCount"
+msgstr "Number of notification messages"
+
+msgid "medona/archiveNotification/read_messageId_"
+msgstr "Read notification message"
+
+msgid "medona/archiveNotification/read_messageId_Export"
+msgstr "Export notification message"
+
+msgid "medona/archiveNotification/read_messageId_Attachment_attachmentId_"
+msgstr "Read notification message's attachement"
+
+msgid "medona/archiveNotification/updateEndtransaction_messageId_"
+msgstr "Notification's end of transaction"
+
+msgid "medona/archiveNotification/readSearch"
+msgstr "Search notification messages"
+
+msgid "medona/archiveNotification/updateArchive"
+msgstr "Notification messages storage"
+
+msgid "medona/archiveNotification/update_messageId_Archive"
+msgstr "Notification message storage"
+
+msgid "medona/archiveNotification/readHistory"
+msgstr "Read notification history"
+
+msgid "medona/archiveRestitution/readIncominglist"
+msgstr "List restitution request messages received"
+
+msgid "medona/archiveRestitution/readRestitutionlist"
+msgstr "List restitution request messages"
+
+msgid "medona/archiveRestitution/readOutgoinglist"
+msgstr "List restitution request messages sent"
+
+msgid "medona/archiveRestitution/readCount"
+msgstr "Number of restitution request messages"
+
+msgid "medona/archiveRestitution/updateRequestacceptance_messageId_"
+msgstr "Accept restitution request message"
+
+msgid "medona/archiveRestitution/updateRequestreplyacceptance_messageId_"
+msgstr "Accept restitution request message"
+
+msgid "medona/archiveRestitution/updateRequestreplyrejection"
+msgstr "Reject restitution request message"
+
+msgid "medona/archiveRestitution/updateRequestrejection"
+msgstr "Reject restitution request message"
+
+msgid "medona/archiveRestitution/updateProcessBatch"
+msgstr "Processing restitution requests"
+
+msgid "medona/archiveRestitution/updateProcess_message_"
+msgstr "Processing restitution request"
+
+msgid "medona/archiveRestitution/updateValidateBatch"
+msgstr "Validate restitution requests"
+
+msgid "medona/archiveRestitution/read_messageId_"
+msgstr "Read restitution request messages"
+
+msgid "medona/archiveRestitution/read_messageId_Export"
+msgstr "Export restitution request message"
+
+msgid "medona/archiveRestitution/read_messageId_Attachment_attachmentId_"
+msgstr "Read restitution request message's attachement"
+
+msgid "medona/archiveRestitution/updateEndtransaction_messageId_"
+msgstr "Restitution request's end of transaction"
+
+msgid "medona/archiveRestitution/readSearch"
+msgstr "Search restitution request messages"
+
+msgid "medona/archiveRestitution/updateArchive"
+msgstr "Restitution request messages storage"
+
+msgid "medona/archiveRestitution/update_messageId_Archive"
+msgstr "Restitution request message storage"
+
+msgid "medona/archiveRestitution/deleteMessagedirectorypurge"
+msgstr "Restitution request messages automatic elimination in the temporary storage medium"
+
+msgid "medona/archiveRestitution/readHistory"
+msgstr "Read restitution history"
+
+msgid "medona/archiveRestitution/readProcessList"
+msgstr "Read processed restitution requests"
+
+msgid "medona/archiveRestitution/readRequestProcessList"
+msgstr "Read pending restitution requests"
+
+msgid "medona/archiveRestitution/readRequestValidationList"
+msgstr "Read restitution requests awaiting to be validated"
+
+msgid "medona/archiveRestitution/readValidationList"
+msgstr "Read validated restitution requests"
+
+msgid "medona/archiveRestitution/read_messageId_exportArchive"
+msgstr "Export requested archive (restitute)"
+
+msgid "medona/archiveRestitution/updateDestructall"
+msgstr "Destruct all retrieved archives"
+
+msgid "medona/archiveRestitution/updateSetforrestitution"
+msgstr "Archive(s) marked for restitution"
+
+msgid "medona/archiveRestitution/update_messageId_Accept"
+msgstr "Accept restitution message"
+
+msgid "medona/archiveRestitution/update_messageId_reject"
+msgstr "Reject restitution message"
+
+msgid "medona/archiveRestitution/update_messageId_acknowledge"
+msgstr "Confirm archive receipt"
+
+msgid "medona/archiveRestitution/update_messageId_Process"
+msgstr "Processing restitution message"
+
+msgid "medona/archiveTransfer/readIncominglist"
+msgstr "List transfer request messages received"
+
+msgid "medona/archiveTransfer/readOutgoinglist"
+msgstr "List transfer request messages sent"
+
+msgid "medona/archiveTransfer/readCount"
+msgstr "Number of transfer request messages"
+
+msgid "medona/archiveTransfer/create"
+msgstr "Generate transfer request message"
+
+msgid "medona/archiveTransfer/updateValidateBatch"
+msgstr "Validate transfer request messages"
+
+msgid "medona/archiveTransfer/updateValidate_messageId_"
+msgstr "Validate transfer request message"
+
+msgid "medona/archiveTransfer/updateProcessBatch"
+msgstr "Processing transfer request"
+
+msgid "medona/archiveTransfer/updateRequestacceptance_messageId_"
+msgstr "Accept tranfer request message"
+
+msgid "medona/archiveTransfer/updateRequestrejection"
+msgstr "Reject transfer request message"
+
+msgid "medona/archiveTransfer/updateProcess_messageId_"
+msgstr "Processing transfer request message"
+
+msgid "medona/archiveTransfer/read_messageId_"
+msgstr "Read transfer request message"
+
+msgid "medona/archiveTransfer/read_messageId_Export"
+msgstr "Export tranfer request message"
+
+msgid "medona/archiveTransfer/read_messageId_Attachment_attachmentId_"
+msgstr "Read transfer request message according to an archive"
+
+msgid "medona/archiveTransfer/updateEndtransaction_messageId_"
+msgstr "Update transfer request message's end of transaction"
+
+msgid "medona/archiveTransfer/readSearch"
+msgstr "Search transfer request messages"
+
+msgid "medona/archiveTransfer/updateArchive"
+msgstr "Transfer request messages storage"
+
+msgid "medona/archiveTransfer/update_messageId_Archive"
+msgstr "Transfer request message storage"
+
+msgid "medona/archiveTransfer/updateRequestvalidate_messageId_"
+msgstr "Validate message"
+
+msgid "medona/archiveTransfer/deleteMessagedirectorypurge"
+msgstr "Transfer request messages automatic elimination in the temporary storage medium"
+
+msgid "medona/archiveTransfer/readHistory"
+msgstr "Read transfer history"
+
+msgid "medona/documentConversion/readProcessAll"
+msgstr "Processing of all conversions"
+
+msgid "medona/documentConversion/readList"
+msgstr "List conversion messages"
+
+msgid "medona/documentConversion/updateDocumentsconversion"
+msgstr "Tagged document(s) for conversion"
+
+msgid "medona/message/read_messageId_"
+msgstr "Read message"
+
+msgid "medona/message/read_messageId_Export"
+msgstr "Export message"
+
+msgid "medona/message/read_messageId_Attachment_attachmentId_"
+msgstr "Read message according to an archive"
+
+msgid "medona/message/updateEndtransaction_messageId_"
+msgstr "Message end of transaction"
+
+msgid "medona/message/readCount"
+msgstr "Number of messages"
+
+msgid "medona/message/readSearch"
+msgstr "Search messages"
+
+msgid "medona/message/updateArchive"
+msgstr "Messages storage"
+
+msgid "medona/message/update_messageId_Archive"
+msgstr "Message storage"
+
+msgid "medona/message/deleteMessagedirectorypurge"
+msgstr "Messages automatic elimination in the temporary storage medium"
+
+msgid "medona/controlAuthority/readList"
+msgstr "Read control Authorities"
+
+msgid "medona/controlAuthority/create"
+msgstr "Create control authority"
+
+msgid "medona/controlAuthority/update"
+msgstr "Update control authority"
+
+msgid "medona/controlAuthority/delete"
+msgstr "Delete control authority"
+
+msgid "digitalResource/cluster/readList"
+msgstr "Read all storage clusters"
+
+msgid "digitalResource/cluster/read_clusterId_"
+msgstr "Read storage cluster"
+
+msgid "digitalResource/cluster/create"
+msgstr "Create storage cluster"
+
+msgid "digitalResource/cluster/update"
+msgstr "Update storage cluster"
+
+msgid "digitalResource/contentType/read"
+msgstr "Read content types"
+
+msgid "digitalResource/contentType/create"
+msgstr "Create content type"
+
+msgid "digitalResource/contentType/read_name_"
+msgstr "Read content type"
+
+msgid "digitalResource/contentType/update_name_"
+msgstr "Update content type"
+
+msgid "digitalResource/conversionRule/readList"
+msgstr "List conversion rules"
+
+msgid "digitalResource/conversionRule/read_conversionRuleId_"
+msgstr "Read conversion rule"
+
+msgid "digitalResource/conversionRule/create"
+msgstr "Create conversion rule"
+
+msgid "digitalResource/conversionRule/update"
+msgstr "Update conversion rule"
+
+msgid "digitalResource/conversionRule/delete_conversionRuleId_"
+msgstr "Delete conversion rule"
+
+msgid "digitalResource/format/readList"
+msgstr "Read all formats"
+
+msgid "digitalResource/format/readFind_query_"
+msgstr "Search formats"
+
+msgid "digitalResource/format/readGet"
+msgstr "Read format according to PuID"
+
+msgid "digitalResource/format/createFileformatinformation"
+msgstr "Informations on document's format"
+
+msgid "digitalResource/repository/readList"
+msgstr "Read all storage mediums"
+
+msgid "digitalResource/repository/read_repositoryId_"
+msgstr "Read storage medium"
+
+msgid "digitalResource/repository/create"
+msgstr "Create storage medium"
+
+msgid "digitalResource/repository/update"
+msgstr "Update storage medium"
+
+msgid "digitalResource/repository/readFlawedaddresses"
+msgstr "Read flawed addresses"
+
+msgid "digitalResource/repository/updateCheckaddressintegrity"
+msgstr "Check address integrity"
+
+msgid "digitalResource/repository/updateCheckintegrity"
+msgstr "Check deposit ressources integrity"
+
+#msgid "organization/orgContact/createOrgcontact"
+#msgstr "Create organization contact"
+
+msgid "organization/orgContact/readOrgcontact_orgId_Org"
+msgstr "Read contact according to his organization"
+
+msgid "organization/orgContact/readOrgcontact_contactId_Contact"
+msgstr "Read organization contact"
+
+msgid "organization/orgContact/deleteOrgcontact"
+msgstr "Delete organization contact"
+
+msgid "organization/orgRole/readList"
+msgstr "Read all roles (organization)"
+
+msgid "auth/roleMember/readIndex"
+msgstr "Read all members of all roles"
+
+msgid "auth/role/readIndex"
+msgstr "Read all roles"
+
+msgid "organization/orgType/readList"
+msgstr "Read all organization types"
+
+msgid "organization/orgType/create"
+msgstr "Create organization type"
+
+msgid "organization/orgType/read_code_"
+msgstr "Read organization type"
+
+msgid "organization/orgType/update_code_"
+msgstr "Update organization type"
+
+msgid "organization/organization/readIndex"
+msgstr "Read all organizations"
+
+msgid "organization/organization/readTree"
+msgstr "Read organizations tree"
+
+msgid "organization/organization/readSearch"
+msgstr "Search organizations"
+
+msgid "organization/organization/create"
+msgstr "Create organization"
+
+msgid "organization/organization/create_orgId_Contact"
+msgstr "Create contact into an organization"
+
+msgid "organization/organization/readOrgunitList"
+msgstr "Read all organizational units"
+
+msgid "organization/organization/read_orgId_"
+msgstr "Read organization"
+
+msgid "organization/organization/readByregnumber"
+msgstr "Read organization by registration number"
+
+msgid "organization/organization/readByrole_role_"
+msgstr "Read organization by role"
+
+#msgid "organization/organization/readOrgList"
+#msgstr "Read organizations"
+
+msgid "organization/organization/readUserpositions_orgId_"
+msgstr "Read organization by user position"
+
+msgid "organization/organization/createUserposition_orgId__userAccountId_"
+msgstr "Read organization by user position and user id"
+
+msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgstr "Create user position in organization"
+
+msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"
+msgstr "Set default user position"
+
+msgid "organization/organization/deleteUserposition_orgId__userAccountId_"
+msgstr "Delete user position"
+
+msgid "organization/organization/deleteServiceposition_orgId__serviceAccountId_"
+msgstr "Delete service account position of an organization"
+
+msgid "organization/organization/deleteContactposition_orgId__contactId_"
+msgstr "Delete organization contact"
+
+msgid "organization/organization/readServicepositions_orgId_"
+msgstr "Read organization by service position"
+
+msgid "organization/organization/update_orgId_"
+msgstr "Update an organization"
+
+msgid "organization/organization/updateMove_orgId_"
+msgstr "Move an organization"
+
+msgid "organization/organization/delete_orgId_"
+msgstr "Delete organization"
+
+msgid "organization/organization/read_orgId_Addresses"
+msgstr "Read all addressess related to an organization"
+
+msgid "organization/organization/read_orgId_Communications"
+msgstr "Read all organization's communications"
+
+msgid "organization/organization/read_orgId_Contacts"
+msgstr "Read all organization's contacts"
+
+#msgid "organization/organization/create_orgId_Contact_contactId_"
+#msgstr "Create organization contact"
+
+msgid "organization/servicePosition/updateCurrent_orgId_"
+msgstr "Update account's service position"
+
+msgid "organization/servicePosition/read"
+msgstr "Read account's service positions"
+
+msgid "organization/servicePosition/read_serviceAccountId_"
+msgstr "Read account's current position"
+
+msgid "organization/servicePosition/readOrgs"
+msgstr "Read service account's available organizations"
+
+msgid "organization/servicePosition/readServices"
+msgstr "Read service account's available services"
+
+msgid "organization/userPosition/updateCurrent_orgId_"
+msgstr "Update a position"
+
+msgid "organization/userPosition/read"
+msgstr "Read user position"
+
+msgid "organization/userPosition/readOrgs"
+msgstr "Read user's available organizations"
+
+msgid "organization/userPosition/readServices"
+msgstr "Read user's available services"
+
+msgid "organization/userPosition/readDescendantorgs"
+msgstr "Read descendant organizations"
+
+msgid "organization/userPosition/readDescendantservices"
+msgstr "Read descendant services"
+
+msgid "organization/userPosition/readGetcurrentorgtree"
+msgstr "Read user position in organization"
+
+msgid "auth/authentication/createUserlogin"
+msgstr "Login"
+
+msgid "auth/authentication/deleteUserlogin"
+msgstr "Logout"
+
+msgid "auth/authentication/update_userName_Password"
+msgstr "Edit user's password"
+
+msgid "auth/publicUserStory/read"
+msgstr "Read all public users"
+
+msgid "auth/role/readNewrole"
+msgstr "Prepare new role"
+
+msgid "auth/role/read_roleId_"
+msgstr "Read role"
+
+msgid "auth/role/read_roleId_Privileges"
+msgstr "Read role's privileges"
+
+msgid "auth/role/read_roleId_Accessrules"
+msgstr "Read role's access rules"
+
+msgid "auth/role/create"
+msgstr "Create role"
+
+msgid "auth/role/create_roleId_Privilege"
+msgstr "Create role's privileges"
+
+msgid "auth/role/create_roleId_Accessrule"
+msgstr "Create role's access rule"
+
+msgid "auth/role/update_roleId_"
+msgstr "Update role"
+
+msgid "auth/role/update_roleId_Status_status_"
+msgstr "Update role's status"
+
+msgid "auth/role/deletePrivilege"
+msgstr "Delete role's privilege"
+
+msgid "auth/role/deleteAccessrule"
+msgstr "Delete role's access rule"
+
+msgid "auth/role/delete_roleId_"
+msgstr "Delete role"
+
+msgid "auth/role/readRoles_query_"
+msgstr "Read roles (Thesaurus)"
+
+msgid "auth/roleMember/readByrole_roleId_"
+msgstr "Read role members"
+
+msgid "auth/roleMember/readByuseraccount_userAccountId_"
+msgstr "Read role by user account"
+
+msgid "auth/roleMember/create"
+msgstr "Create role member"
+
+msgid "auth/roleMember/delete_roleId__userAccountId_"
+msgstr "Delete role member"
+
+msgid "auth/serviceAccount/readIndex"
+msgstr "Read all service accounts"
+
+msgid "auth/serviceAccount/readSearch"
+msgstr "Search service account"
+
+msgid "auth/serviceAccount/readNewservice"
+msgstr "Read new service account"
+
+msgid "auth/serviceAccount/read_serviceAccountId_"
+msgstr "Read service account"
+
+msgid "auth/serviceAccount/create"
+msgstr "Create service account"
+
+msgid "auth/serviceAccount/update"
+msgstr "Update service account"
+
+msgid "auth/serviceAccount/updateEnable_serviceAccountId_"
+msgstr "Activate service account"
+
+msgid "auth/serviceAccount/updateDisable_serviceAccountId_"
+msgstr "Deactivate service account"
+
+msgid "auth/serviceAccount/readServicetoken_serviceAccountId_"
+msgstr "Generate service account token"
+
+msgid "auth/serviceAccount/readQuery_query_"
+msgstr "Account services auto completion"
+
+msgid "auth/userAccount/readIndex"
+msgstr "List users"
+
+msgid "auth/userAccount/readProfile"
+msgstr "Read user profile"
+
+msgid "auth/userAccount/updateProfile"
+msgstr "Update user profile"
+
+msgid "auth/userAccount/readUserlist"
+msgstr "Read all user accounts"
+
+msgid "auth/userAccount/readSearch"
+msgstr "Search users"
+
+msgid "auth/userAccount/readQuery_query_"
+msgstr "Read multiple user accounts"
+
+msgid "auth/userAccount/readNew"
+msgstr "Prepare new user account"
+
+msgid "auth/userAccount/create"
+msgstr "Create user account"
+
+msgid "auth/userAccount/createUseraccount"
+msgstr "Create new user account"
+
+msgid "auth/userAccount/read_userAccountId_"
+msgstr "Read user account"
+
+msgid "auth/userAccount/read_userAccountId_Information"
+msgstr "Read informations related to user account"
+
+msgid "auth/userAccount/update_userAccountId_"
+msgstr "Update user account"
+
+msgid "auth/userAccount/read_userAccountId_Privileges"
+msgstr "Read user account's privileges"
+
+msgid "auth/userAccount/readHasprivilege"
+msgstr "Read privilege"
+
+msgid "auth/userAccount/readAccessrule_objectClass_"
+msgstr "Read user account's access rules by object class"
+
+msgid "auth/userAccount/updateDisable_userAccountId_"
+msgstr "Deactivate user account"
+
+msgid "auth/userAccount/updateEnable_userAccountId_"
+msgstr "Activate user account"
+
+msgid "auth/userAccount/updateLock_userAccountId_"
+msgstr "Lock user account"
+
+msgid "auth/userAccount/updateUnlock_userAccountId_"
+msgstr "Unlock user account"
+
+msgid "auth/userAccount/updatePassword_userAccountId_"
+msgstr "Update user's password"
+
+msgid "auth/userAccount/updatePasswordchangerequest_userAccountId_"
+msgstr "User's password update request"
+
+msgid "auth/authentication/updatePassword"
+msgstr "Update user's password"
+
+msgid "auth/userAccount/updateGeneratePassword"
+msgstr "Generate user's password"
+
+msgid "contact/communicationMean/readIndex"
+msgstr "Read all communication means"
+
+msgid "contact/communicationMean/create"
+msgstr "Create communication mean"
+
+msgid "contact/communicationMean/read_code_"
+msgstr "Read communication mean"
+
+msgid "contact/contact/readCommunication_communicationId_"
+msgstr "Read communication"
+
+msgid "contact/communicationMean/update_code_"
+msgstr "Update communication mean"
+
+msgid "contact/communicationMean/delete_code_"
+msgstr "Delete communication mean"
+
+msgid "contact/contact/readIndex"
+msgstr "Read all contacts"
+
+msgid "contact/contact/create"
+msgstr "Create contact"
+
+msgid "contact/contact/read_contactId_"
+msgstr "Read contact"
+
+msgid "contact/contact/update_contactId_"
+msgstr "Update contact"
+
+msgid "contact/contact/delete_contactId_"
+msgstr "Delete contact"
+
+msgid "contact/contact/read_contactId_Address"
+msgstr "Read contact's addresses"
+
+msgid "contact/contact/create_contactId_Address"
+msgstr "Create contact's address"
+
+msgid "contact/contact/readAddress_addressId_"
+msgstr "Search address"
+
+msgid "contact/contact/updateAddress_addressId_"
+msgstr "Update address"
+
+msgid "contact/contact/deleteAddress_addressId_"
+msgstr "Delete address"
+
+msgid "contact/contact/create_contactId_Communication"
+msgstr "Create contact's communication"
+
+msgid "contact/contact/read_contactId_Communication"
+msgstr "Read contact's communications"
+
+msgid "contact/contact/read_contactId_Communication_comMeanCode_"
+msgstr "Read contact's communication"
+
+msgid "contact/contact/updateCommunication_communicationId_"
+msgstr "Update communication"
+
+msgid "contact/contact/deleteCommunication_communicationId_"
+msgstr "Delete communication"
+
+msgid "lifeCycle/eventFormat/createEventformat"
+msgstr "Create event format"
+
+msgid "lifeCycle/eventFormat/deleteEventformat_type_"
+msgstr "Delete event format"
+
+msgid "lifeCycle/eventFormat/readEventformatEdit"
+msgstr "Prepare event format's change"
+
+msgid "lifeCycle/eventFormat/readEventformatlist"
+msgstr "List events format"
+
+msgid "lifeCycle/eventFormat/updateEventformat"
+msgstr "Update event format"
+
+msgid "batchProcessing/task/readIndex"
+msgstr "Read all tasks"
+
+msgid "batchProcessing/task/create"
+msgstr "Create task"
+
+msgid "batchProcessing/task/delete_taskId_"
+msgstr "Delete task"
+
+msgid "batchProcessing/task/read_taskId_"
+msgstr "Read task"
+
+msgid "batchProcessing/task/update_taskId_"
+msgstr "Update task"
+
+msgid "batchProcessing/scheduling/readSchedulings"
+msgstr "Read all scheduled tasks"
+
+msgid "batchProcessing/scheduling/readExecute_schedulingId_"
+msgstr "Scheduled task's manual execution"
+
+msgid "batchProcessing/scheduling/create"
+msgstr "Create scheduled task"
+
+msgid "batchProcessing/scheduling/update"
+msgstr "Update scheduled task"
+
+msgid "batchProcessing/scheduling/updateChangestatus"
+msgstr "Update scheduled task's status"
+
+msgid "batchProcessing/scheduling/updateProcess"
+msgstr "Scheduled tasks' automatic execution"
+
+msgid "batchProcessing/scheduling/readTasks"
+msgstr "Read tasks for scheduling"
+
+msgid "batchProcessing/scheduling/delete_schedulingId_"
+msgstr "Delete task's scheduling"
+
+msgid "batchProcessing/logscheduling/read_logId_"
+msgstr "Read scheduled task's log"
+
+msgid "batchProcessing/logscheduling/read_schedulingId_"
+msgstr "Read scheduled task's history"
+
+msgid "batchProcessing/notification/create"
+msgstr "Create scheduled tasks' notification"
+
+msgid "batchProcessing/notification/updateProcess"
+msgstr "Batch processing of scheduled tasks' notification"
+
+msgid "batchProcessing/logscheduling/read_schedulingId__logDate_"
+msgstr "Read scheduled task's event by date"
+
+msgid "archivesPubliques/content/createSearch"
+msgstr "Read all public archives"
+
+msgid "archivesPubliques/content/readFinddocuments"
+msgstr "Search public archives' documents"
+
+msgid "archivesPubliques/content/create"
+msgstr "Create public archive content's description"
+
+msgid "archivesPubliques/content/read_contentId_"
+msgstr "Read public archive"
+
+msgid "archivesPubliques/content/update"
+msgstr "Update public archive"
+
+msgid "archivesPubliques/content/delete_contentId_"
+msgstr "Delete public archive"
+
+msgid "archivesPubliques/thesaurus/read_name__query_"
+msgstr "Search thesaurus in register"
+
+msgid "recordsManagement/descriptionField/create"
+msgstr "Create description field"
+
+msgid "recordsManagement/descriptionField/delete_name_"
+msgstr "Delete description field"
+
+msgid "recordsManagement/descriptionField/readIndex"
+msgstr "Read all description fields"
+
+msgid "recordsManagement/descriptionField/read_name_"
+msgstr "Read description field"
+
+msgid "recordsManagement/descriptionField/update"
+msgstr "Update description field"
+
+
+msgid "recordsManagement/archive/create_archiveId_Digitalresource"
+msgstr "Create digital resource inside an archive"
+
+msgid "recordsManagement/archive/delete_archiveId_Digitalresource"
+msgstr "Delete digital resource inside an archive"
+
+msgid "auth/serviceAccount/updateServicetoken_serviceAccountId_"
+msgstr "Update service account's name"
+
+msgid "filePlan/filePlan/readTree"
+msgstr "Read file plan"
+
+msgid "filePlan/filePlan/create"
+msgstr "Create file plan"
+
+msgid "filePlan/filePlan/update"
+msgstr "Update file plan"
+
+msgid "filePlan/filePlan/updateMove_folderId_"
+msgstr "Update folder's location in fileplan"
+
+msgid "filePlan/filePlan/delete_folder_"
+msgstr "Delete folder in file plan"
+
+msgid "recordsManagement/Code/createGenerate"
+msgstr "Generate bar code"
+
+msgid "organization/userPosition/readDescendantprofiles"
+msgstr "Read user's archival profiles"
+
+msgid "organization/organization/update_orgId_Archivalprofileaccess"
+msgstr "Update organization's archival profiles"
+
+msgid "organization/organization/readOrgunitprofiles"
+msgstr "Read originator service's archival profiles"
+
+msgid "medona/archiveTransfer/updateValidatedraft_messageId_"
+msgstr "Validate message's project"
+
+msgid "seda2/ArchiveTransferComposition/create"
+msgstr "Create transfer seda 2.0 message"
+
+msgid "seda2/ArchiveTransferComposition/read_messageId_"
+msgstr "Read transfer seda 2.0 message's first draft"
+
+msgid "seda2/ArchiveTransferComposition/update_messageId_"
+msgstr "Update transfer seda 2.0 message's first draft"
+
+msgid "seda2/ArchiveTransferComposition/delete_messageId_"
+msgstr "Delete transfer seda 2.0 message's first draft"
+
+msgid "seda2/ArchiveTransferComposition/readDraft"
+msgstr "Read all transfer seda 2.0 message's first drafts"
+
+msgid "seda2/ArchiveTransferComposition/create_messageId_document"
+msgstr "Create document on transfer seda 2.0 message's first draft"
+
+msgid "seda2/ArchiveTransferComposition/delete_messageId_document"
+msgstr "Delete document on transfer seda 2.0 message's first draft"
+
+msgid "seda2/ArchiveTransferComposition/updateSenddraft_messageId_"
+msgstr "Send transfer message's first draft"
+
+msgid "archivesCourrier/Content/readSearch"
+msgstr "Search courrier"
+
+msgid "medona/archiveTransfer/readReference_reference_"
+msgstr "Search transfer message by reference"
+
+msgid "medona/archiveDelivery/readReference_reference_"
+msgstr "Search communication message by reference"
+
+msgid "medona/archiveRestitution/readReference_reference_"
+msgstr "Search restitution message by reference"
+
+msgid "medona/archiveNotification/readReference_reference_"
+msgstr "Search notification message by reference"
+
+msgid "medona/archiveAuthorization/readReference_reference_"
+msgstr "Search authorization message by reference"
+
+msgid "medona/archiveDestruction/readReference_reference_"
+msgstr "Search destruction message by reference"
+
+msgid "medona/message/readReference_reference_"
+msgstr "Search message by reference"
+
+msgid "organization/organization/readUserpositions_accountId_"
+msgstr "List user's services"
+
+msgid "recordsManagement/archives/updateIndexfulltext"
+msgstr "Full text indexation"
+
+msgid "digitalResource/digitalResource/updateIsconvertible"
+msgstr "Check ressource's convertibility"
+
+msgid "organization/organization/readTodisplay"
+msgstr "List organizations"
+
+msgid "organization/organization/readOriginator"
+msgstr "Read originator"
+
+msgid "seda/ArchiveTransferComposition/updateSenddraft_messageId_"
+msgstr "Send message with message composer"
+
+msgid "seda/ArchiveTransferComposition/update_messageId_"
+msgstr "Update message"
+
+msgid "seda/ArchiveTransferComposition/create_messageId_document"
+msgstr "Create document by message"
+
+msgid "seda/ArchiveTransferComposition/create"
+msgstr "Create message"
+
+msgid "auth/serviceAccount/readPrivilege_serviceAccountId_"
+msgstr "Read service's privileges"
+
+msgid "medona/archiveAuthorization/readReference"
+msgstr "Read archive's authorization message"
+
+msgid "medona/archiveAuthorization/read_messageId_Retry"
+msgstr "Retry authorization message"
+
+msgid "medona/archiveDelivery/read_messageId_Retry"
+msgstr "Retry communication message"
+
+msgid "medona/archiveDestruction/read_messageId_Retry"
+msgstr "Retry destuction message"
+
+msgid "medona/archiveNotification/read_messageId_Retry"
+msgstr "Retry notification message"
+
+msgid "medona/archiveRestitution/read_messageId_Retry"
+msgstr "Retry restitution message"
+
+msgid "medona/archiveTransfer/read_messageId_Retry"
+msgstr "Retry transfer message"
+
+msgid "medona/message/read_messageId_Retry"
+msgstr "Retry message"
+
+msgid "medona/archiveDelivery/readReference"
+msgstr "Read archive's communication message"
+
+msgid "medona/archiveDestruction/readReference"
+msgstr "Read archive's destruction message"
+
+msgid "medona/archiveNotification/readReference"
+msgstr "Read archive's notification message"
+
+msgid "medona/archiveRestitution/readReference"
+msgstr "Read archive's restitution message"
+
+msgid "medona/archiveTransfer/readReference"
+msgstr "Read archive's transfer message"
+
+msgid "medona/message/readReference"
+msgstr "Read archive's message"
+
+msgid "seda/ArchiveTransferComposition/readLanguageCodes"
+msgstr "Read language codes for message composer"
+
+msgid "seda/ArchiveTransferComposition/read_messageId_"
+msgstr "Read transfer seda 1.0 message's first draft"
+
+msgid "seda/ArchiveTransferComposition/delete_messageId_"
+msgstr "Delete transfer seda 1.0 message's first draft"
+
+msgid "seda/ArchiveTransferComposition/readDraft"
+msgstr "Read all transfer seda 1.0 message's first drafts"
+
+msgid "seda/ArchiveTransferComposition/delete_messageId_document"
+msgstr "Delete document in transfer seda 1.0 message's first draft"
+
+msgid "seda/ArchiveTransferComposition/updateGeneratedraft_messageId_"
+msgstr "Validate transfer seda 1.0 message's first draft"
+
+msgid "medona/archiveTransfer/readOutgoingtransferHistory"
+msgstr "Read outgoing transfer's history"
+
+msgid "medona/archiveTransfer/readOutgoingtransferProcessList"
+msgstr "Read outgoing transfers to finalize"
+
+msgid "medona/archiveTransfer/readOutgoingtransferReception"
+msgstr "Read outgoing transfers to acknowledge"
+
+msgid "medona/archiveTransfer/readOutgoingtransfer_messageId_exportArchive"
+msgstr "Export outgoing transfer"
+
+msgid "medona/archiveTransfer/updateOutgoingtransferSending"
+msgstr "Outgoing transfer request"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_Process"
+msgstr "Outgoing transfer Processing"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_acknowledge"
+msgstr "Outgoing transfer acknowledgement"
+
+msgid "medona/archiveTransfer/updateOutgoingtransfer_messageId_reject"
+msgstr "Reject outgoing transfer"
+
+msgid "organization/orgContact/createOrgcontact"
+msgstr "Create organization's contact"
+
+msgid "organization/organization/readTodisplayorgunit"
+msgstr "Read user's organization"
+
+msgid "organization/orgType/delete_code_"
+msgstr "Delete organization's type"
+
+msgid "organization/organization/readOrgList"
+msgstr "Read organizations"
+
+msgid "auth/userAccount/updateForgotaccount"
+msgstr "Reset forgotten account"
+
+msgid "auth/userAccount/updateResetpassword"
+msgstr "Reset password"
+
+msgid "organization/orgContact/readCountriesCodes"
+msgstr "Read countries list"
+
+msgid "recordsManagement/archives/readRegistry"
+msgstr "Search registry"
+
+msgid "Variables"
+msgstr "Variable(s)"
+
+msgid "Info"
+msgstr "Informations"
+
+msgid "User already exist"
+msgstr "L'utilisateur existe déjà"
+
+msgid "Username and / or password invalid"
+msgstr "Nom d'utilisateur et / ou mot de passe invalide"
+
+msgid "organization/organization/createArchivalprofileaccess"
+msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
+
+msgid "organization/organization/updateArchivalprofileaccess"
+msgstr "Mise à jour d'une association d'un profil d'archive à un service"
+
+msgid "organization/orgTree/deleteArchivalProfileAccess"
+msgstr "Suppression d'une association d'un profil d'archive à un service"
+
+msgid "organization/orgTree/readList"
+msgstr "Retrieve list of organization's type"

@@ -271,3 +271,6 @@ msgstr "Supprimer le profil d'archive"
 
 msgid "Read only"
 msgstr "Lecture seule"
+
+msgid "View in the list"
+msgstr "Voir dans la liste"

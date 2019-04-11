@@ -63,13 +63,12 @@ class catalog
         $catalogFile .= LAABS_RESOURCE.DIRECTORY_SEPARATOR.'locale'.DIRECTORY_SEPARATOR.$lang.DIRECTORY_SEPARATOR.$domain.DIRECTORY_SEPARATOR.$catalog.".po";
 
         $catalogFiles = \core\Reflection\Extensions::extendedPath($catalogFile, false);
-
         if (count($catalogFiles) == 0) {
             return;
             throw new \dependency\localisation\Exception("Catalog $catalogUri not found for language $lang");
         }
 
-        foreach ($catalogFiles as $catalogFile) {
+        foreach (array_reverse($catalogFiles) as $catalogFile) {
             $this->loadFile($catalogFile);
         }
 

@@ -149,7 +149,7 @@ class log implements archiveDescriptionInterface
      */
     public function getByDate($type, $date)
     {
-        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate >= '$date' AND toDate <= '$date'", [], ">fromDate", 1);
+        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate <= '$date' AND toDate >= '$date'", [], ">fromDate", 0, 1);
 
         if (!count($journal)) {
             return null;

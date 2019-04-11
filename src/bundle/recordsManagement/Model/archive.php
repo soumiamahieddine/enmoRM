@@ -283,6 +283,13 @@ class archive
      */
     public $archiverOrgRegNumber;
 
+    /**
+     * Registration number of user organisation
+     *
+     * @var tokenlist
+     */
+    public $userOrgRegNumbers;
+
     /* ************************************************************************
      * Life Cycle
      *********************************************************************** */
@@ -368,6 +375,12 @@ class archive
      * @var string
      */
     public $storagePath;
+
+    /**
+     * Status code for workflow and current use process
+     * @var string
+     */
+    public $processingStatus;
 
     /* ************************************************************************
      * Structure

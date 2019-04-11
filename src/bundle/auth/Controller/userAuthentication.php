@@ -139,7 +139,7 @@ class userAuthentication
         \laabs::setToken('AUTH', $accountToken, $tokenDuration);
 
         if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
-            $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / 86400;
+            $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
             if ($diff > $this->securityPolicy['passwordValidity']) {
                 throw \laabs::newException('auth/userPasswordChangeRequestException');
             }
@@ -217,6 +217,7 @@ class userAuthentication
      */
     public function logout()
     {
-        \laabs::clearTokens();
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
     }
 }

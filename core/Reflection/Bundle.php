@@ -708,7 +708,7 @@ class Bundle
     {
         $observers = array();
 
-        $observerClasses = Extensions::extendedClasses(LAABS_BUNDLE . LAABS_URI_SEPARATOR . $this->name . LAABS_URI_SEPARATOR . LAABS_OBSERVER);
+        $observerClasses = Extensions::extendedClasses(LAABS_BUNDLE . LAABS_URI_SEPARATOR . $this->name . LAABS_URI_SEPARATOR . LAABS_OBSERVER, true);
         foreach ($observerClasses as $observerClass) {
             $observerName = \laabs\basename($observerClass);
             $observer = new Observer($observerName, $observerClass, $this);

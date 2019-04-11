@@ -1,33 +1,34 @@
-<div id="archiveRelationshipsTable" class="col-xs-12">
-    <button id="addArchiveRelationship" class="btn btn-default pull-right">
-        <i class="fa fa-plus"> </i>
-        Add relationship
-    </button>
-    <div class="col-xs-12">
-       TO DO
-    </div>
+<?merge archive.relationships.bool() ?>
+
+<div class="table-responsive">
+    <table id="relationshipsTable" class="table table-condensed table-striped dataTable">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Related archive</th>
+                <th>Description</th>
+                <th style="opacity: 0;"/>
+            </tr>
+        </thead>
+            <tbody>
+                <?merge archive.relationships ?>
+                <tr>
+                    <td>
+                        <?merge .typeCode ?>
+                    </td>
+                    <td data-sort="[?merge .relatedArchiveId ?]">
+                        <?merge .relatedArchiveName ?>
+                    </td>
+                    <td>
+                        <?merge .description ?>
+                    </td>
+                    <td style="padding-right:1em;" class='pull-right'>
+                        <button type="button" class="btn btn-success btn-sm viewRelatedArchive" title="Show the archive info"
+                            data-archiveid='[?merge .relatedArchiveId ?]'>
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+    </table>
 </div>
-
-<div id="archiveRelationshipForm" class="col-xs-12 hide">
-    <?hinclude recordsManagement/archive/archiveInfo/relationshipForm.html ?>
-</div>
-
-<script type="text/javascript">
-    $('#addArchiveRelationship').on('click', function() {
-        $('#archiveRelationshipsTable').addClass('hide');
-        $('#archiveRelationshipForm').removeClass('hide');
-    });
-
-    $('#archiveRelationshipForm').onEvent('closeRelationshipForm.archive', function() {
-        $('#archiveRelationshipForm').addClass('hide');
-        $('#archiveRelationshipsTable').removeClass('hide');
-    });
-
-    $('#archiveRelationshipForm').onEvent('relationshipAdded.archive', function(e, relationship) {
-        trigger('showDetails.archive', relationship.archiveId)
-    })
-
-    $("#archiveRelationshipsTable").on('click', ".viewRelatedArchive", function () {
-        trigger('showFullDetails.archive', $(this).data('archiveid'))
-    })
-</script>

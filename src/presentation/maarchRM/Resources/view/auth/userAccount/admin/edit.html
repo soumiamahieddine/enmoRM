@@ -92,6 +92,7 @@
             </div>
         </div>
 
+        <span class="hide" id="emptyOrganization_text">No organization chosen</span>
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
         <span class="hide" id="invalidEmail_text">Email malformed</span>
         <span class="hide" id="empty_text">The fields with a star are required.</span>
@@ -109,10 +110,30 @@
     $("#user_saveUser").on('click', function () {
 
         var user = serialize();
+        let error = false;
 
-        if (!validateEmail(user.emailAddress)) {
+        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "" || user.displayName == "") {
+            gritter.show($('#empty_text').text(), false);
+            return;
+        }
+
+        if (user.emailAddress != "" && !validateEmail(user.emailAddress)) {
             gritter.show($('#invalidEmail_text').text(), false);
-            return false;
+            error = true;
+        }
+
+        if (user.password != "" && user.verification != "" && user.password != user.verification) {
+            gritter.show($('#badPasswordVerification_text').text(), false);
+            error = true;
+        }
+
+        if (user.organizations.length == 0) {
+            gritter.show($('#emptyOrganization_text').text(), false);
+            error = true;
+        }
+
+        if (error) {
+            return;
         }
 
         var url = "/userAccount";
@@ -120,20 +141,9 @@
 
         var accountId = $(this).data("useraccountid");
 
-
-        if (user.password != user.verification) {
-            gritter.show($('#badPasswordVerification_text').text(), false);
-            return;
-        }
-
         if (accountId != undefined) {
             url = "/userAccount/" + accountId;
             type = "PUT";
-        }
-
-        if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "") {
-            gritter.show($('#empty_text').text(), false);
-            return;
         }
 
         ajax($(this),{
@@ -174,7 +184,7 @@
             userAccount[$(this).attr('name')] = jQuery.trim($(this).val());
         })
 
-        roleConfig = $("#user_RoleContain").attr('data-publicarchive');
+        let roleConfig = $("#user_RoleContain").attr('data-publicarchive');
         //parametre.roleMembers.push(null);
         if (!roleConfig){ 
             var roles = $("#listRoles").find('.active');

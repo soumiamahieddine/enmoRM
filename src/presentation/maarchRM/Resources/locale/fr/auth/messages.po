@@ -365,8 +365,8 @@ msgstr "Activé"
 msgid "Administrator"
 msgstr "Administrateur"
 
-msgid "Select a role"
-msgstr "Sélectionner un rôle"
+msgid "No role"
+msgstr "Aucun rôle"
 
 msgid "Add a role"
 msgstr "Ajouter un rôle"
@@ -555,7 +555,7 @@ msgid "E-Mail"
 msgstr "Courriel"
 
 msgid "Email malformed"
-msgstr "Courriel malformé"
+msgstr "Le courriel est mal-formé"
 
 msgid "Choose group"
 msgstr "Choisir un groupe"
@@ -695,7 +695,7 @@ msgid "Password is required."
 msgstr "Le mot de passe est requis"
 
 msgid "Passwords does not match"
-msgstr "Les mots de passe sont différents"
+msgstr "Les mots de passe ne correspondent pas"
 
 msgid "Service name"
 msgstr "Nom du service"
@@ -783,3 +783,6 @@ msgstr "Tous les privilèges"
 
 msgid "Be careful, you are about to generate a new token. This will cancel the previous token."
 msgstr "Attention, vous êtes sur le point de générer un nouveau jeton. Cela annulera le jeton précédent."
+
+msgid "No organization chosen"
+msgstr "Aucune organisation choisie"

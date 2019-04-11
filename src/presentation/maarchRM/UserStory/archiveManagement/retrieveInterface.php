@@ -69,7 +69,7 @@ interface retrieveInterface
      * @param string $text
      *
      * @return recordsManagement/archive/search
-     * @uses recordsManagement/archives/readRegistry
+     * @uses recordsManagement/archives/read
      */
     public function readRecordsmanagementArchives(
         $archiveId = null,
@@ -83,14 +83,6 @@ interface retrieveInterface
         $description = null,
         $text = null
     );
-
-    /**
-     * View the archive
-     *
-     * @return recordsManagement/archive/getDescription The recordsManagement/archive object
-     * @uses  recordsManagement/archiveDescription/read_archiveId_
-     */
-    public function readRecordsmanagementArchivedescription_archiveId_();
 
     /**
      * Get metadata to edit

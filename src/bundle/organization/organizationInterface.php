@@ -30,9 +30,9 @@ interface organizationInterface
      * @return organization/organization[] An array of organization
      *
      * @action organization/organization/index
-     * 
+     *
      */
-    public function readIndex($query=null);
+    public function readIndex($query = null);
 
     /**
      * Tree of organizations
@@ -56,7 +56,7 @@ interface organizationInterface
      *
      * @action organization/organization/search
      */
-    public function readSearch($name=null, $businessType=null, $orgRoleCode=null, $orgTypeCode=null, $registrationNumber=null, $taxIdentifier=null);
+    public function readSearch($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null);
 
     /**
      * Create an organization
@@ -70,7 +70,7 @@ interface organizationInterface
 
     /**
      * Read an organization by his orgId
-     * 
+     *
      * @return organization/organization the organization
      *
      * @action organization/organization/read
@@ -90,7 +90,7 @@ interface organizationInterface
      * Get organizations by role
      *
      * @return organization/organization[] the organizations
-     * 
+     *
      * @action organization/organization/getOrgsByRole
      */
     public function readByrole_role_();
@@ -222,7 +222,7 @@ interface organizationInterface
 
     /**
      * Get an organization addresses
-     * 
+     *
      * @return contact/address[]
      *
      * @action organization/organization/getAddresses
@@ -231,7 +231,7 @@ interface organizationInterface
 
     /**
      * Get an organization communications
-     * 
+     *
      * @return contact/communication[]
      *
      * @action organization/organization/getCommunications
@@ -240,7 +240,7 @@ interface organizationInterface
 
     /**
      * Get an organization contacts
-     * 
+     *
      * @return contact/contact[]
      *
      * @action organization/organization/getContacts
@@ -251,7 +251,7 @@ interface organizationInterface
      * Add an organization contact
      * @param object $contact
      * @param string $isSelf
-     * 
+     *
      * @return bool
      *
      * @action organization/organization/addContact
@@ -259,24 +259,49 @@ interface organizationInterface
     public function create_orgId_Contact($contact, $isSelf);
 
     /**
-     * Add an organization archival profile access
-     * @param array $archivalProfileAccess The archival profile access array
-     * 
-     * @return bool
+     * Create an organization archival profile access
      *
-     * @action organization/organization/updateArchivalProfileAccess
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @action organization/organization/createArchivalprofileaccess
+     *
+     * @return  organization/archivalProfileAccess
      */
-    public function update_orgId_Archivalprofileaccess($archivalProfileAccess);
+    public function createArchivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Add an organization archival profile access
+     *
+     * @param organization/archivalProfileAccess $archivalProfileAccess
+     *
+     * @action organization/organization/updateArchivalprofileaccess
+     *
+     * @return organization/archivalProfileAccess
+     */
+    public function updateArchivalprofileaccess($archivalProfileAccess);
+
+    /**
+     * Add an organization archival profile access
+     *
+     * @param string $orgId                    id of organization of archivalProfileAccess to delete
+     * @param string $archivalProfileReference archival profile reference of archivalProfileAccess
+     *
+     * @action organization/organization/deleteArchivalProfileAccess
+     *
+     * @return organization/archivalProfileAccess
+     */
+    public function deleteArchivalprofileaccess($orgId, $archivalProfileReference);
 
     /**
      * Get the profiles by orgRegNumber
+     *
      * @param string $orgRegNumber
      * @param string $originatorAccess
-     * 
+     *
      * @return array
      * @action organization/organization/getOrgUnitArchivalProfiles
      */
-    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=false);
+    public function readOrgunitprofiles($orgRegNumber, $originatorAccess=null);
 
     /**
      * Get the user postions by accountId

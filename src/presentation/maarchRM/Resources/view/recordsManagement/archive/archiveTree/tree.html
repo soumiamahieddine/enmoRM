@@ -1,0 +1,73 @@
+<div class="tree-l" id="archiveTree">
+    <input type="hidden" id="canAddResource" value="[?merge canAddResource ?]"/>
+    <input type="hidden" id="canDeleteResource" value="[?merge canDeleteResource ?]"/>
+    <ul>
+        <li class="archive" data-archive-id="[?merge archive.archiveId ?]">
+            <span class="node-default">
+                <i id="rootArchiveTreeOpenner" class="fa" data-closed-icon="fa-caret-right" data-opened-icon="fa-caret-down">&nbsp;</i>
+                <b class="archiveName"><i class="fa fa-folder">&nbsp;</i><?merge archive.archiveName ?></b>
+            </span>
+            <ul>
+                <?merge archive.contents /recordsManagement/archive/archiveTree/archiveNodeTemplate.html ?>
+                <?merge archive.digitalResources /recordsManagement/archive/archiveTree/archiveContentTemplate.html ?>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<style>
+    #archiveTree b {
+        font-weight: 500;
+    }
+    #archiveTree .archivalProfile > span > span {
+        color: grey;
+    }
+
+    #archiveTree li > span {
+        cursor: pointer;
+        word-break:break-all;
+    }
+</style>
+
+<script>
+    ArchiveTree = {
+        selected: null,
+        select: function(e) {
+            this.unselect();
+            var li = e.closest('li')
+
+            if(e.hasClass('archiveName')) {
+                $("#archiveNameH3").text(e.text());
+                li.children('span').removeClass('node-default').addClass('node-warning');
+                
+                trigger("showDetails.archive", li.data('archive-id'));
+                this.selected = li;
+
+            } else if (e.hasClass('documentName')) {
+                e.addClass('node-warning');
+                trigger("showDetails.digitalResource", li.data('json'));
+                this.selected = li;
+            }
+        },
+
+        unselect: function() {
+            if (this.selected == null) {
+                return;
+            }
+            if (this.selected.find('.archiveName').length) {
+                this.selected.children('span').removeClass('node-warning').addClass('node-default');
+            } else if (this.selected.find('.documentName').length) {
+                this.selected.find('small:first').removeClass('node-warning');
+            }
+        }
+    }
+
+    $('#archiveTree').on('click', '.archiveName, .documentName', function() {
+        ArchiveTree.select($(this));
+    })
+
+    $('#archiveTree').ready(function() {
+        BootstrapTree.init($('#archiveTree'));
+        $("#rootArchiveTreeOpenner").click().siblings('.archiveName').click();
+    })
+</script>

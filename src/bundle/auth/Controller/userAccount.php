@@ -159,7 +159,6 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
-
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();

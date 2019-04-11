@@ -99,7 +99,6 @@ class archivalProfile
         $archivalProfile->containedProfiles = json_encode($archivalProfile->containedProfiles);
 
         if ($archivalProfile) {
-
             $this->getProfileType($archivalProfile);
 
             $requiredProperties = array();
@@ -167,8 +166,8 @@ class archivalProfile
 
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
-        $organizationController = \laabs::newController('organization/organization');
         $accessRules = $accessRuleController->index();
+
         foreach ($accessRules as $accessRule) {
             $completeAccessRule = $accessRuleController->edit($accessRule->code);
             $accessRule->description = $completeAccessRule->description;
@@ -179,19 +178,22 @@ class archivalProfile
                 $accessRule->accessRuleDuration = substr($accessRule->duration, 1, -1);
             }
         }
+
         $this->view->setSource("accessRules", $accessRules);
 
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();
+
         foreach ($retentionRules as $retentionRule) {
             if ($retentionRule->duration != null) {
                 $retentionRule->retentionDurationUnit = substr($retentionRule->duration, -1);
                 $retentionRule->retentionDuration = substr($retentionRule->duration, 1, -1);
             }
         }
+
         $this->view->setSource("retentionRules", $retentionRules);
-        $retentionRuleSlector = $this->view->getElementById("code");
-        $this->view->merge($retentionRuleSlector);
+        $retentionRuleSelector = $this->view->getElementById("code");
+        $this->view->merge($retentionRuleSelector);
 
         $this->view->setSource("profilesDirectory", $profilesDirectory);
 
@@ -367,5 +369,31 @@ class archivalProfile
                 $this->listProperties($childClass, $properties, $dateProperties, $qualifiedName);
             }*/
         }
+    }
+
+    /**
+     * Serializer JSON for uploadArchivalProfile method
+     *
+     * @return string
+     **/
+    public function uploadArchivalProfile()
+    {
+        $this->json->message = "Archival profile uploaded";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    /**
+     * Export method
+     * @param resource $file The file
+     *
+     * @return resource
+     */
+    public function export($file)
+    {
+        \laabs::setResponseType("application/file");
+
+        return $file;
     }
 }

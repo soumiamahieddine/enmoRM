@@ -84,6 +84,7 @@
     });
 
     $('#syncImport').on('click', function(e) {
+        $(this).attr("disabled", "disabled");
         ArchiveForm.send('sync', e, $(this));
     });
 

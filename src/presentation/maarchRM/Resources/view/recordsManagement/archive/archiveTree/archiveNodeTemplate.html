@@ -1,0 +1,10 @@
+<li class="archive" data-archive-id="[?merge .archiveId ?]">
+    <span class="node-default">
+        <i class="fa" data-closed-icon="fa-caret-right" data-opened-icon="fa-caret-down">&nbsp;</i>
+        <b class="archiveName"><i class="fa fa-folder">&nbsp;</i><?merge .archiveName ?></b>
+    </span>
+    <ul>
+        <?merge .contents /recordsManagement/archive/archiveTree/archiveNodeTemplate.html ?>
+        <?merge .digitalResources /recordsManagement/archive/archiveTree/archiveContentTemplate.html ?>
+    </ul>
+</li>

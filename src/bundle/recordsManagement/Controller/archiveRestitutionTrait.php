@@ -36,14 +36,44 @@ trait archiveRestitutionTrait
             $archiveIds = array($archiveIds);
         }
 
+        $resChildren = array('success' => array(), 'error' => array());
+
+        $archives = [];
+        $archiveChildrenIds = [];
+
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-            $this->checkRights($archive);
+            $children = $childrenWithParent = $this->listChildrenArchiveId($archiveId);
+            // Unset first element (it's the parent ID)
+            unset($children[0]);
+
+            foreach ($children as $child) {
+                // If one of children is unable to change status, the parent is on error
+                // and unset of the archivesIds to not change status
+                if (!$this->checkStatus($child, 'restituable')) {
+                    array_push($resChildren['error'], $archiveId);
+                    unset($archiveIds[array_search($archiveId, $archiveIds)]);
+                    break;
+                } else {
+                    $archiveChildrenIds = array_merge($archiveChildrenIds, $childrenWithParent);
+                }
+            }
         }
 
-        $canditates = $this->setStatus($archiveIds, 'restituable');
+        foreach ($archiveChildrenIds as $archiveChildrenId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+            $this->checkRights($archive);
+            
+            $archives[] = $archive;
+        }
+        
+        foreach ($archives as $archive) {
+            $this->logRestitutionRequest($archive);
+        }
 
-        return $canditates;
+        $archiveList = $this->setStatus($archiveIds, 'restituable');
+        $archiveList = array_merge_recursive($archiveList, $resChildren);
+
+        return $archiveList;
     }
 
     /**
@@ -56,11 +86,15 @@ trait archiveRestitutionTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archive = $this->retrieve((string)$archiveId, true);
-        
-        // Life cycle journal
-        $this->logRestitution($archive);
+        $archiveChildrenIds = [];
+        $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
 
+        foreach ($archiveChildrenIds as $archiveChildrenId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+            $this->logRestitution($archive);
+        }
+
+        $archive = $this->retrieve((string)$archiveId, true);
         return $archive;
     }
 
@@ -83,7 +117,12 @@ trait archiveRestitutionTrait
      */
     public function cancelRestitution($archiveIds)
     {
-        return $this->setStatus($archiveIds, 'preserved');
+        $archiveList = $this->setStatus($archiveIds, 'preserved');
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $this->logRestitutionRequest($archive);
+        }
+        return $archiveList;
     }
 
     /**

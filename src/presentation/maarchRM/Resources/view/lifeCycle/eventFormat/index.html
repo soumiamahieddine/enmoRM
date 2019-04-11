@@ -217,16 +217,16 @@ $("#saveEventFormat").on("click", function() {
         error : function(response) {
             gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
         }
-    })
+    });
 });
 
 $("#eventsFormatsList").on("click",".editEventFormat", function() {
     var param = {
         eventFormatType : $(this).attr("data-type")
     }
-    
+
     $("#saveEventFormat").attr('data-method','PUT');
-    
+
     ajax($(this), {
         type        : "GET",
         url         : '/lifecycle/eventFormat',
@@ -235,11 +235,17 @@ $("#eventsFormatsList").on("click",".editEventFormat", function() {
         success     : function (response) {
             $("#formatList").empty();
             var split = response.eventFormat.type.split("/");
-            
+
             $("#formDomain").val(split[0]);
             $("#formType").val(split[1]);
             $("#formMessage").text(response.eventFormat.message);
             $("#formNotification").prop("checked",response.eventFormat.notification);
+
+            if (response.eventFormat.notification === true) {
+                $('#formNotification').bootstrapToggle('on');
+            } else {
+                $('#formNotification').bootstrapToggle('off');
+            }
             var splitFormat = response.eventFormat.format.split(" ");
 
             $.each(splitFormat, function(index, value) {

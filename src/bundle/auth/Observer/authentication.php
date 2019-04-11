@@ -143,7 +143,8 @@ class authentication
                 }
 
                 if (!$isUserPosition) {
-                    \laabs::clearTokens();
+                    \laabs::unsetToken("AUTH");
+                    \laabs::unsetToken("ORGANIZATION");
                     \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
 
                     return false;

@@ -14,7 +14,7 @@
                 <?merge publicArchive.bool() ?>
                 <div class="form-group">
                     <select class="form-control" name="role" id="role" data-role="[?merge user.roles[0].roleId ?]">
-                        <option value="">Select a role</option>
+                        <option value="">No role</option>
                         <?merge roles ?>
                         <option value="[?merge .roleId ?]"><?merge .roleName ?></option>
                     </select>

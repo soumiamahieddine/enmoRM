@@ -25,7 +25,7 @@ namespace bundle\organization\Controller;
  * Control of the organization types
  *
  * @package Organization
- * @author  Prosper DE LAURE <prosper.delaure@maarch.org> 
+ * @author  Prosper DE LAURE <prosper.delaure@maarch.org>
  */
 abstract class abstractPosition
 {
@@ -37,7 +37,7 @@ abstract class abstractPosition
      *
      * @return void
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory) 
+    public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
     }
@@ -61,6 +61,7 @@ abstract class abstractPosition
 
         $organizations = [];
         $setToken = false;
+
         foreach ($positions as $position) {
             $organization = $this->sdoFactory->read('organization/organization', $position->orgId);
 
@@ -68,19 +69,29 @@ abstract class abstractPosition
             $position->organization->orgName = $organization->displayName;
 
             if ($position->default && !$currentOrg) {
-                \laabs::setToken("ORGANIZATION", $organization, 86400);
+                \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
                 $setToken = true;
             }
+
             $organizations[] = $organization;
         }
 
         if (!$setToken && !$currentOrg && $organizations) {
-            \laabs::setToken("ORGANIZATION", $organizations[0], 86400);
+            \laabs::setToken("ORGANIZATION", $organizations[0], \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
         }
+
+        usort($positions, function ($pos1, $pos2) {
+            if ($pos1->organization->orgName == $pos2->organization->orgName) {
+                return 0;
+            }
+
+            return ($pos1->organization->orgName > $pos2->organization->orgName) ? +1 : -1;
+        });
+
         return $positions;
     }
 
-    
+
     /**
      * Get my current organization tree
      *
@@ -101,14 +112,14 @@ abstract class abstractPosition
 
     /**
      * Set my working positions
-     * @param organization/organization $orgId The organization identifier 
-     * 
+     * @param organization/organization $orgId The organization identifier
+     *
      * @return bool The result of the operation
      */
     public function setCurrentPosition($orgId)
     {
         if ($organization = $this->sdoFactory->read('organization/organization', $orgId)) {
-            \laabs::setToken("ORGANIZATION", $organization, 86400);
+            \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
 
             return true;
         }
@@ -119,7 +130,7 @@ abstract class abstractPosition
     }
 
     /**
-     * List user owner org and 
+     * List user owner org and
      *
      * @return object[] The list of organization ids
      */
@@ -221,7 +232,7 @@ abstract class abstractPosition
         $userOrg = array($orgId => $ownerOrg->registrationNumber);
         $descendantOrg = $this->readDescandantOrg(array( (string) $ownerOrg->orgId => $ownerOrg->registrationNumber));
 
-        return array_merge($descendantOrg, $userOrg);;
+        return array_merge($descendantOrg, $userOrg);
     }
 
     /**
@@ -271,7 +282,7 @@ abstract class abstractPosition
 
     /**
      * Get descendant archival profiles
-     * 
+     *
      * @return object[]
      */
     public function getdescendantArchivalProfiles()
@@ -300,7 +311,7 @@ abstract class abstractPosition
             if (!empty($descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference])){
                 continue;
             }
-            
+
             if ($archivalProfileAccess->archivalProfileReference != '*') {
                 $descendantArchivalProfiles[$archivalProfileAccess->archivalProfileReference] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference);
             }
