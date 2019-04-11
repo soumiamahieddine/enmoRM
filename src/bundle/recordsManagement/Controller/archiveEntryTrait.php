@@ -589,62 +589,37 @@ trait archiveEntryTrait
 
     protected function validateDescriptionModel($object, $archivalProfile)
     {
-        $descriptionScheme = $this->descriptionSchemeController->read($archivalProfile->descriptionClass);
+        $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
 
-        $names = [];
-
+        $archivalProfileFields = [];
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            $name = $archiveDescription->fieldName;
-            $names[] = $name;
-            $value = null;
-            if (isset($object->{$name})) {
-                $value = $object->{$name};
+            if (!isset($object->{$archiveDescription->fieldName}) && $archiveDescription->required) {
+                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
             }
-            $this->validateDescriptionField($value, $archiveDescription);
-        }
 
+            $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
+        }
+        
         foreach ($object as $name => $value) {
-            if (!in_array($name, $names) && !$archivalProfile->acceptUserIndex) {
+            if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
+
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
+            }
+
+            if (isset($descriptionSchemeProperties[$name])) {
+                $this->validateDescriptionField($value, $descriptionSchemeProperties[$name]);
             }
         }
     }
 
-    protected function validateDescriptionField($value, $archiveDescription)
+    protected function validateDescriptionField($value, $descriptionField)
     {
-        if (is_null($value)) {
-            if ($archiveDescription->required) {
-                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-            }
-
-            return;
-        }
-
-        $descriptionField = $archiveDescription->descriptionField;
-
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
-
-                if (($descriptionField->isArray && !is_array($value)) || (!$descriptionField->isArray && is_array($value))) {
-                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
-                if (empty($descriptionField->enumeration)) {
-                    break;
-                }
-
-                if (!is_array($value)) {
-                    $valueArray = [$value];
-                } else {
-                    $valueArray = $value;
-                }
-
-                foreach ($valueArray as $item) {
-                    if (!in_array($item, $descriptionField->enumeration)  && $archiveDescription->required) {
-                        throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                    }
-                }
-
                 break;
 
             case 'text':
@@ -652,19 +627,19 @@ trait archiveEntryTrait
 
             case 'number':
                 if (!is_int($value) && !is_float($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
 
             case 'boolean':
                 if (!is_bool($value) && !in_array($value, [0, 1])) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
 
             case 'date':
                 if (!is_string($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
         }
