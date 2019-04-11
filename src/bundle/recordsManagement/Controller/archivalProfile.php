@@ -35,7 +35,7 @@ class archivalProfile
     protected $descriptionFields;
 
     protected $profilesDirectory;
-    //protected $descriptionSchemeController;
+    protected $descriptionSchemeController;
 
     /**
      * Constructor
@@ -47,8 +47,7 @@ class archivalProfile
     {
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
-        //$this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
-
+        $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme'); 
         foreach (\Laabs::newController('recordsManagement/descriptionField')->index() as $descriptionField) {
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
@@ -174,6 +173,18 @@ class archivalProfile
 
         // Read profile description
         $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
+        if ($archivalProfile->descriptionClass == '') {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
+            }
+        } else {
+            $descriptionFields = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);           
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if (isset($descriptionFields[$archiveDescription->fieldName])) {
+                    $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
+                }
+            }
+        }
 
         $profileFile = $this->profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference;
         if (file_exists($profileFile.'.rng') || file_exists($profileFile.'.xsd')) {
@@ -190,7 +201,7 @@ class archivalProfile
      */
     public function getContentsProfiles($archivalProfileId, $recursively = false)
     {
-        $containedProfiles = [];
+        $containedProfiles = []; 
         $contents = $this->sdoFactory->find('recordsManagement/archivalProfileContents', "parentProfileId ='$archivalProfileId'");
 
         if (count($contents)) {
