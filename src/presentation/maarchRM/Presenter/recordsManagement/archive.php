@@ -1055,20 +1055,20 @@ class archive
             return;
         } 
 
-        $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionClass/read_name_', $descriptionScheme);
+        $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
         if (empty($descriptionSchemeConfig)) {
             return;
         }
 
-        if (!isset($descriptionSchemeConfig->services->presenter)) {
+        if (!isset($descriptionSchemeConfig->presenter)) {
             return;
         }
 
         try {
-            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->services->controller, LAABS_URI_SEPARATOR));
+            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->controller, LAABS_URI_SEPARATOR));
             $controller = $bundle->getController(strtok(''));
 
-            return $descriptionSchemeConfig->services->presenter;
+            return $descriptionSchemeConfig->presenter;
         } catch (\exception $exception) {
             return;
         }
@@ -1093,34 +1093,31 @@ class archive
 
         // Retrieve scheme properties (description fields)
         if (!empty($archive->descriptionClass)) {
-            $descriptionSchemeProperties = \laabs::callService('recordsManagement/descriptionClass/read_name_Descriptionfields', $archive->descriptionClass);
+            $descriptionSchemeProperties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $archive->descriptionClass);
         }
-        
+
+        $descriptions = (object) $descriptions;
+
         $table = $this->view->createElement('table');
         $table->setAttribute('class', "table table-condensed table-striped");
         
         foreach ($descriptions as $name => $value) {
-            // Get scheme information
-            $archiveDescriptionField = $descriptionSchemeProperty = null;
+            $descriptionField = $this->getDescriptionField($name, $descriptionSchemeProperties);
+            if (!$descriptionField) {
+                continue;
+            }
+
+            // Profile gives immutable and mandatory
+            $immutable = false;
             if (isset($archivalProfileFields[$name])) {
-                $archiveDescriptionField = $archivalProfileFields[$name];
+                $immutable = $archivalProfileFields[$name]->isImmutable;
             }
-            if (isset($descriptionSchemeProperties[$name])) {
-                $descriptionSchemeProperty = $descriptionSchemeProperties[$name];
-            }
-
-            // Avoid complex custom fields
-            if (!isset($archiveDescriptionField) && !isset($descriptionSchemeProperty)) {
-                $actualDatatype = \gettype($value);
-
-                if ($actualDatatype == 'object' || $actualDatatype == 'array') {
-                    continue;
-                }
+            if (in_array($descriptionField->type, ['object', 'array'])) {
+                $immutable = true;
             }
 
-            $tr = $this->getDescriptionFieldHtml($name, $value, $archiveDescriptionField, $descriptionSchemeProperty);
-
-            $table->appendChild($tr);
+            $tr = $this->getTableRow($name, $value, $descriptionField, $immutable);
+            $table->appendChild($tr);           
         }
 
         $container = $this->view->getElementById("metadata");
@@ -1128,93 +1125,152 @@ class archive
         $container->appendChild($table);
     }
 
-    protected function getDescriptionFieldHtml($name, $value, $archiveDescriptionField, $descriptionSchemeProperty)
+    protected function getTableRow($name, $value, $descriptionField, $immutable)
     {
-        // Table row
         $tr = $this->view->createElement('tr');
 
-        $label = null;
-        $type = 'text';
-        $isImmutable = false;
-        $isInList = false;
-        $customField = false;
-
-        // field is declared in profile, or in scheme, or is additional user defined field
-        if (isset($archiveDescriptionField)) {
-            $descriptionField = $archiveDescriptionField->descriptionField;
-
-            $label = $descriptionField->label;
-            $type = $descriptionField->type;
-
-            $isImmutable = $archiveDescriptionField->isImmutable;
-            $isInList = $archiveDescriptionField->isInList;
-        } elseif (isset($descriptionSchemeProperty)) {
-            $label = $descriptionSchemeProperty->label;
-            $type = $descriptionSchemeProperty->type;
-        } else {
-            $label = $name;
-            $tr->setAttribute('class', "customField");
+        if (!empty($name)) {
+            $th = $this->getTableHeader($descriptionField, $immutable);
+            $tr->appendChild($th);
         }
 
-        //if (empty($label)) {
-        //    $label = $this->view->translator->getText($name, false, "recordsManagement/archive");
-        //}
-
-        // table header column
-        $th = $this->view->createElement('th', $label);
-        $th->setAttribute('name', $name);
-        $th->setAttribute('data-type', $type);
-        if ($isImmutable) {
-            $th->setAttribute('data-immutable', 'immutable');
-        }
-        
-        $tr->appendChild($th);
-
-        // Table data column
-        $td = $this->view->createElement('td');
-        $td->setAttribute('style', 'padding: 0 5px 0 5px');
-        $valueNode = $this->getValueNode($value, $type, $td);
-        $td->appendChild($valueNode);
-
+        $td = $this->getTableData($value, $descriptionField);       
         $tr->appendChild($td);
 
         return $tr;
     }
 
-    protected function getValueNode($value, $type, $td)
+    protected function getDescriptionField($name, $descriptionSchemeProperties)
     {
-        switch ($type) {
-            case 'date':
-                $textValue = "";
-                if (!empty($value)) {
-                    //$dateObject = \laabs::newDate($value);
-                    //$textValue = $this->view->dateTimeFormatter->formatDate($dateObject);
-                    $textValue = $value;
-                }
+        if (isset($descriptionSchemeProperties[$name])) {
+            return $descriptionSchemeProperties[$name];
+        } else {
+            $actualDatatype = \gettype($value);
+            if ($actualDatatype == 'object' || $actualDatatype == 'array') {
+                return;
+            }
 
-                $td->setAttribute('data-value', $value);
+            return $this->getDummyDescriptionField($name, 'text');
+        }
+    }
 
-                return $this->view->createTextNode($textValue);
+    protected function getDummyDescriptionField($name, $type)
+    {
+        $descriptionField = new \stdClass();
+        $descriptionField->label = $name;
+        $descriptionField->type = $type;
 
+        return $descriptionField;
+    }
+
+    protected function getTableHeader($descriptionField, $immutable)
+    {
+        $th = $this->view->createElement('th', $descriptionField->label);
+        $th->setAttribute('data-type', $descriptionField->type);
+        if ($immutable) {
+            $th->setAttribute('data-immutable', 'immutable');
+        }
+
+        return $th;
+    }
+
+    protected function getTableData($value, $descriptionField)
+    {
+        $td = $this->view->createElement('td');
+        $td->setAttribute('style', 'padding: 0 5px 0 5px');
+        $valueNode = $this->getTextNode($value, $descriptionField);
+        $td->appendChild($valueNode);
+
+        return $td;
+    }
+
+    protected function getTextNode($value, $descriptionField)
+    {
+        switch ($descriptionField->type) {
             case 'boolean':
-                $valueNode = $this->view->createElement('i');
-                if (is_null($value)) {
-                    $valueNode->setAttribute('data-value', '');
-                } else {
-                    if ($value) {
-                        $valueNode->setAttribute('class', "fa fa-check");
-                        $valueNode->setAttribute('data-value', '1');
-                    } else {
-                        $valueNode->setAttribute('class', "fa fa-times");
-                        $valueNode->setAttribute('data-value', '0');
-                    }
+                return $this->getBooleanChecker($value);
+
+            case 'array':
+                return $this->getArrayTable($value, $descriptionField);
+
+            case 'object':
+                $properties = [];
+                foreach ($descriptionField->properties as $property) {
+                    $properties[$property->name] = $property;
                 }
-                
-                return $valueNode;
+                $descriptionField = $this->getDummyDescriptionField('dummy', 'object');
+                $descriptionField->properties = $properties;
+                return $this->getObjectTable($value, $descriptionField);
 
             default:
-                return $this->view->createTextNode($value);
+                if ($descriptionField->type[0] == '#') {
+                    $itemTypeName = substr($descriptionField->itemType, 1);
+                    $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $itemTypeName);
+                    $descriptionField = $this->getDummyDescriptionField('dummy', 'object');
+                    $descriptionField->properties = $properties;
+
+                    return $this->getObjectTable($value, $descriptionField);
+                } else {
+                    return $this->view->createTextNode($value);
+                }
+                
         }
+    }
+
+    protected function getBooleanChecker($boolean)
+    {
+        $checker = $this->view->createElement('i');
+        if (is_null($boolean)) {
+            $checker->setAttribute('data-value', '');
+        } else {
+            if ($boolean) {
+                $checker->setAttribute('class', "fa fa-check");
+                $checker->setAttribute('data-value', '1');
+            } else {
+                $checker->setAttribute('class', "fa fa-times");
+                $checker->setAttribute('data-value', '0');
+            }
+        }
+        
+        return $checker;
+    }
+
+    protected function getArrayTable($array, $descriptionField)
+    {
+        $table = $this->view->createElement('table');
+        if ($descriptionField->itemType[0] == '#') {
+            $itemTypeName = substr($descriptionField->itemType, 1);
+            $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $itemTypeName);
+            $descriptionField = $this->getDummyDescriptionField('dummy', 'object');
+            $descriptionField->properties = $properties;
+        } else {
+            $descriptionField = $this->getDummyDescriptionField('dummy', $itemType);
+        }
+        foreach ($array as $item) {
+            $tr = $this->getTableRow($name=null, $item, $descriptionField, true);
+            $table->appendChild($tr);
+        }
+
+        return $table;
+    }
+
+    protected function getObjectTable($object, $descriptionField)
+    {
+        $table = $this->view->createElement('table');
+        $table->setAttribute('class', "table table-condensed table-striped");
+        foreach ($object as $name => $value) {
+            if (isset($descriptionField->properties[$name])) {
+                $property = $descriptionField->properties[$name];
+            } else {
+                $property = $this->getDummyDescriptionField($name, 'text');
+            }
+
+            if ($tr = $this->getTableRow($name, $value, $property, true)) {
+                $table->appendChild($tr);
+            }
+        }
+
+        return $table;
     }
 
     protected function sortDescriptionProperties($descriptions, $archivalProfile)
