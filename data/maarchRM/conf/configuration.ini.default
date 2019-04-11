@@ -79,7 +79,7 @@ conversionError = false
 ;       messageDate                 medona              The date of message
 ;       messageReference            medona              The message reference
 ;
-; To include a part of date, you must use <date(format)>. 
+; To include a part of date, you must use <date(format)>.
 ;   - Y for a full numeric representation of a year, 4 digits
 ;   - m for the numeric representation of a month, with leading zeros
 ;   - d for day of the month, 2 digits with leading zeros
@@ -163,7 +163,7 @@ publicUserStory = "['app/*']"
 blacklistUserStories = "[
     'adminFunc/contact',
     'adminArchive/adminStorageRule'
-]" 
+]"
 
 csrfWhiteList = "['user/login', 'user/password']"
 csrfConfig = '{
@@ -242,8 +242,8 @@ Password                        = %password%
 ; Path to the UK National Archives DROID signature file for file format detection
 ; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
 
-signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V91.xml"
-containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20170330.xml"
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
 
 ; Path to libreOffice executable
 ;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"

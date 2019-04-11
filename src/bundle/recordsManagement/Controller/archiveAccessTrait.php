@@ -448,7 +448,6 @@ trait archiveAccessTrait
 
     public function listChildrenArchiveId($archiveId)
     {
-        $archiveIds = [];
         $archiveIds[] = $archiveId;
 
         $archives = $this->sdoFactory->find(
@@ -457,9 +456,8 @@ trait archiveAccessTrait
         );
 
         foreach ($archives as $archive) {
-            $archiveIds[] = $archive->archiveId;
-
-            array_merge($archiveIds, $this->listChildrenArchiveId($archive->archiveId));
+            $archiveId = (string)$archive->archiveId;
+            $archiveIds = array_merge($archiveIds, $this->listChildrenArchiveId($archiveId));
         }
 
         return $archiveIds;

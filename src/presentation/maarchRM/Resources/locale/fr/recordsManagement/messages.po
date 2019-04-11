@@ -728,8 +728,8 @@ msgstr "%1$s restitution(s) annulée(s)."
 msgid "%1$s destruction(s) canceled."
 msgstr "%1$s destruction(s) annulée(s)."
 
-msgid "%1$s archive(s) can not be flagged."
-msgstr "%1$s archive(s) ne sont pas marquée(s)."
+msgid "%1$s archive(s) can not be flagged because an action is already in progress on this(these) archive(s) (or on one of its/their objects)."
+msgstr "%1$s archive(s) n'est(ne sont) pas marquée(s) car une action est déjà en cours sur cette(ces) archive(s) (ou sur l'un de leurs objets)."
 
 msgid "%1$s archive(s) can not be modified."
 msgstr "%1$s archive(s) ne sont pas modifiée(s)."
