@@ -35,7 +35,7 @@ class archivalProfile
     protected $descriptionFields;
 
     protected $profilesDirectory;
-    protected $descriptionSchemesController;
+    //protected $descriptionSchemeController;
 
     /**
      * Constructor
@@ -47,7 +47,7 @@ class archivalProfile
     {
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
-        $this->descriptionSchemesController = \laabs::newController('recordsManagement/descriptionClass');
+        //$this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
         foreach (\Laabs::newController('recordsManagement/descriptionField')->index() as $descriptionField) {
             if (!empty($descriptionField->enumeration)) {
@@ -174,26 +174,6 @@ class archivalProfile
 
         // Read profile description
         $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
-        if ($archivalProfile->descriptionClass == '') {
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
-            }
-        } else {
-            $descriptionScheme = $this->descriptionSchemesController->read($archivalProfile->descriptionClass);
-            switch ($descriptionScheme->type) {
-                case 'php':
-                    $scheme = \laabs::getClass($descriptionScheme->uri);
-                    break;
-            }
-
-            $descriptionFields = $this->descriptionSchemesController->getDescriptionFields($archivalProfile->descriptionClass);
-            
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if (isset($descriptionFields[$archiveDescription->fieldName])) {
-                    $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
-                }
-            }
-        }
 
         $profileFile = $this->profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference;
         if (file_exists($profileFile.'.rng') || file_exists($profileFile.'.xsd')) {
@@ -228,76 +208,6 @@ class archivalProfile
         }
 
         return $containedProfiles;
-    }
-
-    /**
-     * Get the standard archive field
-     * @return array The standard archive field
-     */
-    public function getArchiveDescriptionFields()
-    {
-        $descriptionFields = [];
-        $nameTypes = [
-                'archiveId' => 'name',
-                'originatorArchiveId' => 'name',
-                'originatorOrgRegNumber' => 'name',
-                
-                'archiveName' => 'text',
-
-                'depositDate' => 'date',
-            ];
-        // Read document profiles
-        foreach ($nameTypes as $name => $type) {
-            $descriptionField = \Laabs::newInstance('recordsManagement/descriptionField');
-            $descriptionField->name = $descriptionField->label = $name;
-            $descriptionField->type = $type;
-
-            $descriptionFields[$name] = $descriptionField;
-        }
-
-        return $descriptionFields;
-    }
-
-    /**
-     * Get the standard document fields
-     * @return array The standard document fields
-     */
-    public function getDocumentDescriptionFields()
-    {
-        $descriptionFields = [];
-        $nameTypes = [
-                'description' => 'text',
-                'language' => 'text',
-                'purpose' => 'text',
-                'title' => 'text',
-                'creator' => 'text',
-                'publisher' => 'text',
-                'contributor' => 'text',
-                'spatialCoverage' => 'text',
-                'temporalCoverage' => 'text',
-
-                'docId' => 'name',
-                'originatorDocId' => 'name',
-                'category' => 'name',
-
-                'creation' => 'date',
-                'issue' => 'date',
-                'receipt' => 'date',
-                'response' => 'date',
-                'submission' => 'date',
-                'available' => 'date',
-                'valid' => 'date',
-            ];
-        // Read document profiles
-        foreach ($nameTypes as $name => $type) {
-            $descriptionField = \Laabs::newInstance('recordsManagement/descriptionField');
-            $descriptionField->name = $descriptionField->label = $name;
-            $descriptionField->type = $type;
-
-            $descriptionFields[$name] = $descriptionField;
-        }
-
-        return $descriptionFields;
     }
 
     /**
@@ -466,9 +376,7 @@ class archivalProfile
             }
         }
 
-        // Contents profiles
-
-        
+        // Contents profiles       
         if (!empty($archivalProfile->containedProfiles)) {
             foreach ($archivalProfile->containedProfiles as $containedProfileId) {
                 try {

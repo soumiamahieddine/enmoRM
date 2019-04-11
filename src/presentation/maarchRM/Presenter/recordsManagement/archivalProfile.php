@@ -107,7 +107,7 @@ class archivalProfile
             }
 
             // Description by class
-            $descriptionSchemes = \laabs::callService('recordsManagement/descriptionClass/readIndex');
+            $descriptionSchemes = \laabs::callService('recordsManagement/descriptionScheme/readIndex');
             $descriptionClasses = [];
             foreach ($descriptionSchemes as $name => $descriptionScheme) {
                 $descriptionClasses[] = $descriptionClass = new \stdClass();
@@ -117,7 +117,7 @@ class archivalProfile
                     case 'php':
                         $class = \laabs::getClass($descriptionScheme->uri);
                         $dateProperties = [];
-                        $properties = \laabs::callService('recordsManagement/descriptionClass/read_name_Descriptionfields', $name);
+                        $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $name);
                         foreach ($properties as $descriptionField) {
                             if ($descriptionField->type == 'date') {
                                 array_push($dateProperties, $descriptionField);
@@ -167,7 +167,6 @@ class archivalProfile
             $this->view->setSource("descriptionClasses", $descriptionClasses);
 
             $this->view->setSource("archivalProfile", $archivalProfile);
-
         }
 
         $this->view->translate();
