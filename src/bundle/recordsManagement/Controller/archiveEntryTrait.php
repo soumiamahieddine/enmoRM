@@ -589,7 +589,7 @@ trait archiveEntryTrait
 
     protected function validateDescriptionModel($object, $archivalProfile)
     {
-        $descriptionScheme = $this->descriptionClassController->read($archivalProfile->descriptionClass);
+        $descriptionScheme = $this->descriptionSchemeController->read($archivalProfile->descriptionClass);
 
         $names = [];
 

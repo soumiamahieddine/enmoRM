@@ -75,9 +75,9 @@ class archive
 
     /**
      * Controller for description schemes
-     * @var recordsManagement/Controller/descriptionClass
+     * @var recordsManagement/Controller/descriptionScheme
      */
-    protected $descriptionClassController;
+    protected $descriptionSchemeController;
 
     /**
      * Controller for service levels
@@ -207,7 +207,7 @@ class archive
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
-        $this->descriptionClassController = \laabs::newController("recordsManagement/descriptionClass");
+        $this->descriptionSchemeController = \laabs::newController("recordsManagement/descriptionScheme");
 
         $this->serviceLevelController = \laabs::newController("recordsManagement/serviceLevel");
 
@@ -355,20 +355,20 @@ class archive
             return 'recordsManagement/description';
         } 
 
-        $descriptionSchemeConfig = $this->descriptionClassController->read($descriptionScheme);
+        $descriptionSchemeConfig = $this->descriptionSchemeController->read($descriptionScheme);
         if (empty($descriptionSchemeConfig)) {
             return 'recordsManagement/description';
         }
 
-        if (!isset($descriptionSchemeConfig->services->controller)) {
+        if (!isset($descriptionSchemeConfig->controller)) {
             return 'recordsManagement/description';
         }
 
         try {
-            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->services->controller, LAABS_URI_SEPARATOR));
+            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->controller, LAABS_URI_SEPARATOR));
             $controller = $bundle->getController(strtok(''));
 
-            return $descriptionSchemeConfig->services->controller;
+            return $descriptionSchemeConfig->controller;
         } catch (\exception $exception) {
             return 'recordsManagement/description';
         }
