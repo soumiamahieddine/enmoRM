@@ -339,11 +339,11 @@ class archive
 
         $currentService = \laabs::getToken("ORGANIZATION");
 
-        $canDeleteResource = $canAddResource = true ;
+        $canDeleteResource = $canAddResource = false ;
         
-        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
-            && !in_array("owner", $currentService->orgRoleCodes)) {
-            $canDeleteResource = $canAddResource = false ;
+        if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+            && in_array("owner", $currentService->orgRoleCodes)) {
+            $canDeleteResource = $canAddResource = true ;
         }
         
         $this->view->setSource("canDeleteResource", $canDeleteResource);
