@@ -1166,6 +1166,7 @@ class archive
     protected function getTableHeader($descriptionField, $immutable)
     {
         $th = $this->view->createElement('th', $descriptionField->label);
+        $th->setAttribute('name', $descriptionField->name);
         $th->setAttribute('data-type', $descriptionField->type);
         if ($immutable) {
             $th->setAttribute('data-immutable', 'immutable');
@@ -1178,6 +1179,7 @@ class archive
     {
         $td = $this->view->createElement('td');
         $td->setAttribute('style', 'padding: 0 5px 0 5px');
+        $td->setAttribute('data-value', json_encode($value));
         $valueNode = $this->getTextNode($value, $descriptionField);
         $td->appendChild($valueNode);
 
@@ -1258,15 +1260,17 @@ class archive
     {
         $table = $this->view->createElement('table');
         $table->setAttribute('class', "table table-condensed table-striped");
-        foreach ($object as $name => $value) {
-            if (isset($descriptionField->properties[$name])) {
-                $property = $descriptionField->properties[$name];
-            } else {
-                $property = $this->getDummyDescriptionField($name, 'text');
-            }
+        if (!empty($object)) {
+            foreach ($object as $name => $value) {
+                if (isset($descriptionField->properties[$name])) {
+                    $property = $descriptionField->properties[$name];
+                } else {
+                    $property = $this->getDummyDescriptionField($name, 'text');
+                }
 
-            if ($tr = $this->getTableRow($name, $value, $property, true)) {
-                $table->appendChild($tr);
+                if ($tr = $this->getTableRow($name, $value, $property, true)) {
+                    $table->appendChild($tr);
+                }
             }
         }
 
