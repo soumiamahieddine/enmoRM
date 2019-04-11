@@ -93,21 +93,21 @@ class welcome
 
         // archival profiles for search form
         foreach ($this->userArchivalProfiles as $archivalProfile) {
-            /*if ($archivalProfile == "*") {
-                $currentOrganization->acceptArchiveWithoutProfile = true;
-            }
-
-            $archivalProfileController->readDetail($archivalProfile);*/
+            $descriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $archivalProfile->descriptionClass);
 
             $archivalProfile->searchFields = [];
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                switch ($archiveDescription->descriptionField->type) {
-                    case 'text':
-                    case 'name':
-                    case 'date':
-                    case 'number':
-                    case 'boolean':
-                        $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                if (isset($descriptionFields[$archiveDescription->fieldName])) {
+                    $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
+
+                    switch ($archiveDescription->descriptionField->type) {
+                        case 'text':
+                        case 'name':
+                        case 'date':
+                        case 'number':
+                        case 'boolean':
+                            $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
+                    }
                 }
             }
         }
