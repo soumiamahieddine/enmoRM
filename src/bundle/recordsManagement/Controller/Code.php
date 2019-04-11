@@ -47,7 +47,7 @@ class Code
     public function generateCodes($data, $label)
     {
         $label = strtr(utf8_decode($label), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
-        
+
         $PDFFactory = \laabs::newService('dependency/PDF/Factory');
         $pdf = $PDFFactory->getFpdf();
         $pdf->AddPage();
@@ -57,17 +57,17 @@ class Code
         $qrCode = $this->qrCodeGenerator($data);
         $pdf->Image($qrCode, 80, 150);
 
-        
+
 
         $pdf->SetXY(10, 30);
         $pdf->setFont('Arial', 'B', 16);
         $pdf->MultiCell(0, 10, "Profil d'archive", 1, "C");
-        
+
         $pdf->SetXY(10, 40);
         $pdf->setFont('Arial', '', 16);
         $pdf->MultiCell(0, 10, $label, 1, "C");
 
-        return $pdf->Output("", "S"); 
+        return $pdf->Output("", "S");
     }
 
     /**
@@ -77,7 +77,7 @@ class Code
      */
     private function barcodeGenerator($data, $pdf)
     {
-        require_once 'bundle/recordsManagement/Barcode/php-barcode.php';
+        require_once '../dependency/Barcode/php-barcode.php';
         $barcode = new \Barcode;
 
         $x        = 105;
@@ -87,7 +87,7 @@ class Code
         $angle    = 0;   // rotation in degrees
         $type     = 'code128';
         $black    = ''; // color in hexa
-        
+
         $pdf->SetXY(10, 110);
         $pdf->setFont('Arial', 'B', 16);
         $pdf->MultiCell(0, 10, $data, 0, "C");
@@ -102,7 +102,7 @@ class Code
      */
     private function qrCodeGenerator($data)
     {
-        include_once 'bundle/recordsManagement/phpqrcode/qrlib.php';
+        include_once '../dependency/phpqrcode/qrlib.php';
 
         $filname = \laabs\tempdir() . DIRECTORY_SEPARATOR . \laabs::newId() . ".png";
         \QRcode::png($data, $filname, QR_ECLEVEL_Q, 7);
