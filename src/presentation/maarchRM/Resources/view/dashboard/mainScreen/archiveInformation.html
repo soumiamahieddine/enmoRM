@@ -159,9 +159,9 @@
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
     <input id="inputOriginatingDate" name="originatingDate" type="text" class="col-xs-12 datePicker"/>
 
-    <input id="inputCustomNumericField" placeholder="Value" type="number" class="col-xs-12"/>
+    <input id="inputNumericField" placeholder="Value" type="number" class="col-xs-12"/>
 
-    <div  id="inputCustomBooleanField" class="btn-group" data-toggle="buttons">
+    <div  id="inputBooleanField" class="btn-group" data-toggle="buttons">
         <label class="btn btn-xs btn-default">
             <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
         </label>
@@ -173,8 +173,9 @@
         </label>
     </div>
 
-    <input id="inputHiddenCustomField" placeholder="Value" type="hidden" class="col-xs-12"/>
-    <input id="inputCustomField" placeholder="Value" type="text" class="col-xs-12"/>
+    <input id="inputHiddenField" placeholder="Value" type="hidden" class="col-xs-12"/>
+    <input id="inputDateField" placeholder="Date" type="text" class="col-xs-12"/>
+    <input id="inputTextField" placeholder="Value" type="text" class="col-xs-12"/>
     <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
     <span id="customFieldError_txt">Missing Label</span>
 </div>
@@ -346,67 +347,95 @@
             /*if ($('#metadata').data('descriptionclass') != undefined) {
                 return;
             }*/
-            $('#metadata').find('tr').each(function(i, e) {
-                var label = $(e).children('th');
-                var value = $(e).children('td');
+
+            var inputRows = $('#metadata').children('table').children('tbody').children('tr');
+
+            inputRows.each(function(i, e) {
+                var th = $(e).children('th');
+                var td = $(e).children('td');
                 var input = null;
 
                 var customLabel = $("#inputCustomLabel").clone();
-                customLabel.removeAttr('id').val(label.text()).attr('name', label.attr('name'));
-                label.html('').append(customLabel);
+                customLabel.removeAttr('id').val(th.text()).attr('name', th.attr('name'));
+                th.html('').append(customLabel);
                 var booleanInput = null;
 
-                switch(label.data('type')) {
+                switch(th.data('type')) {
                     case 'boolean' :
-                        input = $("#inputCustomBooleanField").clone();
-                        if(label.data('immutable')) {
+                        input = $("#inputBooleanField").clone();
+                        input.removeAttr('id');
+                        if(th.data('immutable')) {
                             input.prop('disabled', true);
                         }
-                        var intValue = value.find('i').data('value');
+                        var intValue = td.find('i').data('value');
                         booleanInput = input.find('input[value="'+intValue+'"]');
+
+                        td.html('');
+                        
                         break;
+
                     case 'number':
-                        input = $("#inputCustomNumericField").clone();
-                        if(label.data('immutable')) {
+                        input = $("#inputNumericField").clone();
+                        input.removeAttr('id');
+                        if(th.data('immutable')) {
                             input.prop('disabled', true);
                         }
-                        input.val(value.html());
+                        input.val(td.html());
+
+                        td.html('');
                         break;
+
                     case 'date':
-                        input = $("#inputCustomField").clone();
-                        input.datepicker(DatePickerParams).datepicker('setDate', value.html());
-                        if(label.data('immutable')) {
+                        input = $("#inputDateField").clone();
+                        input.removeAttr('id');
+                        input.datepicker(DatePickerParams).datepicker('setDate', td.html());
+                        if(th.data('immutable')) {
                             input.prop('disabled', true);
                         }
                         input.datepicker({
                             language:$('#wrapper').attr('lang'),
                             autoclose:true
-                        }).datepicker('setDate', value.html());
+                        }).datepicker('setDate', td.html());
+
+                        td.html('');
                         break;
+
                     case 'array':
                         // Add data-itemtype to manage arrays
-                        input = $("#inputCustomField").clone();
-                        input.data("array", value.data("array"));
-                        input.val(value.html());
+                        input = $("#inputHiddenField").clone();
+                        input.removeAttr('id');
+                        input.data("array", td.data("value"));
+                        input.val(td.html());
                         input.prop('disabled', true);
+                        input.attr('type', 'hidden');
                         break;
+
                     case 'object':
                         // Add data-itemtype to manage arrays
-                        input = $("#inputCustomField").clone();
-                        input.data("array", value.data("object"));
-                        input.val(value.html());
+                        input = $("#inputHiddenField").clone();
+                        input.removeAttr('id');
+
+                        input.data("object", td.data("value"));
+                        input.val(td.html());
                         input.prop('disabled', true);
+                        input.attr('type', 'hidden');
+
+                        td.append(input);
                         break;
 
                     default :
-                            input = $("#inputCustomField").clone();
-                            if(label.data('immutable')) {
-                                input.prop('disabled', true);
-                            }
-                            input.val(value.text());
+                        input = $("#inputTextField").clone();
+                        input.removeAttr('id');
+
+                        if (th.data('immutable')) {
+                            input.prop('disabled', true);
+                        }
+                        input.val(td.text());   
+                        td.html('');
+                         
                 }
                 
-                value.html('').append(input.removeAttr('id'));
+                td.append(input);
 
                 // Disable input for archival profile field labels
                 if(!$(e).hasClass('customField')) {
@@ -420,33 +449,36 @@
         },
 
         saveMetadata: function() {
-            var descriptionFields = {};
+            var description = {};
             var isSavable = true;
-            
-            $('#metadata').find('tr').each(function(i, e) {
-                var input = $(e).find('th > input');
-                var valueInput = $(e).find('td > input');
-                var label = input.val();
-                var name = input.attr('name');
+
+            var inputRows = $('#metadata').children('table').children('tbody').children('tr');
+            inputRows.each(function(i, e) {
+                var inputLabel = $(e).find('th > input');
+                var inputValue = $(e).find('td > input');
+                var td = $(e).children('td');
+                
+                var label = inputLabel.val();
+                var name = inputLabel.attr('name');
                 var type = $(e).find('th').data('type');
                 var value = null;
 
                 switch (type) {
                     case "array" :
-                        value = valueInput.data("array");
+                        value = td.data("value");
                         break;
                     case "object" :
-                        value = valueInput.data("object");
+                        value = td.data("value");
                         break;
                     case "name" :
                     case "text" :
-                        value = valueInput.val();
+                        value = inputValue.val();
                         break;
                     case "date" :
-                        value = valueInput.data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        value = inputValue.data('datepicker').getFormattedDate('yyyy-mm-dd');
                         break;
                     case "number" :
-                        value = parseInt(valueInput.val());
+                        value = parseInt(inputValue.val());
                         break;
                     case "boolean" :
                         var inputValue = $(e).find('td').find('.active > input').val();
@@ -458,17 +490,17 @@
                         }
                         break;
                     default:
-                        value = valueInput.val();
+                        value = inputValue.val();
                         break;
                 }
 
                 if (!$(e).hasClass('customField')) {
-                    descriptionFields[name] = value;
+                    description[name] = value;
                 } else if (label != '' && value != '') {
-                    descriptionFields[label] = value;
+                    description[label] = value;
                 } else if (label == '' && value != '') {
                     gritter.show($('#customFieldError_txt').text(), false);
-                    descriptionFields = false;
+                    description = false;
                     isSavable = false;
                     return;
                 }
@@ -483,7 +515,7 @@
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
                 originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
-                description         : descriptionFields
+                description         : description
             };
 
             $.ajax({
@@ -511,7 +543,7 @@
 
         addField : function(type) {
             var label = $('#inputCustomLabel').clone().val('').prop('disabled', false);
-            var value = $('#inputCustomField').clone().val('');
+            var value = $('#inputTextField').clone().val('');
 
             if(type == 'date') {
                 value.datepicker({
