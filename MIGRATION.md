@@ -116,11 +116,8 @@ descriptionSchemes = "{
     'name' : 'SEDA 2',
     'type' : 'php',
     'uri' : 'seda2/Content',
-    'services' : {
-      'manage' : '',
-      'search' : '',
-      'present' : ''
-    }
+    'controller' : '',
+    'presenter' : ''
   }
 }"
 ```
