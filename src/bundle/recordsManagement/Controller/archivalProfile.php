@@ -48,12 +48,7 @@ class archivalProfile
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
         $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme'); 
-        foreach (\Laabs::newController('recordsManagement/descriptionField')->index() as $descriptionField) {
-            if (!empty($descriptionField->enumeration)) {
-                $descriptionField->enumeration = json_decode($descriptionField->enumeration);
-            }
-            $this->descriptionFields[$descriptionField->name] = $descriptionField;
-        }
+        $this->descriptionFields = \Laabs::newController('recordsManagement/descriptionField')->index();
 
         if (!is_dir($profilesDirectory) && !empty($profilesDirectory)) {
             mkdir($profilesDirectory, 0777, true);
@@ -173,6 +168,10 @@ class archivalProfile
 
         // Read profile description
         $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
+        usort($archivalProfile->archiveDescription, function ($a, $b) {
+            return $a->position > $b->position;
+        });
+        
         if ($archivalProfile->descriptionClass == '') {
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
