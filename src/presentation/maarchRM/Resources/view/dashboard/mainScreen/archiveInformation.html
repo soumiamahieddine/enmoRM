@@ -159,7 +159,11 @@
     <input id="inputOriginatorArchiveId" name="originatorArchiveId" type="text" class="col-xs-12"/>
     <input id="inputOriginatingDate" name="originatingDate" type="text" class="col-xs-12 datePicker"/>
 
-    <input id="inputNumericField" placeholder="Value" type="number" class="col-xs-12"/>
+    <input id="inputLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
+    
+    <input id="inputHidden" type="hidden"/>
+    <input id="inputText" type="text" class="col-xs-12"/>
+    <input id="inputNumericField" type="number" class="col-xs-12"/>
 
     <div  id="inputBooleanField" class="btn-group" data-toggle="buttons">
         <label class="btn btn-xs btn-default">
@@ -173,10 +177,6 @@
         </label>
     </div>
 
-    <input id="inputHiddenField" placeholder="Value" type="hidden" class="col-xs-12"/>
-    <input id="inputDateField" placeholder="Date" type="text" class="col-xs-12"/>
-    <input id="inputTextField" placeholder="Value" type="text" class="col-xs-12"/>
-    <input id="inputCustomLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
     <span id="customFieldError_txt">Missing Label</span>
 </div>
 
@@ -352,115 +352,94 @@
 
             inputRows.each(function(i, e) {
                 var th = $(e).children('th');
+                var label = th.text();
+                var name = th.attr('name');
+                var type = th.data('type');
+
                 var td = $(e).children('td');
+
                 var input = null;
 
-                var customLabel = $("#inputCustomLabel").clone();
-                customLabel.removeAttr('id').val(th.text()).attr('name', th.attr('name'));
-                th.html('').append(customLabel);
-                var booleanInput = null;
-
-                switch(th.data('type')) {
+                var inputLabel = $("#inputLabel").clone().removeAttr('id');
+                inputLabel.val(label).attr('name', name);
+                // Disable input for archival profile field labels
+                if (th.data('additionnal')) {
+                    th.html('').append(inputLabel);
+                } else {
+                    inputLabel.attr('type', 'hidden');
+                    th.append(inputLabel);
+                }
+                
+                switch(type) {
                     case 'boolean' :
-                        input = $("#inputBooleanField").clone();
-                        input.removeAttr('id');
-                        if(th.data('immutable')) {
-                            input.prop('disabled', true);
-                        }
-                        var intValue = td.find('i').data('value');
-                        booleanInput = input.find('input[value="'+intValue+'"]');
-
-                        td.html('');
-                        
+                        input = $("#inputBooleanField").clone().removeAttr('id');
+                        var intValue = td.find('i').data('value');                       
+                        td.html('').append(input);
+                        // Click on radio value
+                        input.find('input[value="'+intValue+'"]').click();
                         break;
 
                     case 'number':
-                        input = $("#inputNumericField").clone();
-                        input.removeAttr('id');
-                        if(th.data('immutable')) {
-                            input.prop('disabled', true);
-                        }
+                        input = $("#inputNumericField").clone().removeAttr('id');
+
                         input.val(td.html());
 
-                        td.html('');
+                        td.html('').append(input);
                         break;
 
                     case 'date':
-                        input = $("#inputDateField").clone();
-                        input.removeAttr('id');
+                        input = $("#inputText").clone().removeAttr('id');
                         input.datepicker(DatePickerParams).datepicker('setDate', td.html());
-                        if(th.data('immutable')) {
-                            input.prop('disabled', true);
-                        }
+                        
                         input.datepicker({
                             language:$('#wrapper').attr('lang'),
                             autoclose:true
                         }).datepicker('setDate', td.html());
 
-                        td.html('');
+                        td.html('').append(input);
                         break;
 
                     case 'array':
                         // Add data-itemtype to manage arrays
-                        input = $("#inputHiddenField").clone();
-                        input.removeAttr('id');
-                        input.data("array", td.data("value"));
-                        input.val(td.html());
-                        input.prop('disabled', true);
-                        input.attr('type', 'hidden');
+                        input = $("#inputHidden").clone().removeAttr('id');
+                        input.data("value", td.data("value"));
+                        td.append(input);
                         break;
 
                     case 'object':
                         // Add data-itemtype to manage arrays
-                        input = $("#inputHiddenField").clone();
-                        input.removeAttr('id');
-
-                        input.data("object", td.data("value"));
-                        input.val(td.html());
-                        input.prop('disabled', true);
-                        input.attr('type', 'hidden');
-
+                        input = $("#inputHidden").clone().removeAttr('id');
+                        input.data("value", td.data("value"));
                         td.append(input);
                         break;
 
                     default :
-                        input = $("#inputTextField").clone();
-                        input.removeAttr('id');
-
-                        if (th.data('immutable')) {
-                            input.prop('disabled', true);
-                        }
+                        input = $("#inputText").clone().removeAttr('id');
                         input.val(td.text());   
-                        td.html('');
+                        td.html('').append(input);
                          
                 }
-                
-                td.append(input);
 
-                // Disable input for archival profile field labels
-                if(!$(e).hasClass('customField')) {
-                    $(e).find('th input').prop('disabled', true);
-                }
-
-                if (booleanInput && booleanInput.length) {
-                    booleanInput.click();
+                if (th.data('readonly')) {
+                    input.prop('disabled', true);
                 }
             });
         },
 
         saveMetadata: function() {
             var description = {};
-            var isSavable = true;
 
             var inputRows = $('#metadata').children('table').children('tbody').children('tr');
             inputRows.each(function(i, e) {
-                var inputLabel = $(e).find('th > input');
-                var inputValue = $(e).find('td > input');
-                var td = $(e).children('td');
-                
+                var th = $(e).children('th');
+                var type = th.data('type');
+                var inputLabel = th.children('input');
                 var label = inputLabel.val();
                 var name = inputLabel.attr('name');
-                var type = $(e).find('th').data('type');
+                
+                var td = $(e).children('td');
+                var inputValue = td.children('input');
+                
                 var value = null;
 
                 switch (type) {
@@ -494,21 +473,15 @@
                         break;
                 }
 
-                if (!$(e).hasClass('customField')) {
-                    description[name] = value;
-                } else if (label != '' && value != '') {
+                if (th.data('additionnal') && label != '') {
                     description[label] = value;
+                } else if (name != '' && value != '') {
+                    description[name] = value;
                 } else if (label == '' && value != '') {
                     gritter.show($('#customFieldError_txt').text(), false);
-                    description = false;
-                    isSavable = false;
                     return;
                 }
             });
-
-            if (!isSavable) {
-                return;
-            }
 
             var parameters = {
                 archiveId           : ArchiveInformation.archiveId,
@@ -517,7 +490,7 @@
                 originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
                 description         : description
             };
-
+            
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsmanagement/archive/metadata",
@@ -541,18 +514,11 @@
             $('#archiveCustomFieldAddBtn').hide();
         },
 
-        addField : function(type) {
-            var label = $('#inputCustomLabel').clone().val('').prop('disabled', false);
-            var value = $('#inputTextField').clone().val('');
+        addField : function() {
+            var label = $('#inputLabel').clone().val('').prop('disabled', false);
+            var value = $('#inputText').clone().val('');
 
-            if(type == 'date') {
-                value.datepicker({
-                    language:$('#wrapper').attr('lang'),
-                    autoclose:true
-                });
-            }
-
-            var tr = $('<tr/>').append($('<th/>').data("type", type).append(label))
+            var tr = $('<tr/>').append($('<th/>').data("type", 'text').data('additionnal', 'additionnal').append(label))
                                .append($('<td/>').append(value));
 
             $('#metadata').children('table').append(tr);
