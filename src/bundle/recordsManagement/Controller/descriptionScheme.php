@@ -69,8 +69,12 @@ class descriptionScheme
      *
      * @return array
      */
-    public function getDescriptionFields($name)
+    public function getDescriptionFields($name = false)
     {
+        if (empty($name)) {
+            return \laabs::newController('recordsManagement/descriptionField')->index();
+        }
+
         if (isset($this->descriptionSchemes[$name])) {
             $descriptionSchemeConfig = $this->descriptionSchemes[$name];
         } elseif (strpos($name, '/') !== false) {
@@ -84,22 +88,15 @@ class descriptionScheme
                 return $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->uri);
         }
 
-        //var_dump($fields);
         return $fields;
     }
 
     protected function getDescriptionFieldsFromPhpClass($name)
     {
         $descriptionScheme = \laabs::getClass($name);
-        $fields = $keyfields = [];
-        if ($key = $descriptionScheme->getPrimaryKey()) {
-            $keyfields = $key->getFields();
-        }
-        foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
-            if (in_array($descriptionSchemeProperty->name, $keyfields)) {
-                continue;
-            }   
+        $fields = [];
 
+        foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
             $fields[$descriptionSchemeProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionSchemeProperty);
         }
 
@@ -124,11 +121,11 @@ class descriptionScheme
             $descriptionField->enumeration = $schemeProperty->enumeration;
         }
 
-        if (isset($descriptionSchemeProperty->tags['internal'])) {
+        if (isset($schemeProperty->tags['internal'])) {
             $descriptionField->internal = true;
         }
 
-        if (isset($descriptionSchemeProperty->tags['readonly'])) {
+        if (isset($schemeProperty->tags['readonly'])) {
             $descriptionField->readonly = true;
         }
 
