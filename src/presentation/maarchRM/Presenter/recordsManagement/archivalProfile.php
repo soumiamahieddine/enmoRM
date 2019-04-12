@@ -119,6 +119,10 @@ class archivalProfile
                         $dateProperties = [];
                         $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $name);
                         foreach ($properties as $descriptionField) {
+                            // Internal fields are not shown, it should only be manages by business rules
+                            if (isset($descriptionField->internal) || isset($descriptionField->readonly) {
+                                continue;
+                            }
                             if ($descriptionField->type == 'date') {
                                 array_push($dateProperties, $descriptionField);
                             }
