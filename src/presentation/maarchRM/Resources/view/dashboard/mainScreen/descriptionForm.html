@@ -237,12 +237,12 @@
 
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
+            console.log(archiveDescription);
             var target = $("#archivalProfileFields");
             var template = $('#inputFieldTemplate').clone();
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
             var enumeration= archiveDescription.descriptionField.enumeration;
-            var isArray= archiveDescription.descriptionField.isArray;
             var label = archiveDescription.descriptionField.label;
             var name = archiveDescription.descriptionField.name;
             var required = archiveDescription.required;
@@ -263,10 +263,6 @@
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
-
-                        if (isArray) {
-                            field.attr('data-enumerate', 'NOT_VALUE');
-                        }
 
                         field.attr('id', name);
 
@@ -313,8 +309,11 @@
                         template.find('[value=""]').prop("checked", "checked");
                     }
                     break;
+
+                case 'array':
+                case 'object':
                 default:
-                    console.log("Error invalid type");
+                    console.log("Type "+type+" of field "+name+" is not managed");
                     return;
                     break;
             }
@@ -328,7 +327,7 @@
                 field.attr("data-required", required);
             }
 
-            if(isArray) {
+            /*if(isArray) {
                 var btnGroup  = $('#addBtnTpl').clone();
                 btnGroup.removeClass('hide');
                 btnGroup.find('button').attr('data-select',name);
@@ -342,7 +341,7 @@
                 template.find('div').addClass('input-group').append(btnGroup);
                 template.append('<label class="col-md-3 small control-label"></label>');
                 template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
-            }
+            }*/
 
             template.appendTo(target);
 
