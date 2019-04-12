@@ -98,11 +98,7 @@ class descriptionScheme
         foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
             if (in_array($descriptionSchemeProperty->name, $keyfields)) {
                 continue;
-            }
-
-            if (isset($descriptionSchemeProperty->tags['readonly'])) {
-                continue;
-            }
+            }   
 
             $fields[$descriptionSchemeProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionSchemeProperty);
         }
@@ -126,6 +122,14 @@ class descriptionScheme
 
         if (isset($schemeProperty->enumeration)) {
             $descriptionField->enumeration = $schemeProperty->enumeration;
+        }
+
+        if (isset($descriptionSchemeProperty->tags['internal'])) {
+            $descriptionField->internal = true;
+        }
+
+        if (isset($descriptionSchemeProperty->tags['readonly'])) {
+            $descriptionField->readonly = true;
         }
 
         switch (true) {
