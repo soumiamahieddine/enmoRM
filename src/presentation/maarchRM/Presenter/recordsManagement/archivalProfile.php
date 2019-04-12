@@ -101,45 +101,17 @@ class archivalProfile
         if ($archivalProfile) {
             $this->getProfileType($archivalProfile);
 
-            $requiredProperties = array();
-            foreach ($archivalProfile->archiveDescription as $property) {
-                array_push($requiredProperties, $property->fieldName);
-            }
-
             // Description by class
-            $descriptionSchemes = \laabs::callService('recordsManagement/descriptionScheme/readIndex');
-            $descriptionClasses = [];
-            foreach ($descriptionSchemes as $name => $descriptionScheme) {
-                $descriptionClasses[] = $descriptionClass = new \stdClass();
-                $descriptionClass->label = $descriptionScheme->label;
-                $descriptionClass->name = $name;
-                switch ($descriptionScheme->type) {
-                    case 'php':
-                        $class = \laabs::getClass($descriptionScheme->uri);
-                        $dateProperties = [];
-                        $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $name);
-                        foreach ($properties as $descriptionField) {
-                            // Internal fields are not shown, it should only be manages by business rules
-                            if (isset($descriptionField->internal) || isset($descriptionField->readonly) {
-                                continue;
-                            }
-                            if ($descriptionField->type == 'date') {
-                                array_push($dateProperties, $descriptionField);
-                            }
-                        }
-
-                        $properties = json_encode($properties);
-                        $dateProperties = json_encode($dateProperties);
-
-                        $descriptionClass->dateProperties = $dateProperties;
-                        $descriptionClass->properties = $properties;
-                        break;
-                }
-            }
+            $descriptionClasses = $this->getDescriptionClasses();
 
             // Description by fulltext index fields
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
+            foreach ($descriptionFields as $descriptionField) {
+                if (in_array(strtolower($descriptionField->type), ['date', 'datetime', 'timestamp'])) {
+                    $dateFields[] = $descriptionField;
+                }
+            }
 
             if (is_file($profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng")) {
                 $filename = $profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference.".rng";
@@ -157,19 +129,10 @@ class archivalProfile
                 $this->view->setSource("profileFileLastModified", \laabs::newDatetime(date("Y-m-d H:i:s", filemtime($filename))));
             }
 
-            foreach ($descriptionFields as $descriptionField) {
-                if (in_array(strtolower($descriptionField->type), ['date', 'datetime', 'timestamp'])) {
-                    $dateFields[] = $descriptionField;
-                }
-            }
-
             $this->view->setSource("dateFields", $dateFields);
             $this->view->setSource("descriptionFields", $descriptionFields);
-
             $this->view->setSource("profileList", json_encode($profileList));
-
             $this->view->setSource("descriptionClasses", $descriptionClasses);
-
             $this->view->setSource("archivalProfile", $archivalProfile);
         }
 
@@ -211,6 +174,34 @@ class archivalProfile
         $this->view->merge();
 
         return $this->view->saveHtml();
+    }
+
+    protected function getDescriptionClasses()
+    {
+        $descriptionSchemes = \laabs::callService('recordsManagement/descriptionScheme/readIndex');
+        $descriptionClasses = [];
+        foreach ($descriptionSchemes as $name => $descriptionScheme) {
+            $descriptionClasses[] = $descriptionClass = new \stdClass();
+            $descriptionClass->label = $descriptionScheme->label;
+            $descriptionClass->name = $name;
+            
+            $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $name);
+            $dateProperties = [];
+            foreach ($properties as $descriptionField) {
+                // Internal fields are not shown, it should only be manages by business rules
+                if (isset($descriptionField->internal) || isset($descriptionField->readonly)) {
+                    continue;
+                }
+                if ($descriptionField->type == 'date') {
+                    array_push($dateProperties, $descriptionField);
+                }
+            }
+
+            $descriptionClass->properties = json_encode($properties);
+            $descriptionClass->dateProperties = json_encode($dateProperties);
+        }
+
+        return $descriptionClasses;
     }
 
     /**
