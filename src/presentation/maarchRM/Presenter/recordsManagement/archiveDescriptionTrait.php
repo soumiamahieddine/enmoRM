@@ -27,7 +27,7 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
  * @package RecordsManagement
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
-trait archiveDescription
+trait archiveDescriptionTrait
 {
     protected function setDescription($archive)
     {
@@ -123,6 +123,7 @@ trait archiveDescription
         $descriptionField->name = $name;
         $descriptionField->label = $name;
         $descriptionField->type = $type;
+        $descriptionField->additionnal = true;
 
         return $descriptionField;
     }
@@ -134,6 +135,9 @@ trait archiveDescription
         $th->setAttribute('data-type', $descriptionField->type);
         if (isset($descriptionField->readonly)) {
             $th->setAttribute('data-readonly', 'readonly');
+        }
+        if (isset($descriptionField->additionnal)) {
+            $th->setAttribute('data-additionnal', 'additionnal');
         }
 
         return $th;
