@@ -1180,13 +1180,15 @@ class archive
         $td = $this->view->createElement('td');
         $td->setAttribute('style', 'padding: 0 5px 0 5px');
         $td->setAttribute('data-value', json_encode($value));
-        $valueNode = $this->getTextNode($value, $descriptionField);
-        $td->appendChild($valueNode);
+        if (!is_null($value)) {
+            $valueNode = $this->getValueNode($value, $descriptionField);
+            $td->appendChild($valueNode);
+        }
 
         return $td;
     }
 
-    protected function getTextNode($value, $descriptionField)
+    protected function getValueNode($value, $descriptionField)
     {
         switch ($descriptionField->type) {
             case 'boolean':
@@ -1260,17 +1262,15 @@ class archive
     {
         $table = $this->view->createElement('table');
         $table->setAttribute('class', "table table-condensed table-striped");
-        if (!empty($object)) {
-            foreach ($object as $name => $value) {
-                if (isset($descriptionField->properties[$name])) {
-                    $property = $descriptionField->properties[$name];
-                } else {
-                    $property = $this->getDummyDescriptionField($name, 'text');
-                }
+        foreach ($object as $name => $value) {
+            if (isset($descriptionField->properties[$name])) {
+                $property = $descriptionField->properties[$name];
+            } else {
+                $property = $this->getDummyDescriptionField($name, 'text');
+            }
 
-                if ($tr = $this->getTableRow($name, $value, $property, true)) {
-                    $table->appendChild($tr);
-                }
+            if ($tr = $this->getTableRow($name, $value, $property, true)) {
+                $table->appendChild($tr);
             }
         }
 
