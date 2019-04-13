@@ -321,6 +321,12 @@ class scheduling
         if(!empty($frequency[8] && $frequency[8] != "00")) {
             $frequency[8] -= $H_Offset; 
         }
+        if ($frequency[1] < 0) {
+            $frequency[1] = 24 + $frequency[1];
+        }
+        if ($frequency[8] < 0) {
+            $frequency[8] = 24 + $frequency[8];
+        }
         
         if ($frequency[6] != "") {
             if ($frequency[2] == "" && $frequency[3] == "") {
