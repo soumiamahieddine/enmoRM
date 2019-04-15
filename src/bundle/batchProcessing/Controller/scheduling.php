@@ -323,9 +323,13 @@ class scheduling
         }
         if ($frequency[1] < 0) {
             $frequency[1] = 24 + $frequency[1];
+        } elseif ($frequency[1] >= 24) {
+            $frequency[1] = $frequency[1] - 24;
         }
         if ($frequency[8] < 0) {
             $frequency[8] = 24 + $frequency[8];
+        } elseif ($frequency[8] >= 24) {
+            $frequency[8] = $frequency[8] - 24;
         }
         
         if ($frequency[6] != "") {
