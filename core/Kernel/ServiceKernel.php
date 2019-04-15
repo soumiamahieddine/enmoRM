@@ -353,7 +353,14 @@ class ServiceKernel extends AbstractKernel
 
             $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
         } else {
-            switch ($this->response->contentType) {
+            $mimetype = $this->guessResponseType();
+
+            $types = \laabs::getContentTypes();
+            $type = null;
+            if (isset($types[$mimetype])) {
+                $type = $types[$mimetype];
+            }
+            switch ($type) {
                 case 'json':
                 case 'html':
                     $content = \core\Encoding\json::encode($this->serviceReturn);
@@ -362,8 +369,74 @@ class ServiceKernel extends AbstractKernel
                 default:
                     $content = \core\Encoding\text::encode($this->serviceReturn);
             }
+
+            $this->response->setContentType($mimetype);
         }
 
         $this->response->setBody($content);
+    }
+
+    /**
+     * Guess the response content type from the request "Accept"
+     * @return string The ContentType code or "text" as a default value
+     */
+    protected function guessResponseType()
+    {
+        $contentTypes = \laabs::getContentTypes();
+        $requestAccepts = $this->request->accept;
+
+        foreach ($requestAccepts as $mimetype => $priority) {
+            if (isset($contentTypes[$mimetype])) {
+                return $mimetype;
+            }
+        }
+    }
+
+    /**
+     * Guess the response content type from body or the request "Accept"
+     * @return string The ContentType code or "text" as a default value
+     */
+    protected function setResponseType()
+    {
+        
+        $finfo = new \finfo();
+        $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
+        $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
+
+        $contentType = $mimeType;
+
+        if ($mimeType == "text/plain") {
+            $laabsContentTypes = \laabs::getContentTypes();
+            $laabsContentType = 'text';
+            foreach ($this->request->accept as $acceptedMimeType => $priority) {
+                if (isset($laabsContentTypes[$acceptedMimeType])) {
+                    $laabsContentType = $laabsContentTypes[$acceptedMimeType];
+
+                    break;
+                }
+            }
+
+            switch (strtolower($laabsContentType)) {
+                case 'css':
+                case 'less':
+                    $contentType = "text/css";
+                    break;
+
+                case 'js':
+                case 'json':
+                    $contentType = "application/javascript";
+                    break;
+
+                case 'csv':
+                    $contentType = "text/csv";
+                    break;
+
+                case 'html':
+                    $contentType = "text/html";
+                    break;
+            }
+        }
+
+        $this->response->setContentType($contentType);
     }
 }
