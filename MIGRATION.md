@@ -112,7 +112,7 @@ de configuration qui fournit :
 
 ```
 descriptionSchemes = "{
-  'seda2/Content' : {
+  'seda2' : {
     'name' : 'SEDA 2',
     'type' : 'php',
     'uri' : 'seda2/Content',
