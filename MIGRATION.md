@@ -86,8 +86,8 @@ Ces directives sont utilisables à la place de la directive existante `publicArc
 gérer plus finement les fonctionnalités correspondantes :
 
 Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen. 
-Si activée, elle restreint le nombre de rôles possibles pour un utilisateur à 1 seul dans la gestion des utilisateurs
-et inhibe la gestion des utilisateurs rattachés dans la gestion des rôles.
+Si activée, chaque utilisateur ne peut avoir qu'un rôle et 
+la gestion des rôles ne permet plus d'ajouter ou retirer des utilisateurs.
 
 Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileType` définit désormais le comportement suivant :
   * `1` indique des profils de versement de type MEDONA et inhibe la gestion des accès aux profils dans l'organigramme
