@@ -411,7 +411,7 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->accessRuleCode)) {
             $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
-        
+
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
@@ -599,7 +599,7 @@ trait archiveEntryTrait
 
             $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
         }
-        
+
         foreach ($object as $name => $value) {
             if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
 
@@ -905,9 +905,11 @@ trait archiveEntryTrait
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
-
         } catch (\Exception $exception) {
-            $nbResources = count($archive->digitalResources);
+            $nbResources = 0;
+            if (!is_null($archive->digitalResources)) {
+                $nbResources = count($archive->digitalResources);
+            }
             for ($i = 0; $i < $nbResources; $i++) {
                 $this->digitalResourceController->rollbackStorage($archive->digitalResources[$i]);
             }
@@ -1010,7 +1012,7 @@ trait archiveEntryTrait
     protected function storeDescriptiveMetadata($archive)
     {
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        
+
         $descriptionController->create($archive);
     }
 
