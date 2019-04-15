@@ -177,10 +177,7 @@
                     },
                     error       : function (response) {
                         gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                    },
-                    complete : function(response){
-                        $("#syncImport").attr("disabled", false);
-                    }  
+                    }
                 }
             );
         },
