@@ -82,7 +82,6 @@ class welcome
             $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
             $this->view->translate();
-
         }
 
         // Retention
@@ -94,7 +93,7 @@ class welcome
         // archival profiles for search form
         foreach ($this->userArchivalProfiles as $archivalProfile) {
             $archivalProfile->searchFields = [];
-            foreach ($archivalProfile->archiveDescription->properties as $archiveDescription) {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 switch ($archiveDescription->descriptionField->type) {
                     case 'text':
                     case 'name':

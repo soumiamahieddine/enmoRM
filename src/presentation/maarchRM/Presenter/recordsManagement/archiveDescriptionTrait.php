@@ -97,7 +97,7 @@ trait archiveDescriptionTrait
             $tr->appendChild($th);
         }
 
-        $td = $this->getTableData($value, $descriptionField);       
+        $td = $this->getTableData($value, $descriptionField);
         $tr->appendChild($td);
 
         return $tr;
@@ -178,7 +178,6 @@ trait archiveDescriptionTrait
                 } else {
                     return $this->view->createTextNode($value);
                 }
-                
         }
     }
 
@@ -212,7 +211,7 @@ trait archiveDescriptionTrait
             $descriptionField = $this->getDummyDescriptionField('dummy', $itemType);
         }
         foreach ($array as $item) {
-            $tr = $this->getTableRow($name=null, $item, $descriptionField, true);
+            $tr = $this->getTableRow($name = null, $item, $descriptionField, true);
             $table->appendChild($tr);
         }
 

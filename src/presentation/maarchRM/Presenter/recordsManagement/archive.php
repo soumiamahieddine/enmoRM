@@ -1003,7 +1003,7 @@ class archive
      * @return string
      */
     protected function setDescriptiveMetadatas($archive)
-    { 
+    {
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
         }
@@ -1016,14 +1016,13 @@ class archive
     protected function getDescriptionHtml($archive)
     {
         $presenterClass = $this->getDescriptionPresenterClass($archive->descriptionClass);
-
         if (!empty($presenterClass)) {
             $presenter = $this->getPresenter($presenterClass);
-
             $descriptionHtml = $presenter->read($archive->descriptionObject);
+
+            $container = $this->view->getElementById("metadata");
             
             $this->view->addContent($descriptionHtml, $container);
-
         } else {
             $this->setDescription($archive);
         }
@@ -1053,26 +1052,25 @@ class archive
         // Default description class
         if (empty($descriptionScheme)) {
             return;
-        } 
+        }
 
         $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
         if (empty($descriptionSchemeConfig)) {
             return;
         }
-
+       
         if (!isset($descriptionSchemeConfig->presenter)) {
             return;
         }
-
+ 
         try {
-            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->controller, LAABS_URI_SEPARATOR));
-            $controller = $bundle->getController(strtok(''));
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionScheme);
 
             return $descriptionSchemeConfig->presenter;
         } catch (\exception $exception) {
             return;
         }
-        
     }
 
     protected function loadArchivalProfile($reference)
