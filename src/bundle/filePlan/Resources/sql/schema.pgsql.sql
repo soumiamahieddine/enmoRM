@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "filePlan" CASCADE;
 
-CREATE SCHEMA "filePlan"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "filePlan";
 
 -- Table: filePlan."subject"
 
