@@ -54,13 +54,10 @@ class welcome
      */
     public function welcomePage()
     {
-        //$this->view->addHeaders();
-        //$this->view->useLayout();
         $this->view->addContentFile("dashboard/mainScreen/main.html");
 
         $this->view->translate();
 
-        $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
         $userAccountController = \laabs::newController('auth/userAccount');
         $user = $userAccountController->get($accountToken->accountId);

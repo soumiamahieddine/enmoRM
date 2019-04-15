@@ -97,10 +97,6 @@ class logger
             $event->orgUnitRegNumber = $currentOrganization->registrationNumber;
         }
         $event->instanceName = \laabs::getInstanceName();
-        
-        $auditLine = array($entry->entryDate, $entry->entryType, $entry->objectClass, $entry->objectId, $entry->message);
-
-        //fputcsv($this->currentAuditFile, $auditLine, "\t");
 
         return $entry;
     }
@@ -135,8 +131,6 @@ class logger
             return;
         }
 
-
-        $fullpath = $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->path;
         foreach ($this->ignorePaths as $ignorePath) {
             if (fnmatch($ignorePath, $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->name)) {
                 return;

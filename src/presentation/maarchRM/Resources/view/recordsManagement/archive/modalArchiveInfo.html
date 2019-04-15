@@ -93,6 +93,7 @@
             $.ajax({
                 type        : "GET",
                 url         : "/recordsManagement/archiveDescription/" + archiveId,
+                data        : {isCommunication:1},
                 dataType    : 'html',
                 success     : function (response) {
                     $('#modalArchiveInfo_content').empty().html(response);
@@ -122,6 +123,7 @@
             $.ajax({
                 type        : "GET",
                 url         : "/recordsManagement/archiveInfo/" + archiveId,
+                data        : {isCommunication:1},
                 dataType    : 'html',
                 success     : function (response) {
                     $('#archiveInformationDiv').empty().html(response);

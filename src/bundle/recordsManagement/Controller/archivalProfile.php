@@ -322,7 +322,10 @@ class archivalProfile
         }
         
         $organizationController = \laabs::newController('organization/organization');
-        $organizationController->deleteArchivalProfileAccess($archivalProfile->reference);
+        $archivalProfileAccesses = $organizationController->getArchivalProfileAccess($orgId=null, $archivalProfileId);
+        foreach ($archivalProfileAccesses as $archivalProfileAccess) {
+            $organizationController->deleteArchivalProfileAccess($archivalProfileAccess->orgId, $archivalProfile->reference);
+        }
 
         $this->sdoFactory->delete($archivalProfile);
 

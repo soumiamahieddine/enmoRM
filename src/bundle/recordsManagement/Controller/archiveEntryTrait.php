@@ -350,13 +350,6 @@ trait archiveEntryTrait
 
             return;
         }
-
-        // File plan position is given as a folder id, check it exists, if not move to originator root
-        try {
-            $folder = $this->filePlanController->read($archive->filePlanPosition);
-        } catch (\Exception $notFoundException) {
-            $archive->filePlanPosition = null;
-        }
     }
 
     /**
@@ -1032,7 +1025,6 @@ trait archiveEntryTrait
 
         $values = is_array($values) ? $values : get_object_vars($values);
 
-        $matches = array();
         if (preg_match_all("/\<[^\>]+\>/", $pattern, $variables)) {
             foreach ($variables[0] as $variable) {
                 $token = substr($variable, 1, -1);
@@ -1043,7 +1035,7 @@ trait archiveEntryTrait
 
                     case $token == 'instance':
                         if ($instanceName = \laabs::getInstanceName()) {
-                            $pattern = str_replace($variable, \laabs::getInstanceName(), $pattern);
+                            $pattern = str_replace($variable, $instanceName, $pattern);
                         } else {
                             $pattern = "instance";
                         }

@@ -269,8 +269,6 @@ class archive
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive);
-
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -301,9 +299,8 @@ class archive
      */
     public function getDescription($archive)
     {
-        $archiveTree = \laabs::newController("recordsManagement/archive")->listChildrenArchive($archive, true);
         $this->view->addContentFile("recordsManagement/archive/description.html");
-
+        
         // Relationships
         $this->setArchiveTree($archive);
 
@@ -318,13 +315,13 @@ class archive
 
         // Message
         $this->checkMessage($archive);
-
+        
         //$this->view->setSource("visible", $visible);
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
         $this->view->merge();
-
+        
         return $this->view->saveHtml();
     }
 
@@ -862,7 +859,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = $url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
 
         return $this->json->save();
     }

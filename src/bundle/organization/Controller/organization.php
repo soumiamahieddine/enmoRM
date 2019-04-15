@@ -83,12 +83,6 @@ class organization
             }
         }
 
-        if (isset($owner)) {
-            $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "parentOrgId", "ownerOrgId"), 'isOrgUnit = false');
-
-            $orgList = array_merge($orgList, $organizations);
-        }
-
         if (isset($orgList)) {
             foreach ($orgList as $org) {
                 foreach ($orgList as $orgParent) {
@@ -122,7 +116,6 @@ class organization
         }
 
         foreach ($organizations as $org) {
-
             foreach ($org->originators as $orgUnit) {
                 if ($org->orgId == $orgUnit->ownerOrgId) {
                     $orgUnit->ownerOrgName = $org->displayName;
@@ -1135,7 +1128,10 @@ class organization
                 $orgUnitArchivalProfiles[] = '*';
                 continue;
             }
-            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $withRelatedProfile = true);
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference(
+                $archivalProfileAccess->archivalProfileReference,
+                true
+            );
         }
 
         return $orgUnitArchivalProfiles;
