@@ -331,8 +331,18 @@ class archive
 
         // Message
         $this->checkMessage($archive);
+
+        $currentService = \laabs::getToken("ORGANIZATION");
+
+        $canDeleteResource = $canAddResource = false ;
         
-        //$this->view->setSource("visible", $visible);
+        if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+            && in_array("owner", $currentService->orgRoleCodes)) {
+            $canDeleteResource = $canAddResource = true ;
+        }
+        
+        $this->view->setSource("canDeleteResource", $canDeleteResource);
+        $this->view->setSource("canAddResource", $canAddResource);
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();

@@ -180,9 +180,7 @@
     // This event refresh view after a click on deleteResource
     $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
     {
-        $('#modalArchiveInfo').one('hidden.bs.modal', function(e){
-                $('#'+$('#deleteResource').data("archiveid")).find('.viewArchive').click();
-            }).modal('hide');
+        archiveInfoModal.reload($('#deleteResource').data("archiveid"));
     });
 
 </script>

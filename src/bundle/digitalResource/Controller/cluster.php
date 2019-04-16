@@ -247,7 +247,7 @@ class cluster
      * @param object $cluster
      * @param string $path
      * @param mixed  $metadata
-     * 
+     *
      * @return String[] Array of ressource container on the cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
