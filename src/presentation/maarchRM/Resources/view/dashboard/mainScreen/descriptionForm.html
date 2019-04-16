@@ -65,6 +65,14 @@
             </div>
         </div>
 
+        <!-- DATE FIELD TEMPLATE -->
+        <div class="form-group" id="inputDateTemplate">
+            <label class="col-md-3 small control-label"></label>
+            <div class="col-md-6">
+                <input type="text" class="form-control input-sm"/>
+            </div>
+        </div>
+
         <!-- TEXTAREA FIELD TEMPLATE -->
         <div class="form-group" id="textareaFieldTemplate">
             <label class="col-md-3 small control-label"></label>
@@ -203,7 +211,6 @@
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
             var target = $("#archivalProfileFields");
-            var template = $('#inputFieldTemplate').clone();
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
             var enumeration= archiveDescription.descriptionField.enumeration;
@@ -238,6 +245,7 @@
                         });
                         field.val(defaultVal);
                     } else {
+                        var template = $('#inputFieldTemplate').clone();
                         field = template.find('input');
                         if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                             field.val(defaultVal);
@@ -245,6 +253,7 @@
                     }
                     break;
                 case 'number':
+                    var template = $('#inputFieldTemplate').clone();
                     field = template.find('input');
                     field.attr('type', 'number').attr('placeholder', $('#number_text').text());
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
@@ -253,6 +262,7 @@
                     break;
                 case 'date':
                 case 'timestamp':
+                    var template = $('#inputDateTemplate').clone();
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
                     field.datepicker(DatePickerParams);
