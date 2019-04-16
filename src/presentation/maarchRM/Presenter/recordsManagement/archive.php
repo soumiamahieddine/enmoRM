@@ -269,7 +269,10 @@ class archive
     {
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
-        // Relationships
+        // Digital resources
+        $this->setDigitalResources($archive);
+
+        // Contents
         $this->setArchiveTree($archive);
 
         // Managment metadata
@@ -301,7 +304,10 @@ class archive
     {
         $this->view->addContentFile("recordsManagement/archive/description.html");
         
-        // Relationships
+        // Digital resources
+        $this->setDigitalResources($archive);
+
+        // Contents
         $this->setArchiveTree($archive);
 
         // Managment metadata
@@ -1133,33 +1139,22 @@ class archive
 
     protected function setArchiveTree($archive)
     {
-        $childrenByProfiles = [];
-
-        // Digital resources
-        $this->setDigitalResources($archive);
-
+        if (!is_array($archive->contents)) {
+            return;
+        }
         foreach ($archive->contents as $key => $child) {
             if (!is_null($child->archivalProfileReference)) {
                 $archivalProfile = $this->loadArchivalProfile($child->archivalProfileReference);
 
-                if (!isset($childrenByProfiles[$archivalProfile->name])) {
-                    $childrenByProfiles[$archivalProfile->name] = [];
-                }
-
                 $child->archivalProfileName = $archivalProfile->name;
-                $childrenByProfiles[$child->archivalProfileName][] = $child;
-            } else {
-                if (!isset($childrenByProfiles["noProfile"])) {
-                    $childrenByProfiles["noProfile"] = [];
-                }
-                $childrenByProfiles["noProfile"][] = $child;
             }
+
             // Digital resources
             $this->setDigitalResources($archive->contents[$key]);
+            
+            // Contents
             $this->setArchiveTree($archive->contents[$key]);
         }
-
-        //$archive->contents = $childrenByProfiles;
     }
 
     protected function setArchiveRelationships($archive)
