@@ -446,7 +446,7 @@ msgstr "Déplacement de plusieurs archives dans un dossier"
 msgid "recordsManagement/archives/deleteDisposearchives"
 msgstr "Suppression des archives marquées pour destruction"
 
-msgid "recordsManagement/descriptionClass/readIndex"
+msgid "recordsManagement/descriptionScheme/readIndex"
 msgstr "Liste des modèles de description"
 
 msgid "recordsManagement/log/find"

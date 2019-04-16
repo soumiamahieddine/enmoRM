@@ -350,8 +350,6 @@ trait archiveModificationTrait
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
-        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-
         if (!empty($description)) {
             $descriptionObject = $description;
 
@@ -367,14 +365,10 @@ trait archiveModificationTrait
                 }
             }
             
-            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
+            if (!empty($archive->archivalProfileReference)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
-                if (!empty($this->currentArchivalProfile->descriptionClass)) {
-                    $this->validateDescriptionClass($descriptionObject, $this->currentArchivalProfile);
-                } else {
-                    $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
-                }
+                $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);

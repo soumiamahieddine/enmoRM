@@ -115,10 +115,12 @@ trait archiveAccessTrait
         if (!$profileReference) {
             $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
 
-            $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+            $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
-            foreach ($descriptionClassController->index() as $descriptionClass) {
-                $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
+            foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
+                if (isset($descriptionScheme->search)) {
+                    $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
+                }
             }
         } else {
             $archivalProfile = $this->archivalProfileController->getByReference($profileReference);

@@ -74,6 +74,12 @@ class archive
     protected $archivalProfileController;
 
     /**
+     * Controller for description schemes
+     * @var recordsManagement/Controller/descriptionScheme
+     */
+    protected $descriptionSchemeController;
+
+    /**
      * Controller for service levels
      * @var recordsManagement/Controller/serviceLevel
      */
@@ -201,6 +207,8 @@ class archive
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
+        $this->descriptionSchemeController = \laabs::newController("recordsManagement/descriptionScheme");
+
         $this->serviceLevelController = \laabs::newController("recordsManagement/serviceLevel");
 
         $this->lifeCycleJournalController = \laabs::newController("lifeCycle/journal");
@@ -321,26 +329,50 @@ class archive
 
     /**
      * Select a description controller
-     * @param string $descriptionClass
+     * @param string $descriptionScheme
      *
      * @return object descriptionClass controller
      */
-    public function useDescriptionController($descriptionClass)
+    public function useDescriptionController($descriptionScheme)
     {
-        // Default description class
-        if (empty($descriptionClass)) {
-            $descriptionClass = 'recordsManagement/description';
-        }
+        $controllerClass = $this->getDescriptionControllerClass($descriptionScheme);
 
-        if (!isset($this->descriptionControllers[$descriptionClass])) {
-            $this->currentDescriptionController = \laabs::newController($descriptionClass);
+        if (!isset($this->descriptionControllers[$descriptionScheme])) {
+            $this->currentDescriptionController = \laabs::newController($controllerClass);
 
-            $this->descriptionControllers[$descriptionClass] = $this->currentDescriptionController;
+            $this->descriptionControllers[$descriptionScheme] = $this->currentDescriptionController;
         } else {
-            $this->currentDescriptionController = $this->descriptionControllers[$descriptionClass];
+            $this->currentDescriptionController = $this->descriptionControllers[$descriptionScheme];
         }
 
         return $this->currentDescriptionController;
+    }
+
+    protected function getDescriptionControllerClass($descriptionScheme)
+    {
+        // Default description class
+        if (empty($descriptionScheme)) {
+            return 'recordsManagement/description';
+        } 
+
+        $descriptionSchemeConfig = $this->descriptionSchemeController->read($descriptionScheme);
+        if (empty($descriptionSchemeConfig)) {
+            return 'recordsManagement/description';
+        }
+
+        if (!isset($descriptionSchemeConfig->controller)) {
+            return 'recordsManagement/description';
+        }
+
+        try {
+            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->controller, LAABS_URI_SEPARATOR));
+            $controller = $bundle->getController(strtok(''));
+
+            return $descriptionSchemeConfig->controller;
+        } catch (\exception $exception) {
+            return 'recordsManagement/description';
+        }
+        
     }
 
     /**

@@ -57,58 +57,19 @@
     </div>
 
     <div data-translate-catalog="documentManagement/documentMetadata">
-        <!-- CUSTOM TEXT FIELD TEMPLATE -->
-        <!--div class="form-group" id="customTextFieldTemplate">
-            <div class="col-md-3">
-                <input type="text" class="form-control input-sm name" placeholder="Label"/>
-            </div>
-            <div class="input-group col-md-9">
-                <input type="text" class="form-control input-sm value" placeholder="Text"/>
-                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
-            </div>
-        </div-->
-
-        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
-        <div class="form-group" id="customTextareaFieldTemplate">
-            <div class="col-md-3">
-                <input type="text" class="form-control input-sm name" placeholder="Label"/>
-            </div>
-            <div class="col-md-9">
-                <div class="input-group">
-                    <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
-                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CUSTOM BOOLEAN FIELD TEMPLATE -->
-        <!--div class="form-group" id="customBooleanFieldTemplate">
-            <div class="col-md-3">
-                <input type="text" class="form-control input-sm name" placeholder="Label"/>
-            </div>
-            <div class="input-group col-md-9">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                    </label>
-                    <label class="btn btn-default active">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                    </label>
-                </div>
-                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
-            </div>
-        </div-->
-
-
         <!-- TEXT FIELD TEMPLATE -->
         <div class="form-group" id="inputFieldTemplate">
             <label class="col-md-3 small control-label"></label>
             <div class="col-md-9">
                 <input type="text" class="form-control input-sm"/>
-                <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
+            </div>
+        </div>
+
+        <!-- DATE FIELD TEMPLATE -->
+        <div class="form-group" id="inputDateTemplate">
+            <label class="col-md-3 small control-label"></label>
+            <div class="col-md-6">
+                <input type="text" class="form-control input-sm"/>
             </div>
         </div>
 
@@ -116,15 +77,14 @@
         <div class="form-group" id="textareaFieldTemplate">
             <label class="col-md-3 small control-label"></label>
             <div class="col-md-9">
-                <textarea class="form-control input-sm" rows="2" style="resize: none; resize: vertical"></textarea>
-                <!--a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a-->
+                <textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;"></textarea>
             </div>
         </div>
 
         <!-- SELECT FIELD TEMPLATE -->
         <div class="form-group" id="selectFieldTemplate">
             <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <select class="form-control input-sm">
                     <option value=""></option>
                 </select>
@@ -145,6 +105,19 @@
                     <label class="btn btn-default">
                         <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
                     </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
+        <div class="form-group" id="customTextareaFieldTemplate">
+            <div class="col-md-3">
+                <input type="text" class="form-control input-sm name" placeholder="Label"/>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
+                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
                 </div>
             </div>
         </div>
@@ -238,11 +211,9 @@
     var Metadata = {
         addArchiveDescription : function(archiveDescription) {
             var target = $("#archivalProfileFields");
-            var template = $('#inputFieldTemplate').clone();
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
             var enumeration= archiveDescription.descriptionField.enumeration;
-            var isArray= archiveDescription.descriptionField.isArray;
             var label = archiveDescription.descriptionField.label;
             var name = archiveDescription.descriptionField.name;
             var required = archiveDescription.required;
@@ -260,14 +231,9 @@
                     }
                     break;
                 case 'name':
-                case 'id':
                     if (enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
-
-                        if (isArray) {
-                            field.attr('data-enumerate', 'NOT_VALUE');
-                        }
 
                         field.attr('id', name);
 
@@ -279,6 +245,7 @@
                         });
                         field.val(defaultVal);
                     } else {
+                        var template = $('#inputFieldTemplate').clone();
                         field = template.find('input');
                         if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                             field.val(defaultVal);
@@ -286,6 +253,7 @@
                     }
                     break;
                 case 'number':
+                    var template = $('#inputFieldTemplate').clone();
                     field = template.find('input');
                     field.attr('type', 'number').attr('placeholder', $('#number_text').text());
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
@@ -294,6 +262,7 @@
                     break;
                 case 'date':
                 case 'timestamp':
+                    var template = $('#inputDateTemplate').clone();
                     field = template.find('input');
                     field.attr('placeholder', $('#date_text').text());
                     field.datepicker(DatePickerParams);
@@ -314,8 +283,11 @@
                         template.find('[value=""]').prop("checked", "checked");
                     }
                     break;
+
+                case 'array':
+                case 'object':
                 default:
-                    console.log("Error invalid type");
+                    console.log("Type "+type+" of field "+name+" is not managed");
                     return;
                     break;
             }
@@ -329,7 +301,7 @@
                 field.attr("data-required", required);
             }
 
-            if(isArray) {
+            /*if(isArray) {
                 var btnGroup  = $('#addBtnTpl').clone();
                 btnGroup.removeClass('hide');
                 btnGroup.find('button').attr('data-select',name);
@@ -343,7 +315,7 @@
                 template.find('div').addClass('input-group').append(btnGroup);
                 template.append('<label class="col-md-3 small control-label"></label>');
                 template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
-            }
+            }*/
 
             template.appendTo(target);
 

@@ -404,7 +404,7 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->accessRuleCode)) {
             $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
-        
+
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
@@ -577,114 +577,42 @@ trait archiveEntryTrait
             return;
         }
 
-        if (!empty($this->currentArchivalProfile->descriptionClass)) {
-            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
-            $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
-        } else {
-            $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
-        }
-    }
-
-    /**
-     * Check if an object matches an archival profile definition
-     *
-     * @param mixed                             $object          The metadata object to check
-     * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
-     *
-     * @return boolean The result of the validation
-     */
-    protected function validateDescriptionClass($object, $archivalProfile)
-    {
-        if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
-        foreach ($archivalProfile->archiveDescription as $description) {
-            $fieldName = explode(LAABS_URI_SEPARATOR, $description->fieldName);
-            $propertiesList = array($object);
-
-            foreach ($fieldName as $name) {
-                $newPropertiesList = array();
-                foreach ($propertiesList as $propertyValue) {
-                    if (isset($propertyValue->{$name})) {
-                        if (is_array($propertyValue->{$name})) {
-                            foreach ($propertyValue->{$name} as $value) {
-                                $newPropertiesList[] = $value;
-                            }
-                        } else {
-                            $newPropertiesList[] = $propertyValue->{$name};
-                        }
-                    } else {
-                        $newPropertiesList[] = null;
-                    }
-                }
-                $propertiesList = $newPropertiesList;
-            }
-
-            foreach ($propertiesList as $propertyValue) {
-                if ($description->required && $propertyValue == null) {
-                    throw new \core\Exception\BadRequestException('The description class does not match with the archival profile.');
-                }
-            }
-        }
+        $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
     }
 
     protected function validateDescriptionModel($object, $archivalProfile)
     {
-        $names = [];
+        $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
 
+        $archivalProfileFields = [];
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            $name = $archiveDescription->fieldName;
-            $names[] = $name;
-            $value = null;
-            if (isset($object->{$name})) {
-                $value = $object->{$name};
+            if (!isset($object->{$archiveDescription->fieldName}) && $archiveDescription->required) {
+                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
             }
-            $this->validateDescriptionMetadata($value, $archiveDescription);
+
+            $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
         }
 
         foreach ($object as $name => $value) {
-            if (!in_array($name, $names) && !$archivalProfile->acceptUserIndex) {
+            if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
+
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
+            }
+
+            if (isset($descriptionSchemeProperties[$name])) {
+                $this->validateDescriptionField($value, $descriptionSchemeProperties[$name]);
             }
         }
     }
 
-    protected function validateDescriptionMetadata($value, $archiveDescription)
+    protected function validateDescriptionField($value, $descriptionField)
     {
-        if (is_null($value)) {
-            if ($archiveDescription->required) {
-                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-            }
-
-            return;
-        }
-
-        $descriptionField = $archiveDescription->descriptionField;
-
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
-
-                if (($descriptionField->isArray && !is_array($value)) || (!$descriptionField->isArray && is_array($value))) {
-                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
-                if (empty($descriptionField->enumeration)) {
-                    break;
-                }
-
-                if (!is_array($value)) {
-                    $valueArray = [$value];
-                } else {
-                    $valueArray = $value;
-                }
-
-                foreach ($valueArray as $item) {
-                    if (!in_array($item, $descriptionField->enumeration)  && $archiveDescription->required) {
-                        throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                    }
-                }
-
                 break;
 
             case 'text':
@@ -692,19 +620,19 @@ trait archiveEntryTrait
 
             case 'number':
                 if (!is_int($value) && !is_float($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
 
             case 'boolean':
                 if (!is_bool($value) && !in_array($value, [0, 1])) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
 
             case 'date':
                 if (!is_string($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
         }
@@ -950,8 +878,6 @@ trait archiveEntryTrait
             $nbArchiveObjects = null;
         }
 
-
-
         try {
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
@@ -972,9 +898,11 @@ trait archiveEntryTrait
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
-
         } catch (\Exception $exception) {
-            $nbResources = count($archive->digitalResources);
+            $nbResources = 0;
+            if (!is_null($archive->digitalResources)) {
+                $nbResources = count($archive->digitalResources);
+            }
             for ($i = 0; $i < $nbResources; $i++) {
                 $this->digitalResourceController->rollbackStorage($archive->digitalResources[$i]);
             }
@@ -1077,7 +1005,7 @@ trait archiveEntryTrait
     protected function storeDescriptiveMetadata($archive)
     {
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        
+
         $descriptionController->create($archive);
     }
 
