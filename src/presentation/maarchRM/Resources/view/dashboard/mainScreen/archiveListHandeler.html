@@ -193,43 +193,6 @@
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-                    template = this.archiveContentTemplate.clone();
-                    var smalls = template.find('small');
-
-                    if (childrenArchives[j].fileplanLevel == 'item') {
-                        var icon = $('<i class="fa fa-file">&nbsp;</i>');
-                    } else {
-                        var icon = $('<i class="fa fa-archive">&nbsp;</i>');
-                    }
-
-                    template.children('span')
-                            .addClass('childrenArchiveSelection')
-                            .children('span')
-                            .children('i')
-                            .addClass('fa')
-                            .data('closed-icon', 'fa-caret-right')
-                            .data('opened-icon', 'fa-caret-down')
-                            .siblings('span')
-                            .addClass('archive childrenArchive')
-                            .attr('id', childrenArchives[j].archiveId)
-                            .append(icon)
-                            .append($('<span>').text(childrenArchives[j].archiveName))
-                            .append($('<a/>').attr('href','#').class);
-
-                    if (childrenArchives[j].archivalProfileName) {
-                        $(smalls[0]).text(childrenArchives[j].archivalProfileName);
-                    }
-
-                    if (childrenArchives[j].originatorArchiveId) {
-                        $(smalls[1]).text(' ' + childrenArchives[j].originatorArchiveId);
-                    }
-
-                    if (childrenArchives[j].originatingDate) {
-                        $(smalls[2]).text(' ' + childrenArchives[j].originatingDate);
-                    }
-
-                    BootstrapTree.addNode(parent, template, hidden);
-
                     Archive.mergeRow(parent, childrenArchives[j])
 
                     Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
