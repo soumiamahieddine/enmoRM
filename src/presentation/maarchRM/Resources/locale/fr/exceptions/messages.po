@@ -386,7 +386,7 @@ msgstr "La grappe de stockage %s n'a pas été mise à jour."
 msgid "No repository for %s mode"
 msgstr "Aucun espace de stockage pour le mode %1s"
 
-msgid "Container %s counld not be opened."
+msgid "Container %s couldn't not be opened."
 msgstr "Le conteneur %s ne peut pas être ouvert."
 
 msgid "%s not found"

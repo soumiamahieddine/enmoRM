@@ -264,7 +264,7 @@ class cluster
             $realPath = $this->repositoryController->openContainer($clusterRepository->repository, $path, $metadata);
 
             if (!$realPath) {
-                throw \laabs::newException("digitalResource/clusterException", "Container %s counld not be opened.", 404, null, [$path]);
+                throw \laabs::newException("digitalResource/clusterException", "Container %s couldn't not be opened.", 404, null, [$path]);
             }
         }
 
