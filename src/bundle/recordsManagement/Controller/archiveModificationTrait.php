@@ -84,7 +84,7 @@ trait archiveModificationTrait
 
         $archives = array();
 
-        if (\laabs::getToken("ORGANIZATION")) {
+        if (!\laabs::getToken("ORGANIZATION")) {
             throw \laabs::newException(
                 'recordsManagement/noOrgUnitException',
                 "Permission denied: You have to choose a working organization unit to proceed this action."
