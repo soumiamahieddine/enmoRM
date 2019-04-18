@@ -47,6 +47,8 @@ trait archiveDescriptionTrait
                 }
                 $archivalProfileFieldNames[] = $archiveDescriptionField->fieldName;
             }
+        } else {
+            $archivalProfileFieldNames = [];
         }
 
         // Sort description fields as in profile
