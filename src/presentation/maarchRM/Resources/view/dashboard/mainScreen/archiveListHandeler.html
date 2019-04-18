@@ -193,7 +193,6 @@
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-
                     Archive.mergeRow(parent, childrenArchives[j])
 
                     Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);

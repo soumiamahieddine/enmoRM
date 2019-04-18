@@ -85,7 +85,7 @@
     <span id="next_text">Next</span>
     <span id="last_text">Last</span>
     <span id="withoutProfile_text">Without profile</span>
-    
+
 </div>
 <style type="text/css">
     #welcomMessage i{
@@ -151,11 +151,11 @@
                                     .attr('data-toggle', 'dropdown')
                                     .text('...');
                 var ul = $('<ul/>').addClass('dropdown-menu');
-                
+
                 var dropdown = $('<li/>').addClass('dropdown').append(dots).append(ul);
 
                 this.breadcrumb.prepend(dropdown);
-                
+
                 i=path.length-1;
 
                 while(this.breadcrumb.height() > height && i>=0) {
@@ -251,7 +251,7 @@
 
 
             this.buildNewArchiveDropdownMenu(archivalProfiles, acceptArchivesWithoutProfiles);
-            
+
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
@@ -389,7 +389,7 @@
             cancel: ".fa"
             })
         },
-        
+
         refresh: function() {
             trigger('loadFolder.filePlan', [this.orgRegNumber]);
         },
@@ -407,9 +407,9 @@
                 $("#folderToolbarImport").addClass('hide');
                 return;
             }
-            
+
             if (acceptArchivesWithoutProfiles) {
-                var a = $("<a/>") 
+                var a = $("<a/>")
                     .addClass("small newArchive")
                     .data("reference", '')
                     .attr('style', "cursor: pointer;")
@@ -425,7 +425,7 @@
                     .data("json", archivalProfiles[i])
                     .attr('style', "cursor: pointer;")
                     .text(archivalProfiles[i].name);
-                
+
                 $("<li/>").append(a).appendTo(dropdown);
             }
         }
@@ -442,7 +442,7 @@
     $("#folderPanel").on('click', '.newArchive', function() {
         NewArchive.loadImportForm($(this));
     });
-    
+
     // Actions on list
     $("#folderContentList").on('click', ".dataList-sorting", function() {
         ArchiveFolderList.initDragNDrop();
@@ -489,5 +489,6 @@
     $('#folderBreadcrumb').onEvent("archiveImportOver.recordsManagement", function() {
         FolderBreadcrumb.unlockNavigation();
     })
+
 
 </script>

@@ -184,7 +184,7 @@
             userAccount[$(this).attr('name')] = jQuery.trim($(this).val());
         })
 
-        let roleConfig = $("#user_RoleContain").attr('data-publicarchive');
+        let roleConfig = $("#user_RoleContain").attr('data-restrictroles');
         //parametre.roleMembers.push(null);
         if (!roleConfig){ 
             var roles = $("#listRoles").find('.active');

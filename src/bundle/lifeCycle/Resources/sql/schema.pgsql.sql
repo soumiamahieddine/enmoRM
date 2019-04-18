@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "lifeCycle" CASCADE;
 
-CREATE SCHEMA "lifeCycle"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "lifeCycle";
 
 
 -- Table: "lifeCycle"."event"

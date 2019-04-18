@@ -68,7 +68,7 @@ class authentication
 
             $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        } elseif ($requestAuth = \core\Kernel\abstractKernel::get()->request->authentication) {
+        } elseif (\core\Kernel\abstractKernel::get()->request->authentication) {
             $username = $_SERVER['PHP_AUTH_USER'];
             $account = $this->sdoFactory->read("auth/account", array("accountName" => $username));
 
@@ -76,31 +76,6 @@ class authentication
 
             $userAuthenticationController = \laabs::newController('auth/userAuthentication');
             $userAuthenticationController->login($username, $password);
-            
-            /*if ($requestAuth = \core\Kernel\abstractKernel::get()->request->authentication) {
-                switch ($requestAuth::$mode) {
-                    case LAABS_BASIC_AUTH:
-                        if ($this->authenticationService->logIn($requestAuth->username, $requestAuth->password)) {
-                            $token = $this->encrypt($_SESSION['dependency']['authentication']['credential']);
-                        }
-                        break;
-
-                    case LAABS_DIGEST_AUTH:
-                        if ($this->authenticationService->logIn($requestAuth->username, $requestAuth->nonce, $requestAuth->uri, $requestAuth->response, $requestAuth->qop, $requestAuth->nc, $requestAuth->cnonce)) {
-                            $token = $this->encrypt($_SESSION['dependency']['authentication']['credential']);
-                        }
-                        break;
-
-                    case LAABS_APP_AUTH:
-                        if (isset($_SERVER['LAABS_AUTH_TOKEN'])) {
-                            $token = $_SERVER['LAABS_AUTH_TOKEN'];
-
-                            $credential = $this->decrypt($token);
-                            $_SESSION['dependency']['authentication']['credential'] = $credential;
-                        }
-                        break;
-                }
-            }*/
         }
 
         if (!isset($account)) {

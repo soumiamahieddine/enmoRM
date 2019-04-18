@@ -74,7 +74,7 @@ class fulltext
         $documentToUpdate = \laabs::newService('dependency/fulltext/Document');
         $documentToRemove = clone($documentToUpdate);
 
-        foreach ($index as $key => $field) {
+        foreach ($index as $field) {
             $documentToUpdate->addField($field->name, $field->value, $field->type);
 
             if ($field->name == "archiveId") {

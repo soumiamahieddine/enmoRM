@@ -39,8 +39,13 @@ trait contactAddressTrait
         $address->contactId = $contactId;
 
         try {
-            $checkAddress = $this->sdoFactory->read('contact/address', array('purpose' => $address->purpose, 'contactId' => $contactId));
-
+            $this->sdoFactory->read(
+                'contact/address',
+                array(
+                    'purpose' => $address->purpose,
+                    'contactId' => $contactId
+                )
+            );
         } catch (\Exception $e) {
             $address->addressId = \laabs::newId();
             $this->sdoFactory->create($address, "contact/address");
@@ -74,8 +79,6 @@ trait contactAddressTrait
     public function getAddress($addressId)
     {
         return $this->sdoFactory->read("contact/address", array('addressId' => $addressId));
-
-        return \laabs::castMessage($address, "contact/address");
     }
 
     /**

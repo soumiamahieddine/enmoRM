@@ -1056,3 +1056,6 @@ msgstr "Statut initial du flux de travail"
 
 msgid "Last modification date"
 msgstr "Date de mise à jour"
+
+msgid "Add a resource"
+msgstr "Ajouter une pièce"
