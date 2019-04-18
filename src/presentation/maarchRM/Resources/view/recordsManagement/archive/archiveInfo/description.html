@@ -1,11 +1,4 @@
 <div data-translate-catalog="recordsManagement/messages">
-    <?merge editMetadata.bool() ?>
-    <div>
-        <?merge modificationPrivilege.bool() ?>
-        <div class="pull-right">
-            <button type="button" class="btn btn-warning editMetadata"  data-archiveid="[?merge archive.archiveId ?]" title="Edit metadata"><i class="fa fa-edit">&nbsp;</i>Edit metadata</button>
-        </div>
-    </div>
     <div>
         <table id="archiveDescriptionTable" class="table table-condensed">
             <?merge archive.archiveName.bool() ?>
