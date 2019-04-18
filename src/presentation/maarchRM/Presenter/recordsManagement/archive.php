@@ -1157,10 +1157,17 @@ class archive
         $archivalProfile = $this->loadArchivalProfile($archive->archivalProfileReference);
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
+        
+        // Define if we display or not the button to modify metadata
+        $editMetadata = false;
+
         if (!empty($archive->descriptionObject)) {
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
+                if ($archive->descriptionClass == "archivesPubliques/content") {
+                    $editMetadata = true;
+                }
             } else {
                 $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
             }
@@ -1173,6 +1180,7 @@ class archive
             $this->view->addContent($descriptionHtml, $node);
         }
 
+        $this->view->setSource('editMetadata', $editMetadata);
         $this->view->setSource('modificationPrivilege', $modificationPrivilege);
     }
 
