@@ -237,3 +237,14 @@ Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date e
 Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
 Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
 Si ces paramètres sont ignorés, les valeurs par défaut sont chargées par le logiciel, correspondant à un format respectant le standard ISO8601.
+
+Ajout d'un paramètre "actionWithoutRetentionRule" pour permettre ou non l'élimination d'une archive n'ayant pas de règle de conservation.
+Ce paramètre peut prendre deux valeurs : "preserve" ou "dispose" (valeur "preserve" par défaut).
+La valeur preserve bloque la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
+La valeur dispose permet la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
+
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
