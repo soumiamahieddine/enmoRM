@@ -10,10 +10,6 @@
                 <span id='archiveNameH3'><?merge archive.archiveName ?></span>
                 <?merge archive.archiveName.bool().not() ?>
                 <span id='archiveNameH3'>Archive</span>
-                <?merge modificationPrivilege.bool() ?>
-                <div class="pull-right">
-                    <button type="button" class="btn btn-warning editMetadata"  data-archiveid="[?merge archive.archiveId ?]" title="Edit metadata"><i class="fa fa-edit">&nbsp;</i>Edit metadata</button>
-                </div>
             </h3>
         </div>
     </div>
