@@ -1165,7 +1165,9 @@ class archive
             if (!empty($archive->descriptionClass)) {
                 $presenter = \laabs::newPresenter($archive->descriptionClass);
                 $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
-                if ($archive->descriptionClass == "archivesPubliques/content") {
+
+                // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
+                if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
                     $editMetadata = true;
                 }
             } else {
