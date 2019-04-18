@@ -19,7 +19,7 @@ ALTER TABLE "organization"."archivalProfileAccess" PRIMARY KEY ("orgId", "archiv
 -- Add columns for processing statuses on org unit archival profiles access
 ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb;
 
--- Add columns for display or not in workflow list the archive descriptions
+-- Add columns to display or not, on workflow archives list
 ALTER TABLE "recordsManagement"."archiveDescription" ADD COLUMN "isInList" boolean default false;
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
