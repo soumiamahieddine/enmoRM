@@ -308,14 +308,10 @@
             }
 
             archive.descriptionObject = Metadata.serialize($('#allFields'));
-            if (archive.descriptionObject === true) {
+
+            if (archive.descriptionObject === -1) {
                 return -1;
             }
-
-            /*if (archive.archiveName == null || archive.archiveName == "") {
-                gritter.show($('#fieldLabel_error').text(), false);
-                return -2;
-            }*/
 
             archive.digitalResources = DocumentList.serialize();
 
