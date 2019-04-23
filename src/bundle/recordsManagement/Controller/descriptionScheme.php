@@ -133,11 +133,7 @@ class descriptionScheme
             case substr($type, -2) == '[]':
                 $descriptionField->type = 'array';
                 $itemType = substr($type, 0, -2);
-                if (strpos($itemType, '/') !== false) {
-                    $descriptionField->itemType = '#'.$itemType;
-                } else {
-                    $descriptionField->itemType = $itemType;
-                }
+                $descriptionField->itemType = $this->getPropertyTypeName($itemType);
                 break;
 
             case $type == 'string':
@@ -151,34 +147,45 @@ class descriptionScheme
                 }
                 break;
 
-            case $type == 'int':
-            case $type == 'integer':
-            case $type == 'float':
-            case $type == 'real':
-            case $type == 'double':
-                $descriptionField->type = 'number';
-                break;
-
-            case $type == 'bool':
-            case $type == 'boolean':
-                $descriptionField->type = 'boolean';
-                break;
-
-            case $type == 'timestamp':
-            case $type == 'datetime':
-            case $type == 'date':
-                $descriptionField->type = 'date';
-                break;
-
             case strpos($type, '/') !== false:
                 $descriptionField->type = 'object';
                 $descriptionField->properties = $this->getDescriptionFieldsFromPhpClass($type);
                 break;
 
             default:
-                $descriptionField->type = $type;
+                $descriptionField->type = $this->getPropertyTypeName($type);
         }
 
         return $descriptionField;
+    }
+
+    protected function getPropertyTypeName($type)
+    {
+        switch (true) {
+            case $type == 'string':
+                return 'text';
+                
+            case $type == 'int':
+            case $type == 'integer':
+            case $type == 'float':
+            case $type == 'real':
+            case $type == 'double':
+                return 'number';
+
+            case $type == 'bool':
+            case $type == 'boolean':
+                return 'boolean';
+
+            case $type == 'timestamp':
+            case $type == 'datetime':
+            case $type == 'date':
+                return 'date';
+
+            case strpos($type, '/') !== false:
+                return '#'.$type;
+
+            default:
+                return $type;
+        }
     }
 }
