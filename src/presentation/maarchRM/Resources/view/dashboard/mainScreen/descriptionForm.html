@@ -209,6 +209,9 @@
     }
 
     var Metadata = {
+        flagEmptyRequiredField : false,
+        flagEmptyCustomField : false,
+
         addArchiveDescription : function(archiveDescription) {
             var target = $("#archivalProfileFields");
             var type = archiveDescription.descriptionField.type;
@@ -369,129 +372,98 @@
         },
 
         serialize : function(target) {
+            Metadata.flagEmptyRequiredField = false;
+            Metadata.flagEmptyCustomField = false;
+
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
             var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
             var inputsCustom = target.find("#customFields").children();
-            var flagEmptyRequiredField = false;
-            var flagEmptyCustomField = false;
-
-            if (selectedProfile != undefined && selectedProfile.descriptionClass != null && selectedProfile.descriptionClass != '') {
-                var descriptionObject = {};
-                var fulltext = false;
-            } else {
-                var descriptionObject = {};
-                var fulltext = true;
-            }
+            var descriptionObject = {};
 
             $.each(inputsArchivalProfile, function() {
-                //var value = $.trim($(this).val());
-                var type = $(this).attr("data-type");
-                var inputType = $(this).attr("type");
-                var name = $(this).attr('name');
-                var required = $(this).attr('data-required');
-                var enumerate = $(this).attr('data-enumerate');
-
-                if(enumerate == 'NOT_VALUE'){
-                    return;
-                }
-                switch(type) {
-                    case "boolean":
-                        if (!$(this).prop("checked")) {
-                            return;
-                        }
-
-                        switch ($(this).val()) {
-                            case "1":
-                            case "0": value = $(this).val();
-                                break;
-                            default: value = null;
-                                break;
-                        }
-
-                        break;
-
-                    case "date":
-                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        break;
-
-                    case 'number':
-                        value = Number($.trim($(this).val()));
-                        break;
-
-                    default :
-                        value = $.trim($(this).val());
-                }
-
-
-                if (required == "true" && (value === "" || value === null || value === undefined)) {
-                    flagEmptyRequiredField = true;
-                    $(this).closest(".form-group").addClass('has-error');
-                    return;
-                } else {
-                    $(this).closest(".form-group").removeClass('has-error');
-                }
-
-                if (enumerate) {
-                    if(enumerate != 'NOT_VALUE'){
-
-                        if(!descriptionObject[name]) {
-                            descriptionObject[name] = [value];
-                        } else {
-                            descriptionObject[name].push(value)
-                        }
-                    }
-                } else {
-                    descriptionObject[name] = value;
-                }
+                Metadata.serializeField($(this), descriptionObject);
             });
-
 
             $.each(inputsCustom, function() {
-                var value = "";
-                var type = $(this).find('[data-type]').attr("data-type");
-                var name = $(this).find('.name').val();
-
-                switch(type) {
-                    case "boolean":
-                        value = $(this).find("input:checked").val();
-
-                        break;
-
-                    case "date":
-                        value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        break;
-
-                    case 'number':
-                        value = Number($.trim($(this).find('.value').val()));
-                        break;
-
-                    default :
-                        value = $.trim($(this).find('.value').val());
-                }
-
-                if ((value === '' && type != "boolean") || value == undefined || value == null || name == ''|| name == undefined || name == null) {
-                    $(this).closest(".form-group").addClass('has-error');
-                    flagEmptyCustomField = true;
-                    return;
-                } else {
-                    $(this).closest(".form-group").removeClass('has-error');
-                }
-
-                descriptionObject[name] = value;
+                Metadata.serializeAdditionnalField($(this), descriptionObject);
             });
 
-            var result = descriptionObject;
-
-            if (flagEmptyRequiredField) {
-                result = true;
+            if (Metadata.flagEmptyRequiredField) {
                 gritter.show($('#fieldLabel_error').text(), false);
+
+                return -1;
             }
-            if (flagEmptyCustomField) {
-                result = true
+            if (Metadata.flagEmptyCustomField) {
                 gritter.show($('#customFieldLabel_error').text(), false);
+
+                return -1;
             }
 
-            return result;
+            return descriptionObject;
+        },
+
+        serializeField : function(input, data) {
+            var type = input.attr("data-type");
+            var name = input.attr('name');
+            var required = input.data('required');
+
+            switch(type) {
+                case "boolean":
+                    if (!input.prop("checked")) {
+                        return;
+                    }
+
+                    switch (input.val()) {
+                        case "1":
+                        case "0": value = input.val();
+                            break;
+                        default: value = null;
+                            break;
+                    }
+
+                    break;
+
+                case "date":
+                    value = input.data('datepicker').getFormattedDate('yyyy-mm-dd');
+                    break;
+
+                case 'number':
+                    value = Number($.trim(input.val()));
+                    break;
+
+                case 'array':
+                case 'object':
+                    value = JSON.parse(input.val());
+                    break;
+
+                default :
+                    value = $.trim(input.val());
+            }
+
+            if (required == "true" && (value === "" || value === null || value === undefined)) {
+                Metadata.flagEmptyRequiredField = name;
+                input.closest(".form-group").addClass('has-error');
+                return;
+            } else {
+                input.closest(".form-group").removeClass('has-error');
+            }
+
+            data[name] = value;
+        },
+
+        serializeAdditionnalField : function(input, data) {
+            var name = $(this).find('.name').val();
+            var value = $.trim($(this).find('.value').val());
+
+            if (value == undefined || value == null || name == ''|| name == undefined || name == null) {
+                $(this).closest(".form-group").addClass('has-error');
+                Metadata.flagEmptyCustomField = true;
+                return;
+            } else {
+                $(this).closest(".form-group").removeClass('has-error');
+            }
+
+            data[name] = value;
         },
 
         clear : function() {
