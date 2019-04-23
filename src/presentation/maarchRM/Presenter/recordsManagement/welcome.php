@@ -284,6 +284,23 @@ class welcome
         }
 
         $orgUnit->archivalProfiles = array_values($orgUnit->archivalProfiles);
+        
+        // Get scheme for array of objects, limit to one level for scheme recusions
+        foreach ($orgUnit->archivalProfiles as $archivalProfile) {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if ($archiveDescription->descriptionField->type == 'array' 
+                    && isset($archiveDescription->descriptionField->itemType)
+                    && $archiveDescription->descriptionField->itemType[0] == '#') {
+                    $objectType = new \StdClass();
+                    $objectType->type = 'object';
+
+                    $className = substr($archiveDescription->descriptionField->itemType, 1);
+                    $objectType->properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $className);
+
+                    $archiveDescription->descriptionField->itemType = $objectType;
+                }
+            }
+        }
 
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
