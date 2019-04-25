@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2019 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -93,11 +93,11 @@ class descriptionScheme
 
     protected function getDescriptionFieldsFromPhpClass($name)
     {
-        $descriptionScheme = \laabs::getClass($name);
+        $descriptionClass = \laabs::getClass($name);
         $fields = [];
 
-        foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
-            $fields[$descriptionSchemeProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionSchemeProperty);
+        foreach ($descriptionClass->getProperties() as $descriptionProperty) {
+            $fields[$descriptionProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionProperty);
         }
 
         return $fields;
@@ -119,13 +119,16 @@ class descriptionScheme
 
         if (isset($schemeProperty->enumeration)) {
             $descriptionField->enumeration = $schemeProperty->enumeration;
+            if (isset($schemeProperty->tags['enumNames'])) {
+                @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+                if (isset($enumNames) && isset($descriptionField->enumeration) && count($enumNames) == count($descriptionField->enumeration)) {
+                    $descriptionField->enumNames = $enumNames;
+                }
+            }
         }
 
-        if (isset($schemeProperty->tags['enumNames'])) {
-            @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
-            if (isset($enumNames) && isset($descriptionField->enumeration) && count($enumNames) == count($descriptionField->enumeration)) {
-                $descriptionField->enumNames = $enumNames;
-            }
+        if (isset($schemeProperty->tags['ref'])) {
+            $descriptionField->ref = $schemeProperty->tags['ref'][0];
         }
 
         if (isset($schemeProperty->tags['internal'])) {
@@ -151,7 +154,8 @@ class descriptionScheme
                 if (isset($schemeProperty->tags['scheme'])
                     || isset($schemeProperty->tags['uses'])
                     || isset($schemeProperty->enumeration)
-                    || isset($schemeProperty->index)) {
+                    || isset($schemeProperty->index)
+                    || isset($schemeProperty->tags['ref'])) {
                     $descriptionField->type = 'name';
                 } else {
                     $descriptionField->type = 'text';

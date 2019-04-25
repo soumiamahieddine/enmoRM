@@ -214,13 +214,26 @@
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
             var choice = archiveDescription.descriptionField.choice;
+            var ref = archiveDescription.descriptionField.ref;
             var label = archiveDescription.descriptionField.label;
             var name = archiveDescription.descriptionField.name;
             var required = archiveDescription.required;
             var origin = archiveDescription.origin;
 
             var field = null;
-
+            if (ref !== undefined) {
+                console.log(type);
+                        $.ajax({
+                            type: 'GET',
+                            url: '/descriptionPickList/' + ref,
+                            dataType: 'json',
+                            async: true,
+                            success: function (response) {
+                                console.log(response);
+                            }
+                        });
+                    }
+            
             switch (type) {
                 case 'text':
                 case 'string':
@@ -231,19 +244,41 @@
                     }
                     break;
                 case 'name':
-                    if (choice ) {
+                    if (choice) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
 
                         field.attr('id', name);
 
-                        $.each(choice , function (key, label) {
+                        $.each(choice, function (key, label) {
                             field.append($('<option>', {
                                 value: key,
                                 text: label
                             }));
                         });
                         field.val(defaultVal);
+                    } else if (ref !== undefined) {
+                        template = $('#selectFieldTemplate').clone();
+                        field = template.find('select');
+
+                        field.attr('id', name);
+
+                        $.ajax({
+                            type: 'GET',
+                            url: '/descriptionPickList/' + ref,
+                            dataType: 'json',
+                            async: true,
+                            success: function (response) {
+                                console.log(response);
+
+                                $.each(response, function (key, label) {
+                                    field.append($('<option>', {
+                                        value: key,
+                                        text: label
+                                    }));
+                                });
+                            }
+                        });
                     } else {
                         var template = $('#inputFieldTemplate').clone();
                         field = template.find('input');
