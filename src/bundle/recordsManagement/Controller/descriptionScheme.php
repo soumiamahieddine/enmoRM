@@ -121,6 +121,13 @@ class descriptionScheme
             $descriptionField->enumeration = $schemeProperty->enumeration;
         }
 
+        if (isset($schemeProperty->tags['enumNames'])) {
+            @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+            if (isset($enumNames) && isset($descriptionField->enumeration) && count($enumNames) == count($descriptionField->enumeration)) {
+                $descriptionField->enumNames = $enumNames;
+            }
+        }
+
         if (isset($schemeProperty->tags['internal'])) {
             $descriptionField->internal = true;
         }

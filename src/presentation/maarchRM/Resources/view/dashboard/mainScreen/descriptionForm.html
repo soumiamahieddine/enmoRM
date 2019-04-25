@@ -213,7 +213,7 @@
             var target = $("#archivalProfileFields");
             var type = archiveDescription.descriptionField.type;
             var defaultVal = archiveDescription.descriptionField.default;
-            var enumeration= archiveDescription.descriptionField.enumeration;
+            var choice = archiveDescription.descriptionField.choice;
             var label = archiveDescription.descriptionField.label;
             var name = archiveDescription.descriptionField.name;
             var required = archiveDescription.required;
@@ -231,16 +231,16 @@
                     }
                     break;
                 case 'name':
-                    if (enumeration) {
+                    if (choice ) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
 
                         field.attr('id', name);
 
-                        $.each(enumeration, function (index, value) {
+                        $.each(choice , function (key, label) {
                             field.append($('<option>', {
-                                value: value,
-                                text: value
+                                value: key,
+                                text: label
                             }));
                         });
                         field.val(defaultVal);
@@ -300,22 +300,6 @@
                 $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
                 field.attr("data-required", required);
             }
-
-            /*if(isArray) {
-                var btnGroup  = $('#addBtnTpl').clone();
-                btnGroup.removeClass('hide');
-                btnGroup.find('button').attr('data-select',name);
-                if (enumeration) {
-                    btnGroup.find('button').attr('data-input-type',"select");
-                } else {
-                    btnGroup.find('button').attr('data-input-type',"input");
-                    template.find('input').attr('data-enumerate', 'NOT_VALUE');
-                }
-
-                template.find('div').addClass('input-group').append(btnGroup);
-                template.append('<label class="col-md-3 small control-label"></label>');
-                template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
-            }*/
 
             template.appendTo(target);
 
