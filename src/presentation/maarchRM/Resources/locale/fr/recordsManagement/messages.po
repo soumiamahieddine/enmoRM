@@ -1059,3 +1059,12 @@ msgstr "Date de mise à jour"
 
 msgid "Add a resource"
 msgstr "Ajouter une pièce"
+
+msgid "Delete the resource"
+msgstr "Supprimer la pièce"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Import a resource"
+msgstr "Importer une pièce"
