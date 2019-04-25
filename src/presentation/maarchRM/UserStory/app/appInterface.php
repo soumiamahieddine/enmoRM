@@ -173,4 +173,19 @@ interface appInterface
      * @uses organization/organization/readOriginator
      */
     public function readOriginator();
+
+    /**
+     * Search a pick list or get the entire ref
+     * @param string $query
+     *
+     * @uses recordsManagement/descriptionPickList/read_name_
+     */
+    public function readDescriptionpicklist_name_($query = null);
+
+    /**
+     * Get one pick list entry by its key
+     *
+     * @uses recordsManagement/descriptionPickList/read_name__key_
+     */
+    public function readDescriptionpicklist_name__key_();
 }
