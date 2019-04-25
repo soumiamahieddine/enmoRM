@@ -1,0 +1,141 @@
+<?php
+
+/*
+ * Copyright (C) 2019 Maarch
+ *
+ * This file is part of dependency pickLists.
+ *
+ * Dependency pickLists is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Dependency pickLists is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with dependency pickLists. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace dependency\pickLists;
+
+/**
+ * Pick lists from xml
+ *
+ * @author Cyril Vazquez <cyril.vazquez@maarch.org>
+ */
+class XmlPickList implements PickListInterface
+{
+    /**
+     * @var DOMDocument The DOMDocument object
+     */
+    protected $document;
+
+    /**
+     * @var DOMXPath The DOMXPath object
+     */
+    protected $xPath;
+
+    /**
+     * @var string The item xpath template
+     */
+    protected $itemXPath;
+
+    /**
+     * @var string The key xpath template
+     */
+    protected $keyXPath;
+
+    /**
+     * @var string The key xpath template
+     */
+    protected $valueXPath;
+
+    /**
+     * Constructor
+     * @param string $filename The XML uri
+     *
+     */
+    public function __construct(string $filename, string $itemXPath, string $keyXPath, string $valueXPath)
+    {
+        $this->document = new \DOMDocument();
+        $this->document->load($filename);
+
+        $this->xPath = new \DOMXPath($this->document);
+
+        $this->itemXPath = $itemXPath;
+        $this->keyXPath = $keyXPath;
+        $this->valueXPath = $valueXPath;
+    }
+
+    /**
+     * Returns a set of values
+     * @param string string $query
+     *
+     * @return array
+     */
+    public function search(string $query = null): array
+    {
+        $array = [];
+
+        if (!is_null($query)) {
+            $xPathExpr = sprintf('%1$s[contains(., "%4$s")]|%1$s[contains(%2$s, "%4$s")]|%1$s[contains(%3$s, "%4$s")]', $this->itemXPath, $this->keyXPath, $this->valueXPath, $query);
+        } else {
+            $xPathExpr = $this->itemXPath;
+        }
+
+        $domNodeList = $this->xPath->query($xPathExpr);
+
+        foreach ($domNodeList as $i => $itemNode) {
+            $key = $this->getKey($itemNode);
+            $value = $this->getValue($itemNode);
+            
+            $array[$key] = $itemNode->textContent;
+        }
+
+        asort($array, SORT_STRING);
+        
+        return $array;
+    }
+
+    /**
+     * Reads an entry or checks existence
+     * @param string $key
+     *
+     * @return string The value or null
+     */
+    public function get(string $key): ?string
+    {
+        $xPathExpr = sprintf('%s[%s="%s"]', $this->itemXPath, $this->keyXPath, $key);
+
+        $domNodeList = $this->xPath->query($xPathExpr);
+
+        if ($domNodeList->length == 0) {
+            return null;
+        }
+
+        $itemNode = $domNodeList->item(0);
+
+        return $this->getValue($itemNode);
+    }
+
+    protected function getKey($itemNode)
+    {
+        $domNodeList = $this->xPath->query($this->keyXPath, $itemNode);
+
+        if ($domNodeList->length > 0) {
+            return $domNodeList->item(0)->nodeValue;
+        }
+    }
+
+    protected function getValue($itemNode)
+    {
+        $domNodeList = $this->xPath->query($this->valueXPath, $itemNode);
+
+        if ($domNodeList->length > 0) {
+            return $domNodeList->item(0)->nodeValue;
+        }
+    }
+}
