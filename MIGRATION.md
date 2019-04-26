@@ -306,3 +306,9 @@ descriptionSchemes = "{
   }
 }"
 ```
+
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.4_V2.5.sql
