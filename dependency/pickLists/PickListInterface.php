@@ -31,16 +31,19 @@ interface PickListInterface
     /**
      * Returns a set of values
      * @param string $query
+     * @param string $order
+     * @param int    $limit
+     * @param int    $offset
      *
      * @return array
      */
-    public function search(string $query = null): array;
+    public function search(string $query = null, $limit = 100, $offset = 0): array;
 
     /**
      * Reads an entry or checks existence
      * @param string $key
      *
-     * @return string The value or null
+     * @return mixed The entry
      */
-    public function get(string $key): ?string;
+    public function get(string $key);
 }

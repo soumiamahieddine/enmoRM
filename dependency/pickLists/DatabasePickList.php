@@ -36,7 +36,7 @@ class DatabasePickList implements PickListInterface
     /**
      * @var PDOStatement The pdo statement for entire set
      */
-    protected $pdoListStmt;
+    protected $sqlSelectStmt;
 
     /**
      * @var PDOStatement The pdo statement for search
@@ -46,29 +46,27 @@ class DatabasePickList implements PickListInterface
     /**
      * @var PDOStatement The pdo statement for get
      */
-    protected $pdoGetStmt;
+    protected $sqlGetStmt;
 
     /**
      * Constructor
      * @param string $dsn    The database datasource name, includin user and password
      * @param string $table  The source qualified table name
-     * @param string $key    The table key column name
-     * @param string $value  The table value expression (sql)
-     * @param string $search The search expression/columns (sql). If omitted, key and value expression used with "like" 
+     * @param string $key    The table key expression
+     * @param array  $value  The table value expression (sql list of column or expression for select clause)
+     * @param string $search The search expression/columns (sql). If omitted, key and value expression used with "like"
+     * 
      */
-    public function __construct(string $dsn, string $table, string $key, string $value, string $search=null)
+    public function __construct(string $dsn, string $table, string $key, string $value, string $search)
     {
         $this->pdo = new \PDO($dsn);
         $this->pdo->setAttribute(\PDO::ATTR_CASE, \PDO::CASE_NATURAL);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-         if (is_null($search)) {
-            $search = $key." || ' ' || ".$value;
-        }
-
-        $this->pdoGetStmt = $this->pdo->prepare(sprintf('SELECT %s "value" FROM %s WHERE %s=:key', $value, $table, $key));
-        $this->pdoListStmt = $this->pdo->prepare(sprintf('SELECT %s "key", %s "value" FROM %s', $key, $value, $table));
-        $this->pdoSearchStmt = $this->pdo->prepare(sprintf('SELECT %s "key", %s "value" FROM %s WHERE %s LIKE :query', $key, $value, $table, $search));
+        $this->table = $table;
+        $this->key = $key;
+        $this->value = $value;
+        $this->search = $search;
     }
 
     /**
@@ -77,21 +75,21 @@ class DatabasePickList implements PickListInterface
      *
      * @return array
      */
-    public function search(string $query = null): array
+    public function search(string $query = null, $limit = 100, $offset = 0): array
     {
         $array = [];
 
         if (is_null($query)) {
-            $pdoStmt = $this->pdoListStmt;
+            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s FROM %s OFFSET %d LIMIT %d', $this->value, $this->table, $offset, $limit));
             $params = [];
         } else {
-            $pdoStmt = $this->pdoSearchStmt;
+            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s FROM %s WHERE %s OFFSET %d LIMIT %d', $this->value, $this->table, $this->search, $offset, $limit));
             $params = ['query' => '%'.$query.'%'];
         }
 
         $pdoStmt->execute($params);
-        while ($entry = $pdoStmt->fetch(\PDO::FETCH_ASSOC)) {
-            $array[$entry['key']] = $entry['value'];
+        while ($entry = $pdoStmt->fetchObject()) {
+            $array[] = $entry;
         }
 
         return $array;
@@ -103,10 +101,12 @@ class DatabasePickList implements PickListInterface
      *
      * @return string The value or null
      */
-    public function get(string $key): string
+    public function get(string $key)
     {
-        $this->pdoGetStmt->execute(['key' => $key]);
+        $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s FROM %s WHERE %s=:key', $this->value, $this->table, $this->key));
 
-        return $this->pdoGetStmt->fetchColumn();
+        $pdoStmt->execute(['key' => $key]);
+
+        return $pdoStmt->fetchObject();
     }
 }
