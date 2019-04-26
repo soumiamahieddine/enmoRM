@@ -115,7 +115,10 @@
             <div class="col-md-3">
                 <input type="text" class="form-control input-sm name" placeholder="Label"/>
             </div>
-            
+            <div class="input-group">
+                <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
+                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
+            </div>
         </div>
 
         <!-- CUSTOM OBJECT FIELD -->
@@ -137,8 +140,10 @@
                 <input class="hide" name="arrayMetadata" type="text" data-type="array" value=''>
                 <table id="arrayFields">
                     <tr>
-                        <td id="textRow"><input class="hidden" type="text" value=""></td>
-                        <td id="intRow"><input class="hidden" type="text" value=""></td>
+                        <td id="textRow"><input type="text" class="form-control input-sm hidden"/></td>
+                        <td id="numberRow"><input type="number" class="form-control input-sm hidden"/></td>
+                        <td id="dateRow"><input type="date" class="form-control input-sm hidden"/></td>
+                        <td id="objectRow"><input type="object" class="hidden"/></td>
                         <td id="rowAddBtn">
                             <div class="dropup col-xs-12 hidden">
                                 <button type="button" class="addRowArray btn btn-xs btn-default pull-right" title="Add data">
@@ -177,7 +182,11 @@
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
         Metadata.addRowField($(this));
+    });
 
+    $('#allFields').on('click', '.removeRowArray', function(e) {
+        e.preventDefault();
+        Metadata.removeRowArray($(this));
     });
 
     $('#allFields').on('click', '.removeField', function(e) {
@@ -215,7 +224,6 @@
         }
 
         var tpl = $('#keywordTpl').clone().removeClass('hide');
-
 
         if(val) {
             tpl.find('input').val(val).attr('name',name);
@@ -265,34 +273,33 @@
 
                     if ($.isPlainObject(itemType)) {
                         template = $('#arrayFieldTemplate').clone();
-                        
                         field = template.find("#arrayFields");
-
                         underTemplate = $("#objectFieldTemplate").clone();
                         $.each(itemType.properties, function() {
                             Metadata.addObjectField(underTemplate, this);
                         });
-                        template.find("table").append(underTemplate);
+                        field.append($("<tr></tr>").append($("<td></td>").append(underTemplate)));
 
                     } else {
                         template = $('#arrayFieldTemplate').clone();
-                        field = template.find('#'+itemType+'Row');
-                        
-                        field.find("input").removeClass("hidden");
+                        row = template.find('#'+itemType+'Row');
+                        row.find("input, textarea, select").removeClass("hidden");
                     }
+
+                    field = template.find("input").first();
 
                     addButton = template.find("#rowAddBtn");
                     addButton.appendTo(template.find("tr"));
                     addButton.find("button").attr("data-rowtype", itemType);
                     addButton.find("div").removeClass("hidden");
 
-                    template.find("input").first().attr("id", name)
+                    template.find("input").first().attr("id", name);
 
                     break;
 
                 case 'object':
                     template = $("#objectFieldTemplate").clone();
-                    field = template.find("#objectFields");
+                    field = template.find("input").first();
                     $.each(archiveDescription.descriptionField.properties, function() {
                         Metadata.addObjectField(template, this);
                     });
@@ -367,7 +374,6 @@
                     return;
                     break;
             }
-
             field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
 
             template.find("label:first").text(label);
@@ -386,21 +392,30 @@
             var target = source.closest("#arrayFields");
             var type = source.attr('data-rowtype');
 
-            // GET the Input Value
-            var valueInput = target.find('#'+type+'Row').find("input").val();
+            if (type == "[object Object]") {
+                type = "object";
+
+                // GET the Input Value
+                var valueInput = JSON.stringify(Metadata.serializeObject(target.find("[name='objectMetadata']")));
+                var valueToDisplay = "Object";
+                // Delete the input value
+                target.find(target.find("#objectFieldTemplate").find("input, textarea, select")).val("");
+            } else {
+                // GET the Input Value
+                var valueInput = target.find('#'+type+'Row').find("input, textarea, select").val();
+                var valueToDisplay = valueInput;
+                
+                // Delete the input value
+                target.find('#'+type+'Row').find("input, textarea, select").val("");
+            }
 
             if (valueInput != "") {
-
-                // Delete the input value
-                target.find('#'+type+'Row').find("input").val("");
 
                 var row = $('<tr></tr>');
                 row.append($("<input>")
                     .attr("data-rowValue", valueInput)
                     .addClass("hidden"));
-                row.append($("<td></td>")
-                    .text(valueInput));
-                
+                row.append('<td><input type="text" value="'+valueToDisplay+'" readonly></td><td><a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a></td>');
                 row.appendTo(target);
             }
 
@@ -421,7 +436,6 @@
         },
 
         addObjectField : function(target, source) {
-            
             var defaultVal = source.default;
             var enumeration = source.enumeration;
             var label = source.label;
@@ -444,7 +458,6 @@
                     if (source.enumeration) {
                         template = $('#selectFieldTemplate').clone();
                         field = template.find('select');
-
                         field.attr('id', name);
 
                         $.each(source.enumeration, function (index, value) {
@@ -495,10 +508,13 @@
                     break;
             }
             template.find("label:first").text(label);
+            template.removeAttr('id')
 
             templateRow.removeClass("hidden");
             templateRow.removeAttr('id')
-            field.attr('data-type', type);
+            templateRow.addClass("propertie");
+
+            field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
             template.appendTo(templateRow);
             templateRow.appendTo(target.find("table"));
             return templateRow;
@@ -546,6 +562,12 @@
 
         },
 
+        removeRowArray : function(source) {
+            target = source.closest("#arrayFields");
+            source.closest('tr').remove();
+            target.siblings("input").first().val(Metadata.serializeArrayFields(target));
+        },
+
         removeField : function(source) {
             source.closest('.form-group').remove();
         },
@@ -560,8 +582,9 @@
             var descriptionObject = {};
 
             $.each(inputsArchivalProfile, function() {
-                Metadata.serializeField($(this), descriptionObject);
-                console.log("OK");
+                if(!$(this).closest("#arrayFields").length > 0) {
+                    Metadata.serializeField($(this), descriptionObject);
+                }
             });
 
             $.each(inputsCustom, function() {
@@ -586,6 +609,7 @@
             var type = input.attr("data-type");
             var name = input.attr('name');
             var required = input.data('required');
+            var value = null;
 
             switch(type) {
                 case "boolean":
@@ -613,11 +637,11 @@
 
                 case 'array':
                     if (input.val()) {
-                        console.log(input.val());
                         value = JSON.parse(input.val());
                     }
                     break;
                 case 'object':
+                    value = Metadata.serializeObject(input);
                     break;
                 default :
                     value = $.trim(input.val());
@@ -630,8 +654,16 @@
             } else {
                 input.closest(".form-group").removeClass('has-error');
             }
-
             data[name] = value;
+        },
+
+        serializeObject : function(input) {
+            var object = new Object;
+            var properties = $(input).siblings("#objectFields").find(".propertie").find('input, textarea, select');
+            $.each(properties, function() {
+                Metadata.serializeField($(this), object);
+            })
+            return object;
         },
 
         serializeAdditionnalField : function(input, data) {
