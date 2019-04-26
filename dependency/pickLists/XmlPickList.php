@@ -49,16 +49,16 @@ class XmlPickList implements PickListInterface
     protected $keyXPath;
 
     /**
-     * @var string The key xpath template
+     * @var array The value xpath templates
      */
-    protected $valueXPath;
+    protected $valuesXPath;
 
     /**
      * Constructor
      * @param string $filename The XML uri
      *
      */
-    public function __construct(string $filename, string $itemXPath, string $keyXPath, string $valueXPath)
+    public function __construct(string $filename, string $itemXPath, string $keyXPath, array $valuesXPath)
     {
         $this->document = new \DOMDocument();
         $this->document->load($filename);
@@ -67,7 +67,7 @@ class XmlPickList implements PickListInterface
 
         $this->itemXPath = $itemXPath;
         $this->keyXPath = $keyXPath;
-        $this->valueXPath = $valueXPath;
+        $this->valuesXPath = $valuesXPath;
     }
 
     /**
@@ -76,27 +76,31 @@ class XmlPickList implements PickListInterface
      *
      * @return array
      */
-    public function search(string $query = null): array
+    public function search(string $query = null, $limit = 100, $offset = 0): array
     {
         $array = [];
 
         if (!is_null($query)) {
-            $xPathExpr = sprintf('%1$s[contains(., "%4$s")]|%1$s[contains(%2$s, "%4$s")]|%1$s[contains(%3$s, "%4$s")]', $this->itemXPath, $this->keyXPath, $this->valueXPath, $query);
+            $xPathExprs = [];
+            foreach ($this->valuesXPath as $name => $valueXPath) {
+                $xPathExprs[] = sprintf('%1$s[contains(%2$s, "%3$s")]', $this->itemXPath, $valueXPath, $query);
+            }
+            $xPathExpr = implode('|', $xPathExprs);
         } else {
             $xPathExpr = $this->itemXPath;
         }
 
         $domNodeList = $this->xPath->query($xPathExpr);
 
-        foreach ($domNodeList as $i => $itemNode) {
-            $key = $this->getKey($itemNode);
-            $value = $this->getValue($itemNode);
-            
-            $array[$key] = $itemNode->textContent;
-        }
+        for ($i=$offset; $i<=$limit; $i++) {
+            $itemNode = $domNodeList->item($i);
+            if (!$itemNode) {
+                break;
+            }
 
-        asort($array, SORT_STRING);
-        
+            $array[] = $this->getValue($itemNode);
+        }
+       
         return $array;
     }
 
@@ -104,9 +108,9 @@ class XmlPickList implements PickListInterface
      * Reads an entry or checks existence
      * @param string $key
      *
-     * @return string The value or null
+     * @return object The value or null
      */
-    public function get(string $key): ?string
+    public function get(string $key)
     {
         $xPathExpr = sprintf('%s[%s="%s"]', $this->itemXPath, $this->keyXPath, $key);
 
@@ -132,10 +136,14 @@ class XmlPickList implements PickListInterface
 
     protected function getValue($itemNode)
     {
-        $domNodeList = $this->xPath->query($this->valueXPath, $itemNode);
-
-        if ($domNodeList->length > 0) {
-            return $domNodeList->item(0)->nodeValue;
+        $item = new \stdClass();
+        foreach ($this->valuesXPath as $name => $valueXPath) {
+            $valueNode = $this->xPath->query($valueXPath, $itemNode)->item(0);
+            if ($valueNode) {
+                $item->{$name} = $valueNode->nodeValue;
+            }
         }
+
+        return $item;
     }
 }
