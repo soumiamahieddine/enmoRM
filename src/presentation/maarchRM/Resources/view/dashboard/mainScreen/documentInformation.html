@@ -37,21 +37,21 @@
         </table>
     </div>
     <!--   Modale de confirmation pour la suppression de ressource     -->
-    <div class="modal fade" id="confirmDeleteModal"  data-translate-catalog="recordsManagement/messages">
+    <div class="modal fade" id="confirmDeleteModal" data-translate-catalog="recordsManagement/messages" style="top:75px;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 style="text-align: center;">Delete the resource</h4>
+                    <h3 style="text-align: center;">Delete the resource</h3>
                 </div>
                 <div class="modal-body">
-                    <p>
+                    <p id="confirm_text">
                         Voulez-vous vraiment supprimer cette ressource ? <br/>
                         Cette action sera irréversible.
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="c_no"  title="Cancel">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="c_yes" data-resid="" data-archiveid="" data-dismiss="modal" title="Delete">Delete</button>
+                    <button type="button" class="btn btn-default" id="confirm_no" title="Cancel">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm_yes" data-resid="" data-archiveid="" data-dismiss="modal" title="Delete">Delete</button>
                 </div>
             </div>
         </div>
@@ -80,6 +80,9 @@
     #resourceInformation .infoIcon {
         font-size: 80px; 
         margin-bottom: 10px;
+    }
+    #confirm_text{
+        font-size:14px;
     }
 </style>
 
@@ -182,20 +185,21 @@
         $('#confirmDeleteModal').modal("hide");
     });
 
+    //Btn deleteResource open a confirmation modal
     $("#deleteResource").on("click", function() {
         button = $(this);
         archiveId = button.data('archiveid');
         resourceId = button.data('resid');
-        $('#confirmDeleteModal').find("#c_yes").attr("data-resid", resourceId);
-        $('#confirmDeleteModal').find("#c_yes").attr("data-archiveid", archiveId);
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-resid", resourceId);
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-archiveid", archiveId);
         $('#confirmDeleteModal').modal();
     });
 
-    $("#c_no").on("click", function() {
+    $("#confirm_no").on("click", function() {
         $('#confirmDeleteModal').modal("hide");
     });
 
-    $("#c_yes").on("click", function(){
+    $("#confirm_yes").on("click", function(){
         var resources = {
                 resIds           : [$(this).data('resid')]
             }
