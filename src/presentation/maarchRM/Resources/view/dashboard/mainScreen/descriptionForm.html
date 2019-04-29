@@ -281,6 +281,7 @@
                     if ($.isPlainObject(itemType)) {
                         template = $('#arrayFieldTemplate').clone();
                         field = template.find("#arrayFields");
+                        underTemplate = $("#objectFieldTemplate").clone();
                         underTemplate.find('#rowAddBtn')
                                     .addClass('hide');
                         underTemplate.find('col-md-9')
@@ -414,7 +415,8 @@
 
                 // GET the Input Value
                 var valueInput = JSON.stringify(Metadata.serializeObject(target.find("[name='objectMetadata']")));
-                var valueToDisplay = "Object";
+                var valueToDisplay = target.find(".propertie").find("input, textarea, select").first().val();
+
                 // Delete the input value
                 target.find(target.find("#objectFieldTemplate").find("input, textarea, select")).val("");
             } else {
@@ -426,7 +428,7 @@
                 target.find('#'+type+'Row').find("input, textarea, select").val("");
             }
 
-            if (valueInput != "") {
+            if (valueToDisplay != "") {
 
                 var row = $('<tr></tr>');
                 row.append($("<input>")
@@ -468,7 +470,6 @@
                 case 'text':
                 case 'string':
                     template = $('#textareaFieldTemplate').clone();
-                    template.find()
                     field = template.find('textarea');
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.val(defaultVal);
@@ -477,6 +478,7 @@
                 case 'name':
                     if (source.enumeration) {
                         template = $('#selectFieldTemplate').clone();
+                        field = template.find('select');
                         field.attr('id', name);
 
                         $.each(source.enumeration, function (index, value) {
