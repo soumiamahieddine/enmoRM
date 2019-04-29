@@ -306,3 +306,31 @@ descriptionSchemes = "{
   }
 }"
 ```
+
+## Branchement de listes externes
+Un nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser 
+des valeurs ou des paires de clé et valeur dans les métadonnées descriptives des archives.
+
+Les sources de données sont en founissant des URI de services qui doivent respecter
+l'interface `dependency\pickLists\PickListInterface`.
+
+La configuration fournit aussi une liste de paramètres à passer au service pour son instanciation.
+Le nombre et la nature de paramètres est propre à chaque service, se référer à la documentation 
+ou au code source de ceux-ci pour définir la configuration.
+
+```
+descriptionPickLists = "{
+  'customers' : {
+    'name' : 'Clients',
+    'type' : 'assoc',
+    'uri' : 'dependency/dataRepositories/database',
+    'parameters' : {
+        'dsn' : 'pgsql:...',
+        'table' : 'schema_name.table_name',
+        'key' : 'key_column_name', 
+        'value' : 'value_expression',
+        'order' : 'order_expression'
+    }
+  }
+}"
+```
