@@ -138,14 +138,14 @@
             <label class="col-md-3 small control-label">Métadonnée tableau</label>
             <div class="col-md-9">
                 <input class="hide" name="arrayMetadata" type="text" data-type="array" value=''>
-                <table id="arrayFields">
+                <table id="arrayFields" class="col-md-12">
                     <tr>
                         <td id="textRow"><input type="text" class="form-control input-sm hidden"/></td>
                         <td id="numberRow"><input type="number" class="form-control input-sm hidden"/></td>
                         <td id="dateRow"><input type="date" class="form-control input-sm hidden"/></td>
                         <td id="objectRow"><input type="object" class="hidden"/></td>
                         <td id="rowAddBtn">
-                            <div class="dropup col-xs-12 hidden">
+                            <div class="dropup hidden">
                                 <button type="button" class="addRowArray btn btn-xs btn-default pull-right" title="Add data">
                                     &nbsp;<i class="fa fa-plus">&nbsp;</i>
                                 </button>
@@ -410,7 +410,7 @@
                 // GET the Input Value
                 var valueInput = target.find('#'+type+'Row').find("input, textarea, select").val();
                 var valueToDisplay = valueInput;
-                
+
                 // Delete the input value
                 target.find('#'+type+'Row').find("input, textarea, select").val("");
             }
@@ -419,9 +419,11 @@
 
                 var row = $('<tr></tr>');
                 row.append($("<input>")
+                    .addClass('form-control')
+                    .addClass('input-sm')
                     .attr("data-rowValue", valueInput)
                     .addClass("hidden"));
-                row.append('<td><input type="text" value="'+valueToDisplay+'" readonly></td><td><a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a></td>');
+                row.append('<td class="input-group"><input class="form-control" type="text" value="' + valueToDisplay + '" readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span></td>');
                 row.appendTo(target);
             }
 
