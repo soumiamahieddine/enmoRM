@@ -27,6 +27,7 @@
         </div>
     </div>
 </form>
+
 <div class="hide">
     <!-- TEXT VARIABLE -->
     <div data-translate-catalog="documentManagement/documentMetadata">
@@ -126,7 +127,7 @@
             <label class="col-md-3 small control-label">Métadonnée objet</label>
             <div class="col-md-9">
                 <input class="hide" name="objectMetadata" type="text" data-type="object" value=''>
-                <table id="objectFields">
+                <table id="objectFields" class="col-md-12">
                     <tr id="objectPropertie" class="hidden">
                     </tr>
                 </table>
@@ -146,7 +147,7 @@
                         <td id="objectRow"><input type="object" class="hidden"/></td>
                         <td id="rowAddBtn">
                             <div class="dropup hidden">
-                                <button type="button" class="addRowArray btn btn-sm btn-default pull-right" title="Add data">
+                                <button type="button" class="addRowArray btn btn-sm btn-default btn-success pull-right" title="Add data">
                                     &nbsp;<i class="fa fa-plus">&nbsp;</i>
                                 </button>
                             </div>
@@ -280,7 +281,12 @@
                     if ($.isPlainObject(itemType)) {
                         template = $('#arrayFieldTemplate').clone();
                         field = template.find("#arrayFields");
-                        underTemplate = $("#objectFieldTemplate").clone();
+                        underTemplate.find('#rowAddBtn')
+                                    .addClass('hide');
+                        underTemplate.find('col-md-9')
+                                     .removeClass('col-md-9')
+                                     .addClass('col-md-12');
+                        $(underTemplate).children("label").remove();
                         $.each(itemType.properties, function() {
                             Metadata.addObjectField(underTemplate, this);
                         });
@@ -390,7 +396,12 @@
             }
 
             template.appendTo(target);
-
+            // template.find('.control-label')
+            //         .removeClass('col-md-3')
+            //         .addClass('col-md-2');
+            // template.find('.col-md-9')
+            //         .removeClass('col-md-9')
+            //         .addClass('col-md-10');
             template.removeAttr('id').appendTo(target);
         },
 
@@ -457,6 +468,7 @@
                 case 'text':
                 case 'string':
                     template = $('#textareaFieldTemplate').clone();
+                    template.find()
                     field = template.find('textarea');
                     if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
                         field.val(defaultVal);
@@ -465,7 +477,6 @@
                 case 'name':
                     if (source.enumeration) {
                         template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
                         field.attr('id', name);
 
                         $.each(source.enumeration, function (index, value) {
@@ -515,6 +526,12 @@
                     }
                     break;
             }
+            template.find('.control-label')
+                        .removeClass('col-md-3')
+                        .addClass('col-md-2');
+            template.find('.col-md-9')
+                        .removeClass('col-md-9')
+                        .addClass('col-md-10');
             template.find("label:first").text(label);
             template.removeAttr('id')
 
