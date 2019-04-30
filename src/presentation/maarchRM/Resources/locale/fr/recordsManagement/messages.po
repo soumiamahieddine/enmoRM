@@ -1058,13 +1058,13 @@ msgid "Last modification date"
 msgstr "Date de mise à jour"
 
 msgid "Add a resource"
-msgstr "Ajouter une pièce"
+msgstr "Ajouter une ressource"
 
 msgid "Delete the resource"
-msgstr "Supprimer la pièce"
+msgstr "Supprimer la ressource"
 
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Import a resource"
-msgstr "Importer une pièce"
+msgstr "Importer une ressource"
