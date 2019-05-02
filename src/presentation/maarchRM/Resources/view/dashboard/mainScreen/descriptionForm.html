@@ -221,18 +221,6 @@
             var origin = archiveDescription.origin;
 
             var field = null;
-            if (ref !== undefined) {
-                console.log(type);
-                        $.ajax({
-                            type: 'GET',
-                            url: '/descriptionPickList/' + ref,
-                            dataType: 'json',
-                            async: true,
-                            success: function (response) {
-                                console.log(response);
-                            }
-                        });
-                    }
             
             switch (type) {
                 case 'text':

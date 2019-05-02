@@ -49,16 +49,16 @@ class XmlPickList implements PickListInterface
     protected $keyXPath;
 
     /**
-     * @var array The value xpath templates
+     * @var string The value xpath templates
      */
-    protected $valuesXPath;
+    protected $valueXPath;
 
     /**
      * Constructor
      * @param string $filename The XML uri
      *
      */
-    public function __construct(string $filename, string $itemXPath, string $keyXPath, array $valuesXPath)
+    public function __construct(string $filename, string $itemXPath, string $keyXPath, string $valueXPath)
     {
         $this->document = new \DOMDocument();
         $this->document->load($filename);
@@ -67,7 +67,7 @@ class XmlPickList implements PickListInterface
 
         $this->itemXPath = $itemXPath;
         $this->keyXPath = $keyXPath;
-        $this->valuesXPath = $valuesXPath;
+        $this->valueXPath = $valueXPath;
     }
 
     /**
@@ -98,7 +98,7 @@ class XmlPickList implements PickListInterface
                 break;
             }
 
-            $array[] = $this->getValue($itemNode);
+            $array[$this->getKey($itemNode)] = $this->getValue($itemNode);
         }
        
         return $array;
@@ -136,6 +136,8 @@ class XmlPickList implements PickListInterface
 
     protected function getValue($itemNode)
     {
+        return $this->xPath->query($this->valueXPath, $itemNode)->item(0)->nodeValue;
+
         $item = new \stdClass();
         foreach ($this->valuesXPath as $name => $valueXPath) {
             $valueNode = $this->xPath->query($valueXPath, $itemNode)->item(0);
