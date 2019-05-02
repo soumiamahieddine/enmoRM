@@ -80,16 +80,16 @@ class DatabasePickList implements PickListInterface
         $array = [];
 
         if (is_null($query)) {
-            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s FROM %s OFFSET %d LIMIT %d', $this->value, $this->table, $offset, $limit));
+            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s "key", %s "value" FROM %s OFFSET %d LIMIT %d', $this->key, $this->value, $this->table, $offset, $limit));
             $params = [];
         } else {
-            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s FROM %s WHERE %s OFFSET %d LIMIT %d', $this->value, $this->table, $this->search, $offset, $limit));
+            $pdoStmt = $this->pdo->prepare(sprintf('SELECT %s "key", %s "value" FROM %s WHERE %s OFFSET %d LIMIT %d', $this->value, $this->table, $this->search, $offset, $limit));
             $params = ['query' => '%'.$query.'%'];
         }
 
         $pdoStmt->execute($params);
         while ($entry = $pdoStmt->fetchObject()) {
-            $array[] = $entry;
+            $array[$entry->key] = $entry->value;
         }
 
         return $array;
@@ -107,6 +107,6 @@ class DatabasePickList implements PickListInterface
 
         $pdoStmt->execute(['key' => $key]);
 
-        return $pdoStmt->fetchObject();
+        return $pdoStmt->fetchColumn();
     }
 }
