@@ -582,8 +582,10 @@ trait archiveEntryTrait
 
     protected function validateDescriptionModel($object, $archivalProfile)
     {
+        var_dump($archivalProfile->descriptionClass);
         $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
-
+        var_dump($descriptionSchemeProperties);
+        exit;
         $archivalProfileFields = [];
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
             if (!isset($object->{$archiveDescription->fieldName}) && $archiveDescription->required) {
@@ -595,7 +597,6 @@ trait archiveEntryTrait
 
         foreach ($object as $name => $value) {
             if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
-
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
             }
 
@@ -603,6 +604,7 @@ trait archiveEntryTrait
                 $this->validateDescriptionField($value, $descriptionSchemeProperties[$name]);
             }
         }
+        exit;
     }
 
     protected function validateDescriptionField($value, $descriptionField)
@@ -610,7 +612,7 @@ trait archiveEntryTrait
         $type = $descriptionField->type;
         switch ($type) {
             case 'name':
-                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration) && $value != '') {
                     throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
@@ -631,10 +633,57 @@ trait archiveEntryTrait
                 break;
 
             case 'date':
-                if (!is_string($value)) {
+                if (!$this->isDateISO8601Valid($value) && !is_null($value)) {
                     throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
                 }
                 break;
+
+            case 'object':
+                foreach ($value as $valueDescription => $valueData) {
+                    $this->validateDescriptionField($valueData, $descriptionField->properties[$valueDescription]);
+                }
+                break;
+
+            case 'array':
+                if (!is_null($value)) {
+                    $this->validateArrayDescriptionField($value, $descriptionField);
+                }
+                break;
+        }
+    }
+
+    protected function isDateISO8601Valid($timestamp)
+    {
+        if (preg_match('/^'.
+            '(\d{4})-(\d{2})-(\d{2})T'. // YYYY-MM-DDT ex: 2014-01-01T
+            '(\d{2}):(\d{2}):(\d{2})'.  // HH-MM-SS  ex: 17:00:00
+            '.(\d{3})Z'.  // milliseconds Z
+            '$/', $timestamp, $parts) == true) {
+            try {
+                new \DateTime($timestamp);
+                return true;
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    protected function validateArrayDescriptionField($array, $descriptionSchemeProperties)
+    {
+        foreach ($array as $name => $value) {
+            if ($descriptionSchemeProperties->itemType != 'text') {
+                $descriptionFields = $this->descriptionSchemeController->getDescriptionFields(ltrim($descriptionSchemeProperties->itemType, '#'));
+                var_dump($name);
+                var_dump($value);
+                var_dump($descriptionFields);
+                if (is_array($value) || is_object($value)) {
+                    $this->validateArrayDescriptionField($value, $descriptionSchemeProperties);
+                } else {
+                    $this->validateDescriptionField($value, $descriptionFields[$name]);
+                }
+            }
         }
     }
 
@@ -872,7 +921,7 @@ trait archiveEntryTrait
             $this->sdoFactory->beginTransaction();
         }
 
-        if(!empty($archive->contents)) {
+        if (!empty($archive->contents)) {
             $nbArchiveObjects = count($archive->contents);
         } else {
             $nbArchiveObjects = null;

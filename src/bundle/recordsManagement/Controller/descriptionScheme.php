@@ -35,7 +35,7 @@ class descriptionScheme
      *
      * @return void
      */
-    public function __construct($descriptionSchemes)
+    public function __construct($descriptionSchemes = [])
     {
         $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
     }
@@ -74,8 +74,8 @@ class descriptionScheme
         if (empty($name)) {
             return \laabs::newController('recordsManagement/descriptionField')->index();
         }
-
         if (isset($this->descriptionSchemes[$name])) {
+            var_dump('toto');
             $descriptionSchemeConfig = $this->descriptionSchemes[$name];
         } elseif (strpos($name, '/') !== false) {
             $descriptionSchemeConfig = new \stdClass();
@@ -129,6 +129,10 @@ class descriptionScheme
             $descriptionField->readonly = true;
         }
 
+        if (isset($schemeProperty->tags['required'])) {
+            $descriptionField->required = true;
+        }
+
         switch (true) {
             case substr($type, -2) == '[]':
                 $descriptionField->type = 'array';
@@ -164,7 +168,7 @@ class descriptionScheme
         switch (true) {
             case $type == 'string':
                 return 'text';
-                
+
             case $type == 'int':
             case $type == 'integer':
             case $type == 'float':
