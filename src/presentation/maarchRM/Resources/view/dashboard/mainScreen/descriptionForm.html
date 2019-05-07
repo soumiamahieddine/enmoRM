@@ -246,26 +246,40 @@
                         });
                         field.val(defaultVal);
                     } else if (ref !== undefined) {
-                        template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
-
+                        template = $('#inputFieldTemplate').clone();
+                        field = template.find('input');
                         field.attr('id', name);
 
-                        $.ajax({
-                            type: 'GET',
-                            url: '/descriptionPickList/' + ref,
-                            dataType: 'json',
-                            async: true,
-                            success: function (response) {
-                                console.log(response);
-
-                                $.each(response, function (key, label) {
-                                    field.append($('<option>', {
-                                        value: key,
-                                        text: label
-                                    }));
-                                });
+                        var data = new Bloodhound({
+                          datumTokenizer: Bloodhound.tokenizers.whitespace,
+                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                          remote: {
+                                url: '/descriptionRef/'+ref+'?query=%QUERY',
+                                wildcard: '%QUERY'
                             }
+                        });
+
+                        field.typeahead(null, {
+                          name: name,
+                          source: data,
+                          templates: {
+                          suggestion: function(data) {
+                                var html = '<dl class="dl dl-horizontal small">';
+                                $.each(data, function(key, value) {
+                                    if (key == '_query') {
+                                        return;
+                                    }
+                                    html += '<dt>'+key+'</dt><dd>'+value+'</dd>';
+                                });
+                                html += '</dl>';
+
+                                return html;
+                            }
+                        }
+                        }).on('typeahead:selected', function ($event, suggestion, source) {
+                            var key = Object.keys(suggestion)[0]; //fetched the key at first index
+                            field.val(suggestion[key]);
+                            field.typeahead('val', suggestion[key]);
                         });
                     } else {
                         var template = $('#inputFieldTemplate').clone();
