@@ -813,7 +813,7 @@ li > input, #headingOne > h4, #headingOne > span {
                     break;
 
                 case "date":
-                    value = input.data('datepicker').getFormattedDate('yyyy-mm-dd');
+                    value = new Date(input.data('datepicker').getFormattedDate('yyyy-mm-dd'));
                     break;
 
                 case 'number':

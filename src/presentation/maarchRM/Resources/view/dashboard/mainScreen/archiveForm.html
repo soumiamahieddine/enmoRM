@@ -292,7 +292,7 @@
                 var value = $(this).val();
                 if (value) {
                     if ($(this).hasClass('datePicker')) {
-                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        value = new Date($(this).data('datepicker').getFormattedDate('yyyy-mm-dd'));
                     }
                     archive[$(this).attr('name')] = value;
                 }
