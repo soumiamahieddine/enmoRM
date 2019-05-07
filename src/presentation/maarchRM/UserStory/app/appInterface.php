@@ -175,17 +175,17 @@ interface appInterface
     public function readOriginator();
 
     /**
-     * Search a pick list or get the entire ref
+     * Search a reference or get the entire ref list
      * @param string $query
      *
-     * @uses recordsManagement/descriptionPickList/read_name_
+     * @uses recordsManagement/descriptionRef/read_name_
      */
-    public function readDescriptionpicklist_name_($query = null);
+    public function readDescriptionref_name_($query = null);
 
     /**
-     * Get one pick list entry by its key
+     * Get one ref entry by its key
      *
-     * @uses recordsManagement/descriptionPickList/read_name__key_
+     * @uses recordsManagement/descriptionRef/read_name__key_
      */
-    public function readDescriptionpicklist_name__key_();
+    public function readDescriptionref_name__key_();
 }

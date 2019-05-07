@@ -22,19 +22,19 @@ namespace bundle\recordsManagement;
  *
  * @author Cyril Vazquez <cyril.vazqure@maarch.org> 
  */
-interface descriptionPickListInterface
+interface descriptionRefInterface
 {
     /**
      * Search the list
      *
-     * @action recordsManagement/descriptionPickList/search
+     * @action recordsManagement/descriptionRef/search
      */
     public function read_name_($query=null);
 
     /**
      * Get the description class properties
      *
-     * @action recordsManagement/descriptionPickList/get
+     * @action recordsManagement/descriptionRef/get
      */
     public function read_name__key_();
 }
