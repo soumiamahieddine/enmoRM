@@ -6,6 +6,27 @@
     </div>
 </div>
 
+<!--   Modale de confirmation pour la suppression de ressource     -->
+<div class="modal fade" id="confirmDeleteModal" data-translate-catalog="recordsManagement/messages" style="top:75px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align: center;">Delete the resource</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm_text">
+                    Voulez-vous vraiment supprimer cette ressource ? <br/>
+                    Cette action sera irréversible.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="confirm_no" title="Cancel">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm_yes" data-resid="" data-archiveid="" data-dismiss="modal" title="Delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ARCHIVE DOCUMENT -->
 <div class="modal fade" id="modalArchiveDocument" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
