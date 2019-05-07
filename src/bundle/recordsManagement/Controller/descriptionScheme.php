@@ -75,7 +75,6 @@ class descriptionScheme
             return \laabs::newController('recordsManagement/descriptionField')->index();
         }
         if (isset($this->descriptionSchemes[$name])) {
-            var_dump('toto');
             $descriptionSchemeConfig = $this->descriptionSchemes[$name];
         } elseif (strpos($name, '/') !== false) {
             $descriptionSchemeConfig = new \stdClass();
