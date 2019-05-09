@@ -1017,12 +1017,17 @@ class archive
      */
     protected function setDescriptiveMetadatas($archive)
     {
+        $editMetadata = false;
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
+            // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
+            if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
+                $editMetadata = true;
+            }
         }
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-        
+        $this->view->setSource('editMetadata', $editMetadata);
         $this->view->setSource('modificationPrivilege', $modificationPrivilege);
     }
 
@@ -1049,32 +1054,16 @@ class archive
      */
     protected function getPresenter($descriptionClass)
     {
+        // Try to find a bundle controller, else fallback to default
         try {
             $presentation = \laabs::presentation();
             $presenter = $presentation->getPresenter($descriptionClass);
 
-        $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-        
-        // Define if we display or not the button to modify metadata
-        $editMetadata = false;
-
-        if (!empty($archive->descriptionObject)) {
-            if (!empty($archive->descriptionClass)) {
-                $presenter = \laabs::newPresenter($archive->descriptionClass);
-                $descriptionHtml = /*'<br/>'.*/$presenter->read($archive->descriptionObject);
-
-                // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
-                if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
-                    $editMetadata = true;
-                }
-            } else {
-                $descriptionHtml = $this->setDescription($archive->descriptionObject, $archivalProfile);
-            }
-        } else {
-            $descriptionHtml = '<table></table>';
+            return \laabs::newPresenter($descriptionClass);
+        } catch (\exception $exception) {
+            return null;
         }
     }
-
 
     protected function getDescriptionPresenterClass($descriptionScheme)
     {
@@ -1083,8 +1072,23 @@ class archive
             return;
         }
 
-        $this->view->setSource('editMetadata', $editMetadata);
-        $this->view->setSource('modificationPrivilege', $modificationPrivilege);
+        $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
+        if (empty($descriptionSchemeConfig)) {
+            return;
+        }
+       
+        if (!isset($descriptionSchemeConfig->presenter)) {
+            return;
+        }
+ 
+        try {
+            $presentation = \laabs::presentation();
+            $presenter = $presentation->getPresenter($descriptionScheme);
+
+            return $descriptionSchemeConfig->presenter;
+        } catch (\exception $exception) {
+            return;
+        }
     }
 
     protected function loadArchivalProfile($reference)
