@@ -181,6 +181,44 @@
                 }
             );
         },
+
+        modify : function(event, button) {
+            let url = null;
+            let data = null;
+            let archive = null;
+
+            archiveId = $(button).data("archive-id");
+            archive = this.syncSerialize();
+
+            var parameters = {
+                archiveId           : archiveId,
+                originatorArchiveId : archive.originatorArchiveId,
+                archiveName         : archive.archiveName,
+                originatingDate     : archive.originatingDate, 
+                description         : archive.descriptionObject
+            };
+
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsmanagement/archive/metadata",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        Archive.getInfo(ArchiveInformation.archiveId);
+
+                        $("#searchForm_inputSearchBtn").click()
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
         loadProfile : function() {
             var value = $('#archivalProfile').val();
             var dataJson = $('#archivalProfile').data('json');

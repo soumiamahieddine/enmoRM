@@ -567,10 +567,6 @@
          ArchiveInformation.saveManagementMetadata();
     });
     
-    $('#editMetadata').on('click', function(){
-        ArchiveInformation.editMetadata();
-    });
-    
     $('#archiveInformation').on('click','.addCustomField',function(){
        ArchiveInformation.addField($(this).data('type'));
     });
@@ -581,6 +577,18 @@
 
     $("#archiveToolbarBtn").on('click', '.newArchive', function() {
         ArchiveInformation.loadImportForm($(this));
+    });
+
+    $('#editMetadata').on('click', function(){
+        var profile = $(this).parent().text().trim();
+        var profileMetadata = $("#folderToolbarBtn").find(".newArchive").filter(function() {
+            if ($(this).text().trim() === profile) {
+                return $(this);
+            }
+        })
+        archiveId = $(".archiveInformationId").val();
+        NewArchive.loadImportForm(profileMetadata);
+        Metadata.fillInMetadata(archiveId);
     });
         
 </script>

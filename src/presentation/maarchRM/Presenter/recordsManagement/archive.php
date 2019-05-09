@@ -267,6 +267,12 @@ class archive
      */
     public function getArchiveInfo($archive)
     {
+
+        if(\laabs::kernel()->request->getHeader("Accept")=="application/json") {
+            \laabs::setResponseHeader('Content-Type', "application/json");
+            return json_encode($archive);
+        }
+
         $this->view->addContentFile('dashboard/mainScreen/archiveInformation.html');
 
         // Digital resources

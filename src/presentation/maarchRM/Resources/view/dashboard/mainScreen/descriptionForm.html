@@ -428,6 +428,7 @@ li > input {
             field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
 
             template.find("label:first").text(label);
+            template.find("label:first").attr("id", name);
 
             if (required) {
                 $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
@@ -569,7 +570,8 @@ li > input {
 
                     // Delete the input value
                     target.find("#objectFieldTemplate").find("input, textarea, select").not("[data-type=boolean]").val("");
-                    // target.find("#objectFieldTemplate").find("[data-type=boolean]").parent().removeClass("active");
+                    target.find("#objectFieldTemplate").find("[data-type=boolean]").parent().siblings("label").removeClass("active");
+                    target.find("#objectFieldTemplate").find('[data-type=boolean][value=""]').parent().addClass("active");
                 }
 
             } else {
@@ -589,7 +591,7 @@ li > input {
                         .addClass('input-sm')
                         .attr("data-rowValue", valueInput)
                         .addClass("hidden"));
-                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + '" readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
+                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + ' readonly"><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
                     row.appendTo(target);
                 }
             }
@@ -598,7 +600,6 @@ li > input {
 
         serializeArrayFields : function(target) {
             var tabValue = [];
-            var name = target.siblings("input").attr('id');
             var allInput = target.find("[data-rowvalue]");
 
             allInput.each(function(index) {
@@ -793,9 +794,7 @@ li > input {
 
             switch(type) {
                 case "boolean":
-                    if (!input.prop("checked")) {
-
-                        console.log(input);
+                    if (!input.parent().hasClass("active")) {
                         return;
                     }
 
@@ -823,7 +822,6 @@ li > input {
                     }
                     break;
                 case 'object':
-                    console.log("HERE I AM");
                     value = Metadata.serializeObject(input);
                     break;
                 default :
@@ -877,8 +875,115 @@ li > input {
                 $('#customFields').empty();
                 $('#customFieldAddBtn').addClass("hide");
             }
+        },
+
+        fillInMetadata : function(archiveId) {
+            $.ajax({
+                url         : "/archive/"+archiveId,
+                type        : "GET",
+                headers     : {"Accept":"application/json"},
+                async       : false,
+                success     : function (response) {
+                    Metadata.archive = response;
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+        }
+            })
+            Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
+            $('#syncImport').parent().prepend('<a href="#" class="btn btn-sm btn-success" data-archive-id="'+archiveId+'" id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a><i>&nbsp;</i>')
+        },
+
+        checkAndFill : function(data, target) {
+            if (target.attr("data-type")==="date") {
+                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                target.datepicker('setDate', data);
+            }
+
+            if (target.attr("data-type")==="boolean") {
+                $.each($(target), function(){
+                    if($(this).val() === data) {
+                        $(this).parent().siblings("label").removeClass("active");
+                        $(this).parent().addClass("active");
+                    }
+                })
+            } else if ($.isPlainObject(data)) {
+                $.each(data, function(property, value) {
+                    if (property == "description") {
+                        $.each(value, function(descProperty, descValue) {
+                            Metadata.checkAndFill(descValue, $("label[id='"+descProperty+"']").parent().find("[name="+descProperty+"]"))
+                        })
+                    } else {
+                        if (target.parent().length > 0){
+                            input = target.parent().find("[name="+property+"]");
+                        } else {
+                            input = target.find("[name="+property+"]");
+                        }
+                        Metadata.checkAndFill(value, input)
+    }
+                })
+            } else if ($.isArray(data)){
+                $.each(data, function(index, item) {
+                    Metadata.addRowFieldWithData(item, target.parent());
+                })
+            } else {
+                target.val(data);
+            }
+        },
+
+        addRowFieldWithData : function(data, source) {
+            var target = source.find("#arrayFields");
+            var type = source.find(".addRowArray").attr('data-rowtype');
+
+            if (type == "[object Object]") {
+
+                objectNumber = (target.find("[data-rowValue]").length) + 1 ;
+
+                var aleaID = guid();
+                var toAdd = target.find("#objectFieldTemplate").clone();
+
+                Metadata.checkAndFill(data, toAdd);
+                valueInput = JSON.stringify(data);
+
+                toAdd.find("li").removeClass("propertie");
+                toAdd.find("h4").children("a").text("Objet n°"+objectNumber);
+                toAdd.removeAttr("id");
+                toAdd.find("#accordion").find('.panel-collapse').attr("id", aleaID).removeClass("in");
+                toAdd.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID).addClass("collapsed");
+                toAdd.find("#headingOne").append('<a href="#" class="btn btn-default removeRowArray pull-right"><i class="fa fa-times text-danger"></i></a>')
+                
+                target.append($("<li class='input-group col-md-12'></li>").append(toAdd));
+
+                toAdd.find("#accordion")
+                        .attr("data-rowValue", valueInput);
+
+                // Delete the input value
+                target.find("#objectFieldTemplate").find("input, textarea, select").not("[data-type=boolean]").val("");
+            } else {
+                
+                // GET the Input Value
+                var valueInput = data;
+                var valueToDisplay = valueInput;
+
+                if (valueToDisplay != "") {
+
+                    var row = $('<li class="input-group"></li>');
+                    row.append($("<input>")
+                        .addClass('form-control')
+                        .addClass('input-sm')
+                        .attr("data-rowValue", valueInput)
+                        .addClass("hidden"));
+                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + '" readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
+                    row.appendTo(target);
+                }
+            }
+            target.siblings("input").first().val(Metadata.serializeArrayFields(target));
         }
     }
+
+    $('#importPanel').on('click', '#modifyArchive', function(e) {
+        ArchiveForm.modify(e, $(this));
+    });
 
 </script>
 <script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
