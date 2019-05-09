@@ -81,7 +81,7 @@ class descriptionRef
         }
 
         $header = fgetcsv($handler, 1000, ",");
-        while (($row = fgetcsv($handler, 1000, ",")) !== FALSE) {
+        while (($row = fgetcsv($handler, 1000, ",")) !== false) {
             if ($query && mb_strlen($query) > 2) {
                 if (!preg_match('/'.preg_quote($query, '/').'/i', implode(' | ', $row))) {
                     continue;

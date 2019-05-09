@@ -263,15 +263,15 @@
                           name: name,
                           source: data,
                           templates: {
-                          suggestion: function(data) {
-                                var html = '<dl class="dl dl-horizontal small">';
-                                $.each(data, function(key, value) {
-                                    if (key == '_query') {
-                                        return;
-                                    }
-                                    html += '<dt>'+key+'</dt><dd>'+value+'</dd>';
-                                });
-                                html += '</dl>';
+                            suggestion: function(suggestion) {
+                                delete suggestion._query;
+                                var html = $('<div>');
+                                var keyname = Object.keys(suggestion)[0];
+                                var key = suggestion[keyname];
+                                html.append($('<strong class="badge">').text(key));
+                                delete suggestion[keyname];
+                                var value = Object.keys(suggestion).map(function(name){return suggestion[name]}).join(" - ");
+                                html.append(' '+value);
 
                                 return html;
                             }
