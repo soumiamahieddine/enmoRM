@@ -288,7 +288,11 @@ class welcome
         // Get scheme for array of objects, limit to one level for scheme recusions
         foreach ($orgUnit->archivalProfiles as $archivalProfile) {
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                $this->loadScheme($archiveDescription->descriptionField);
+                if (isset($archiveDescription->descriptionField)) {
+                    $archiveDescription->descriptionField->required = $archiveDescription->required;
+                    $archiveDescription->descriptionField->readonly = $archiveDescription->isImmutable;
+                    $this->loadScheme($archiveDescription->descriptionField);
+                }
             }
         }
 
