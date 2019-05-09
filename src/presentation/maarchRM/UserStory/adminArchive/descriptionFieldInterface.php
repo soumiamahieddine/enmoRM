@@ -66,16 +66,15 @@ interface descriptionFieldInterface
      * Update a description field
      * @param string $reffile The description field reference file
      *
-     * @return recordsManagement/descriptionRef/create
-     * @uses recordsManagement/descriptionRef/create_name_
+     * @uses recordsManagement/descriptionField/update_name_Ref
      */
-    public function createDescriptionref_name_($reffile);
+    public function updateDescriptionfield_name_Ref($reffile);
 
     /**
      * Read a description ref
      *
-     * @return recordsManagement/descriptionRef/read
-     * @uses recordsManagement/descriptionRef/read_name_
+     * @return recordsManagement/descriptionField/readRef
+     * @uses recordsManagement/descriptionField/read_name_Ref
      */
-    public function readDescriptionref_name_();
+    public function readDescriptionfield_name_Ref();
 }
