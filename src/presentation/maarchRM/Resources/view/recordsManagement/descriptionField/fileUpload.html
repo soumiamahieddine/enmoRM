@@ -1,0 +1,222 @@
+<div class="col-md-8">
+    <div class="col-md-offset-2">
+        <input type="file" id="descriptionRef_filesBrowser" class="hide">
+
+        <div id="fileDropZone" class="[?merge descriptionField.hasRef.bool().then('hide', '') ?]">
+            <i class="fa fa-file-text fileIcon">&nbsp;</i>
+            <h4>Click or drop a file<h4>
+        </div>
+
+        <div id="descriptionRef_fileInfo" class="col-md-12 col-md-offset-2 [?merge descriptionField.hasRef.bool().then('', 'hide') ?]">
+            <br/>
+            <table>
+                <tr>
+                    <td><i class="fa fa-file-text fileIcon">&nbsp;</i></td>
+                    <td>
+                        <div class="form-group" style="padding-left:10px">
+                            <label class="control-label">File name</label> :
+                            <span id="descriptionRef_fileName"><?merge profileFileName ?></span>
+                            <br/>
+                            <label class="control-label">Format</label> :
+                            <span id="descriptionRef_fileFormat"><?merge profileFileFormat ?></span>
+                            <br/>
+                            <label class="control-label">Date</label> :
+                            <span id="descriptionRef_fileDate"><?merge profileFileLastModified.format('Y-m-d H:i:s') ?></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="row">
+                <br/>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-warning btn-sm [?merge descriptionField.hasRef.bool().then('', 'hide') ?]" id="descriptionRef_cancelImport" title="Cancel"><i class='fa fa-times'>&nbsp;</i>Cancel</button>
+                    <button type="button" class="btn btn-success btn-sm [?merge descriptionField.hasRef.bool().then('', 'hide') ?]" id="descriptionRef_submitImport" title="Import"><i class='fa fa-level-down'>&nbsp;</i>Import</button>
+                    <button type="button" class="btn btn-success btn-sm [?merge descriptionField.hasRef.bool().then('hide', '') ?]" id="descriptionRef_download" data-ref="[?merge descriptionField.name ?]" title="download"><i class='fa fa-download'>&nbsp;</i>Download file</button>
+                    <button type="button" class="btn btn-info btn-sm [?merge descriptionField.hasRef.bool().then('hide', '') ?]" id="descriptionRef_replaceFile" title="Replace file"><i class='fa fa-refresh'>&nbsp;</i>Replace file</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="cantUploadFileError">Can't upload file. You have to save the profile first.</span>
+        <span id="wrongFileFormat">The profile file's extention must be csv or txt.</span>
+    </div>
+</div>
+<div class="modal fade" id="messageSavingModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Enregistrer le champ</h4>
+            </div>
+            <div class="modal-body">
+                <p>Le champ sera enregistré afin de pouvoir ajouter le fichier. Voulez-vous continuer ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Annuler">Non</button>
+                <button type="button" id="confirmSaving" class="btn btn-success" data-dismiss="modal" title="Enregistrer">Oui</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #fileDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 100px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+    .fileIcon {
+        font-size: 400%;
+    }
+</style>
+
+
+<script>
+
+// Drag & drop
+    $("#fileDropZone").on('dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    })
+
+    $("#fileDropZone").on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#fileDropZone').css('opacity', '1');
+    })
+
+    $("#fileDropZone").on('dragleave', function(e) {
+        $('#fileDropZone').css('opacity', '0.5');
+    })
+
+    $('#fileDropZone').on('drop', function(e) {
+        if(e.originalEvent.dataTransfer) {
+            if(e.originalEvent.dataTransfer.files.length) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('#fileDropZone').css('opacity', '0.5');
+                uploadFile(e.originalEvent.dataTransfer.files[0]);
+            }
+        }
+    })
+
+    // Files browser
+    $('#fileDropZone').on('click', function() {
+        $('#descriptionRef_filesBrowser').click();
+    })
+
+
+    $('#descriptionRef_filesBrowser').on('change', function() {
+        uploadFile($(this).context.files[0]);
+    })
+
+    // Cancel
+    $('#descriptionRef_cancelImport').on('click', function() {
+        cancelProfileForm();
+    })
+
+    $('#descriptionRef_submitImport').on('click', function() {
+        $('#messageSavingModal').modal();
+    });
+
+
+    // Submit
+    $('#confirmSaving').on('click', function() {
+
+        var icon = $('<i/>').addClass('fa fa-spinner fa-spin');
+        var submitButton = $('#descriptionRef_submitImport');
+        var reference = $('#descriptionRef_form').find('input[name="name"]').val();
+        var format = $('#descriptionRef_filesBrowser').val().split('.').pop();
+
+        submitButton.find('i').removeClass('fa-level-down').addClass('fa-spin fa-spinner');
+
+        if (!reference) {
+            gritter.show($('#cantUploadFileError').text(), false);
+            return;
+        }
+
+        var fileName = $('#descriptionRef_fileName').text().split('.');
+
+        $('.btn').prop('disabled', true);
+        var archivalProfile = ArchivalProfile.serialize();
+        var content = $('#descriptionRef_filesBrowser').data('base64');
+
+        ajax($(this), {
+            type        : 'POST',
+            url         : '/archivalProfile/upload/' + reference,
+            data        : JSON.stringify({archivalProfile: archivalProfile ,content : content, format: format}),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if(response.status) {
+                    $('#descriptionRef_cancelImport').addClass('hide');
+                    $('#descriptionRef_submitImport').addClass('hide');
+                    $('#descriptionRef_replaceFile').removeClass('hide');
+                    $("#descriptionRef_download").removeClass('hide');
+                }
+                $('#messageSavingModal').modal('hide');
+                $('#messageSavingModal').one('hidden.bs.modal', function () {
+                    load('/archivalProfiles');
+                });
+                $('.btn').prop('disabled', false);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                $('.btn').prop('disabled', false);
+            }
+        });
+    })
+
+    // Replace
+    $('#descriptionRef_replaceFile').on('click', function() {
+        cancelProfileForm();
+    })
+
+    $("#descriptionRef_download").on('click', function() {
+        var reference = $(this).data('ref');
+        window.open('/archivalProfile/export/'+ reference);
+    })
+    
+    function cancelProfileForm() {
+        $('#fileDropZone').removeClass('hide');
+        $('#descriptionRef_fileInfo').addClass('hide');
+        $('#descriptionRef_filesBrowser').val('');
+
+        $('#descriptionRef_cancelImport').removeClass('hide');
+        $('#descriptionRef_submitImport').removeClass('hide');
+        $('#descriptionRef_replaceFile').addClass('hide');
+    }
+
+    function uploadFile(file) {
+        oFileReader = new FileReader();
+        oFileReader.readAsText(file);
+        oFileReader.onload = function() {
+            $('#descriptionRef_filesBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
+            var ext = file.name.split('.').pop();
+            var format = '';
+            if (ext == 'rng')
+                format = 'Relax NG (Regular Language for XML Next Generation)';
+            if (ext == 'xsd')
+                format = "XML Schema Definition";
+
+            $('#descriptionRef_fileFormat').html(format);
+            $('#descriptionRef_fileName').html(file.name);
+
+            $('#descriptionRef_fileDate').addClass('hide');
+                
+            $('#fileDropZone').addClass('hide');
+            $('#descriptionRef_fileInfo').removeClass('hide');
+
+            $('#descriptionRef_cancelImport').removeClass('hide');
+            $('#descriptionRef_submitImport').removeClass('hide');
+            $('#descriptionRef_replaceFile').addClass('hide');
+        }
+        $("#descriptionRef_download").addClass('hide');
+    }
+
+</script>
