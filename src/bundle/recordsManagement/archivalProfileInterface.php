@@ -92,4 +92,21 @@ interface archivalProfileInterface
      */
     public function delete_archivalProfileId_();
 
+    /**
+     * upload an archival profile
+     * @param recordsManagement/archivalProfile $archivalProfile The profile object
+     * @param base64 $content The profile binary file
+     * @param string $format          The profile file format
+     *
+     * @action recordsManagement/archivalProfile/uploadArchivalProfile
+     */
+    public function createArchivalprofileUpload_profileReference_($archivalProfile,$content, $format="rng");
+
+    /**
+     * Download the profile file
+     *
+     * @action recordsManagement/archivalProfile/export
+     */
+    public function readArchivalprofileExport_profileReference_();
+
 }
