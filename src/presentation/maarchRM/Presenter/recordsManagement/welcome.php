@@ -54,13 +54,10 @@ class welcome
      */
     public function welcomePage()
     {
-        //$this->view->addHeaders();
-        //$this->view->useLayout();
         $this->view->addContentFile("dashboard/mainScreen/main.html");
 
         $this->view->translate();
 
-        $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
         $userAccountController = \laabs::newController('auth/userAccount');
         $user = $userAccountController->get($accountToken->accountId);
@@ -82,7 +79,6 @@ class welcome
             $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
             $this->view->translate();
-
         }
 
         // Retention
@@ -93,12 +89,6 @@ class welcome
 
         // archival profiles for search form
         foreach ($this->userArchivalProfiles as $archivalProfile) {
-            /*if ($archivalProfile == "*") {
-                $currentOrganization->acceptArchiveWithoutProfile = true;
-            }
-
-            $archivalProfileController->readDetail($archivalProfile);*/
-
             $archivalProfile->searchFields = [];
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 switch ($archiveDescription->descriptionField->type) {

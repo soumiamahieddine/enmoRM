@@ -370,7 +370,9 @@ class ServiceKernel extends AbstractKernel
                     $content = \core\Encoding\text::encode($this->serviceReturn);
             }
 
-            $this->response->setContentType($mimetype);
+            if ($this->guessRequestMode() == 'http') {
+                $this->response->setContentType($mimetype);
+            }
         }
 
         $this->response->setBody($content);
@@ -436,7 +438,9 @@ class ServiceKernel extends AbstractKernel
                     break;
             }
         }
-
-        $this->response->setContentType($contentType);
+        
+        if ($this->guessRequestMode() == 'http') {
+            $this->response->setContentType($contentType);
+        }
     }
 }

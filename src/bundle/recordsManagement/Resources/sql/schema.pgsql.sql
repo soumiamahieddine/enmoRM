@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "recordsManagement" CASCADE;
 
-CREATE SCHEMA "recordsManagement"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "recordsManagement";
 
 -- Table: "recordsManagement"."accessRule"
 

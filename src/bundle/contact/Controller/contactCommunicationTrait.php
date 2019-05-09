@@ -38,8 +38,14 @@ trait contactCommunicationTrait
         $communication->contactId = $contactId;
 
         try {
-            $checkcommunication = $this->sdoFactory->read('contact/communication', array('purpose' => $communication->purpose, 'comMeanCode' => $communication->comMeanCode, 'contactId' => $contactId));
-
+            $this->sdoFactory->read(
+                'contact/communication',
+                array(
+                    'purpose' => $communication->purpose,
+                    'comMeanCode' => $communication->comMeanCode,
+                    'contactId' => $contactId
+                )
+            );
         } catch (\Exception $e) {
             $this->sdoFactory->create($communication, "contact/communication");
 
@@ -47,7 +53,6 @@ trait contactCommunicationTrait
         }
 
         throw \laabs::newException('contact/contactException', 'A communication mean with this purpose already exist.');
-
     }
 
     /**

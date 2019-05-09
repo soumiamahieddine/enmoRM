@@ -1,17 +1,17 @@
-<div id="user_RoleContain" data-publicarchive="[?merge publicArchive ?]" data-roles="[?merge user.roles ?]">
+<div id="user_RoleContain" data-restrictroles="[?merge restrictRoles ?]" data-roles="[?merge user.roles ?]">
     <form class="">
         <div class="row">
             <div class="col-md-12">
                 <br/>
                 <label>Role</label>
-                <?merge publicArchive.bool().not() ?>
+                <?merge restrictRoles.bool().not() ?>
                 <div class="form-group">
                     <div class="list-group" id="listRoles">
                         <?merge roles ?>
                         <a class="list-group-item" data-id="[?merge .roleId ?]"><?merge .roleName ?></a>
                     </div>
                 </div>
-                <?merge publicArchive.bool() ?>
+                <?merge restrictRoles.bool() ?>
                 <div class="form-group">
                     <select class="form-control" name="role" id="role" data-role="[?merge user.roles[0].roleId ?]">
                         <option value="">No role</option>
@@ -29,7 +29,7 @@
     $('#user_RoleContain').ready(function() {
         roles = $('#user_RoleContain').data("roles");
         if (roles) {
-            if (!$("#user_RoleContain").attr('data-publicarchive')) {
+            if (!$("#user_RoleContain").attr('data-restrictroles')) {
                  $.each(roles,function (index, value) {
                      if($('#listRoles').find("[data-id='" + value.roleId + "']").length > 0 ) {
                          $('#listRoles').find("[data-id='" + value.roleId + "']").addClass('active');

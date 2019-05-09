@@ -208,7 +208,7 @@ msgstr "Move archives into a folder"
 msgid "recordsManagement/archives/deleteDisposearchives"
 msgstr "Delete all archives flagged for destuction"
 
-msgid "recordsManagement/descriptionClass/readIndex"
+msgid "recordsManagement/descriptionScheme/readIndex"
 msgstr "Listing of description models"
 
 msgid "recordsManagement/log/find"

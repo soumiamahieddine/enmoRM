@@ -2063,7 +2063,7 @@ th {
   border-top: 2px solid #dddddd;
 }
 .table .table {
-  background-color: #23aae5;
+  background-color: transparent;
 }
 .table-condensed > thead > tr > th,
 .table-condensed > tbody > tr > th,

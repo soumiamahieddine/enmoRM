@@ -102,9 +102,7 @@ class adminRole
      */
     public function edit($role = null, $publicUserStories = array())
     {
-        $publicArchive = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-
-        if(isset(\laabs::configuration('auth')['blacklistUserStories'])) {
+        if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
             $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
         } else {
             $blacklistUserStories = null;
@@ -181,7 +179,10 @@ class adminRole
         }
         $this->view->setSource("userStories", $userStoryDomains);
 
-        $this->view->setSource('publicArchive', $publicArchive);
+        $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
+        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        
+        $this->view->setSource('hideUsers', $publicArchives || $restrictUserRoles);
         $this->view->setSource('role', $role);
         $this->view->merge();
         

@@ -104,10 +104,13 @@ class user
 
         $view->addContentFile("auth/userAccount/admin/edit.html");
 
+        $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
+        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
-        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
+        $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
         $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_", $user->accountId);
 
         $view->setSource('userPositions', $userPositions);
@@ -164,9 +167,12 @@ class user
 
         $roles = $this->sdoFactory->find('auth/role');
 
+        $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
+        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
-        $view->setSource('publicArchive', \laabs::configuration('presentation.maarchRM')['publicArchives']);
+        $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
         $view->setSource('user', $user);
         $view->setSource('userPositions', false);
 
