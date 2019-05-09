@@ -91,3 +91,12 @@ msgstr "Ajouter un champ"
 
 msgid "Text"
 msgstr "Texte"
+
+msgid "Add an object"
+msgstr "Ajout d'un objet"
+
+msgid "Object metadata"
+msgstr "Métadonnée objet"
+
+msgstr "Table metadata"
+msgstr "Métadonnée tableau"
