@@ -86,10 +86,10 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" id="fieldName">
+                        <div class="form-group" id="name">
                             <label class="col-md-2 control-label">Name<span style="color:red">&nbsp;*</span></label>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="fieldName" placeholder="Name"/>
+                                <input type="text" class="form-control" name="name" placeholder="Name"/>
                                 <small class="help-block">The first and last character must be a letter. You must use only letters and the special character '_'</small>
                             </div>
                         </div>
@@ -160,8 +160,11 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="list-group col-md-9 hide" id="keywordEnumList">
-                            </div>
+                            <div class="list-group col-md-9 hide" id="keywordEnumList"></div>
+                        </div>
+                        <div class="form-group hide" id="keywordRefForm">
+                            <label class="col-md-2 control-label">Reference</label>
+                            <?hinclude recordsManagement/descriptionField/fileUpload.html ?>
                         </div>
                     </form>
                 </div>
@@ -359,7 +362,7 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #nameSelectPropertyDefaultValue').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue').addClass('hide');
         $('#keywordEnumList').empty();
         $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
@@ -367,6 +370,7 @@ file that was distributed with this source code.
             case "name" :
                 $('#keywordEnumForm').removeClass('hide');
                 $('#keywordEnumList').removeClass('hide');
+                $('#keywordRefForm').removeClass('hide');
                 $('#namePropertyDefaultValue').removeClass('hide');
                 break;
 
@@ -393,9 +397,9 @@ file that was distributed with this source code.
         $("#descriptionField_formContent").find('input[type="text"], input[type="number"], select').val('');
         $("#descriptionField_formContent").find('input[type="checkbox"]').prop('checked', false);
         
-        $('#fieldName').find('input').removeAttr("disabled");
+        $('#name').find('input').removeAttr("disabled");
 
-        let formGroup = $('#fieldName').closest('.form-group');
+        let formGroup = $('#name').closest('.form-group');
         formGroup.removeClass('has-error');
         formGroup.removeClass('has-success');
 
@@ -417,8 +421,8 @@ file that was distributed with this source code.
     function mergeForm(descriptionField) {
         $('#documentDescriptionPropertiesType').find('input[type=radio][name=type][value='+descriptionField.type+']').parent().addClass("active");
         $('#propertyLabel').find('input').val(descriptionField.label);
-        $('#fieldName').find('input').val(descriptionField.name).attr("disabled",true);
-        let formGroup = $('#fieldName').closest('.form-group');
+        $('#name').find('input').val(descriptionField.name).attr("disabled",true);
+        let formGroup = $('#name').closest('.form-group');
         formGroup.removeClass('has-error');
         formGroup.removeClass('has-success');
         
@@ -441,6 +445,7 @@ file that was distributed with this source code.
                     $('#namePropertyDefaultValue').removeClass('hide');
                     $('#namePropertyDefaultValue').find("input").val(descriptionField.default);
                 }
+                $("#keywordRefForm").removeClass('hide');
                 
                 break;
 
@@ -489,7 +494,7 @@ file that was distributed with this source code.
         var type = $('.active > input[type=radio][name=type]').val();
         
         var property = {
-            name         : $('#fieldName').find('input').val(),
+            name         : $('#name').find('input').val(),
             label        : $('#propertyLabel').find('input').val(),
             type         : type,
         };
@@ -544,7 +549,7 @@ file that was distributed with this source code.
         return property;
     }
 
-    $("#descriptionField_formContent").on("keyup","[name='fieldName']", function(){
+    $("#descriptionField_formContent").on("keyup","[name='name']", function(){
         var input = $(this);
         var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
         var formGroup = input.closest('.form-group');
