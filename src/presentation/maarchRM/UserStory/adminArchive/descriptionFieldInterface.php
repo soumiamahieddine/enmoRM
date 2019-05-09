@@ -63,10 +63,19 @@ interface descriptionFieldInterface
     public function updateDescriptionfield_name_($descriptionField);
 
     /**
-     * Delete a description field
+     * Update a description field
+     * @param string $reffile The description field reference file
      *
-     * @return recordsManagement/descriptionField/delete
-     * @uses recordsManagement/descriptionField/delete_name_
+     * @return recordsManagement/descriptionRef/create
+     * @uses recordsManagement/descriptionRef/create_name_
      */
-    public function deleteDescriptionfield_name_();
+    public function createDescriptionref_name_($reffile);
+
+    /**
+     * Read a description ref
+     *
+     * @return recordsManagement/descriptionRef/read
+     * @uses recordsManagement/descriptionRef/read_name_
+     */
+    public function readDescriptionref_name_();
 }
