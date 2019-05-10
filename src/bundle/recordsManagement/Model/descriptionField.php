@@ -42,7 +42,7 @@ class descriptionField
     public $label;
 
     /**
-    * @var string The type of data : name, string, integer, float, boolean, number, date, timestamp, datetime 
+    * @var string The type of data : name, string, integer, float, boolean, number, date, timestamp, datetime
     * @notempty
     */
     public $type;
@@ -76,6 +76,11 @@ class descriptionField
     * @var string
     */
     public $enumeration;
+
+    /**
+    * @var string
+    */
+    public $enumNames;
 
     /**
     * @var string
