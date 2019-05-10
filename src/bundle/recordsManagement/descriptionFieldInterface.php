@@ -25,15 +25,15 @@ interface descriptionFieldInterface
 {
     /**
      *  List the description field's code
-     * 
-     * @action recordsManagement/descriptionField/index 
+     *
+     * @action recordsManagement/descriptionField/index
      */
     public function readIndex();
 
     /**
      * Create a description field
      * @param recordsManagement/descriptionField $descriptionField The description field
-     * 
+     *
      * @action recordsManagement/descriptionField/create
      *
      */
@@ -41,7 +41,7 @@ interface descriptionFieldInterface
 
     /**
      * Read a description field
-     * 
+     *
      * @action recordsManagement/descriptionField/read
      *
      */
@@ -50,7 +50,7 @@ interface descriptionFieldInterface
     /**
      *  Update a description field
      * @param recordsManagement/descriptionField $descriptionField The description field
-     * 
+     *
      * @action recordsManagement/descriptionField/update
      *
      */
@@ -58,10 +58,9 @@ interface descriptionFieldInterface
 
     /**
      *  Delete a description field
-     * 
+     *
      * @action recordsManagement/descriptionField/delete
-     * 
+     *
      */
     public function delete_name_();
-
 }

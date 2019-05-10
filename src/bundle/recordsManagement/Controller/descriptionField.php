@@ -55,6 +55,10 @@ class descriptionField
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
             }
 
+            if (!empty($descriptionField->enumNames)) {
+                $descriptionField->enumNames = json_decode($descriptionField->enumNames);
+            }
+
             unset($descriptionFields[$i]);
         }
 
@@ -79,9 +83,12 @@ class descriptionField
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }
 
+        if (!empty($descriptionField->enumNames)) {
+            $descriptionField->enumNames = json_encode($descriptionField->enumNames);
+        }
+
         try {
             return $this->sdoFactory->create($descriptionField, 'recordsManagement/descriptionField');
-
         } catch (\Exception $e) {
             throw $e;
         }
@@ -95,16 +102,20 @@ class descriptionField
      */
     public function read($name)
     {
-        try { 
+        try {
             $descriptionField = $this->sdoFactory->read('recordsManagement/descriptionField', $name);
 
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
             }
 
+            if (!empty($descriptionField->enumNames)) {
+                $descriptionField->enumNames = json_decode($descriptionField->enumNames);
+            }
+
             return $descriptionField;
         } catch (\Exception $e) {
-            
+
         }
     }
 
@@ -118,9 +129,19 @@ class descriptionField
      */
     public function update($descriptionField)
     {
+        if (!empty($descriptionField->enumNames)) {
+            //throw exception if number of enumNames is different from enumeration
+            // array_filter without callback function, it removes all entries equals to FALSE (cf. https://www.php.net/manual/en/function.array-filter.php)
+            if (count(array_filter($descriptionField->enumNames)) != count(array_filter($descriptionField->enumeration))) {
+                throw new \core\Exception\BadRequestException("All enumName Description fields must be filled");
+            }
+            $descriptionField->enumNames = json_encode($descriptionField->enumNames);
+        }
+
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }
+
 
         try {
             $res = $this->sdoFactory->update($descriptionField, 'recordsManagement/descriptionField');
