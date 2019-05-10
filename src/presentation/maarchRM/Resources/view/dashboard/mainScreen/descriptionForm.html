@@ -507,8 +507,6 @@ li > input, #headingOne > h4, #headingOne > span {
 
             var div = Metadata.getArrayItem(descriptionField);
             itemList.prepend(div);
-
-            itemList.siblings("input").first().val(Metadata.serializeArrayFields(itemList));
         },
 
         addCustomField : function(source) {
@@ -625,8 +623,8 @@ li > input, #headingOne > h4, #headingOne > span {
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
-        }
-            })
+                }
+            });
             Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
             $('#syncImport').parent().prepend('<a href="#" class="btn btn-sm btn-success" data-archive-id="'+archiveId+'" id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a><i>&nbsp;</i>')
         },
@@ -714,7 +712,6 @@ li > input, #headingOne > h4, #headingOne > span {
                     row.appendTo(target);
                 }
             }
-            target.siblings("input").first().val(Metadata.serializeArrayFields(target));
         }
     }
 
