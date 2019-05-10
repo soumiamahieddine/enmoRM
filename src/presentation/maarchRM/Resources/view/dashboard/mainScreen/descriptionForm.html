@@ -59,56 +59,35 @@
     </div>
 
     <div data-translate-catalog="documentManagement/documentMetadata">
+        <!-- INPUT GROUP -->
+        <div class="form-group" id="formGroupTemplate">
+            <label class="col-md-3 small control-label"></label>
+            <div class="col-md-9">
+            </div>
+        </div>
+        
         <!-- TEXT FIELD TEMPLATE -->
-        <div class="form-group" id="inputFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <input type="text" class="form-control input-sm"/>
-            </div>
-        </div>
-
-        <!-- DATE FIELD TEMPLATE -->
-        <div class="form-group" id="inputDateTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <input type="text" class="form-control input-sm"/>
-            </div>
-        </div>
+        <input id="inputFieldTemplate" type="text" class="form-control input-sm"/>
 
         <!-- TEXTAREA FIELD TEMPLATE -->
-        <div class="form-group" id="textareaFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;"></textarea>
-            </div>
-        </div>
+        <textarea  id="textareaFieldTemplate" class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;"></textarea>
 
         <!-- SELECT FIELD TEMPLATE -->
-        <div class="form-group" id="selectFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <select class="form-control input-sm">
-                    <option value=""></option>
-                </select>
-            </div>
-        </div>
+        <select id="selectFieldTemplate" class="form-control input-sm">
+            <option value=""></option>
+        </select>
 
         <!-- BOOLEAN FIELD TEMPLATE -->
-        <div class="form-group" id="booleanFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                    </label>
-                    <label class="btn btn-default active">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="">&nbsp;
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                    </label>
-                </div>
-            </div>
+        <div id="booleanFieldTemplate" class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default">
+                <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+            </label>
+            <label class="btn btn-default active">
+                <input type="radio" name="defaultValue" autocomplete="off" value="">&nbsp;
+            </label>
+            <label class="btn btn-default">
+                <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+            </label>
         </div>
 
         <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
@@ -123,55 +102,38 @@
         </div>
 
         <!-- CUSTOM OBJECT FIELD V2 -->
-        <div id="objectFieldTemplate" class="form-group">
-            <label class="col-md-3 small control-label">Object metadata</label>
-            <div class="col-md-9" id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default" style="margin-bottom:0px;">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Add an object
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                        <div class="panel-body">
-                            <div class="col-md-9">
-                                <input class="hide" name="objectMetadata" type="text" data-type="object" value=''>
-                                <ul id="objectFields" class="col-md-12">
-                                    <li id="objectPropertie" class="hidden"></li>
-                                </ul>
-                            </div>
+        <div id="objectFieldTemplate"  class="col-md-9" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default" style="margin-bottom:0px;">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Add an object
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="col-md-9">
+                            <input class="hide" name="objectMetadata" type="text" data-type="object" value=''>
+                            <ul id="objectProperties" class="col-md-12">
+                                <li id="objectPropertie" class="hidden"></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- <div id="objectFieldTemplate" class="form-group">
-            <label class="col-md-3 small control-label">Métadonnée objet</label>
-            <div class="col-md-9">
-                <input class="hide" name="objectMetadata" type="text" data-type="object" value=''>
-                <ul id="objectFields" class="col-md-12">
-                    <li id="objectPropertie" class="hidden"></li>
-                </ul>
-            </div>
-        </div> -->
-
         <!-- CUSTOM ARRAY FIELD V2 -->
-        <div class="form-group" id="arrayFieldTemplate">
-            <label class="col-md-3 small control-label">Table metadata</label>
-            <div class="col-md-9">
-                <input class="hide" name="arrayMetadata" type="text" data-type="array" value=''>
-                <div id="rowAddBtn" class="dropup hidden">
-                    <button type="button" class="addRowArray btn btn-sm btn-default btn-success pull-left" title="Add data">
-                        &nbsp;<i class="fa fa-plus">&nbsp;</i>
-                    </button>
-                </div>
-                <ul id="arrayFields">
-                    <li id="textRow" class="input-group col-md-12"><input type="text" class="form-control input-sm hidden"/></li>
-                </ul>
+        <div id="arrayFieldTemplate">
+            <input class="hide" name="arrayMetadata" type="text" data-type="array" value=''>
+            <div id="rowAddBtn" class="dropup hidden">
+                <button type="button" class="addRowArray btn btn-sm btn-default btn-success pull-left" title="Add data">
+                    &nbsp;<i class="fa fa-plus">&nbsp;</i>
+                </button>
             </div>
+            <ul id="arrayItems">
+            </ul>
         </div>
 
 
@@ -192,7 +154,7 @@
 
 
 <style>
-#objectFields .propertie .col-md-9{
+#objectProperties .propertie .col-md-9{
     padding-left:40px;
 }
 ul {
@@ -206,7 +168,7 @@ li > input, #headingOne > h4, #headingOne > span {
     width:27px;
     margin-top:-7px;
 }
-#arrayFields > .input-group > .form-group{
+#arrayItems > .input-group > .form-group{
     margin-bottom:0px; 
 }
 #objectFieldTemplate{
@@ -225,6 +187,9 @@ li > input, #headingOne > h4, #headingOne > span {
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
         Metadata.addRowField($(this));
+        // source = $(this).parent().parent();
+        // data = Metadata.serializeObject(source.find("[name='objectMetadata']"));
+        // Metadata.addRowFieldWithData(data, source);
     });
 
     $('#allFields').on('click', '.removeRowArray', function(e) {
@@ -300,253 +265,224 @@ li > input, #headingOne > h4, #headingOne > span {
         flagEmptyCustomField : false,
 
         addArchiveDescription : function(archiveDescription) {
+            var descriptionField = archiveDescription.descriptionField;
             var target = $("#archivalProfileFields");
-            var type = archiveDescription.descriptionField.type;
-            var defaultVal = archiveDescription.descriptionField.default;
-            var enumeration= archiveDescription.descriptionField.enumeration;
-            var label = archiveDescription.descriptionField.label;
-            var name = archiveDescription.descriptionField.name;
-            var required = archiveDescription.required;
-            var origin = archiveDescription.origin;
-            var field = null;
+            var field = Metadata.addField(descriptionField);
+            target.append(field);            
+        },
 
-            switch (type) {
+        addField: function(descriptionField) {
+            var formGroup = $('#formGroupTemplate').clone();
+            formGroup.removeAttr('id');
+            formGroup.find("label:first").text(descriptionField.label);
+            formGroup.find("label:first").attr("id", descriptionField.name);
+            
+            switch (descriptionField.type) {
                 case 'array':
-                    var itemType = archiveDescription.descriptionField.itemType;
-
-                    if ($.isPlainObject(itemType)) {
-                        template = $('#arrayFieldTemplate').clone();
-                        field = template.find("#arrayFields");
-                        underTemplate = $("#objectFieldTemplate").clone();
-                        aleaID = guid()
-                        underTemplate.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-                        underTemplate.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-                
-                        underTemplate.find('.col-md-9')
-                                     .removeClass('col-md-9')
-                                     .addClass('col-md-12');
-                        $(underTemplate).children("label").remove();
-                        $.each(itemType.properties, function() {
-                            Metadata.addObjectField(underTemplate, this);
-                        });
-                        field.append($("<li class='input-group col-md-12'></li>").append(underTemplate));
-
-                    } else {
-                        template = $('#arrayFieldTemplate').clone();
-                        field = Metadata.addField(archiveDescription);
-                        field.addClass("arrayInput");
-                        template.find("#arrayFields").append($("<li class='input-group col-md-12'></li>").append(field));
-                    }
-                    field = template.find("input").first();
-                    addButton = template.find("#rowAddBtn");
-                    addButton.find("button").attr("data-rowtype", itemType);
-                    addButton.removeClass("hidden");
-
-                    template.find("input").first().attr("id", name);
-
+                    var field = Metadata.addArrayDiv(descriptionField);
                     break;
 
                 case 'object':
-                    template = $("#objectFieldTemplate").clone();
-                    aleaID = guid()
-                    template.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-                    template.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-                
-                    field = template.find("input").first();
-                    template.find("h4").find("a").text("Métadonnée "+label)
-                    $.each(archiveDescription.descriptionField.properties, function() {
-                        Metadata.addObjectField(template, this);
-                    });
+                    var field = Metadata.addObjectDiv(descriptionField);
                     break;
 
                 case 'text':
                 case 'string':
-                    template = $('#textareaFieldTemplate').clone();
-                    field = template.find('textarea');
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
+                    var field = Metadata.addTextArea(descriptionField);
                     break;
+                    
                 case 'name':
-                    if (enumeration) {
-                        template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
-
-                        field.attr('id', name);
-
-                        $.each(enumeration, function (index, value) {
-                            field.append($('<option>', {
-                                value: value,
-                                text: value
-                            }));
-                        });
-                        field.val(defaultVal);
+                    if (descriptionField.enumeration) {
+                        var field = Metadata.addSelect(descriptionField);      
                     } else {
-                        var template = $('#inputFieldTemplate').clone();
-                        field = template.find('input');
-                        if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                            field.val(defaultVal);
-                        }
+                        var field = Metadata.addTextInput(descriptionField);                   
                     }
                     break;
+
                 case 'number':
-                    var template = $('#inputFieldTemplate').clone();
-                    field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
+                    var field = Metadata.addNumberInput(descriptionField);
                     break;
+
                 case 'date':
                 case 'timestamp':
-                    var template = $('#inputDateTemplate').clone();
-                    field = template.find('input');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.data("datepicker").setDate(defaultVal);
-                    }
-
+                    var field = Metadata.addDateInput(descriptionField);
                     break;
+
                 case 'boolean':
-                    var template = $('#booleanFieldTemplate').clone();
-                    field = template.find("input");
-                    template.find('.active').removeClass("active");
-                    if (defaultVal == 1 || defaultVal == 0) {
-                        template.find('[value="'+defaultVal+'"]').parent().addClass("active");
-                        template.find('[value="'+defaultVal+'"]').prop("checked", "checked");
-                    } else {
-                        template.find('[value=""]').parent().addClass("active");
-                        template.find('[value=""]').prop("checked", "checked");
-                    }
+                    var field = Metadata.addRadioInput(descriptionField);
                     break;
 
-                case 'array':
-                case 'object':
                 default:
-                    console.log("Type "+type+" of field "+name+" is not managed");
+                    console.log("Type "+descriptionField.type+" of field "+descriptionField.name+" is not managed");
                     return;
-                    break;
             }
-            field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
 
-            template.find("label:first").text(label);
-            template.find("label:first").attr("id", name);
+            formGroup.children('div').append(field);
+            field.attr('name', descriptionField.name).attr('data-type', descriptionField.type);
 
-            if (required) {
-                $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
+            if (descriptionField.required) {
+                $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(formGroup.find("label:first"));
                 field.attr("data-required", required);
             }
 
-            template.appendTo(target);
-            template.removeAttr('id').appendTo(target);
+            return formGroup;
         },
 
-        addField : function(archiveDescription) {
-            if (archiveDescription.descriptionField.type == "array") {
-                type = archiveDescription.descriptionField.itemType;
-            } else {
-                var type = archiveDescription.descriptionField.type;
+        addTextInput : function (descriptionField) {
+            var field = $('#inputFieldTemplate').clone();
+            field.removeAttr('id');
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
             }
-            var defaultVal = archiveDescription.descriptionField.default;
-            var enumeration= archiveDescription.descriptionField.enumeration;
-            var label = archiveDescription.descriptionField.label;
-            var name = archiveDescription.descriptionField.name;
-            var required = archiveDescription.required;
-            var origin = archiveDescription.origin;
-            var field = null;
 
-            switch (type) {
-                case 'object':
-                    template = $("#objectFieldTemplate").clone();
-                    aleaID = guid()
-                    template.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-                    template.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-                
-                    field = template.find("input").first();
-                    $.each(archiveDescription.descriptionField.properties, function() {
-                        Metadata.addObjectField(template, this);
-                    });
-                    break;
-
-                case 'text':
-                case 'string':
-                    template = $('#textareaFieldTemplate').clone();
-                    field = template.find('textarea');
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'name':
-                    if (enumeration) {
-                        template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
-
-                        field.attr('id', name);
-
-                        $.each(enumeration, function (index, value) {
-                            field.append($('<option>', {
-                                value: value,
-                                text: value
-                            }));
-                        });
-                        field.val(defaultVal);
-                    } else {
-                        var template = $('#inputFieldTemplate').clone();
-                        field = template.find('input');
-                        if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                            field.val(defaultVal);
-                        }
-                    }
-                    break;
-                case 'number':
-                    var template = $('#inputFieldTemplate').clone();
-                    field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'date':
-                case 'timestamp':
-                    var template = $('#inputDateTemplate').clone();
-                    field = template.find('input');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.data("datepicker").setDate(defaultVal);
-                    }
-
-                    break;
-                case 'boolean':
-                    var template = $('#booleanFieldTemplate').clone();
-                    field = template.find("input");
-                    template.find('.active').removeClass("active");
-                    if (defaultVal == 1 || defaultVal == 0) {
-                        template.find('[value="'+defaultVal+'"]').parent().addClass("active");
-                        template.find('[value="'+defaultVal+'"]').prop("checked", "checked");
-                    } else {
-                        template.find('[value=""]').parent().addClass("active");
-                        template.find('[value=""]').prop("checked", "checked");
-                    }
-                    break;
-
-                case 'array':
-                case 'object':
-                default:
-                    console.log("Type "+type+" of field "+name+" is not managed");
-                    return;
-                    break;
-            }
             return field;
         },
 
+        addNumberInput : function(descriptionField) {
+            var field = Metadata.addTextInput(descriptionField);
+            field.attr('type', 'number').attr('placeholder', $('#number_text').text());
+
+            return field;
+        },
+
+        addDateInput : function(descriptionField) {
+            var field = Metadata.addTextInput(descriptionField);
+            field.attr('placeholder', $('#date_text').text());
+            field.datepicker(DatePickerParams);
+
+            return field;
+        },
+
+        addTextArea : function(descriptionField) {
+            var field = $('#textareaFieldTemplate').clone();
+            field.removeAttr('id');
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
+            }
+
+            return field;
+        },
+
+        addRadioInput : function(descriptionField) {
+            var field = $('#booleanFieldTemplate').clone();
+            field.removeAttr('id');
+            field.find('.active').removeClass("active");
+
+            if (descriptionField.default == 1 || descriptionField.default == 0) {
+                formGroup.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
+                formGroup.find('[value="'+descriptionField.default+'"]').prop("checked", "checked");
+            } else {
+                formGroup.find('[value=""]').parent().addClass("active");
+                formGroup.find('[value=""]').prop("checked", "checked");
+            }
+        },
+
+        addSelect : function(descriptionField) {
+            var field = $('#selectFieldTemplate').clone();            
+            field.removeAttr('id');
+            
+            $.each(descriptionField.enumeration, function (index, value) {
+                field.append($('<option>', {
+                    value: value,
+                    text: value
+                }));
+            });
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
+            }
+
+            return field;
+        },
+
+        addObjectDiv : function(descriptionField) {
+            var div = $("#objectFieldTemplate").clone();
+            div.removeAttr('id');
+            
+            aleaID = guid()
+            div.find("#accordion").find('.panel-collapse').attr("id", aleaID);
+            div.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
+            
+            var propertyList = div.find($('#objectProperties'));
+            propertyList.removeAttr('id');
+            
+            field = div.find("input").first();
+            div.find("h4").find("a").text(descriptionField.label);
+            $.each(descriptionField.properties, function() {
+                field = Metadata.addField(this);
+                propertyList.append($("<li class='col-md-12'></li>").append(field));
+            });
+
+            return div;
+        },
+
+        addArrayDiv : function(descriptionField) {
+            var div = $('#arrayFieldTemplate').clone();
+            div.removeAttr('id');
+            var itemList = div.find("#arrayItems");
+            itemList.removeAttr('id');
+
+            var rowAddBtn = div.find("#rowAddBtn");
+            rowAddBtn.removeAttr('id');
+            var addButton = rowAddBtn.find("button").attr("data-rowtype", descriptionField.itemType);
+            rowAddBtn.removeClass("hidden");
+
+
+            switch (descriptionField.itemType) {
+                case 'text':
+                case 'string':
+                    var field = Metadata.addTextArea(descriptionField);
+                    break;
+                    
+                case 'name':
+                    if (descriptionField.enumeration) {
+                        var field = Metadata.addSelect(descriptionField);      
+                    } else {
+                        var field = Metadata.addTextInput(descriptionField);                   
+                    }
+                    break;
+
+                case 'number':
+                    var field = Metadata.addNumberInput(descriptionField);
+                    break;
+
+                case 'date':
+                case 'timestamp':
+                    var field = Metadata.addDateInput(descriptionField);
+                    break;
+
+                case 'boolean':
+                    var field = Metadata.addRadioInput(descriptionField);
+                    break;
+
+                default:
+                    if ($.isPlainObject(descriptionField.itemType)) {
+                        addButton.attr("data-rowtype", descriptionField.itemType.type);
+                        switch (descriptionField.itemType.type) {
+                            case 'object' :
+                                var field = Metadata.addObjectDiv(descriptionField.itemType);
+                                break;
+                            case 'array' :
+                                var field = Metadata.addArrayDiv(descriptionField.itemType);
+                                break;
+                        }
+                    } else {
+                        console.log("Type "+descriptionField.itemType+" of field "+descriptionField.name+" is not managed");
+                        return;
+                    }
+            }
+
+            itemList.append($("<li class='input-group col-md-12'></li>").append(field));
+            
+            div.find("input").first().attr("id", name);
+
+            return div;
+        },
+
         addRowField : function(source) {
-            var target = source.parent().siblings("#arrayFields");
+            var target = source.parent().siblings("#arrayItems");
             var type = source.attr('data-rowtype');
 
-            if (type == "[object Object]") {
-                type = "object";
+            if (type == "object") {
 
                 objectNumber = (target.find("[data-rowValue]").length) + 1 ;
 
@@ -594,7 +530,7 @@ li > input, #headingOne > h4, #headingOne > span {
                         .addClass('input-sm')
                         .attr("data-rowValue", valueInput)
                         .addClass("hidden"));
-                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + ' readonly"><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
+                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + '"readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
                     row.appendTo(target);
                 }
             }
@@ -624,6 +560,50 @@ li > input, #headingOne > h4, #headingOne > span {
             var templateRow = target.find('#objectPropertie').clone();
 
             switch (type) {
+                case 'object':
+                    template = $("#objectFieldTemplate").clone();
+                    aleaID = guid()
+                    template.find("#accordion").find('.panel-collapse').attr("id", aleaID);
+                    template.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
+                
+                    field = template.find("input").first();
+                    $.each(source.properties, function() {
+                        Metadata.addObjectField(template, this);
+                    });
+                    break;
+                case 'array':
+                    var itemType = descriptionField.itemType;
+                    template = $('#arrayFieldTemplate').clone();
+
+                    if ($.isPlainObject(itemType)) {
+                        field = template.find("#arrayItems");
+                        underTemplate = $("#objectFieldTemplate").clone();
+                        aleaID = guid();
+                        underTemplate.find("#accordion").find('.panel-collapse').attr("id", aleaID);
+                        underTemplate.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
+                
+                        underTemplate.find('.col-md-9')
+                                     .removeClass('col-md-9')
+                                     .addClass('col-md-12');
+                        $(underTemplate).children("label").remove();
+                        $.each(itemType.properties, function() {
+                            Metadata.addObjectField(underTemplate, this);
+                        });
+                        field.append($("<li class='input-group col-md-12'></li>").append(underTemplate));
+
+                    } else {
+                        field = Metadata.addFieldNew(source);
+                        field.addClass("arrayInput");
+                        template.find("#arrayItems").append($("<li class='input-group col-md-12'></li>").append(field));
+                    }
+                    field = template.find("input").first();
+                    addButton = template.find("#rowAddBtn");
+                    addButton.find("button").attr("data-rowtype", itemType);
+                    addButton.removeClass("hidden");
+
+                    template.find("input").first().attr("id", name);
+
+                    break;
                 case 'text':
                 case 'string':
                     template = $('#textareaFieldTemplate').clone();
@@ -747,7 +727,7 @@ li > input, #headingOne > h4, #headingOne > span {
         },
 
         removeRowArray : function(source) {
-            target = source.closest("#arrayFields");
+            target = source.closest("#arrayItems");
             source.closest('li').remove();
             target.siblings("input").first().val(Metadata.serializeArrayFields(target));
         },
@@ -766,7 +746,7 @@ li > input, #headingOne > h4, #headingOne > span {
             var descriptionObject = {};
 
             $.each(inputsArchivalProfile, function() {
-                if(!$(this).closest("#arrayFields").length > 0 && !$(this).closest("#objectFields").length > 0) {
+                if(!$(this).closest("#arrayItems").length > 0 && !$(this).closest("#objectProperties").length > 0) {
                     Metadata.serializeField($(this), descriptionObject);
                 }
             });
@@ -843,7 +823,7 @@ li > input, #headingOne > h4, #headingOne > span {
 
         serializeObject : function(input) {
             var object = new Object;
-            var properties = $(input).siblings("#objectFields").find(".propertie").find('input, textarea, select');
+            var properties = $(input).siblings("#objectProperties").find(".propertie").find('input, textarea, select');
             $.each(properties, function() {
                 Metadata.serializeField($(this), object);
             })
@@ -923,7 +903,7 @@ li > input, #headingOne > h4, #headingOne > span {
                             input = target.find("[name="+property+"]");
                         }
                         Metadata.checkAndFill(value, input)
-    }
+                    }
                 })
             } else if ($.isArray(data)){
                 $.each(data, function(index, item) {
@@ -935,7 +915,7 @@ li > input, #headingOne > h4, #headingOne > span {
         },
 
         addRowFieldWithData : function(data, source) {
-            var target = source.find("#arrayFields");
+            var target = source.find("#arrayItems");
             var type = source.find(".addRowArray").attr('data-rowtype');
 
             if (type == "[object Object]") {
