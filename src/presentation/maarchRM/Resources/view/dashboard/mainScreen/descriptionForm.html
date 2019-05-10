@@ -59,37 +59,6 @@
     </div>
 
     <div data-translate-catalog="documentManagement/documentMetadata">
-        <!-- INPUT GROUP -->
-        <div class="form-group" id="formGroupTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-            </div>
-        </div>
-        
-        <!-- TEXT FIELD TEMPLATE -->
-        <input id="inputFieldTemplate" type="text" class="form-control input-sm"/>
-
-        <!-- TEXTAREA FIELD TEMPLATE -->
-        <textarea  id="textareaFieldTemplate" class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;"></textarea>
-
-        <!-- SELECT FIELD TEMPLATE -->
-        <select id="selectFieldTemplate" class="form-control input-sm">
-            <option value=""></option>
-        </select>
-
-        <!-- BOOLEAN FIELD TEMPLATE -->
-        <div id="booleanFieldTemplate" class="btn-group" data-toggle="buttons">
-            <label class="btn btn-default">
-                <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
-            </label>
-            <label class="btn btn-default active">
-                <input type="radio" name="defaultValue" autocomplete="off" value="">&nbsp;
-            </label>
-            <label class="btn btn-default">
-                <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
-            </label>
-        </div>
-
         <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
         <div class="form-group" id="customTextareaFieldTemplate">
             <div class="col-md-3">
@@ -100,45 +69,6 @@
                 <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
             </div>
         </div>
-
-        <!-- CUSTOM OBJECT FIELD V2 -->
-        <div id="objectFieldTemplate"  class="col-md-9" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default" style="margin-bottom:0px;">
-                <div class="panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Add an object
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-body">
-                        <div class="col-md-9">
-                            <input class="hide" name="objectMetadata" type="text" data-type="object" value=''>
-                            <ul id="objectProperties" class="col-md-12">
-                                <li id="objectPropertie" class="hidden"></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CUSTOM ARRAY FIELD V2 -->
-        <div id="arrayFieldTemplate">
-            <input class="hide" name="arrayMetadata" type="text" data-type="array" value=''>
-            <div id="rowAddBtn" class="dropup hidden">
-                <button type="button" class="addRowArray btn btn-sm btn-default btn-success pull-left" title="Add data">
-                    &nbsp;<i class="fa fa-plus">&nbsp;</i>
-                </button>
-            </div>
-            <ul id="arrayItems">
-            </ul>
-        </div>
-
-
-        <!-- REQUIRED FIELD TEMPLATE -->
-        <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
     </div>
 </div>
 
@@ -163,11 +93,7 @@ ul {
 li > input, #headingOne > h4, #headingOne > span {
     display: inline-block;
 }
-#headerObjectTable{
-    float:right;
-    width:27px;
-    margin-top:-7px;
-}
+
 #arrayItems > .input-group > .form-group{
     margin-bottom:0px; 
 }
@@ -186,10 +112,10 @@ li > input, #headingOne > h4, #headingOne > span {
 
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
-        Metadata.addRowField($(this));
+        Metadata.addArrayItem($(this));
         // source = $(this).parent().parent();
         // data = Metadata.serializeObject(source.find("[name='objectMetadata']"));
-        // Metadata.addRowFieldWithData(data, source);
+        // Metadata.addArrayItemWithData(data, source);
     });
 
     $('#allFields').on('click', '.removeRowArray', function(e) {
@@ -263,53 +189,52 @@ li > input, #headingOne > h4, #headingOne > span {
     var Metadata = {
         flagEmptyRequiredField : false,
         flagEmptyCustomField : false,
+        fields : [],
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
             var target = $("#archivalProfileFields");
-            var field = Metadata.addField(descriptionField);
+            var field = Metadata.getField(descriptionField);
+            Metadata.fields.push(field);
             target.append(field);            
         },
 
-        addField: function(descriptionField) {
-            var formGroup = $('#formGroupTemplate').clone();
-            formGroup.removeAttr('id');
-            formGroup.find("label:first").text(descriptionField.label);
-            formGroup.find("label:first").attr("id", descriptionField.name);
-            
+        getField: function(descriptionField) {
+            var formGroup = $('<div class="form-group" />');
+            var label = $('<label class="col-md-3 small control-label" />').text(descriptionField.label);
+            formGroup.append(label);
+            var div = $('<div class="col-md-9" />');
+            formGroup.append(div);
+
             switch (descriptionField.type) {
                 case 'array':
-                    var field = Metadata.addArrayDiv(descriptionField);
+                    var field = Metadata.getArrayDiv(descriptionField);
                     break;
 
                 case 'object':
-                    var field = Metadata.addObjectDiv(descriptionField);
+                    var field = Metadata.getObjectDiv(descriptionField);
                     break;
 
                 case 'text':
                 case 'string':
-                    var field = Metadata.addTextArea(descriptionField);
+                    var field = Metadata.getTextArea(descriptionField);
                     break;
                     
                 case 'name':
-                    if (descriptionField.enumeration) {
-                        var field = Metadata.addSelect(descriptionField);      
-                    } else {
-                        var field = Metadata.addTextInput(descriptionField);                   
-                    }
+                    var field = Metadata.getKeywordInput(descriptionField);
                     break;
 
                 case 'number':
-                    var field = Metadata.addNumberInput(descriptionField);
+                    var field = Metadata.getNumberInput(descriptionField);
                     break;
 
                 case 'date':
                 case 'timestamp':
-                    var field = Metadata.addDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField);
                     break;
 
                 case 'boolean':
-                    var field = Metadata.addRadioInput(descriptionField);
+                    var field = Metadata.getRadioInput(descriptionField);
                     break;
 
                 default:
@@ -317,20 +242,20 @@ li > input, #headingOne > h4, #headingOne > span {
                     return;
             }
 
-            formGroup.children('div').append(field);
             field.attr('name', descriptionField.name).attr('data-type', descriptionField.type);
 
+            div.append(field);
+            
             if (descriptionField.required) {
-                $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(formGroup.find("label:first"));
-                field.attr("data-required", required);
+                label.append($('<span style="color: red"">&nbsp;*</span>'));
+                field.attr("data-required", descriptionField.required);
             }
 
             return formGroup;
         },
 
-        addTextInput : function (descriptionField) {
-            var field = $('#inputFieldTemplate').clone();
-            field.removeAttr('id');
+        getTextInput : function (descriptionField) {
+            var field = $('<input type="text" class="form-control input-sm"/>');
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
             }
@@ -338,24 +263,31 @@ li > input, #headingOne > h4, #headingOne > span {
             return field;
         },
 
-        addNumberInput : function(descriptionField) {
-            var field = Metadata.addTextInput(descriptionField);
+        getKeywordInput : function (descriptionField) {
+            if (descriptionField.enumeration) {
+                return Metadata.getSelect(descriptionField);      
+            } else {
+                return Metadata.getTextInput(descriptionField);                   
+            }
+        },
+
+        getNumberInput : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
             field.attr('type', 'number').attr('placeholder', $('#number_text').text());
 
             return field;
         },
 
-        addDateInput : function(descriptionField) {
-            var field = Metadata.addTextInput(descriptionField);
+        getDateInput : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
             field.attr('placeholder', $('#date_text').text());
             field.datepicker(DatePickerParams);
 
             return field;
         },
 
-        addTextArea : function(descriptionField) {
-            var field = $('#textareaFieldTemplate').clone();
-            field.removeAttr('id');
+        getTextArea : function(descriptionField) {
+            var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
             }
@@ -363,24 +295,34 @@ li > input, #headingOne > h4, #headingOne > span {
             return field;
         },
 
-        addRadioInput : function(descriptionField) {
-            var field = $('#booleanFieldTemplate').clone();
-            field.removeAttr('id');
-            field.find('.active').removeClass("active");
+        getRadioInput : function(descriptionField) {
+            var field = $('<div class="btn-group" data-toggle="buttons"/>');
+            var falseGroup = $('<label class="btn btn-default"/>');
+            falseGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="0">')
+                      .append($('<i class="fa fa-times" />'));
+            field.append(falseGroup);
+
+            var nullGroup = $('<label class="btn btn-default active"/>');
+            nullGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="">');
+            field.append(nullGroup);
+
+            var trueGroup = $('<label class="btn btn-default"/>');
+            trueGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="1">')
+                     .append($('<i class="fa fa-check" />'));
+            field.append(trueGroup);
 
             if (descriptionField.default == 1 || descriptionField.default == 0) {
+                formGroup.find('[value=""]').parent().removeClass("active");
                 formGroup.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
-                formGroup.find('[value="'+descriptionField.default+'"]').prop("checked", "checked");
-            } else {
-                formGroup.find('[value=""]').parent().addClass("active");
-                formGroup.find('[value=""]').prop("checked", "checked");
+                formGroup.find('[value="'+descriptionField.default+'"]').prop("checked", "checked"); 
             }
+
+            return field;
         },
 
-        addSelect : function(descriptionField) {
-            var field = $('#selectFieldTemplate').clone();            
-            field.removeAttr('id');
-            
+        getSelect : function(descriptionField) {
+            var field = $('<select class="form-control input-sm"><option value="" /></select>')            
+           
             $.each(descriptionField.enumeration, function (index, value) {
                 field.append($('<option>', {
                     value: value,
@@ -394,75 +336,105 @@ li > input, #headingOne > h4, #headingOne > span {
             return field;
         },
 
-        addObjectDiv : function(descriptionField) {
-            var div = $("#objectFieldTemplate").clone();
-            div.removeAttr('id');
+        getObjectDiv : function(descriptionField) {
+            id = guid();
+            var div = $('<div class="panel panel-default" style="margin-bottom:0px;">');
+            div.fields = [];
+
+            var heading = $('<div class="panel-heading"/>');
+            div.append(heading);
+
+            var title = $('<h4 class="panel-title"/>');
+            heading.append(title);
+
+            var anchor = $('<a role="button" data-toggle="collapse" aria-expanded="true"/>');
+            anchor.attr('href', "#"+id);
+            anchor.text('Add');
+            title.append(anchor);
+
+            var collapse = $('<div class="panel-collapse collapse in">').attr('id', id);
+            div.append(collapse);
+
+            var panelBody = $('<div class="panel-body">');
+            collapse.append(panelBody);
+
+            var input = $('<input class="hide" type="text" data-type="object" value="">');
+            panelBody.append(input);
             
-            aleaID = guid()
-            div.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-            div.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-            
-            var propertyList = div.find($('#objectProperties'));
-            propertyList.removeAttr('id');
-            
-            field = div.find("input").first();
-            div.find("h4").find("a").text(descriptionField.label);
+            var propertyList = $('<ul>');
+            panelBody.append(propertyList);
+           
             $.each(descriptionField.properties, function() {
-                field = Metadata.addField(this);
-                propertyList.append($("<li class='col-md-12'></li>").append(field));
+                field = Metadata.getField(this);
+                div.fields.push(field);
+                propertyList.append($("<li class='col-sm-12'></li>").append(field));
             });
 
             return div;
         },
 
-        addArrayDiv : function(descriptionField) {
-            var div = $('#arrayFieldTemplate').clone();
-            div.removeAttr('id');
-            var itemList = div.find("#arrayItems");
-            itemList.removeAttr('id');
+        getArrayDiv : function(descriptionField) {
+            var div = $('<div>');
+            div.items = [];
 
-            var rowAddBtn = div.find("#rowAddBtn");
-            rowAddBtn.removeAttr('id');
-            var addButton = rowAddBtn.find("button").attr("data-rowtype", descriptionField.itemType);
-            rowAddBtn.removeClass("hidden");
+            var input = $('<input class="hide" type="text" data-type="array" value="">');
+            div.append(input);
 
+            var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-left" title="Add data">&nbsp;<i class="fa fa-plus">&nbsp;</i></button>');
+            addButton.attr("data-rowtype", descriptionField.itemType);
+            if (descriptionField.itemType.type) {
+                addButton.attr("data-rowtype", descriptionField.itemType.type)
+            }
+
+            div.append(addButton);
+
+            var itemList = $('<ul>');
+            div.append(itemList);
+            addButton.data('itemlist', itemList);
+            addButton.data('description', descriptionField);
+            
+            var item = Metadata.getArrayItem(descriptionField);
+
+            itemList.append(item);           
+
+            return div;
+        },
+
+        getArrayItem : function(descriptionField)
+        {
+            var item = $('<li class="input-group col-sm-12">');
 
             switch (descriptionField.itemType) {
                 case 'text':
                 case 'string':
-                    var field = Metadata.addTextArea(descriptionField);
+                    var field = Metadata.getTextArea(descriptionField);
                     break;
                     
                 case 'name':
-                    if (descriptionField.enumeration) {
-                        var field = Metadata.addSelect(descriptionField);      
-                    } else {
-                        var field = Metadata.addTextInput(descriptionField);                   
-                    }
+                    var field = Metadata.getKeywordInput(descriptionField);
                     break;
 
                 case 'number':
-                    var field = Metadata.addNumberInput(descriptionField);
+                    var field = Metadata.getNumberInput(descriptionField);
                     break;
 
                 case 'date':
                 case 'timestamp':
-                    var field = Metadata.addDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField);
                     break;
 
                 case 'boolean':
-                    var field = Metadata.addRadioInput(descriptionField);
+                    var field = Metadata.getRadioInput(descriptionField);
                     break;
 
                 default:
                     if ($.isPlainObject(descriptionField.itemType)) {
-                        addButton.attr("data-rowtype", descriptionField.itemType.type);
                         switch (descriptionField.itemType.type) {
                             case 'object' :
-                                var field = Metadata.addObjectDiv(descriptionField.itemType);
+                                var field = Metadata.getObjectDiv(descriptionField.itemType);
                                 break;
                             case 'array' :
-                                var field = Metadata.addArrayDiv(descriptionField.itemType);
+                                var field = Metadata.getArrayDiv(descriptionField.itemType);
                                 break;
                         }
                     } else {
@@ -471,70 +443,26 @@ li > input, #headingOne > h4, #headingOne > span {
                     }
             }
 
-            itemList.append($("<li class='input-group col-md-12'></li>").append(field));
-            
-            div.find("input").first().attr("id", name);
+            item.append(field);
 
-            return div;
+            return item;
         },
 
-        addRowField : function(source) {
-            var target = source.parent().siblings("#arrayItems");
-            var type = source.attr('data-rowtype');
+        addArrayItem : function(button) {
+            var itemList = button.data('itemlist');
+            var descriptionField = button.data('description');
 
-            if (type == "object") {
+            var index = itemList.children("li").length;
 
-                objectNumber = (target.find("[data-rowValue]").length) + 1 ;
+            var current = itemList.children("li").first();
+            current.find('a').first().text('#'+index);
+            current.find('.panel-collapse').first().removeClass('in');
+            current.parent().append(current);
 
-                // GET the Input Value
-                var valueInput = JSON.stringify(Metadata.serializeObject(target.find("[name='objectMetadata']")));
-                var valueToDisplay = target.find(".propertie").find("input, textarea, select").first().val();
+            var div = Metadata.getArrayItem(descriptionField);
+            itemList.prepend(div);
 
-                var aleaID = guid();
-                var toAdd = target.find("#objectFieldTemplate").clone();
-
-                if (valueToDisplay != "") {
-                    toAdd.find("li").removeClass("propertie");
-                    toAdd.find("h4").children("a").text("Objet n°"+objectNumber);
-                    // toAdd.find("input, textarea, selct").prop("readonly", true);
-                    toAdd.removeAttr("id");
-                    toAdd.find("#accordion").find('.panel-collapse').attr("id", aleaID).removeClass("in");
-                    toAdd.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID).addClass("collapsed");
-                    toAdd.find("#headingOne").append('<span id="headerObjectTable"><a href="#" class="btn btn-default removeRowArray" title="Supprimer l\'objet"><i class="fa fa-times text-danger"></i></a></span>')
-                    
-                    target.append($("<li class='input-group col-md-12'></li>").append(toAdd));
-
-                    toAdd.find("#accordion")
-                         .attr("data-rowValue", valueInput);
-
-                    // Delete the input value
-                    target.find("#objectFieldTemplate").find("input, textarea, select").not("[data-type=boolean]").val("");
-                    target.find("#objectFieldTemplate").find("[data-type=boolean]").parent().siblings("label").removeClass("active");
-                    target.find("#objectFieldTemplate").find('[data-type=boolean][value=""]').parent().addClass("active");
-                }
-
-            } else {
-                
-                // GET the Input Value
-                var valueInput = target.find('.arrayInput').val();
-                var valueToDisplay = valueInput;
-
-                // Delete the input value
-                target.find('.arrayInput').val("");
-
-                if (valueToDisplay != "") {
-
-                    var row = $('<li class="input-group"></li>');
-                    row.append($("<input>")
-                        .addClass('form-control')
-                        .addClass('input-sm')
-                        .attr("data-rowValue", valueInput)
-                        .addClass("hidden"));
-                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + '"readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
-                    row.appendTo(target);
-                }
-            }
-            target.siblings("input").first().val(Metadata.serializeArrayFields(target));
+            itemList.siblings("input").first().val(Metadata.serializeArrayFields(itemList));
         },
 
         serializeArrayFields : function(target) {
@@ -547,141 +475,6 @@ li > input, #headingOne > h4, #headingOne > span {
             var data = tabValue;
 
             return JSON.stringify(data);
-        },
-
-        addObjectField : function(target, source) {
-            var defaultVal = source.default;
-            var enumeration = source.enumeration;
-            var label = source.label;
-            var name = source.name;
-            var required = source.required;
-            var origin = source.origin;
-            var type = source.type;
-            var templateRow = target.find('#objectPropertie').clone();
-
-            switch (type) {
-                case 'object':
-                    template = $("#objectFieldTemplate").clone();
-                    aleaID = guid()
-                    template.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-                    template.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-                
-                    field = template.find("input").first();
-                    $.each(source.properties, function() {
-                        Metadata.addObjectField(template, this);
-                    });
-                    break;
-                case 'array':
-                    var itemType = descriptionField.itemType;
-                    template = $('#arrayFieldTemplate').clone();
-
-                    if ($.isPlainObject(itemType)) {
-                        field = template.find("#arrayItems");
-                        underTemplate = $("#objectFieldTemplate").clone();
-                        aleaID = guid();
-                        underTemplate.find("#accordion").find('.panel-collapse').attr("id", aleaID);
-                        underTemplate.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID);
-                
-                        underTemplate.find('.col-md-9')
-                                     .removeClass('col-md-9')
-                                     .addClass('col-md-12');
-                        $(underTemplate).children("label").remove();
-                        $.each(itemType.properties, function() {
-                            Metadata.addObjectField(underTemplate, this);
-                        });
-                        field.append($("<li class='input-group col-md-12'></li>").append(underTemplate));
-
-                    } else {
-                        field = Metadata.addFieldNew(source);
-                        field.addClass("arrayInput");
-                        template.find("#arrayItems").append($("<li class='input-group col-md-12'></li>").append(field));
-                    }
-                    field = template.find("input").first();
-                    addButton = template.find("#rowAddBtn");
-                    addButton.find("button").attr("data-rowtype", itemType);
-                    addButton.removeClass("hidden");
-
-                    template.find("input").first().attr("id", name);
-
-                    break;
-                case 'text':
-                case 'string':
-                    template = $('#textareaFieldTemplate').clone();
-                    field = template.find('textarea');
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'name':
-                    if (source.enumeration) {
-                        template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
-                        field.attr('id', name);
-
-                        $.each(source.enumeration, function (index, value) {
-                            field.append($('<option>', {
-                                value: value,
-                                text: value
-                            }));
-                        });
-                        field.val(defaultVal);
-                    } else {
-                        var template = $('#inputFieldTemplate').clone();
-                        field = template.find('input');
-                        if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                            field.val(defaultVal);
-                        }
-                    }
-                    break;
-                case 'number':
-                    var template = $('#inputFieldTemplate').clone();
-                    field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'date':
-                case 'timestamp':
-                    var template = $('#inputDateTemplate').clone();
-                    field = template.find('input');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.data("datepicker").setDate(defaultVal);
-                    }
-
-                    break;
-                case 'boolean':
-                    var template = $('#booleanFieldTemplate').clone();
-                    field = template.find("input");
-                    template.find('.active').removeClass("active");
-                    if (defaultVal == 1 || defaultVal == 0) {
-                        template.find('[value="'+defaultVal+'"]').parent().addClass("active");
-                        template.find('[value="'+defaultVal+'"]').prop("checked", "checked");
-                    } else {
-                        template.find('[value=""]').parent().addClass("active");
-                        template.find('[value=""]').prop("checked", "checked");
-                    }
-                    break;
-            }
-            template.find('.control-label')
-                        .removeClass('col-md-3')
-                        .addClass('col-md-2');
-            template.find('.col-md-9')
-                        .removeClass('col-md-9')
-                        .addClass('col-md-10');
-            template.find("label:first").text(label);
-            template.removeAttr('id')
-
-            templateRow.removeClass("hidden");
-            templateRow.removeAttr('id')
-            templateRow.addClass("propertie");
-
-            field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
-            template.appendTo(templateRow);
-            templateRow.appendTo(target.find("ul"));
-            return templateRow;
         },
 
         addCustomField : function(source) {
@@ -907,14 +700,14 @@ li > input, #headingOne > h4, #headingOne > span {
                 })
             } else if ($.isArray(data)){
                 $.each(data, function(index, item) {
-                    Metadata.addRowFieldWithData(item, target.parent());
+                    Metadata.addArrayItemWithData(item, target.parent());
                 })
             } else {
                 target.val(data);
             }
         },
 
-        addRowFieldWithData : function(data, source) {
+        addArrayItemWithData : function(data, source) {
             var target = source.find("#arrayItems");
             var type = source.find(".addRowArray").attr('data-rowtype');
 
@@ -935,7 +728,7 @@ li > input, #headingOne > h4, #headingOne > span {
                 toAdd.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID).addClass("collapsed");
                 toAdd.find("#headingOne").append('<a href="#" class="btn btn-default removeRowArray pull-right"><i class="fa fa-times text-danger"></i></a>')
                 
-                target.append($("<li class='input-group col-md-12'></li>").append(toAdd));
+                target.append($("<li class='input-group col-sm-12'></li>").append(toAdd));
 
                 toAdd.find("#accordion")
                         .attr("data-rowValue", valueInput);
