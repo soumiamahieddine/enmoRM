@@ -57,19 +57,6 @@
         <span id="retentionRuleCodeMissing_error">The retention rule is missing.</span>
         <span id="documentMissing_error">You must deposit at least one document.</span>
     </div>
-
-    <div data-translate-catalog="documentManagement/documentMetadata">
-        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
-        <div class="form-group" id="customTextareaFieldTemplate">
-            <div class="col-md-3">
-                <input type="text" class="form-control input-sm name" placeholder="Label"/>
-            </div>
-            <div class="input-group">
-                <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
-                <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
-            </div>
-        </div>
-    </div>
 </div>
 
 <span  id="addBtnTpl" class="input-group-btn hide">
@@ -112,10 +99,7 @@ li > input, #headingOne > h4, #headingOne > span {
 
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
-        Metadata.addArrayItem($(this));
-        // source = $(this).parent().parent();
-        // data = Metadata.serializeObject(source.find("[name='objectMetadata']"));
-        // Metadata.addArrayItemWithData(data, source);
+        Metadata.addArrayItem($(this).parent());
     });
 
     $('#allFields').on('click', '.removeRowArray', function(e) {
@@ -189,17 +173,15 @@ li > input, #headingOne > h4, #headingOne > span {
     var Metadata = {
         flagEmptyRequiredField : false,
         flagEmptyCustomField : false,
-        fields : [],
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
             var target = $("#archivalProfileFields");
-            var field = Metadata.getField(descriptionField);
-            Metadata.fields.push(field);
-            target.append(field);            
+            var formGroup = Metadata.getFormGroup(descriptionField);
+            target.append(formGroup);            
         },
 
-        getField: function(descriptionField) {
+        getFormGroup: function(descriptionField) {
             var formGroup = $('<div class="form-group" />');
             var label = $('<label class="col-md-3 small control-label" />').text(descriptionField.label);
             formGroup.append(label);
@@ -217,7 +199,7 @@ li > input, #headingOne > h4, #headingOne > span {
 
                 case 'text':
                 case 'string':
-                    var field = Metadata.getTextArea(descriptionField);
+                    var field = Metadata.getTextInput(descriptionField);
                     break;
                     
                 case 'name':
@@ -242,7 +224,8 @@ li > input, #headingOne > h4, #headingOne > span {
                     return;
             }
 
-            field.attr('name', descriptionField.name).attr('data-type', descriptionField.type);
+            formGroup.attr('name', descriptionField.name).attr('data-type', descriptionField.type);
+            formGroup.data('description', descriptionField);
 
             div.append(field);
             
@@ -250,6 +233,8 @@ li > input, #headingOne > h4, #headingOne > span {
                 label.append($('<span style="color: red"">&nbsp;*</span>'));
                 field.attr("data-required", descriptionField.required);
             }
+
+            formGroup.data('field', field);
 
             return formGroup;
         },
@@ -259,6 +244,10 @@ li > input, #headingOne > h4, #headingOne > span {
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
             }
+
+            field.getValue = function() {
+                return this.val();
+            };
 
             return field;
         },
@@ -292,6 +281,10 @@ li > input, #headingOne > h4, #headingOne > span {
                 field.val(descriptionField.default);
             }
 
+            field.getValue = function() {
+                return $.trim(this.val());
+            };
+
             return field;
         },
 
@@ -312,10 +305,14 @@ li > input, #headingOne > h4, #headingOne > span {
             field.append(trueGroup);
 
             if (descriptionField.default == 1 || descriptionField.default == 0) {
-                formGroup.find('[value=""]').parent().removeClass("active");
-                formGroup.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
-                formGroup.find('[value="'+descriptionField.default+'"]').prop("checked", "checked"); 
+                field.find('[value=""]').parent().removeClass("active");
+                field.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
+                field.find('[value="'+descriptionField.default+'"]').prop("checked", "checked"); 
             }
+
+            field.getValue = function() {
+                return this.find('.active').val();
+            };
 
             return field;
         },
@@ -333,13 +330,16 @@ li > input, #headingOne > h4, #headingOne > span {
                 field.val(descriptionField.default);
             }
 
+            field.getValue = function() {
+                return $.trim(this.val());
+            };
+
             return field;
         },
 
         getObjectDiv : function(descriptionField) {
             id = guid();
             var div = $('<div class="panel panel-default" style="margin-bottom:0px;">');
-            div.fields = [];
 
             var heading = $('<div class="panel-heading"/>');
             div.append(heading);
@@ -349,7 +349,7 @@ li > input, #headingOne > h4, #headingOne > span {
 
             var anchor = $('<a role="button" data-toggle="collapse" aria-expanded="true"/>');
             anchor.attr('href', "#"+id);
-            anchor.text('Add');
+            anchor.text('#');
             title.append(anchor);
 
             var collapse = $('<div class="panel-collapse collapse in">').attr('id', id);
@@ -365,37 +365,81 @@ li > input, #headingOne > h4, #headingOne > span {
             panelBody.append(propertyList);
            
             $.each(descriptionField.properties, function() {
-                field = Metadata.getField(this);
-                div.fields.push(field);
-                propertyList.append($("<li class='col-sm-12'></li>").append(field));
+                formGroup = Metadata.getFormGroup(this);
+
+                item = $("<li class='col-sm-12'></li>");
+                item.append(formGroup);
+
+                item.data('formgroup', formGroup);
+                item.data('field', formGroup.data('field'));
+
+                propertyList.append(item);
             });
+
+            div.data('propertyList', propertyList);
+
+            div.getValue = function() {
+                var object = {};
+                var properties = this.data('propertyList').children('li');
+                
+                $.each(properties, function() {
+                    var field = $(this).data('field');
+                    var name = $(this).data('formgroup').attr('name');
+                    var value = field.getValue();
+                    if (value) {
+                        object[name] = value;
+                    }
+                });
+
+                if (Object.keys(object).length) {
+                    return object;
+                }
+            };
 
             return div;
         },
 
         getArrayDiv : function(descriptionField) {
             var div = $('<div>');
-            div.items = [];
+
+            div.attr("data-itemtype", descriptionField.itemType);
+            if (descriptionField.itemType.type) {
+                div.attr("data-itemtype", descriptionField.itemType.type)
+            }
 
             var input = $('<input class="hide" type="text" data-type="array" value="">');
             div.append(input);
 
             var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-left" title="Add data">&nbsp;<i class="fa fa-plus">&nbsp;</i></button>');
-            addButton.attr("data-rowtype", descriptionField.itemType);
-            if (descriptionField.itemType.type) {
-                addButton.attr("data-rowtype", descriptionField.itemType.type)
-            }
-
             div.append(addButton);
 
             var itemList = $('<ul>');
             div.append(itemList);
-            addButton.data('itemlist', itemList);
-            addButton.data('description', descriptionField);
+            div.data('itemlist', itemList);
+            div.data('item-description', descriptionField.itemtype);
+            div.data('description', descriptionField);
             
             var item = Metadata.getArrayItem(descriptionField);
 
-            itemList.append(item);           
+            itemList.append(item); 
+            div.data('itemlist', itemList);
+
+            div.getValue = function() {
+                var values = [];
+                var items = this.data('itemlist').children('li');
+                
+                $.each(items, function() {
+                    var field = $(this).data('field');
+                    var value = field.getValue();
+                    if (value) {
+                        values.push(value);
+                    }
+                });
+
+                if (values.length) {
+                    return values;
+                }
+            };
 
             return div;
         },
@@ -407,7 +451,7 @@ li > input, #headingOne > h4, #headingOne > span {
             switch (descriptionField.itemType) {
                 case 'text':
                 case 'string':
-                    var field = Metadata.getTextArea(descriptionField);
+                    var field = Metadata.getTextInput(descriptionField);
                     break;
                     
                 case 'name':
@@ -443,14 +487,16 @@ li > input, #headingOne > h4, #headingOne > span {
                     }
             }
 
+            item.data('field', field);
+
             item.append(field);
 
             return item;
         },
 
-        addArrayItem : function(button) {
-            var itemList = button.data('itemlist');
-            var descriptionField = button.data('description');
+        addArrayItem : function(arrayDiv) {
+            var itemList = arrayDiv.data('itemlist');
+            var descriptionField = arrayDiv.data('description');
 
             var index = itemList.children("li").length;
 
@@ -465,64 +511,35 @@ li > input, #headingOne > h4, #headingOne > span {
             itemList.siblings("input").first().val(Metadata.serializeArrayFields(itemList));
         },
 
-        serializeArrayFields : function(target) {
-            var tabValue = [];
-            var allInput = target.find("[data-rowvalue]");
-
-            allInput.each(function(index) {
-                tabValue.push($(this).data("rowvalue"));
-            });
-            var data = tabValue;
-
-            return JSON.stringify(data);
-        },
-
         addCustomField : function(source) {
             var target = $("#customFields");
-            var template = $('#customTextFieldTemplate').clone();
-            var type = source.attr('data-type');
+            
+            var formGroup = $('<div class="form-group" />');
+            var label = $('<div class="col-md-3"/>');
+            var name = $('<input type="text" class="form-control input-sm name" />');
+            label.append(name);
+            formGroup.append(label);
+            var div = $('<div class=" input-group col-md-9" />');
+            formGroup.append(div);
 
-            var field = null;
+            var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
+            field.attr('data-type', 'text');
 
-            switch (type) {
-                case 'text'   :
-                    template = $('#customTextareaFieldTemplate').clone();
-                    field = template.find('.value');
-                    break;
-                case 'name':
-                    field = template.find('input');
-                    break;
-                case 'number' :
-                    field = template.find('.value');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
-                    break;
-                case 'date':
-                    field = template.find('.value');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    break;
-                case 'boolean':
-                    var template = $('#customBooleanFieldTemplate').clone();
-                    token = guid();
+            div.append(field);
 
-                    field = template.find("input[type=radio]").each(function () {
-                        $(this).attr("name", token);
-                    });
-                    break;
-                default:
-                    return;
-                    break;
-            }
+            formGroup.data('name', name);
+            formGroup.data('field', field);
 
-            field.attr('data-type', type);
-            template.removeAttr('id').appendTo(target);
+            field.getValue = function() {
+                return $.trim(this.val());
+            };
 
+            target.append(formGroup);
         },
 
         removeRowArray : function(source) {
             target = source.closest("#arrayItems");
             source.closest('li').remove();
-            target.siblings("input").first().val(Metadata.serializeArrayFields(target));
         },
 
         removeField : function(source) {
@@ -534,19 +551,42 @@ li > input, #headingOne > h4, #headingOne > span {
             Metadata.flagEmptyCustomField = false;
 
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
-            var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
-            var inputsCustom = target.find("#customFields").children();
+            var formGroups = target.find("#archivalProfileFields").children('div');
+            var customFormGroups = target.find("#customFields").children('div');
+
             var descriptionObject = {};
 
-            $.each(inputsArchivalProfile, function() {
-                if(!$(this).closest("#arrayItems").length > 0 && !$(this).closest("#objectProperties").length > 0) {
-                    Metadata.serializeField($(this), descriptionObject);
+            $.each(formGroups, function() {
+                name = $(this).attr('name');
+                
+                field = $(this).data('field');                
+                value = field.getValue();
+
+                if (value) {
+                    descriptionObject[name] = value;
                 }
             });
+            
 
-            $.each(inputsCustom, function() {
-                Metadata.serializeAdditionnalField($(this), descriptionObject);
+            $.each(customFormGroups, function() {
+                name = $(this).data('name').val();
+                var value = $.trim($(this).find('.value').val());
+                field = $(this).data('field');                
+                value = field.getValue();
+
+                if (value == undefined || value == null || name == ''|| name == undefined || name == null) {
+                    $(this).closest(".form-group").addClass('has-error');
+                    Metadata.flagEmptyCustomField = true;
+                    return;
+                } else {
+                    $(this).closest(".form-group").removeClass('has-error');
+                }
+
+                descriptionObject[name] = value;
             });
+
+            console.log(descriptionObject);
+            return -1;
 
             if (Metadata.flagEmptyRequiredField) {
                 gritter.show($('#fieldLabel_error').text(), false);
@@ -560,82 +600,6 @@ li > input, #headingOne > h4, #headingOne > span {
             }
 
             return descriptionObject;
-        },
-
-        serializeField : function(input, data) {
-            var type = input.attr("data-type");
-            var name = input.attr('name');
-            var required = input.data('required');
-            var value = null;
-
-            switch(type) {
-                case "boolean":
-                    if (!input.parent().hasClass("active")) {
-                        return;
-                    }
-
-                    switch (input.val()) {
-                        case "1":
-                        case "0": value = input.val();
-                            break;
-                        default: value = null;
-                            break;
-                    }
-
-                    break;
-
-                case "date":
-                    value = new Date(input.data('datepicker').getFormattedDate('yyyy-mm-dd'));
-                    break;
-
-                case 'number':
-                    value = Number($.trim(input.val()));
-                    break;
-
-                case 'array':
-                    if (input.val()) {
-                        value = JSON.parse(input.val());
-                    }
-                    break;
-                case 'object':
-                    value = Metadata.serializeObject(input);
-                    break;
-                default :
-                    value = $.trim(input.val());
-            }
-
-            if (required == "true" && (value === "" || value === null || value === undefined)) {
-                Metadata.flagEmptyRequiredField = name;
-                input.closest(".form-group").addClass('has-error');
-                return;
-            } else {
-                input.closest(".form-group").removeClass('has-error');
-            }
-            data[name] = value;
-        },
-
-        serializeObject : function(input) {
-            var object = new Object;
-            var properties = $(input).siblings("#objectProperties").find(".propertie").find('input, textarea, select');
-            $.each(properties, function() {
-                Metadata.serializeField($(this), object);
-            })
-            return object;
-        },
-
-        serializeAdditionnalField : function(input, data) {
-            var name = $(this).find('.name').val();
-            var value = $.trim($(this).find('.value').val());
-
-            if (value == undefined || value == null || name == ''|| name == undefined || name == null) {
-                $(this).closest(".form-group").addClass('has-error');
-                Metadata.flagEmptyCustomField = true;
-                return;
-            } else {
-                $(this).closest(".form-group").removeClass('has-error');
-            }
-
-            data[name] = value;
         },
 
         clear : function() {
@@ -709,7 +673,7 @@ li > input, #headingOne > h4, #headingOne > span {
 
         addArrayItemWithData : function(data, source) {
             var target = source.find("#arrayItems");
-            var type = source.find(".addRowArray").attr('data-rowtype');
+            var type = source.find(".addRowArray").attr('data-itemtype');
 
             if (type == "[object Object]") {
 
