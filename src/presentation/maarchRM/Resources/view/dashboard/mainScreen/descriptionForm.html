@@ -296,7 +296,7 @@ li > input, #headingOne > h4, #headingOne > span {
             field.append(falseGroup);
 
             var nullGroup = $('<label class="btn btn-default active"/>');
-            nullGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="">');
+            nullGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value=""> &nbsp');
             field.append(nullGroup);
 
             var trueGroup = $('<label class="btn btn-default"/>');
@@ -632,11 +632,15 @@ li > input, #headingOne > h4, #headingOne > span {
         checkAndFill : function(data, target) {
             if (target.attr("data-type")==="date") {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
-                target.datepicker('setDate', data);
+                target.find("input").datepicker('setDate', data);
             }
 
-            if (target.attr("data-type")==="boolean") {
-                $.each($(target), function(){
+            if (target.attr("data-type")==="name") {
+                target.find("select").val(data);
+            }
+
+            else if (target.attr("data-type")==="boolean") {
+                $.each($(target).find("input"), function(){
                     if($(this).val() === data) {
                         $(this).parent().siblings("label").removeClass("active");
                         $(this).parent().addClass("active");
@@ -646,71 +650,22 @@ li > input, #headingOne > h4, #headingOne > span {
                 $.each(data, function(property, value) {
                     if (property == "description") {
                         $.each(value, function(descProperty, descValue) {
-                            Metadata.checkAndFill(descValue, $("label[id='"+descProperty+"']").parent().find("[name="+descProperty+"]"))
+                            Metadata.checkAndFill(descValue, target.find("[name="+descProperty+"]").first());
                         })
                     } else {
-                        if (target.parent().length > 0){
-                            input = target.parent().find("[name="+property+"]");
-                        } else {
-                            input = target.find("[name="+property+"]");
-                        }
-                        Metadata.checkAndFill(value, input)
+                        objectTarget = target.find("[name="+property+"]").first();
+                        Metadata.checkAndFill(value, objectTarget);
                     }
                 })
             } else if ($.isArray(data)){
+                array = target.find("ul").first();
                 $.each(data, function(index, item) {
-                    Metadata.addArrayItemWithData(item, target.parent());
+                    newItem = array.find("li").first();
+                    Metadata.checkAndFill(item, newItem);
+                    Metadata.addArrayItem(array.parent());
                 })
             } else {
-                target.val(data);
-            }
-        },
-
-        addArrayItemWithData : function(data, source) {
-            var target = source.find("#arrayItems");
-            var type = source.find(".addRowArray").attr('data-itemtype');
-
-            if (type == "[object Object]") {
-
-                objectNumber = (target.find("[data-rowValue]").length) + 1 ;
-
-                var aleaID = guid();
-                var toAdd = target.find("#objectFieldTemplate").clone();
-
-                Metadata.checkAndFill(data, toAdd);
-                valueInput = JSON.stringify(data);
-
-                toAdd.find("li").removeClass("propertie");
-                toAdd.find("h4").children("a").text("Objet n°"+objectNumber);
-                toAdd.removeAttr("id");
-                toAdd.find("#accordion").find('.panel-collapse').attr("id", aleaID).removeClass("in");
-                toAdd.find("#accordion").find('[data-toggle="collapse"]').attr("href", "#"+aleaID).addClass("collapsed");
-                toAdd.find("#headingOne").append('<a href="#" class="btn btn-default removeRowArray pull-right"><i class="fa fa-times text-danger"></i></a>')
-                
-                target.append($("<li class='input-group col-sm-12'></li>").append(toAdd));
-
-                toAdd.find("#accordion")
-                        .attr("data-rowValue", valueInput);
-
-                // Delete the input value
-                target.find("#objectFieldTemplate").find("input, textarea, select").not("[data-type=boolean]").val("");
-            } else {
-                
-                // GET the Input Value
-                var valueInput = data;
-                var valueToDisplay = valueInput;
-
-                if (valueToDisplay != "") {
-
-                    var row = $('<li class="input-group"></li>');
-                    row.append($("<input>")
-                        .addClass('form-control')
-                        .addClass('input-sm')
-                        .attr("data-rowValue", valueInput)
-                        .addClass("hidden"));
-                    row.append('<input class="form-control" type="text" value="' + valueToDisplay + '" readonly><span class="input-group-btn"><a href="#" class="btn btn-default removeRowArray "><i class="fa fa-times text-danger"></i></a></span>');
-                    row.appendTo(target);
-                }
+                target.find("input").val(data);
             }
         }
     }
