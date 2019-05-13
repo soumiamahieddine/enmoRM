@@ -1067,7 +1067,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Import a resource"
-msgstr "Importer une ressource"
+msgstr "Ajout d'une ressource"
 
 msgid "Do you really want to delete this resource ?"
 msgstr "Voulez-vous vraiment supprimer cette ressource ?"
