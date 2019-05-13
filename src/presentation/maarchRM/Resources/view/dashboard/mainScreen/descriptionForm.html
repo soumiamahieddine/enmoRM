@@ -652,6 +652,8 @@ li > input, #headingOne > h4, #headingOne > span {
                         $.each(value, function(descProperty, descValue) {
                             Metadata.checkAndFill(descValue, target.find("[name="+descProperty+"]").first());
                         })
+                    } else if (property == "descriptionObject") {
+                        return true;
                     } else {
                         objectTarget = target.find("[name="+property+"]").first();
                         Metadata.checkAndFill(value, objectTarget);
