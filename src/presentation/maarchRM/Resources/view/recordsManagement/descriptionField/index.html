@@ -148,14 +148,14 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group hide" id="keywordEnumForm">
+                        <div class="form-group hide" id="keywordEnumForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Enumeration</label>
                             <div class="col-md-8">
-                                <div class="input-group">
-                                    <span class="input-group-addon" style="width: 0; padding: 0"></span>
-                                    <input type='text' id="inputAddEnumeration" class="form-control col-md-6" name="keywordEnumField" placeholder="identifier" />
-                                    <span class="input-group-addon" style="width: 0; padding: 0"></span>
-                                    <input type='text' id="inputAddEnumName" class="form-control col-md-6" name="keywordEnumField" placeholder="label" />
+                                <div class="input-group" style="border-radius: 4px 0 0 4px;">
+                                    <span class="input-group-addon" style="width: 0; padding: 0; border: 0;"></span>
+                                    <input type='text' id="inputAddEnumeration" class="form-control col-md-6" name="keywordEnumField" placeholder="Identifier" style="border-radius: 4px 0 0 4px;" />
+                                    <span class="input-group-addon" style="width: 0; padding: 0; border:0;"></span>
+                                    <input type='text' id="inputAddEnumName" class="form-control col-md-6" name="keywordEnumField" placeholder="Label" />
                                     <div class="input-group-btn">
                                         <button type="button" class="btn btn-success" id="btnAddEnumField"><span class="fa fa-plus"></span></button>
                                     </div>
@@ -163,15 +163,15 @@ file that was distributed with this source code.
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="list-group col-md-9 hide" id="keywordEnumList"></div>
+                            <ul class="col-md-offset-2 col-md-8 hide" id="keywordEnumList"></ul>
                         </div>
-                        <div class="form-group hide" id="keywordRefForm">
+                        <div class="form-group hide" id="keywordRefForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Reference</label>
                             <?hinclude recordsManagement/descriptionField/fileUpload.html ?>
                         </div>
                     </form>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-10">
                     <div class="pull-right" id="descriptionField_formBtn">
                         <button type="button" class="btn btn-default" id="descriptionField_formCancelBtn">Cancel</button>
                         <button type="button" class="btn btn-success" id="descriptionField_formSaveBtn">Save</button>
@@ -189,15 +189,11 @@ file that was distributed with this source code.
 
     <div class="hide">
         <!-- DOCUMENT PROPERTY TEMPLATE -->
-        <div class="list-group-item col-md-offset-3 col-md-9" id="keywordEnumTemplate">
-            <div class="col-xs-11">
-                <p>
-                    <strong class="keywordEnumeration"></strong>
-                    <span class="keywordEnumName"></span>
-                </p>
-            </div>
+        <li class="list-group-item" id="keywordEnumTemplate" style="padding: 6px 15px;">
+            <strong class="keywordEnumeration"></strong>
+            <span class="keywordEnumName"></span>
             <span class="deleteKeywordEnum pull-right" title="Delete"><i class="fa fa-times"></i></span>
-        </div>
+        </li>
     </div>
 </div>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -451,9 +447,8 @@ file that was distributed with this source code.
 
             case "name" :
                 $("#keywordEnumForm, #keywordEnumList").removeClass("hide");
-
                 var hasEnumNames = false;
-                if (descriptionField.enumNames !== "" && descriptionField.enumNames !== null && descriptionField.enumNames !== undefined) {
+                if (descriptionField.facets.enumNames !== "" && descriptionField.facets.enumNames !== null && descriptionField.facets.enumNames !== undefined) {
                     hasEnumNames = true;
                 }
 
@@ -461,7 +456,7 @@ file that was distributed with this source code.
                     $.each(descriptionField.enumeration, function (key, value) {
                         if (hasEnumNames === true) {
                             $("#inputAddEnumeration").val(value);
-                            $('#inputAddEnumName').val(descriptionField.enumNames[key]);
+                            $('#inputAddEnumName').val(descriptionField.facets.enumNames[key]);
                         } else {
                             $("#inputAddEnumeration").val(value ).attr('data-Enumeration', value);
                         }
@@ -570,8 +565,8 @@ file that was distributed with this source code.
                 enumNames.push(item.getAttribute('data-enumNames'))
             });
             property['enumeration'] = enumeration;
-            property['enumNames'] = enumNames;
-
+            property.facets = {};
+            property.facets.enumNames = enumNames;
             property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
         }
         property['isArray'] = false;
