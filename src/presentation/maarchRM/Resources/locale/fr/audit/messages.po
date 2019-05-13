@@ -351,10 +351,10 @@ msgid "recordsManagement/archiveRelationship/newRelationship"
 msgstr "Préparation à la création d'une nouvelle relation"
 
 msgid "recordsManagement/archive/create_archiveId_Digitalresource"
-msgstr "Création d'un document au sein d'une archive"
+msgstr "Dépôt d'une ressource au sein d'une archive"
 
 msgid "recordsManagement/archive/delete_archiveId_Digitalresource"
-msgstr "Suppression d'un document au sein d'une archive"
+msgstr "Destruction d'une ressource au sein d'une archive"
 
 msgid "recordsManagement/archiveRelationship/createRelationship"
 msgstr "Création d'une relation entre deux archives"
