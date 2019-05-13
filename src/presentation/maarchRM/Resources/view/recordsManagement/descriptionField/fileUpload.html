@@ -1,4 +1,4 @@
-<div class="col-md-8">
+<div class="col-md-8 control-label"  data-translate-catalog="recordsManagement/descriptionField">
     <div class="col-md-offset-2">
         <input type="file" id="descriptionRef_filesBrowser" class="hide">
 
@@ -38,23 +38,23 @@
         </div>
     </div>
     <div class="hide">
-        <span id="cantUploadFileError">Can't upload file. You have to save the profile first.</span>
-        <span id="wrongFileFormat">The profile file's extention must be csv or txt.</span>
+        <span id="cantUploadFileError">Can't upload file. You have to save the profile first</span>
+        <span id="wrongFileFormat">The profile file's extention must be csv or txt</span>
     </div>
 </div>
-<div class="modal fade" id="messageSavingModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="messageSavingModal" tabindex="-1" role="dialog" aria-hidden="true" data-translate-catalog="recordsManagement/descriptionField">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Enregistrer le champ</h4>
+                <h4 class="modal-title">Save field</h4>
             </div>
             <div class="modal-body">
-                <p>Le champ sera enregistré afin de pouvoir ajouter le fichier. Voulez-vous continuer ?</p>
+                <p>Field will be save in order to add the file. Do you wish to proceed ?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" title="Annuler">Non</button>
-                <button type="button" id="confirmSaving" class="btn btn-success" data-dismiss="modal" title="Enregistrer">Oui</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Annuler">No</button>
+                <button type="button" id="confirmSaving" class="btn btn-success" data-dismiss="modal" title="Enregistrer">Yes</button>
             </div>
         </div>
     </div>
@@ -181,7 +181,7 @@
         var reference = $(this).data('ref');
         window.open('/archivalProfile/export/'+ reference);
     })
-    
+
     function cancelProfileForm() {
         $('#fileDropZone').removeClass('hide');
         $('#descriptionRef_fileInfo').addClass('hide');
@@ -208,7 +208,7 @@
             $('#descriptionRef_fileName').html(file.name);
 
             $('#descriptionRef_fileDate').addClass('hide');
-                
+
             $('#fileDropZone').addClass('hide');
             $('#descriptionRef_fileInfo').removeClass('hide');
 
