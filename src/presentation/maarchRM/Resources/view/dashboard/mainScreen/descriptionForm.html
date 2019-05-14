@@ -361,13 +361,13 @@ li > input, #headingOne > h4, #headingOne > span {
             var input = $('<input class="hide" type="text" data-type="object" value="">');
             panelBody.append(input);
             
-            var propertyList = $('<ul>');
+            var propertyList = $('<ul style="padding-left: 0px;">');
             panelBody.append(propertyList);
            
             $.each(descriptionField.properties, function() {
                 formGroup = Metadata.getFormGroup(this);
 
-                item = $("<li class='col-sm-12'></li>");
+                item = $("<li class='col-12'></li>");
                 item.append(formGroup);
 
                 item.data('formgroup', formGroup);
