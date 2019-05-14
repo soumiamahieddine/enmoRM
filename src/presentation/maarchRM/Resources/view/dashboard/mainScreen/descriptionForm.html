@@ -365,6 +365,9 @@ li > input, #headingOne > h4, #headingOne > span {
             panelBody.append(propertyList);
            
             $.each(descriptionField.properties, function() {
+                if (this.internal) {
+                    return;
+                }
                 formGroup = Metadata.getFormGroup(this);
 
                 item = $("<li class='col-12'></li>");
