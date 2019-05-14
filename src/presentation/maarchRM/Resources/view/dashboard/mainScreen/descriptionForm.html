@@ -344,7 +344,7 @@ li > input, #headingOne > h4, #headingOne > span {
             var heading = $('<div class="panel-heading"/>');
             div.append(heading);
 
-            var title = $('<h4 class="panel-title"/>');
+            var title = $('<h4 class="panel-title" style="display: inline-block;" />');
             heading.append(title);
 
             var anchor = $('<a role="button" data-toggle="collapse" aria-expanded="true"/>');
@@ -497,12 +497,19 @@ li > input, #headingOne > h4, #headingOne > span {
         addArrayItem : function(arrayDiv) {
             var itemList = arrayDiv.data('itemlist');
             var descriptionField = arrayDiv.data('description');
-
             var index = itemList.children("li").length;
 
             var current = itemList.children("li").first();
             current.find('a').first().text('#'+index);
             current.find('.panel-collapse').first().removeClass('in');
+
+            // Button to remove item
+            if ($.isPlainObject(descriptionField.itemType)) {
+                current.find(".panel-heading").append('<a href="#" class="btn btn-default removeField" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
+            } else {
+                current.append('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+            }
+
             current.parent().append(current);
 
             var div = Metadata.getArrayItem(descriptionField);
@@ -541,7 +548,7 @@ li > input, #headingOne > h4, #headingOne > span {
         },
 
         removeField : function(source) {
-            source.closest('.form-group').remove();
+            source.closest('li').remove();
         },
 
         serialize : function(target) {
