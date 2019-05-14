@@ -410,9 +410,6 @@ li > input, #headingOne > h4, #headingOne > span {
                 div.attr("data-itemtype", descriptionField.itemType.type)
             }
 
-            var input = $('<input class="hide" type="text" data-type="array" value="">');
-            div.append(input);
-
             var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-left" title="Add data">&nbsp;<i class="fa fa-plus">&nbsp;</i></button>');
             div.append(addButton);
 
@@ -422,9 +419,11 @@ li > input, #headingOne > h4, #headingOne > span {
             div.data('item-description', descriptionField.itemtype);
             div.data('description', descriptionField);
             
-            var item = Metadata.getArrayItem(descriptionField);
+            if (!$.isPlainObject(descriptionField.itemType)) {
+                var item = Metadata.getArrayItem(descriptionField);
+                itemList.append(item);
+            }
 
-            itemList.append(item); 
             div.data('itemlist', itemList);
 
             div.getValue = function() {
@@ -500,22 +499,26 @@ li > input, #headingOne > h4, #headingOne > span {
         addArrayItem : function(arrayDiv) {
             var itemList = arrayDiv.data('itemlist');
             var descriptionField = arrayDiv.data('description');
-            var index = itemList.children("li").length;
 
-            var current = itemList.children("li").first();
-            current.find('a').first().text('#'+index);
-            current.find('.panel-collapse').first().removeClass('in');
-
-            // Button to remove item
-            if ($.isPlainObject(descriptionField.itemType)) {
-                current.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
-            } else {
-                current.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
-            }
-
-            current.parent().append(current);
-
+            // New empty item
             var div = Metadata.getArrayItem(descriptionField);
+
+            var items = itemList.children("li");
+            if (items.length) {
+                var index = items.length;
+                
+                previous = items.first();
+                previous.find('a').first().text('#'+index);
+                previous.find('.panel-collapse').first().removeClass('in');
+
+                // Button to remove item
+                if ($.isPlainObject(descriptionField.itemType)) {
+                    previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
+                } else {
+                    previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+                }
+            } 
+
             itemList.prepend(div);
         },
 
