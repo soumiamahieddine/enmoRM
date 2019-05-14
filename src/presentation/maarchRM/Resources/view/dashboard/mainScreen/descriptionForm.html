@@ -419,10 +419,10 @@ li > input, #headingOne > h4, #headingOne > span {
             div.data('item-description', descriptionField.itemtype);
             div.data('description', descriptionField);
             
-            if (!$.isPlainObject(descriptionField.itemType)) {
+            //if (!$.isPlainObject(descriptionField.itemType)) {
                 var item = Metadata.getArrayItem(descriptionField);
                 itemList.append(item);
-            }
+            //}
 
             div.data('itemlist', itemList);
 
