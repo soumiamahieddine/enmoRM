@@ -94,7 +94,7 @@ li > input, #headingOne > h4, #headingOne > span {
     // METADATAS
     $('.addCustomField').on('click', function(e) {
         e.preventDefault();
-        Metadata.addCustomField($(this));
+        Metadata.addCustomField();
     });
 
     // Add row in array of metadata
@@ -516,19 +516,20 @@ li > input, #headingOne > h4, #headingOne > span {
             itemList.prepend(div);
         },
 
-        addCustomField : function(source) {
-            var target = $("#customFields");
-            
+        addCustomField : function(source = "", target = $("#customFields")) {            
             var formGroup = $('<div class="form-group" />');
             var label = $('<div class="col-md-3"/>');
             var name = $('<input type="text" class="form-control input-sm name" />');
+            name.val(source.property);
+
             label.append(name);
             formGroup.append(label);
-            var div = $('<div class=" input-group col-md-9" />');
+            var div = $('<div class="input-group col-md-9" style="padding-left: 15px;"/>');
             formGroup.append(div);
 
             var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
             field.attr('data-type', 'text');
+            field.text(source.value);
 
             var removeButton = $('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
             
@@ -659,7 +660,15 @@ li > input, #headingOne > h4, #headingOne > span {
                 $.each(data, function(property, value) {
                     if (property == "description") {
                         $.each(value, function(descProperty, descValue) {
-                            Metadata.checkAndFill(descValue, target.find("[name="+descProperty+"]").first());
+                            if(target.find("[name='"+descProperty+"']").first().length > 0) {
+                                Metadata.checkAndFill(descValue, target.find("[name='"+descProperty+"']").first());
+                            } else {
+                                custom = {
+                                    "property" : descProperty,
+                                    "value": descValue
+                                    }
+                                Metadata.addCustomField(custom);
+                            }
                         })
                     } else if (property == "descriptionObject") {
                         return true;
