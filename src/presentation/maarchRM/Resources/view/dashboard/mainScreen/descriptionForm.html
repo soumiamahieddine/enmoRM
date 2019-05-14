@@ -505,9 +505,9 @@ li > input, #headingOne > h4, #headingOne > span {
 
             // Button to remove item
             if ($.isPlainObject(descriptionField.itemType)) {
-                current.find(".panel-heading").append('<a href="#" class="btn btn-default removeField" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
+                current.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
             } else {
-                current.append('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+                current.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
             }
 
             current.parent().append(current);
@@ -530,7 +530,10 @@ li > input, #headingOne > h4, #headingOne > span {
             var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
             field.attr('data-type', 'text');
 
+            var removeButton = $('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+            
             div.append(field);
+            div.append(removeButton);
 
             formGroup.data('name', name);
             formGroup.data('field', field);
@@ -543,12 +546,11 @@ li > input, #headingOne > h4, #headingOne > span {
         },
 
         removeRowArray : function(source) {
-            target = source.closest("#arrayItems");
             source.closest('li').remove();
         },
 
         removeField : function(source) {
-            source.closest('li').remove();
+            source.closest('.form-group').remove();
         },
 
         serialize : function(target) {
