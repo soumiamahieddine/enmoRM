@@ -80,9 +80,10 @@ class descriptionField
     public $enumeration;
 
     /**
-     * @var json
+    * @var string[]
     */
-    public $facets;
+    public $enumNames;
+
     /**
     * @var string
     */

@@ -448,7 +448,7 @@ file that was distributed with this source code.
             case "name" :
                 $("#keywordEnumForm, #keywordEnumList").removeClass("hide");
                 var hasEnumNames = false;
-                if (descriptionField.facets.enumNames !== "" && descriptionField.facets.enumNames !== null && descriptionField.facets.enumNames !== undefined) {
+                if (descriptionField.enumNames !== "" && descriptionField.enumNames !== null && descriptionField.enumNames !== undefined) {
                     hasEnumNames = true;
                 }
 
@@ -456,7 +456,7 @@ file that was distributed with this source code.
                     $.each(descriptionField.enumeration, function (key, value) {
                         if (hasEnumNames === true) {
                             $("#inputAddEnumeration").val(value);
-                            $('#inputAddEnumName').val(descriptionField.facets.enumNames[key]);
+                            $('#inputAddEnumName').val(descriptionField.enumNames[key]);
                         } else {
                             $("#inputAddEnumeration").val(value ).attr('data-Enumeration', value);
                         }
@@ -561,12 +561,15 @@ file that was distributed with this source code.
             var enumeration = new Array();
             var enumNames = new Array();
             $.each($("#keywordEnumList").find(".keywordEnumeration"), function (key, item) {
-                enumeration.push(item.getAttribute('data-enumeration'));
-                enumNames.push(item.getAttribute('data-enumNames'))
+                if (item.getAttribute('data-enumeration') != '') {
+                    enumeration.push(item.getAttribute('data-enumeration'));
+                }
+                if (item.getAttribute('data-enumNames') != '') {
+                    enumNames.push(item.getAttribute('data-enumNames'))
+                }
             });
             property['enumeration'] = enumeration;
-            property.facets = {};
-            property.facets.enumNames = enumNames;
+            property.enumNames = enumNames;
             property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
         }
         property['isArray'] = false;
