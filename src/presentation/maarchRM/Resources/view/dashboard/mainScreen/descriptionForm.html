@@ -272,6 +272,13 @@ li > input, #headingOne > h4, #headingOne > span {
             field.attr('placeholder', $('#date_text').text());
             field.datepicker(DatePickerParams);
 
+            field.getValue = function() {
+                if (this.val()){
+                    var dateObject = this.datepicker('getDate');
+                    return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                }
+            };
+
             return field;
         },
 
@@ -510,10 +517,10 @@ li > input, #headingOne > h4, #headingOne > span {
                 previous = items.first();
                 previous.find('a').first().text('#'+index);
                 previous.find('.panel-collapse').first().removeClass('in');
-
                 // Button to remove item
                 if ($.isPlainObject(descriptionField.itemType)) {
-                    previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
+                    previous.find(".panel-heading").css({ "padding-top": "2px", "padding-bottom": "2px" });
+                    previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
                 } else {
                     previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
                 }
