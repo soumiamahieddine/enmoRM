@@ -183,7 +183,7 @@ trait archiveModificationTrait
 
         // #10629 Get duration from ref when empty and code is received
         if (empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleCode)) {
-            $refAccessRule = $this->accessRuleController->read($accessRule->accessRuleCode);
+            $refAccessRule = $this->accessRuleController->edit($accessRule->accessRuleCode);
 
             $accessRule->accessRuleDuration = $refAccessRule->duration;
         }
@@ -203,7 +203,7 @@ trait archiveModificationTrait
 
                 $accessRule->archiveId = $archiveId;
 
-                if (!$accessRule->changeStartDate) {
+                if ($accessRule->changeStartDate === false) {
                     $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
                 }
 
