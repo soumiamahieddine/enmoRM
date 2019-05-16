@@ -133,8 +133,10 @@ class descriptionField
      */
     public function serializeFacets($descriptionField)
     {
-        foreach ($descriptionField->facets->jsonSerialize() as $key => $value) {
-            $descriptionField->$key = $value;
+        if (isset($descriptionField->facets) && !is_null($descriptionField->facets)) {
+            foreach ($descriptionField->facets->jsonSerialize() as $key => $value) {
+                $descriptionField->$key = $value;
+            }
         }
 
         return $descriptionField;
