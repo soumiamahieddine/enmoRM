@@ -352,8 +352,12 @@ file that was distributed with this source code.
         var inputAddEnumeration = $("#inputAddEnumeration").val()
         var inputValue = inputAddEnumeration;
         var inputAddEnumName = $("#inputAddEnumName").val();
+        var option;
         if (inputAddEnumName !== '') {
+            option = $("<option></option>").val(inputAddEnumeration).text(inputAddEnumName);
             inputValue += ':' + inputAddEnumName;
+        } else {
+            option = $("<option></option>").val(inputAddEnumeration).text(inputAddEnumeration);
         }
         template.find(".keywordEnumeration")
                 .text(inputAddEnumeration)
@@ -366,7 +370,6 @@ file that was distributed with this source code.
         $('#namePropertyDefaultValue').addClass('hide');
         $('#nameSelectPropertyDefaultValue').removeClass('hide');
 
-        var option = $("<option></option>").val(inputValue).text(inputValue);
         $('#nameSelectPropertyDefaultValue').find('select').append(option);
 
         $("#inputAddEnumeration").val("");
