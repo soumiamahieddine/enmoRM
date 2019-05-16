@@ -250,4 +250,30 @@
     $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
         archiveDocumentViewer.load(archiveId, resId);
     })
+
+    $("#confirm_yes").on("click", function(){
+        var resources = {
+                resIds           : [$(this).attr('data-resid')]
+            }
+
+            ajax($('#deleteResource'), {
+                type: "DELETE",
+                url: '/' + $(this).attr('data-archiveid') + '/digitalResource',
+                data: JSON.stringify(resources),
+                dataType: 'json',
+                contentType: 'application/json',
+                success     : function (response) {
+                    gritter.show(response.message, true);
+                    trigger('deleteResourceDone.recordsManagement');
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+    });
+
+
+    $("#confirm_no").on("click", function() {
+        $('#confirmDeleteModal').modal("hide");
+    });
 </script>
