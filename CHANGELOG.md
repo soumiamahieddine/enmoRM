@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Version 2.4.2
+
+### Script d'import
+
+- `Fixed` Correction de la réponse lors de l'appel de 'response::setContentType' lors de l'utilisation de cli 
+
+## Version 2.4.1
+
+### IHM
+
+- `Fixed` Le bouton 'Import' restait parfois grisé en cas d'erreur lors d'un versement
+
+### Métadonnées
+
+- `Fixed` Rétablissement de la fonctionnalité de création, diffusion et modification d'un fichier de profil d'archive de type
+- `Changed` Suppression du bouton de modification des métadonnées descriptives SEDA dans la modale de détail du socle : le bouton est propre à l'extension archivesPubliques
+
+
 ## Version 2.3
 
 ### Exploitation
