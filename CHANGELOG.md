@@ -4,7 +4,7 @@
 
 ### Script d'import
 
-- `Fixed` Correction de la réponse lors de l'appel de 'response::setContentType' lors de l'utilisation de cli 
+- `Fixed` Correction d'un bug lors de l'utilisation de cli 
 
 ## Version 2.4.1
 
