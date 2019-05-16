@@ -14,7 +14,7 @@ ALTER TABLE "recordsManagement"."archive" ADD COLUMN "userOrgRegNumbers" text;
 
 -- DROP constraint on orgid and add primary key constraint on couple (orgid and archivalprofilereference)
 ALTER TABLE "organization"."archivalProfileAccess" DROP CONSTRAINT "archivalProfileAccess_orgId_archivalProfileReference_key";
-ALTER TABLE "organization"."archivalProfileAccess" PRIMARY KEY ("orgId", "archivalProfileReference");
+ALTER TABLE "organization"."archivalProfileAccess" ADD PRIMARY KEY ("orgId", "archivalProfileReference");
 
 -- Add columns for processing statuses on org unit archival profiles access
 ALTER TABLE "organization"."archivalProfileAccess" ADD COLUMN "userAccess" jsonb;
