@@ -17,6 +17,34 @@
 - `Fixed` Rétablissement de la fonctionnalité de création, diffusion et modification d'un fichier de profil d'archive de type
 - `Changed` Suppression du bouton de modification des métadonnées descriptives SEDA dans la modale de détail du socle : le bouton est propre à l'extension archivesPubliques
 
+## Version 2.4
+
+### IHM
+
+- `Added` Ajout et suppression d'une seule pièce au sein d'une archive désormais possible
+- `Changed` Nouveau design de la modale de détails des informations de l'archive
+- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
+- `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
+- `Fixed` Le bouton Annuler est également non cliquable durant l'execution d'un versement
+- `Fixed` Le choix "sans profil" au versement d'une archive ne doit apparaître que si le dossier qui la receptionne l'autorise
+
+### Métadonnées
+
+- `Added` Une variable "actionWithoutRetentionRule" a été ajoutée dans le fichier de configuration pour permettre ou non l'élimination d'une archive n'ayant pas de règle (preserve : L'archive ne peut pas être supprimée si aucune règle n'a été définie OU dispose : L'archive peut-être éliminée si aucune règle n'a été définie)
+- `Added` Mise à jour automatique de la date de dernière modification d'une archive
+
+### Administration
+
+- `Changed` Mise à jour dans la configuration des fichiers de signature Droid (v91 => v94)
+
+### Accès
+
+- `Changed` Les libellés des formats dans le tableau de documents indique désormais le nom du type de document au lieu de son identifiant
+- `Fixed` Les routes d'évènements du journal de l'application ont été intégralement traduites en Anglais
+
+## Extension
+
+- `Added` L'extension Workflow permettant l'utilisation des flux de travail est désormais disponible
 
 ## Version 2.3
 
