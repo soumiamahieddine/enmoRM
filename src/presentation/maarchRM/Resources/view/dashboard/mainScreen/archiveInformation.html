@@ -580,6 +580,7 @@
     });
 
     $('#editMetadata').on('click', function(){
+        $("#documentForm").hide();
         var profile = $(this).parent().text().trim();
         var profileMetadata = $("#folderToolbarBtn").find(".newArchive").filter(function() {
             if ($(this).text().trim() === profile) {

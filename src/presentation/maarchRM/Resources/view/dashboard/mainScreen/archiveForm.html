@@ -173,6 +173,8 @@
                                 folder = archive.filePlanPosition;
                             }
                             trigger('loadFolder.filePlan', [folder]);
+
+                            $("#documentForm").show();
                         }
                     },
                     error       : function (response) {
@@ -210,7 +212,9 @@
                     if (response.status) {
                         Archive.getInfo(ArchiveInformation.archiveId);
 
-                        $("#searchForm_inputSearchBtn").click()
+                        $("#searchForm_inputSearchBtn").click();
+
+                        $("#documentForm").show();
                     }
                 },
                 error       : function (response) {
