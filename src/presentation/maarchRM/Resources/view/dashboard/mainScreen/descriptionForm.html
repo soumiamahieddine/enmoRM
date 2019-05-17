@@ -71,21 +71,8 @@
 
 
 <style>
-#objectProperties .propertie .col-md-9{
-    padding-left:40px;
-}
 ul {
     list-style: none;
-}
-li > input, #headingOne > h4, #headingOne > span {
-    display: inline-block;
-}
-
-#arrayItems > .input-group > .form-group{
-    margin-bottom:0px; 
-}
-#objectFieldTemplate{
-    margin-bottom:15px !important;
 }
 
 </style>
@@ -649,7 +636,8 @@ li > input, #headingOne > h4, #headingOne > span {
                 }
             });
             Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
-            $('#syncImport').parent().prepend('<a href="#" class="btn btn-sm btn-success" data-archive-id="'+archiveId+'" id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a><i>&nbsp;</i>')
+            $('#syncImport').parent().prepend('<a href="#" class="btn btn-sm btn-success" data-archive-id='+archiveId+' id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a>');
+            
         },
 
         checkAndFill : function(data, target) {
