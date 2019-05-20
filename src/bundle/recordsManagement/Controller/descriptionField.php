@@ -51,6 +51,8 @@ class descriptionField
 
         foreach ($descriptionFields as $i => $descriptionField) {
             $descriptionFields[$descriptionField->name] = $descriptionField;
+            $this->serializeFacets($descriptionField);
+
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
             }
@@ -75,13 +77,28 @@ class descriptionField
             throw new \core\Exception\ConflictException("The description field already exists.");
         }
 
+        $model = \laabs::bundle('recordsManagement')->getClass('descriptionField');
+        $differences = array_diff_key(get_object_vars($descriptionField), $model->getProperties());
+        $facets = new \stdClass();
+        foreach ($differences as $property => $value) {
+            $facets->{$property} = $value;
+        }
+        $descriptionField->facets = json_encode($facets);
+
+        if (!empty($descriptionField->enumNames)) {
+            //throw exception if number of enumNames is different from enumeration
+            // array_filter without callback function, it removes all entries equals to FALSE (cf. https://www.php.net/manual/en/function.array-filter.php)
+            if (count(array_filter($descriptionField->enumNames)) != count(array_filter($descriptionField->enumeration))) {
+                throw new \core\Exception\BadRequestException("All label Description fields must be filled");
+            }
+        }
+
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }
 
         try {
             return $this->sdoFactory->create($descriptionField, 'recordsManagement/descriptionField');
-
         } catch (\Exception $e) {
             throw $e;
         }
@@ -95,8 +112,9 @@ class descriptionField
      */
     public function read($name)
     {
-        try { 
+        try {
             $descriptionField = $this->sdoFactory->read('recordsManagement/descriptionField', $name);
+            $this->serializeFacets($descriptionField);
 
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
@@ -104,7 +122,26 @@ class descriptionField
 
             return $descriptionField;
         } catch (\Exception $e) {
-            
+
+        }
+    }
+
+    /**
+     * Format facets object into descriptionField
+     *
+     * @param  recordsManagement/descriptionField $descriptionField DatabaseObject
+     *
+     * @return descriptionField                   $descriptionField object serialised
+     */
+    public function serializeFacets($descriptionField)
+    {
+        if (isset($descriptionField->facets) && !is_null($descriptionField->facets)) {
+            $facets = $descriptionField->facets->getValue();
+            foreach ($facets as $key => $value) {
+                $descriptionField->$key = $value;
+            }
+
+            unset($descriptionField->facets);
         }
     }
 
@@ -118,6 +155,22 @@ class descriptionField
      */
     public function update($descriptionField)
     {
+        if (!empty($descriptionField->enumNames)) {
+            //throw exception if number of enumNames is different from enumeration
+            // array_filter without callback function, it removes all entries equals to FALSE (cf. https://www.php.net/manual/en/function.array-filter.php)
+            if (count(array_filter($descriptionField->enumNames)) != count(array_filter($descriptionField->enumeration))) {
+                throw new \core\Exception\BadRequestException("All label Description fields must be filled");
+            }
+        }
+
+        $model = \laabs::bundle('recordsManagement')->getClass('descriptionField');
+        $differences = array_diff_key(get_object_vars($descriptionField), $model->getProperties());
+        $facets = new \stdClass();
+        foreach ($differences as $property => $value) {
+            $facets->{$property} = $value;
+        }
+        $descriptionField->facets = json_encode($facets);
+
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
         }

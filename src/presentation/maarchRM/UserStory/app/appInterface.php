@@ -173,4 +173,19 @@ interface appInterface
      * @uses organization/organization/readOriginator
      */
     public function readOriginator();
+
+    /**
+     * Search a reference or get the entire ref list
+     * @param string $query
+     *
+     * @uses recordsManagement/descriptionRef/read_name_
+     */
+    public function readDescriptionref_name_($query = null);
+
+    /**
+     * Get one ref entry by its key
+     *
+     * @uses recordsManagement/descriptionRef/read_name__key_
+     */
+    public function readDescriptionref_name__key_();
 }

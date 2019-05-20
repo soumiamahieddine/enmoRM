@@ -248,7 +248,12 @@ Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
 
-# Migration 2.4 vers 2.5 
+# Migration 2.4 vers 2.5
+
+## Données descriptives
+
+Ajout de la possibilité de choisir des clés valeurs pour les champs de description de type énumération pour les données descriptives.
+Les valeurs déjà renseignés apparaissent dans le champ identifiant de la liste d'énumération. Il est désormais possible de rajouter un label pour chaque identifiant. Si un label est renseigné pour un champ, alors un label doit être renseigné pour tous les identifiants déja renseignés de la liste, dans le cas contraire, le système renverra une erreur.
 
 ## Présentation et fonctionnalités orientées "archives publiques"
 
@@ -303,6 +308,34 @@ descriptionSchemes = "{
     'uri' : 'seda2/Content',
     'controller' : '',
     'presenter' : ''
+  }
+}"
+```
+
+## Branchement de listes externes
+Un nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser 
+des valeurs ou des paires de clé et valeur dans les métadonnées descriptives des archives.
+
+Les sources de données sont en founissant des URI de services qui doivent respecter
+l'interface `dependency\pickLists\PickListInterface`.
+
+La configuration fournit aussi une liste de paramètres à passer au service pour son instanciation.
+Le nombre et la nature de paramètres est propre à chaque service, se référer à la documentation 
+ou au code source de ceux-ci pour définir la configuration.
+
+```
+descriptionPickLists = "{
+  'customers' : {
+    'name' : 'Clients',
+    'type' : 'assoc',
+    'uri' : 'dependency/dataRepositories/database',
+    'parameters' : {
+        'dsn' : 'pgsql:...',
+        'table' : 'schema_name.table_name',
+        'key' : 'key_column_name', 
+        'value' : 'value_expression',
+        'order' : 'order_expression'
+    }
   }
 }"
 ```

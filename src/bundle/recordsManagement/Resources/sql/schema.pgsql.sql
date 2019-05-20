@@ -101,6 +101,7 @@ CREATE TABLE "recordsManagement"."descriptionField"
   "minValue" numeric,
   "maxValue" numeric,
   "enumeration" text,
+  "facets" jsonb,
   "pattern" text,
   "isArray" boolean default false,
   PRIMARY KEY ("name")

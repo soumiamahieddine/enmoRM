@@ -240,7 +240,9 @@ ul {
         },
 
         getKeywordInput : function (descriptionField) {
-            if (descriptionField.enumeration) {
+            if (descriptionField.ref) {
+                return Metadata.getTypeahead(descriptionField);
+            } else if (descriptionField.enumeration) {
                 return Metadata.getSelect(descriptionField);      
             } else {
                 return Metadata.getTextInput(descriptionField);                   
@@ -312,12 +314,16 @@ ul {
         },
 
         getSelect : function(descriptionField) {
-            var field = $('<select class="form-control input-sm"><option value="" /></select>')            
+            var field = $('<select class="form-control input-sm"><option value="" /></select>')         
            
             $.each(descriptionField.enumeration, function (index, value) {
+                text = value;
+                if (descriptionField.enumNames[index]) {
+                    text = descriptionField.enumNames[index]
+                }
                 field.append($('<option>', {
                     value: value,
-                    text: value
+                    text: text
                 }));
             });
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
@@ -327,6 +333,45 @@ ul {
             field.getValue = function() {
                 return $.trim(this.val());
             };
+
+            return field;
+        },
+
+        getTypeahead : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
+            field.attr('name', 'test');
+
+            var data = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.whitespace,
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              remote: {
+                    url: '/descriptionRef/'+descriptionField.name+'?query=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            field.typeahead(null, {
+              name: 'test',
+              source: data,
+              templates: {
+                suggestion: function(suggestion) {
+                    delete suggestion._query;
+                    var html = $('<div>');
+                    var keyname = Object.keys(suggestion)[0];
+                    var key = suggestion[keyname];
+                    html.append($('<strong class="badge">').text(key));
+                    delete suggestion[keyname];
+                    var value = Object.keys(suggestion).map(function(name){return suggestion[name]}).join(" - ");
+                    html.append(' '+value);
+
+                    return html;
+                }
+            }
+            }).on('typeahead:selected', function ($event, suggestion, source) {
+                var key = Object.keys(suggestion)[0]; //fetched the key at first index
+                field.val(suggestion[key]);
+                field.typeahead('val', suggestion[key]);
+            });
 
             return field;
         },

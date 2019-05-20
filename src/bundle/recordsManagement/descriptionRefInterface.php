@@ -22,26 +22,19 @@ namespace bundle\recordsManagement;
  *
  * @author Cyril Vazquez <cyril.vazqure@maarch.org> 
  */
-interface descriptionSchemeInterface
+interface descriptionRefInterface
 {
     /**
-     * Get the description classes
+     * Search the list
      *
-     * @action recordsManagement/descriptionScheme/index
+     * @action recordsManagement/descriptionRef/search
      */
-    public function readIndex();
-
-    /**
-     * Get the description class
-     *
-     * @action recordsManagement/descriptionScheme/read
-     */
-    public function read_name_();
+    public function read_name_($query=null);
 
     /**
      * Get the description class properties
      *
-     * @action recordsManagement/descriptionScheme/getDescriptionFields
+     * @action recordsManagement/descriptionRef/get
      */
-    public function read_name_Descriptionfields();
+    public function read_name__key_();
 }

@@ -64,6 +64,7 @@ CREATE TABLE `recordsManagement.descriptionField`
   `minValue` numeric,
   `maxValue` numeric,
   `enumeration` text,
+  `facets` jsonb,
   `pattern` text,
   PRIMARY KEY (`name`)
 );
