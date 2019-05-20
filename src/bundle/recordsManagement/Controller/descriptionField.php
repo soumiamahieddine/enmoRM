@@ -51,6 +51,8 @@ class descriptionField
 
         foreach ($descriptionFields as $i => $descriptionField) {
             $descriptionFields[$descriptionField->name] = $descriptionField;
+            $this->serializeFacets($descriptionField);
+
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
             }
@@ -112,7 +114,7 @@ class descriptionField
     {
         try {
             $descriptionField = $this->sdoFactory->read('recordsManagement/descriptionField', $name);
-            $descriptionField = $this->serializeFacets($descriptionField);
+            $this->serializeFacets($descriptionField);
 
             if (!empty($descriptionField->enumeration)) {
                 $descriptionField->enumeration = json_decode($descriptionField->enumeration);
@@ -134,12 +136,13 @@ class descriptionField
     public function serializeFacets($descriptionField)
     {
         if (isset($descriptionField->facets) && !is_null($descriptionField->facets)) {
-            foreach ($descriptionField->facets->jsonSerialize() as $key => $value) {
+            $facets = $descriptionField->facets->getValue();
+            foreach ($facets as $key => $value) {
                 $descriptionField->$key = $value;
             }
-        }
 
-        return $descriptionField;
+            unset($descriptionField->facets);
+        }
     }
 
     /**
