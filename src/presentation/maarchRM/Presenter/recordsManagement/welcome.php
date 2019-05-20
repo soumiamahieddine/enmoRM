@@ -308,7 +308,7 @@ class welcome
                         $archiveDescription->descriptionField->choice = array_combine($archiveDescription->descriptionField->enumeration, $archiveDescription->descriptionField->enumeration);
                     }
                 }
-            }           
+            }
         }
 
         if (!empty($orgUnit->organization)) {
