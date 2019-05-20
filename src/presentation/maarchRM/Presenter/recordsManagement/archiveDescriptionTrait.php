@@ -178,6 +178,13 @@ trait archiveDescriptionTrait
 
                     return $this->getObjectTable($value, $properties);
                 } else {
+                    if (!empty($descriptionField->enumeration) && !empty($descriptionField->enumNames)) {
+                        $index = array_search($value, $descriptionField->enumeration);
+                        if ($index!== false && isset($descriptionField->enumNames[$index])) {
+                            $value = $descriptionField->enumNames[$index];
+                        }
+                    }
+
                     return $this->view->createTextNode($value);
                 }
         }
