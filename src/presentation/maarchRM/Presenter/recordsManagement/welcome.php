@@ -322,6 +322,32 @@ class welcome
             }
         }
 
+        foreach ($orgUnit->archivalProfiles as $archivalProfile) {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                // Get scheme for array of objects, limit to one level for scheme recusions
+                if ($archiveDescription->descriptionField->type == 'array'
+                    && isset($archiveDescription->descriptionField->itemType)
+                    && $archiveDescription->descriptionField->itemType[0] == '#') {
+                    $objectType = new \StdClass();
+                    $objectType->type = 'object';
+
+                    $className = substr($archiveDescription->descriptionField->itemType, 1);
+                    $objectType->properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $className);
+
+                    $archiveDescription->descriptionField->itemType = $objectType;
+                }
+
+                // Get key-value pairs for select if enum has enumNames
+                if (isset($archiveDescription->descriptionField->enumeration)) {
+                    if (isset($archiveDescription->descriptionField->enumNames)) {
+                        $archiveDescription->descriptionField->choice = array_combine($archiveDescription->descriptionField->enumeration, $archiveDescription->descriptionField->enumNames);
+                    } else {
+                        $archiveDescription->descriptionField->choice = array_combine($archiveDescription->descriptionField->enumeration, $archiveDescription->descriptionField->enumeration);
+                    }
+                }
+            }
+        }
+
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);
