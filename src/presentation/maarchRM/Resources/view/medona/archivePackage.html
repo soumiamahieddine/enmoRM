@@ -1,0 +1,106 @@
+<div id="containList" class="row" data-translate-catalog="medona/messages">
+    <div class="panel panel-primary">
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <th class="hidden-md">Archive id</th>
+                        <th>Description class</th>
+                        <th>Res id</th>
+                        <th/>
+                    </tr>
+                </thead>
+                <tbody id="archiveList_tabl">
+                    <?merge $descriptiveMetadata.archive ?>
+                    <div>
+                        <tr id="[?merge .archiveId ?]">
+                            <td class="hidden-md" style="word-break: break-all;"><?merge .archiveId ?></td>
+                            <td class="hidden-md" ><?merge .descriptionClass ?></td>
+                            <td class="hidden-md">
+                                <?merge .digitalResources ?>
+                                <span><?merge .resId ?></span>
+                            </td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <?merge .digitalResources ?>
+                                    <button type="button" class="btn btn-primary showDocument" title="View" data-id="[?merge .resId ?]">
+                                        <span class="fa fa-eye">&nbsp;</span>
+                                    </button>
+                                    <button type="button" class="btn btn-success info" title="Info" data-json="[?merge .descriptionObject.json ?]">
+                                        <span class="fa fa-info-circle">&nbsp;</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="descriptionObjectModal hide">
+    <div id="messageModal">
+    <div class="container-fluid">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4>Description</h4>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive" data-translate-catalog="businessRecords/messages">
+                <table class="table table-condensed table-striped table-condensed">
+                    <tbody class="descriptionBody">
+                        <!--Description information-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>
+    <div class="hide" data-translate-catalog="businessRecords/messages">
+        <span id="descriptionId_text">Description id</span>
+        <span id="companyCode_text">Company code</span>
+        <span id="companyName_text">Company</span>
+        <span id="thirdPartyName_text">Third party</span>
+        <span id="thirdPartyCode_text">Third party code</span>
+        <span id="thirdPartyTaxIdentifier_text">Third party tax identifier</span>
+        <span id="reference_text">Reference</span>
+        <span id="date_text">Date</span>
+        <span id="natureCode_text">Nature code</span>
+        <span id="year_text">Year</span>
+        <span id="quarter_text">Quarter</span>
+        <span id="month_text">Month</span>
+        <span id="employeeNumber_text">Employee number</span>
+        <span id="employeeName_text">Employee name</span>
+        <span id="relatedAgency_text">Related agency</span>
+    </div>
+</div>
+
+
+<script>
+    $("#archiveList_tabl").on('click',".info", function() {
+
+        description = $.parseJSON($(this).attr('data-json'));
+        var table = $(".descriptionBody");
+        
+        table.empty();
+        
+        $.each(description, function(index, value) {
+            if (value) {
+                var tr = $('<tr/>');
+                var td = $('<td/>').appendTo(tr);
+                var strong = $('<strong/>').text($("#"+index+"_text").html()).appendTo(td);
+                var tdValue = $('<td/>').text(value).appendTo(tr);
+                
+                tr.appendTo(table);
+            }
+        });
+        
+        $('#modalContainerInfo').html($(".descriptionObjectModal").html());
+        $('#viewModalInfo').modal();
+    });
+
+</script>

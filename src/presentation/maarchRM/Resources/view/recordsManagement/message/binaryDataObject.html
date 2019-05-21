@@ -1,0 +1,25 @@
+<div id="contain" class="row" data-translate-catalog="medona/messages">
+    <div class="panel panel-primary">
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mimetype</th>
+                        <th class="hidden-md" data-translate-catalog="recordsManagement/messages">Size (bytes)</th>
+                    </tr>
+                </thead>
+                <tbody id="objectList_table">
+                    <?merge $binaryDataObject ?>
+                    <div>
+                        <tr id="[?merge .value ?]">
+                            <td><?merge .attachment.filename ?></td>
+                            <td><?merge .mimetype ?></td>
+                            <td><?merge .size ?></td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

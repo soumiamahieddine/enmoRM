@@ -1,0 +1,80 @@
+<!--#
+    This file is part of the medona package.
+    (c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="containList" class="col-xs-12" data-translate-catalog="medona/messages">
+    <div class="panel panel-primary">
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <th class="hidden-md">Identifiant</th>
+                        <th>Type of message</th>
+                        <th>Sender</th>
+                        <th>Recipient</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?merge messages ?>
+                    <div>
+                        <tr>
+                            <td class="hidden-md" style="word-break: break-all;"><?merge .reference ?></td>
+                            <td><?merge .typeTranslate ?></td>
+                            <td><?merge .senderOrgName ?></td>
+                            <td><?merge .recipientOrgName ?></td>
+                            <td data-sort="[?merge .date.format('YmdHisu') ?]" ><?merge .date ?></td>
+                            <td><?merge .status ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
+                                        <span class="fa fa-eye">&nbsp;</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="messages" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="message_modalContainer">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="viewModalInfo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContainerInfo">
+        </div>
+    </div>
+</div>
+
+<?hinclude recordsManagement/archive/modalArchiveInfo.html ?>
+<?hinclude medona/message/modalModification.html ?>
+
+<script>
+
+    $("#containList").on('click','.viewMessage',function() {
+        $.ajax({
+            url: "/medona/historyMessage/" + $(this).data('message-id'),
+            type: "GET",
+            dataType: "html",
+            success: function(response) {
+                $('#message_modalContainer').html(response);
+                $('#infoModal').modal();
+            }
+        });
+    });
+   
+</script>

@@ -1,0 +1,60 @@
+<div class="panel-group"  role="tablist" aria-multiselectable="true">
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" href="#document[?merge .archivalAgencyDocumentIdentifier.value ?][?merge .id ?]" aria-expanded="true" aria-controls="collapseOne">
+                    Document : <?merge .attachment.filename ?>
+                </a>
+            </h4>
+        </div>
+        <div id="document[?merge .archivalAgencyDocumentIdentifier.value ?][?merge .id ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-translate-catalog="recordsManagement/messages">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Name</dt>
+                    <dd translate="no">
+                        <?merge .attachment.filename ?>
+                    </dd>
+                    <?merge .type ?>
+                    <dl class="dl-horizontal">
+                        <dt>Type</dt>
+                        <?merge .value.ifeq('CDO') ?>
+                        <dd>Content data object</dd>
+                        <?merge .value.ifeq('RI') ?>
+                        <dd>Representation information</dd>
+                        <?merge .value.ifeq('PDI') ?>
+                        <dd>Preservation Description Information</dd>
+                    </dl>
+                    <?merge .language.bool() ?>
+                    <span>
+                        <dt>Langage</dt>
+                        <dd translate="no">
+                            <?merge .language ?>
+                        </dd>
+                    </span>
+                    <?merge .attachment.bool() ?>
+                    <span>
+                        <dt>Format</dt>
+                        <dd translate="no">
+                            <?merge .attachment.mimeCode ?>
+                        </dd>
+                    </span>
+                    <dt>Integrity</dt>
+                    <dd translate="no">
+                        <?merge .integrity.value ?>
+                    </dd>
+                    <?merge .size.bool() ?>
+                    <span>
+                        <dt>Size (octets)</dt>
+                        <dd translate="no">
+                            <?merge .size.value ?>
+                        </dd>
+                    </span>
+                </dl>
+                <?merge .attachment.bool() ?>
+                <button type="button" class="btn btn-warning btn-sm showDocument pull-right" title="Show" data-id="[?merge .attachment.id ?]" data-filename="[?merge .attachment.filename ?]">
+                    <span class="fa fa-eye"/> Afficher
+                </button>
+            </div>
+        </div>
+    </div>
+</div> <!-- end document -->

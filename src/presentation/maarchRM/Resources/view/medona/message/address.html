@@ -1,0 +1,25 @@
+<?merge .address ?>
+<div class="panel panel-warning">
+    <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-target="#address[?merge $organization.id ?][?merge $contact.id ?][?merge .id ?]" aria-expanded="true" aria-controls="collapseOne">
+                Address
+            </a>
+        </h4>
+    </div>
+    <div id="address[?merge $organization.id ?][?merge $contact.id ?][?merge .id ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+        <div class="panel-body">
+            <div>
+                <?merge .streetName.bool() ?>
+                <div><?merge .roomIdentification ?>&nbsp;<?merge .streetName ?><br/></div>
+                <?merge .blockName.bool() ?>
+                <div><?merge .blockName ?><br/></div>
+                <?merge .floorIdentification.bool() ?>
+                <div>Etage <?merge .floorIdentification ?><br/></div>
+                <?merge .buildingNumber.bool() ?>
+                <div>Batiment <?merge .buildingNumber ?>&nbsp;<?merge .buildingName ?><br/></div>
+                <?merge .postCode ?>&nbsp;<?merge .cityName ?>
+            </div>
+        </div>
+    </div>
+</div>

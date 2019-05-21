@@ -1,0 +1,181 @@
+<!-- Data objects -->
+<div class="col-xs-6" >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Archival agency</strong>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>Identifier</dt>
+                <dd translate="no">
+                    <?merge .object.archivalAgency.identification.value ?>
+                </dd>
+                <dt>Nom de l'organisation</dt>
+                <dd translate="no">
+                    <?merge .object.archivalAgency.name ?>
+                </dd>
+            </dl>
+            <?merge .object.archivalAgency.address.bool() ?>
+            <div class="panel panel-warning">
+                <div class="panel-heading" role="tab">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#addressArchivalAgency" aria-expanded="true" aria-controls="collapseOne">
+                            Address
+                        </a>
+                    </h4>
+                </div>
+                <div id="addressArchivalAgency" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <?merge .object.archivalAgency.address ?>
+                        <div>
+                            <?merge .roomIdentification ?>&nbsp;<?merge .streetName ?>
+                            <br/>
+                            <?merge .blockName ?>
+                            <br/>
+                            <?merge .floorIdentification.bool() ?>
+                            <div>Etage <?merge .floorIdentification ?><br/></div>
+                            <?merge .buildingNumber.bool() ?>
+                            <div>Batiment <?merge .buildingNumber ?>&nbsp;<?merge .buildingName ?><br/></div>
+                            <?merge .postCode ?>&nbsp;<?merge .cityName ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?merge .object.archivalAgency.communication.bool() ?>
+            <div data-translate-catalog="contact/contact">
+                <h4>Communication mean</h4>
+                <?merge .object.archivalAgency.communication ?>
+                <dl class="dl-horizontal">
+                    <?merge .channel.value.ifeq('TE') ?>
+                    <dt>
+                    Phone
+                    </dt>
+                    <?merge .channel.value.ifeq('FX') ?>
+                    <dt>
+                    Fax
+                    </dt>
+                    <?merge .channel.value.ifeq('EM') ?>
+                    <dt>
+                    E-mail
+                    </dt>
+                    <?merge .channel.value.ifeq('AU') ?>
+                    <dt>
+                    FTP
+                    </dt>
+                    <?merge .channel.value.ifeq('AO') ?>
+                    <dt>
+                    URL
+                    </dt>
+                    <?merge .channel.value.ifeq('AL') ?>
+                    <dt>
+                    Cellular
+                    </dt>
+                    <?merge .channel.value.ifeq('AH') ?>
+                    <dt>
+                    World Wide Web
+                    </dt>
+                    <dd translate="no">
+                        <?merge .completeNumber.value ?>
+                        <?merge .URIID.value ?>
+                    </dd>
+                </dl>
+            </div>
+            <?merge .object.archivalAgency.contact ?>
+            <div class="panel-group" role="tablist" aria-multiselectable="true" >
+                <div class="panel panel-info">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#contactArchivalAgency[?merge .identification.value ?]" aria-expanded="true" aria-controls="collapseOne">
+                                Contact : <?merge .personName ?>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="contactArchivalAgency[?merge .identification.value ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" data-translate-catalog="contact/contact">
+                        <div class="panel-body">
+                            <dl class="dl-horizontal" >
+                                <dt>Name</dt>
+                                <dd translate="no">
+                                    <?merge .personName ?>
+                                </dd>
+                                <dt>Identifier</dt>
+                                <dd translate="no">
+                                    <?merge .identification.value ?>
+                                </dd>
+                                <dt>Responsibility</dt>
+                                <dd translate="no">
+                                    <?merge .responsibility ?>
+                                </dd>
+                                <dt>Department name</dt>
+                                <dd translate="no">
+                                    <?merge .departmentName ?>
+                                </dd>
+                            </dl>
+                            <br/>
+                            <div class="panel panel-warning">
+                                <div class="panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" href="#addressContactArchivalAgency[?merge .identification.value ?]" aria-expanded="true" aria-controls="collapseOne">
+                                            Address
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="addressContactArchivalAgency[?merge .identification.value ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                        <?merge .address ?>
+                                        <div >
+                                            <?merge .roomIdentification ?>&nbsp;<?merge .streetName ?>
+                                            <br/>
+                                            <?merge .blockName ?>
+                                            <br/>
+                                            <?merge .floorIdentification.bool() ?>
+                                            <div>Etage <?merge .floorIdentification ?><br/></div>
+                                            <?merge .buildingNumber.bool() ?>
+                                            <div>Batiment <?merge .buildingNumber ?>&nbsp;<?merge .buildingName ?><br/></div>
+                                            <?merge .postCode ?>&nbsp;<?merge .cityName ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4>Communication mean</h4>
+                            <?merge .communication ?>
+                            <dl class="dl-horizontal" >
+                                <?merge .channel.value.ifeq('TE') ?>
+                                <dt>
+                                Phone
+                                </dt>
+                                <?merge .channel.value.ifeq('FX') ?>
+                                <dt>
+                                Fax
+                                </dt>
+                                <?merge .channel.value.ifeq('EM') ?>
+                                <dt>
+                                E-mail
+                                </dt>
+                                <?merge .channel.value.ifeq('AU') ?>
+                                <dt>
+                                FTP
+                                </dt>
+                                <?merge .channel.value.ifeq('AO') ?>
+                                <dt>
+                                URL
+                                </dt>
+                                <?merge .channel.value.ifeq('AL') ?>
+                                <dt>
+                                Cellular
+                                </dt>
+                                <?merge .channel.value.ifeq('AH') ?>
+                                <dt>
+                                World Wide Web
+                                </dt>
+                                <dd translate="no">
+                                    <?merge .completeNumber.value ?>
+                                    <?merge .URIID.value ?>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="table-responsive" data-translate-catalog="medona/message">
+    <table class="table table-condensed table-striped table-condensed">
+        <tbody>
+            <?merge message.messageId.bool() ?>
+            <tr><td><strong>Message identifier</strong></td><td><?merge message.messageId ?></td></tr>
+            
+            <?merge message.schema.bool() ?>
+            <tr><td><strong>Schema</strong></td><td><?merge message.schema ?></td></tr>
+
+            <tr><td><strong>Date de dépôt</strong></td><td><?merge carteAdherent.date_depot_pli ?></td></tr>
+            
+            <?merge message.type.bool() ?>
+            <tr><td><strong>Type</strong></td><td><?merge message.type ?></td></tr>
+            
+            <?merge message.senderOrgName.bool() ?>
+            <tr><td><strong>Sender</strong></td><td><?merge message.senderOrgName ?></td></tr>
+            
+            <?merge message.recipientOrgName.bool() ?>
+            <tr><td><strong>Recipient</strong></td><td><?merge message.recipientOrgName ?></td></tr>
+            
+            <?merge message.operationDate.bool() ?>
+            <tr><td><strong>Operation date</strong></td><td><?merge message.operationDate ?></td></tr>
+            
+            <?merge message.receptionDate.bool() ?>
+            <tr><td><strong>Reception date</strong></td><td><?merge message.receptionDate ?></td></tr>  
+            
+            <?merge message.replyCode.bool() ?>
+            <tr><td><strong>Reply code</strong></td><td><?merge message.replyCode ?></td></tr>         
+            
+            <?merge message.size.bool() ?>
+            <tr><td><strong>Size</strong></td><td><?merge message.size ?></td></tr>
+        </tbody>
+    </table>
+</div>
