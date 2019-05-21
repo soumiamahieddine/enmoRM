@@ -1195,6 +1195,20 @@ class organization
         $archiveController = \laabs::newController("recordsManagement/archive");
         $count = $archiveController->countByOrg($registrationNumber);
 
+        if ($count > 0) {
+            return true;
+        }
+
+        $messageController = \laabs::newController("medona/message");
+        $count = $messageController->countByOrg($registrationNumber);
+
+        if ($count > 0) {
+            return true;
+        }
+
+        $archivalAgreementController = \laabs::newController("medona/archivalAgreement");
+        $count = $archivalAgreementController->countByOrg($registrationNumber);
+
         return $count > 0 ? true : false;
     }
 

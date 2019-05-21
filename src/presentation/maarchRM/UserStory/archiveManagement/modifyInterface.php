@@ -24,6 +24,14 @@ namespace presentation\maarchRM\UserStory\archiveManagement;
  */
 interface modifyInterface
 {
+    /**
+     * Read organization by role
+     *
+     * @uses organization/organization/readByrole_role_
+     * @return organization/organization/byRole
+     */
+    public function readOrganizationByrole_role_();
+
     // --------------------------------------------------------------------------    
     // Preservation rule
     // --------------------------------------------------------------------------
@@ -43,6 +51,7 @@ interface modifyInterface
      *  
      */
     public function readRecordsmanagementArchiveRetentionrule();
+
     /**
      * Update a retention rule
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
@@ -50,7 +59,6 @@ interface modifyInterface
      * 
      * @uses recordsManagement/archives/updateRetentionrule
      * @return recordsManagement/archive/modifyRetentionRule
-     * 
      */
     public function updateRecordsmanagementArchiveRetentionrule($retentionRule, $archiveIds);
 
@@ -60,10 +68,8 @@ interface modifyInterface
     /**
      * Read the access rule of archive
      * 
-     * @return recordsManagement/archive/editArchiveAccessRule
-     * 
      * @uses recordsManagement/archive/readAccessrule_archiveId_
-     * 
+     * @return recordsManagement/archive/editArchiveAccessRule
      */
     public function readRecordsmanagementArchiveAccessrule_archiveId_();
 
@@ -71,10 +77,8 @@ interface modifyInterface
      * Read the access rule of multiple archives
      * @param array $archiveIds Array of archive identifier or sigle archive identifier
      * 
-     * @return recordsManagement/archive/editArchiveAccessRule
-     * 
      * @uses recordsManagement/archives/readAccessrule
-     * 
+     * @return recordsManagement/archive/editArchiveAccessRule
      */
     public function readRecordsmanagementArchiveAccessrule($archiveIds);
     /**
@@ -82,9 +86,8 @@ interface modifyInterface
      * @param recordsManagement/archiveAccessRule $accessRule The access rule object
      * @param array                               $archiveIds The archives ids
      * 
-     * @return recordsManagement/archive/modifyAccessRule
-     * 
      * @uses recordsManagement/archives/updateAccessrule
+     * @return recordsManagement/archive/modifyAccessRule
      */
     public function updateRecordsmanagementArchiveAccessrule($accessRule, $archiveIds);
 
@@ -97,10 +100,8 @@ interface modifyInterface
      * @param string                              $comment     The comment of modification
      * @param string                              $identifiant Message identifiant
      * 
-     * @return recordsManagement/archive/freeze
-     * 
      * @uses recordsManagement/archives/updateFreeze
-     * 
+     * @return recordsManagement/archive/freeze
      */
     public function updateRecordsmanagementArchiveFreeze($archiveIds, $comment, $identifiant);
 
@@ -110,9 +111,8 @@ interface modifyInterface
      * @param string                              $comment     The comment of modification
      * @param string                              $identifiant Message identifiant
      * 
-     * @return recordsManagement/archive/unfreeze
-     * 
      * @uses recordsManagement/archives/updateUnfreeze
+     * @return recordsManagement/archive/unfreeze
      */
     public function updateRecordsmanagementArchiveUnfreeze($archiveIds, $comment, $identifiant);
 }
