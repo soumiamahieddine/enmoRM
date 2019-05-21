@@ -1,0 +1,254 @@
+<div class="panel-group" role="tablist" aria-multiselectable="true">
+    <?merge $descriptiveMetadata ?>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" href="#archive_[?merge $descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" class="collapsed">
+                    Archive : <?merge .archiveName ?>
+                </a>
+            </h4>
+        </div>
+        <div id="archive_[?merge $descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" style="height: 0px;">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Identifiant</dt>
+                    <dd translate="no">
+                        <?merge .archiveName ?>
+                    </dd>
+
+                    <?merge .archiveId.bool() ?>
+                    <span>
+                        <dt>Cote</dt>
+                        <dd translate="no">
+                            <?merge .archiveId ?>
+                        </dd>
+                    </span>
+
+                    <?merge .originatorArchiveId.bool() ?>
+                    <span>
+                        <dt>Originator archive id</dt>
+                        <dd translate="no">
+                            <?merge .originatorArchiveId ?>
+                        </dd>
+                    </span>
+
+                    <?merge .archiverArchiveId.bool() ?>
+                    <span>
+                        <dt>Archiver archive id</dt>
+                        <dd translate="no">
+                            <?merge .archiverArchiveId ?>
+                        </dd>
+                    </span>
+
+                    <?merge .depositorArchiveId.bool() ?>
+                    <span>
+                        <dt>Depositor archive id</dt>
+                        <dd translate="no">
+                            <?merge .depositorArchiveId ?>
+                        </dd>
+                    </span>
+
+                    <?merge .originatingSystemId.bool() ?>
+                    <span>
+                        <dt>Originating system id</dt>
+                        <dd translate="no">
+                            <?merge .originatingSystemId ?>
+                        </dd>
+                    </span>
+
+                    <?merge .archiveType.bool() ?>
+                    <span>
+                        <dt>Archive type</dt>
+                        <dd>
+                            <?merge .archiveType.ifeq('item') ?>
+                            <span>Item</span>
+                            <?merge .archiveType.ifeq('container') ?>
+                            <span>Container</span>
+                        </dd>
+                    </span>
+
+                    <?merge .originatingDate.bool() ?>
+                    <span>
+                        <dt>Originating date</dt>
+                        <dd translate="no">
+                            <?merge .originatingDate ?>
+                        </dd>
+                    </span>
+                </dl>
+
+                <?merge .descriptionObject.bool() ?>
+                <div class="panel panel-warning">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#descriptionObject_[?merge $descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                Description object
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="descriptionObject_[?merge $descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <?merge .descriptionObject ?>
+                            <dl class="dl-horizontal" data-translate-catalog="medona/messages">
+                                <?merge .label.bool() ?>
+                                <dt><?merge .label ?></dt>
+                                <?merge .label.bool().not() ?>
+                                <dt><?merge .key ?></dt>
+                                <?merge .value.ifeq(1) ?>
+                                <dd translate="no">True</dd>
+                                <?merge .value.ifne(1) ?>
+                                <dd translate="no"><?merge .value ?></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <?merge .managementMetadata.bool() ?>
+                <div class="panel panel-warning">
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#managementMetadata_[?merge $descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                Management metadata
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="managementMetadata_[?merge $descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <dl class="dl-horizontal">
+                                <?merge .managementMetadata.archivalProfile.bool() ?>
+                                <span>
+                                    <dt>Archival profile</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.archivalProfile ?>
+                                    </dd>
+                                </span>
+                                <?merge .managementMetadata.serviceLevel.bool() ?>
+                                <span>
+                                    <dt>Service level</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.serviceLevel ?>
+                                    </dd>
+                                </span>
+                            </dl>
+                            <?merge .managementMetadata.storageRule.bool() ?>
+                            <dl class="dl-horizontal" data-translate-catalog="medona/messages">
+                                <h4>Storage rule</h4>
+
+                                <?merge .managementMetadata.storageRule.code.bool() ?>
+                                <span>
+                                    <dt>Code</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.storageRule.code ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.storageRule.finalAction.bool() ?>
+                                <span>
+                                <dt>Final action</dt>
+                                <dd translate="no">
+                                    <?merge .managementMetadata.storageRule.finalAction ?>
+                                </dd>
+                                </span>
+
+                                <?merge .managementMetadata.storageRule.startDate.bool() ?>
+                                <span>
+                                    <dt>Start date</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.storageRule.startDate ?>
+                                    </dd>
+                                </span>
+                            </dl>
+                            <hr/>
+                            <?merge .managementMetadata.appraisalRule.bool() ?>
+                            <dl class="dl-horizontal" data-translate-catalog="medona/messages">
+                                <h4>Appraisal rule</h4>
+
+                                <?merge .managementMetadata.appraisalRule.code.bool() ?>
+                                <span>
+                                    <dt>Code</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.appraisalRule.code ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.appraisalRule.duration.bool() ?>
+                                <span>
+                                <dt>Duration</dt>
+                                <dd translate="no">
+                                    <?merge .managementMetadata.appraisalRule.duration ?>
+                                </dd>
+                                </span>
+
+                                <?merge .managementMetadata.appraisalRule.startDate.bool() ?>
+                                <span>
+                                <dt>Start date</dt>
+                                <dd translate="no">
+                                    <?merge .managementMetadata.appraisalRule.startDate ?>
+                                </dd>
+                                </span>
+                            </dl>
+                            <hr/>
+                            <?merge .managementMetadata.accessRule.bool() ?>
+                            <dl class="dl-horizontal"data-translate-catalog="medona/messages">
+                                <h4>Access rule</h4>
+
+                                <?merge .managementMetadata.accessRule.code.bool() ?>
+                                <span>
+                                    <dt>Code</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.accessRule.code ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.accessRule.startDate.bool() ?>
+                                <span>
+                                    <dt>Start date</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.accessRule.startDate ?>
+                                    </dd>
+                                </span>
+                            </dl>
+                            <hr/>
+                            <?merge .managementMetadata.classificationRule.bool() ?>
+                            <dl class="dl-horizontal"data-translate-catalog="medona/messages">
+                                <h4>Classification rule</h4>
+
+                                <?merge .managementMetadata.classificationRule.code.bool() ?>
+                                <span>
+                                    <dt>Code</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.classificationRule.code ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.classificationRule.startDate.bool() ?>
+                                <span>
+                                    <dt>Start date</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.classificationRule.startDate ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.classificationRule.classificationLevel.bool() ?>
+                                <span>
+                                    <dt>Level</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.classificationRule.classificationLevel ?>
+                                    </dd>
+                                </span>
+
+                                <?merge .managementMetadata.classificationRule.classificationOwner.bool() ?>
+                                <span>
+                                    <dt>Owner</dt>
+                                    <dd translate="no">
+                                        <?merge .managementMetadata.classificationRule.classificationOwner ?>
+                                    </dd>
+                                </span>
+                            </dl>
+                        </div>
+                    </div>
+                </div><!-- end management metadata -->
+                <br>
+            </div><!-- end panel body -->
+        </div> <!-- end collapse -->
+    </div> <!-- end panel -->
+</div> <!-- end panel group -->

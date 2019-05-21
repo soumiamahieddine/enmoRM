@@ -1,0 +1,187 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div class="panel-group hide" id="accordionSearch">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-toggle="collapse" data-parent="#accordionSearch" href="#collapseOne" style="cursor:pointer;">
+            <h4 class="panel-title" style="float:left;">
+                <i class="fa fa-search"></i>
+                Search form 
+            </h4>
+            <i class="fa fa-caret-down" style="float:right;"></i>
+            <div style="clear:both;"></div>
+        </div>
+        <div id="collapseOne" class="well panel-collapse collapse" style="margin-bottom: 0px">
+            <form class="form-horizontal" id="searchForm">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Reference</label>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="reference" placeholder="Message identifier"/>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Type</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="type" name="type" >
+                                    <option value="">Select a type of message</option>
+                                    <?merge typeOfMessage.deposit.inarray('history') ?>
+                                    <option value="ArchiveTransfer">Transfer</option>
+                                    <?merge typeOfMessage.communication.inarray('history') ?>
+                                    <option value="ArchiveDeliveryRequest">Delivery</option>
+                                    <?merge typeOfMessage.restitution.inarray('history') ?>
+                                    <option value="ArchiveRestitutionRequest">Restitution request</option>
+                                    <?merge typeOfMessage.restitution.inarray('history') ?>
+                                    <option value="ArchiveRestitution">Restitution</option>
+                                    <?merge typeOfMessage.destruction.inarray('history') ?>
+                                    <option value="ArchiveDestructionRequest">Destrution</option>
+                                    <?merge typeOfMessage.notification.inarray('history') ?>
+                                    <option value="Notification">Notification</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Sender</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="sender" placeholder="Sender"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Recipient</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="recipient" placeholder="Recipient"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">From date</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control datePicker" name="fromDate" placeholder="From date"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">To date</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control datePicker" name="toDate" placeholder="To date"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="clearfix">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary col-md-offset-4 col-md-3" id="search" title="Search"><i class="fa fa-search">&nbsp;</i> Search</button>
+                        <button type="button" class="btn btn-warning col-md-offset-1" id="resetSearchForm" title="Reset"><i class="fa fa-refresh">&nbsp;</i> Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).keypress(function (e) {
+        if (e.which != 13) {
+            return;
+        }
+        // Prevent form submit
+        e.preventDefault();
+        if ($("#reference").is(':focus')) {
+            $("#referenceSearch").click();
+        } else {
+            $("#search").click();
+        }
+    });
+
+    $('#searchForm').on('keyup', '[name="reference"]', function() {
+        var inputs = $('#searchForm').find('input');
+        var referenceInput = $(this);
+        var reference = referenceInput.val();
+
+        if (reference == "") {
+            inputs.prop('disabled', false);
+        } else {
+            inputs.not(referenceInput).prop('disabled', true);
+        }
+    });
+
+    $("#resetSearchForm").on("click", function () {
+        messageSearchForm.reset();
+    });
+
+    $('#search').on('click', function() {
+        messageSearchForm.search();
+    });
+
+    var messageSearchForm = {
+        load: function(action) {
+            $('#accordionSearch').removeClass('hide');
+            $('#search').data('action', action);
+            messageSearchForm.search();
+            $('#result').empty();
+        },
+
+        search: function() {
+            var action = $('#search').data('action');
+
+            $('#search').attr('disabled', '');
+            ajax($('#search'), {
+                type: 'GET',
+                url: action,
+                data: messageSearchForm.serialize(),
+                contentType: 'application/json',
+                dataType: 'html',
+                async: true,
+                success: function (response) {
+                    $('#result').empty().html(response);
+                }
+            });
+            $('#search').removeAttr('disabled');
+        },
+
+        reset: function() {
+            inputs = $('#searchForm').find('input[type="text"]')
+            inputs.val('');
+            $('#result').empty();
+            inputs.prop('disabled', false);
+        },
+
+        serialize: function() {
+            var searchForm = $('#searchForm');
+            var reference = searchForm.find('[name="reference"]').val();
+            var serializedObject = {};
+
+            if (reference == "") {
+                searchForm.find('input').each(function(){
+                    serializedObject[$(this).attr('name')] = $(this).val();
+                })
+                serializedObject['type'] = $('#searchForm').find('[name="type"] option:selected').val();
+            } else {
+                serializedObject['reference'] = reference;
+            }
+
+            return serializedObject;
+        },
+
+        close: function() {
+            var accordionSearch = $('#accordionSearch');
+            
+            if (!accordionSearch.hasClass('hide')){
+                accordionSearch.addClass('hide');
+                $('#collapseOne').removeClass('in');
+                messageSearchForm.reset();
+            }
+        }
+    }
+
+</script>

@@ -1,0 +1,127 @@
+<!--#
+This file is part of the digitalResource package.
+(c) Maarch Alexis RAGOT <alexis.ragot@maarch.org>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#-->
+<div class="container-fluid" data-translate-catalog="medona/messages">
+    <div class="page-header">
+        <h1>
+            <i class="fa fa-list"></i>
+            Conversion requests
+        </h1>
+    </div>
+</div>
+<div class="container-fluid" data-translate-catalog="medona/messages">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <h4><span id='tableItemNumber'><?merge archivesConversionRequest.count() ?></span> conversion request(s)</h4>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 0;">
+                    
+                    
+                    <table class="table dataTable table-hover" id="conversionRequestTable">
+                        <thead>
+                            <tr>
+                                <th class="hidden-md">Reference</th>
+                                <?merge sender.bool() ?>
+                                <th>Sender</th>
+                                <?merge recipient.bool() ?>
+                                <th>Recipient</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?merge archivesConversionRequest ?>
+                            <div>
+                                <tr>
+                                    <td class="hidden-md" style="word-break: break-all;"><?merge .reference ?></td>
+                                    <?merge sender.bool() ?>
+                                    <td><?merge .senderOrgName ?></td>
+                                    <?merge recipient.bool() ?>
+                                    <td><?merge .recipientOrgName ?></td>
+                                    <td><?merge .date ?></td>
+                                    <td><?merge .status ?></td>
+                                    <td>
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="btn btn-success viewMessage" title="View" data-message-id ="[?merge .messageId ?]">
+                                                <span class="fa fa-eye">&nbsp;</span>
+                                            <utton$(this), >
+                                        </div>
+                                    </td>
+                                </tr>
+                            </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="messages" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="message_modalContainer">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="viewModalDocument" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 80%;">
+        <div class="modal-content" id="modalContainerDocument">
+            <div data-translate-catalog="recordsManagement/messages">
+                <div class="container-fluid">
+                    <div class="">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <br/>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="fileContent" class="col-sm-12">
+                        <!--iframe class="" style="height:100%;width:100%" src="[?merge url ?]" type="[?merge mimetype ?]"></iframe-->
+                        <object id="viewer" width="100%" data="[?merge url ?]" type="[?merge mimetype?]"></object>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
+                <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+            </div>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var height = $(window).height();
+                    $("#viewer").attr("height", 0.85*height);
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="viewModalInfo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="modalContainerInfo">
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#conversionRequestTable").on('click', ".viewMessage", function() {
+        $(this).prop("disabled", true);
+        ajax($(this), {
+            url: "/message/" + $(this).data('message-id'),
+            type: "GET",
+            dataType: "html",
+            success: function (response) {
+                $('#message_modalContainer').html(response);
+                $('#infoModal').modal();
+            }
+        });
+        $(this).prop("disabled", false);
+    })
+</script>

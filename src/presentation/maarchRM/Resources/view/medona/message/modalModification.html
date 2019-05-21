@@ -1,0 +1,63 @@
+<div class="modal fade" id="modificationModal" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" data-translate-catalog="medona/messages">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3><span id="modification_title"></span></h3>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="sidebar-offcanvas col-sm-12">
+                    <?hinclude medona/message/modificationMessageCommentFrom.html?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" data-dismiss="modal" title="Cancel"><i class="fa fa-times">&nbsp;</i>Cancel</button>
+                <button id="save" class="btn btn-success" data-archiveIds="" data-dismiss="modal" title="Save"><i class="fa fa-check">&nbsp;</i>OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var urlReject = null;  
+    $("#save").on('click', function () {
+        var parameters;
+        parameters = {};
+        parameters.messageId = $(this).data('messageIds');
+        
+        parameters.comment = $("#rejet").find('[name="comment"]').val();
+        
+        $.ajax({
+            url         : urlReject,
+            type        : 'PUT',
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    $('#infoModal').modal("hide");
+                    $('#infoModal').one('hidden.bs.modal', function() {
+                        trigger('reload.medonaMenu');
+                    });
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+    
+    function loadReject(messageId, url) {
+        urlReject = url;
+        var modal = $('#modificationModal');
+        $('#title').html($('#mtext_reject').html());
+        $('#save').data("messageIds", messageId);
+        
+        $("#modification").hide();
+        $("#rejet").show();
+        modal.modal();
+    }
+</script>
