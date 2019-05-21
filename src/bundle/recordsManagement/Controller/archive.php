@@ -382,4 +382,28 @@ class archive
     {
         return $this->sdoFactory->read('recordsManagement/archive', $archiveId);
     }
+
+    /**
+     * Check if the new status of an archive is possible depending on current status
+     * @param string $archiveId  Identifier of the archives to check
+     * @param string $status     New status to check
+     *
+     * @return boolean           if the new status is possible on this archive (depends on the current status of the archive)
+     */
+    public function checkStatus($archiveId, $status)
+    {
+        $statusList = [];
+        $statusList['restituable'] = array('preserved', 'restituted', 'disposed');
+        
+        if (!isset($statusList[$status])) {
+            return false;
+        }
+        $archive = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
+
+        if (!in_array($archive->status, $statusList[$status])) {
+            return false;
+        }
+
+        return true;
+    }
 }

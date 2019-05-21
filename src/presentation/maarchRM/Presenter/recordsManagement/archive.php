@@ -1226,10 +1226,16 @@ class archive
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
+        $hasRestitutionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
+        $hasDeliveryPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "delivery/deliveryRequest");
+        $hasTransferPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "definitiveTransfer/transferSending");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
         $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
+        $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);
+        $this->view->setSource('hasDeliveryPrivilege', $hasDeliveryPrivilege);
+        $this->view->setSource('hasTransferPrivilege', $hasTransferPrivilege);
     }
 
     /**
