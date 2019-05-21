@@ -45,7 +45,6 @@ css = "/presentation/css/style.css"
 ; List of displayable format as preview
 displayableFormat = "['application/pdf', 'image/jpeg', 'image/png', 'text/plain']"
 
-
 [recordsManagement]
 ; Profile directory for rng profile
 profilesDirectory = "%laabsDirectory%/data/maarchRM/profiles"
@@ -106,15 +105,15 @@ translationLogType = "{
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
-descriptionSchemes = "{
-   'seda2/Content' : {
-       'label' : 'SEDA 2',
-       'type' : 'php',
-       'uri' : 'seda2/Content',
-       'controller' : '',
-       'presenter' : ''
-   }
-}"
+;descriptionSchemes = "{
+;   'seda2/Content' : {
+;       'label' : 'SEDA 2',
+;       'type' : 'php',
+;       'uri' : 'seda2/Content',
+;       'controller' : '',
+;       'presenter' : ''
+;   }
+;}"
 
 [audit]
 ; Send notifications on audit event
@@ -135,6 +134,154 @@ chainWithTimestamp = false;
 
 ; Any operation on this list will no be logged in the application journal
 ;ignoreMethods = "['read']"
+[medona]
+messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
+autoValidateSize = 2147000
+
+;packageSchemas = "{
+;    'seda' : {
+;         'label' : 'Seda 1',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v1.0',
+;         'phpNamespace' : 'seda'
+;    },
+;    'seda2' : {
+;         'label' : 'Seda 2',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v2.0',
+;         'phpNamespace' : 'seda2'
+;    }
+;}"
+
+; Array of task to remove medona message directories
+; 'type' is an array of medona message type
+; 'status' is an array of medona message status
+; 'delay' is the difference with the current date
+removeMessageTask = "{
+    'task1' : {
+        'type' : ['ArchiveTransfer', 'ArchiveTransferReply'],
+        'status' : ['processed'],
+        'delay' : '-P1Y'
+    },
+    'task2' : {
+        'type' : ['ArchiveModificationNotification'],
+        'status' : ['sent'],
+        'delay' : '-P6M'
+    }
+}"
+
+menu = "[
+       {
+       'label' : 'Transferts entrants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-in fa-fw',
+       'submenu' : [
+       {
+       'label' : 'Importer un bordereau',
+       'href'  : '/transfer'
+       },
+       {
+       'label' : 'Transferts en attente de traitement',
+       'href'  : '/transfer/sent'
+       },
+       {
+       'label' : 'Transferts à traiter',
+       'href'  : '/transfer/received'
+       },
+       {
+       'label' : 'Historique de transfert',
+       'href'  : '/transfer/history'
+       }
+       ]
+       },
+       {
+       'label' : 'Communication',
+       'href'  : '#',
+       'class' : 'fa fa-share fa-fw',
+       'submenu' : [
+       {
+       'label' : 'Demandes d\'autorisation',
+       'href'  : '/delivery/Authorizationrequest'
+       },
+       {
+       'label' : 'Communications à valider',
+       'href'  : '/delivery/request'
+       },
+       {
+       'label' : 'Communications à récupérer',
+       'href'  : '/delivery/list'
+       },
+       {
+       'label' : 'Historique de communication',
+       'href'  : '/delivery/history'
+       }
+       ]
+       },
+       {
+       'label' : 'Restitution',
+       'href'  : '#',
+       'class' : 'fa fa-reply fa-fw',
+       'submenu' : [
+       {
+       'label' : 'Demandes à valider',
+       'href'  : '/restitution/Requestvalidation'
+       },
+       {
+       'label' : 'Restitutions à récupérer',
+       'href'  : '/restitution/validation'
+       },
+       {
+       'label' : 'Restitutions à finaliser',
+       'href'  : '/restitution/process'
+       },
+       {
+       'label' : 'Historique de restitution',
+       'href'  : '/restitution/history'
+       }
+       ]
+       },
+       {
+       'label' : 'Élimination',
+       'href'  : '#',
+       'class' : 'fa fa-remove fa-fw',
+       'submenu' : [
+       {
+       'label' : 'Demandes d\'autorisation',
+       'href'  : '/destruction/Authorizationrequests'
+       },
+       {
+       'label' : 'Demandes à valider',
+       'href'  : '/destruction/processlist'
+       },
+       {
+       'label' : 'Historique d\'élimination',
+       'href'  : '/destruction/history'
+       }
+       ]
+       },
+       {
+       'label' : 'Transferts sortants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-out fa-fw',
+       'submenu' : [
+       {
+       'label' : 'Transferts à acquitter',
+       'href'  : '/outgoingTransfer/received'
+       },
+       {
+       'label' : 'Transferts à finaliser',
+       'href'  : '/outgoingTransfer/Process'
+       },
+       {
+       'label' : 'Historique de transfert',
+       'href'  : '/outgoingTransfer/history'
+       }
+       ]
+       },
+       {
+       'label' : 'Notifications',
+       'href'  : '/notifications',
+       'class' : 'fa fa-bell-o fa-fw'
+       }
+]"
 
 [auth]
 ; Encryption algorithm (MD5, SHA256, SHA512...)
@@ -182,56 +329,75 @@ csrfConfig = '{
     }'
 
 servicePrivileges = "[
-                    {
-                    'serviceURI': 'audit/event/createChainjournal',
-                    'description' : 'Chaîner le journal de l\'application'
-                    },
-                    {
-                    'serviceURI': 'batchProcessing/scheduling/updateProcess',
-                    'description' : 'Exécution automatique des tâches planifiées'
-                    },
-                    {
-                    'serviceURI': 'lifeCycle/journal/createChainjournal',
-                    'description' : 'Chaîner le journal du cycle de vie'
-                    },
-                    {
-                    'serviceURI': 'recordsmanagement/archivecompliance/readperiodic',
-                    'description' : 'Valider l\'intégrité des archives'
-                    },
-                    {
-                    'serviceURI': 'recordsManagement/archives/deleteDisposablearchives',
-                    'description' : 'Détruire les archives'
-                    },
-                    {
-                    'serviceURI': 'recordsManagement/archives/updateIndexfulltext',
-                    'description' : 'Extraction plein texte'
-                    },
-                    {
-                    'serviceURI': 'recordsManagement/archive/create',
-                    'description' : 'Création d\'une archive'
-                    },
-                    {
-                    'serviceURI': 'recordsManagement/archive/createArchiveBatch',
-                    'description' : 'Création par batch d\'archive(s)'
-                    },
-                    {
-                    'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
-                    'description' : 'Mise à jour de la durée d\'utilité administrative'
-                    },
-                    {
-                    'serviceURI': '*',
-                    'description' : 'Tous les droits'
-                    }
-                    ]"
-
-[organization]
-orgUnitRoles = "{
-                    'owner' : {
-                        'code' : 'owner',
-                        'name' : 'organization/owner',
-                        'description' : 'The system owner'
-                    }
-                }"
+	{
+	'serviceURI': 'audit/event/createChainjournal',
+	'description' : 'Chaîner le journal de l\'application'
+	},
+	{
+	'serviceURI': 'batchProcessing/scheduling/updateProcess',
+	'description' : 'Exécution automatique des tâches planifiées'
+	},
+	{
+	'serviceURI': 'lifeCycle/journal/createChainjournal',
+	'description' : 'Chaîner le journal du cycle de vie'
+	},
+	{
+	'serviceURI': 'recordsmanagement/archivecompliance/readperiodic',
+	'description' : 'Valider l\'intégrité des archives'
+	},
+	{
+	'serviceURI': 'recordsManagement/archives/deleteDisposablearchives',
+	'description' : 'Détruire les archives'
+	},
+	{
+	'serviceURI': 'recordsManagement/archives/updateIndexfulltext',
+	'description' : 'Extraction plein texte'
+	},
+	{
+	'serviceURI': 'recordsManagement/archive/create',
+	'description' : 'Création d\'une archive'
+	},
+	{
+	'serviceURI': 'recordsManagement/archive/createArchiveBatch',
+	'description' : 'Création par batch d\'archive(s)'
+	},
+	{
+	'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
+	'description' : 'Mise à jour de la durée d\'utilité administrative'
+	},
+	{
+	'serviceURI' : 'medona/ArchiveDelivery/updateProcessBatch',
+	'description' : 'Traiter les communications'
+	},
+	{
+	'serviceURI' : 'medona/ArchiveDestruction/updateProcessAll',
+	'description' : 'Traiter les destructions'
+	},
+	{
+	'serviceURI' : 'medona/ArchiveRestitution/updateProcessBatch',
+	'description' : 'Traiter les restitutions'
+	},
+	{
+	'serviceURI' : 'medona/ArchiveTransfer/updateProcessBatch',
+	'description' : 'Traiter les transferts'
+	},
+	{
+	'serviceURI' : 'medona/ArchiveTransfer/updateValidateBatch',
+	'description' : 'Valider les transferts'
+	},
+	{
+	'serviceURI' : 'medona/message/deleteMessageDirectoryPurge',
+	'description' : 'Purge des bordereaux'
+	},
+	{
+	'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
+	'description' : 'Mise à jour de la durée d\'utilité administrative'
+	},
+    {
+	'serviceURI': '*',
+	'description' : 'Tous les droits'
+	}
+]"
 
 [lifeCycle]
 
@@ -240,6 +406,30 @@ chainJournalByOrganization = false;
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
+
+[organization]
+orgUnitRoles = "{
+   'owner' : {
+	   'code' : 'owner',
+	   'description' : 'The system owner'
+   },
+   'archiver' : {
+	   'code' : 'archiver',
+	   'description' : 'Archival agency'
+   },
+   'controlAuthority' : {
+	   'code' : 'controlAuthority',
+	   'description' : 'Archive control authority'
+   },
+   'depositor' : {
+	   'code' : 'depositor',
+	   'description' : 'Archive depositor agency'
+   },
+   'originator' : {
+	   'code' : 'originator',
+	   'description' : 'Archive originating agency'
+   }
+}"
 
 [dependency.datasource]
 @Adapter                        = Database
@@ -334,7 +524,7 @@ appenders = "{
         'layout' : {
             'class' : 'LoggerLayoutPattern',
             'params' : {
-                    'conversionPattern' : '[%date{d/m/Y H:i:s}] %-5p [%t] %message %newline'
+                'conversionPattern' : '[%date{d/m/Y H:i:s}] %-5p [%t] %message %newline'
             }
         },
         'params' : {
@@ -402,39 +592,69 @@ trace = 1
 
 [batchProcessing]
 tasks = "[
-            {
-                'taskId': '01',
-                'route' : 'audit/event/createChainjournal',
-                'description' : 'Chainer le journal de l\'application'
-            },
-            {
-                'taskId': '02',
-                'route' : 'lifeCycle/journal/createChainjournal',
-                'description' : 'Chainer le journal du cycle de vie'
-            },
-            {
-                'taskId': '03',
-                'route' : 'recordsManagement/archiveCompliance/readPeriodic',
-                'description' : 'Valider l\'intégrité des archives'
-            },
-            {
-                'taskId': '04',
-                'route' : 'recordsManagement/archives/deleteDisposablearchives',
-                'description' : 'Détruire les archives'
-            },
-            {
-                'taskId': '05',
-                'route' : 'batchProcessing/notification/updateProcess',
-                'description' : 'Envoyer notification'
-            },
-            {
-                'taskId': '06',
-                'route' : 'recordsManagement/archives/updateIndexfulltext',
-                'description' : 'Extraction plein texte'
-            },
-            {
-                'taskId': '07',
-                'route' : 'recordsManagement/archives/updateArchivesretentionrule',
-                'description' : 'Mise à jour de la durée d\'utilité administrative'
-            }
-        ]"
+	{
+		'taskId': '01',
+		'route' : 'audit/event/createChainjournal',
+		'description' : 'Chainer le journal de l\'application'
+	},
+	{
+		'taskId': '02',
+		'route' : 'lifeCycle/journal/createChainjournal',
+		'description' : 'Chainer le journal du cycle de vie'
+	},
+	{
+		'taskId': '03',
+		'route' : 'recordsManagement/archiveCompliance/readPeriodic',
+		'description' : 'Intégrité périodique'
+	},
+	{
+		'taskId': '04',
+		'route' : 'medona/ArchiveDelivery/updateProcessBatch',
+		'description' : 'Traiter les communications'
+	},
+	{
+		'taskId': '05',
+		'route' : 'medona/ArchiveDestruction/updateProcessAll',
+		'description' : 'Traiter les destructions'
+	},
+	{
+		'taskId': '06',
+		'route' : 'medona/ArchiveRestitution/updateProcessBatch',
+		'description' : 'Traiter les restitutions'
+	},
+	{
+		'taskId': '07',
+		'route' : 'medona/ArchiveTransfer/updateProcessBatch',
+		'description' : 'Traiter les transferts'
+	},
+	{
+		'taskId': '08',
+		'route' : 'medona/ArchiveTransfer/updateValidateBatch',
+		'description' : 'Valider les transferts'
+	},
+	{
+		'taskId': '09',
+		'route' : 'medona/message/deleteMessageDirectoryPurge',
+		'description' : 'Purge des bordereaux'
+	},
+	{
+		'taskId': '10',
+		'route' : 'recordsManagement/archives/updateArchivesretentionrule',
+		'description' : 'Mise à jour de la durée d\'utilité administrative'
+	},
+	{
+		'taskId': '11',
+		'route' : 'recordsManagement/archives/deleteDisposablearchives',
+		'description' : 'Détruire les archives'
+	},
+	{
+		'taskId': '12',
+		'route' : 'batchProcessing/notification/updateProcess',
+		'description' : 'Envoyer notification'
+	},
+	{
+		'taskId': '13',
+		'route' : 'recordsManagement/archives/updateIndexfulltext',
+		'description' : 'Extraction plein texte'
+	}
+]"
