@@ -1367,7 +1367,7 @@ trait laabsAppTrait
         $version->number = file_get_contents('../VERSION.md');
         $versions[] = $version;
 
-        $extensions = scandir('ext/');
+        $extensions = \laabs::getExtensions();
         foreach ($extensions as $extension) {
             $versionPath = 'ext' . DIRECTORY_SEPARATOR . $extension . DIRECTORY_SEPARATOR . 'VERSION.md';
             if (file_exists($versionPath)) {
