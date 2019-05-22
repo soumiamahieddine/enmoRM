@@ -29,8 +29,19 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
     ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s'),
     ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Destruction de la ressource %9$s'),
-    ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt d''une ressource dans l''archive %6$s');
-   
+    ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt d''une nouvelle pièce dans l''archive %6$s');
+
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+    ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)'),
+    ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Validation du message %14$s : %16$s (%15$s)'),
+    ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Acquittement du message %14$s : %16$s (%15$s)'),
+    ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s accepté par %13$s (%12$s)'),
+    ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s rejeté par %13$s (%12$s)'),
+    ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
+
+
 -- EN --
 --INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
 
