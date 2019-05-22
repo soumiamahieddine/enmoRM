@@ -67,6 +67,7 @@ $BUNDLE_PATH/audit/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/auth/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/batchProcessing/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/contact/Resources/sql/schema.pgsql.sql \
+$BUNDLE_PATH/medona/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/recordsManagement/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/digitalResource/Resources/sql/schema.pgsql.sql \
 $BUNDLE_PATH/filePlan/Resources/sql/schema.pgsql.sql \

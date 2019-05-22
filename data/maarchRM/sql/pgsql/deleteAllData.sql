@@ -52,3 +52,7 @@ TRUNCATE TABLE "recordsManagement"."accessRule" CASCADE;
 TRUNCATE TABLE "recordsManagement"."retentionRule" CASCADE;
 
 TRUNCATE TABLE "recordsManagement"."descriptionField" CASCADE;
+
+-- Medona
+TRUNCATE TABLE "medona"."archivalAgreement" CASCADE;
+TRUNCATE TABLE "medona"."message" CASCADE;
