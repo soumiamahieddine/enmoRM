@@ -1,54 +1,40 @@
 <div id="messageModal" lang="en" data-translate-catalog="medona/messages">
     <div class="container-fluid">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4></h4>
+            <?merge messages[0] $message ?>
+            <?hinclude /medona/message/messageHead.html ?>
         </div>
         <div class="modal-body">
-            <div class="panel-group" id="messageAccordion" role="tablist" aria-multiselectable="true">
-                <?merge messages ?>
-                <div class="panel panel-info">
-                    <div class="panel-heading" role="tab">
-                        <h3 class="panel-title">
-                            <h4>
-                                <a data-toggle="collapse" data-parent="#messageAccordion" href="#message_[?merge .messageId?]" aria-expanded="true" aria-controls="[? .messageId ?]">
-                                    <span><?merge .type ?></span>&nbsp;
-                                    <small><?merge .date ?>
-                                </a>
-                                <div class="pull-right">
-
-                                    <?merge .exportButton.bool() ?>
-                                    <button type="button" class="btn btn-warning messageExport" data-action="[?merge .exportButton ?]" title="Download"><i class="fa fa-download">&nbsp;</i></button>
-                                    <?merge .processButton.bool() ?>
-                                    <button type="button" class="btn btn-warning messageAction" data-action="[?merge .processButton ?]" title="Process"><i class="fa fa-cogs">&nbsp;</i>Process</button>
-                                    <?merge .acceptButton.bool() ?>
-                                    <button type="button" class="btn btn-success messageAction" data-action="[?merge .acceptButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
-                                    <?merge .acceptWarningButton.bool() ?>
-                                    <button type="button" class="btn btn-success messageActionValidation" data-action="[?merge .acceptWarningButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
-                                    <?merge .rejectButton.bool() ?>
-                                    <button type="button" class="btn btn-danger messageActionReject" data-action="[?merge .rejectButton ?]" title="Reject"><i class="fa fa-times">&nbsp;</i>Reject</button>
-                                    <?merge .validateButton.bool() ?>
-                                    <button type="button" class="btn btn-success messageAction" data-action="[?merge .validateButton ?]" title="Validate" ><i class="fa fa-check">&nbsp;</i>Validate</button>
-                                    <?merge .modifyButton.bool() ?>
-                                    <button type="button" class="btn btn-warning messageAction" data-action="[?merge .modifyButton ?]" title="Modify"><i class="fa fa-times">&nbsp;</i>Modify</button>
-                                    <?merge .validationButton.bool() ?>
-                                    <button type="button" class="btn btn-danger messageActionValidation" data-action="[?merge .validationButton ?]" title="Destroy" ><i class="fa fa-trash">&nbsp;</i>Destroy</button>
-                                    <?merge .sendRequestAuth.bool() ?>
-                                    <button type="button" class="btn btn-warning messageAction" data-action="[?merge .sendRequestAuth ?]" title="Authorization"><i class="fa fa-level-up">&nbsp;</i>Authorization</button>
-                                    <?merge .archived ?>
-                                    <button type="button" class="btn btn-success viewArchive" data-archive-id="[?merge .messageId ?]" title="Info"><span class="fa fa-info-circle"></span></button>
-                                    <?merge .acknowledgeButton.bool() ?>
-                                    <button type="button" class="btn btn-danger messageActionValidation" data-action="[?merge .acknowledgeButton ?]" title="Acknowledge"><i class="fa fa-gavel">&nbsp;</i>Acknowledge</button>
-                                </div>
-                            </h4>
-                        </h3>
+            <div class="container-fluid">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active">
+                        <a href="#messageInformationsTab" data-toggle="tab">Informations</a>
+                    </li>
+                    <li>
+                        <a href="#messageViewer" data-toggle="tab">Détail</a>
+                    </li>
+                    <li>
+                        <a href="#messageUnitIdentifierTab" data-toggle="tab">Unit Identifier</a>
+                    </li>
+                    <li>
+                        <a href="#messageLifeCycleTab" data-toggle="tab">Historique</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="messageInformationsTab">
+                        <?merge messages[0] $message ?>
+                        <?hinclude medona/message/messageInformation.html ?>
                     </div>
-                    <div id="message_[?merge .messageId ?]" class="panel-collapse collapse [?merge .last.bool().then('in', '') ?]" role="tabpanel">
-                        <div class="panel-body">
-                            <div class="dataObjects col-xs-12" id="[?merge .messageId ?]">
-                                <!-- Data objects -->
-                            </div>
-                        </div>
+                    <div class="tab-pane" id="messageViewer">
+                    </div>
+                    <?merge unitIdentifiers.bool() ?>
+                    <div class="tab-pane" id="messageUnitIdentifierTab" style="padding:14px">
+                        <?merge unitIdentifiers $unitId ?>
+                        <?hinclude medona/message/unitIdentifiers.html ?>
+                    </div>
+                    <div class="tab-pane" id="messageLifeCycleTab" style="padding:14px">
+                        <?merge messages[0].lifeCycleEvent $lifeCycleEvent ?>
+                        <?hinclude medona/message/lifeCycle.html ?>
                     </div>
                 </div>
             </div>
@@ -71,6 +57,7 @@
         } else {
             filename = filename.substr(0, filename.lastIndexOf('.')) || filename;
         }
+
         var regEx = new RegExp('[ .]', 'gi');
         window.open("/medona/message/" + messageId + "/attachment/" + $(this).data('id') + "/" + filename.replace(regEx, "_"));
     })
@@ -81,37 +68,63 @@
     })
     
     $('#messageModal').on('click','.viewArchive', function() {
-        archiveInfoModal.load($(this).data('archive-id'));
+        window.close();
+        archiveInfoModal.load($(this).data('archive-id'), true);
     });
 
+    // Show life cycle event 
+    $("#messageModal").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    });
+    
     $('#messageModal').on('click', ".messageActionReject", function() {
         var str = $(this).data('action');
         var res = str.split("/");
 
         loadReject(res[2],str);
     });
-    
+
+    $('#confirmationModal').on('hidden.bs.modal', function() {
+       $('#confirmDelete').off('click');
+       $('.messageActionValidation').attr('disabled',false);
+    });
+
     $('#messageModal').on('click', ".messageActionValidation", function() {
+
+        $(this).attr('disabled',true);
         var parameters = {
             messageAction: $(this).data('action')
         };
-        
-        
+
         var res = parameters.messageAction.split("/");
         var last = res.pop();
-        
+
+
         if ( last == "Acknowledge") {
             $('#confirmationModal').find('.modal-body').html($('#acknowledge_text').html());
-            $('#confirmationModal').find('.modal-title').html($('#restitutionTitle_text').html());
+            if (res[1] == "outgoingTransfer") {
+                $('#confirmationModal').find('.modal-title').html($('#transferTitle_text').html());
+            } else {
+                $('#confirmationModal').find('.modal-title').html($('#restitutionTitle_text').html());
+            }
+        } else if (last == "Accept" && res[1] == "destructionRequest") {
+            $('#confirmationModal').find('.modal-body').html($('#destroy_text').html());
+            $('#confirmationModal').find('.modal-title').html($('#destructionTitle_text').html());
         } else if (last == "Accept") {
             $('#confirmationModal').find('.modal-body').html($('#validation_text').html());
             $('#confirmationModal').find('.modal-title').html($('#restitutionTitle_text').html());
         } else {
-            $('#confirmationModal').find('.modal-body').html($('#destroy_text').html());
-            $('#confirmationModal').find('.modal-title').html($('#destructionTitle_text').html());
+            if (res[1] == "outgoingTransfer") {
+                $('#confirmationModal').find('.modal-body').html($('#transfer_text').html());
+                $('#confirmationModal').find('.modal-title').html($('#transferTitle_text').html());
+            } else {
+                $('#confirmationModal').find('.modal-body').html($('#destroy_text').html());
+                $('#confirmationModal').find('.modal-title').html($('#destructionTitle_text').html());
+            }
+
         }
         $('#confirmationModal').modal();
-        
+
         $('#confirmDelete').one('click', function(){
                 $.ajax({
                     url         : parameters.messageAction,
@@ -124,13 +137,16 @@
                         $('#infoModal').modal("hide");
                         $('#infoModal').one('hidden.bs.modal', function() {
                             trigger('reload.medonaMenu');
-                        });
+                       });
+
                     },
                     error       : function(response) {
-                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors)
                     }
                 });
         });
+
+
     });
     
     $('#messageModal').on('click', ".messageAction", function() {
@@ -165,10 +181,18 @@
         var messageAction = $(this).data('action');
 
         window.open(messageAction,'_blank');
-        
+
         $('#infoModal').modal("hide");
         $('#infoModal').one('hidden.bs.modal', function() {
             trigger('reload.medonaMenu');
+        });
+    });
+
+    $('#messageModal').on('click', ".messageActionModification", function() {
+        var res = $(this).data('action');
+        $('#infoModal').modal("hide");
+        $('#infoModal').one('hidden.bs.modal', function() {
+            load(res);
         });
     });
     

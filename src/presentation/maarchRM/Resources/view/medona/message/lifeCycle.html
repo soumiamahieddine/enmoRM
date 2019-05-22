@@ -1,0 +1,30 @@
+<div class="panel panel-primary" data-translate-catalog="lifeCycle/messages">
+    <div class="table-responsive">
+        <table class="table table-condensed dataTable">
+            <thead>
+            <th>Date</th>
+            <th>Description</th>
+            </thead>
+            <tbody>
+                <?merge $lifeCycleEvent ?>
+                <tr>
+                    <td class="col-md-3">
+                        <a class="showEvent" href="#" data-eventId='[?merge .eventId ?]' style="text-decoration:none; color:#22486B;"><?merge .timestamp ?></a>
+                    </td>
+                    <td data-type="[?merge .eventType ?]">
+                        <a class="showEvent" href="#" data-eventId='[?merge .eventId ?]' style="text-decoration:none; color:#22486B;"><?merge .description ?></a>
+                    </td>
+                    <!--<td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning btn-sm showEvent" title="Show the event" data-eventId='[?merge .eventId ?]'>
+                                <span class="fa fa-fw fa-eye">&nbsp;</span>
+                            </button>
+                        </div>
+                    </td>-->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

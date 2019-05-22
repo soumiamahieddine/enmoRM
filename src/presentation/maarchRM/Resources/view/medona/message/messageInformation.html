@@ -1,0 +1,59 @@
+<div id="sidebarModal" class="sidebar-offcanvas col-sm-12">
+    <div class="table-responsive">
+        <br/>
+        
+        <table class="table table-condensed table-striped table-condensed">
+            <tbody>
+                <tr>
+                    <td><strong>Identifiant</strong></td>
+                    <td><?merge $message.reference ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td><?merge $message.type ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Statut</strong></td>
+                    <td><?merge $message.status ?></td>
+                </tr>
+                <?merge $message.type.ifeq('ArchiveTransfer') ?>
+                <tr>
+                    <td><strong>Schema</strong></td>
+                    <td><?merge $message.schema?></td>
+                </tr>
+                <tr>
+                    <td><strong>Date</strong></td>
+                    <td><?merge $message.date ?></td>
+                </tr>
+                <?merge $message.archivalAgreement.bool() ?>
+                <tr>
+                    <td><strong>Accords de versement</strong></td>
+                    <td><?merge $message.archivalAgreement ?></td>
+                </tr>
+                <?merge $message.originatingAgency.bool() ?>
+                <tr>
+                    <td><strong>Originator</strong></td>
+                    <td><?merge $message.originatingAgency.name ?></td>
+                </tr>
+                <?merge $message.archivalAgency.bool() ?>
+                <tr>
+                    <td><strong>Archival agency</strong></td>
+                    <td><?merge $message.archivalAgency.name ?></td>
+                </tr>
+                <?merge $message.transferringAgency.bool() ?>
+                <tr>
+                    <td><strong>Transferring agency</strong></td>
+                    <td><?merge $message.transferringAgency.name ?></td>
+                </tr>
+                <?merge $message.size.bool() ?>
+                <tr>
+                    <td><strong>Taille (en octets)</strong></td>
+                    <td><?merge $message.size ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<span class="hide" id="destruction_text">Destruction</span>
+<span class="hide" id="preservation_text">Preservation</span>
