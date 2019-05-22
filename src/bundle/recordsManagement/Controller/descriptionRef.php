@@ -33,7 +33,7 @@ class descriptionRef
      * Constructor
      * @param string $refDirectory The directory where refs are uploaded
      */
-    public function __construct($refDirectory=null)
+    public function __construct($refDirectory = null)
     {
         $this->dir = $refDirectory;
 
@@ -43,7 +43,7 @@ class descriptionRef
     }
 
     /**
-     * Uploads a new version of the ref
+     * Upload a new version of the ref
      * @param string $name     The name of the ref
      * @param string $contents The datas of the ref, csv format
      */
@@ -53,7 +53,7 @@ class descriptionRef
     }
 
     /**
-     * Uploads a new version of the ref
+     * Download a csv file of the ref
      * @param string $name The name of the ref
      * 
      * @return string
@@ -64,7 +64,7 @@ class descriptionRef
     }
 
     /**
-     * Uploads a new version of the ref
+     * Search the ref
      * @param string $name  The name of the ref
      * @param string $query an optional searched text
      * 
@@ -100,7 +100,7 @@ class descriptionRef
     }
 
     /**
-     * Uploads a new version of the ref
+     * Retrieve the ref
      * @param string $name The name of the ref
      * @param string $key  The key value, first column
      * 
@@ -117,7 +117,7 @@ class descriptionRef
         }
 
         $header = fgetcsv($handler, 1000, ",");
-        while (($row = fgetcsv($handler, 1000, ",")) !== FALSE) {
+        while (($row = fgetcsv($handler, 1000, ",")) !== false) {
             if ($row[0] == $key) {
                 $item = [];
                 foreach ($header as $i => $name) {
@@ -137,7 +137,7 @@ class descriptionRef
     {
         $filename = $this->dir.DIRECTORY_SEPARATOR.$name.'.csv';
 
-        if (is_file($filename) && ($handle = fopen($filename, "r")) !== FALSE) {
+        if (is_file($filename) && ($handle = fopen($filename, "r")) !== false) {
             return $handle;
         }
     }
