@@ -34,8 +34,11 @@ trait archiveTransferTrait
      */
     public function messageImport()
     {
-        $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
-
+        $packageSchemas = [];
+        if (isset(\laabs::configuration('medona')['packageSchemas'])) {
+            $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
+        }
+        
         $this->view->addContentFile("medona/archiveTransfer/messageImport.html");
         $this->view->translate();
 
