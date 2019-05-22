@@ -46,6 +46,7 @@ class message
 
     protected $dashboardPresenter;
     protected $menu;
+    protected $packageSchemas = [];
 
     /**
      * Constuctor of message html serializer
@@ -71,6 +72,10 @@ class message
         $this->menu = \laabs::configuration()['medona']['menu'];
 
         $this->dashboardPresenter = \laabs::newService('presentation/dashboard');
+
+        if (isset(\laabs::configuration('medona')['packageSchemas'])) {
+            $this->packageSchemas = \laabs::configuration('medona')['packageSchemas'];
+        }
     }
 
     /**
@@ -208,6 +213,14 @@ class message
 
         if (isset($message->replyMessage)) {
             $messages[] = $message->replyMessage;
+        }
+
+        $schemaConf = $presenter = null;
+        if (isset($this->packageSchemas[$baseMessage->schema])) {
+            $schemaConf = $this->packageSchemas[$baseMessage->schema];
+            if (isset($schemaConf['presenter'])) {
+                $presenter = \laabs::newPresenter($schemaConf['presenter']);
+            }
         }
 
         foreach ($messages as $message) {
@@ -348,11 +361,14 @@ class message
         }
 
         end($messageObjects)->last = true;
-        $this->view->addContentFile($baseMessage->schema."/message/messageModal.html");
+        $this->view->addContentFile("medona/message/messageModal.html");
 
-        $messageDiv = $this->view->getElementById('[?merge .messageId ?]');
-        if ($baseMessage->schema == 'medona') {
-            $this->view->addContentFile('medona/message/message.html', $messageDiv);
+        $messageViewer = $this->view->getElementById('messageViewer');
+
+        $messageView = $presenter->read($messageObjects);
+        $this->view->addContent($messageView, $messageViewer);
+        /*if ($baseMessage->schema == 'medona') {
+            $this->view->addContentFile('medona/message/message.html', $messageViewer);
 
             // Append description specific form
             $descriptionMetadataDiv = $this->view->getElementById('descriptiveMetadata');
@@ -366,9 +382,7 @@ class message
                     }
                 }
             }
-        } /**else {
-    $this->view->addContentFile($baseMessage->schema.'/message/message.html', $messageDiv);
-    }*/
+        }*/
 
         if ($this->view->getElementsByClass("dataTable")->item(2)) {
             $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];

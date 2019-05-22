@@ -1,0 +1,39 @@
+<h4>
+    <span><?merge $message.type ?></span>&nbsp;
+    <div class="pull-right">
+        <?merge $message.type.ifeq('ArchiveTransfer') ?>
+        <span>
+            <?merge $message.exportButton.bool().not() ?>
+            <span>
+                <?merge $message.xml.bool() ?>
+                <button type="button" class="btn btn-warning messageExport" data-action="/medona/message/[?merge $message.messageId ?]/export" title="Download"><i class="fa fa-download">&nbsp;</i></button>
+            </span>
+        </span>
+        <?merge $message.exportButton.bool() ?>
+        <button type="button" class="btn btn-success messageExport" data-action="[?merge $message.exportButton ?]" title="Download"><i class="fa fa-download">&nbsp;</i></button>
+        <?merge $message.processButton.bool() ?>
+        <button type="button" class="btn btn-warning messageAction" data-action="[?merge $message.processButton ?]" title="Process"><i class="fa fa-cogs">&nbsp;</i>Process</button>
+        <?merge $message.modifyButton.bool() ?>
+        <button type="button" class="btn btn-warning messageActionModification" data-action="[?merge $message.modifyButton ?]" title="Modify"><i class="fa fa-edit">&nbsp;</i>Modify</button>
+        <?merge $message.retryButton.bool() ?>
+        <button type="button" class="btn btn-success messageAction" data-action="[?merge $message.retryButton ?]" title="Retry the process"><i class="fa fa-refresh">&nbsp;</i>Retry</button>
+        <?merge $message.acceptButton.bool() ?>
+        <button type="button" class="btn btn-success messageAction" data-action="[?merge $message.acceptButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
+        <?merge $message.derogationButton.bool() ?>
+        <button type="button" class="btn btn-warning messageAction" data-action="[?merge $message.derogationButton ?]" title="Derogation"><i class="fa fa-level-up">&nbsp;</i>Derogation</button>
+        <?merge $message.acceptWarningButton.bool() ?>
+        <button type="button" class="btn btn-success messageActionValidation" data-action="[?merge $message.acceptWarningButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
+        <?merge $message.rejectButton.bool() ?>
+        <button type="button" class="btn btn-danger messageActionReject" data-action="[?merge $message.rejectButton ?]" title="Reject"><i class="fa fa-times">&nbsp;</i>Reject</button>
+        <?merge $message.validateButton.bool() ?>
+        <button type="button" class="btn btn-success messageAction" data-action="[?merge $message.validateButton ?]" title="Validate" ><i class="fa fa-check">&nbsp;</i>Validate</button>
+        <?merge $message.validationButton.bool() ?>
+        <button type="button" class="btn btn-danger messageActionValidation" data-action="[?merge $message.validationButton ?]" title="Destroy" ><i class="fa fa-trash">&nbsp;</i>Destroy</button>
+        <?merge $message.sendRequestAuth.bool() ?>
+        <button type="button" class="btn btn-warning messageAction" data-action="[?merge $message.sendRequestAuth ?]" title="Authorization"><i class="fa fa-level-up">&nbsp;</i>Authorization</button>
+        <?merge $message.archived ?>
+        <button type="button" class="btn btn-success viewArchive" data-archive-id="[?merge $message.messageIid ?]" title="Info"><span class="fa fa-info-circle"></span></button>
+        <?merge $message.acknowledgeButton.bool() ?>
+        <button type="button" class="btn btn-warning messageActionValidation" data-action="[?merge $message.acknowledgeButton ?]" title="Acknowledge"><i class="fa fa-gavel">&nbsp;</i>Acknowledge</button>
+    </div>
+</h4>
