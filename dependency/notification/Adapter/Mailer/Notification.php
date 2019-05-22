@@ -36,8 +36,9 @@ class Notification implements \dependency\notification\NotificationInterface
     protected $mailSMTPAuth;
     protected $mailSMTPSecure;
     protected $mailAdminReceiver;
+    protected $mailSMTPAutoTLS;
 
-    public function __construct($mailHost, $mailUsername, $mailPassword, $mailPort, $mailSender, $mailAdminReceiver, $mailSMTPAuth, $mailSMTPSecure)
+    public function __construct($mailHost, $mailUsername, $mailPassword, $mailPort, $mailSender, $mailAdminReceiver, $mailSMTPAuth, $mailSMTPSecure, $mailSMTPAutoTLS=true)
     {
         $this->mailHost = $mailHost;
         $this->mailUsername = $mailUsername;
@@ -47,6 +48,7 @@ class Notification implements \dependency\notification\NotificationInterface
         $this->mailSMTPAuth = $mailSMTPAuth;
         $this->mailSMTPSecure = $mailSMTPSecure;
         $this->mailAdminReceiver = $mailAdminReceiver;
+        $this->mailSMTPAutoTLS = $mailSMTPAutoTLS;
     }
 
     /**
@@ -66,6 +68,7 @@ class Notification implements \dependency\notification\NotificationInterface
         $mail->setFrom($this->mailSender);
         $mail->SMTPAuth = $this->mailSMTPAuth;
         $mail->SMTPSecure = $this->mailSMTPSecure;
+        $mail->SMTPAutoTLS = $this->mailSMTPAutoTLS;
         
         if (empty($receivers)) {
             $mail->addAddress($this->mailAdminReceiver);
