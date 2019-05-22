@@ -318,51 +318,20 @@ class message
                         }
                     }
                 }
-            } elseif ($baseMessage->schema == 'seda') {
-                if (isset($messageObject->archive)) {
-                    foreach ($messageObject->archive as $archive) {
-                        if (isset($archive->document)) {
-                            foreach ($archive->document as $document) {
-                                if (isset($document->integrity)) {
-                                    $document->integrity->hashAlgorithm = substr($document->integrity->algorithme, strrpos($document->integrity->algorithme, "#") + 1);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (isset($messageObject->archive)) {
-                foreach ($messageObject->archive as $archive) {
-                    if (isset($archive->appraisalRule)) {
-                        $dateInter = new \DateInterval($archive->appraisalRule->duration);
-                        $numberDuration = 0;
-                        $toDisplay = '';
-                        
-                        if ($dateInter->y != 0) {
-                            if ($dateInter->y == 999999999) {
-                                $toDisplay = "Unlimited";
-                            } else {
-                                $numberDuration = $dateInter->y;
-                                $toDisplay = "Year(s)";
-                            }
-                        } elseif ($dateInter->m != 0) {
-                            $numberDuration = $dateInter->m;
-                            $toDisplay = "Month(s)";
-                        } elseif ($dateInter->d != 0) {
-                            $numberDuration = $dateInter->d;
-                            $toDisplay = "Day(s)";
-                        }
-                        $archive->appraisalRule->durationNumber = $numberDuration;
-                        $archive->appraisalRule->durationToDisplay = $toDisplay;
-                    }
-                }
-            }
+            } 
+            
             $messageObjects[] = $messageObject;
         }
 
         end($messageObjects)->last = true;
         $this->view->addContentFile("medona/message/messageModal.html");
 
+        if ($this->view->getElementsByClass("dataTable")->item(2)) {
+            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
+            $dataTable->setPaginationType("full_numbers");
+            $dataTable->setSorting(array(array(0, 'desc')));
+        }
+        
         $messageViewer = $this->view->getElementById('messageViewer');
 
         $messageView = $presenter->read($messageObjects);
@@ -384,11 +353,6 @@ class message
             }
         }*/
 
-        if ($this->view->getElementsByClass("dataTable")->item(2)) {
-            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
-            $dataTable->setPaginationType("full_numbers");
-            $dataTable->setSorting(array(array(0, 'desc')));
-        }
         
         $this->view->setSource('messages', $messageObjects);
         $this->view->setSource('unitIdentifiers', $unitIdentifiers);
