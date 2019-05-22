@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Version 2.4.3 
+### Métadonnées
+- `Changed` Le format interne `Name` notamment utilisé pour les codes de règles de conservation 
+et de communicabilité accepte désormais les caractères numériques en première position ainsi que les tirets.
+- `Changed` Les appels au service de modification de la règle de conservation des archives 
+peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer 
+les durées et le sort final. Idem pour la règle de communicabilité et la durée.
+
+### Exploitation 
+- `Changed` Nouveau paramètre pour les notification, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
+automatique, notamment pour les connexions sans authentification
+
+
 ## Version 2.4.2
 
 ### Script d'import
