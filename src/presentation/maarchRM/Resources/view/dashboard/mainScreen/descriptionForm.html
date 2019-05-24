@@ -74,7 +74,6 @@
 ul {
     list-style: none;
 }
-
 </style>
 
 <script type="text/javascript">
@@ -86,6 +85,10 @@ ul {
 
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
+       var text = $(this).next("ul").children("li").children("input").val();
+        if (text === "") {
+            return;
+        }
         Metadata.addArrayItem($(this).parent());
     });
 
