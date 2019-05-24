@@ -78,7 +78,6 @@
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="text/javascript">
 
-
     FilePlanLevelToggle = {
         load: function (isWithoutProfile = true) {
             if(isWithoutProfile == true) {
@@ -117,6 +116,13 @@
 
     $('#app_maarchRM_main').ready(function () {
         $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+    });
+
+    $("#archiveForm").keypress(function(e) {
+    //To disable Enter keypress in this form
+        if (e.which == 13) {
+            return false;
+        }
     });
 
     // ARCHIVE

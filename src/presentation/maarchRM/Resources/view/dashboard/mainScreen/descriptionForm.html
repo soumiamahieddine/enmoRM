@@ -6,7 +6,7 @@
     file that was distributed with this source code.
 #-->
 
-<form class="form-horizontal" data-translate-catalog="documentManagement/document">
+<form id="descriptionForm" class="form-horizontal" data-translate-catalog="documentManagement/document">
     <div id="allFields">
         <div id="archivalProfileFields"></div>
         <div id="customFields"></div>
@@ -77,6 +77,13 @@ ul {
 </style>
 
 <script type="text/javascript">
+    $("#descriptionForm").keypress(function(e) {
+    //To disable Enter keypress in this form
+        if (e.which == 13) {
+            return false;
+        }
+    });
+
     // METADATAS
     $('.addCustomField').on('click', function(e) {
         e.preventDefault();
@@ -85,6 +92,7 @@ ul {
 
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
+        // click on button addRowArray won't work if input is empty 
        var text = $(this).next("ul").children("li").children("input").val();
         if (text === "") {
             return;
