@@ -329,7 +329,7 @@ ul {
            
             $.each(descriptionField.enumeration, function (index, value) {
                 text = value;
-                if (descriptionField.enumNames[index]) {
+                if (descriptionField.enumNames && descriptionField.enumNames[index]) {
                     text = descriptionField.enumNames[index]
                 }
                 field.append($('<option>', {
