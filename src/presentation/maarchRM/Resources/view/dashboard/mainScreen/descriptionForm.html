@@ -692,8 +692,10 @@ ul {
                 }
             });
             Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
-            $('#syncImport').parent().prepend('<a href="#" class="btn btn-sm btn-success" data-archive-id='+archiveId+' id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a>');
-            
+            $('#modifyArchive').attr("data-archive-id", archiveId);
+            $('#modifyArchive').removeClass("hide");
+            $("#syncImport").addClass("hide");
+
         },
 
         checkAndFill : function(data, target) {

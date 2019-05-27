@@ -219,7 +219,9 @@
                         Archive.getInfo(ArchiveInformation.archiveId);
                         $("#searchForm_inputSearchBtn").click();
                         trigger("archiveImportOver.recordsManagement");
-                        $("#modifyArchive").remove();
+                        $("#modifyArchive").addClass("hide");
+                        $("#syncImport").removeClass("hide");
+                        $("#documentForm").show();
                     }
                 },
                 error       : function (response) {
