@@ -160,7 +160,7 @@ trait archiveValidationTrait
 
     protected function validateNumber($value, $descriptionField)
     {
-        if (!is_int($value) && !is_float($value)) {
+        if (!is_numeric($value)) {
             throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$descriptionField->name]);
         }
     }
