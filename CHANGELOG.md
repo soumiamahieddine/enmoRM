@@ -3,16 +3,16 @@
 ## Version 2.4.3 
 
 ### Métadonnées
+
 - `Changed` Le format interne `Name` notamment utilisé pour les codes de règles de conservation 
 et de communicabilité accepte désormais les caractères numériques en première position ainsi que les tirets
 - `Changed` Les appels au service de modification de la règle de conservation des archives 
-peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer 
-les durées et le sort final. Idem pour la règle de communicabilité et la durée
+peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée
 
 ### Exploitation 
+
 - `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
 automatique, notamment pour les connexions sans authentification
-
 
 ## Version 2.4.2
 
@@ -31,6 +31,34 @@ automatique, notamment pour les connexions sans authentification
 - `Fixed` Rétablissement de la fonctionnalité de création, diffusion et modification d'un fichier de profil d'archive de type
 - `Changed` Suppression du bouton de modification des métadonnées descriptives SEDA dans la modale de détail du socle : le bouton est propre à l'extension archivesPubliques
 
+## Version 2.4
+
+### IHM
+
+- `Added` Ajout et suppression d'une seule pièce au sein d'une archive désormais possible
+- `Changed` Nouveau design de la modale de détails des informations de l'archive
+- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
+- `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
+- `Fixed` Le bouton Annuler est également non cliquable durant l'execution d'un versement
+- `Fixed` Le choix "sans profil" au versement d'une archive ne doit apparaître que si le dossier qui la receptionne l'autorise
+
+### Métadonnées
+
+- `Added` Une variable "actionWithoutRetentionRule" a été ajoutée dans le fichier de configuration pour permettre ou non l'élimination d'une archive n'ayant pas de règle (preserve : L'archive ne peut pas être supprimée si aucune règle n'a été définie OU dispose : L'archive peut-être éliminée si aucune règle n'a été définie)
+- `Added` Mise à jour automatique de la date de dernière modification d'une archive
+
+### Administration
+
+- `Changed` Mise à jour dans la configuration des fichiers de signature Droid (v91 => v94)
+
+### Accès
+
+- `Changed` Les libellés des formats dans le tableau de documents indique désormais le nom du type de document au lieu de son identifiant
+- `Fixed` Les routes d'évènements du journal de l'application ont été intégralement traduites en Anglais
+
+## Extension
+
+- `Added` L'extension Workflow permettant l'utilisation des flux de travail est désormais disponible
 
 ## Version 2.3
 
@@ -49,7 +77,6 @@ automatique, notamment pour les connexions sans authentification
 ### Administration
 
 - `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication aux organisations et services
-
 
 ## Version 2.2
 
@@ -89,12 +116,12 @@ automatique, notamment pour les connexions sans authentification
 ### Exploitation
 - `Added` Restriction des comptes de service disponibles pour la planification à ceux qui possèdent le privilège pour le service à exécuter
 - `Changed` Liste des services disponibles pour la planification déplacée dans la configuration. Table `batchProcessing.task` supprimée
-- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une  en erreur
+- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une en erreur
 
 ### Échéancier d'élimination
 - `Added` Sort final non défini au versement ou à la modification désormais interprété comme *A définir ultérieurement*
 - `Changed` Modification du statut final des unités d'archive en fonction de l'opération qui mène à leur ressortie : *Détruite*, *Restituée* et *Transférée*
-- `Fixed` Interdiction de  toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
+- `Fixed` Interdiction de toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
 
 ### Élimination
 - `Changed` La demande n'est valide que si l'unité d'archive et toutes ses unités contenues sont éliminables (à terme de la DUA ou sans règle de conservation, sort final *Détuire* ou sans sort final
