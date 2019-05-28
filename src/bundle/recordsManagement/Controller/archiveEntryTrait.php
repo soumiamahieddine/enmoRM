@@ -363,7 +363,12 @@ trait archiveEntryTrait
         $this->completeRetentionRule($archive);
         $this->completeAccessRule($archive);
         $this->completeServiceLevel($archive);
+        $this->completeOriginator($archive);
+        $this->completeArchiver($archive);
+    }
 
+    protected function completeOriginator($archive)
+    {
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
             $currentOrg = \laabs::getToken("ORGANIZATION");
@@ -382,6 +387,16 @@ trait archiveEntryTrait
         $archive->originatorOwnerOrgId = $originator->ownerOrgId;
         $originatorOrg = $this->organizationController->read($originator->ownerOrgId);
         $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
+    }
+
+    protected function completeArchiver($archive)
+    {
+        if (empty($archive->archiverOrgRegNumber)) {
+            $ownerOrgs = $this->organizationController->getOrgsByRole('owner');
+            if (count($ownerOrgs) > 0) {
+                $archive->archiverOrgRegNumber = $ownerOrgs[0]->registrationNumber;
+            }
+        }
     }
 
     /**
