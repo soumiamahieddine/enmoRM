@@ -5,7 +5,6 @@
     For the full copyright and license information, please view the LICENSE
     file that was distributed with this source code.
 #-->
-
 <form id="descriptionForm" class="form-horizontal" data-translate-catalog="documentManagement/document">
     <div id="allFields">
         <div id="archivalProfileFields"></div>
@@ -92,7 +91,7 @@ ul {
 
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
-        // click on button addRowArray won't work if input is empty 
+        // click on button addRowArray won't work if input is empty
        var text = $(this).next("ul").children("li").children("input").val();
         if (text === "") {
             return;
@@ -176,7 +175,7 @@ ul {
             var descriptionField = archiveDescription.descriptionField;
             var target = $("#archivalProfileFields");
             var formGroup = Metadata.getFormGroup(descriptionField);
-            target.append(formGroup);            
+            target.append(formGroup);
         },
 
         getFormGroup: function(descriptionField) {
@@ -199,7 +198,7 @@ ul {
                 case 'string':
                     var field = Metadata.getTextInput(descriptionField);
                     break;
-                    
+
                 case 'name':
                     var field = Metadata.getKeywordInput(descriptionField);
                     break;
@@ -226,7 +225,7 @@ ul {
             formGroup.data('description', descriptionField);
 
             div.append(field);
-            
+
             if (descriptionField.required) {
                 label.append($('<span style="color: red"">&nbsp;*</span>'));
                 field.attr("data-required", descriptionField.required);
@@ -238,7 +237,11 @@ ul {
         },
 
         getTextInput : function (descriptionField) {
-            var field = $('<input type="text" class="form-control input-sm"/>');
+            var field = $('<input>')
+                        .attr('type', 'text')
+                        .addClass('form-control')
+                        .addClass('input-sm');
+            // var field = $('<input type="text" class="form-control input-sm"/>');
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
             }
@@ -254,9 +257,9 @@ ul {
             if (descriptionField.ref) {
                 return Metadata.getTypeahead(descriptionField);
             } else if (descriptionField.enumeration) {
-                return Metadata.getSelect(descriptionField);      
+                return Metadata.getSelect(descriptionField);
             } else {
-                return Metadata.getTextInput(descriptionField);                   
+                return Metadata.getTextInput(descriptionField);
             }
         },
 
@@ -314,7 +317,7 @@ ul {
             if (descriptionField.default == 1 || descriptionField.default == 0) {
                 field.find('[value=""]').parent().removeClass("active");
                 field.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
-                field.find('[value="'+descriptionField.default+'"]').prop("checked", "checked"); 
+                field.find('[value="'+descriptionField.default+'"]').prop("checked", "checked");
             }
 
             field.getValue = function() {
@@ -325,8 +328,8 @@ ul {
         },
 
         getSelect : function(descriptionField) {
-            var field = $('<select class="form-control input-sm"><option value="" /></select>')         
-           
+            var field = $('<select class="form-control input-sm"><option value="" /></select>')
+
             $.each(descriptionField.enumeration, function (index, value) {
                 text = value;
                 if (descriptionField.enumNames && descriptionField.enumNames[index]) {
@@ -351,38 +354,47 @@ ul {
         getTypeahead : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
             field.attr('name', 'test');
+            setTimeout(function(){
+                var data = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/descriptionRef/'+descriptionField.name+'?query=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+                data.initialize();
 
-            var data = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              remote: {
-                    url: '/descriptionRef/'+descriptionField.name+'?query=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
+                field.typeahead(
+                    {
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'data',
+                        source: data.ttAdapter(),
+                        templates: {
+                            suggestion: function(data) {
+                                delete data._query;
+                                var html = $('<div>');
+                                var keyname = Object.keys(data)[0];
+                                var key = data.keyname;
+                                html.append($('<strong class="badge">').text(key));
+                                delete data[keyname];
+                                var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
+                                html.append(' '+value);
+                                return html;
+                            }
+                        }
+                    }
+                ).on('typeahead:selected', function ($event, suggestion, source) {
+                    var keys = Object.keys(suggestion); //fetched the key at first index
+                    field.val(suggestion[keys[0]]);
+                    field.typeahead('val', suggestion[keys[0]]);
+                });
+            }, 300);
 
-            field.typeahead(null, {
-              name: 'test',
-              source: data,
-              templates: {
-                suggestion: function(suggestion) {
-                    delete suggestion._query;
-                    var html = $('<div>');
-                    var keyname = Object.keys(suggestion)[0];
-                    var key = suggestion[keyname];
-                    html.append($('<strong class="badge">').text(key));
-                    delete suggestion[keyname];
-                    var value = Object.keys(suggestion).map(function(name){return suggestion[name]}).join(" - ");
-                    html.append(' '+value);
-
-                    return html;
-                }
-            }
-            }).on('typeahead:selected', function ($event, suggestion, source) {
-                var key = Object.keys(suggestion)[0]; //fetched the key at first index
-                field.val(suggestion[key]);
-                field.typeahead('val', suggestion[key]);
-            });
 
             return field;
         },
@@ -410,10 +422,10 @@ ul {
 
             var input = $('<input class="hide" type="text" data-type="object" value="">');
             panelBody.append(input);
-            
+
             var propertyList = $('<ul style="padding-left: 0px;">');
             panelBody.append(propertyList);
-           
+
             $.each(descriptionField.properties, function() {
                 if (this.internal) {
                     return;
@@ -434,7 +446,7 @@ ul {
             div.getValue = function() {
                 var object = {};
                 var properties = this.data('propertyList').children('li');
-                
+
                 $.each(properties, function() {
                     var field = $(this).data('field');
                     var name = $(this).data('formgroup').attr('name');
@@ -468,7 +480,7 @@ ul {
             div.data('itemlist', itemList);
             div.data('item-description', descriptionField.itemtype);
             div.data('description', descriptionField);
-            
+
             //if (!$.isPlainObject(descriptionField.itemType)) {
                 var item = Metadata.getArrayItem(descriptionField);
                 itemList.append(item);
@@ -479,7 +491,7 @@ ul {
             div.getValue = function() {
                 var values = [];
                 var items = this.data('itemlist').children('li');
-                
+
                 $.each(items, function() {
                     var field = $(this).data('field');
                     var value = field.getValue();
@@ -505,7 +517,7 @@ ul {
                 case 'string':
                     var field = Metadata.getTextInput(descriptionField);
                     break;
-                    
+
                 case 'name':
                     var field = Metadata.getKeywordInput(descriptionField);
                     break;
@@ -556,7 +568,7 @@ ul {
             var items = itemList.children("li");
             if (items.length) {
                 var index = items.length;
-                
+
                 previous = items.first();
                 previous.find('a').first().text('#'+index);
                 previous.find('.panel-collapse').first().removeClass('in');
@@ -567,12 +579,12 @@ ul {
                 } else {
                     previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
                 }
-            } 
+            }
 
             itemList.prepend(div);
         },
 
-        addCustomField : function(source = "", target = $("#customFields")) {            
+        addCustomField : function(source = "", target = $("#customFields")) {
             var formGroup = $('<div class="form-group" />');
             var label = $('<div class="col-md-3"/>');
             var name = $('<input type="text" class="form-control input-sm name" />');
@@ -588,7 +600,7 @@ ul {
             field.text(source.value);
 
             var removeButton = $('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
-            
+
             div.append(field);
             div.append(removeButton);
 
@@ -622,20 +634,20 @@ ul {
 
             $.each(formGroups, function() {
                 name = $(this).attr('name');
-                
-                field = $(this).data('field');                
+
+                field = $(this).data('field');
                 value = field.getValue();
 
                 if (value) {
                     descriptionObject[name] = value;
                 }
             });
-            
+
 
             $.each(customFormGroups, function() {
                 name = $(this).data('name').val();
                 var value = $.trim($(this).find('.value').val());
-                field = $(this).data('field');                
+                field = $(this).data('field');
                 value = field.getValue();
 
                 if (value == undefined || value == null || name == ''|| name == undefined || name == null) {
@@ -752,6 +764,5 @@ ul {
     $('#importPanel').on('click', '#modifyArchive', function(e) {
         ArchiveForm.modify(e, $(this));
     });
-
 </script>
 <script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>

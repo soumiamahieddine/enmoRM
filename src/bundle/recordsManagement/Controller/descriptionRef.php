@@ -55,7 +55,7 @@ class descriptionRef
     /**
      * Download a csv file of the ref
      * @param string $name The name of the ref
-     * 
+     *
      * @return string
      */
     public function download($name)
@@ -67,7 +67,7 @@ class descriptionRef
      * Search the ref
      * @param string $name  The name of the ref
      * @param string $query an optional searched text
-     * 
+     *
      * @return array object[]
      */
     public function search($name, $query = null)
@@ -80,7 +80,7 @@ class descriptionRef
             return $data;
         }
 
-        $header = fgetcsv($handler, 1000, ",");
+        // $header = fgetcsv($handler, 1000, ",");
         while (($row = fgetcsv($handler, 1000, ",")) !== false) {
             if ($query && mb_strlen($query) > 2) {
                 if (!preg_match('/'.preg_quote($query, '/').'/i', implode(' | ', $row))) {
@@ -88,10 +88,10 @@ class descriptionRef
                 }
             }
             $item = [];
-            foreach ($header as $i => $name) {
-                $item[$name] = $row[$i];
-            }
-            $data[] = (object) $item;
+            // foreach ($header as $i => $name) {
+            //     $item[$name] = $row[$i];
+            // }
+            $data[] = (object) $row;
         }
 
         fclose($handler);
@@ -103,7 +103,7 @@ class descriptionRef
      * Retrieve the ref
      * @param string $name The name of the ref
      * @param string $key  The key value, first column
-     * 
+     *
      * @return object
      */
     public function get($name, $key)
