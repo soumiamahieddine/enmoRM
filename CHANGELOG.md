@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## Version 2.5
+
+### Métadonnées
+
+- `Added` Possiblité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Possiblité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
+- `Added` Possiblité d'ajout de referentiels externes (exemple : CSV, base de données...) pour les données descriptives.
+
+## Version 2.4.2
+
+### Script d'import
+
+- `Fixed` Correction d'un bug lors de l'utilisation de cli 
+
+## Version 2.4.1
+
+### IHM
+
+- `Fixed` Le bouton 'Import' restait parfois grisé en cas d'erreur lors d'un versement
+
+### Métadonnées
+
+- `Fixed` Rétablissement de la fonctionnalité de création, diffusion et modification d'un fichier de profil d'archive de type
+- `Changed` Suppression du bouton de modification des métadonnées descriptives SEDA dans la modale de détail du socle : le bouton est propre à l'extension archivesPubliques
+
 ## Version 2.4
 
 ### IHM
@@ -29,7 +54,6 @@
 
 - `Added` L'extension Workflow permettant l'utilisation des flux de travail est désormais disponible
 
-
 ## Version 2.3
 
 ### Exploitation
@@ -40,7 +64,7 @@
 
 ### IHM
 
-- `Changed` Nouveau design de l'écran principal pour la navigation, la recherche et la consultation
+- `Changed` Nouvau design de l'écran principal pour la navigation, la recherche et la consultation
 - `Added` Personnalisation de la page de connexion avec une image de fonds et un style configurables
 - `Fixed` Blocage des double-clics sur les boutons
 
