@@ -30,11 +30,11 @@ interface deliveryRequestInterface
      * Deliver an archive
      *
      * @param mixes  $archiveIds The archive identifier or a list of identifier
-     * @param string $identifier The reference for message
      * @param string $comment    A comment
+     * @param string $identifier The reference for message
      *
      * @uses medona/archiveDelivery/createDelivery
      * @return medona/archiveModification/deliver
      */
-    public function createArchivedelivery($archiveIds, $identifier, $comment);
+    public function createArchivedelivery($archiveIds, $comment, $identifier = null);
 }
