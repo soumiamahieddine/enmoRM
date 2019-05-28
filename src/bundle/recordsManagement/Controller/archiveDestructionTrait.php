@@ -58,7 +58,7 @@ trait archiveDestructionTrait
             $this->logDestructionRequest($archive);
         }
 
-        $this->sendDestructionRequest($archives, $reference = null, $comment = null)
+        $this->sendDestructionRequest($archives, $reference = null, $comment = null);
 
         return $archiveList;
     }
