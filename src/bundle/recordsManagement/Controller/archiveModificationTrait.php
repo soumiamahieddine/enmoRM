@@ -151,6 +151,8 @@ trait archiveModificationTrait
             }
         }
 
+        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+
         return $res;
     }
 
@@ -226,6 +228,8 @@ trait archiveModificationTrait
             }
         }
 
+        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+
         return $res;
     }
 
@@ -263,6 +267,8 @@ trait archiveModificationTrait
             $this->logFreeze($archive, false);
         }
 
+        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+
         return $res;
     }
 
@@ -299,6 +305,8 @@ trait archiveModificationTrait
             $archive = $archives[$res['error'][$i]];
             $this->logUnfreeze($archive, false);
         }
+
+        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
 
         return $res;
     }
@@ -384,6 +392,8 @@ trait archiveModificationTrait
         $res = true;
         
         $this->logMetadataModification($archive, $operationResult);
+
+        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
             
         return $res;
     }
@@ -402,7 +412,9 @@ trait archiveModificationTrait
 
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
-       
+
+        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
+        
         return true;
     }
 
@@ -421,9 +433,10 @@ trait archiveModificationTrait
         // Life cycle journal
         $this->logRelationshipDeleting($archive, $archiveRelationship);
 
+        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
+
         return true;
     }
-
 
     /**
      * Index full text 
@@ -612,5 +625,43 @@ trait archiveModificationTrait
         $archiveUserOrgRegNumbers->lastModificationDate = \laabs::newTimestamp();
 
         $this->sdoFactory->update($archiveUserOrgRegNumbers);
+    }
+
+    protected function sendModificationNotification($archives, $comment, $identifier = null)
+    {
+        $archivesByOriginator = array();
+        foreach ($archives as $archive) {
+            if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
+                $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
+            }
+
+            $archivesByOriginator[$archive->originatorOrgRegNumber][] = $archive;
+        }
+
+        $archiveModificationNotificationController = \laabs::newController("medona/ArchiveModificationNotification");
+        
+        if (!$identifier) {
+            $identifier = "archiveModificationNotification_".date("Y-m-d-H-i-s");
+        }
+
+        $reference = $identifier;
+        foreach ($archivesByOriginator as $originatorOrgRegNumber => $archives) {
+            $i = 1;
+            $senderOrg = $archives[0]->archiverOrgRegNumber;
+            $recipientOrg = $originatorOrgRegNumber;
+
+            $unique = array(
+                'type' => 'ArchiveModificationNotification',
+                'senderOrgRegNumber' => $senderOrg,
+                'reference' => $reference,
+            );
+
+            while ($this->sdoFactory->exists("medona/message", $unique)) {
+                $i++;
+                $unique['reference'] = $reference = $identifier.'_'.$i;
+            }
+            
+            $message = $archiveModificationNotificationController->send($reference, $archives, $senderOrg, $recipientOrg, $comment);
+        }
     }
 }

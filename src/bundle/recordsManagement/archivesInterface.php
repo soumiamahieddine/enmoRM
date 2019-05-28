@@ -149,24 +149,24 @@ interface archivesInterface
     */
     /**
      * Suspend archives
-     * @param array  $archiveIds  Array of archive identifier
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param array  $archiveIds Array of archive identifier
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @action recordsManagement/archive/freeze
      *
      */
-    public function updateFreeze($archiveIds, $comment = null, $identifiant = null);
+    public function updateFreeze($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Change the status of an archive
-     * @param mixed  $archiveIds  Array of archive identifier
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param mixed  $archiveIds Array of archive identifier
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @action recordsManagement/archive/unfreeze
      */
-    public function updateUnfreeze($archiveIds, $comment = null, $identifiant = null);
+    public function updateUnfreeze($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Read the retention rule of multiple archives
@@ -197,7 +197,7 @@ interface archivesInterface
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($description='', $text='', $profile = '', $limit = null);
+    public function readFind($description = '', $text = '', $profile = '', $limit = null);
 
     /**
      * Read the access rule of multiple archives
@@ -210,38 +210,38 @@ interface archivesInterface
 
     /**
      * Update a access rule
-     * @param recordsManagement/archiveAccessRule $accessRule  The access rule object
-     * @param array                               $archiveIds  The archives ids
-     * @param string                              $comment     The comment of modification
-     * @param string                              $identifiant Message identifiant
+     * @param recordsManagement/archiveAccessRule $accessRule The access rule object
+     * @param array                               $archiveIds The archives ids
+     * @param string                              $comment    The comment of modification
+     * @param string                              $identifier Message identifier
      *
      * @action recordsManagement/archive/modifyAccessRule
      *
      */
-    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifiant = null);
+    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifier = null);
 
     /*
         RESTITUTION
     */
     /**
      * Flag archives for restitution
-     * @param array  $archiveIds  Array of archive identifier
-     * @param string $identifiant The message reference
-     * @param string $comment     A comment
+     * @param array  $archiveIds Array of archive identifier
+     * @param string $identifier The message reference
+     * @param string $comment    A comment
      *
      * @action recordsManagement/archive/setForRestitution
      *
      */
-    public function updateSetforrestitution($archiveIds, $identifiant = null, $comment = null);
+    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null);
 
     /*
         DESTRUCTION
     */
     /**
      * Flag archives for disposal
-     * @param array  $archiveIds  The archives ids
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param array  $archiveIds The archives ids
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @return boolean
      *
@@ -249,7 +249,7 @@ interface archivesInterface
      * @action recordsManagement/archive/dispose
      *
      */
-    public function updateDisposearchives($archiveIds, $comment = null, $identifiant = null);
+    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Delete disposable archives
