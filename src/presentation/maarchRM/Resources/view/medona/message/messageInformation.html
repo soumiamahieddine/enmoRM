@@ -13,41 +13,33 @@
                     <td><?merge $message.type ?></td>
                 </tr>
                 <tr>
-                    <td><strong>Statut</strong></td>
+                    <td><strong>Status</strong></td>
                     <td><?merge $message.status ?></td>
                 </tr>
-                <?merge $message.type.ifeq('ArchiveTransfer') ?>
                 <tr>
                     <td><strong>Schema</strong></td>
-                    <td><?merge $message.schema?></td>
+                    <td><?merge $message.schema ?></td>
                 </tr>
                 <tr>
                     <td><strong>Date</strong></td>
                     <td><?merge $message.date ?></td>
                 </tr>
-                <?merge $message.archivalAgreement.bool() ?>
+                <?merge $message.archivalAgreementReference.bool() ?>
                 <tr>
                     <td><strong>Accords de versement</strong></td>
-                    <td><?merge $message.archivalAgreement ?></td>
+                    <td><?merge $message.archivalAgreementReference ?></td>
                 </tr>
-                <?merge $message.originatingAgency.bool() ?>
                 <tr>
-                    <td><strong>Originator</strong></td>
-                    <td><?merge $message.originatingAgency.name ?></td>
+                    <td><strong>Sender</strong></td>
+                    <td><?merge $message.senderOrgName ?></td>
                 </tr>
-                <?merge $message.archivalAgency.bool() ?>
                 <tr>
-                    <td><strong>Archival agency</strong></td>
-                    <td><?merge $message.archivalAgency.name ?></td>
-                </tr>
-                <?merge $message.transferringAgency.bool() ?>
-                <tr>
-                    <td><strong>Transferring agency</strong></td>
-                    <td><?merge $message.transferringAgency.name ?></td>
+                    <td><strong>Recipient</strong></td>
+                    <td><?merge $message.recipientOrgName ?></td>
                 </tr>
                 <?merge $message.size.bool() ?>
                 <tr>
-                    <td><strong>Taille (en octets)</strong></td>
+                    <td><strong>Size</strong></td>
                     <td><?merge $message.size ?></td>
                 </tr>
             </tbody>
