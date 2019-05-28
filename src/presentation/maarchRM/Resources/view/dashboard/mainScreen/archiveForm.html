@@ -216,6 +216,7 @@
                     gritter.show(response.message, response.status, response.errors);
 
                     if (response.status) {
+                        ImportPanel.cancel();
                         Archive.getInfo(ArchiveInformation.archiveId);
                         $("#searchForm_inputSearchBtn").click();
                         trigger("archiveImportOver.recordsManagement");
