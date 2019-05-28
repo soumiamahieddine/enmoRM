@@ -56,11 +56,13 @@ interface modifyInterface
      * Update a retention rule
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param array                                  $archiveIds    The archives ids
+     * @param string                                 $comment       The comment of modification
+     * @param string                                 $identifier    Message identifier
      * 
      * @uses recordsManagement/archives/updateRetentionrule
      * @return recordsManagement/archive/modifyRetentionRule
      */
-    public function updateRecordsmanagementArchiveRetentionrule($retentionRule, $archiveIds);
+    public function updateRecordsmanagementArchiveRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null);
 
     // --------------------------------------------------------------------------
     // Access rule
@@ -85,11 +87,13 @@ interface modifyInterface
      * Update a access rule
      * @param recordsManagement/archiveAccessRule $accessRule The access rule object
      * @param array                               $archiveIds The archives ids
+     * @param string                              $comment    The comment of modification
+     * @param string                              $identifier Message identifier
      * 
      * @uses recordsManagement/archives/updateAccessrule
      * @return recordsManagement/archive/modifyAccessRule
      */
-    public function updateRecordsmanagementArchiveAccessrule($accessRule, $archiveIds);
+    public function updateRecordsmanagementArchiveAccessrule($accessRule, $archiveIds, $comment = null, $identifier = null);
 
     // --------------------------------------------------------------------------
     // Freeze rules
@@ -97,22 +101,22 @@ interface modifyInterface
     /**
      * Suspend archives
      * @param array $archiveIds Array of archive identifier
-     * @param string                              $comment     The comment of modification
-     * @param string                              $identifiant Message identifiant
+     * @param string                              $comment    The comment of modification
+     * @param string                              $identifier Message identifier
      * 
      * @uses recordsManagement/archives/updateFreeze
      * @return recordsManagement/archive/freeze
      */
-    public function updateRecordsmanagementArchiveFreeze($archiveIds, $comment, $identifiant);
+    public function updateRecordsmanagementArchiveFreeze($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Change the status of an archive
      * @param mixed  $archiveIds
-     * @param string                              $comment     The comment of modification
-     * @param string                              $identifiant Message identifiant
+     * @param string                              $comment    The comment of modification
+     * @param string                              $identifier Message identifier
      * 
      * @uses recordsManagement/archives/updateUnfreeze
      * @return recordsManagement/archive/unfreeze
      */
-    public function updateRecordsmanagementArchiveUnfreeze($archiveIds, $comment, $identifiant);
+    public function updateRecordsmanagementArchiveUnfreeze($archiveIds, $comment = null, $identifier = null);
 }

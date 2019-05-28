@@ -58,7 +58,59 @@ trait archiveDestructionTrait
             $this->logDestructionRequest($archive);
         }
 
+        $this->sendDestructionRequest($archives, $reference = null, $comment = null)
+
         return $archiveList;
+    }
+
+    /**
+     * Send destruction request
+     */
+    protected function sendDestructionRequest($archives, $reference = null, $comment = null)
+    {
+        $archiveDestructionRequestController = \laabs::newController("medona/ArchiveDestructionRequest");
+
+        $archivesByOriginator = array();
+        foreach ($archives as $archive) {
+            if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
+                $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
+            }
+
+            $archivesByOriginator[$archive->originatorOrgRegNumber][] = $archive;
+        }
+        $requesterOrg = null;
+        if (!$requesterOrg) {
+            $requesterOrg = \laabs::getToken('ORGANIZATION');
+            if (!$requesterOrg) {
+                throw \laabs::newException('medona/invalidMessageException', "No current organization choosen");
+            }
+        }
+        $requesterOrgRegNumber = $requesterOrg->registrationNumber;
+
+        if (!$identifier) {
+            $identifier = "archiveDestructionRequest_".date("Y-m-d-H-i-s");
+        }
+
+        $reference = $identifier;
+        foreach ($archivesByOriginator as $originatorOrgRegNumber => $archives) {
+            $i = 1;
+            $recipientOrgRegNumber = $archives[0]->archiverOrgRegNumber;
+
+            $unique = array(
+                'type' => 'ArchiveDestructionRequest',
+                'senderOrgRegNumber' => $requesterOrgRegNumber,
+                'reference' => $reference,
+            );
+
+            while ($this->sdoFactory->exists("medona/message", $unique)) {
+                $i++;
+                $unique['reference'] = $reference = $identifier.'_'.$i;
+            }
+
+            $archiveDestructionRequestController->send($reference, $archives, $comment, $requesterOrgRegNumber, $recipientOrgRegNumber, $originatorOrgRegNumber);
+        }
+
+        return $archives;
     }
 
     /**
