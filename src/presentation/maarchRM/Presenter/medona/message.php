@@ -215,55 +215,42 @@ class message
             $messages[] = $message->replyMessage;
         }
 
-        $schemaConf = $presenter = null;
-        if (isset($this->packageSchemas[$baseMessage->schema])) {
-            $schemaConf = $this->packageSchemas[$baseMessage->schema];
-            if (isset($schemaConf['presenter'])) {
-                $presenter = \laabs::newPresenter($schemaConf['presenter']);
-            }
+        $this->view->addContentFile("medona/message/messageModal.html");
+
+        if ($this->view->getElementsByClass("dataTable")->item(2)) {
+            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
+            $dataTable->setPaginationType("full_numbers");
+            $dataTable->setSorting(array(array(0, 'desc')));
         }
 
         foreach ($messages as $message) {
-            $messageObject = $message->object;
-            $messageObject->type = $message->type;
-            $messageObject->schema = $message->schema;
-            $messageObject->messageId = $message->messageId;
-            $messageObject->xml = isset($message->xml);
-            $messageObject->archived = $message->archived;
-            $messageObject->status = $message->status;
-            $messageObject->archivalAgreement = $message->archivalAgreementReference;
-            $messageObject->reference = $message->reference;
-            $messageObject->size = number_format($message->size, 0, '', ' ');
+            $message->size = number_format($message->size, 0, '', ' ');
 
             $user = \laabs::callService('auth/userAccount/read_userAccountId_', $message->accountId);
-            $messageObject->accountDisplayName = $user->displayName;
-            $messageObject->accountName = $user->accountName;
-
-            if (isset($message->lifeCycleEvent)) {
-                $messageObject->lifeCycleEvent = $message->lifeCycleEvent;
-            }
+            $message->accountDisplayName = $user->displayName;
+            $message->accountName = $user->accountName;
 
             // Load the organizations names
-            if (isset($messageObject->archivalAgency)) {
-                $messageObject->archivalAgency->name = $this->loadOrganizationName($messageObject->archivalAgency, $message);
+            if (isset($message->archivalAgency)) {
+                $message->archivalAgency->name = $this->loadOrganizationName($message->archivalAgency, $message);
             }
-            if (isset($messageObject->transferringAgency)) {
-                $messageObject->transferringAgency->name = $this->loadOrganizationName($messageObject->transferringAgency, $message);
+            if (isset($message->transferringAgency)) {
+                $message->transferringAgency->name = $this->loadOrganizationName($message->transferringAgency, $message);
             }
-            if (isset($messageObject->controlAuthority)) {
-                $messageObject->controlAuthority->name = $this->loadOrganizationName($messageObject->controlAuthority, $message);
+            if (isset($message->controlAuthority)) {
+                $message->controlAuthority->name = $this->loadOrganizationName($message->controlAuthority, $message);
             }
-            if (isset($messageObject->originatingAgency)) {
-                $messageObject->originatingAgency->name = $this->loadOrganizationName($messageObject->originatingAgency, $message);
+            if (isset($message->originatingAgency)) {
+                $message->originatingAgency->name = $this->loadOrganizationName($message->originatingAgency, $message);
             }
-            if (isset($messageObject->requester)) {
-                $messageObject->requester->name = $this->loadOrganizationName($messageObject->requester, $message);
+            if (isset($message->requester)) {
+                $message->requester->name = $this->loadOrganizationName($message->requester, $message);
             }
-            if (isset($messageObject->sender)) {
-                $messageObject->sender->name = $this->loadOrganizationName($messageObject->sender, $message);
+            if (isset($message->sender)) {
+                $message->sender->name = $this->loadOrganizationName($message->sender, $message);
             }
-            if (isset($messageObject->receiver)) {
-                $messageObject->receiver->name = $this->loadOrganizationName($messageObject->receiver, $message);
+            if (isset($message->receiver)) {
+                $message->receiver->name = $this->loadOrganizationName($message->receiver, $message);
             }
 
             // Set messages action buttons
@@ -272,7 +259,7 @@ class message
             }
 
             if ($message->status === 'error') {
-                $messageObject->retryButton = "/medona/message/". $message->messageId . "/retry";
+                $message->retryButton = "/medona/message/". $message->messageId . "/retry";
             }
 
             if (is_array($message->unitIdentifier)) {
@@ -286,17 +273,17 @@ class message
                     $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
                 }
 
-                $messageObject->sender = $message->senderOrg;
-                $messageObject->receiver = $message->recipientOrg;
+                $message->sender = $message->senderOrg;
+                $message->receiver = $message->recipientOrg;
 
-                if (isset($messageObject->binaryDataObject)) {
-                    $messageObject->binaryDataObject = (array) $messageObject->binaryDataObject;
+                if (isset($message->binaryDataObject)) {
+                    $message->binaryDataObject = (array) $message->binaryDataObject;
                 }
 
-                if (isset($messageObject->descriptiveMetadata)) {
-                    $messageObject->descriptiveMetadata = (array) $messageObject->descriptiveMetadata;
+                if (isset($message->descriptiveMetadata)) {
+                    $message->descriptiveMetadata = (array) $message->descriptiveMetadata;
 
-                    foreach ($messageObject->descriptiveMetadata as $descriptiveMetadata) {
+                    foreach ($message->descriptiveMetadata as $descriptiveMetadata) {
                         if (isset($descriptiveMetadata->descriptionObject)) {
                             $descriptionObjects = $descriptiveMetadata->descriptionObject;
                             $descriptiveMetadata->descriptionObject = [];
@@ -318,33 +305,31 @@ class message
                         }
                     }
                 }
-            } 
-            
-            $messageObjects[] = $messageObject;
+            }
         }
-
-        end($messageObjects)->last = true;
-        $this->view->addContentFile("medona/message/messageModal.html");
-
-        if ($this->view->getElementsByClass("dataTable")->item(2)) {
-            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
-            $dataTable->setPaginationType("full_numbers");
-            $dataTable->setSorting(array(array(0, 'desc')));
-        }
+        end($messages)->last = true;
         
         $messageViewer = $this->view->getElementById('messageViewer');
 
-        $messageView = $presenter->read($messageObjects);
-        $this->view->addContent($messageView, $messageViewer);
+        $schemaConf = $presenter = null;
+        if (isset($this->packageSchemas[$baseMessage->schema])) {
+            $schemaConf = $this->packageSchemas[$baseMessage->schema];
+            if (isset($schemaConf['presenter'])) {
+                $presenter = \laabs::newPresenter($schemaConf['presenter']);
+                $messageView = $presenter->read($messages);
+                $this->view->addContent($messageView, $messageViewer);
+            }
+        }
+        
         /*if ($baseMessage->schema == 'medona') {
             $this->view->addContentFile('medona/message/message.html', $messageViewer);
 
             // Append description specific form
             $descriptionMetadataDiv = $this->view->getElementById('descriptiveMetadata');
-            if (isset($messageObjects[0]->dataObjectPackage)) {
-                $this->view->addContentFile($messageObjects[0]->dataObjectPackage->descriptiveMetadataClass.'.html', $descriptionMetadataDiv);
-                if ($messageObjects[0]->dataObjectPackage->descriptiveMetadataClass == 'medona/archivePackage') {
-                    foreach ($messageObjects[0]->dataObjectPackage->descriptiveMetadata->archive as $archive) {
+            if (isset($messages[0]->dataObjectPackage)) {
+                $this->view->addContentFile($messages[0]->dataObjectPackage->descriptiveMetadataClass.'.html', $descriptionMetadataDiv);
+                if ($messages[0]->dataObjectPackage->descriptiveMetadataClass == 'medona/archivePackage') {
+                    foreach ($messages[0]->dataObjectPackage->descriptiveMetadata->archive as $archive) {
                         if (isset($archive->descriptionObject)) {
                             $archive->descriptionObject->json = json_encode($archive->descriptionObject);
                         }
@@ -354,7 +339,7 @@ class message
         }*/
 
         
-        $this->view->setSource('messages', $messageObjects);
+        $this->view->setSource('messages', $messages);
         $this->view->setSource('unitIdentifiers', $unitIdentifiers);
         $this->view->merge();
 
@@ -746,56 +731,55 @@ class message
      * Load organization name
      * @param object $message            The message
      * @param object $messages           The message list
-     * @param object $messageObject      The message object
      * @param string $registrationNumber The current user registration number
      */
-    protected function setMessageActions($message, $messages, $messageObject, $registrationNumber)
+    protected function setMessageActions($message, $messages, $registrationNumber)
     {
 
         if (in_array($message->recipientOrgRegNumber, $registrationNumber)) {
-            $messageId = (string) $messageObject->messageId;
+            $messageId = (string) $message->messageId;
 
-            switch ($messageObject->type) {
+            switch ($message->type) {
                 case 'ArchiveTransfer':
                     if ($message->status == "received" || $message->status == "modified") {
                         if (!$message->isIncoming) {
-                            $messageObject->acknowledgeButton = "/restitution/".$messageId."/Acknowledge";
+                            $message->acknowledgeButton = "/restitution/".$messageId."/Acknowledge";
                         }
-                        $messageObject->validateButton = "/transferValidate/" . $messageId;
-                        $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                        $message->validateButton = "/transferValidate/" . $messageId;
+                        $message->exportButton = "/medona/message/".$messageId."/Export";
                     } elseif ($message->status == "valid") {
-                        $messageObject->acceptButton = "/transferAcceptance/".$messageId;
-                        $messageObject->rejectButton = "/transferRejection/".$messageId;
-                        $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                        $message->acceptButton = "/transferAcceptance/".$messageId;
+                        $message->rejectButton = "/transferRejection/".$messageId;
+                        $message->exportButton = "/medona/message/".$messageId."/Export";
                     } elseif ($message->status == "toBeModified") {
-                        $messageObject->rejectButton = "/transferRejection/".$messageId;
-                        $messageObject->retryButton = "/medona/message/". $message->messageId . "/retry";
+                        $message->rejectButton = "/transferRejection/".$messageId;
+                        $message->retryButton = "/medona/message/". $message->messageId . "/retry";
                         if ($message->schema === 'seda') {
-                            $messageObject->modifyButton = "/transferModify/" . $message->messageId;
+                            $message->modifyButton = "/transferModify/" . $message->messageId;
                         }
                     } elseif ($message->status == "accepted") {
-                        $messageObject->processButton = "/transferProcess/".$messageId;
-                        $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                        $message->processButton = "/transferProcess/".$messageId;
+                        $message->exportButton = "/medona/message/".$messageId."/Export";
                     } elseif ($message->status == "sent") {
-                        $messageObject->exportButton = "/outgoingTransfer/".$messageId."/Export";
+                        $message->exportButton = "/outgoingTransfer/".$messageId."/Export";
                     } elseif ($message->status == "downloaded") {
-                        $messageObject->acknowledgeButton = "/outgoingTransfer/".$messageId."/Acknowledge";
-                        $messageObject->rejectButton = "/outgoingTransfer/".$messageId."/Reject";
-                        $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                        $message->acknowledgeButton = "/outgoingTransfer/".$messageId."/Acknowledge";
+                        $message->rejectButton = "/outgoingTransfer/".$messageId."/Reject";
+                        $message->exportButton = "/medona/message/".$messageId."/Export";
                     } elseif ($message->status == "processing") {
-                        $messageObject->retryButton = "/medona/message/". $message->messageId . "/retry";
+                        $message->retryButton = "/medona/message/". $message->messageId . "/retry";
                     }
                     break;
 
                 case 'Acknowledgement':
-                    $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                    $message->exportButton = "/medona/message/".$messageId."/Export";
                     break;
 
                 case 'ArchiveDeliveryRequest':
                     if (count($messages) == 1) {
                         if ($message->status === "sent") {
-                            $messageObject->rejectButton = "/delivery/".$messageId."/Reject";
-                            $messageObject->derogationButton = "/delivery/".$messageId."/Derogation";
+                            $message->rejectButton = "/delivery/".$messageId."/Reject";
+                            $message->derogationButton = "/delivery/".$messageId."/Derogation";
                         }
                     }
                     break;
@@ -803,7 +787,7 @@ class message
                 case 'ArchiveDeliveryRequestReply':
                     if (count($messages) == 1) {
                         if ($message->status == "sent") {
-                            $messageObject->exportButton = "/delivery/".$messageId."/Export";
+                            $message->exportButton = "/delivery/".$messageId."/Export";
                         }
                     }
                     break;
@@ -811,36 +795,36 @@ class message
                 case 'ArchiveRestitutionRequest':
                     if (count($messages) == 1) {
                         if ($message->status == "sent") {
-                            $messageObject->rejectButton = "/restitutionRequest/".$messageId."/Reject";
-                            $messageObject->acceptWarningButton = "/restitutionRequest/".$messageId."/Accept";
+                            $message->rejectButton = "/restitutionRequest/".$messageId."/Reject";
+                            $message->acceptWarningButton = "/restitutionRequest/".$messageId."/Accept";
                         }
                     } elseif ($message->status == "accepted") {
-                        $messageObject->processButton = "/restitutionRequest/".$messageId."/process";
+                        $message->processButton = "/restitutionRequest/".$messageId."/process";
                     }
                     break;
 
                 case 'ArchiveRestitution':
                     if ($message->status == "sent") {
-                        $messageObject->exportButton = "/restitution/".$messageId."/Export";
+                        $message->exportButton = "/restitution/".$messageId."/Export";
                     } elseif ($message->status == "received") {
-                        $messageObject->rejectButton = "/restitution/".$messageId."/Reject";
-                        $messageObject->acknowledgeButton = "/restitution/".$messageId."/Acknowledge";
+                        $message->rejectButton = "/restitution/".$messageId."/Reject";
+                        $message->acknowledgeButton = "/restitution/".$messageId."/Acknowledge";
                     } elseif ($message->status == "acknowledge") {
-                        $messageObject->validationButton = "/restitution/".$messageId."/process";
-                        $messageObject->exportButton = "/medona/message/".$messageId."/Export";
+                        $message->validationButton = "/restitution/".$messageId."/process";
+                        $message->exportButton = "/medona/message/".$messageId."/Export";
                     }
                     break;
 
                 case 'ArchiveDestructionRequest':
                     if ($message->status == "accepted") {
-                        $messageObject->validationButton = "/destructionRequest/".$messageId."/Accept";
-                        //$messageObject->rejectButton = "/destructionRequest/".(string) $message->messageId."/Reject";
+                        $message->validationButton = "/destructionRequest/".$messageId."/Accept";
+                        //$message->rejectButton = "/destructionRequest/".(string) $message->messageId."/Reject";
                     }
                     break;
 
                 case 'AuthorizationOriginatingAgencyRequest':
-                    $messageObject->acceptButton = "/authorizationOriginatingAgencyRequest/".(string) $message->messageId."/Accept";
-                    $messageObject->rejectButton = "/authorizationOriginatingAgencyRequest/".(string) $message->messageId."/Reject";
+                    $message->acceptButton = "/authorizationOriginatingAgencyRequest/".(string) $message->messageId."/Accept";
+                    $message->rejectButton = "/authorizationOriginatingAgencyRequest/".(string) $message->messageId."/Reject";
                     break;
 
                 case 'AuthorizationOriginatingAgencyRequestReply':
@@ -850,38 +834,38 @@ class message
 
                     if (strtoupper($message->replyCode) == "000") {
                         if ($messages[0]->type == "ArchiveDeliveryRequest") {
-                            $messageObject->acceptButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Accept";
-                            $messageObject->sendRequestAuth = "/authorizationControlAuthorityRequest/".(string) $messages[0]->messageId;
+                            $message->acceptButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Accept";
+                            $message->sendRequestAuth = "/authorizationControlAuthorityRequest/".(string) $messages[0]->messageId;
                         }
 
-                        if ($messageObject[0]->type == "ArchiveDestructionRequest") {
-                            $messageObject->acceptButton = "/destructionRequest/".(string) $messages[0]->messageId."/Accept";
-                            $messageObject->sendRequestAuth = "/authorizationControlAuthorityRequest/".(string) $messages[0]->messageId;
+                        if ($message[0]->type == "ArchiveDestructionRequest") {
+                            $message->acceptButton = "/destructionRequest/".(string) $messages[0]->messageId."/Accept";
+                            $message->sendRequestAuth = "/authorizationControlAuthorityRequest/".(string) $messages[0]->messageId;
                         }
                     } else {
                         if ($messages[0]->type == "ArchiveDeliveryRequest") {
-                            $messageObject->rejectButton = "/deliveryRequest/".$messageId."/Reject";
+                            $message->rejectButton = "/deliveryRequest/".$messageId."/Reject";
                         }
 
                         if ($messages[0]->type == "ArchiveDestructionRequest") {
-                            $messageObject->rejectButton = "/destructionRequest/".(string) $messages[0]->messageId."/Reject";
+                            $message->rejectButton = "/destructionRequest/".(string) $messages[0]->messageId."/Reject";
                         }
                     }
                     break;
 
                 case 'AuthorizationControlAuthorityRequest':
-                    $messageObject->acceptButton = "/authorizationControlAuthorityRequest/".(string) $message->messageId."/Accept";
-                    $messageObject->rejectButton = "/authorizationControlAuthorityRequest/".(string) $message->messageId."/Reject";
+                    $message->acceptButton = "/authorizationControlAuthorityRequest/".(string) $message->messageId."/Accept";
+                    $message->rejectButton = "/authorizationControlAuthorityRequest/".(string) $message->messageId."/Reject";
                     break;
 
                 case 'AuthorizationControlAuthorityRequestReply':
                     if (strtoupper($message->replyCode) == "000") {
                         if ($messages[0]->type == "ArchiveDeliveryRequest") {
-                            $messageObject->acceptButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Accept";
+                            $message->acceptButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Accept";
                         }
                     } else {
                         if ($messages[0]->type == "ArchiveDeliveryRequest") {
-                            $messageObject->rejectButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Reject";
+                            $message->rejectButton = "/deliveryRequest/".(string) $messages[0]->messageId."/Reject";
                         }
                     }
                     break;
@@ -889,17 +873,17 @@ class message
                 */
             }
         } elseif (in_array($message->senderOrgRegNumber, $registrationNumber)) {
-            $messageId = (string) $messageObject->messageId;
+            $messageId = (string) $message->messageId;
 
-            switch ($messageObject->type) {
+            switch ($message->type) {
                 case 'ArchiveRestitution':
                     if ($message->status == "acknowledge") {
-                        $messageObject->validationButton = "/restitution/".$messageId."/process";
+                        $message->validationButton = "/restitution/".$messageId."/process";
                     }
                     break;
-                case 'ArchiveTransfer' :
+                case 'ArchiveTransfer':
                     if ($message->status == "acknowledge") {
-                        $messageObject->validationButton = "/outgoingTransfer/".$messageId."/process";
+                        $message->validationButton = "/outgoingTransfer/".$messageId."/process";
                     }
                     break;
             }
