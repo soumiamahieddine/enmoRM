@@ -230,32 +230,9 @@ class message
             $message->accountDisplayName = $user->displayName;
             $message->accountName = $user->accountName;
 
-            // Load the organizations names
-            if (isset($message->archivalAgency)) {
-                $message->archivalAgency->name = $this->loadOrganizationName($message->archivalAgency, $message);
-            }
-            if (isset($message->transferringAgency)) {
-                $message->transferringAgency->name = $this->loadOrganizationName($message->transferringAgency, $message);
-            }
-            if (isset($message->controlAuthority)) {
-                $message->controlAuthority->name = $this->loadOrganizationName($message->controlAuthority, $message);
-            }
-            if (isset($message->originatingAgency)) {
-                $message->originatingAgency->name = $this->loadOrganizationName($message->originatingAgency, $message);
-            }
-            if (isset($message->requester)) {
-                $message->requester->name = $this->loadOrganizationName($message->requester, $message);
-            }
-            if (isset($message->sender)) {
-                $message->sender->name = $this->loadOrganizationName($message->sender, $message);
-            }
-            if (isset($message->receiver)) {
-                $message->receiver->name = $this->loadOrganizationName($message->receiver, $message);
-            }
-
             // Set messages action buttons
             if ($withActionsButtons) {
-                $this->setMessageActions($message, $messages, $messageObject, $registrationNumber);
+                $this->setMessageActions($message, $messages, $registrationNumber);
             }
 
             if ($message->status === 'error') {

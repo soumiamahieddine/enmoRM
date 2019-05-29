@@ -629,13 +629,16 @@ trait archiveModificationTrait
 
     protected function sendModificationNotification($archives, $comment, $identifier = null)
     {
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+
         $archivesByOriginator = array();
         foreach ($archives as $archive) {
-            if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
-                $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
+            if ($currentOrg->registrationNumber != $archive->originatorOrgRegNumber) {
+                if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
+                    $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
+                }
+                $archivesByOriginator[$archive->originatorOrgRegNumber][] = $archive;
             }
-
-            $archivesByOriginator[$archive->originatorOrgRegNumber][] = $archive;
         }
 
         $archiveModificationNotificationController = \laabs::newController("medona/ArchiveModificationNotification");

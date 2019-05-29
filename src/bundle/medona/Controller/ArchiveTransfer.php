@@ -99,7 +99,6 @@ class ArchiveTransfer extends abstractMessage
             $message->status = "received";
             $this->create($message);
         } catch (\Exception $e) {
-
             $event = $this->lifeCycleJournalController->logEvent(
                 'medona/reception',
                 'medona/message',
@@ -147,10 +146,10 @@ class ArchiveTransfer extends abstractMessage
     protected function receivePackage($message, $messageFile, $attachments, $filename)
     {
         // Valid URL file:// http:// data://
-        if (filter_var($messageFile, FILTER_VALIDATE_URL)) { 
+        if (filter_var($messageFile, FILTER_VALIDATE_URL)) {
             $data = stream_get_contents($messageFile);
         } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile)) {
-            $data = base64_decode($messageFile);  
+            $data = base64_decode($messageFile);
         } elseif (is_file($messageFile)) {
             if (empty($filename)) {
                 $filename = basename($messageFile);
@@ -164,7 +163,7 @@ class ArchiveTransfer extends abstractMessage
         switch ($mediatype) {
             case 'application/zip':
             case 'application/octet-stream':
-            case 'application/x-7z-compressed' : 
+            case 'application/x-7z-compressed':
                 $this->receiveZip($message, $data, $attachments, $filename);
                 break;
 
@@ -240,10 +239,10 @@ class ArchiveTransfer extends abstractMessage
         
         if (count($attachments)) {
             foreach ($attachments as $attachment) {
-                if (filter_var($attachment->data, FILTER_VALIDATE_URL)) { 
+                if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
                     $data = stream_get_contents($attachment->data);
                 } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
-                    $data = base64_decode($attachment->data);  
+                    $data = base64_decode($attachment->data);
                 } elseif (is_file($attachment->data)) {
                     $data = file_get_contents($attachment->data);
                 }
@@ -252,7 +251,6 @@ class ArchiveTransfer extends abstractMessage
                 $message->attachments[] = $attachment->filename;
             }
         }
-        
     }
 
     protected function detectSchema($message)

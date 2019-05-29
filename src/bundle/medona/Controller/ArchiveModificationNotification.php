@@ -45,10 +45,11 @@ class ArchiveModificationNotification extends ArchiveNotification
         $message->messageId = \laabs::newId();
         $message->type = "ArchiveModificationNotification";
 
-        $schema = "medona";
+        $schema = "";
         if (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
+
         $message->schema = $schema;
 
         $message->status = "sent";
@@ -61,6 +62,7 @@ class ArchiveModificationNotification extends ArchiveNotification
 
         $message->senderOrgRegNumber = $senderOrg;
         $message->recipientOrgRegNumber = $recipientOrg;
+
         $this->readOrgs($message); // read org names, addresses, communications, contacts
 
         $message->archive = $archives;
@@ -77,25 +79,12 @@ class ArchiveModificationNotification extends ArchiveNotification
         $message->dataObjectCount = count($message->archive);
 
         try {
-            if ($message->schema != 'medona') {
+            if ($message->schema) {
 
                 $archiveModificationNotificationController = \laabs::newController($message->schema.'/ArchiveModificationNotification');
                 $archiveModificationNotificationController->send($message);
-
-            } else {
-                $archiveModificationNotification = $this->sendMessage($message);
-                $message->object = $archiveModificationNotification;
-
-                $archiveModificationNotification->originatingAgency = $this->sendOrganization($message->senderOrg);
-                $archiveModificationNotification->archivalAgency = $this->sendOrganization($message->recipientOrg);
-
-                $message->object->unitIdentifier = $message->unitIdentifier;
-
-                $this->generate($message);
-                $this->save($message);
             }
             $operationResult = true;
-
         } catch (\Exception $e) {
             $message->status = "error";
             $operationResult = false;
