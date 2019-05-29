@@ -303,10 +303,11 @@ de configuration qui fournit :
 ```
 descriptionSchemes = "{
   'seda2' : {
-    'name' : 'SEDA 2',
+    'label' : 'SEDA 2',
     'type' : 'php',
     'uri' : 'seda2/Content',
     'controller' : '',
+    'search' : '',
     'presenter' : ''
   }
 }"
