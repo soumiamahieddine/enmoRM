@@ -57,8 +57,6 @@ class message
 
     protected $profilesDirectory;
 
-    protected $messageStandard;
-
     protected $archivalAgreements = array();
 
     protected $currentArchivalAgreement;
@@ -81,13 +79,12 @@ class message
 
     protected $finfo;
 
-    protected $schemas = [];
+    protected $packageSchemas = [];
 
     /**
      * Constructor
      * @param string                  $messageDirectory  The message directory
      * @param \dependency\sdo\Factory $sdoFactory        The dependency Sdo Factory
-     * @param string                  $messageStandard   The standard to use : MEDONA / SEDA
      * @param bool                    $parentsDerogation See the child org messages
      * @param array                   $removeMessageTask Tasks to remove medona messages directories
      * @param integer                 $autoValidateSize  Min size for auto-validation
@@ -96,13 +93,12 @@ class message
     public function __construct(
         $messageDirectory,
         \dependency\sdo\Factory $sdoFactory,
-        $messageStandard = 'medona',
         $parentsDerogation = true,
         $removeMessageTask = null,
         $autoValidateSize = 0,
         $autoProcessSize = 0,
-        $packageSchemas = [])
-    {
+        $packageSchemas = []
+    ) {
         $this->orgController = \laabs::newController('organization/organization');
         $this->archiveController = \laabs::newController('recordsManagement/archive');
         $this->archiveRelationshipController = \laabs::newController('recordsManagement/archiveRelationship');
@@ -120,7 +116,6 @@ class message
         }
 
         $this->sdoFactory = $sdoFactory;
-        $this->messageStandard = $messageStandard;
 
         $this->parentsDerogation = (bool) $parentsDerogation;
 
@@ -182,7 +177,7 @@ class message
     public function search($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null, $isIncoming = null)
     {
         $queryParams = array();
-        $queryString = $this->searchMessage($type, $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status, $isIncoming,$queryParams);
+        $queryString = $this->searchMessage($type, $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status, $isIncoming, $queryParams);
 
         return $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, 300);
     }
@@ -204,7 +199,7 @@ class message
      *
      * @return medona/message[]
      */
-    public function searchMessage($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null,  $isIncoming = null, &$queryParams)
+    public function searchMessage($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null, $isIncoming = null, &$queryParams)
     {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
@@ -220,7 +215,6 @@ class message
             if ($archiver) {
                 $query[] = "(senderOrgRegNumber= :archiver OR recipientOrgRegNumber= :archiver)";
                 $queryParams['archiver'] = $archiver;
-
             }
             if ($originator) {
                 $query[] = "(senderOrgRegNumber= :originator OR recipientOrgRegNumber= :originator)";
@@ -267,10 +261,10 @@ class message
         }
         if ($isIncoming !== null) {
             switch ($isIncoming) {
-                case true :
+                case true:
                     $queryParts[] = "isIncoming= true";
                     break;
-                case false :
+                case false:
                     $queryParts[] = "isIncoming= false";
                     break;
             }
@@ -278,7 +272,7 @@ class message
         if ($type) {
             $clause = [];
             switch ($type) {
-                case  "ArchiveDelivery":
+                case "ArchiveDelivery":
                     if ($isOriginator || $isArchiver) {
                         $clause[] = "type='*$type*'";
                     }
@@ -302,7 +296,6 @@ class message
                     }
 
                     if (!$isArchiver && !$isOriginator && !$isControlAuthority) {
-
                     }
                     break;
 
@@ -314,7 +307,7 @@ class message
                     $clause[] = "type=['ArchiveModificationNotification','ArchiveDestructionNotification','ArchivalProfileModificationNotification']";
                     break;
 
-                default :
+                default:
                     $clause[] = "type= :type AND status !='template'";
                     $queryParams['type'] = $type;
                     break;
@@ -426,7 +419,6 @@ class message
                     $this->sdoFactory->create($unitIdentifier);
                 }
             }
-
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -465,7 +457,6 @@ class message
             }
 
             $this->sdoFactory->update($message, 'medona/message');
-
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -506,7 +497,6 @@ class message
                 $message->replyMessage = $replyMessage;
             }
         } catch (\Exception $e) {
-
         }
 
         // Ack
@@ -519,7 +509,6 @@ class message
                 $message->acknowledgement = $ackMessage;
             }
         } catch (\Exception $e) {
-
         }
 
         // Related authorization messages for communication and destruction requests
@@ -540,7 +529,6 @@ class message
                 }
             }
         } catch (\Exception $e) {
-
         }
 
         return $message;
@@ -591,7 +579,6 @@ class message
         if (!isset($message->object)) {
             $this->extract($message);
         }
-
     }
 
     /**
@@ -772,7 +759,6 @@ class message
         $resource->setContents($contents);
 
         return $resource;
-
     }
 
     protected function useArchivalAgreement($archivalAgreementReference)
@@ -1014,9 +1000,9 @@ class message
      */
     public function getByReference($reference)
     {
-//        $queryParts = $this->searchMessage(null, $reference);
+        //$queryParts = $this->searchMessage(null, $reference);
         $queryParams = array();
-        $queryString = $this->searchMessage(null, $reference, null, null, null, null, null, null, null,null,$queryParams);
+        $queryString = $this->searchMessage(null, $reference, null, null, null, null, null, null, null, null, $queryParams);
 
         $message = $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, 300);
 
@@ -1067,7 +1053,7 @@ class message
      *
      * @return array Array of medona message directory removed
      */
-    public function MessageDirectoryPurge()
+    public function messageDirectoryPurge()
     {
         $res = [];
 
