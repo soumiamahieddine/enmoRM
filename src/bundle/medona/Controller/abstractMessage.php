@@ -217,11 +217,28 @@ abstract class abstractMessage extends message
         if (!isset($this->archivalAgreements[$archivalAgreementReference])) {
             $this->currentArchivalAgreement = $archivalAgreementController->getByReference($archivalAgreementReference);
             $this->archivalAgreements[$archivalAgreementReference] = $this->currentArchivalAgreement;
-
         } else {
             $this->currentArchivalAgreement = $this->archivalAgreements[$archivalAgreementReference];
         }
 
         return $this->currentArchivalAgreement;
+    }
+
+    protected function getMessageTypeController($schema, $messageType)
+    {
+        if (!isset($this->packageSchemas[$schema])) {
+            $schemaConf = $this->packageSchemas[$schema];
+            if (isset($schemaConf['controllers'][$messageType])) {
+                return \laabs::newController($schemaConf['controllers'][$messageType]);
+            }
+        }
+
+        if (\laabs::hasBundle($schema)) {
+            $bundle = \laabs::bundle($schema);
+
+            if ($bundle->hasController($messageType)) {
+                return \laabs::newController($schema.'/'.$messageType);
+            }
+        }
     }
 }
