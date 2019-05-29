@@ -1058,4 +1058,19 @@ msgid "Last modification date"
 msgstr "Date de mise à jour"
 
 msgid "Add a resource"
-msgstr "Ajouter une pièce"
+msgstr "Ajouter une ressource"
+
+msgid "Delete the resource"
+msgstr "Supprimer la ressource"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Import a resource"
+msgstr "Ajout d'une ressource"
+
+msgid "Do you really want to delete this resource ?"
+msgstr "Voulez-vous vraiment supprimer cette ressource ?"
+
+msgid "This action will be irreversible."
+msgstr "Cette action sera irréversible."

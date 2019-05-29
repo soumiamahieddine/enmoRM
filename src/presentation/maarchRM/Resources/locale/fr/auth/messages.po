@@ -118,7 +118,7 @@ msgstr "Ajouter une relation à l'archive"
 msgctxt "userStory"
 
 msgid "addResource"
-msgstr "Ajouter/Supprimer une pièce"
+msgstr "Ajouter et supprimer une ressource"
 msgctxt "userStory"
 
 # ---------------------------------------------------------

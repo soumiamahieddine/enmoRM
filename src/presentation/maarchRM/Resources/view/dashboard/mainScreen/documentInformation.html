@@ -61,6 +61,9 @@
         font-size: 80px; 
         margin-bottom: 10px;
     }
+    #confirm_text{
+        font-size:14px;
+    }
 </style>
 
 <script>
@@ -156,31 +159,19 @@
         window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid")+"?isCommunication=1");
     });
 
-    $("#deleteResource").on("click", function(){
-        var resources = {
-                resIds           : [$(this).data('resid')]
-            }
-
-            ajax($('#deleteResource'), {
-                type: "DELETE",
-                url: '/' + $(this).data("archiveid") + '/digitalResource',
-                data: JSON.stringify(resources),
-                dataType: 'json',
-                contentType: 'application/json',
-                success     : function (response) {
-                    gritter.show(response.message, true);
-                    trigger('deleteResourceDone.recordsManagement');
-                },
-                error       : function(response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                }
-            });
-    });
-
     // This event refresh view after a click on deleteResource
-    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
-    {
+    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() {
         archiveInfoModal.reload($('#deleteResource').data("archiveid"));
+        $('#confirmDeleteModal').modal("hide");
     });
 
+    //Btn deleteResource open a confirmation modal
+    $("#deleteResource").on("click", function() {
+        button = $(this);
+        archiveId = button.data('archiveid');
+        resourceId = button.data('resid');
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-resid", resourceId);
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-archiveid", archiveId);
+        $('#confirmDeleteModal').modal();
+    });
 </script>

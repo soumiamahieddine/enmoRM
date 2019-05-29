@@ -290,8 +290,8 @@ trait archiveDestructionTrait
         $destructResources['success'] = [];
 
         foreach ($resIds as $resId) {
+            $digitalResource = $this->digitalResourceController->info($resId);
             try {
-                $digitalResource = $this->digitalResourceController->info($resId);
                 $this->digitalResourceController->delete($resId);
                 $destructResources['success'][] = $resId;
                 $this->logDestructionResource($archive, $digitalResource);
