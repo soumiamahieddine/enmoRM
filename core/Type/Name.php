@@ -15,8 +15,8 @@ class Name
      */
     public function __construct($name)
     {
-        if (!preg_match('#^[A-Za-z_][A-Za-z0-9_]*$#', $name)) {
-            throw new \core\Exception("Invalid name '$name': Names must start with alphabetic characters or underscore and contain only alphanumeric or underscores");
+        if (!preg_match('#^[A-Za-z0-9_\-]*$#', $name)) {
+            throw new \core\Exception("The value can only contain alphanumeric characters, underscores and dashes");
         }
 
         $this->name = $name;
