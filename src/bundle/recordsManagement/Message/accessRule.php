@@ -30,7 +30,7 @@ class accessRule
     /**
      * The code of the access
      *
-     * @var string
+     * @var name
      */
     public $code;
 
