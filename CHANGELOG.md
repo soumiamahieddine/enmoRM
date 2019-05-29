@@ -4,10 +4,10 @@
 
 ### Métadonnées
 
-- `Changed` Le format interne `Name` notamment utilisé pour les codes de règles de conservation 
-et de communicabilité accepte désormais les caractères numériques en première position ainsi que les tirets
+- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation 
+et de communicabilité accepte désormais les caractères numériques en première position, ainsi que les tirets
 - `Changed` Les appels au service de modification de la règle de conservation des archives 
-peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée
+peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée qui y est associée.
 
 ### Exploitation 
 
