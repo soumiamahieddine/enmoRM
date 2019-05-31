@@ -49,6 +49,15 @@ class descriptionField
     {
         $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField');
 
+        foreach ($descriptionFields as $i => $descriptionField) {
+            $descriptionFields[$descriptionField->name] = $descriptionField;
+            if (!empty($descriptionField->enumeration)) {
+                $descriptionField->enumeration = json_decode($descriptionField->enumeration);
+            }
+
+            unset($descriptionFields[$i]);
+        }
+
         return $descriptionFields;
     }
 

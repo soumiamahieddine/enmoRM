@@ -247,3 +247,68 @@ La valeur dispose permet la suppression d'une archive si aucune règle de conser
 Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
+
+# Migration 2.4 vers 2.5 
+
+## Présentation et fonctionnalités orientées "archives publiques"
+
+### Situation dans les versions antérieures
+Dans la section `[presentation.maarchRM]`, la directive `publicArchives` définissait les comportements suivants :
+  * dans la gestion des utilisateurs, un seul rôle autorisé par utilisateur
+  * dans la gestion des rôles, pas de gestion des utilisateurs rattachés
+  * dans l'organigramme fonctionnel, pas de gestion des accès aux profils d'archive (géré par accords de versement uniquement)
+  * dans la gestion des règles de communicabilité, pas de suppression ni de modification (règles issues du référentiel contrôlé par les Archives de France)
+  * dans la gestion des règles de conservation, pas de gestion du sort final
+
+La directive `menu` n'intégrait pas le point de menu vers la gestion du dictionnaire de données (champs de description);
+
+Dans la section `[auth]`, la directive `blackListedUserStories` inhibait les droits sur les fonctions suivantes :
+  * versement direct dans l'Archive 
+  * gestion du dictionnaire de données 
+
+### Nouvelles configurations 
+
+Ces directives sont utilisables à la place de la directive existante `publicArchives` pour 
+gérer plus finement les fonctionnalités correspondantes :
+
+Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen. 
+Si activée, chaque utilisateur ne peut avoir qu'un rôle et 
+la gestion des rôles ne permet plus d'ajouter ou retirer des utilisateurs.
+
+Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileType` définit désormais le comportement suivant :
+  * `1` indique des profils de versement de type MEDONA et inhibe la gestion des accès aux profils dans l'organigramme
+  * `2` indique des profils d'archive avec description des métadonnées et règles de gestion et active la gestion des accès aux profils dans l'organigramme
+  * `3` indique des profils mixtes (MEDONA et description interne) et active la gestion des accès aux profils dans l'organigramme
+
+## Branchement des schémas de description
+
+Dans la section `[recordsManagement]`, la directive `descriptionSchemes` permet de définir
+les schémas de description en lieu et place des entrées de la table `recordsManagement.descriptionClass` 
+qui doit être supprimée.
+
+A chaque identifiant de schéma de description (éventuellement précédemment inscrit dans la table) correspond un élément 
+de configuration qui fournit :
+
+  * le libellé affiché
+  * le format de description : classe php, schema json, schéma XML
+  * le nom du schéma
+  * les URIs des différents services utilisés par l'application pour la gestion des données, 
+    la recherche, la transformation, la présentation, etc.
+
+```
+descriptionSchemes = "{
+  'seda2' : {
+    'name' : 'SEDA 2',
+    'type' : 'php',
+    'uri' : 'seda2/Content',
+    'controller' : '',
+    'presenter' : ''
+  }
+}"
+```
+
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.4_V2.5.sql

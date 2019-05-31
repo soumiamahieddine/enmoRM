@@ -50,7 +50,7 @@ msgstr "Consulter"
 msgid "Destroy"
 msgstr "Éliminer"
 
-msgid "Destrution"
+msgid "Destruction"
 msgstr "Destruction"
 
 msgid "Preservation"

@@ -75,7 +75,7 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Changed` Nouvau design de l'écran principal pour la navigation, la recherche et la consultation
+- `Changed` Nouveau design de l'écran principal pour la navigation, la recherche et la consultation
 - `Added` Personnalisation de la page de connexion avec une image de fonds et un style configurables
 - `Fixed` Blocage des double-clics sur les boutons
 

@@ -208,7 +208,8 @@ class Property
                     break;
 
                 case 'enumeration':
-                    $this->enumeration = \laabs\explode(",", substr(trim($tagvalues[0]), 1, -1));
+                    @eval('$enumeration = '.trim($tagvalues[0]).';');
+                    $this->enumeration = $enumeration;
                     break;
 
                 case 'precision':

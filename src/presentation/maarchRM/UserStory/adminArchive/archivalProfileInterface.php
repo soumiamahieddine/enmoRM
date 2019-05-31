@@ -89,4 +89,22 @@ interface archivalProfileInterface
      * @uses recordsManagement/code/createGenerate
      */
     public function readArchivalprofilebarcode($data, $label);
+
+    /**
+     * Upload profile reference
+     * 
+     * @return recordsManagement/archivalProfile/uploadArchivalProfile 
+     * @uses recordsManagement/archivalProfile/createArchivalprofileUpload_profileReference_
+     * 
+     */
+    public function createArchivalprofileUpload_profileReference_();
+    
+    /**
+     * Export profile file
+     * 
+     * @return recordsManagement/archivalProfile/export 
+     * @uses recordsManagement/archivalProfile/readArchivalprofileExport_profileReference_
+     * 
+     */
+    public function readArchivalprofileExport_profileReference_();
 }

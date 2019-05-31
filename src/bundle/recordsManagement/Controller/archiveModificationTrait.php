@@ -96,8 +96,11 @@ trait archiveModificationTrait
 
         $archives = array();
 
-        if (!$currentOrg = \laabs::getToken("ORGANIZATION")) {
-            throw \laabs::newException('recordsManagement/noOrgUnitException', "Permission denied: You have to choose a working organization unit to proceed this action.");
+        if (!\laabs::getToken("ORGANIZATION")) {
+            throw \laabs::newException(
+                'recordsManagement/noOrgUnitException',
+                "Permission denied: You have to choose a working organization unit to proceed this action."
+            );
         }
 
         foreach ($archiveIds as $archiveId) {
@@ -339,14 +342,17 @@ trait archiveModificationTrait
         $description = null,
         $checkAccess = true
     ) {
-        $archive = $this->retrieve($archiveId, $withData = false, $checkAccess);
+        $archive = $this->retrieve($archiveId, false, $checkAccess);
 
         if ($checkAccess) {
             $this->checkRights($archive);
         }
 
         if (!empty($archive->archivalProfileReference)) {
-            $archivalProfileDescription = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference)->archiveDescription;
+            $archivalProfileDescription = \laabs::callService(
+                'recordsManagement/archivalProfile/readByreference_reference_',
+                $archive->archivalProfileReference
+            )->archiveDescription;
         }
 
         if ($archiveName) {
@@ -363,8 +369,6 @@ trait archiveModificationTrait
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
-        $publicArchives = \laabs::configuration('presentation.maarchRM')['publicArchives'];
-
         if (!empty($description)) {
             $descriptionObject = $description;
 
@@ -380,14 +384,10 @@ trait archiveModificationTrait
                 }
             }
             
-            if (!empty($archive->archivalProfileReference) && !$publicArchives) {
+            if (!empty($archive->archivalProfileReference)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
-                if (!empty($this->currentArchivalProfile->descriptionClass)) {
-                    $this->validateDescriptionClass($descriptionObject, $this->currentArchivalProfile);
-                } else {
-                    $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
-                }
+                $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
@@ -417,7 +417,7 @@ trait archiveModificationTrait
     {
         $this->archiveRelationshipController->createRelationship($archiveRelationship);
 
-        $archive = $this->retrieve($archiveRelationship->archiveId, $withBinary = false, $checkAccess = false);
+        $archive = $this->retrieve($archiveRelationship->archiveId, false, false);
 
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
