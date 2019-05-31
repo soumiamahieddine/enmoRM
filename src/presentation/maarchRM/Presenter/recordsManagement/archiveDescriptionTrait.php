@@ -210,7 +210,7 @@ trait archiveDescriptionTrait
             $descriptionField = $this->getDummyDescriptionField('dummy', 'object');
             $descriptionField->properties = $properties;
         } else {
-            $descriptionField = $this->getDummyDescriptionField('dummy', $itemType);
+            $descriptionField = $this->getDummyDescriptionField('dummy', $descriptionField->itemType);
         }
         foreach ($array as $item) {
             $tr = $this->getTableRow($name = null, $item, $descriptionField, true);
