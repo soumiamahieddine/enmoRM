@@ -717,7 +717,7 @@ ul {
             }
 
             if (target.attr("data-type")==="name") {
-                target.find("input").val(data);
+                target.find("select, input").val(data);
             }
             else if (target.attr("data-type")==="boolean") {
                 $.each($(target).find("input"), function(){

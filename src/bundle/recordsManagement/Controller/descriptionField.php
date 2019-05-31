@@ -73,15 +73,18 @@ class descriptionField
      */
     public function create($descriptionField)
     {
-        if ($this->sdoFactory->exists("recordsManagement/descriptionField", $descriptionField->name)){
+        if ($this->sdoFactory->exists("recordsManagement/descriptionField", $descriptionField->name)) {
             throw new \core\Exception\ConflictException("The description field already exists.");
         }
 
         $model = \laabs::bundle('recordsManagement')->getClass('descriptionField');
         $differences = array_diff_key(get_object_vars($descriptionField), $model->getProperties());
+
         $facets = new \stdClass();
         foreach ($differences as $property => $value) {
-            $facets->{$property} = $value;
+            if (!is_null($value)) {
+                $facets->{$phproperty} = $value;
+            }
         }
         $descriptionField->facets = json_encode($facets);
 

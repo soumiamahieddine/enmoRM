@@ -314,29 +314,14 @@ descriptionSchemes = "{
 ```
 
 ## Branchement de listes externes
-Un nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser 
+Un nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser
 des valeurs ou des paires de clé et valeur dans les métadonnées descriptives des archives.
 
-Les sources de données sont en founissant des URI de services qui doivent respecter
-l'interface `dependency\pickLists\PickListInterface`.
+Pour le moment, uniquement les csv sur deux colonnes sont gérés. Il est nécessaire de créer un dossier avec l'ensemble des rénférentiels externes à l'intérieur. Le chemin vers ce fichier est à renseigner dans la valeur de configuration [recordsManagement] refDirectoy, par exemple :
 
-La configuration fournit aussi une liste de paramètres à passer au service pour son instanciation.
-Le nombre et la nature de paramètres est propre à chaque service, se référer à la documentation 
-ou au code source de ceux-ci pour définir la configuration.
+[recordsManagement]
+refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 
-```
-descriptionPickLists = "{
-  'customers' : {
-    'name' : 'Clients',
-    'type' : 'assoc',
-    'uri' : 'dependency/dataRepositories/database',
-    'parameters' : {
-        'dsn' : 'pgsql:...',
-        'table' : 'schema_name.table_name',
-        'key' : 'key_column_name', 
-        'value' : 'value_expression',
-        'order' : 'order_expression'
-    }
-  }
-}"
-```
+Les csv sont considérés comme étant séparés pas des virgules et les données présentes entre double quotes ("")
+Lors de l'ajout du'n mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentuel externe est le nom du fichier csv à charger dans le dossier renseigné dans la configuraiton, sans son extension.
+Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxieème colonne. Les colonnes surnuméraires sont chargés mais ne sert que d'aide à la recherche lors de la saisie

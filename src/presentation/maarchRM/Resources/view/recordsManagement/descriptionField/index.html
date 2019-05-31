@@ -151,11 +151,27 @@ file that was distributed with this source code.
                         <div class="form-group hide" id="keywordEnumForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Enumeration</label>
                             <div class="col-md-8">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="keywordChoice" id="keywordDefault" value="keywordDefault" checked>Saisie
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="keywordChoice" id="keywordList" value="keywordList">Liste de choix
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="keywordChoice" id="keywordExternalRef" value="keywordExternalRef">Référentiel externe
+                                    </label>
+                                </div>
+                                <br>
                                 <div class="input-group" style="border-radius: 4px 0 0 4px;">
                                     <span class="input-group-addon" style="width: 0; padding: 0; border: 0;"></span>
                                     <input type='text' id="inputAddEnumeration" class="form-control col-md-6" name="keywordEnumField" placeholder="Identifier" style="border-radius: 4px 0 0 4px;" />
                                     <span class="input-group-addon" style="width: 0; padding: 0; border:0;"></span>
-                                    <input type='text' id="inputAddEnumName" class="form-control col-md-6" name="keywordEnumField" placeholder="Label" />
+                                    <input type='text' id="inputAddEnumName" class="form-control col-md-6" name="keywordEnumField" placeholder="Label" style="display: none;" />
                                     <div class="input-group-btn">
                                         <button type="button" class="btn btn-success" id="btnAddEnumField"><span class="fa fa-plus"></span></button>
                                     </div>
@@ -460,13 +476,22 @@ file that was distributed with this source code.
                         if (hasEnumNames === true) {
                             $("#inputAddEnumeration").val(value);
                             $('#inputAddEnumName').val(descriptionField.enumNames[key]);
+                            $('#keywordList').prop('checked', true);
+                            $('#keywordRefForm').hide();
                         } else {
                             $("#inputAddEnumeration").val(value ).attr('data-Enumeration', value);
+                            $('#keywordDefault').prop('checked', true);
+                            $('#keywordRefForm').hide();
                         }
                         $("#btnAddEnumField").click();
                     });
                     $("#nameSelectPropertyDefaultValue").find("select").val(descriptionField.default);
                     $("#keywordEnumList").removeClass("hide");
+                } else if (descriptionField.ref === true) {
+                    $('#keywordEnumForm .input-group').hide();
+                    $('#inputAddEnumName').hide();
+                    $('#keywordExternalRef').prop('checked', true);
+                    $('#keywordRefForm').hide();
                 } else {
                     $('#namePropertyDefaultValue').removeClass('hide');
                     $('#namePropertyDefaultValue').find("input").val(descriptionField.default);
@@ -537,11 +562,11 @@ file that was distributed with this source code.
             case "boolean":
                 switch ($('#booleanPropertyDefaultValue').find('input:checked').val()) {
                     case "1": property['default'] = 1;
-                              break;
+                        break;
                     case "0": property['default'] = 0;
-                              break;
+                        break;
                     default: property['default'] = "";
-                              break;
+                        break;
                 }
                 break;
             case "number":
@@ -560,6 +585,9 @@ file that was distributed with this source code.
 
         if (nbResult == 0) {
             property['default'] = $('#namePropertyDefaultValue').find('input').val();
+            if ($('#keywordExternalRef').prop('checked') === true) {
+                property['ref'] = true;
+            }
         } else {
             var enumeration = new Array();
             var enumNames = new Array();
@@ -571,6 +599,7 @@ file that was distributed with this source code.
                     enumNames.push(item.getAttribute('data-enumNames'))
                 }
             });
+
             property['enumeration'] = enumeration;
             property.enumNames = enumNames;
             property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
@@ -593,6 +622,32 @@ file that was distributed with this source code.
         } else {
             formGroup.removeClass('has-success').addClass('has-error');
         }
+    });
+
+    $('#keywordEnumForm .radio').on('click', function(e) {
+        var value = $(this).find('input').val();
+
+        if(value === 'keywordDefault') {
+            $(this).siblings('.input-group').show();
+            $('#inputAddEnumName').hide();
+            $('#keywordEnumList').empty();
+            $("#nameSelectPropertyDefaultValue").find("select").empty();
+        }
+
+        if (value == 'keywordList') {
+            $(this).siblings('.input-group').show();
+            $('#inputAddEnumName').show();
+            $('#keywordEnumList').empty();
+            $("#nameSelectPropertyDefaultValue").find("select").empty();
+        }
+
+        if (value == 'keywordExternalRef') {
+            $(this).siblings('.input-group').hide();
+            $('#inputAddEnumName').hide();
+            $('#keywordEnumList').empty();
+            $("#nameSelectPropertyDefaultValue").find("select").empty();
+        }
+
     });
 
 
