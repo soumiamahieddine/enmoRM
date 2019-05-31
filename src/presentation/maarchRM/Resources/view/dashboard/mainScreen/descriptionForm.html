@@ -703,10 +703,10 @@ ul {
                     gritter.show(response.responseText, false);
                 }
             });
-            Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
             $('#modifyArchive').attr("data-archive-id", archiveId);
             $('#modifyArchive').removeClass("hide");
             $("#syncImport").addClass("hide");
+            Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
 
         },
 
@@ -717,22 +717,21 @@ ul {
             }
 
             if (target.attr("data-type")==="name") {
-                target.find("select").val(data);
+                target.find("input").val(data);
             }
-
             else if (target.attr("data-type")==="boolean") {
                 $.each($(target).find("input"), function(){
                     if($(this).val() === data) {
                         $(this).parent().siblings("label").removeClass("active");
                         $(this).parent().addClass("active");
                     }
-                })
+                });
             } else if ($.isPlainObject(data)) {
                 $.each(data, function(property, value) {
                     if (property == "description") {
                         $.each(value, function(descProperty, descValue) {
                             if(target.find("[name='"+descProperty+"']").first().length > 0) {
-                                Metadata.checkAndFill(descValue, target.find("[name='"+descProperty+"']").first());
+                                Metadata.checkAndFill(descValue, target.find("[name='" + descProperty + "']").first());
                             } else {
                                 custom = {
                                     "property" : descProperty,
@@ -740,7 +739,7 @@ ul {
                                     }
                                 Metadata.addCustomField(custom);
                             }
-                        })
+                        });
                     } else if (property == "descriptionObject") {
                         return true;
                     } else {

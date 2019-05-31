@@ -116,15 +116,14 @@ class descriptionRef
             return $item;
         }
 
+        $item = [];
         $header = fgetcsv($handler, 1000, ",");
         while (($row = fgetcsv($handler, 1000, ",")) !== false) {
             if ($row[0] == $key) {
-                $item = [];
-                foreach ($header as $i => $name) {
-                    $item[$name] = $row[$i];
-                }
-
-                $item = (object) $item;
+                // foreach ($header as $i => $name) {
+                //     $item[$name] = $row[$i];
+                // }
+                $item = $row;
             }
         }
 
