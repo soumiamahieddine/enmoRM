@@ -72,7 +72,13 @@
 
 <style>
 ul {
+    padding-left: 0px;
+    padding-right: 40px;
     list-style: none;
+}
+
+input:invalid {
+    border-color: red;
 }
 </style>
 
@@ -104,6 +110,16 @@ ul {
         e.preventDefault();
         Metadata.removeRowArray($(this));
     });
+
+    function checkInput(e){
+        var field = $(e).find("input");
+        if (!field.val()){
+            field.css({"border-color":"red"});
+        }
+        else {
+            field.css({"border-color":""});
+        }
+    }
 
     $('#allFields').on('click', '.removeField', function(e) {
         e.preventDefault();
@@ -478,7 +494,7 @@ ul {
                 div.attr("data-itemtype", descriptionField.itemType.type)
             }
 
-            var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-left" title="Add data">&nbsp;<i class="fa fa-check">&nbsp;</i></button>');
+            var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-right" title="Add data">&nbsp;<i class="fa fa-check">&nbsp;</i></button>');
             div.append(addButton);
 
             var itemList = $('<ul>');
@@ -588,6 +604,7 @@ ul {
                     previous.find(".panel-heading").css({ "padding-top": "2px", "padding-bottom": "2px" });
                     previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
                 } else {
+                    previous.attr("oninput", "checkInput(this)");
                     previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
                 }
             }
