@@ -1075,7 +1075,7 @@ class archive
         $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
         if (!empty($descriptionSchemeConfig) && isset($descriptionSchemeConfig->presenter)) {
             $presenterClass = $descriptionSchemeConfig->presenter;
-        } elseif (strpos($descriptionScheme, '/') !== false) {
+        } else {
             $presenterClass = $descriptionScheme;
         }
  
