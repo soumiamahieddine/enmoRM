@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 2.4.4 
+
+### Métadonnées
+
+- `Fixed` Rétablissement de l'affichage des fichiers convertis et des relations dans la modale de détails de l'archive
+- `Changed` Différenciation entre le fichier d'origine et ses conversions dans l'arborescence du plan de classement
+
 ## Version 2.4.3 
 
 ### Métadonnées
