@@ -1059,3 +1059,6 @@ msgstr "Date de mise à jour"
 
 msgid "Add a resource"
 msgstr "Ajouter une pièce"
+
+msgid "Click to add '%1$s'"
+msgstr "Cliquer pour ajouter '%1$s'"

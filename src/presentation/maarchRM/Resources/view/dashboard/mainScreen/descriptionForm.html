@@ -39,6 +39,7 @@
     <span id="preservation_text">Preservation</span>
     <span id="destruction_text">Destruction</span>
     <span id="retentionRule_text">%1$s after %2$s</span>
+    <span id="object_header_text">Click to add '%1$s'</span>
 
     <div data-translate-catalog="dates/dates">
         <span id="days_text">days</span>
@@ -192,6 +193,11 @@ ul {
 
                 case 'object':
                     var field = Metadata.getObjectDiv(descriptionField);
+
+                    // Add title to Collapse
+                    var objectHeader = $("#object_header_text").text().replace(/%1\$s/g, descriptionField.label);
+                    header = field.find(".panel-title").first().find("a");
+                    header.text(objectHeader);
                     break;
 
                 case 'text':
@@ -414,7 +420,7 @@ ul {
             anchor.text('#');
             title.append(anchor);
 
-            var collapse = $('<div class="panel-collapse collapse in">').attr('id', id);
+            var collapse = $('<div class="panel-collapse collapse">').attr('id', id);
             div.append(collapse);
 
             var panelBody = $('<div class="panel-body">');
@@ -537,6 +543,12 @@ ul {
                         switch (descriptionField.itemType.type) {
                             case 'object' :
                                 var field = Metadata.getObjectDiv(descriptionField.itemType);
+
+                                // Add title to Collapse
+                                var objectHeader = $("#object_header_text").text().replace(/%1\$s/g, descriptionField.label);
+                                header = field.find(".panel-title").first().find("a");
+                                header.text(objectHeader);
+
                                 break;
                             case 'array' :
                                 var field = Metadata.getArrayDiv(descriptionField.itemType);
@@ -570,7 +582,7 @@ ul {
 
                 previous = items.first();
                 previous.find('a').first().text('#'+index);
-                previous.find('.panel-collapse').first().removeClass('in');
+
                 // Button to remove item
                 if ($.isPlainObject(descriptionField.itemType)) {
                     previous.find(".panel-heading").css({ "padding-top": "2px", "padding-bottom": "2px" });
