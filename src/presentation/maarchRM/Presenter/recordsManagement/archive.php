@@ -1033,9 +1033,9 @@ class archive
 
     protected function getDescriptionHtml($archive)
     {
-        $presenterClass = $this->getDescriptionPresenterClass($archive->descriptionClass);
-        if (!empty($presenterClass)) {
-            $presenter = $this->getPresenter($presenterClass);
+        $presenter = $this->getDescriptionPresenter($archive->descriptionClass);
+
+        if (!empty($presenter)) {
             $descriptionHtml = $presenter->read($archive->descriptionObject);
 
             $container = $this->view->getElementById("metadata");
@@ -1048,24 +1048,24 @@ class archive
 
     /**
      * Returns the presenter for archive description object, or null
-     * @param string $descriptionClass The name of the description class used by archive
+     * @param string $presenterClass The name of the description class used by archive
      *
      * @return object|null
      */
-    protected function getPresenter($descriptionClass)
+    protected function getPresenter($presenterClass)
     {
         // Try to find a bundle controller, else fallback to default
         try {
             $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionClass);
+            $presenter = $presentation->getPresenter($presenterClass);
 
-            return \laabs::newPresenter($descriptionClass);
+            return \laabs::newPresenter($presenterClass);
         } catch (\exception $exception) {
             return null;
         }
     }
 
-    protected function getDescriptionPresenterClass($descriptionScheme)
+    protected function getDescriptionPresenter($descriptionScheme)
     {
         // Default description class
         if (empty($descriptionScheme)) {
@@ -1073,22 +1073,20 @@ class archive
         }
 
         $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
-        if (empty($descriptionSchemeConfig)) {
-            return;
-        }
-       
-        if (!isset($descriptionSchemeConfig->presenter)) {
-            return;
+        if (!empty($descriptionSchemeConfig) && isset($descriptionSchemeConfig->presenter)) {
+            $presenterClass = $descriptionSchemeConfig->presenter;
+        } elseif (strpos($descriptionScheme, '/') !== false) {
+            $presenterClass = $descriptionScheme;
         }
  
         try {
             $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionScheme);
-
-            return $descriptionSchemeConfig->presenter;
+            $presentation->getPresenter($presenterClass);
         } catch (\exception $exception) {
             return;
         }
+
+        return \laabs::newPresenter($presenterClass);
     }
 
     protected function loadArchivalProfile($reference)
