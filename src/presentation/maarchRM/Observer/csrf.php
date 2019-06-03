@@ -64,7 +64,7 @@ class csrf
             return;
         }
 
-        $requestToken = $this->getRequestToken();
+        $requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
 
         // Get account with LOCK
         $this->sdoFactory->beginTransaction();
@@ -73,7 +73,7 @@ class csrf
         if (!$account) {
             $this->sdoFactory->rollback();
 
-            return;
+            throw new \core\Exception('Attempt to access without a valid token 2', 412);
         }
         $accountTokens = $account->authentication->csrf;
 
@@ -82,10 +82,12 @@ class csrf
             case "create":
             case "update":
             case "delete":
-                $requestTokenTime = $this->isValidToken($requestToken, $accountTokens);
+                if (empty($requestToken)) {
+                    throw new \core\Exception('Attempt to access without a valid token 1', 412);
+                }
 
+                $requestTokenTime = $this->checkToken($requestToken, $accountTokens);
                 $accountTokens = $this->shiftTokens($requestTokenTime, $accountTokens);
-    
                 $accountTokens = $this->addToken($accountTokens);
                 break;
 
@@ -130,21 +132,9 @@ class csrf
     }
 
     /**
-     * Retrieves the request csrf token
-     * 
-     * @return string
-     */
-    private function getRequestToken()
-    {
-        $requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
-        
-        return $requestToken;
-    }
-
-    /**
      * Retrieves the account information with a LOCK on database
      * @param bool $lock Lock user
-     * 
+     *
      * @return auth/userAccount
      */
     private function getAccount($lock = false)
@@ -171,9 +161,27 @@ class csrf
 
         if (!is_object($account->authentication->csrf)) {
             $account->authentication->csrf = [];
-        } else {
-            $account->authentication->csrf = get_object_vars($account->authentication->csrf);
+            return $account;
         }
+
+        $account->authentication->csrf = get_object_vars($account->authentication->csrf);
+
+        $lifetime = '3600';
+        if (isset($this->config['lifetime'])) {
+            $lifetime = $this->config['lifetime'];
+        }
+        $duration = \laabs::newDuration('PT'.$lifetime.'S');
+        $now = \laabs::newTimestamp();
+
+        foreach ($account->authentication->csrf as $time => $token) {
+            $timestamp = \laabs::newTimestamp($time);
+            $expiration = $timestamp->add($duration);
+
+            if ($now->diff($expiration)->invert == 1) {
+                unset($account->authentication->csrf[$time]);
+            }
+        }
+
 
         return $account;
     }
@@ -214,16 +222,8 @@ class csrf
         return end($accountTokens);
     }
 
-    private function isValidToken($requestToken, $accountTokens)
+    private function checkToken($requestToken, $accountTokens)
     {
-        if (empty($requestToken)) {
-            $e = new \core\Exception('Attempt to access without a valid token', 412);
-
-            throw $e;
-
-            return false;
-        }
-
         $requestTokenTime = array_search($requestToken, $accountTokens);
 
         if (empty($requestTokenTime)) {
@@ -240,7 +240,7 @@ class csrf
     private function shiftTokens($requestTokenTime, $accountTokens)
     {
         foreach ($accountTokens as $time => $token) {
-            if ($time < $requestTokenTime) {
+            if ($time <= $requestTokenTime) {
                 unset($accountTokens[$time]);
             }
         }

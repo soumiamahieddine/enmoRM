@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 2.4.4
+
+### Sécurité 
+
+- `Changed` Ajout du paramètre `lifetime` pour le jeton CSRF qui définit la durée de validité des jetons en secondes. Si omis, durée de 1 heure par défaut.
+
+- `Fixed` Jeton CRSF consommé lorsqu'utilisé. 
+
 ## Version 2.4.3 
 
 ### Métadonnées
