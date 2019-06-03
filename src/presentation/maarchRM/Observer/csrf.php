@@ -73,10 +73,10 @@ class csrf
         if (!$account) {
             $this->sdoFactory->rollback();
 
-            throw new \core\Exception('Attempt to access without a valid token 2', 412);
+            return;
         }
+        
         $accountTokens = $account->authentication->csrf;
-
         
         switch ($userCommand->method) {
             case "create":
