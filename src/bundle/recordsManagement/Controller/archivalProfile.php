@@ -359,13 +359,11 @@ class archivalProfile
      */
     public function isUsed($archivalProfile)
     {
-        if (\laabs::hasBundle('medona')) {
-            $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
-            $archivalAgreement = $archivalAgreementController->getByProfileReference($archivalProfile->reference);
+        $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $archivalAgreement = $archivalAgreementController->getByProfileReference($archivalProfile->reference);
 
-            if (!empty($archivalAgreement)) {
-                return false;
-            }
+        if (!empty($archivalAgreement)) {
+            return false;
         }
 
         return (bool) $this->sdoFactory->count('recordsManagement/archive', "archivalProfileReference = '$archivalProfile->reference'");
