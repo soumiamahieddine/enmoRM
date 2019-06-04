@@ -98,8 +98,14 @@ class ArchiveDestructionRequest extends abstractMessage
      *
      * @return The request message generated
      */
-    public function send($reference, $archives, $comment = null, $requesterOrgRegNumber = null, $archiverOrgRegNumber = null, $originatorOrgRegNumber=null)
-    {
+    public function send(
+        $reference,
+        $archives,
+        $comment = null,
+        $requesterOrgRegNumber = null,
+        $archiverOrgRegNumber = null,
+        $originatorOrgRegNumber = null
+    ) {
         if (!is_array($archives)) {
             $archives = array($archives);
         }
@@ -136,7 +142,9 @@ class ArchiveDestructionRequest extends abstractMessage
             }
 
             if ($message->schema != 'medona') {
-                $archiveDestructionRequestController = \laabs::newController($message->schema.'/ArchiveDestructionRequest');
+                $archiveDestructionRequestController = \laabs::newController(
+                    $message->schema.'/ArchiveDestructionRequest'
+                );
                 $archiveDestructionRequestController->send($message);
             } else {
                 $archiveDestructionRequest = $this->sendMessage($message);
