@@ -37,7 +37,7 @@ class Date
      */
     public function jsonSerialize()
     {
-        return (string) $this->format('c');
+        return (string) $this->format('Y-m-d');
     }
 
 }
