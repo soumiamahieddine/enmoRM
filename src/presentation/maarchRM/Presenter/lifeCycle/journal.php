@@ -130,12 +130,6 @@ class journal
             });
         }
 
-
-
-        if (!\laabs::hasBundle('medona')) {
-            $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
-        }
-
         $this->view->setSource("eventType", $eventDomains);
 
         $this->view->merge();

@@ -596,9 +596,7 @@ trait archiveAccessTrait
             $archive->communicability = $this->accessVerification($archive);
         }
 
-        if (\laabs::hasBundle('medona')) {
-            $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
-        }
+        $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
 
         return $archive;
     }
