@@ -38,7 +38,9 @@ trait archiveModificationTrait
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($archive->status === 'frozen') {
-            throw new \bundle\recordsManagement\Exception\retentionRuleException('A frozen archive can\'t be modified.');
+            throw new \bundle\recordsManagement\Exception\retentionRuleException(
+                'A frozen archive can\'t be modified.'
+            );
         }
 
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
@@ -56,7 +58,9 @@ trait archiveModificationTrait
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($archive->status === 'frozen') {
-            throw new \bundle\recordsManagement\Exception\retentionRuleException('A frozen archive can\'t be modified.');
+            throw new \bundle\recordsManagement\Exception\retentionRuleException(
+                'A frozen archive can\'t be modified.'
+            );
         }
 
         $this->getAccessRule($archive);
@@ -66,12 +70,15 @@ trait archiveModificationTrait
 
     /**
      * Modify the archive retention rule
-     * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
-     * @param mixed                                  $archiveIds    The archives ids
      *
-     * @return bool The result of the operation
+     * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
+     * @param @param mixed                                  $archiveIds    The archives ids
+     * @param null $comment
+     * @param null $identifier
+     * @return array
+     * @throws \Exception
      */
-    public function modifyRetentionRule($retentionRule, $archiveIds)
+    public function modifyRetentionRule($retentionRule, $archiveIds, $comment = null, $identifier = null)
     {
 
         $retentionRuleReceived = $retentionRule;
@@ -126,7 +133,10 @@ trait archiveModificationTrait
                     $retentionRule->disposalDate = null;
                 } else {
                     if (!empty($retentionRule->retentionDuration) && !empty($retentionRule->retentionStartDate)) {
-                        $retentionRule->disposalDate = $this->calculateDate($retentionRule->retentionStartDate, $retentionRule->retentionDuration);
+                        $retentionRule->disposalDate = $this->calculateDate(
+                            $retentionRule->retentionStartDate,
+                            $retentionRule->retentionDuration
+                        );
                     }
                 }
 
@@ -151,19 +161,23 @@ trait archiveModificationTrait
             }
         }
 
-        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification($archives, $comment, $identifier);
+        }
 
         return $res;
     }
 
     /**
      * Modify the archive access
+     *
      * @param recordsManagement/archiveAccessCode $accessRule The access rule object
      * @param array                               $archiveIds The archives ids
-     *
-     * @return bool The result of the operation
+     * @param null $comment
+     * @param null $identifier
+     * @return array
      */
-    public function modifyAccessRule($accessRule, $archiveIds)
+    public function modifyAccessRule($accessRule, $archiveIds, $comment = null, $identifier = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -203,7 +217,10 @@ trait archiveModificationTrait
                 } elseif (!empty($accessRule->accessRuleDuration) && $accessRule->accessRuleDuration->y >= 9999) {
                     $accessRule->accessRuleComDate = null;
                 } elseif (!empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleStartDate)) {
-                    $accessRule->accessRuleComDate = $this->calculateDate($accessRule->accessRuleStartDate, $accessRule->accessRuleDuration);
+                    $accessRule->accessRuleComDate = $this->calculateDate(
+                        $accessRule->accessRuleStartDate,
+                        $accessRule->accessRuleDuration
+                    );
                 }
 
                 $accessRule->lastModificationDate = \laabs::newTimestamp();
@@ -228,7 +245,9 @@ trait archiveModificationTrait
             }
         }
 
-        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification($archives, $comment, $identifier);
+        }
 
         return $res;
     }
@@ -236,10 +255,12 @@ trait archiveModificationTrait
     /**
      * Suspend archives
      * @param mixed $archiveIds Array of archive identifier
+     * @param null $comment
+     * @param null $identifier
      *
      * @return array
      */
-    public function freeze($archiveIds)
+    public function freeze($archiveIds, $comment = null, $identifier = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -267,7 +288,9 @@ trait archiveModificationTrait
             $this->logFreeze($archive, false);
         }
 
-        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification($archives, $comment, $identifier);
+        }
 
         return $res;
     }
@@ -275,10 +298,12 @@ trait archiveModificationTrait
     /**
      * Liberate archives
      * @param mixed $archiveIds Array of archive identifier
+     * @param null $comment
+     * @param null $identifier
      *
      * @return array
      */
-    public function unfreeze($archiveIds)
+    public function unfreeze($archiveIds, $comment = null, $identifier = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -306,7 +331,9 @@ trait archiveModificationTrait
             $this->logUnfreeze($archive, false);
         }
 
-        $this->sendModificationNotification($archives, $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification($archives, $comment, $identifier);
+        }
 
         return $res;
     }
@@ -393,7 +420,9 @@ trait archiveModificationTrait
         
         $this->logMetadataModification($archive, $operationResult);
 
-        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
+        }
             
         return $res;
     }
@@ -413,7 +442,9 @@ trait archiveModificationTrait
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
 
-        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
+        }
         
         return true;
     }
@@ -433,7 +464,9 @@ trait archiveModificationTrait
         // Life cycle journal
         $this->logRelationshipDeleting($archive, $archiveRelationship);
 
-        $this->sendModificationNotification([$archive], $comment = null, $identifier = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
+        }
 
         return true;
     }
@@ -449,7 +482,15 @@ trait archiveModificationTrait
         $res = [];
         $res['success'] = [];
         $res['fail'] = [];
-        $archivesToIndex = $this->sdoFactory->find('recordsManagement/archive', "fullTextIndexation='requested'", [], null, null, $limit);
+        $archivesToIndex = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            "fullTextIndexation='requested'",
+            [],
+            null,
+            null,
+            $limit
+        );
+
         if (isset(\laabs::configuration('recordsManagement')['stopWordsFilePath'])) {
             $stopWords = \laabs::configuration('recordsManagement')['stopWordsFilePath'];
             $stopWords = utf8_encode(file_get_contents($stopWords));
@@ -507,7 +548,14 @@ trait archiveModificationTrait
      */
     public function updateArchiveRetentionRule($limit = 1000)
     {
-        $archives = $this->sdoFactory->find('recordsManagement/archive', 'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"', null, null, null, $limit);
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            'retentionRuleCode != null AND retentionStartDate != null AND retentionDuration !=null AND retentionRuleStatus = "changed"',
+            null,
+            null,
+            null,
+            $limit
+        );
         $retentionRules = [];
 
         foreach ($archives as $archive) {
@@ -551,7 +599,7 @@ trait archiveModificationTrait
         // Valid URL file:// http:// data://
         if (filter_var($contents, FILTER_VALIDATE_URL)) {
             $contents = stream_get_contents($contents);
-        } else if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
+        } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
             $contents = base64_decode($contents);
         } elseif (is_file($contents)) {
             if (empty($filename)) {
@@ -581,7 +629,10 @@ trait archiveModificationTrait
         }
 
         try {
-            $this->digitalResourceController->openContainers($this->currentServiceLevel->digitalResourceClusterId, $archive->storagePath);
+            $this->digitalResourceController->openContainers(
+                $this->currentServiceLevel->digitalResourceClusterId,
+                $archive->storagePath
+            );
             $this->digitalResourceController->store($digitalResource);
 
             $this->logAddResource($archive, $digitalResource, true);
@@ -627,7 +678,7 @@ trait archiveModificationTrait
         $this->sdoFactory->update($archiveUserOrgRegNumbers);
     }
 
-    protected function sendModificationNotification($archives, $comment, $identifier = null)
+    protected function sendModificationNotification($archives, $comment = null, $identifier = null)
     {
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
@@ -664,7 +715,13 @@ trait archiveModificationTrait
                 $unique['reference'] = $reference = $identifier.'_'.$i;
             }
             
-            $message = $archiveModificationNotificationController->send($reference, $archives, $senderOrg, $recipientOrg, $comment);
+            $archiveModificationNotificationController->send(
+                $reference,
+                $archives,
+                $senderOrg,
+                $recipientOrg,
+                $comment
+            );
         }
     }
 }

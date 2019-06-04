@@ -59,10 +59,12 @@ $('.multipleActionMenu').on('click', 'li', function() {
     if(type == "checkHash") {
         ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
     } else {
-        ModificationModal.loadMultiple(selection.selected, selection.relevant, selection.ids, selection.names,type);    
-    }
+        var transaction = false;
+        $("#transaction").val() ? transaction = true : transaction = false;
 
-})
+        ModificationModal.loadMultiple(selection.selected, selection.relevant, selection.ids, selection.names,type, transaction);
+    }
+});
 
 $('#archiveList').on('click', '.actionMenu li', function() {
     var button = $(this);
@@ -74,9 +76,12 @@ $('#archiveList').on('click', '.actionMenu li', function() {
     if(type == "checkHash") {
         ArchivesAction.checkHash(id);
     } else {
-        ModificationModal.load(id, name, type);
+        var transaction = false;
+        $("#transaction").val() ? transaction = true : transaction = false;
+
+        ModificationModal.load(id, name, type, transaction);
     }
-})
+});
 
 var ArchivesAction = {
     actionsPossibility : {

@@ -120,6 +120,8 @@ class archive
 
         $this->view->translate();
 
+        $transaction = \laabs::configuration("medona")["transaction"];
+
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
         $accessRules = $accessRuleController->index();
@@ -148,14 +150,24 @@ class archive
 
         $currentDate = \laabs::newDate();
         foreach ($archives as $archive) {
-            $archive->finalDispositionDesc = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
-            $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+            $archive->finalDispositionDesc = $this->view->translator->getText(
+                $archive->finalDisposition,
+                false,
+                "recordsManagement/messages"
+            );
+            $archive->statusDesc = $this->view->translator->getText(
+                $archive->status,
+                false,
+                "recordsManagement/messages"
+            );
 
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
             }
 
-            if (empty($archive->disposalDate) && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))) {
+            if (empty($archive->disposalDate)
+                && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))
+            ) {
                 $archive->noRetention = true;
             }
 
@@ -163,12 +175,16 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    if ($archive->status == 'disposed' || $archive->status == 'error' || $archive->status == 'restituted' || $archive->status == 'transfered') {
+                    if ($archive->status == 'disposed'
+                        || $archive->status == 'error'
+                        || $archive->status == 'restituted'
+                        || $archive->status == 'transfered'
+                    ) {
                         $archive->hasRights = false;
                     } else {
                         $archive->hasRights = $archiveController->checkRights($archive);
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $archive->hasRights = false;
                 }
             }
@@ -189,6 +205,7 @@ class archive
         $this->view->setSource("accessRules", $accessRules);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
+        $this->view->setSource('transaction', $transaction);
         $this->view->merge();
 
         return $this->view->saveHtml();

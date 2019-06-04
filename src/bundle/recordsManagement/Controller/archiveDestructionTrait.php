@@ -28,11 +28,14 @@ trait archiveDestructionTrait
 {
     /**
      * Flag for disposal
-     * @param array $archiveIds The archives ids
      *
-     * @return bool The result of the operation
+     * @param array $archiveIds The archives ids
+     * @param string $identifier
+     * @param string $comment
+     * @return mixed
+     * @throws \bundle\recordsManagement\Exception\notDisposableArchiveException
      */
-    public function dispose($archiveIds)
+    public function dispose($archiveIds, $identifier = null, $comment = null)
     {
         $archives = [];
 
@@ -58,15 +61,24 @@ trait archiveDestructionTrait
             $this->logDestructionRequest($archive);
         }
 
-        $this->sendDestructionRequest($archives, $reference = null, $comment = null);
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendDestructionRequest($archives, $identifier, $comment);
+        }
 
         return $archiveList;
     }
 
     /**
+     *
      * Send destruction request
+     *
+     * @param $archives
+     * @param null $identifier
+     * @param null $comment
+     * @return mixed
+     * @throws \Exception
      */
-    protected function sendDestructionRequest($archives, $reference = null, $comment = null)
+    protected function sendDestructionRequest($archives, $identifier = null, $comment = null)
     {
         $archiveDestructionRequestController = \laabs::newController("medona/ArchiveDestructionRequest");
 
@@ -107,7 +119,14 @@ trait archiveDestructionTrait
                 $unique['reference'] = $reference = $identifier.'_'.$i;
             }
 
-            $archiveDestructionRequestController->send($reference, $archives, $comment, $requesterOrgRegNumber, $recipientOrgRegNumber, $originatorOrgRegNumber);
+            $archiveDestructionRequestController->send(
+                $reference,
+                $archives,
+                $comment,
+                $requesterOrgRegNumber,
+                $recipientOrgRegNumber,
+                $originatorOrgRegNumber
+            );
         }
 
         return $archives;
@@ -194,7 +213,10 @@ trait archiveDestructionTrait
         foreach ($archives['success'] as $archiveId) {
             $archive = $this->retrieve((string)$archiveId);
 
-            if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
+            if ($archive->status != 'disposed'
+                && $archive->status != 'restituted'
+                && $archive->status != 'transfered'
+            ) {
                 $destructArchives['error'][] = $archive;
                 continue;
             }
@@ -300,6 +322,12 @@ trait archiveDestructionTrait
         return $archiveIds;
     }
 
+    /**
+     * @param $archive
+     * @param bool $isChild
+     * @return array
+     * @throws \bundle\recordsManagement\Exception\notDisposableArchiveException
+     */
     public function checkDisposalRights($archive, $isChild = false)
     {
         $archiveIds = [];
@@ -316,13 +344,23 @@ trait archiveDestructionTrait
         }
 
         if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Archive not set for destruction.");
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Archive not set for destruction."
+            );
         }
         if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Disposal date not reached."
+            );
         }
-        if ((!isset($archive->finalDisposition) || empty($archive->finalDisposition) || empty($archive->disposalDate)) && $actionWithoutRetentionRule == "preserve") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."There is a missing management information (date or retention rule).");
+        if ((!isset($archive->finalDisposition)
+                || empty($archive->finalDisposition)
+                || empty($archive->disposalDate)
+            )
+            && $actionWithoutRetentionRule == "preserve") {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."There is a missing management information (date or retention rule)."
+            );
         }
 
         return $archiveIds ;
@@ -333,7 +371,8 @@ trait archiveDestructionTrait
         $currentService = \laabs::getToken("ORGANIZATION");
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         
-        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber
+                || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
             && !in_array("owner", $currentService->orgRoleCodes)) {
             return false ;
         }

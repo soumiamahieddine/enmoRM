@@ -792,31 +792,6 @@ class message
     }
 
     /**
-     * Get the message type and schema specific controller
-     * @param medona/message $message The message object
-     *
-     * @return The controller
-     */
-    protected function getMessageTypeController($message)
-    {
-        if (!isset($message->type)) {
-            $message->type = $message->xml->documentElement->nodeName;
-        }
-
-        if (!isset($message->schema)) {
-            $messageNamespace = $message->xml->documentElement->namespaceURI;
-            if (!$messageSchema = \laabs::resolveXmlNamespace($messageNamespace)) {
-                throw new \Exception('Unknown message namespace'.$messageNamespace, 400);
-            }
-            $message->schema = $messageSchema;
-        }
-
-        $this->messageTypeController = \laabs::newController($message->schema.LAABS_URI_SEPARATOR.$message->type);
-
-        return $this->messageTypeController;
-    }
-
-    /**
      * Get the message type and schema specific parser
      * @param medona/message $message The message object
      * @param string         $format  The implementation format

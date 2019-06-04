@@ -134,7 +134,13 @@ chainWithTimestamp = false;
 
 ; Any operation on this list will no be logged in the application journal
 ;ignoreMethods = "['read']"
+
 [medona]
+; Enable or disable the transaction mode
+; true = Enable
+; false = Disable
+transaction = false
+
 messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
 autoValidateSize = 2147000
 

@@ -74,62 +74,30 @@
     var ArchiveModification = {
         modal: $('#modificationModal'),
         serialize: function (type) {
-            var parameter = {}
-            if (type === "accessRule") {
-                var code = this.modal.find('[name="accessRuleCode"]').find('option:selected').data('json');
-                parameter.accessRule = {
-                    accessRuleCode: this.modal.find('[name="accessRuleCode"]').val(),
-                    accessRuleStartDate: this.modal.find('[name="startDate"]').val(),
-                    accessRuleDuration: code.duration
-                }
-            } else if (type === "retentionRule") {
-                var code = this.modal.find('[name="retentionRuleCode"]').find('option:selected').data('json');
-                parameter.retentionRule = {
-                    retentionStartDate: this.modal.find('[name="startDate"]').val(),
-                    retentionRuleCode: this.modal.find('[name="retentionRuleCode"]').val()
-                };
+            console.log("passage");
+            var parameter = {};
+            var transaction = false;
 
-                if (code) {
-                    parameter.retentionRule.retentionDuration = code.duration;
-                }
-
-                if (!($("#updateFinalDisposition").css('display') === 'block' && $('#retentionRuleFinalDisposition').prop("disabled"))) {
-                    parameter.retentionRule.finalDisposition = $('#retentionRuleFinalDisposition').val();
-                }
-
+            $("#transaction").val() ? transaction = true : transaction = false;
+            if (type === "accessRule" || type === "retentionRule") {
+                parameter = eval(type+"_serialize()");
             } else if (type === "flagForTransfer") {
                 if ($('#archivalAgencySelect').find('option:selected').val()) {
                     parameter.archiverOrgRegNumber = $('#archivalAgencySelect').find('option:selected').val();
                 }
             }
 
-            parameter.identifier = this.modal.find('[name="identifier"]').val();
-            parameter.comment = this.modal.find('[name="comment"]').val();
+            if (transaction) {
+                parameter.identifier = this.modal.find('[name="identifier"]').val();
+                parameter.comment = this.modal.find('[name="comment"]').val();
 
-            return parameter;
-        }
-    }
-    var ArchiveModification = {
-        modal: $('#modificationModal'),
-        serialize: function(type) {
-            parameter = {};
-            try {
-                parameter = eval(type+"_serialize()");
-            }
-            catch(err) {
-                parameter = {};
-            }
-
-            parameter.identifier = this.modal.find('[name="identifier"]').val();
-            parameter.comment = this.modal.find('[name="comment"]').val();
-
-            if (parameter!=-1 && !parameter.comment) {
-                gritter.show($('#empty_text').html(), false);
-                return -1;
+                if (parameter!=-1 && !parameter.comment) {
+                    gritter.show($('#empty_text').html(), false);
+                    return -1;
+                }
             }
 
             return parameter;
         }
-    }
+    };
 </script>
-                    
