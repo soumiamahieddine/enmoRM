@@ -198,6 +198,17 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
 
 
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+    ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)'),
+    ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Validation du message %14$s : %16$s (%15$s)'),
+    ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Acquittement du message %14$s : %16$s (%15$s)'),
+    ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s accepté par %13$s (%12$s)'),
+    ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s rejeté par %13$s (%12$s)'),
+    ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
+
+
 INSERT INTO organization."orgType" (code, name) VALUES ('Collectivite', 'Collectivité');
 INSERT INTO organization."orgType" (code, name) VALUES ('Societe', 'Société');
 INSERT INTO organization."orgType" (code, name) VALUES ('Direction', 'Direction d''une entreprise ou d''une collectivité');

@@ -41,7 +41,6 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s rejeté par %13$s (%12$s)'),
     ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
 
-
 -- EN --
 --INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
 
