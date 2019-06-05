@@ -41,20 +41,16 @@
                 li.children('span').removeClass('node-default').addClass('node-warning');               
                 trigger("showDetails.archive", li.data('archive-id'));
                 this.selected = li;
-            } else if (e.hasClass('documentName')) {
-            // Pour les fichiers convertis, on va récupérer les 'relatedResource' dans le data du parent
-                    if (!li.data('json')){
-                    var converted_data = li.parents("li").first().data('json');
-                        $.each(converted_data.relatedResource, function( index, value ) {
-                            if(value.resId == li.data('resId')) {
-                                li.data('json', value);
-                            }
-                            // TODO faire fonctionner "ça" dès la création de l'arbre
-                            if (value.relationshipType === 'isConversionOf'){
-                                li.find('i').removeClass('fa-caret-right fa-caret-down');
-                                li.find('i:last').removeClass('fa-file').addClass("fa-files-o fa-fw");
-                            }
-                        });
+            } 
+            else if (e.hasClass('documentName')) {
+// Pour les fichiers convertis, on va récupérer les 'relatedResource' dans le data.json du parent
+                if (!li.data('json')){
+                var converted_data = li.parents("li").first().data('json');
+                    $.each(converted_data.relatedResource, function( index, value ) {
+                        if(value.resId == li.data('resId')) {
+                            li.data('json', value);
+                        }
+                    });
                 }
                 e.addClass('node-warning').removeClass('node-default');
                 trigger("showDetails.digitalResource", li.data('json'));
