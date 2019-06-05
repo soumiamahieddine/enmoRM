@@ -1226,7 +1226,7 @@ class archive
 
     protected function setDigitalResources($archive)
     {
-        if ($archive->status == "disposed") {
+        if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
             $archive->digitalResources = null;
         } elseif (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $key => $digitalResource) {
