@@ -254,14 +254,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-
-        // TODO virer comment avant commit
-        // donne le resId du fichier d'origine
-        var_dump($archive->digitalResources[0]->relatedResource[0]->relatedResId);
-        // donne le resId du fichier converti
-        var_dump($archive->digitalResources[0]->relatedResource[0]->resId);
-        exit;
-        
+           
         return $this->view->saveHtml();
     }
 
