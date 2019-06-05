@@ -126,8 +126,12 @@ class adminRole
         $userStoryNames = array();
 
         foreach ($userStories as $userStory) {
-            if (is_array($blacklistUserStories) && in_array($userStory->uri, $blacklistUserStories)) {
-                continue;
+            if (is_array($blacklistUserStories)) {
+                foreach ($blacklistUserStories as $blacklistUserStory) {
+                    if (fnmatch($blacklistUserStory, $userStory->uri)) {
+                        continue 2;
+                    }
+                }
             }
 
             $userStoryName = $userStory->getName();

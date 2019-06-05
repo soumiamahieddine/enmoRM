@@ -59,8 +59,12 @@ class authorization
     {
 
         foreach ($userStories as $i => $userStory) {
-            if (is_array($this->blacklistUserStories) && in_array($userStory->uri, $this->blacklistUserStories)) {
-                unset($userStories[$i]);
+            if (is_array($this->blacklistUserStories)) {
+                foreach ($this->blacklistUserStories as $blacklistUserStory) {
+                    if (fnmatch($blacklistUserStory, $userStory->uri)) {
+                        unset($userStories[$i]);
+                    }
+                }
             }
 
             if ($userStory->isPublic()) {
