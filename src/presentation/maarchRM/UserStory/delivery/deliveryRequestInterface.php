@@ -29,7 +29,7 @@ interface deliveryRequestInterface
     /**
      * Deliver an archive
      *
-     * @param mixes  $archiveIds The archive identifier or a list of identifier
+     * @param mixed  $archiveIds The archive identifier or a list of identifier
      * @param string $comment    A comment
      * @param string $identifier The reference for message
      *

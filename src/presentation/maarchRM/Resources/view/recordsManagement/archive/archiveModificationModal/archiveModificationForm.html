@@ -74,12 +74,11 @@
     var ArchiveModification = {
         modal: $('#modificationModal'),
         serialize: function (type) {
-            console.log("passage");
             var parameter = {};
             var transaction = false;
 
             $("#transaction").val() ? transaction = true : transaction = false;
-            if (type === "accessRule" || type === "retentionRule") {
+            if (type === "accessRule" || type === "retentionRule" || type === "requestCommunication") {
                 parameter = eval(type+"_serialize()");
             } else if (type === "flagForTransfer") {
                 if ($('#archivalAgencySelect').find('option:selected').val()) {
