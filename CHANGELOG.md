@@ -1,11 +1,41 @@
 # CHANGELOG
 
+
 ## Version 2.5
 
 ### IHM
-
 - `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
 
+## Version 2.4.3 
+
+### Métadonnées
+
+- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation 
+et de communicabilité accepte désormais les caractères numériques en première position, ainsi que les tirets
+- `Changed` Les appels au service de modification de la règle de conservation des archives 
+peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée qui y est associée.
+
+### Exploitation 
+
+- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
+automatique, notamment pour les connexions sans authentification
+
+## Version 2.4.2
+
+### Script d'import
+
+- `Fixed` Correction d'un bug lors de l'utilisation de cli 
+
+## Version 2.4.1
+
+### IHM
+
+- `Fixed` Le bouton 'Import' restait parfois grisé en cas d'erreur lors d'un versement
+
+### Métadonnées
+
+- `Fixed` Rétablissement de la fonctionnalité de création, diffusion et modification d'un fichier de profil d'archive de type
+- `Changed` Suppression du bouton de modification des métadonnées descriptives SEDA dans la modale de détail du socle : le bouton est propre à l'extension archivesPubliques
 
 ## Version 2.4
 
@@ -35,7 +65,6 @@
 
 - `Added` L'extension Workflow permettant l'utilisation des flux de travail est désormais disponible
 
-
 ## Version 2.3
 
 ### Exploitation
@@ -53,7 +82,6 @@
 ### Administration
 
 - `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication aux organisations et services
-
 
 ## Version 2.2
 
@@ -93,12 +121,12 @@
 ### Exploitation
 - `Added` Restriction des comptes de service disponibles pour la planification à ceux qui possèdent le privilège pour le service à exécuter
 - `Changed` Liste des services disponibles pour la planification déplacée dans la configuration. Table `batchProcessing.task` supprimée
-- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une  en erreur
+- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une en erreur
 
 ### Échéancier d'élimination
 - `Added` Sort final non défini au versement ou à la modification désormais interprété comme *A définir ultérieurement*
 - `Changed` Modification du statut final des unités d'archive en fonction de l'opération qui mène à leur ressortie : *Détruite*, *Restituée* et *Transférée*
-- `Fixed` Interdiction de  toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
+- `Fixed` Interdiction de toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
 
 ### Élimination
 - `Changed` La demande n'est valide que si l'unité d'archive et toutes ses unités contenues sont éliminables (à terme de la DUA ou sans règle de conservation, sort final *Détuire* ou sans sort final

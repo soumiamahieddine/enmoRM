@@ -106,7 +106,7 @@ trait laabsModelTrait
             'integer' => '[0-9]+',
 
             'string' => '[A-Za-z0-9_\-]*',
-            'name' => '[A-Za-z_][A-Za-z0-9_]*',
+            'name' => '[A-Za-z0-9_\-]*',
             'qname' => '[A-Za-z_][A-Za-z0-9_]*/[A-Za-z_][A-Za-z0-9_]*',
 
             'bool' => '(true|false|0|1)',

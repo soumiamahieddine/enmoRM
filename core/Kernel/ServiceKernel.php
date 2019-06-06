@@ -438,7 +438,7 @@ class ServiceKernel extends AbstractKernel
                     break;
             }
         }
-        
+
         if ($this->guessRequestMode() == 'http') {
             $this->response->setContentType($contentType);
         }
