@@ -168,7 +168,7 @@ class archive
                     } else {
                         $archive->hasRights = $archiveController->checkRights($archive);
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $archive->hasRights = false;
                 }
             }
@@ -230,7 +230,7 @@ class archive
     {
         $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
 
-        // Managment metadata
+        // Management metadata
         $this->setManagementMetadatas($archive);
 
         // Descriptive metadata
@@ -254,7 +254,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-
+           
         return $this->view->saveHtml();
     }
 
@@ -289,7 +289,6 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-
         return $this->view->saveHtml();
     }
 
@@ -342,7 +341,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-        
+       
         return $this->view->saveHtml();
     }
 
@@ -656,7 +655,7 @@ class archive
         if ($result == false) {
             $count = 0;
         } else {
-            $count = count($result);
+            $count = 1;
         }
         $this->json->message = '%1$s document(s) converted.';
         $this->json->message = $this->translator->getText($this->json->message);
@@ -1231,18 +1230,18 @@ class archive
             $archive->digitalResources = null;
         } elseif (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $key => $digitalResource) {
-                $archive->digitalResources[$key]->json = json_encode($digitalResource);
+
                 $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
 
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
-                    continue;
+                } else {
+                    foreach ($digitalResource->relatedResource as $relatedResource) {
+                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
+                        $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
+                    }
                 }
-
-                foreach ($digitalResource->relatedResource as $relatedResource) {
-                    $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
-                    $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
-                }
+                $archive->digitalResources[$key]->json = json_encode($digitalResource);
             }
         }
     }
