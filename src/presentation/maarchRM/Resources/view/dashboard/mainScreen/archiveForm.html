@@ -365,6 +365,10 @@
 
             archive.digitalResources = DocumentList.serialize();
 
+            if (archive.descriptionObject === undefined) {
+                return -1;
+            }
+
             if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
                 if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
                     gritter.show($('#documentMissing_error').text(), false);

@@ -412,7 +412,7 @@
                 
                 if (type == "boolean") {
                     if (!$(this).parent().hasClass("active")) {
-                        return;
+                        return false;
                     }
 
                     value = $(this).val();
@@ -430,10 +430,6 @@
                 } else {
                     $(this).closest(".form-group").removeClass('has-error');
                 }
-
-                /*if ($(this).attr("data-origin") != "user") {
-                    metadatas[name] = value;
-                }*/
 
                 var metadata = {
                     type : type,
@@ -493,6 +489,9 @@
 
             var index = Metadata.serialize();
 
+            if (!index) {
+                return;
+            }
             index.push(existingIndexes.fields['archiveId']);
             index.push(existingIndexes.fields["originatorOrgRegNumber"]);
             index.push(existingIndexes.fields["docId"]);

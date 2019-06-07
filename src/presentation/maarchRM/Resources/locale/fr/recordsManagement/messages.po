@@ -1062,3 +1062,6 @@ msgstr "Ajouter une pièce"
 
 msgid "Click to add '%1$s'"
 msgstr "Cliquer pour ajouter '%1$s'"
+
+msgid "Click to modify '%1$s'"
+msgstr "Cliquer pour modifier '%1$s'"

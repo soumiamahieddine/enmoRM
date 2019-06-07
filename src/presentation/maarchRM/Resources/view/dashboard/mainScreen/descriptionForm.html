@@ -39,7 +39,8 @@
     <span id="preservation_text">Preservation</span>
     <span id="destruction_text">Destruction</span>
     <span id="retentionRule_text">%1$s after %2$s</span>
-    <span id="object_header_text">Click to add '%1$s'</span>
+    <span id="object_header_new_text">Click to add '%1$s'</span>
+    <span id="object_header_modify_text">Click to modify '%1$s'</span>
 
     <div data-translate-catalog="dates/dates">
         <span id="days_text">days</span>
@@ -99,7 +100,7 @@ input:invalid {
     // Add row in array of metadata
     $('#allFields').on('click', '.addRowArray', function(e) {
         // click on button addRowArray won't work if input is empty
-       var text = $(this).next("ul").children("li").children("input").val();
+        var text = $(this).next("ul").children("li").children("input").val();
         if (text === "") {
             return;
         }
@@ -110,6 +111,17 @@ input:invalid {
         e.preventDefault();
         Metadata.removeRowArray($(this));
     });
+
+    function checkErrorInput(e){
+        if (!e.val()){
+            e.css({"border-color":"red"});
+            e.focus();
+            Metadata.isValid = false;
+        }
+        else {
+            e.css({"border-color":""});
+        }
+    }
 
     function checkInput(e){
         var field = $(e).find("input");
@@ -187,6 +199,7 @@ input:invalid {
     var Metadata = {
         flagEmptyRequiredField : false,
         flagEmptyCustomField : false,
+        isValid : true,
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
@@ -211,7 +224,7 @@ input:invalid {
                     var field = Metadata.getObjectDiv(descriptionField);
 
                     // Add title to Collapse
-                    var objectHeader = $("#object_header_text").text().replace(/%1\$s/g, descriptionField.label);
+                    var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
                     header = field.find(".panel-title").first().find("a");
                     header.text(objectHeader);
                     break;
@@ -249,7 +262,7 @@ input:invalid {
             div.append(field);
 
             if (descriptionField.required) {
-                label.append($('<span style="color: red"">&nbsp;*</span>'));
+                label.append($("<span style='color: red'>").text(" *"));
                 field.attr("data-required", descriptionField.required);
             }
 
@@ -269,6 +282,9 @@ input:invalid {
             }
 
             field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
                 return this.val();
             };
 
@@ -298,6 +314,9 @@ input:invalid {
             field.datepicker(DatePickerParams);
 
             field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
                 if (this.val()){
                     var dateObject = this.datepicker('getDate');
                     return $.datepicker.formatDate('yy-mm-dd', dateObject);
@@ -314,6 +333,9 @@ input:invalid {
             }
 
             field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
                 return $.trim(this.val());
             };
 
@@ -343,7 +365,18 @@ input:invalid {
             }
 
             field.getValue = function() {
-                return this.find('.active').val();
+                if(field.data('required')){
+                    if (this.find('.active').children("input").val()=="") {
+                        this.css({"border-color":"red",
+                                    "border-style":"solid"});
+                        this.focus();
+                        Metadata.isValid = false;
+                    } else {
+                        this.css({"border-color":"",
+                                    "border-style":"unset"});
+                    }
+                }
+                return this.find('.active').children("input").val();
             };
 
             return field;
@@ -367,6 +400,9 @@ input:invalid {
             }
 
             field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
                 return $.trim(this.val());
             };
 
@@ -478,6 +514,18 @@ input:invalid {
                     }
                 });
 
+                if (!div.parent("li").length){
+                    if(field.data('required')){
+                        if (!Object.keys(object).length) {
+                            field.css({"border-color":"red"});
+                            field.focus();
+                            Metadata.isValid = false;
+                        } else {
+                            field.css({"border-color":""});
+                        }
+                    }
+                }
+
                 if (Object.keys(object).length) {
                     return object;
                 }
@@ -503,8 +551,8 @@ input:invalid {
             div.data('item-description', descriptionField.itemtype);
             div.data('description', descriptionField);
 
-                var item = Metadata.getArrayItem(descriptionField);
-                itemList.append(item);
+            var item = Metadata.getArrayItem(descriptionField);
+            itemList.append(item);
 
 
             div.getValue = function() {
@@ -518,6 +566,24 @@ input:invalid {
                         values.push(value);
                     }
                 });
+
+                if(this.data('required')){
+                    if (values.length == 0) {
+                        if (this.data("itemtype") == "object") {
+                            div.find("div").first().css({"border-color":"red"});
+                        } else {
+                            div.find("input").first().css({"border-color":"red"});
+                        }
+                        div.focus();
+                        Metadata.isValid = false;
+                    } else {
+                        if (this.data("itemtype") == "object") {
+                            div.find("div").first().css({"border-color":""});
+                        } else {
+                            div.find("input").first().css({"border-color":""});
+                        }
+                    }
+                }
 
                 if (values.length) {
                     return values;
@@ -561,7 +627,7 @@ input:invalid {
                                 var field = Metadata.getObjectDiv(descriptionField.itemType);
 
                                 // Add title to Collapse
-                                var objectHeader = $("#object_header_text").text().replace(/%1\$s/g, descriptionField.label);
+                                var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
                                 header = field.find(".panel-title").first().find("a");
                                 header.text(objectHeader);
 
@@ -601,9 +667,12 @@ input:invalid {
 
                 // Button to remove item
                 if ($.isPlainObject(descriptionField.itemType)) {
+                    previous.children().css({'border-color':''});
                     previous.find(".panel-heading").css({ "padding-top": "2px", "padding-bottom": "2px" });
+                    previous.find(".panel-collapse").removeClass("in");
                     previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
                 } else {
+                    previous.children().css({'border-color':''});
                     previous.attr("oninput", "checkInput(this)");
                     previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
                 }
@@ -670,6 +739,10 @@ input:invalid {
                     descriptionObject[name] = value;
                 }
             });
+            if (!Metadata.isValid) {
+                Metadata.isValid = true;
+                return ;
+            }
 
 
             $.each(customFormGroups, function() {
@@ -759,6 +832,9 @@ input:invalid {
                     if (property == "description") {
                         $.each(value, function(descProperty, descValue) {
                             if(target.find("[name='"+descProperty+"']").first().length > 0) {
+                                var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, property);
+                                header = target.find(".panel-title").first().find("a");
+                                header.text(objectHeader);
                                 Metadata.checkAndFill(descValue, target.find("[name='" + descProperty + "']").first());
                             } else {
                                 custom = {
@@ -772,6 +848,9 @@ input:invalid {
                         return true;
                     } else {
                         objectTarget = target.find("[name="+property+"]").first();
+                        var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, property);
+                        header = objectTarget.find(".panel-title").first().find("a");
+                        header.text(objectHeader);
                         Metadata.checkAndFill(value, objectTarget);
                     }
                 })
