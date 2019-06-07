@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 2.5
+
+### IHM
+- `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
+
 ## Version 2.4.4 
 
 ### IHM
@@ -16,7 +21,6 @@
 
 - `Changed` Ajout du paramètre `lifetime` pour le jeton CSRF qui définit la durée de validité des jetons en secondes. Si omis, durée de 1 heure par défaut.
 - `Fixed` Jeton CRSF consommé lorsqu'utilisé. 
-
 
 ## Version 2.4.3 
 
@@ -53,7 +57,6 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Added` Ajout et suppression d'une seule pièce au sein d'une archive désormais possible
 - `Changed` Nouveau design de la modale de détails des informations de l'archive
 - `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
 - `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
@@ -88,7 +91,7 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Changed` Nouvau design de l'écran principal pour la navigation, la recherche et la consultation
+- `Changed` Nouveau design de l'écran principal pour la navigation, la recherche et la consultation
 - `Added` Personnalisation de la page de connexion avec une image de fonds et un style configurables
 - `Fixed` Blocage des double-clics sur les boutons
 

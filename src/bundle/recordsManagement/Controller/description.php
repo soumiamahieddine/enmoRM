@@ -64,22 +64,22 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
         
-        if ($fullText ) {
+        if ($fullText) {
             $descriptionObject->text .= ' '.$fullText;
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
         $archive->description = $descriptionObject->description;
 
-        $res = $this->sdoFactory->update($descriptionObject);
+        $this->sdoFactory->update($descriptionObject);
     }
 
     protected function getText($data)
     {
         switch (\gettype($data)) {
-            case 'string' :
-            case 'integer' :
-            case 'double' :
+            case 'string':
+            case 'integer':
+            case 'double':
                 if (strlen((string) $data) > 2) {
                     return (string) $data;
                 }
@@ -163,7 +163,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             
             // Divide tokens with or without wildcrards for LIKE or TS
             $tokens = \laabs\explode(' ', $protectedText);
-            foreach ($tokens as $i => $token) {
+            foreach ($tokens as $token) {
                 // LIKE tokens directly add a WHERE assert expression, case insensitive
                 if (strpos($token, '*') !== false) {
                     if (mb_strlen(str_replace("*", "", $token)) <= 3) {

@@ -115,10 +115,12 @@ trait archiveAccessTrait
         if (!$profileReference) {
             $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
 
-            $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+            $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
-            foreach ($descriptionClassController->index() as $descriptionClass) {
-                $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
+            foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
+                if (isset($descriptionScheme->search)) {
+                    $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
+                }
             }
         } else {
             $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
@@ -866,7 +868,6 @@ trait archiveAccessTrait
             $this->userPositionController->readDescandantService((string) $currentService->orgId)
         );
 
-        $owner = false;
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
             $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
             if (isset($userService->orgRoleCodes) && $userService->orgRoleCodes->contains('owner')) {
@@ -967,8 +968,6 @@ trait archiveAccessTrait
 
         foreach ($archiveIds as $archiveId) {
             $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
-            $currentStatus = $archiveProcessingStatus->processingStatus;
-
             $archiveProcessingStatus->processingStatus = $targetStatus;
             $this->sdoFactory->update($archiveProcessingStatus);
             array_push($res['success'], $archiveId);
@@ -1058,7 +1057,6 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        $accessRules = array();
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {

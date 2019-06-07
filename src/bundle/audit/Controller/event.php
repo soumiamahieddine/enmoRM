@@ -227,9 +227,6 @@ class event
         if ($event) {
             $queryParams['path'] = $event;
             $queryParts['path'] = "path=:path";
-
-            $pathRouter = new \core\Route\PathRouter($event);
-            $reflectionPath = $pathRouter->path;
         }
         if ($accountId) {
             $queryParams['accountId'] = $accountId;

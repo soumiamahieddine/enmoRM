@@ -123,19 +123,17 @@ class journal
             $eventDomains[$objectType]->eventTypes[] = $eventOption;
         }
 
-        foreach ($eventDomains as $domain => $eventDomain) {
+        foreach ($eventDomains as $eventDomain) {
             // Sort by translated event type using locale and normalized string
             uasort($eventDomain->eventTypes, function ($eventType1, $eventType2) {
                 return strcoll(\laabs::normalize($eventType1->label), \laabs::normalize($eventType2->label));
             });
-
-            //$eventDomains[$domain] = $eventTypes;
         }
 
 
 
         if (!\laabs::hasBundle('medona')) {
-            $messageObjectType = $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
+            $this->view->XPath->query('//option[@value="medona/message"]')->item(0)->setAttribute('class', 'hide');
         }
 
         $this->view->setSource("eventType", $eventDomains);
@@ -270,7 +268,6 @@ class journal
 
         $eventObject->accountDisplayName = $user->displayName.' ('.$user->accountName.')';
 
-        $objectClass = \laabs\dirname($event->objectClass);
         $this->translator->setCatalog('lifeCycle/messages');
         
         $eventObject->description = $this->translator->getText($event->description);

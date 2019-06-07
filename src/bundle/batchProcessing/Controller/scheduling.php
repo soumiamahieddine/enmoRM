@@ -211,7 +211,7 @@ class scheduling
         $this->update($scheduling);
 
         $observerPool = \core\Observer\Dispatcher::getPool(\bundle\audit\AUDIT_ENTRY_OUTPUT);
-        foreach ($observerPool as $key=>$value) {
+        foreach ($observerPool as $key => $value) {
             if ($value instanceof \bundle\audit\Observer\logger) {
                 $info = $value->output;
                 break;

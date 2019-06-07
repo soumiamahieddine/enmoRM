@@ -54,13 +54,13 @@
         </div>
         <div class="col-md-6">
             <ul class="nav nav-tabs nav-justified">
-                    <li id="roleMembersTabBtn" class="[?merge publicArchive.then('hidden','active') ?]"><a href="#roleMembersTab" data-toggle="tab">Role members</a></li>
-                    <li id="privilegesTabBtn" class="[?merge publicArchive.then('active','') ?]"><a href="#privilegesTab" data-toggle="tab">Role privileges</a></li>
+                    <li id="roleMembersTabBtn" class="[?merge hideUsers.then('hidden','active') ?]"><a href="#roleMembersTab" data-toggle="tab">Role members</a></li>
+                    <li id="privilegesTabBtn" class="[?merge hideUsers.then('active','') ?]"><a href="#privilegesTab" data-toggle="tab">Role privileges</a></li>
                 </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in [?merge publicArchive.then('','active') ?]" id="roleMembersTab" >
+                        <div class="tab-pane fade in [?merge hideUsers.then('','active') ?]" id="roleMembersTab" >
                             <h3>Role members</h3>
                             <div class="form-group">
                                 <div class="input-group">                                  
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade in [?merge publicArchive.then('active','') ?]" id="privilegesTab" >
+                        <div class="tab-pane fade in [?merge hideUsers.then('active','') ?]" id="privilegesTab" >
                             <h3>Privileges</h3>
                             <div class="form-group">
                                 <label class="control-label"><span>All privileges</span>&nbsp;

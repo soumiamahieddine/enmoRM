@@ -52,16 +52,18 @@ trait DocCommentTrait
         $docComment = $this->getDocComment();
         $this->tags = null;
         $docComment = preg_split('# *\n\s*\*(\/| *)?#m', substr($docComment, 3));
+        
+        array_pop($docComment);
 
         $summaryLines = [];
-        while (($line = next($docComment)) !== false && (!empty($line) && $line[0] != '@')) {
+        while (($line = next($docComment)) !== false && !empty(trim($line)) && trim($line)[0] != '@') {
             $summaryLines[] = $line;
         }
 
-        $this->summary = implode (' ', $summaryLines);
+        $this->summary = implode(' ', $summaryLines);
 
         $descriptionLines = [];
-        while (($line = next($docComment)) !== false && (!isset($line[0]) || $line[0] != '@')) {
+        while (($line = next($docComment)) !== false && !empty(trim($line)) && trim($line)[0] != '@') {
             $descriptionLines[] = $line;
         }
 

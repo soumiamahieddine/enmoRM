@@ -91,11 +91,11 @@ class event
 
         if (isset($this->eventFormats[$event->eventType])) {
             $eventFormat = $this->eventFormats[$event->eventType];
-            foreach ($eventFormat->format as $i => $infoName) {
+            foreach ($eventFormat->format as $infoName) {
                 if (isset($event->{$infoName})) {
                     $infoValue = $event->{$infoName};
-                    $infoElement = $this->xml->createElement($infoName, (string) $infoValue); 
-                    $eventNode->appendChild($infoElement); 
+                    $infoElement = $this->xml->createElement($infoName, (string)$infoValue);
+                    $eventNode->appendChild($infoElement);
                 }
             }
         }

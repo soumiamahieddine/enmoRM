@@ -6,6 +6,27 @@
     </div>
 </div>
 
+<!--   Modale de confirmation pour la suppression de ressource     -->
+<div class="modal fade" id="confirmDeleteModal" data-translate-catalog="recordsManagement/messages" style="top:75px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="text-align: center;">Delete the resource</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm_text">
+                    Do you really want to delete this resource ? <br/>
+                    This action will be irreversible.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="confirm_no" title="Cancel">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm_yes" data-resid="" data-archiveid="" data-dismiss="modal" title="Delete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ARCHIVE DOCUMENT -->
 <div class="modal fade" id="modalArchiveDocument" data-backdrop="static" data-keyboard="false" tabindex="999"  data-focus-on="input:first" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -25,6 +46,26 @@
             </div>
             <div class="modal-footer" data-translate-catalog="recordsManagement/messages">
                 <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newResourceModal" tabindex="-1" role="dialog" data-translate-catalog="recordsManagement/messages">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="container-fluid">
+                <div class="page-header">
+                    <button type="button" class="close closeModal" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h2 style="text-align: center"><i>&nbsp;</i> Import a resource </h2>
+                </div>
+                <div class="modal-body">
+                    <?hinclude dashboard/mainScreen/importResource.html ?>
+                </div>
+                <br/>
             </div>
         </div>
     </div>
@@ -119,6 +160,18 @@
             });
          },
 
+         reload: function(archiveId, noMessageTab) {
+            $.ajax({
+                type        : "GET",
+                url         : "/recordsManagement/archiveDescription/" + archiveId,
+                data        : {isCommunication:1},
+                dataType    : 'html',
+                success     : function (response) {
+                    $('#modalArchiveInfo_content').empty().html(response);
+                }
+            });
+         },
+
          loadDescription: function(archiveId) {
             $.ajax({
                 type        : "GET",
@@ -197,4 +250,30 @@
     $('#modalArchiveInfo').onEvent('showResource.digitalResource', function(e, archiveId, resId) {
         archiveDocumentViewer.load(archiveId, resId);
     })
+
+    $("#confirm_yes").on("click", function(){
+        var resources = {
+                resIds           : [$(this).attr('data-resid')]
+            }
+
+            ajax($('#deleteResource'), {
+                type: "DELETE",
+                url: '/' + $(this).attr('data-archiveid') + '/digitalResource',
+                data: JSON.stringify(resources),
+                dataType: 'json',
+                contentType: 'application/json',
+                success     : function (response) {
+                    gritter.show(response.message, true);
+                    trigger('deleteResourceDone.recordsManagement');
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+    });
+
+
+    $("#confirm_no").on("click", function() {
+        $('#confirmDeleteModal').modal("hide");
+    });
 </script>

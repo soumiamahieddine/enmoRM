@@ -68,7 +68,7 @@ class eventFormat
      */
     public function edit($eventFormatType)
     {
-        return $eventFormat = $this->sdoFactory->read("lifeCycle/eventFormat", $eventFormatType);
+        return $this->sdoFactory->read("lifeCycle/eventFormat", $eventFormatType);
     }
     
     /**
