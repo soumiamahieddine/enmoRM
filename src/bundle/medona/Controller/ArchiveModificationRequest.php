@@ -185,6 +185,15 @@ class ArchiveModificationRequest extends abstractMessage
         $this->changeStatus($messageId, "rejected");
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
+        if (!empty($message->comment)) {
+            $message->comment = json_decode($message->comment);
+        } else {
+            $message->comment = [];
+        }
+
+        $message->comment[] = $comment;
+
+        
         
         $this->lifeCycleJournalController->logEvent(
             'medona/rejection',
@@ -194,9 +203,7 @@ class ArchiveModificationRequest extends abstractMessage
             true
         );
 
-        $archiveModificationRequestReplyController = \laabs::newController('medona/ArchiveModificationRequestReply');
-        $replyMessage = $archiveModificationRequestReplyController->send($messageId, "400", $comment);
-
-        return $replyMessage;
+        
+        return $message;
     }
 }

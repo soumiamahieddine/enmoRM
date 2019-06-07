@@ -468,6 +468,10 @@ class message
                 $message->data = json_encode($message->object);
             }
 
+            if (isset($message->comment)) {
+                $message->comment = json_encode($message->comment);
+            }
+
             $this->sdoFactory->update($message, 'medona/message');
         } catch (\Exception $exception) {
             if ($transactionControl) {
