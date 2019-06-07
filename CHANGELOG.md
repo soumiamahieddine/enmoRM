@@ -2,6 +2,10 @@
 
 ## Version 2.4.4 
 
+### IHM
+
+- `Fixed` Retrait de l’affichage des ressources si l'archive est en cours de suppression
+
 ### Métadonnées
 
 - `Fixed` Ajout d'un bouton dans la modale de détail de l'archive permettant la conversion unitaire d'un document
