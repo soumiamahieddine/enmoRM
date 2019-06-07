@@ -780,6 +780,13 @@ class message
                     }
                     break;
 
+                case 'ArchiveModificationRequest':
+                    if ($message->status == "received") {
+                        $messageObject->rejectButton = "/modificationRequest/".$messageId."/Reject";
+                        $messageObject->acceptButton = "/modificationRequest/".$messageId."/accept";
+                    }
+                    break;
+
                 case 'ArchiveRestitution':
                     if ($message->status == "sent") {
                         $message->exportButton = "/restitution/".$messageId."/Export";

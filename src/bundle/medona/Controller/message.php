@@ -307,7 +307,11 @@ class message
                     $clause[] = "type=['ArchiveModificationNotification','ArchiveDestructionNotification','ArchivalProfileModificationNotification']";
                     break;
 
-                default:
+                case "ArchiveModificationRequest":
+                    $clause[] = "type='ArchiveModificationRequest'";
+                    break;
+
+                default :
                     $clause[] = "type= :type AND status !='template'";
                     $queryParams['type'] = $type;
                     break;
