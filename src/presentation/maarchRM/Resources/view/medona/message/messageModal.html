@@ -10,6 +10,7 @@
                     <li class="active">
                         <a href="#messageInformationsTab" data-toggle="tab">Informations</a>
                     </li>
+                    <?merge messages[0].data.bool() ?>
                     <li>
                         <a href="#messageViewer" data-toggle="tab">Détail</a>
                     </li>
@@ -23,9 +24,9 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="messageInformationsTab">
-                        <?merge messages[0] $message ?>
                         <?hinclude medona/message/messageInformation.html ?>
                     </div>
+                    <?merge messages[0].data.bool() ?>
                     <div class="tab-pane" id="messageViewer">
                     </div>
                     <?merge unitIdentifiers.bool() ?>

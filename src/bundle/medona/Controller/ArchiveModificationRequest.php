@@ -69,18 +69,25 @@ class ArchiveModificationRequest extends abstractMessage
             $message = \laabs::newInstance('medona/message');
             $message->messageId = \laabs::newId();
 
-            $message->schema = "medona";
+            $message->schema = false;
+            /*if (\laabs::hasBundle('seda')) {
+               $message->schema = "seda";
+            }*/
             $message->type = "ArchiveModificationRequest";
             $message->status = 'received';
             $message->date = \laabs::newDatetime(null, "UTC");
             $message->receptionDate = $message->date;
             $message->reference = $reference.'_'.str_pad($i, 2, '0', STR_PAD_LEFT);
-
+            
             $message->senderOrgRegNumber = $senderOrg->registrationNumber;
             $message->recipientOrgRegNumber = $archiverOrgRegNumber;
 
             // read org names, addresses, communications, contacts
             $this->readOrgs($message);
+
+            if ($comment) {
+                $message->comment[] = $comment;
+            }
 
             foreach ($archiveIds as $archiveId) {
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
@@ -91,7 +98,18 @@ class ArchiveModificationRequest extends abstractMessage
                 $message->unitIdentifier[] = $unitIdentifier;
             }
 
-            $message->object = new StdClass();
+            try {
+                if ($message->schema) {
+                    $archiveModificationRequestController = \laabs::newController($message->schema.'/ArchiveModificationRequest');
+                    $archiveModificationRequestController->send($message);
+                }
+                $operationResult = true;
+            } catch (\Exception $e) {
+                $message->status = "error";
+                $operationResult = false;
+
+                throw $e;
+            }
 
             $this->create($message);
 

@@ -199,7 +199,7 @@ class message
             $registrationNumber = array($organization->registrationNumber);
         }
 
-        $messageObjects = $unitIdentifiers = [];
+        $unitIdentifiers = [];
 
         $messages = array($message);
         $baseMessage = reset($messages);
@@ -782,8 +782,8 @@ class message
 
                 case 'ArchiveModificationRequest':
                     if ($message->status == "received") {
-                        $messageObject->rejectButton = "/modificationRequest/".$messageId."/Reject";
-                        $messageObject->acceptButton = "/modificationRequest/".$messageId."/accept";
+                        $message->rejectButton = "/modificationRequest/".$messageId."/Reject";
+                        $message->acceptButton = "/modificationRequest/".$messageId."/accept";
                     }
                     break;
 
