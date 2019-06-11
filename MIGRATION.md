@@ -322,6 +322,6 @@ Pour le moment, uniquement les csv sur deux colonnes sont gérés. Il est néces
 [recordsManagement]
 refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 
-Les csv sont considérés comme étant séparés pas des virgules et les données présentes entre double quotes ("")
-Lors de l'ajout du'n mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentuel externe est le nom du fichier csv à charger dans le dossier renseigné dans la configuraiton, sans son extension.
-Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxieème colonne. Les colonnes surnuméraires sont chargés mais ne sert que d'aide à la recherche lors de la saisie
+Les csv sont considérés comme étant séparés par des virgules et les données présentes entre des guillemets ("").
+Lors de l'ajout d'un mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentiel externe est le nom du fichier csv à charger dans le dossier renseigné dans la configuration, sans son extension.
+Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxieème colonne. Les colonnes surnuméraires sont chargées mais ne sert que d'aide à la recherche lors de la saisie
