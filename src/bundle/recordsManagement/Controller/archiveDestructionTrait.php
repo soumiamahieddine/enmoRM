@@ -61,7 +61,7 @@ trait archiveDestructionTrait
             $this->logDestructionRequest($archive);
         }
 
-        if (\laabs::configuration("medona")['transaction']) {
+        if (isset(\laabs::configuration("medona")['transaction'])) {
             $this->sendDestructionRequest($archives, $identifier, $comment);
         }
 
