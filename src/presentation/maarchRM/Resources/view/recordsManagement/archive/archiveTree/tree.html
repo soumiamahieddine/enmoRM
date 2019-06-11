@@ -37,17 +37,25 @@
         selected: null,
         select: function(e) {
             this.unselect();
-            var li = e.closest('li')
+            var li = e.closest('li');
 
             if(e.hasClass('archiveName')) {
                 $("#archiveNameH3").text(e.text());
-                li.children('span').removeClass('node-default').addClass('node-warning');
-                
+                li.children('span').removeClass('node-default').addClass('node-warning');               
                 trigger("showDetails.archive", li.data('archive-id'));
                 this.selected = li;
-
-            } else if (e.hasClass('documentName')) {
-                e.addClass('node-warning');
+            } 
+            else if (e.hasClass('documentName')) {
+// Pour les fichiers convertis, on va récupérer les 'relatedResource' dans le data.json du parent
+                if (!li.data('json')){
+                var converted_data = li.parents("li").first().data('json');
+                    $.each(converted_data.relatedResource, function( index, value ) {
+                        if(value.resId == li.data('resId')) {
+                            li.data('json', value);
+                        }
+                    });
+                }
+                e.addClass('node-warning').removeClass('node-default');
                 trigger("showDetails.digitalResource", li.data('json'));
                 this.selected = li;
             }

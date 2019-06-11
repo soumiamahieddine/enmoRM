@@ -1,30 +1,32 @@
 <div id="resourceInformation" class="row">
     <div class="col-xs-12 text-center">
-        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]"/>
-        <i class="infoIcon fa fa-file-o"/>
+        <div id="preview" class="hide" data-format="[?merge displayableFormat ?]" />
+        <i class="infoIcon fa fa-file-o" />
     </div>
     <div class="col-xs-12 text-center">
-        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid=""><i class ="fa-eye fa">&nbsp;</i>View</button>
-        <button type="button" id="deleteResource" class="btn btn-link btn-sm hide" data-resid="" data-archiveid="" title2="Delete"><i class ="fa fa-trash">&nbsp;</i>Delete</button>
+        <button type="button" id="viewResource" class="btn btn-link btn-sm" data-resid="" data-archiveid=""><i class="fa-eye fa">&nbsp;</i>View</button>
+        <button type="button" id="deleteResource" class="btn btn-link btn-sm hide" data-resid="" data-archiveid="" title2="Delete"><i class="fa fa-trash">&nbsp;</i>Delete</button>
+
+        <button type="button" id="convertResource" class="btn btn-link btn-sm hide" data-resid="" data-archiveid=""><i class="fa fa-recycle">&nbsp;</i>Convert</button>
     </div>
 
     <div class="col-xs-12">
         <table>
             <tr>
                 <th title="Name">Name</th>
-                <td name="fileName"/>
+                <td name="fileName" />
             </tr>
             <tr>
                 <th title="Creation date">Creation date</th>
-                <td name="created"/>
+                <td name="created" />
             </tr>
             <tr>
                 <th title="Identifier">Identifier</th>
-                <td name="resId"/>
+                <td name="resId" />
             </tr>
             <tr>
                 <th title="Size">Size</th>
-                <td><span name="size"/> <span>bytes</span></td>
+                <td><span name="size" /> <span>bytes</span></td>
             </tr>
             <tr>
                 <th title="Format">Format</th>
@@ -43,23 +45,31 @@
         font-size: 12px;
         min-height: calc(95vh - 80px);
     }
+
     #resourceInformation table {
-        table-layout:fixed;
-        width:100%;
+        table-layout: fixed;
+        width: 100%;
     }
+
     #resourceInformation table th {
         width: 40%;
         text-align: right;
     }
-    #resourceInformation table td, #resourceInformation table th {
-        padding: 0 5px 0 5px ;
+
+    #resourceInformation table td,
+    #resourceInformation table th {
+        padding: 0 5px 0 5px;
         text-overflow: crop;
         overflow: hidden;
         white-space: nowrap;
     }
+
     #resourceInformation .infoIcon {
-        font-size: 80px; 
+        font-size: 80px;
         margin-bottom: 10px;
+    }
+    #confirm_text{
+        font-size:14px;
     }
 </style>
 
@@ -67,10 +77,13 @@
     DocumentInformation = {
         form: $('#resourceInformation'),
         load: function (resource) {
-            DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
             DocumentInformation.form.find("#viewResource").data("archiveid", resource.archiveId);
-            DocumentInformation.form.find("#deleteResource").data("resid", resource.resId);
             DocumentInformation.form.find("#deleteResource").data("archiveid", resource.archiveId);
+            DocumentInformation.form.find("#convertResource").data("archiveid", resource.archiveId);
+            DocumentInformation.form.find("#viewResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#deleteResource").data("resid", resource.resId);
+            DocumentInformation.form.find("#convertResource").data("resid", resource.resId);
+
             DocumentInformation.form.find('[name="fileName"]').text(resource.fileName).attr('title', resource.fileName);
             DocumentInformation.form.find('[name="created"]').text(resource.created).attr('title', resource.created);
             DocumentInformation.form.find('[name="size"]').text(resource.size).attr('title', resource.size);
@@ -79,11 +92,13 @@
                 DocumentInformation.form.find('[name="puid"]').closest('tr').addClass('hide');
             } else {
                 DocumentInformation.form.find('[name="puid"]').text(resource.puid).attr('title', resource.puid);
-
             }
-
+            // cache le bouton de conversion selon le format
+            if (resource.isConvertible) {
+                DocumentInformation.form.find("#convertResource").removeClass('hide');
+            }
             if (resource.format) {
-                var formatname = resource.format.name+' '+resource.format.version;
+                var formatname = resource.format.name + ' ' + resource.format.version;
                 DocumentInformation.form.find('[name="format"]').text(formatname).attr('title', formatname);
 
                 var iconI = DocumentInformation.form.find(".infoIcon");
@@ -128,20 +143,26 @@
 
                 if (resource.mimetype.match(mimetype)) {
                     $.ajax({
-                        url         : '/'+$("#viewResource").data("archiveid")+"/digitalResource/"+resource.resId,
-                        data        : {isCommunication:1},
-                        type        : "GET",
-                        dataType    : 'html',
-                        success     : function(response) {
+                        url: '/' + $("#viewResource").data("archiveid") + "/digitalResource/" +
+                            resource.resId,
+                        data: {
+                            isCommunication: 1
+                        },
+                        type: "GET",
+                        dataType: 'html',
+                        success: function (response) {
                             $("#preview").removeClass('hide').html(response);
-                            $('#preview').find('object').css('height', '70vh').css('width', '100%');
-                            if (resource.mimetype == 'text/plain' || resource.mimetype == 'application/pdf') {
+                            $('#preview').find('object').css('height', '70vh').css('width',
+                                '100%');
+                            if (resource.mimetype == 'text/plain' || resource.mimetype ==
+                                'application/pdf') {
                                 $('#preview').find('object').attr('height', '300');
                             }
                             $('#preview').siblings('i').addClass('hide');
                         },
-                        error    : function(response) {
-                            gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                        error: function (response) {
+                            gritter.show(response.responseJSON.message, response
+                                .responseJSON.status, response.responseJSON.errors);
                         }
                     });
 
@@ -151,36 +172,53 @@
             });
         }
     }
-
-    $("#viewResource").on("click", function() {
-        window.open("/recordsManagement/"+$(this).data("archiveid")+"/digitalResource/"+$(this).data("resid")+"?isCommunication=1");
+    $("#viewResource").on("click", function () {
+        window.open("/recordsManagement/" + $(this).data("archiveid") + "/digitalResource/" + $(this).data(
+            "resid") + "?isCommunication=1");
     });
-
-    $("#deleteResource").on("click", function(){
-        var resources = {
-                resIds           : [$(this).data('resid')]
-            }
-
-            ajax($('#deleteResource'), {
-                type: "DELETE",
-                url: '/' + $(this).data("archiveid") + '/digitalResource',
-                data: JSON.stringify(resources),
-                dataType: 'json',
-                contentType: 'application/json',
-                success     : function (response) {
-                    gritter.show(response.message, true);
-                    trigger('deleteResourceDone.recordsManagement');
-                },
-                error       : function(response) {
-                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-                }
-            });
-    });
-
     // This event refresh view after a click on deleteResource
-    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() 
-    {
-        archiveInfoModal.reload($('#deleteResource').data("archiveid"));
+    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function () {
+        $('#modalArchiveInfo').one('hidden.bs.modal', function (e) {
+            $('#' + $('#deleteResource').data("archiveid")).find('.viewArchive').click();
+        }).modal('hide');
     });
 
+    $("#convertResource").on('click', function () {
+        var resId = $(this).data('resid');
+        var archiveId = $(this).data('archiveid');
+        $.ajax({
+            type: "PUT",
+            url: "/recordsManagement/InteractiveConversion/" + resId,
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status && response.result != false) {
+                    archiveInfoModal.close();
+                    $('#modalArchiveInfo').one('hidden.bs.modal', function () {
+                        archiveInfoModal.load(archiveId);
+                    });
+                    $('#modalArchiveInfo').one('shown.bs.modal', function () {
+                        $("#modalArchiveInfo").find('[href=#digitalResourcesTab]').tab(
+                            "show");
+                    });
+                }
+            }
+        });
+    });
+    
+    // This event refresh view after a click on deleteResource
+    $('#resourceInformation').onEvent("deleteResourceDone.recordsManagement", function() {
+        archiveInfoModal.reload($('#deleteResource').data("archiveid"));
+        $('#confirmDeleteModal').modal("hide");
+    });
+
+    //Btn deleteResource open a confirmation modal
+    $("#deleteResource").on("click", function() {
+        button = $(this);
+        archiveId = button.data('archiveid');
+        resourceId = button.data('resid');
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-resid", resourceId);
+        $('#confirmDeleteModal').find("#confirm_yes").attr("data-archiveid", archiveId);
+        $('#confirmDeleteModal').modal();
+    });
 </script>

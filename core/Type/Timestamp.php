@@ -34,15 +34,4 @@ class Timestamp
 
         parent::__construct($value, $timezone, $format);
     }
-
-    /**
-     * Serialize into json representation
-     * @return string
-     */
-    public function jsonSerialize()
-    {
-        return (string) $this->format();
-    }
-
-
 }

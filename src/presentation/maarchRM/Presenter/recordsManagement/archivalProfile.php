@@ -217,6 +217,18 @@ class archivalProfile
         } else {
             $archivalProfile->type = 1;
         }
+
+        if ($archivalProfile->type != 2) {
+            $profileFileTab = $this->view->createDocumentFragment();
+            $profileFileTab->appendHtmlFile("recordsManagement/archivalProfile/profileUploadTab.html");
+
+            $this->view->getElementById('archivalProfileNavControl')->appendChild($profileFileTab);
+
+            $profileFileForm = $this->view->createDocumentFragment();
+            $profileFileForm->appendHtmlFile("recordsManagement/archivalProfile/profileUpload.html");
+            
+            $this->view->getElementById('archivalProfileNavTabs')->appendChild($profileFileForm);
+        }
     }
 
     /**
