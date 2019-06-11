@@ -49,6 +49,7 @@ displayableFormat = "['application/pdf', 'image/jpeg', 'image/png', 'text/plain'
 [recordsManagement]
 ; Profile directory for rng profile
 profilesDirectory = "%laabsDirectory%/data/maarchRM/profiles"
+refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 
 ; Type of archival profile
 ; 1 = file only
@@ -107,7 +108,7 @@ translationLogType = "{
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
 descriptionSchemes = "{
-   'seda2/Content' : {
+   'seda2' : {
        'label' : 'SEDA 2',
        'type' : 'php',
        'uri' : 'seda2/Content',
