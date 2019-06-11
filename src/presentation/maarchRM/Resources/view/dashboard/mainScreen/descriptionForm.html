@@ -748,7 +748,8 @@ input:invalid {
             });
             if (!Metadata.isValid) {
                 Metadata.isValid = true;
-                return ;
+                Metadata.flagEmptyRequiredField.field = true;
+                return -1 ;
             }
 
 

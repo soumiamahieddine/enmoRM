@@ -196,7 +196,7 @@
             let archive = null;
 
             archiveId = $(button).data("archive-id");
-            archive = this.syncSerialize();
+            archive = this.syncSerialize("modify");
 
             var parameters = {
                 archiveId           : archiveId,
@@ -330,7 +330,7 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function() {
+        syncSerialize : function(action = "add") {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
@@ -369,7 +369,7 @@
                 return -1;
             }
 
-            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "" && action !== "modify") {
                 if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
                     gritter.show($('#documentMissing_error').text(), false);
                     return -2;
