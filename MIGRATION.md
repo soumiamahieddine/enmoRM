@@ -313,9 +313,6 @@ descriptionSchemes = "{
 }"
 ```
 ## Regroupement Socle + ThirdPartyArchiving
-
-Rapatriement de la configuration de l'extension thirdPartyArchiving dans le socle.
-
 Création d'une nouvelle section `[medona]`
 
 ```
