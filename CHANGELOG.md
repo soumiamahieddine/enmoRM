@@ -65,7 +65,6 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Added` Ajout et suppression d'une seule pièce au sein d'une archive désormais possible
 - `Changed` Nouveau design de la modale de détails des informations de l'archive
 - `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
 - `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
@@ -108,7 +107,6 @@ automatique, notamment pour les connexions sans authentification
 
 - `Fixed` Ajout d'un contact et/ou d'une adresse et/ou d'un moyen de communication aux organisations et services
 
-
 ## Version 2.2
 
 ### Exploitation
@@ -147,12 +145,12 @@ automatique, notamment pour les connexions sans authentification
 ### Exploitation
 - `Added` Restriction des comptes de service disponibles pour la planification à ceux qui possèdent le privilège pour le service à exécuter
 - `Changed` Liste des services disponibles pour la planification déplacée dans la configuration. Table `batchProcessing.task` supprimée
-- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une  en erreur
+- `Fixed` Correction d'erreurs dans le calcul de la prochaine vacation après une en erreur
 
 ### Échéancier d'élimination
 - `Added` Sort final non défini au versement ou à la modification désormais interprété comme *A définir ultérieurement*
 - `Changed` Modification du statut final des unités d'archive en fonction de l'opération qui mène à leur ressortie : *Détruite*, *Restituée* et *Transférée*
-- `Fixed` Interdiction de  toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
+- `Fixed` Interdiction de toute demande sur les unités d'archive gelées : élimination, restitution, modification, transfert
 
 ### Élimination
 - `Changed` La demande n'est valide que si l'unité d'archive et toutes ses unités contenues sont éliminables (à terme de la DUA ou sans règle de conservation, sort final *Détuire* ou sans sort final

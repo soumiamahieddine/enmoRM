@@ -57,7 +57,7 @@ class DateTime
      */
     public function jsonSerialize()
     {
-        return (string) $this->format();
+        return (string) $this->format('c');
     }
 
     /**

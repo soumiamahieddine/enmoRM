@@ -451,7 +451,7 @@ msgid "recordsManagement/integrity"
 msgstr "Test de conformité"
 
 msgid "recordsManagement/depositNewResource"
-msgstr "Dépôt d'un nouveau document"
+msgstr "Dépôt d'une ressource"
 
 msgid "recordsManagement/delivery"
 msgstr "Communication"
@@ -512,6 +512,15 @@ msgstr "Modification de la description d'archive"
 
 msgid "recordsManagement/outgoingTransfer"
 msgstr "Transfert sortant"
+
+msgid "recordsManagement/depositOfLinkedResource"
+msgstr "Dépôt d'une ressource liée"
+
+msgid "recordsManagement/destructionRequestCancel"
+msgstr "Annuler la demande de d'élimination de l'archive"
+
+msgid "recordsManagement/resourceDestruction"
+msgstr "Destruction d'une ressource"
 
 msgid "medona/sending"
 msgstr "Envoi d'un bordereau"
@@ -671,15 +680,6 @@ msgstr "Le format est vide."
 
 msgid "Archival profile"
 msgstr "Profil d'archive"
-
-msgid "recordsManagement/depositOfLinkedResource"
-msgstr "Dépôt d'une ressource liée"
-
-msgid "recordsManagement/destructionRequestCancel"
-msgstr "Annuler la demande de d'élimination de l'archive"
-
-msgid "recordsManagement/resourceDestruction"
-msgstr "Destruction d'un document"
 
 msgid "Account name"
 msgstr "Nom du compte"

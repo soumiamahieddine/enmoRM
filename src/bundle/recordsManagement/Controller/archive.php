@@ -357,23 +357,20 @@ class archive
         } 
 
         $descriptionSchemeConfig = $this->descriptionSchemeController->read($descriptionScheme);
-        if (empty($descriptionSchemeConfig)) {
-            return 'recordsManagement/description';
-        }
-
-        if (!isset($descriptionSchemeConfig->controller)) {
-            return 'recordsManagement/description';
+        if (!empty($descriptionSchemeConfig) && isset($descriptionSchemeConfig->controller)) {
+            $controllerClass = $descriptionSchemeConfig->controller;
+        } else {
+            $controllerClass = $descriptionScheme;
         }
 
         try {
-            $bundle = \laabs::bundle(strtok($descriptionSchemeConfig->controller, LAABS_URI_SEPARATOR));
+            $bundle = \laabs::bundle(strtok($controllerClass, LAABS_URI_SEPARATOR));
             $controller = $bundle->getController(strtok(''));
-
-            return $descriptionSchemeConfig->controller;
         } catch (\exception $exception) {
             return 'recordsManagement/description';
         }
         
+        return $controllerClass;
     }
 
     /**

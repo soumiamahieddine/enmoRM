@@ -168,7 +168,7 @@ class archive
                     } else {
                         $archive->hasRights = $archiveController->checkRights($archive);
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $archive->hasRights = false;
                 }
             }
@@ -230,7 +230,7 @@ class archive
     {
         $this->view->addContentFile("recordsManagement/archive/archiveInfo/archiveInfo.html");
 
-        // Managment metadata
+        // Management metadata
         $this->setManagementMetadatas($archive);
 
         // Descriptive metadata
@@ -254,7 +254,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-
+           
         return $this->view->saveHtml();
     }
 
@@ -296,7 +296,6 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-
         return $this->view->saveHtml();
     }
 
@@ -343,7 +342,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-        
+       
         return $this->view->saveHtml();
     }
 
@@ -657,7 +656,7 @@ class archive
         if ($result == false) {
             $count = 0;
         } else {
-            $count = count($result);
+            $count = 1;
         }
         $this->json->message = '%1$s document(s) converted.';
         $this->json->message = $this->translator->getText($this->json->message);
@@ -1023,20 +1022,25 @@ class archive
      */
     protected function setDescriptiveMetadatas($archive)
     {
+        $editMetadata = false;
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
+            // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
+            if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
+                $editMetadata = true;
+            }
         }
 
         $modificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modifyDescription");
-        
+        $this->view->setSource('editMetadata', $editMetadata);
         $this->view->setSource('modificationPrivilege', $modificationPrivilege);
     }
 
     protected function getDescriptionHtml($archive)
     {
-        $presenterClass = $this->getDescriptionPresenterClass($archive->descriptionClass);
-        if (!empty($presenterClass)) {
-            $presenter = $this->getPresenter($presenterClass);
+        $presenter = $this->getDescriptionPresenter($archive->descriptionClass);
+
+        if (!empty($presenter)) {
             $descriptionHtml = $presenter->read($archive->descriptionObject);
 
             $container = $this->view->getElementById("metadata");
@@ -1049,24 +1053,24 @@ class archive
 
     /**
      * Returns the presenter for archive description object, or null
-     * @param string $descriptionClass The name of the description class used by archive
+     * @param string $presenterClass The name of the description class used by archive
      *
      * @return object|null
      */
-    protected function getPresenter($descriptionClass)
+    protected function getPresenter($presenterClass)
     {
+        // Try to find a bundle controller, else fallback to default
         try {
             $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionClass);
+            $presenter = $presentation->getPresenter($presenterClass);
 
-            return \laabs::newPresenter($descriptionClass);
+            return \laabs::newPresenter($presenterClass);
         } catch (\exception $exception) {
             return null;
         }
     }
 
-
-    protected function getDescriptionPresenterClass($descriptionScheme)
+    protected function getDescriptionPresenter($descriptionScheme)
     {
         // Default description class
         if (empty($descriptionScheme)) {
@@ -1074,22 +1078,20 @@ class archive
         }
 
         $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);
-        if (empty($descriptionSchemeConfig)) {
-            return;
-        }
-       
-        if (!isset($descriptionSchemeConfig->presenter)) {
-            return;
+        if (!empty($descriptionSchemeConfig) && isset($descriptionSchemeConfig->presenter)) {
+            $presenterClass = $descriptionSchemeConfig->presenter;
+        } else {
+            $presenterClass = $descriptionScheme;
         }
  
         try {
             $presentation = \laabs::presentation();
-            $presenter = $presentation->getPresenter($descriptionScheme);
-
-            return $descriptionSchemeConfig->presenter;
+            $presentation->getPresenter($presenterClass);
         } catch (\exception $exception) {
             return;
         }
+
+        return \laabs::newPresenter($presenterClass);
     }
 
     protected function loadArchivalProfile($reference)
@@ -1133,22 +1135,22 @@ class archive
 
     protected function setDigitalResources($archive)
     {
-        if ($archive->status == "disposed") {
+        if ($archive->status == "disposed" || $archive->status == "restituted" || $archive->status == "transfered") {
             $archive->digitalResources = null;
         } elseif (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $key => $digitalResource) {
-                $archive->digitalResources[$key]->json = json_encode($digitalResource);
+
                 $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
 
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
-                    continue;
+                } else {
+                    foreach ($digitalResource->relatedResource as $relatedResource) {
+                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
+                        $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
+                    }
                 }
-
-                foreach ($digitalResource->relatedResource as $relatedResource) {
-                    $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
-                    $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
-                }
+                $archive->digitalResources[$key]->json = json_encode($digitalResource);
             }
         }
     }
