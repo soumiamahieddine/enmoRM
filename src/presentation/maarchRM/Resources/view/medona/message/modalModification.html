@@ -21,16 +21,16 @@
 </div>
 
 <script>
-    var urlReject = null;  
+    var rejectUrl = null;  
     $("#save").on('click', function () {
         var parameters;
         parameters = {};
         parameters.messageId = $(this).data('messageIds');
         
-        parameters.comment = $("#rejet").find('[name="comment"]').val();
+        parameters.comment = $("#addComment").find('[name="comment"]').val();
         
         $.ajax({
-            url         : urlReject,
+            url         : rejectUrl,
             type        : 'PUT',
             data        : JSON.stringify(parameters),
             contentType : 'application/json',
@@ -51,13 +51,24 @@
     });
     
     function loadReject(messageId, url) {
-        urlReject = url;
+        rejectUrl = url;
         var modal = $('#modificationModal');
         $('#title').html($('#mtext_reject').html());
         $('#save').data("messageIds", messageId);
         
         $("#modification").hide();
-        $("#rejet").show();
+        $("#addComment").show();
+        modal.modal();
+    }
+
+    function loadAccept(messageId, url) {
+        rejectUrl = url;
+        var modal = $('#modificationModal');
+        $('#title').html($('#mtext_accept').html());
+        $('#save').data("messageIds", messageId);
+        
+        $("#modification").hide();
+        $("#addComment").show();
         modal.modal();
     }
 </script>

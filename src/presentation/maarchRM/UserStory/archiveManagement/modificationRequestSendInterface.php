@@ -47,6 +47,7 @@ interface modificationRequestSendInterface
      * @param string $identifier            An identifier
      *
      * @uses medona/archiveModificationRequest/create
+     * @return medona/archiveModification/modificationRequestSent
      */
     public function createModificationrequest($archiveIds, $comment, $identifier = null);
 }

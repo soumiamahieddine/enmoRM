@@ -45,7 +45,7 @@ interface modificationRequestProcessInterface
      * @param string $comment A comment
      *
      * @uses medona/archiveModificationRequest/update_messageId_Accept
-     * @return medona/message/acceptAuthorizationControlAuthorityRequest
+     * @return medona/archiveModification/modificationRequestAccepted
      */
     public function updateModificationrequest_messageId_Accept();
 
@@ -55,7 +55,7 @@ interface modificationRequestProcessInterface
      *
      * @uses medona/archiveModificationRequest/update_messageId_Reject
      * 
-     * @return medona/message/acceptAuthorizationControlAuthorityRequest
+     * @return medona/archiveModification/modificationRequestRejected
      */
     public function updateModificationrequest_messageId_Reject($comment = null);
 }

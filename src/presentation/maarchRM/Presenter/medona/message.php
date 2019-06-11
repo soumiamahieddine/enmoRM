@@ -783,7 +783,7 @@ class message
                 case 'ArchiveModificationRequest':
                     if ($message->status == "received") {
                         $message->rejectButton = "/modificationRequest/".$messageId."/Reject";
-                        $message->acceptButton = "/modificationRequest/".$messageId."/accept";
+                        $message->acceptWithCommentButton = "/modificationRequest/".$messageId."/accept";
                     }
                     break;
 

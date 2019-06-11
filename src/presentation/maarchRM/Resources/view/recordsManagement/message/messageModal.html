@@ -42,6 +42,13 @@
         loadReject(res[2],str);
     });
     
+    $('#messageModal').on('click', ".messageActionAcceptWithComment", function() {
+        var str = $(this).data('action');
+        var res = str.split("/");
+
+        loadAccept(res[2],str);
+    });
+
     $('#messageModal').on('click', ".messageActionValidation", function() {
         var parameters = {
             messageAction: $(this).data('action')

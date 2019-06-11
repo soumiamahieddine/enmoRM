@@ -30,12 +30,12 @@ class ArchiveModificationRequest extends abstractMessage
     /**
      * Send a new a new modification request
      * @param array  $archiveIds   An array of unit identifier
-     * @param string $reference    The message identifier
+     * @param string $identifier    The message identifier
      * @param string $comment      A comment
      *
      * @return The request message generated
      */
-    public function send($archiveIds, $reference = null, $comment = null)
+    public function send($archiveIds, $identifier = null, $comment = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -57,8 +57,8 @@ class ArchiveModificationRequest extends abstractMessage
             $archivesByArchiver[$archive->archiverOrgRegNumber][] = $archive;
         }
 
-        if (!$reference) {
-            $reference = "archiveModificationRequest_".date("Y-m-d-H-i-s");
+        if (!$identifier) {
+            $identifier = "archiveModificationRequest_".date("Y-m-d-H-i-s");
         }
 
         $messages = [];
@@ -77,7 +77,7 @@ class ArchiveModificationRequest extends abstractMessage
             $message->status = 'received';
             $message->date = \laabs::newDatetime(null, "UTC");
             $message->receptionDate = $message->date;
-            $message->reference = $reference.'_'.str_pad($i, 2, '0', STR_PAD_LEFT);
+            $message->reference = $identifier.'_'.str_pad($i, 2, '0', STR_PAD_LEFT);
             
             $message->senderOrgRegNumber = $senderOrg->registrationNumber;
             $message->recipientOrgRegNumber = $archiverOrgRegNumber;
@@ -112,6 +112,14 @@ class ArchiveModificationRequest extends abstractMessage
             }
 
             $this->create($message);
+
+            $this->lifeCycleJournalController->logEvent(
+                'medona/sending',
+                'medona/message',
+                $message->messageId,
+                $message,
+                $operationResult
+            );
 
             $messages[] = $message;
         }
@@ -154,15 +162,26 @@ class ArchiveModificationRequest extends abstractMessage
     /**
      * Accept archive restitution request message
      * @param string $messageId The message identifier
+     * @param string $comment   A comment from archiver
      *
      * @return medona/message The medon reply message
      */
-    public function accept($messageId)
+    public function accept($messageId, $comment = null)
     {
-        $this->changeStatus($messageId, "accepted");
-
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
+        $message->status = 'accepted';
+
+        if (!empty($comment)) {
+            if (!empty($message->comment)) {
+                $message->comment = json_decode($message->comment);
+            } else {
+                $message->comment = [];
+            }
+
+            $message->comment[] = $comment;
+        }
+
+        $this->update($message);
 
         $this->lifeCycleJournalController->logEvent(
             'medona/acceptance',
@@ -182,18 +201,21 @@ class ArchiveModificationRequest extends abstractMessage
      */
     public function reject($messageId, $comment = null)
     {
-        $this->changeStatus($messageId, "rejected");
-
+        
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        if (!empty($message->comment)) {
-            $message->comment = json_decode($message->comment);
-        } else {
-            $message->comment = [];
+        $message->status = 'rejected';
+
+        if (!empty($comment)) {
+            if (!empty($message->comment)) {
+                $message->comment = json_decode($message->comment);
+            } else {
+                $message->comment = [];
+            }
+
+            $message->comment[] = $comment;
         }
 
-        $message->comment[] = $comment;
-
-        
+        $this->update($message);
         
         $this->lifeCycleJournalController->logEvent(
             'medona/rejection',

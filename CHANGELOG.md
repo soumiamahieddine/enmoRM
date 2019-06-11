@@ -6,6 +6,9 @@
 
 - `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
 
+### Gestion
+
+- `Added` Ajout de la transaction de demande de modification d'archive 
 
 ## Version 2.4
 
