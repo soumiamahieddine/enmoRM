@@ -832,6 +832,12 @@ input:invalid {
                     if (property == "description") {
                         $.each(value, function(descProperty, descValue) {
                             if(target.find("[name='"+descProperty+"']").first().length > 0) {
+                                if ($.isPlainObject(descValue)){
+                                    objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
+                                    var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').text());
+                                    header = objectTarget.find(".panel-title").first().find("a");
+                                    header.text(objectHeader);
+                                }
                                 Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
                             } else {
                                 custom = {
