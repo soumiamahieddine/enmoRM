@@ -89,6 +89,8 @@ CREATE TABLE "medona"."message"
   "archived" boolean,
   "isIncoming" boolean,
 
+  "comment" text,
+
   PRIMARY KEY ("messageId"),
   UNIQUE ("type", "reference", "senderOrgRegNumber")
 )
