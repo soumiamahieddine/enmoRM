@@ -1,0 +1,146 @@
+<div class="container-fluid" style="padding-top: 10px">
+    <div id="mainScreenWrapper" class="row">
+        <div class="col-sm-3 col-xs-12 " id="leftColumn">
+            <div class="tree-l" id='medonaMenu'>
+                <br/>
+                <ul>
+                    <?merge medonaMenu ?>
+                    <li>
+                        <?merge ['href'].ifne('#').then('folderNode link') @class ?>
+                        <span class="folderNode">
+                            <i class="fa" data-opened-icon="fa-caret-down" data-closed-icon="fa-caret-right" >&nbsp;</i>
+                            <b data-href="[?merge ['href'] ?]">
+                                &nbsp;
+                                <i class="[?merge ['class'] ?]"></i>
+                                <?merge ['label'] ?>
+                            </b>
+                        </span>
+                        <?merge ['submenu'].count().bool() ?>
+                        <ul>
+                            <?merge ['submenu'] ?>
+                            <li >
+                                <?merge ['href'].ifne('#').then('folderNode link') @class ?>
+                                <span class="folderNode">
+                                    <i class="fa" data-open-icon="fa-caret-down" data-closed-icon="fa-caret-right" >&nbsp;</i>
+                                    <b data-href="[?merge ['href'] ?]">
+                                        <i class="[?merge ['class'] ?]"></i>
+                                        <?merge ['label'] ?>
+                                    </b>
+                                </span>
+                            </li>       
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--a id="toggleLeftColumn" href="#" class="hidden-sm hidden-xs"><i class="fa fa-chevron-circle-left"/></a-->
+        <div class="col-sm-9 col-xs-12" id="middleColumn">
+            <div class="row">
+                <div class="tab-content">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-xs-12 hidden" id="rightColumn">
+            <a id="openInNewTab" href="#" class="pull-left"><i class="fa fa-external-link"/></a>
+            <a id="showMoreDetail" href="#" class="pull-left"><i class="fa fa-plus-circle"/></a>
+            <a id="closeDetailScreen" href="#" class="pull-right"><i class="fa fa-chevron-circle-right"/></a>
+            <div id="detailScreenContent"/>
+        </div>
+    </div>
+</div>
+<style>
+    .folderNode {
+        cursor: pointer;
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .folderNode > b{
+        font-size: 16px;
+        font-weight: normal;
+        float: left;
+        width: calc(100% - 30px);
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+    }
+    .folderNode > i {
+        font-size: 18px;
+        float: left;
+        width: 10px;
+    }
+
+    .folderNode > b > i {
+        font-size: 18px;
+    }
+
+    .folderNode:hover {
+        background-color: #DDD;
+    }
+
+    #medonaMenu > ul {
+        padding-left: 0;
+    }
+
+    #medonaMenu li {
+        padding: 0px;
+    }
+
+
+</style>
+<script>
+    var medonaMenu = {
+        currentHref: null,
+        locked: false,
+        load: function(href) { 
+            if (this.locked) {
+                return;
+            }
+            this.locked = true;
+            $.ajax({
+                url         : href,
+                type        : "GET",
+                dataType    : 'html',
+                success     : function (response) {
+                    medonaMenu.currentHref = href;
+                    $('.tab-content').empty();
+                    $('.tab-content').html(response);
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                },
+                complete: function() {
+                    medonaMenu.locked = false;
+                }
+            });
+        },
+        reload: function() {
+            this.load(this.currentHref);
+        }
+    }
+
+    $('#medonaMenu').onEvent('reload.medonaMenu', function() {
+        medonaMenu.reload();
+    });
+
+    $('#medonaMenu').ready(function () {
+        BootstrapTree.init($('#medonaMenu'), true);
+    });
+
+    $('.link > b').on(
+        'click', 
+        function() {
+            medonaMenu.load($(this).data('href'))
+        }
+    );
+
+    $('.folderNode').not('.link').on(
+        'click', 
+        function() { 
+           $(this).find('i:first').click();
+        }
+    );
+
+    
+</script>

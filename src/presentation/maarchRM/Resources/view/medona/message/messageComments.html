@@ -1,0 +1,657 @@
+<style>
+    #drop_zone {
+        border: 2px dashed #bbb;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        padding: 100px;
+        text-align: center;
+        font: 20pt bold 'Vollkorn';
+        color: #bbb;
+    }
+</style>
+
+<div id="contain" lang="en" data-translate-catalog="recordsManagement/depositArchive">
+    <div class="container-fluid" >
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-file-archive-o"></i>
+                Preparation of message
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/depositArchive">
+        <form class="form-horizontal">
+            <div class="col-md-12">
+                <div class="col-md-7 well">
+                    <!-- ARCHIVAL REFERENCE -->
+                    <?hinclude medona/message/messageHeader.html ?>
+                    <br>
+                    <?hinclude medona/message/messageDataObjectPackage.html ?>
+                    <br>
+                    <div class="form-group pull-left col-md-12" id="btnDataObjet">
+                        <a href="#" class="btn btn-default" id="addNewFile" title="Add a new document"><span class="fa fa-plus">&nbsp;</span>Add a new document</a>
+                    </div>
+                    <div class="form-group pull-right col-md-12" id="btnSend">
+                        <button type="button" class=" btn btn-primary pull-right" id="end" data-button-submit title="Send archive"><span class="fa fa-save">&nbsp;</span>Send archive</button>
+                    </div>
+                </div>
+
+                <!-- ADD FILE -->
+                <div class="col-md-5">
+                    <?hinclude medona/message/messageAddDocument.html ?>
+                    <div>
+                        <!-- DOCUMENT -->
+                        <div id="document">
+                            <div class="panel-group" id="accordionDoc">
+                                <div class="panel panel-primary template" id="origine">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordionDoc" href="#collapseDocument">
+                                                Document :
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseDocument" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div id="document" class="col-md-12">
+                                                <div class="col-sm-6">
+                                                    <label>Id : </label><span id="fileIdView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Name : </label><span id="fileNameView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Size : </label><span id="fileSizeView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Type : </label><span id="fileTypeView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Format : </label><span id="fileFormatView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Relationship Type : </label><span id="fileRelationTypeView">&nbsp;</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>With : </label><span id="fileTypeWithView">&nbsp;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+
+<div class="hide" lang="en" data-translate-catalog="recordsManagement/exception">
+    <span data-exception-reference >You must define top of mind</span>
+    <span data-exception-DataObjetPackage  >You must define a data object package</span>
+    <span data-exception-file >You must insert a document</span>
+    <span data-success >Message sent successfully</span>
+</div>
+
+<script type="text/javascript">
+
+    $("#archiveDescription").prop('hidden', true);
+    $("#dataObjetPackage").prop('hidden', true);
+    $("#descriptionClass").prop('hidden', true);
+    $("#btnDataObjet").prop('hidden', true);
+    $("#btnSend").prop('hidden', true);
+    $("#accordionAddFile").prop('hidden', true);
+    $("#accordionDoc").prop('hidden', true);
+    var tab = new Array();
+    var idFile = 0;
+
+    var doc = document.implementation.createDocument('org:afnor:medona:1.0', 'medona:ArchiveTransfer');
+    var oSerializer = new XMLSerializer();
+    var date = insertElement(doc.documentElement, 'Date');
+    var messageIdentifier = insertElement(doc.documentElement, 'MessageIdentifier');
+    var codeListVersions = insertElement(doc.documentElement, 'CodeListVersions');
+    var dataObjectPackage = insertElement(doc.documentElement, 'DataObjectPackage');
+    var archivalAgency = insertElement(doc.documentElement, 'ArchivalAgency');
+    var transferringAgency = insertElement(doc.documentElement, 'TransferringAgency');
+
+    var descriptiveMetadata = insertElement(dataObjectPackage, 'DescriptiveMetadata');
+    var managementMetadata = insertElement(dataObjectPackage, 'ManagementMetadata');
+    var identifierArchival = insertElement(archivalAgency, 'Identifier');
+    var identifierTransferring = insertElement(transferringAgency, 'Identifier');
+    view();
+
+    $(document).ready(function () {
+        $("#archivalProfileReference").on('change', function () {
+            if ($("#archivalProfileReference").find(':selected').val()) {
+                if ($(this).val() === "") {
+                    if ($('#collapseDescriptionMetadata').is(':visible')) {
+                        $('#collapseDescriptionMetadata').addClass('hide');
+                    }
+
+                    $('#descriptionClass').html('');
+                    return;
+                }
+
+                if ($(this).find(":selected").attr("data-descriptionClass") !== "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: "/recordsManagement/archive/descriptionForm/" + $(this).find(":selected").val(),
+                        async: true,
+                        dataType: 'html',
+                        success: function (response) {
+                            $('#descriptionClass').html(response);
+                            if (!$('#collapseDescriptionMetadata').is(':visible')) {
+                                $('#collapseDescriptionMetadata').removeClass('hide');
+                            }
+                        }
+                    });
+                } else {
+                    if ($('#collapseDescriptionMetadata').is(':visible')) {
+                        $('#collapseDescriptionMetadata').addClass('hide');
+                    }
+                    $('#descriptionClass').html('');
+                }
+
+                if ($("#archivalProfileReference").val() === "invoices") {
+                    $("#archiveDescription").prop('hidden', false);
+                } else {
+                    $("#archiveDescription").prop('hidden', true);
+                }
+
+                if ($(this).find(":selected").attr('data-retentionRuleCode')) {
+                    $('#retentionRule option[value="' + $(this).find(":selected").attr('data-retentionRuleCode') + '"]').prop('selected', true);
+                    var finalDisposition = $('#retentionRule option[value="' + $(this).find(":selected").attr('data-retentionRuleCode') + '"]').attr('data-finalDisposition');
+                    var duration = $('#retentionRule option[value="' + $(this).find(":selected").attr('data-retentionRuleCode') + '"]').attr('data-duration');
+                    var durationUnit = $('#retentionRule option[value="' + $(this).find(":selected").attr('data-retentionRuleCode') + '"]').attr('data-durationUnit');
+
+                    $('#finalDisposition option[value="' + finalDisposition + '"]').prop('selected', true);
+                    $('#retentionRuleDuration').val(duration);
+                    $('#retentionRuleDurationUnit option[value="' + durationUnit + '"]').prop('selected', true);
+                    $("#retentionRuleDuration").prop('disabled', false);
+                }
+                if ($(this).find(":selected").attr('data-accessRuleCode')) {
+                    $('#accessRule option[value="' + $(this).find(":selected").attr('data-accessRuleCode') + '"]').prop('selected', true);
+                    var duration = $('#accessRule option[value="' + $(this).find(":selected").attr('data-accessRuleCode') + '"]').attr('data-duration');
+                    var durationUnit = $('#accessRule option[value="' + $(this).find(":selected").attr('data-accessRuleCode') + '"]').attr('data-durationUnit');
+                    $('#accessRuleDuration').val(duration);
+                    $('#accessRuleDurationUnit option[value="' + durationUnit + '"]').prop('selected', true);
+                    $("#accessRuleDuration").prop('disabled', false);
+                    var archivalProfile = insertElement(managementMetadata, 'ArchivalProfile');
+                    archivalProfile.appendChild(doc.createTextNode($("#archivalProfileReference").val()));
+                    var accessRule = insertElement(managementMetadata, 'AccessRule', '', 'maarch.org:laabs:recordsManagement');
+                    var code = insertElement(accessRule, 'Code');
+                    code.appendChild(doc.createTextNode($("#accessRule").val()));
+                    var duration = insertElement(accessRule, 'Duration');
+                    duration.appendChild(doc.createTextNode("P" + $("#accessRuleDuration").val() + $('#accessRuleDurationUnit').val()));
+                    var startDate = insertElement(accessRule, 'StartDate');
+                    startDate.appendChild(doc.createTextNode(new Date().toISOString()));
+                    var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+                    var appraisalCode = insertElement(appraisalRule, 'AppraisalCode');
+                    appraisalCode.appendChild(doc.createTextNode($("#finalDisposition").val()));
+                    var appraisalDuration = insertElement(appraisalRule, 'Duration');
+                    appraisalDuration.appendChild(doc.createTextNode("P" + $("#retentionRuleDuration").val() + $('#accessRuleDurationUnit').val()));
+                    var appraisalStartDate = insertElement(appraisalRule, 'StartDate');
+                    appraisalStartDate.appendChild(doc.createTextNode(new Date().toISOString()));
+                    view();
+                }
+            }
+        });
+        $("#drop_zone").on('click', function () {
+            $('[name="file"]')[0].click();
+        });
+        $("[name='file']").on('change', function () {
+            if ($('[name="file"]').val() == "") {
+                return;
+            }
+            var digitalResource = new Object();
+            oFile = $('[name="file"]')[0].files[0];
+            oFileReader = new FileReader();
+            oFileReader.readAsDataURL(oFile);
+            oFileReader.onload = function () {
+                $('#drop_zone').hide();
+                $('#fileId').text('o_' + idFile);
+                $('#fileName').text(oFile.name);
+                $('#fileSize').text(oFile.size + " octets");
+                $('#fileName').parent().parent().removeClass('hide');
+                $('#resetFile').removeClass('hide');
+                var contents = oFileReader.result;
+                digitalResource.handler = contents;
+                digitalResource.fileId = 'o_' + idFile;
+                digitalResource.fileName = oFile.name;
+                digitalResource.size = oFile.size;
+                digitalResource.format = format(digitalResource.handler);
+                /*
+                 * $("[name='viewer']").each(function () {
+                 $(this).attr("src", contents);
+                 $(this).removeClass('hide');
+                 });
+                 */
+                tab[idFile] = digitalResource;
+
+            }
+        });
+        $("#resetFile").on('click', function () {
+            var digitalResource = new Object();
+            digitalResource = tab[idFile];
+            idFile = idFile - 1;
+            digitalResource.fileId = "";
+            digitalResource.handler = "";
+            digitalResource.fileName = "";
+            disabledAddFile();
+            /*$("[name='viewer']").each(function () {
+             $(this).attr("src", "");
+             $(this).addClass('hide');
+             });*/
+        });
+
+        $("#accessRule").on('change option:selected', function () {
+            var durationUnit = $(this).find(":selected").attr("data-durationUnit");
+            var accessRule = insertElement(managementMetadata, 'AccessRule', '', 'maarch.org:laabs:recordsManagement');
+            var code = insertElement(accessRule, 'Code');
+            var duration = insertElement(accessRule, 'duration');
+            var startDate = insertElement(accessRule, 'StartDate');
+
+            if (durationUnit === 'P') {
+                $('#accessRuleDuration').prop('disabled', false);
+                $('#accessRuleDuration').val("0");
+                $('#accessRuleDurationUnit option[value="d"]').prop('selected', true)
+            } else if (durationUnit === '') {
+                $('#accessRuleDuration').prop('disabled', 'disabled');
+                $('#accessRuleDurationUnit option[value="*"]').prop('selected', true)
+            } else {
+                $('#accessRuleDuration').prop('disabled', false);
+                $('#accessRuleDuration').val($(this).find(":selected").attr("data-duration"));
+                $('#accessRuleDurationUnit').val(durationUnit);
+                $('#accessRuleDurationUnit option[value="' + durationUnit + '"]').prop('selected', true)
+            }
+
+            code.appendChild(doc.createElement($("#accessRule").val()));
+            duration.appendChild(doc.createTextNode($("#accessRuleDuration").val()));
+            startDate.appendChild(doc.createTextNode(new Date($("#startDateAccess").val()).toISOString()));
+            view();
+        });
+
+        $("#retentionRule").on('change', function () {
+            var durationUnit = $(this).find(":selected").attr("data-durationUnit");
+            var finalDisposition = $(this).find(":selected").attr("data-finalDisposition");
+            var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+            var appraisalCode = insertElement(appraisalRule, 'AppraisalCode');
+            var duration = insertElement(appraisalRule, 'Duration');
+
+            if (durationUnit === 'P') {
+                $('#retentionRuleDuration').prop('disabled', false);
+                $('#retentionRuleDuration').val("0");
+                $('#retentionRuleDurationUnit option[value="d"]').prop('selected', true)
+            } else if (durationUnit === '') {
+                $('#retentionRuleDuration').prop('disabled', 'disabled');
+                $('#retentionRuleDurationUnit option[value="*"]').prop('selected', true)
+            } else {
+                $('#retentionRuleDuration').prop('disabled', false);
+                $('#retentionRuleDuration').val($(this).find(":selected").attr("data-duration"));
+                $('#retentionRuleDurationUnit option[value="' + durationUnit + '"]').prop('selected', true);
+            }
+            $('#finalDisposition option[value="' + finalDisposition + '"]').prop('selected', true);
+
+            appraisalCode.appendChild(doc.createTextNode($("#finalDisposition").val()));
+            duration.appendChild(doc.createTextNode("P" + $("#retentionRuleDuration").val() + $('#retentionRuleDurationUnit').val()));
+            view();
+        });
+
+        $("#accessRuleDurationUnit").on('change', function () {
+            var accessRule = insertElement(managementMetadata, 'AccessRule', '', 'maarch.org:laabs:recordsManagement');
+            var duration = insertElement(accessRule, 'Duration', 'element');
+            var startDate = insertElement(accessRule, 'StartDate');
+
+            if ($("#accessRuleDurationUnit").val() === "*") {
+                $("#accessRuleDuration").prop('disabled', true);
+            } else {
+                $("#accessRuleDuration").prop('disabled', false);
+            }
+
+            duration.appendChild(doc.createTextNode("P" + $("#accessRuleDuration").val() + $('#accessRuleDurationUnit').val()));
+            startDate.appendChild(doc.createTextNode(new Date().toISOString()));
+            view();
+        });
+
+        $("#retentionRuleDurationUnit").on('change', function () {
+            var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+            var duration = insertElement(appraisalRule, 'Duration');
+
+            if ($("#retentionRuleDurationUnit").val() === "*") {
+                $("#retentionRuleDuration").prop('disabled', true);
+            } else {
+                $("#retentionRuleDuration").prop('disabled', false);
+            }
+
+            duration.appendChild(doc.createTextNode("P" + $("#retentionRuleDuration").val() + $('#retentionRuleDurationUnit').val()));
+            view();
+        });
+
+        $("#nextTop").on('click', function () {
+            if ($("#messageReference").val() && $("#depositor").val() && $("#archiver").val()) {
+                $("#dataObjetPackage").prop('hidden', false);
+                $("#btnNextTop").prop('hidden', true);
+            } else {
+                $("#dataObjetPackage").prop('hidden', true);
+                createGritter("gritter-danger", $("[data-exception-reference]").text());
+            }
+        });
+
+        $("#nextMD").on('click', function () {
+            if ($("#archivalProfileReference").val() && $("#serviceLevel").val() && $("#retentionRule").val() && $("#retentionRuleDuration").val() && $("#retentionRuleDurationUnit").val() && $("#finalDisposition").val()) {
+                $("#descriptionClass").prop('hidden', false);
+                $("#btnDataObjet").prop('hidden', false);
+                $("#btnNextMD").prop('hidden', true);
+            } else {
+                $("#descriptionClass").prop('hidden', true);
+                createGritter("gritter-danger", $("[data-exception-DataObjetPackage]").text());
+            }
+        });
+
+        $("#addNewFile").on('click', function () {
+            $("#accordionAddFile").prop('hidden', false);
+            getDocument();
+        });
+
+        $("#nextDOP").on('click', function () {
+            if ($("#documentType").val() && $("#reference").val() && $("#date").val() && $("#companyName").val() && $("#thirdPartyName").val()) {
+                $("#btnDataObjet").prop('hidden', false);
+                $("#btnNextDOP").prop('hidden', true);
+            } else {
+                $("#btnDataObjet").prop('hidden', true);
+            }
+        });
+
+        $("#validateAddFile").on('click', function () {
+            var digitalResource = new Object();
+            digitalResource = tab[idFile];
+            if (digitalResource) {
+                disabledAddFile();
+                $("#accordionDoc").prop('hidden', false);
+                $("#accordionAddFile").prop('hidden', true);
+                $("#fileNameDocument").text(digitalResource.fileName);
+                $("#fileIdView").text(digitalResource.fileId);
+                $("#fileNameView").text(digitalResource.fileName);
+                $("#fileSizeView").text(digitalResource.size + " octets");
+                $("#fileFormatView").text(digitalResource.format);
+                $("#fileTypeView").text($("#type").find(":selected").text());
+                if ($('#typeDataWith').find(":selected").val() && $('#typeData').find(":selected").val()) {
+                    $("#fileTypeWithView").text($('#typeDataWith').find(":selected").text());
+                    $("#fileRelationTypeView").text($('#typeData').find(":selected").text());
+                }
+                createDivDocument(digitalResource.fileName);
+
+                var attrs = {
+                    'xml:id': digitalResource.fileId
+                };
+                var binaryDataObject = insertElement('', 'BinaryDataObject', attrs, '', descriptiveMetadata);
+                if ($('#typeDataWith').find(":selected").val() && $('#typeData').find(":selected").val()) {
+                    attrs = {
+                        'target': $('#typeDataWith').find(":selected").text(),
+                        'type': $('#typeData').find(":selected").text()
+                    };
+                    insertElement(binaryDataObject, 'Relationship', attrs);
+                    attrs = {
+                        'filename': digitalResource.fileName
+                    };
+                    insertElement(binaryDataObject, 'Attachment', attrs);
+                }
+                var format = insertElement(binaryDataObject, 'Format');
+                format.appendChild(doc.createTextNode(digitalResource.format));
+                var size = insertElement(binaryDataObject, 'Size');
+                size.appendChild(doc.createTextNode(digitalResource.size));
+
+
+                // ARCHIVE PACKAGE ACTIVE POUR LE MOMENT
+                //var archivePackageList = doc.evaluate('ArchiveTransfer/DataObjectPackage/DataObjectPackage', doc, null, XPathResult.ANY_TYPE, null);
+                //console.log(archivePackageList);
+                var archivePackage;
+                // if (archivePackageList.length > 0) {
+                //  archivePackage = archivePackageList[0];
+                //} else {
+                archivePackage = insertElement(descriptiveMetadata, 'archivePackage', '', 'maarch.org:laabs:medona');
+                //}
+                attrs = {
+                    'xml:id': 'a_' + idFile
+                };
+                var archive = insertElement(archivePackage, 'archive', attrs, 'maarch.org:laabs:recordsManagement');
+                var descriptionObject = insertElement(archive, 'descriptionObject');
+                if ($("#archivalProfileReference").val() === "invoices") {
+                    var invoice = insertElement(descriptionObject, 'invoice', '', 'maarch.org:laabs:financialRecords');
+                    var dateArchive = insertElement(invoice, 'date');
+                    dateArchive.appendChild(doc.createTextNode(new Date(dateInvoice).toISOString()));
+                    var referenceArchive = insertElement(invoice, 'reference');
+                    referenceArchive.appendChild(doc.createTextNode(referenceInvoice));
+                    var thirdPartyName = insertElement(invoice, 'thirdPartyName');
+                    thirdPartyName.appendChild(doc.createTextNode(thirdPartyNameInvoice));
+                    var documentType = insertElement(invoice, 'DocumentType');
+                    documentType.appendChild(doc.createTextNode(documentTypeInvoice));
+                    var companyName = insertElement(invoice, 'companyName');
+                    companyName.appendChild(doc.createTextNode(companyNameInvoice));
+                }
+                attrs = {
+                    'xml:id': 'd_' + idFile,
+                    'oid': 'o_' + idFile
+                };
+                var document = insertElement(archive, 'document', attrs);
+                var type = insertElement(document, 'type');
+                type.appendChild(doc.createTextNode($("#type").find(":selected").text()));
+                idFile = idFile + 1;
+                $("#btnSend").prop('hidden', false);
+                view();
+            } else {
+                createGritter("gritter-danger", $("[data-exception-file]").text());
+            }
+        });
+
+        $("#end").on('click', function () {
+            if (date.childNodes.length) {
+                date.removeChild(date.childNodes[0]);
+            }
+            date.appendChild(doc.createTextNode(new Date().toISOString()));
+            view();
+            createGritter("gritter-success", $("[data-success]").text())
+        });
+
+        $("#messageReference").on('change', function () {
+            if (messageIdentifier.childNodes.length) {
+                messageIdentifier.removeChild(messageIdentifier.childNodes[0]);
+            }
+            messageIdentifier.appendChild(doc.createTextNode($("#messageReference").val()));
+        });
+
+        $("#agreement").on('change', function () {
+            if ($("#agreement").val()) {
+                /*if (archivalAgreementList.length > 0) {
+                    archivalAgreement = archivalAgreementList[0];
+                } else {*/
+                    var archivalAgreement = insertElement('', 'ArchivalAgreement', '', '', codeListVersions);
+                //}
+
+                archivalAgreement.appendChild(doc.createTextNode($("#agreement").val()));
+                var archivalAgreementList = doc.evaluate('/ArchiveTransfer/ArchivalAgreement', archivalAgreement, null, XPathResult.ANY_TYPE, null);
+            }
+        });
+
+//CODE LISTE VERSIONS ?
+
+        $("#archiver").on('change', function () {
+            if ($("#archiver").find(":selected").val()) {
+                identifierArchival.appendChild(doc.createTextNode($("#archiver").find(":selected").attr("data-regNumber")));
+                var organizationDescriptiveMetadataArchival = insertElement(archivalAgency, 'OrganizationDescriptiveMetadata');
+                var organizationArchival = insertElement(organizationDescriptiveMetadataArchival, 'Organization', '', 'maarch.org:laabs:organization');
+                var nameArchival = insertElement(organizationArchival, 'Name');
+                nameArchival.appendChild(doc.createTextNode($("#archiver").find(":selected").text()));
+                view();
+            }
+        });
+
+        $("#depositor").on('change', function () {
+            if ($("#depositor").find(":selected").val()) {
+                identifierTransferring.appendChild(doc.createTextNode($("#depositor").find(":selected").attr("data-regNumber")));
+                var organizationDescriptiveMetadataTransferring = insertElement(transferringAgency, 'OrganizationDescriptiveMetadata');
+                var organizationTransferring = insertElement(organizationDescriptiveMetadataTransferring, 'Organization', '', 'maarch.org:laabs:organization');
+                var nameTransferring = insertElement(organizationTransferring, 'Name');
+                nameTransferring.appendChild(doc.createTextNode($("#depositor").find(":selected").text()));
+                view();
+            }
+        });
+
+        $("#serviceLevel").on('change', function () {
+            if ($("#serviceLevel").find(":selected").val()) {
+                var serviceLevel = insertElement(managementMetadata, 'ServiceLevel');
+                if (serviceLevel.childNodes.length) {
+                    serviceLevel.removeChild(serviceLevel.childNodes[0]);
+                }
+                serviceLevel.appendChild(doc.createTextNode($("#serviceLevel").find(":selected").text()));
+                view();
+            }
+        });
+
+        $("#accessRuleDuration").on('change', function () {
+            var accessRule = insertElement(managementMetadata, 'AccessRule', '', 'maarch.org:laabs:recordsManagement');
+            var duration = insertElement(accessRule, 'Duration', 'element');
+            duration.appendChild(doc.createTextNode("P" + $("#accessRuleDuration").val() + $('#accessRuleDurationUnit').val()));
+            var startDate = insertElement(accessRule, 'StartDate');
+            startDate.appendChild(doc.createTextNode(new Date().toISOString()));
+            view();
+        });
+
+        $("#startDateAccess").on('change', function () {
+            var accessRule = insertElement(managementMetadata, 'AccessRule', '', 'maarch.org:laabs:recordsManagement');
+            var startDate = insertElement(accessRule, 'StartDate');
+            startDate.appendChild(doc.createTextNode(new Date().toISOString()));
+            view();
+        });
+
+
+        $("#retentionRuleDuration").on('change', function () {
+            var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+            var duration = insertElement(appraisalRule, 'Duration');
+            duration.appendChild(doc.createTextNode("P" + $("#retentionRuleDuration").val() + $('#retentionRuleDurationUnit').val()));
+            view();
+        });
+
+        $("#startDateRetention").on('change', function () {
+            var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+            var startDate = insertElement(appraisalRule, 'StartDate');
+            startDate.appendChild(doc.createTextNode(new Date().toISOString()));
+            view();
+        });
+
+        $("#finalDisposition").on('change', function () {
+            var appraisalRule = insertElement(managementMetadata, 'AppraisalRule');
+            var appraisalCode = insert(appraisalRule, 'AppraisalCode');
+            appraisalCode.appendChild(doc.createTextNode($("#finalDisposition").val()));
+            view();
+        });
+
+        $("#validateAddFile").on('change', function () {
+            view();
+        });
+
+    });
+    /*
+     $.ajax({
+     type: "PUT",
+     url: "/medona/interactiveArchive",
+     data: oSerializer.serializeToString(doc),
+     async: false,
+     contentType: '',
+     dataType: 'text',
+     success: function (response) {
+     if (response.status) {
+     $.gritter.add({
+     text: response.message,
+     class_name: "gritter-succes"
+     });
+     load("/recordsManagement/archive/depositForm");
+     } else {
+     $.gritter.add({
+     text: response.message,
+     class_name: "gritter-danger"
+     });
+     }
+     }
+     });
+     */
+    function view() {
+        var sXML = oSerializer.serializeToString(doc);
+        console.log(sXML);
+    }
+    /*
+     * Insert anelement of XML
+     */
+    function insertElement(parentNode, nodeName, attributes, ns, nodeAfter) {
+        if (ns) {
+            var element = doc.createElementNS(ns, 'ns:' + nodeName);
+        } else {
+            var element = doc.createElement(nodeName);
+        }
+        if (attributes) {
+            $.each(attributes, function (key, value) {
+                element.setAttribute(key, value);
+            });
+        }
+        if (nodeAfter) {
+            nodeAfter.parentNode.insertBefore(element, nodeAfter);
+        } else {
+            parentNode.appendChild(element);
+        }
+        return element;
+    }
+
+
+    function createDivDocument(text) {
+        var $template = $("#origine");
+        var $newPanel = $template.clone();
+        $newPanel.find(".collapse").removeClass("in");
+        $newPanel.find(".accordion-toggle").attr("href", "#" + (idFile))
+                .text("Document : " + text);
+        $newPanel.find(".panel-collapse").attr("id", idFile).addClass("collapse").removeClass("in");
+        $("#accordionDoc").append($newPanel.fadeIn());
+        $("#origine").css('display', 'none');
+    }
+    function disabledAddFile() {
+        $('#fileId').text("");
+        $("#fileName").text("");
+        $("#fileSize").text("");
+        $("#fileName").parent().parent().addClass("hide");
+        $('#resetFile').addClass("hide");
+        $("#drop_zone").show();
+        $("[name='warningMessageFile']").each(function () {
+            $(this).show();
+        });
+    }
+
+    function getDocument() {
+        var i;
+        $('#typeDataWith').empty();
+        $('#typeDataWith').append($('<option>', {
+            value: "",
+            text: "Selectionner un document"
+        }));
+        for (i = 0; i < tab.length; i++) {
+            $('#typeDataWith').append($('<option>', {
+                value: tab[i].fileId,
+                text: tab[i].fileId
+            }));
+        }
+    }
+    function format(text) {
+        var tab = text.split(";");
+        return tab[0].split("data:")[1];
+    }
+
+    function createGritter(type, text) {
+        $.gritter.add({
+            text: text,
+            class_name: type
+        });
+    }
+
+</script>

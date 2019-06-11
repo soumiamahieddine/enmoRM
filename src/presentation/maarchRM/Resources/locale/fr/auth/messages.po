@@ -121,6 +121,15 @@ msgid "addResource"
 msgstr "Ajouter et supprimer une ressource"
 msgctxt "userStory"
 
+msgid "modificationRequestSend"
+msgstr "Envoyer des demandes de modification"
+msgctxt "userStory"
+
+msgid "modificationRequestProcess"
+msgstr "Traiter les demandes de modification"
+msgctxt "userStory"
+
+
 # ---------------------------------------------------------
 # Journal
 # ---------------------------------------------------------

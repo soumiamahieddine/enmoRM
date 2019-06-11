@@ -596,9 +596,7 @@ trait archiveAccessTrait
             $archive->communicability = $this->accessVerification($archive);
         }
 
-        if (\laabs::hasBundle('medona')) {
-            $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
-        }
+        $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
 
         return $archive;
     }
@@ -906,18 +904,20 @@ trait archiveAccessTrait
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
      *
-     * @return array Archives ids separate by successfully updated archives ['success']
-     * and not updated archives ['error']
+     * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
     public function setStatus($archiveIds, $status)
     {
         $statusList = [];
-        $statusList['preserved'] = array('frozen', 'disposable', 'error');
-        $statusList['frozen'] = array('preserved', 'disposable');
-        $statusList['disposable'] = array('preserved');
-        $statusList['disposed'] = array('disposable');
+        $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+        $statusList['restituable'] = array('preserved');
         $statusList['restituted'] = array('restituable');
-        $statusList['error'] = array('preserved', 'frozen', 'disposable', 'disposed');
+        $statusList['transfered'] = array('transferable');
+        $statusList['frozen'] = array('preserved', 'restituable', 'disposable', 'transferable');
+        $statusList['disposable'] = array('preserved');
+        $statusList['transferable'] = array('preserved');
+        $statusList['disposed'] = array('disposable', 'restituted');
+        $statusList['error'] = array('preserved', 'restituable', 'restituted', 'frozen', 'disposable', 'disposed');
 
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -937,8 +937,9 @@ trait archiveAccessTrait
                 array_push($res['error'], $archiveId);
             } else {
                 $archiveStatus->status = $status;
+
                 $archiveStatus->lastModificationDate = \laabs::newTimestamp();
-                
+
                 $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
                 $this->setStatus($childrenArchives, $status);
 
@@ -949,6 +950,7 @@ trait archiveAccessTrait
 
         return $res;
     }
+
 
     /**
      * Change the processing status of an archive

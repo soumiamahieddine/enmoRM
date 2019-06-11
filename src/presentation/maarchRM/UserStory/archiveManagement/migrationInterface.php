@@ -33,4 +33,21 @@ interface migrationInterface
      * @return recordsManagement/archive/convert
      */
     public function updateRecordsmanagementInteractiveconversion_resId_();
+
+    /**
+     * List all archive conversion request
+     *
+     * @uses medona/documentConversion/readList
+     * @return medona/message/listConversionRequest
+     */
+    public function readConversionrequestList();
+
+    /**
+     * Flag archives for disposal
+     * @param array $documentIds Array of document identifier
+     *
+     * @uses medona/documentConversion/updateDocumentsconversion
+     * @return medona/archiveModification/conversion
+     */
+    public function updateConversion($documentIds);
 }

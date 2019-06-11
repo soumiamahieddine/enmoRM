@@ -65,6 +65,9 @@ msgstr "Demandes d'élimination"
 msgid "Transfer history"
 msgstr "Historique de transfert"
 
+msgid "Modification request history"
+msgstr "Historique des demandes"
+
 msgid "Sent transfers"
 msgstr "Transferts envoyés"
 
@@ -749,3 +752,9 @@ msgstr "Illimitée"
 
 msgid "Unit Identifier"
 msgstr "Archive(s) liée(s)"
+
+msgid "Modification requests"
+msgstr "Demandes de modification à traiter"
+
+msgid "ArchiveModificationRequest"
+msgstr "Demande de modification"

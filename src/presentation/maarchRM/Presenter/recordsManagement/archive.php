@@ -120,6 +120,8 @@ class archive
 
         $this->view->translate();
 
+        $transaction = \laabs::configuration("medona")["transaction"];
+
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
         $accessRules = $accessRuleController->index();
@@ -148,14 +150,24 @@ class archive
 
         $currentDate = \laabs::newDate();
         foreach ($archives as $archive) {
-            $archive->finalDispositionDesc = $this->view->translator->getText($archive->finalDisposition, false, "recordsManagement/messages");
-            $archive->statusDesc = $this->view->translator->getText($archive->status, false, "recordsManagement/messages");
+            $archive->finalDispositionDesc = $this->view->translator->getText(
+                $archive->finalDisposition,
+                false,
+                "recordsManagement/messages"
+            );
+            $archive->statusDesc = $this->view->translator->getText(
+                $archive->status,
+                false,
+                "recordsManagement/messages"
+            );
 
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
             }
 
-            if (empty($archive->disposalDate) && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))) {
+            if (empty($archive->disposalDate)
+                && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))
+            ) {
                 $archive->noRetention = true;
             }
 
@@ -163,7 +175,11 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    if ($archive->status == 'disposed' || $archive->status == 'error' || $archive->status == 'restituted' || $archive->status == 'transfered') {
+                    if ($archive->status == 'disposed'
+                        || $archive->status == 'error'
+                        || $archive->status == 'restituted'
+                        || $archive->status == 'transfered'
+                    ) {
                         $archive->hasRights = false;
                     } else {
                         $archive->hasRights = $archiveController->checkRights($archive);
@@ -189,6 +205,7 @@ class archive
         $this->view->setSource("accessRules", $accessRules);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
+        $this->view->setSource('transaction', $transaction);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -1225,10 +1242,16 @@ class archive
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
+        $hasRestitutionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
+        $hasDeliveryPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "delivery/deliveryRequest");
+        $hasTransferPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "definitiveTransfer/transferSending");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
         $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
+        $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);
+        $this->view->setSource('hasDeliveryPrivilege', $hasDeliveryPrivilege);
+        $this->view->setSource('hasTransferPrivilege', $hasTransferPrivilege);
     }
 
     /**

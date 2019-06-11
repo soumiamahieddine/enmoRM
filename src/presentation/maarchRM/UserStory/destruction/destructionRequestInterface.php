@@ -26,13 +26,22 @@ namespace presentation\maarchRM\UserStory\destruction;
 interface destructionRequestInterface
 {
     /**
+     * Get destruction request form
+     *
+     * @return medona/message/destructionRequest
+     */
+    public function readDestructionRequest();
+
+    /**
      * Flag archives for disposal
      * @param array  $archiveIds The archives ids
+     * @param string $comment    The comment of destruction request
+     * @param string $identifier Message identifier
      *
      * @uses recordsManagement/archives/updateDisposearchives
      * @return recordsManagement/archive/dispose
      */
-    public function updateRecordsmanagementDispose($archiveIds);
+    public function updateRecordsmanagementDispose($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Cancel destruction

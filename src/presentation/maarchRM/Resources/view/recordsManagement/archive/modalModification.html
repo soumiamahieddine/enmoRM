@@ -104,6 +104,7 @@
             accessRule          : '/recordsManagement/archive/accessRule',
             retentionRule       : '/recordsManagement/archive/retentionRule',
             flagForDestruction  : '/recordsManagement/dispose',
+            requestModification : '/modificationRequest',
             cancelDestruction   : '/recordsManagement/cancelDestruction',
             freeze              : '/recordsManagement/archive/freeze',
             unfreeze            : '/recordsManagement/archive/unfreeze'
@@ -112,7 +113,7 @@
         modal : $('#modificationModal'),
         modalType : null,
         dataTable : null,
-        load : function(archiveId, archiveName, type) {
+        load : function(archiveId, archiveName, type, transaction) {
             this.modalType = type;
 
             this.loadTitle();
@@ -137,6 +138,10 @@
             } else {
                 $('#derogationTr').hide();
                 $('#derogationInputTr').hide();
+            }
+
+            if (!transaction) {
+                $('#message').hide();
             }
 
             $('#save').data("archiveids", "");
@@ -226,7 +231,7 @@
             });
         },
 
-        loadMultiple: function(selected, relevant, ids, names, type) {
+        loadMultiple: function(selected, relevant, ids, names, type, transaction) {
             this.modalType = type;
 
             this.loadTitle();
@@ -248,7 +253,11 @@
             $('#modal_relevant').html(relevant);
 
             ModificationModal.loadTable(ids, names);
-            
+
+            if (!transaction) {
+                $('#message').hide();
+            }
+
             this.modal.find('input, select').val('');
             this.modal.modal();
         },

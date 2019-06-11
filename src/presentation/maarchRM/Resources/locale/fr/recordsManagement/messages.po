@@ -369,6 +369,9 @@ msgstr "Demander le transfert"
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
 
+msgid "Request a modification"
+msgstr "Demander une modification"
+
 msgid "Edit access rule"
 msgstr "Modifier la règle de communicabilité"
 
@@ -985,6 +988,9 @@ msgstr "Demande de restitution"
 
 msgid "ArchiveDestructionRequest"
 msgstr "Demande d'élimination"
+
+msgid "ArchiveModificationRequest"
+msgstr "Demande de modification"
 
 msgid "Rule name"
 msgstr "Nom de la règle"

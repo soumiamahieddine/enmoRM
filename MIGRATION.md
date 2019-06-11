@@ -306,7 +306,167 @@ descriptionSchemes = "{
   }
 }"
 ```
+## Regroupement Socle + ThirdPartyArchiving
 
+Rapatriement de la configuration de l'extension thirdPartyArchiving dans le socle.
+
+Création d'une nouvelle section `[medona]`
+
+```
+[medona]
+; Enable or disable the transaction mode
+; true = Enable
+; false = Disable
+transaction = false
+
+messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
+autoValidateSize = 2147000
+
+;packageSchemas = "{
+;    'seda' : {
+;         'label' : 'Seda 1',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v1.0',
+;         'phpNamespace' : 'seda'
+;    },
+;    'seda2' : {
+;         'label' : 'Seda 2',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v2.0',
+;         'phpNamespace' : 'seda2'
+;    }
+;}"
+
+; Array of task to remove medona message directories
+; 'type' is an array of medona message type
+; 'status' is an array of medona message status
+; 'delay' is the difference with the current date
+;removeMessageTask = "{
+;    'task1' : {
+;        'type' : ['ArchiveTransfer', 'ArchiveTransferReply'],
+;        'status' : ['processed'],
+;        'delay' : '-P1Y'
+;    },
+;    'task2' : {
+;        'type' : ['ArchiveModificationNotification'],
+;        'status' : ['sent'],
+;        'delay' : '-P6M'
+;    }
+;}"
+
+menu = "[
+   {
+       'label' : 'Transferts entrants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-in fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Importer un bordereau',
+               'href'  : '/transfer'
+           },
+           {
+               'label' : 'Transferts en attente de traitement',
+               'href'  : '/transfer/sent'
+           },
+           {
+               'label' : 'Transferts à traiter',
+               'href'  : '/transfer/received'
+           },
+           {
+               'label' : 'Historique de transfert',
+               'href'  : '/transfer/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Communication',
+       'href'  : '#',
+       'class' : 'fa fa-share fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes d\'autorisation',
+               'href'  : '/delivery/Authorizationrequest'
+           },
+           {
+               'label' : 'Communications à valider',
+               'href'  : '/delivery/request'
+           },
+           {
+               'label' : 'Communications à récupérer',
+               'href'  : '/delivery/list'
+           },
+           {
+               'label' : 'Historique de communication',
+               'href'  : '/delivery/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Restitution',
+       'href'  : '#',
+       'class' : 'fa fa-reply fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes à valider',
+               'href'  : '/restitution/Requestvalidation'
+           },
+           {
+               'label' : 'Restitutions à récupérer',
+               'href'  : '/restitution/validation'
+           },
+           {
+               'label' : 'Restitutions à finaliser',
+               'href'  : '/restitution/process'
+           },
+           {
+               'label' : 'Historique de restitution',
+               'href'  : '/restitution/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Élimination',
+       'href'  : '#',
+       'class' : 'fa fa-remove fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes d\'autorisation',
+               'href'  : '/destruction/Authorizationrequests'
+           },
+           {
+               'label' : 'Demandes à valider',
+               'href'  : '/destruction/processlist'
+           },
+           {
+               'label' : 'Historique d\'élimination',
+               'href'  : '/destruction/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Transferts sortants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-out fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Transferts à acquitter',
+               'href'  : '/outgoingTransfer/received'
+           },
+           {
+               'label' : 'Transferts à finaliser',
+               'href'  : '/outgoingTransfer/Process'
+           },
+           {
+               'label' : 'Historique de transfert',
+               'href'  : '/outgoingTransfer/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Notifications',
+       'href'  : '/notifications',
+       'class' : 'fa fa-bell-o fa-fw'
+   }
+]"
+```
 ## SQL
 
 Voir le fichier spécifique

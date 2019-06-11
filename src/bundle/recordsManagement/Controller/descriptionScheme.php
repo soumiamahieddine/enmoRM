@@ -35,9 +35,13 @@ class descriptionScheme
      *
      * @return void
      */
-    public function __construct($descriptionSchemes)
+    public function __construct($descriptionSchemes = [])
     {
-        $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
+        if (is_object($descriptionSchemes)) {
+            $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
+        } elseif (is_array($descriptionSchemes)) {
+            $this->descriptionSchemes = $descriptionSchemes;
+        }
     }
 
     /**

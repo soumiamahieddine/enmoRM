@@ -1,0 +1,645 @@
+<div id="contain" >
+    <div data-form-ns="archivalAgreement" class="dataForm" data-translate-catalog="medona/archivalAgreement">
+        <div class="container-fluid">
+            <div class="page-header">
+                <?merge archivalAgreement.archivalAgreementId.ifeq('') ?>
+                <h1>
+                    <i class="fa fa-briefcase"></i>
+                    New archival agreement
+                </h1>
+                <?merge archivalAgreement.archivalAgreementId.ifne('') ?>
+                <h1>
+                    <i class="fa fa-briefcase"></i>
+                    Edit an archival agreement<small>&nbsp;<?merge archivalAgreement.reference ?></small>
+                </h1>
+            </div>
+        </div>
+        <div class="container-fluid  panel-body">
+            <?merge archivalAgreement ?>
+            <form class="form-horizontal container-fluid">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="control-label">Reference <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Name <span style="color:red">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name"/>
+                        </div>
+                    </div>
+                    <div class=" col-md-offset-1 col-md-5">
+                        <div class="form-group">
+                            <label class="control-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" placeholder="Description"></textarea>
+                        </div>
+                        <div class="col-md-10 form-group">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="enabled" id="enabled" data-toggle="toggle"/>&nbsp;Enabled
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li role="presentation" class="active"><a href="#archivalAgreementInfo" aria-controls="home" role="tab" data-toggle="tab">Information</a></li>
+                        <li role="presentation"><a href="#archivalAgreementOriginator" aria-controls="home" role="tab" data-toggle="tab">Originator</a></li>
+                        <li role="presentation"><a href="#archivalAgreementRules" aria-controls="profile" role="tab" data-toggle="tab">Rules</a></li>
+                        <li role="presentation"><a href="#archivalAgreementFormat" aria-controls="messages" role="tab" data-toggle="tab">Format</a></li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content well">
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <!-- Information -->
+                                <div role="tabpanel" class="tab-pane fade in active" id="archivalAgreementInfo">
+                                    <input type="hidden" id="archivalAgreementId" name="archivalAgreementId"/>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label class="control-label" for="archiverOrgRegNumber">Archiver name <span style="color:red">*</span></label>
+                                            <select class="form-control" id="archiverOrgRegNumber" name="archiverOrgRegNumber">
+                                                <option value="">Select an archiver</option>
+                                                <?merge archivers ?>
+                                                <optgroup label="[?merge .orgName ?]">
+                                                    <?merge .archivers ?>
+                                                    <option value="[?merge .registrationNumber ?]"><?merge .orgName ?></option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="depositorOrgRegNumber">Depositor name <span style="color:red">*</span></label>
+                                            <select class="form-control" id="depositorOrgRegNumber" name="depositorOrgRegNumber">
+                                                <option value="">Select a depositor</option>
+                                                <?merge depositors ?>
+                                                <optgroup label="[?merge .orgName ?]">
+                                                    <?merge .depositors?>
+                                                    <option value="[?merge .registrationNumber ?]"><?merge .orgName?></option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Begin date</label>
+                                            <input type="text" class="form-control datePicker" id="beginDate" name="beginDate" placeholder="Begin date"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">End date</label>
+                                            <input type="text" class="form-control datePicker" id="endDate" name="endDate" placeholder="End date"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-offset-1 col-md-5">
+                                        <div class="form-group">
+                                            <label class="control-label" for="archivalProfileReference">Archival profile</label>
+                                            <select class="form-control" id="archivalProfileReference" name="archivalProfileReference">
+                                                <option value="">Select an archival profile</option>
+                                                <?merge archivalProfiles ?>
+                                                <option value="[?merge .reference ?]"><?merge .reference ?></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label" for="serviceLevelReference">Service level <span style="color:red">*</span></label>
+                                            <select class="form-control" id="serviceLevelReference" name="serviceLevelReference">
+                                                <option value="" data-control="" data-clusterName="">Select a service level</option>
+                                                <?merge serviceLevels ?>
+                                                <option value="[?merge .reference ?]" data-control="[?merge .control ?]" data-clusterName="[?merge .clusterName ?]"><?merge .reference ?></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group ">
+                                             <div class=" clearfix">
+                                                <div class=" clearfix">
+                                                    <label class="control-label" id="table-clusterName">Cluster<span> : </span></span><span id="clusterName"></span></label>
+                                                    <ul class="list-group" id="validationList">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Producteur -->
+                                <div role="tabpanel" class="tab-pane fade" id="archivalAgreementOriginator" data-orgId-checked="[?merge archivalAgreement.originatorOrgIds ?]">
+                                    <div id="allOriginator">
+                                        <div class="panel-group" id="productor" role="tablist" aria-multiselectable="true">
+                                            <?merge originators ?>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading" role="tab">
+                                                    <h4 class="panel-title">
+                                                        <div class="btn-group" data-toggle="buttons">
+                                                            <label class="btn btn-xs btn-default selectAll [?merge .allChecked.then('btn-success active','') ?]" title="All">
+                                                                <input type="radio" name="selectAll" value='[?merge .orgName ?]/*'/> All
+                                                            </label>
+                                                            <label class="btn btn-xs btn-default selectNone [?merge .allUnChecked.then('btn-danger','') ?]" title="None">
+                                                                <input type="radio" name="selectNone" value="false"> None
+                                                            </label>
+                                                        </div>
+
+                                                        <a data-translate-context="userStoryGroup" data-toggle="collapse" data-parent="#orginator" href="#[?merge .registrationNumber ?]_originator" aria-expanded="false" aria-controls="[?merge .registrationNumber ?]_originator" >
+                                                            <?merge .orgName?>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="[?merge .registrationNumber ?]_originator" class="panel-collapse collapse "role="tabpanel">
+                                                    <div class="panel-body">
+                                                        <ul class="list-group">
+                                                            <?merge .originators ?>
+                                                            <li class="list-group-item">
+                                                                <div class="btn-group" data-toggle="buttons" >
+                                                                    <label class="userStory btn btn-xs btn-toggle [?merge .serviceChecked.then('btn-success active', 'btn-danger') ?]" title="On / Off">
+                                                                        <?merge .serviceChecked @checked ?>
+                                                                        <input type="checkbox" class="userStoryRadioBtn" value='[?merge .orgId ?]' name="originatorOrgId"/><span class="label"><?merge .serviceChecked.then("On" , "Off") ?></span>
+                                                                    </label>
+                                                                </div>
+                                                                <span><?merge .orgName ?></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Rules -->
+                                <div role="tabpanel" class="tab-pane fade" id="archivalAgreementRules">
+                                    <div class="col-md-6">
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size of archives for the agreement</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeAgreement" name="maxSizeAgreement" placeholder="Max size of archives for the agreement"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size of archives per year</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeYear" name="maxSizeYear" placeholder="Max size of archives per year"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size of archives per month</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeMonth" name="maxSizeMonth" placeholder="Max size of archives per month"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size of archives per week</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeWeek" name="maxSizeWeek" placeholder="Max size of archives per week"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size of archives per day</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeDay" name="maxSizeDay" placeholder="Max size of archives per day"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label class="control-label">Max size per transfer</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="maxSizeTransfer" name="maxSizeTransfer" placeholder="Max size per transfer"/>
+                                                <span class="input-group-addon">Mbytes</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10 form-group">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="signed" id="signed" data-toggle="toggle"/>&nbsp;Presence of signing
+                                            </label>
+                                        </div>
+                                        <div class="col-md-10 form-group">
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="autoTransferAcceptance" id="autoTransferAcceptance" data-toggle="toggle"/>&nbsp;Automatic transfer acceptance
+                                           </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Formats -->
+                                <div role="tabpanel" class="tab-pane fade" id="archivalAgreementFormat">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label">List of allowed file formats</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="formatTypeahead" placeholder="File format" data-puids='[]'/>
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-success disabled" id="addFormat"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="col-md-offset-2">
+                                            <ul class="list-group" id="formatList">
+                                                <?merge archivalAgreement.allowedFormats.bool() ?>
+                                                <div>
+                                                    <?merge archivalAgreement.allowedFormats ?>
+                                                    <li class="list-group-item" data-puid="[?merge .puid ?]">
+                                                        [<?merge .puid ?>] <?merge .name ?><?merge .version.bool() ?><span> - <?merge .version ?></span>
+                                                        <a href="#" class="pull-right removeFormat">
+                                                            <i class="fa fa-times">&nbsp;</i>
+                                                        </a>
+                                                    </li>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="clearfix">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-warning" data-cancel="" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                        <?merge archivalAgreement.archivalAgreementId.ifne('') ?>
+                        <button type="button" id="save" class="btn btn-success" title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+                        <?merge archivalAgreement.archivalAgreementId.ifeq('') ?>
+                        <button type="button" id="add" class="btn btn-success" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
+                    </div>
+                </div>
+
+                <span class='hide' id="referenceError_txt">The reference is empty.</span>
+                <span class='hide' id="nameError_txt">The name is empty.</span>
+                <span class='hide' id="archiverError_txt">The archiver is not selected.</span>
+                <span class='hide' id="depositorError_txt">The depositor is not selected.</span>
+                <span class='hide' id="originatorError_txt">No originator selected.</span>
+                <span class='hide' id="beginDateError_txt">The begin date is empty.</span>
+                <span class='hide' id="endDateError_txt">The end date is empty.</span>
+                <span class='hide' id="empty_text">The fields with a star are required.</span>
+                <span class='hide' id="validationNull_txt">No validation activated</span>
+
+                <span class='hide' id="formatDetection_txt">Format detection</span>
+                <span class='hide' id="formatValidation_txt">Format validation</span>
+                <span class='hide' id="virusCheck_txt">Virus check</span>
+                <span class='hide' id="convertOnDeposit_txt">Convert on deposit</span>
+                <span class='hide' id="logConsultation_txt">Log the consultations</span>
+                <span class='hide' id="fullTextIndexation_txt">Full text indexation</span>
+
+                <span class='hide' id="mediaInfo_txt">Media info</span>
+                <span class='hide' id="noFormatFound">No format found</span>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('input[type=checkbox][data-toggle=toggle]').bootstrapToggle()
+    })
+
+    window.localStorage.clear();
+
+    $('#serviceLevelReference').on('change', function () {
+        changeServiceLevelTable();
+    });
+
+    $('[data-cancel]').on('click', function () {
+        load("/medona/archivalAgreements");
+    });
+ //typeahead
+    $(document).ready(function () {
+        changeServiceLevelTable();
+        var arrayChecked = $("#archivalAgreementOriginator").attr("data-orgId-checked");
+
+        if (arrayChecked){
+            arrayChecked = arrayChecked.split(' ');
+            $.each(arrayChecked, function (index, element) {
+                $("#allServices").find("input:checkbox").each(function () {
+                    if (element == $(this).val()) {
+                        $(this).click();
+                    }
+                });
+            });
+        }
+
+        var typesSource = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('puid'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                wildcard: '%QUERY',
+                url: '/digitalResource/format/find/%QUERY',
+                rateLimitWait: 500,
+                transform: function(response) {
+                    return response;
+                }
+            },
+            limit: 100
+        });
+
+        // initialize typeahead
+        $('#formatTypeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+        // data source contacts
+        {
+            name: 'format',
+            templates: {
+                empty: function () {
+                    return "<span class='well well-sm'>" + $('#noFormatFound').text() + "</span>";
+                },
+                suggestion: function (type) {
+                    var displayName = '[' + type.puid + '] ' + type.name;
+                    if (type.version != undefined) {
+                        displayName += ' ' + type.version;
+                    }
+                    var display = "<span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + displayName
+                            + "</span></span><br>";
+                    return display;
+                }
+            },
+            display: 'name',
+            source: typesSource
+        }).on('typeahead:selected', function ($event, suggestion, source) {
+            $("#formatTypeahead").data('format', suggestion);
+            $('#addFormat').removeClass('disabled');
+        });
+    });
+
+//add format
+    $("#contain").on('click', '#addFormat', function () {
+        var input = $('#formatTypeahead');
+        var format = input.data('format');
+        input.removeData('format').val('');
+
+        addFormatToList(format);
+        $(this).addClass('disabled');
+
+    })
+
+//remove format
+    $("#contain").on('click', '.removeFormat', function () {
+        $(this).closest('li').remove();
+    })
+
+//Update
+    $("#contain").on('click', '#save', function () {
+        var archivalAgreement = serialize();
+
+        if (!archivalAgreement) {
+            return;
+        }
+
+        ajax($(this), {
+            url: '/medona/archivalAgreement',
+            type: 'PUT',
+            data: JSON.stringify({archivalAgreement: archivalAgreement}),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load("/medona/archivalAgreements");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    });
+    //Add
+    $("#contain").on('click', '#add', function () {
+        var archivalAgreement = serialize();
+
+        if (!archivalAgreement) {
+            return;
+        }
+
+        ajax($(this), {
+            url: '/medona/archivalAgreement',
+            type: 'POST',
+            data: JSON.stringify({archivalAgreement: archivalAgreement}),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                if (response.status) {
+                    load("/medona/archivalAgreements");
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
+    });
+    
+    function changeServiceLevelTable () {
+        var selection = $('#serviceLevelReference').find('option:selected');
+        var clusterName = selection.data('clustername');
+        var serviceControls = selection.data('control');
+        var list = $('#validationList');
+        
+        $("#clusterName").text(clusterName);
+        list.empty();
+        $("#table-clusterName").addClass('hide');
+
+        if (!serviceControls) {
+            serviceControls = [];
+            if (clusterName != "") {
+                var li = $('<li/>').addClass('list-group-item').text($("#validationNull_txt").text());
+                var i = $('<i/>').addClass('fa fa-remove text-danger pull-right').appendTo(li);
+
+                li.appendTo(list);
+                $("#table-clusterName").removeClass('hide');
+            }
+        } else {
+            serviceControls = serviceControls.split(' ');
+            $("#table-clusterName").removeClass('hide');
+        }
+        
+        //$("#table-clusterName").text(clusterName);
+
+        $.each(serviceControls, function (index, element) {
+            var li = $('<li/>').addClass('list-group-item').text($("#"+ element + "_txt").text());
+            var i = $('<i/>').addClass('fa fa-check text-success pull-right').appendTo(li);
+
+            li.appendTo(list);
+        }); 
+    }
+    
+    function boundFormats() {
+        return $('#formatList').find('li').map(function () {
+            return $(this).attr('data-puid');
+        }).get();
+    }
+
+    function serialize() {
+        var allowedFormats = boundFormats().join(' ');
+
+        serializedObject = {
+            archivalAgreementId: $('#archivalAgreementId').val(),
+            
+            reference: $('#reference').val(),
+            name: $('#name').val(),
+            description: $('#description').val(),
+            enabled : false,
+            
+            archivalProfileReference: $('#archivalProfileReference').val(),
+            serviceLevelReference: $('#serviceLevelReference').val(),
+            archiverOrgRegNumber: $('#archiverOrgRegNumber').val(),
+            depositorOrgRegNumber: $('#depositorOrgRegNumber').val(),
+            beginDate: $('#beginDate').val(),
+            endDate: $('#endDate').val(),
+            
+            originatorOrgIds: [],
+            
+            maxSizeAgreement: $('#maxSizeAgreement').val(),
+            maxSizeYear: $('#maxSizeYear').val(),
+            maxSizeMonth: $('#maxSizeMonth').val(),
+            maxSizeWeek: $('#maxSizeWeek').val(),
+            maxSizeDay: $('#maxSizeDay').val(),
+            maxSizeTransfer: $('#maxSizeTransfer').val(),
+            signed: false,
+            autoTransferAcceptance: false,
+            processSmallArchive: false,
+            
+            allowedFormats: allowedFormats
+        };
+
+        $("input:checkbox[name=originatorOrgId]:checked").each(function(){
+            serializedObject.originatorOrgIds.push($(this).val());
+        });
+
+        if ($('#enabled').prop('checked')) {
+            serializedObject.enabled = true;
+        }
+        if ($('#signed').prop('checked')) {
+            serializedObject.signed = true;
+        }
+        if ($('#autoTransferAcceptance').prop('checked')) {
+            serializedObject.autoTransferAcceptance = true;
+        }
+        
+        if(serializedObject.reference == "" 
+                || serializedObject.name == "" 
+                || serializedObject.archiverOrgRegNumber == "" 
+                || serializedObject.depositorOrgRegNumber == ""
+                || serializedObject.serviceLevelReference == "") {
+            gritter.show($('#empty_text').text(), false);
+            return;
+        }
+        return serializedObject;
+    }
+
+    function addFormatToList(format) {
+        /*var puids = $("#formatTypeahead").data('puids');
+         puids.push(format.puid);
+         $("#formatTypeahead").data('puids', puids).val('');*/
+
+        var list = $('#formatList');
+        var display = '[' + format['puid'] + '] ' + format['name'];
+        if (format['version']) {
+            display += ' ' + format['version'];
+        }
+        var li = $('<li/>').addClass('list-group-item').attr('data-puid', format.puid).text(display);
+        var span = $('<span/>').addClass('pull-right').appendTo(li);
+        var a = $('<a/>').attr('onclick', 'load(\'#\')').addClass('pull-right removeFormat').appendTo(span)
+        var i = $('<i/>').addClass('fa fa-times').appendTo(a);
+
+        li.appendTo(list);
+    }
+
+    $('#productor').on('click', '.selectAll', function() {
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        selectAllServices($(this), false);
+    })
+
+    $('#productor').on('click', '.selectNone', function() {
+        if ($(this).hasClass('.active')) {
+            return;
+        }
+        unselectAllServices($(this), false);
+
+    })
+
+
+    function selectAllServices(btn, btnOnly) {
+        btn.addClass('btn-success active')
+            .removeClass('btn-default')
+            .closest('.btn-group')
+            .find('.selectNone')
+            .addClass('btn-default')
+            .removeClass('btn-danger active')
+
+        if (btnOnly === false) {
+            btn.closest('.panel')
+                .find('.userStory')
+                .not('.active')
+                .click();
+        }
+    }
+
+    function unselectAllServices(btn, btnOnly) {
+        btn.addClass('btn-danger active')
+            .removeClass('btn-default')
+            .closest('.btn-group')
+            .find('.selectAll')
+            .addClass('btn-default')
+            .removeClass('btn-success active')
+
+        if (btnOnly === false) {
+            btn.closest('.panel')
+                .find('.userStory.active')
+                .click();
+        }
+    }
+
+    function selectServices(panel, ajusment) {
+        var title = panel.find('.panel-title');
+        var inputs = panel.find('.panel-body').find('input');
+        var inputsTotalNumber = inputs.length;
+        var inputsUncheckedNumber = inputs.not(':checked').length;
+
+        if(ajusment == "selected") {
+            inputsUncheckedNumber--;
+        } else if (ajusment == "unselected") {
+            inputsUncheckedNumber++;
+        }
+
+        if (inputsUncheckedNumber == 0)  {
+            selectAllServices(title.find('.selectAll'));
+        } else if (inputsUncheckedNumber == inputsTotalNumber) {
+            unselectAllServices(title.find('.selectNone'));
+        } else {
+            title.find('.selectAll, .selectNone')
+                .addClass('btn-default')
+                .removeClass('btn-danger btn-success active')
+                .find('input')
+                .prop('checked', false);
+        }
+    }
+
+    $("#contain").on('click', '.userStory', function() {
+        var btn = $(this);
+
+        if(btn.hasClass('active')) {
+            btn.addClass('btn-danger')
+                .removeClass('btn-success')
+                .find('.label')
+                .text('Off');
+            selectServices(btn.closest('.panel'), "unselected");
+            if ($("#superadmin").is(':checked')) {
+                $('#superadmin').closest('.toggle').click();
+            }
+        } else {
+            btn.addClass('btn-success')
+                .removeClass('btn-danger')
+                .find('.label')
+                .text("On");
+            selectServices(btn.closest('.panel'), "selected");
+        }
+    })
+
+</script>

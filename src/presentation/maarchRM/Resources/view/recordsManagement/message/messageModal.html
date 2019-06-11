@@ -1,0 +1,143 @@
+<div id="messageModal" lang="en" data-translate-catalog="medona/messages">
+    <div class="container-fluid">
+        <div class="modal-header">
+            <?merge messages[0] $message ?>
+            <?hinclude /recordsManagement/message/messageHead.html ?>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active">
+                        <a href="#messageDetailTab" data-toggle="tab">Détail</a>
+                    </li>
+                    <li>
+                        <a href="#messageLifeCycleTab" data-toggle="tab">Historique</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="messageDetailTab">
+                        <br>
+                        <?merge messages $messages ?>
+                        <?hinclude recordsManagement/message/message.html ?>
+                    </div>
+                    <div class="tab-pane" id="messageLifeCycleTab" style="padding:14px">
+                        <?merge messages[0].lifeCycleEvent $lifeCycleEvent ?>
+                        <?hinclude recordsManagement/message/lifeCycle.html ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Data objects -->
+<script type="text/javascript">
+    $('#messageModal').on('click', ".messageActionReject", function() {
+        var str = $(this).data('action');
+        var res = str.split("/");
+
+        loadReject(res[2],str);
+    });
+    
+    $('#messageModal').on('click', ".messageActionValidation", function() {
+        var parameters = {
+            messageAction: $(this).data('action')
+        };
+        
+        
+        var res = parameters.messageAction.split("/");
+        var last = res.pop();
+        
+        if ( last == "Acknowledge") {
+            $('#confirmationModal').find('.modal-body').html($('#acknowledge_text').html());
+            $('#confirmationModal').find('.modal-title').html($('#restitutionTitle_text').html());
+        } else if (last == "Accept") {
+            $('#confirmationModal').find('.modal-body').html($('#validation_text').html());
+            $('#confirmationModal').find('.modal-title').html($('#restitutionTitle_text').html());
+        } else {
+            $('#confirmationModal').find('.modal-body').html($('#destroy_text').html());
+            $('#confirmationModal').find('.modal-title').html($('#destructionTitle_text').html());
+        }
+        $('#confirmationModal').modal();
+        
+        $('#confirmDelete').one('click', function(){
+                $.ajax({
+                    url         : parameters.messageAction,
+                    type        : 'PUT',
+                    contentType : "application/json",
+                    data        : JSON.stringify(parameters),
+                    dataType    :'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors)
+                        $('#infoModal').modal("hide");
+                        $('#infoModal').one('hidden.bs.modal', function() {
+                            trigger('reload.medonaMenu');
+                        });
+                    },
+                    error       : function(response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                });
+        });
+    });
+    
+    $('#messageModal').on('click', ".messageAction", function() {
+        var parameters = {
+            messageAction: $(this).data('action')
+        };
+
+        ajax($(this), {
+            url         : $(this).data('action'),
+            type        : 'PUT',
+            contentType : "application/json",
+            data        : JSON.stringify(parameters),
+            dataType    :'json',
+            success     : function (response) {
+                gritter.show(response.message, response.status, response.errors);
+                $('#infoModal').modal("hide");
+                $('#infoModal').one('hidden.bs.modal', function() {
+                    trigger('reload.medonaMenu');
+                });
+            },
+            error       : function(response) {
+                $('#infoModal').modal("hide");
+                $('#infoModal').one('hidden.bs.modal', function() {
+                    trigger('reload.medonaMenu');
+                });
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    $('#messageModal').on('click', ".messageExport", function() {
+        var messageAction = $(this).data('action');
+
+        window.open(messageAction,'_blank');
+        
+        $('#infoModal').modal("hide");
+        $('#infoModal').one('hidden.bs.modal', function() {
+            trigger('reload.medonaMenu');
+        });
+    });
+    
+    $('#messageModal').on('click', ".archiveDescription", function() {
+        $.ajax({
+            type: "GET",
+            url: "/recordsManagement/archiveDescription/" + $(this).data('archiveid'),
+            dataType: 'html',
+            success: function (response) {
+                $('#modalContainerInfo').html(response);
+                $('#viewModalInfo').modal();
+            }
+        });
+    });
+
+    // Show life cycle event
+    $("#messageModal").on('click', '.showEvent', function () {
+        eventInfo.load($(this).data('eventid'));
+    });
+    
+</script>

@@ -1,0 +1,92 @@
+<div class="row" style="padding:20px">
+    <h4>
+        <strong>
+            <span>Identifier</span> : </strong>
+        <?merge .messageId ?>
+    </h4>
+    <h4>
+        <strong>
+            <span>Date</span> : </strong>
+        <?merge .date ?>
+    </h4>
+    <h4>
+        <strong>
+            <span>Reference</span> : </strong>
+        <?merge .messageIdentifier.value ?>
+    </h4>
+    <?merge .replyCode.bool() ?>
+    <h4>
+        <strong>
+            <span>Reply code</span> : </strong>
+        <?merge .replyCode.value ?>&nbsp;<?merge .replyCode.name ?>
+    </h4>
+    <?merge .object.comment.bool() ?>
+    <h4>
+        <strong>
+            <span>Comment</span> : </strong>
+        <ul>
+            <?merge .object.comment ?><li><?merge . ?></li>
+            <?merge .comment ?><li><?merge . ?></li>
+        </ul>
+    </h4>
+    
+    <?merge .comment.bool() ?>
+    <h4>
+        <strong>
+            <span>Comment</span> : </strong>
+        <span><?merge .comment ?></span>
+    </h4>
+</div>
+
+<div class="container-fluid">
+    <div class="row" data-translate-catalog="organization/messages" >
+        <?merge .archivalAgency.bool() ?>
+        <div class="col-xs-6" >
+            <?merge .archivalAgency $organization ?>
+            <?merge 'Archival agency' $rolename ?>
+            <?hinclude medona/message/organization.html ?>
+        </div>
+        <?merge .transferringAgency.bool() ?>
+        <div class="col-xs-6" >
+            <?merge .transferringAgency $organization ?>
+            <?merge 'Service Versant' $rolename ?>
+            <?hinclude medona/message/organization.html ?>
+        </div>
+        <?merge .controlAuthority.bool() ?>
+        <div class="col-xs-6" >
+            <?merge .controlAuthority $organization ?>
+            <?merge 'Service de contrôle' $rolename ?>
+            <?hinclude medona/message/organization.html ?>
+        </div>
+        <?merge .originatingAgency.bool() ?>
+        <div class="col-xs-6" >
+            <?merge .originatingAgency $organization ?>
+            <?merge 'Service producteur' $rolename ?>
+            <?hinclude medona/message/organization.html ?>
+        </div>
+        <?merge .requester.bool() ?>
+        <div class="col-xs-6">
+            <?merge .requester $organization ?>
+            <?merge 'Demandeur' $rolename ?>
+            <?hinclude medona/message/organization.html ?>
+        </div>
+        <?merge .dataObjectPackage.managementMetadata.bool() ?>
+        <div class="col-xs-12" >
+            <?merge .dataObjectPackage.managementMetadata $managementMetadata ?>
+            <?hinclude /medona/message/messageManagementMetadata.html ?>
+        </div>
+    </div>
+</div>
+<?merge .bool().not() ?>
+<?hinclude /medona/message/authorization.html ?>
+<br/>
+
+<?merge .unitIdentifier.bool() ?>
+<span>
+    <?merge .unitIdentifier $unitIdentifier ?>
+    <?hinclude /medona/message/unitIdentifier.html ?>
+</span>
+<?merge .dataObjectPackage.descriptiveMetadata.bool() ?>
+<span id="descriptiveMetadata">
+    <?merge .dataObjectPackage.descriptiveMetadata $descriptiveMetadata ?>
+</span>
