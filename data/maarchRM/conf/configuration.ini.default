@@ -107,15 +107,15 @@ translationLogType = "{
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
-descriptionSchemes = "{
-   'seda2' : {
-       'label' : 'SEDA 2',
-       'type' : 'php',
-       'uri' : 'seda2/Content',
-       'controller' : '',
-       'presenter' : ''
-   }
-}"
+;descriptionSchemes = "{
+;   'seda2/Content' : {
+;       'label' : 'SEDA 2',
+;       'type' : 'php',
+;       'uri' : 'seda2/Content',
+;       'controller' : '',
+;       'presenter' : ''
+;   }
+;}"
 
 [audit]
 ; Send notifications on audit event

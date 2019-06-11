@@ -248,12 +248,7 @@ Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
 
-# Migration 2.4 vers 2.5
-
-## Données descriptives
-
-Ajout de la possibilité de choisir des clés valeurs pour les champs de description de type énumération pour les données descriptives.
-Les valeurs déjà renseignés apparaissent dans le champ identifiant de la liste d'énumération. Il est désormais possible de rajouter un label pour chaque identifiant. Si un label est renseigné pour un champ, alors un label doit être renseigné pour tous les identifiants déja renseignés de la liste, dans le cas contraire, le système renverra une erreur.
+# Migration 2.4 vers 2.5 
 
 ## Présentation et fonctionnalités orientées "archives publiques"
 
@@ -303,16 +298,18 @@ de configuration qui fournit :
 ```
 descriptionSchemes = "{
   'seda2' : {
-    'label' : 'SEDA 2',
+    'name' : 'SEDA 2',
     'type' : 'php',
     'uri' : 'seda2/Content',
     'controller' : '',
-    'search' : '',
     'presenter' : ''
   }
 }"
 ```
 ## Regroupement Socle + ThirdPartyArchiving
+
+Rapatriement de la configuration de l'extension thirdPartyArchiving dans le socle.
+
 Création d'une nouvelle section `[medona]`
 
 ```
@@ -471,6 +468,10 @@ menu = "[
 ]"
 ```
 ## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.4_V2.5.sql
 
 ## Branchement de listes externes
 Un nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser
