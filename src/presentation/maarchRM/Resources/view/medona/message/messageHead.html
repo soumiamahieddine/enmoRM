@@ -25,6 +25,8 @@
         <button type="button" class="btn btn-success messageActionValidation" data-action="[?merge $message.acceptWarningButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
         <?merge $message.rejectButton.bool() ?>
         <button type="button" class="btn btn-danger messageActionReject" data-action="[?merge $message.rejectButton ?]" title="Reject"><i class="fa fa-times">&nbsp;</i>Reject</button>
+        <?merge $message.acceptWithCommentButton.bool() ?>
+        <button type="button" class="btn btn-success messageActionAcceptWithComment" data-action="[?merge $message.acceptWithCommentButton ?]" title="Accept"><i class="fa fa-check">&nbsp;</i>Accept</button>
         <?merge $message.validateButton.bool() ?>
         <button type="button" class="btn btn-success messageAction" data-action="[?merge $message.validateButton ?]" title="Validate" ><i class="fa fa-check">&nbsp;</i>Validate</button>
         <?merge $message.validationButton.bool() ?>

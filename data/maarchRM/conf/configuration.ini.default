@@ -283,10 +283,25 @@ menu = "[
        ]
    },
    {
+        'label' : 'Demandes de modification',
+        'href'  : '#',
+        'class' : 'fa fa-sign-out fa-fw',
+        'submenu' : [
+            {
+                'label' : 'Demandes à traiter',
+                'href'  : '/modificationrequest/list'
+            },
+            {
+                'label' : 'Historique des demandes',
+                'href'  : '/modificationrequest/history'
+            }
+        ]
+    },
+    {
        'label' : 'Notifications',
        'href'  : '/notifications',
        'class' : 'fa fa-bell-o fa-fw'
-   }
+    }
 ]"
 
 [auth]

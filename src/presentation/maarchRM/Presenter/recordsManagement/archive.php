@@ -57,6 +57,8 @@ class archive
         $this->translator->setCatalog('recordsManagement/messages');
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+
+        $this->transaction = isset(\laabs::configuration("medona")["transaction"]) && \laabs::configuration("medona")["transaction"];
     }
 
     /**
@@ -119,8 +121,6 @@ class archive
         $this->view->addContentFile("recordsManagement/archive/resultList.html");
 
         $this->view->translate();
-
-        $transaction = \laabs::configuration("medona")["transaction"];
 
         //access code selector
         $accessRuleController = \laabs::newController('recordsManagement/accessRule');
@@ -205,7 +205,7 @@ class archive
         $this->view->setSource("accessRules", $accessRules);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
-        $this->view->setSource('transaction', $transaction);
+        $this->view->setSource('transaction', $this->transaction);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -1242,9 +1242,10 @@ class archive
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
-        $hasRestitutionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
-        $hasDeliveryPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "delivery/deliveryRequest");
-        $hasTransferPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "definitiveTransfer/transferSending");
+        $hasRestitutionPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
+        $hasDeliveryPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "delivery/deliveryRequest");
+        $hasTransferPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "definitiveTransfer/transferSending");
+        $hasModificationRequestPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modificationRequestSend");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
@@ -1252,6 +1253,7 @@ class archive
         $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);
         $this->view->setSource('hasDeliveryPrivilege', $hasDeliveryPrivilege);
         $this->view->setSource('hasTransferPrivilege', $hasTransferPrivilege);
+        $this->view->setSource('hasModificationRequestPrivilege', $hasModificationRequestPrivilege);
     }
 
     /**

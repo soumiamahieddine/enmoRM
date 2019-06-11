@@ -199,7 +199,7 @@ class message
             $registrationNumber = array($organization->registrationNumber);
         }
 
-        $messageObjects = $unitIdentifiers = [];
+        $unitIdentifiers = [];
 
         $messages = array($message);
         $baseMessage = reset($messages);
@@ -777,6 +777,13 @@ class message
                         }
                     } elseif ($message->status == "accepted") {
                         $message->processButton = "/restitutionRequest/".$messageId."/process";
+                    }
+                    break;
+
+                case 'ArchiveModificationRequest':
+                    if ($message->status == "received") {
+                        $message->rejectButton = "/modificationRequest/".$messageId."/Reject";
+                        $message->acceptWithCommentButton = "/modificationRequest/".$messageId."/accept";
                     }
                     break;
 

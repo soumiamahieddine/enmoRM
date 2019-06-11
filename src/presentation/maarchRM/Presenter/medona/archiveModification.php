@@ -383,4 +383,31 @@ class archiveModification
 
         return $this->json->save();
     }
+
+    public function modificationRequestSent($message)
+    {
+        $this->json->message = 'Modification request sent';
+        $this->json->message = $this->translator->getText($this->json->message);
+        $this->json->message = sprintf($this->json->message, $message);
+
+        return $this->json->save();
+    }
+
+    public function modificationRequestAccepted()
+    {
+        $this->translator->setCatalog('medona/messages');
+        $this->json->message = 'Modification request accepted';
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
+
+    public function modificationRequestRejected()
+    {
+        $this->translator->setCatalog('medona/messages');
+        $this->json->message = 'Modification request rejected';
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
 }

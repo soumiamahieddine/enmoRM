@@ -5,7 +5,7 @@
         <table class="table table-condensed table-striped table-condensed">
             <tbody>
                 <tr>
-                    <td><strong>Identifiant</strong></td>
+                    <td><strong>Identifier</strong></td>
                     <td><?merge $message.reference ?></td>
                 </tr>
                 <tr>
@@ -26,7 +26,7 @@
                 </tr>
                 <?merge $message.archivalAgreementReference.bool() ?>
                 <tr>
-                    <td><strong>Accords de versement</strong></td>
+                    <td><strong>Archival agreements</strong></td>
                     <td><?merge $message.archivalAgreementReference ?></td>
                 </tr>
                 <tr>
@@ -41,6 +41,17 @@
                 <tr>
                     <td><strong>Size</strong></td>
                     <td><?merge $message.size ?></td>
+                </tr>
+                <?merge $message.comment.bool() ?>
+                <tr>
+                    <td><strong>Comment(s)</strong></td>
+                    <td>
+                        <ul>
+                            <?merge $message.comment ?>
+                            <li><?merge . ?></li>
+                        </ul>
+
+                    </td>
                 </tr>
             </tbody>
         </table>

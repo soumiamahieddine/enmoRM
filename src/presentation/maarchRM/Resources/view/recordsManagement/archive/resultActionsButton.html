@@ -11,6 +11,8 @@
     <li class="divider"></li>
     <?merge hasDeliveryPrivilege.bool() ?>
     <li class="requestDelivery" data-type="requestCommunication"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request of communication</a></li>
+    <?merge hasModificationRequestPrivilege.bool() ?>
+    <li class="requestModification" data-type="requestModification"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request a modification</a></li>
     <?merge hasRestitutionPrivilege.bool() ?>
     <li class="flagForRestitution" data-type="flagForRestitution"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for restitution</a></li>
     <?merge hasDestructionPrivilege.bool() ?>

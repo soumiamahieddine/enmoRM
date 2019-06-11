@@ -157,6 +157,10 @@ class message
         if (!empty($message->data)) {
             $message->object = json_decode($message->data);
         }
+
+        if (!empty($message->comment)) {
+            $message->comment = json_decode($message->comment);
+        }
     }
 
     /**
@@ -307,7 +311,11 @@ class message
                     $clause[] = "type=['ArchiveModificationNotification','ArchiveDestructionNotification','ArchivalProfileModificationNotification']";
                     break;
 
-                default:
+                case "ArchiveModificationRequest":
+                    $clause[] = "type='ArchiveModificationRequest'";
+                    break;
+
+                default :
                     $clause[] = "type= :type AND status !='template'";
                     $queryParams['type'] = $type;
                     break;
@@ -412,13 +420,17 @@ class message
                 $message->data = json_encode($message->object);
             }
 
+            if (is_array($message->comment)) {
+                $message->comment = json_encode($message->comment);
+            }
+
             $this->sdoFactory->create($message, 'medona/message');
 
             if (is_array($message->unitIdentifier)) {
                 foreach ($message->unitIdentifier as $unitIdentifier) {
                     $this->sdoFactory->create($unitIdentifier);
                 }
-            }
+            }           
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -454,6 +466,10 @@ class message
         try {
             if (isset($message->object)) {
                 $message->data = json_encode($message->object);
+            }
+
+            if (isset($message->comment)) {
+                $message->comment = json_encode($message->comment);
             }
 
             $this->sdoFactory->update($message, 'medona/message');

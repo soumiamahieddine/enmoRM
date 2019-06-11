@@ -28,7 +28,7 @@ namespace presentation\maarchRM\Presenter\medona;
  */
 trait archiveNotificationTrait
 {
-     /**
+    /**
      * Show notification history screen
      * @param array $messages Array of message object
      *
@@ -47,6 +47,54 @@ trait archiveNotificationTrait
 
         $this->view->setSource('statuses', $statuses);
         $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Show incoming modification message list
+     * @param array $messages Array of message object
+     *
+     * @return string The view
+     */
+    public function modificationRequestList($messages)
+    {
+        $this->view->addContentFile('medona/archiveNotification/modificationRequestList.html');
+
+        $this->prepareMesageList($messages);
+
+        $title = $this->translator->getText("Modification requests");
+        $this->view->setSource("sender", true);
+        $this->view->setSource("title", $title);
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Show incoming modification message list
+     * @param array $messages Array of message object
+     *
+     * @return string The view
+     */
+    public function modificationRequestHistory($messages)
+    {
+        $this->view->addContentFile('medona/archiveNotification/modificationRequestHistory.html');
+
+        $this->prepareMesageList($messages);
+
+        $this->initHistoryForm();
+
+        $statuses = [
+            'received' => $this->translator->getText('received'),
+            'accepted' => $this->translator->getText('accepted'),
+            'rejected' => $this->translator->getText('rejected'),
+        ];
+
+        $this->view->setSource('statuses', $statuses);
+
+        $title = $this->translator->getText("Modification requests");
+         $this->view->merge();
 
         return $this->view->saveHtml();
     }
