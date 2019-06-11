@@ -83,7 +83,7 @@ class descriptionField
         $facets = new \stdClass();
         foreach ($differences as $property => $value) {
             if (!is_null($value)) {
-                $facets->{$phproperty} = $value;
+                $facets->{$property} = $value;
             }
         }
         $descriptionField->facets = json_encode($facets);
