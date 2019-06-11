@@ -8,7 +8,43 @@
 - `Added` Possiblité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
 - `Added` Possiblité d'ajout de referentiels externes (exemple : CSV, base de données...) pour les données descriptives.
 
-## Version 2.4.2
+### IHM
+
+- `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
+
+## Version 2.4.4 
+
+### IHM
+
+- `Fixed` Retrait de l’affichage des ressources si l'archive est en cours de suppression
+
+### Métadonnées
+
+- `Fixed` Ajout d'un bouton dans la modale de détail de l'archive permettant la conversion unitaire d'un document
+- `Fixed` Rétablissement de l'affichage des fichiers convertis et des relations dans la modale de détails de l'archive
+- `Changed` Différenciation entre le fichier d'origine et ses conversions dans l'arborescence du plan de classement
+
+### Sécurité 
+
+- `Changed` Ajout du paramètre `lifetime` pour le jeton CSRF qui définit la durée de validité des jetons en secondes. Si omis, durée de 1 heure par défaut.
+- `Fixed` Jeton CRSF consommé lorsqu'utilisé. 
+
+## Version 2.4.3 
+
+### Métadonnées
+
+- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation 
+et de communicabilité accepte désormais les caractères numériques en première position, ainsi que les tirets
+- `Changed` Les appels au service de modification de la règle de conservation des archives 
+peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée qui y est associée.
+
+### Exploitation 
+
+- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
+automatique, notamment pour les connexions sans authentification
+
+## Version 2.4.2
+
 
 ### Script d'import
 
