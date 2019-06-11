@@ -41,6 +41,7 @@
     <span id="retentionRule_text">%1$s after %2$s</span>
     <span id="object_header_new_text">Click to add '%1$s'</span>
     <span id="object_header_modify_text">Click to modify '%1$s'</span>
+    <span id="object_required_text">* At least one field must be filled in.</span>
 
     <div data-translate-catalog="dates/dates">
         <span id="days_text">days</span>
@@ -222,11 +223,6 @@ input:invalid {
 
                 case 'object':
                     var field = Metadata.getObjectDiv(descriptionField);
-
-                    // Add title to Collapse
-                    var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
-                    header = field.find(".panel-title").first().find("a");
-                    header.text(objectHeader);
                     break;
 
                 case 'text':
@@ -468,9 +464,18 @@ input:invalid {
             heading.append(title);
 
             var anchor = $('<a role="button" data-toggle="collapse" aria-expanded="true"/>');
+
+            // Add title to Collapse
+            var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
             anchor.attr('href', "#"+id);
-            anchor.text('#');
+            anchor.text(objectHeader);
             title.append(anchor);
+
+            if (descriptionField.required) {
+                var requiredTitle = $("#object_required_text");
+                requiredTitle.css({"font-size":"small", "color":"red", "display":"block"});
+                heading.append(requiredTitle);
+            }
 
             var collapse = $('<div class="panel-collapse collapse">').attr('id', id);
             div.append(collapse);
