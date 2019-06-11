@@ -846,10 +846,6 @@ msgid "isTimestampOf"
 msgstr "Jeton d'horodatage"
 msgctxt "relationship"
 
-msgid "isConversionOf"
-msgstr "Document converti"
-msgctxt "relationship"
-
 msgid "Indexing modification"
 msgstr "Modification de l'index"
 

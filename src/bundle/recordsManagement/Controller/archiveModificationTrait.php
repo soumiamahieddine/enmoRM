@@ -80,6 +80,18 @@ trait archiveModificationTrait
      */
     public function modifyRetentionRule($retentionRule, $archiveIds, $comment = null, $identifier = null)
     {
+        // #10629 Get finalDisposition and duration from ref when empty and code is received
+        if ((empty($retentionRule->finalDisposition) || empty($retentionRule->retentionDuration)) && !empty($retentionRule->retentionRuleCode)) {
+            $refRetentionRule = $this->retentionRuleController->read($retentionRule->retentionRuleCode);
+
+            if (empty($retentionRule->finalDisposition)) {
+                $retentionRule->finalDisposition = $refRetentionRule->finalDisposition;
+            }
+
+            if (empty($retentionRule->retentionDuration)) {
+                $retentionRule->retentionDuration = $refRetentionRule->duration;
+            }
+        }
 
         $retentionRuleReceived = $retentionRule;
 
@@ -188,6 +200,13 @@ trait archiveModificationTrait
         $archives = array();
         $operationResult = null;
 
+        // #10629 Get duration from ref when empty and code is received
+        if (empty($accessRule->accessRuleDuration) && !empty($accessRule->accessRuleCode)) {
+            $refAccessRule = $this->accessRuleController->edit($accessRule->accessRuleCode);
+
+            $accessRule->accessRuleDuration = $refAccessRule->duration;
+        }
+
         $accessRuleReceived = $accessRule;
 
         foreach ($archiveIds as $archiveId) {
@@ -203,7 +222,7 @@ trait archiveModificationTrait
 
                 $accessRule->archiveId = $archiveId;
 
-                if (!$accessRule->changeStartDate) {
+                if ($accessRule->changeStartDate === false) {
                     $accessRule->accessRuleStartDate = $archive->accessRuleStartDate;
                 }
 
