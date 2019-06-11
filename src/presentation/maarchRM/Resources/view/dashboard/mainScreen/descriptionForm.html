@@ -211,7 +211,9 @@ input:invalid {
 
         getFormGroup: function(descriptionField) {
             var formGroup = $('<div class="form-group" />');
-            var label = $('<label class="col-md-3 small control-label" />').text(descriptionField.label);
+            var label = $('<label class="col-md-3 small control-label" />')
+            var spanLabel = $('<span name=descriptionLabel />').text(descriptionField.label);
+            label.append(spanLabel);
             formGroup.append(label);
             var div = $('<div class="col-md-9" />');
             formGroup.append(div);
@@ -839,7 +841,7 @@ input:invalid {
                             if(target.find("[name='"+descProperty+"']").first().length > 0) {
                                 if ($.isPlainObject(descValue)){
                                     objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
-                                    var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').text());
+                                    var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
                                     header = objectTarget.find(".panel-title").first().find("a");
                                     header.text(objectHeader);
                                 }
