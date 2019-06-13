@@ -73,7 +73,7 @@
 
 
 <style>
-ul {
+.arrayDiv {
     padding-left: 0px;
     padding-right: 40px;
     list-style: none;
@@ -81,6 +81,14 @@ ul {
 
 input:invalid {
     border-color: red;
+}
+
+.panel-title {
+    font-size: 14px;
+}
+
+.control-label {
+    padding-top: 3px;
 }
 </style>
 
@@ -211,7 +219,7 @@ input:invalid {
 
         getFormGroup: function(descriptionField) {
             var formGroup = $('<div class="form-group" />');
-            var label = $('<label class="col-md-3 small control-label" />')
+            var label = $('<label class="col-md-3 control-label" />')
             var spanLabel = $('<span name=descriptionLabel />').text(descriptionField.label);
             label.append(spanLabel);
             formGroup.append(label);
@@ -264,6 +272,10 @@ input:invalid {
                 field.attr("data-required", descriptionField.required);
             }
 
+            if (descriptionField.readonly) {
+                field.attr("data-readonly", descriptionField.readonly);
+            }
+
             formGroup.data('field', field);
 
             return formGroup;
@@ -274,7 +286,6 @@ input:invalid {
                         .attr('type', 'text')
                         .addClass('form-control')
                         .addClass('input-sm');
-            // var field = $('<input type="text" class="form-control input-sm"/>');
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
             }
@@ -474,8 +485,8 @@ input:invalid {
             title.append(anchor);
 
             if (descriptionField.required) {
-                var requiredTitle = $("#object_required_text");
-                requiredTitle.css({"font-size":"small", "color":"red", "display":"block"});
+                var requiredTitle = $("#object_required_text").clone();
+                requiredTitle.css({"font-size":"12px", "color":"red", "display":"block"});
                 heading.append(requiredTitle);
             }
 
@@ -488,7 +499,7 @@ input:invalid {
             var input = $('<input class="hide" type="text" data-type="object" value="">');
             panelBody.append(input);
 
-            var propertyList = $('<ul style="padding-left: 0px;">');
+            var propertyList = $('<ul style="padding-left: 0px; padding-right: 40px; list-style: none">');
             panelBody.append(propertyList);
 
             $.each(descriptionField.properties, function() {
@@ -552,7 +563,7 @@ input:invalid {
             var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-right" title="Add data">&nbsp;<i class="fa fa-check">&nbsp;</i></button>');
             div.append(addButton);
 
-            var itemList = $('<ul>');
+            var itemList = $('<ul class="arrayDiv">');
             div.append(itemList);
             div.data('itemlist', itemList);
             div.data('item-description', descriptionField.itemtype);
@@ -686,6 +697,7 @@ input:invalid {
             }
             div.css({'margin-bottom': '5px'});
             itemList.prepend(div);
+            itemList.append(previous);
         },
 
         addCustomField : function(source = "", target = $("#customFields")) {
@@ -822,19 +834,34 @@ input:invalid {
         checkAndFill : function(data, target) {
             if (target.attr("data-type")==="date") {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
-                target.find("input").datepicker('setDate', data);
+                field = target.find("input");
+                field.datepicker('setDate', data);
+                if(field.data("readonly")){
+                    field.attr("readonly", true);
+                }
             }
 
             if (target.attr("data-type")==="name") {
-                target.find("select, input").val(data);
-            }
-            else if (target.attr("data-type")==="boolean") {
+                field = target.find("select, input");
+                field.val(data);
+                if(field.data("readonly")){
+                    field.attr("readonly", true);
+                }
+            } else if (target.attr("data-type")==="boolean") {
                 $.each($(target).find("input"), function(){
                     if($(this).val() === data) {
                         $(this).parent().siblings("label").removeClass("active");
                         $(this).parent().addClass("active");
                     }
                 });
+                btnGroup = target.find(".btn-group");
+                if (btnGroup.data("readonly")){
+                    $.each($(btnGroup).find(".btn"), function(){
+                        if(!$(this).hasClass("active")){
+                            $(this).addClass("disabled");
+                        }
+                    });
+                }
             } else if ($.isPlainObject(data)) {
                 $.each(data, function(property, value) {
                     if (property == "description") {
@@ -845,6 +872,16 @@ input:invalid {
                                     var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
                                     header = objectTarget.find(".panel-title").first().find("a");
                                     header.text(objectHeader);
+
+                                    panel = objectTarget.find(".panel").first();
+                                    if(panel.data("readonly")) {
+                                        panel.find("input, select").attr("readonly", true);
+                                        $.each($(panel).find(".btn"), function(){
+                                            if(!$(this).hasClass("active")){
+                                                $(this).addClass("disabled");
+                                            }
+                                        });
+                                    }
                                 }
                                 Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
                             } else {
@@ -872,8 +909,20 @@ input:invalid {
                     Metadata.checkAndFill(item, newItem);
                     Metadata.addArrayItem(array.parent());
                 })
+                if(array.parent().data("readonly")){
+                    array.find("input, select").attr("readonly", true);
+                    $.each($(array).find(".btn"), function(){
+                        if(!$(this).hasClass("active")){
+                            $(this).addClass("disabled");
+                        }
+                    });
+                }
             } else {
-                target.find("input").val(data);
+                field = target.find("select, input");
+                field.val(data);
+                if(field.data("readonly")){
+                    field.attr("readonly", true);
+                }
             }
         }
     }
