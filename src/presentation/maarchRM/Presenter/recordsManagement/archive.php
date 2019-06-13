@@ -1129,6 +1129,7 @@ class archive
         }
 
         if (isset($archive->accessRuleDuration)) {
+            $archive->accessRuleNotEmpty = true;
             $archive->accessRuleDurationUnit = substr($archive->accessRuleDuration, -1);
             $archive->accessRuleDuration = substr($archive->accessRuleDuration, 1, -1);
         }
