@@ -173,7 +173,7 @@ trait archiveModificationTrait
             }
         }
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification($archives, $comment, $identifier);
         }
 
@@ -264,7 +264,7 @@ trait archiveModificationTrait
             }
         }
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification($archives, $comment, $identifier);
         }
 
@@ -307,7 +307,7 @@ trait archiveModificationTrait
             $this->logFreeze($archive, false);
         }
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification($archives, $comment, $identifier);
         }
 
@@ -350,7 +350,7 @@ trait archiveModificationTrait
             $this->logUnfreeze($archive, false);
         }
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification($archives, $comment, $identifier);
         }
 
@@ -439,7 +439,7 @@ trait archiveModificationTrait
         
         $this->logMetadataModification($archive, $operationResult);
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
             
@@ -461,7 +461,7 @@ trait archiveModificationTrait
         // Life cycle journal
         $this->logRelationshipAdding($archive, $archiveRelationship);
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
         
@@ -483,7 +483,7 @@ trait archiveModificationTrait
         // Life cycle journal
         $this->logRelationshipDeleting($archive, $archiveRelationship);
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
 
