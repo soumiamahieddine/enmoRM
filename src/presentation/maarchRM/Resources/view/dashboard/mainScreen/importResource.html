@@ -96,11 +96,15 @@
             data        : JSON.stringify(data),
             dataType    :'json',
             success     : function (response) {
+                if (!response.status) {
+                    gritter.show(response.message, response.status, response.errors);
+                }
+
                 ResourcePanel.cancel();
                 archiveInfoModal.reload(archiveId);
             },
             error       : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                gritter.show(response.message, response.status, response.errors);
             }
         });
 

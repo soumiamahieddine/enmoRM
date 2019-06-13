@@ -43,6 +43,10 @@ trait archiveModificationTrait
             );
         }
 
+        if ($archive->status !== 'preserved') {
+            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        }
+
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
 
     }
@@ -61,6 +65,10 @@ trait archiveModificationTrait
             throw new \bundle\recordsManagement\Exception\retentionRuleException(
                 'A frozen archive can\'t be modified.'
             );
+        }
+
+        if ($archive->status !== 'preserved') {
+            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
         }
 
         $this->getAccessRule($archive);
@@ -634,6 +642,10 @@ trait archiveModificationTrait
 
         $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
 
+        if ($archive->status !== 'preserved') {
+            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+        }
+
         // Check rights ?
         if ($checkAccess) {
             $this->checkRights($archive);
@@ -667,6 +679,10 @@ trait archiveModificationTrait
 
         if ($transactionControl) {
             $this->sdoFactory->commit();
+        }
+
+        if (\laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
         }
 
         return $digitalResource->resId;
