@@ -81,7 +81,7 @@ trait archiveNotificationTrait
     {
         $this->view->addContentFile('medona/archiveNotification/modificationRequestHistory.html');
 
-        $this->prepareMesageList($messages);
+        $this->prepareMesageList($messages, true);
 
         $this->initHistoryForm();
 

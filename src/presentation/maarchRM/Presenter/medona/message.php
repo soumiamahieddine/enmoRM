@@ -217,8 +217,8 @@ class message
 
         $this->view->addContentFile("medona/message/messageModal.html");
 
-        if ($this->view->getElementsByClass("dataTable")->item(2)) {
-            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
+        if ($this->view->getElementsByClass("dataTable")->item(1)) {
+            $dataTable = $this->view->getElementsByClass("dataTable")->item(1)->plugin['dataTable'];
             $dataTable->setPaginationType("full_numbers");
             $dataTable->setSorting(array(array(0, 'desc')));
         }
