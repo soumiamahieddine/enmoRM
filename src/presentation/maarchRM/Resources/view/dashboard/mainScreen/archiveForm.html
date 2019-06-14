@@ -194,6 +194,7 @@
             let url = null;
             let data = null;
             let archive = null;
+            let archiveId = null;
 
             archiveId = $(button).data("archive-id");
             archive = this.syncSerialize("modify");
@@ -217,6 +218,7 @@
 
                     if (response.status) {
                         ImportPanel.cancel();
+                        $('#archivalProfileFields').empty();
                         Archive.getInfo(ArchiveInformation.archiveId);
                         $("#searchForm_inputSearchBtn").click();
                         trigger("archiveImportOver.recordsManagement");
@@ -239,12 +241,6 @@
             if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
                 selectedProfile = dataJson;
             }
-
-            /*if (value == '' || value == null) {
-                $('#requireArchiveName').removeClass("hide");
-            } else {
-                $('#requireArchiveName').addClass("hide");
-            }*/
 
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
                 $('#retentionRule').val('').removeAttr("disabled").change();
