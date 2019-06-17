@@ -576,6 +576,7 @@
     });
 
     $("#archiveToolbarBtn").on('click', '.newArchive', function() {
+        Metadata.isModification = false;
         ArchiveInformation.loadImportForm($(this));
     });
 
@@ -588,6 +589,7 @@
             }
         })
         archiveId = $(".archiveInformationId").val();
+        Metadata.isModification = true;
         NewArchive.loadImportForm(profileMetadata);
         Metadata.fillInMetadata(archiveId);
     });

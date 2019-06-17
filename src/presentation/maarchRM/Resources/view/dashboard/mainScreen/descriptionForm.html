@@ -123,8 +123,19 @@ input:invalid {
 
     function checkErrorInput(e){
         if (!e.val()){
-            e.css({"border-color":"red"});
             e.focus();
+            e.css({"border-color":"red"});
+            Metadata.isValid = false;
+        }
+        else {
+            e.css({"border-color":""});
+        }
+    }
+
+    function checkNumberInput(e){
+        if (e.val() && isNaN(e.val())){
+            e.focus();
+            e.css({"border-color":"red"});
             Metadata.isValid = false;
         }
         else {
@@ -209,6 +220,7 @@ input:invalid {
         flagEmptyRequiredField : false,
         flagEmptyCustomField : false,
         isValid : true,
+        isModification : false,
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
@@ -290,6 +302,11 @@ input:invalid {
                 field.val(descriptionField.default);
             }
 
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
+            }
+
             field.getValue = function() {
                 if(field.data('required')){
                     checkErrorInput(field);
@@ -312,7 +329,15 @@ input:invalid {
 
         getNumberInput : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
-            field.attr('type', 'number').attr('placeholder', $('#number_text').text());
+            field.attr('placeholder', $('#number_text').text()).attr("pattern", "[0-9]*");
+
+            field.getValue = function() {
+                checkNumberInput(field);
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                return this.val();
+            };
 
             return field;
         },
@@ -339,6 +364,11 @@ input:invalid {
             var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
             }
 
             field.getValue = function() {
@@ -371,6 +401,10 @@ input:invalid {
                 field.find('[value=""]').parent().removeClass("active");
                 field.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
                 field.find('[value="'+descriptionField.default+'"]').prop("checked", "checked");
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                $(field).find(".btn").addClass("disabled");
             }
 
             field.getValue = function() {
@@ -406,6 +440,11 @@ input:invalid {
             });
             if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
                 field.val(descriptionField.default);
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
             }
 
             field.getValue = function() {
@@ -519,6 +558,12 @@ input:invalid {
 
             div.data('propertyList', propertyList);
 
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                $(div).find(".btn").addClass("disabled");
+            }
+
             div.getValue = function() {
                 var object = {};
                 var properties = this.data('propertyList').children('li');
@@ -572,6 +617,11 @@ input:invalid {
             var item = Metadata.getArrayItem(descriptionField);
             itemList.append(item);
 
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                $(div).find(".btn").addClass("disabled");
+            }
 
             div.getValue = function() {
                 var values = [];
@@ -695,6 +745,13 @@ input:invalid {
                     previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
                 }
             }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                $(div).find(".btn").addClass("disabled");
+            }
+
             div.css({'margin-bottom': '5px'});
             itemList.prepend(div);
             itemList.append(previous);
@@ -827,8 +884,8 @@ input:invalid {
             $('#modifyArchive').data("archive-id", archiveId);
             $('#modifyArchive').removeClass("hide");
             $("#syncImport").addClass("hide");
+            $("#managementMetadataDiv").addClass("hide");
             Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
-
         },
 
         checkAndFill : function(data, target) {
@@ -836,32 +893,19 @@ input:invalid {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 field.datepicker('setDate', data);
-                if(field.data("readonly")){
-                    field.attr("readonly", true);
-                }
             }
 
             if (target.attr("data-type")==="name") {
                 field = target.find("select, input");
                 field.val(data);
-                if(field.data("readonly")){
-                    field.attr("readonly", true);
-                }
             } else if (target.attr("data-type")==="boolean") {
                 $.each($(target).find("input"), function(){
                     if($(this).val() === data) {
                         $(this).parent().siblings("label").removeClass("active");
+                        $(this).parent().removeClass("disabled");
                         $(this).parent().addClass("active");
                     }
                 });
-                btnGroup = target.find(".btn-group");
-                if (btnGroup.data("readonly")){
-                    $.each($(btnGroup).find(".btn"), function(){
-                        if(!$(this).hasClass("active")){
-                            $(this).addClass("disabled");
-                        }
-                    });
-                }
             } else if ($.isPlainObject(data)) {
                 $.each(data, function(property, value) {
                     if (property == "description") {
@@ -872,16 +916,6 @@ input:invalid {
                                     var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
                                     header = objectTarget.find(".panel-title").first().find("a");
                                     header.text(objectHeader);
-
-                                    panel = objectTarget.find(".panel").first();
-                                    if(panel.data("readonly")) {
-                                        panel.find("input, select").attr("readonly", true);
-                                        $.each($(panel).find(".btn"), function(){
-                                            if(!$(this).hasClass("active")){
-                                                $(this).addClass("disabled");
-                                            }
-                                        });
-                                    }
                                 }
                                 Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
                             } else {
@@ -911,11 +945,7 @@ input:invalid {
                 })
                 if(array.parent().data("readonly")){
                     array.find("input, select").attr("readonly", true);
-                    $.each($(array).find(".btn"), function(){
-                        if(!$(this).hasClass("active")){
-                            $(this).addClass("disabled");
-                        }
-                    });
+                    array.find("input, select").attr("disabled", true);
                 }
             } else {
                 field = target.find("select, input");

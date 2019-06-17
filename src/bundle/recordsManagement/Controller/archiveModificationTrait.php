@@ -376,24 +376,28 @@ trait archiveModificationTrait
                 foreach ($archivalProfileDescription as $descriptionImmutable) {
                     if ($descriptionImmutable->isImmutable) {
                         $fieldName = (string)$descriptionImmutable->fieldName;
-                        if (is_array($descriptionObject->$fieldName)) {
-                            if (is_object($descriptionObject->$fieldName[0])){
-                                foreach($descriptionObject->$fieldName as $index => $object) {
-                                    if ($archive->descriptionObject->$fieldName[$index] != $object) {
+                        if (isset($descriptionObject->$fieldName)){
+                            if (is_array($descriptionObject->$fieldName)) {
+                                if (is_object($descriptionObject->$fieldName[0])){
+                                    foreach($descriptionObject->$fieldName as $index => $object) {
+                                        if ($archive->descriptionObject->$fieldName[$index] != $object) {
+                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                                        }
+                                    }
+                                } else {
+                                    if (array_diff($descriptionObject->$fieldName, $archive->descriptionObject->$fieldName)) {
                                         throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
                                     }
                                 }
-                            } else {
-                                if (array_diff($descriptionObject->$fieldName, $archive->descriptionObject->$fieldName)) {
-                                    throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
-                                }
+                            }
+                            elseif (!isset($archive->descriptionObject->$fieldName)) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                            }
+                            elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
                             }
                         }
-                        elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
-                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
-                        }
                     }
-
                 }
             }
             
