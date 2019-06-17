@@ -681,7 +681,8 @@ trait archiveModificationTrait
             $this->sdoFactory->commit();
         }
 
-        if (isset(\laabs::configuration("medona")['transaction'])) {
+        if (isset(\laabs::configuration("medona")['transaction'])
+            && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
 
