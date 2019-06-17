@@ -343,7 +343,8 @@ class archive
         $canDeleteResource = $canAddResource = false ;
         
         if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
-            && in_array("owner", $currentService->orgRoleCodes) && $archive->status === 'preserved') {
+            && in_array("owner", $currentService->orgRoleCodes) 
+            && $archive->status === 'preserved') {
             $canDeleteResource = $canAddResource = true ;
         }
         
