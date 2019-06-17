@@ -749,7 +749,9 @@ input:invalid {
             if(descriptionField.readonly && Metadata.isModification) {
                 div.find("input, select").attr("readonly", true);
                 div.find("input, select").attr("disabled", true);
-                $(div).find(".btn").addClass("disabled");
+                div.find(".btn").addClass("disabled");
+                // Disable 'removeRowArray' button
+                previous.find(".btn").addClass("disabled");
             }
 
             div.css({'margin-bottom': '5px'});
