@@ -391,6 +391,12 @@ trait archiveDestructionTrait
                 $this->logDestructionResource($archive, $digitalResource, false);
             }
         }
+
+        if (isset(\laabs::configuration("medona")['transaction'])
+            && \laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
+        }
+
         return $destructResources;
     }
 }

@@ -6,6 +6,7 @@
     </div>
     <div> 
         <span id="resourceArchiveId" class="hidden"></span>
+        <span id="currentArchiveId" class="hidden"></span>
         <div class="row col-md-10 col-md-offset-4">
             <a href="#" class="btn btn-sm btn-success" id="addResource"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
@@ -84,6 +85,7 @@
     $("#addResource").on('click', function() {
         digitalResource = resourceList.serialize();
         var archiveId = $("#resourceArchiveId").text();
+        var currentArchiveId = $("#currentArchiveId").text();
 
         var data = {
             contents : digitalResource[0].handler,
@@ -97,7 +99,7 @@
             dataType    :'json',
             success     : function (response) {
                 ResourcePanel.cancel();
-                archiveInfoModal.reload(archiveId);
+                archiveInfoModal.reload(currentArchiveId);
             },
             error       : function(response) {
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);

@@ -12,8 +12,10 @@
 
 <script type="text/javascript">
     $(".addResourceArchive").on('click', '.newArchive', function() {
-        parentArchiveId = $(this).data("parent-archive-id");
+        currentArchiveId = $('li.archive').data('archive-id');
+        parentArchiveId = $('.addResourceArchive').data("parent-archive-id");
         $("#resourceArchiveId").text(parentArchiveId);
+        $("#currentArchiveId").text(currentArchiveId);
         $('#newResourceModal').modal();
         $("#importResourcePanel").removeClass("hide");
     })

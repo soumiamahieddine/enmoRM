@@ -180,6 +180,7 @@
                 dataType    : 'html',
                 success     : function (response) {
                     $('#archiveInformationDiv').empty().html(response);
+                    $('.addResourceArchive').data('parent-archive-id', archiveId);
                 }
             });
         },
