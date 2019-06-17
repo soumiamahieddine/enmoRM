@@ -35,7 +35,7 @@
 <script>
     $("#messagesTable").on('click', '.viewMessage', function() {
         $.ajax({
-            url      : "/medona/message/" + $(this).data('message-id'),
+            url      : "/medona/historyMessage/" + $(this).data('message-id'),
             type     : "GET",
             dataType : "html",
             success  : function (response) {
