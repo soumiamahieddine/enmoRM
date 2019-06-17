@@ -212,6 +212,11 @@ trait archiveDescriptionTrait
         } else {
             $descriptionField = $this->getDummyDescriptionField('dummy', $descriptionField->itemType);
         }
+
+        if (is_scalar($array)) {
+            $array = [$array];
+        }
+        
         foreach ($array as $item) {
             $tr = $this->getTableRow($name = null, $item, $descriptionField, true);
             $table->appendChild($tr);
