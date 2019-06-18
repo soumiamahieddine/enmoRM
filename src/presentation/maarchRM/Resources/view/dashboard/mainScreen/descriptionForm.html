@@ -121,11 +121,25 @@ input:invalid {
         Metadata.removeRowArray($(this));
     });
 
+    function onError(e) {
+        var parentCollapse = e.closest(".panel-collapse");
+        if (parentCollapse.length) {
+            parentCollapse.addClass("in");
+            var focusOn = parentCollapse;
+        } else {
+            focusOn = e;
+        }
+        $('html,body').animate({
+            scrollTop: $(focusOn).offset().top
+        }, 'slow');
+        e.focus();
+        e.css({"border-color":"red"});
+        Metadata.isValid = false;
+    }
+
     function checkErrorInput(e){
         if (!e.val()){
-            e.focus();
-            e.css({"border-color":"red"});
-            Metadata.isValid = false;
+            onError(e);
         }
         else {
             e.css({"border-color":""});
@@ -134,9 +148,7 @@ input:invalid {
 
     function checkNumberInput(e){
         if (e.val() && isNaN(e.val())){
-            e.focus();
-            e.css({"border-color":"red"});
-            Metadata.isValid = false;
+           onError(e);
         }
         else {
             e.css({"border-color":""});
@@ -580,9 +592,7 @@ input:invalid {
                 if (!div.parent("li").length){
                     if(field.data('required')){
                         if (!Object.keys(object).length) {
-                            field.css({"border-color":"red"});
-                            field.focus();
-                            Metadata.isValid = false;
+                            onError(field);
                         } else {
                             field.css({"border-color":""});
                         }
@@ -638,12 +648,10 @@ input:invalid {
                 if(this.data('required')){
                     if (values.length == 0) {
                         if (this.data("itemtype") == "object") {
-                            div.find("div").first().css({"border-color":"red"});
+                            onError(div.find("div").first());
                         } else {
-                            div.find("input").first().css({"border-color":"red"});
+                            onError(div.find("input").first());
                         }
-                        div.focus();
-                        Metadata.isValid = false;
                     } else {
                         if (this.data("itemtype") == "object") {
                             div.find("div").first().css({"border-color":""});

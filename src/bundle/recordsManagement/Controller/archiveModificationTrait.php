@@ -385,7 +385,6 @@ trait archiveModificationTrait
                                         }
                                     }
                                 } else {
-
                                     $archiveNewField = $descriptionObject->$fieldName;
                                     $archiveOldField = $archive->descriptionObject->$fieldName;
                                     sort($archiveNewField);
