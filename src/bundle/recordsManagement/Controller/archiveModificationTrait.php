@@ -328,7 +328,7 @@ trait archiveModificationTrait
      * @param string $originatorArchiveId
      * @param string $archiverArchiveId
      * @param string $archiveName
-     * @param string $description
+     * @param object $description
      * @param date   $originatingDate
      *
      * @return boolean The result of the operation
@@ -385,12 +385,12 @@ trait archiveModificationTrait
                                 if (is_object($descriptionObject->$fieldName[0])){
                                     foreach($archiveNewField as $index => $object) {
                                         if ($archiveOldField[$index] != $object) {
-                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                                         }
                                     }
                                 } else {
                                     if (count( $archiveNewField ) != count( $archiveOldField ) OR array_diff( $archiveNewField , $archiveOldField )){
-                                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                                     }
                                 }
                             }
@@ -398,7 +398,7 @@ trait archiveModificationTrait
                                 throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                             }
                             elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
-                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                             }
                         }
                     }
