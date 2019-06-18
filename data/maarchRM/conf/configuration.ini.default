@@ -145,18 +145,12 @@ transaction = false
 messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
 autoValidateSize = 2147000
 
-;packageSchemas = "{
-;    'seda' : {
-;         'label' : 'Seda 1',
-;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v1.0',
-;         'phpNamespace' : 'seda'
-;    },
-;    'seda2' : {
-;         'label' : 'Seda 2',
-;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v2.0',
-;         'phpNamespace' : 'seda2'
-;    }
-;}"
+packageSchemas = "{
+    'mades' : {
+          'label' : 'Format d'échange Maarch RM,
+         'phpNamespace' : 'mades'
+    }
+}"
 
 ; Array of task to remove medona message directories
 ; 'type' is an array of medona message type
