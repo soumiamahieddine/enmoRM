@@ -1,22 +1,22 @@
 <?php
 
 /* 
- * Copyright (C) 2015 Maarch
+ * Copyright (C) Maarch
  *
- * This file is part of bundle medona
+ * This file is part of bundle Mades
  *
- * Bundle medona is free software: you can redistribute it and/or modify
+ * Bundle Mades is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Bundle medona is distributed in the hope that it will be useful,
+ * Bundle Mades is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with bundle medona.  If not, see <http://www.gnu.org/licenses/>.
+ * along with bundle Mades. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace bundle\mades\Controller;
@@ -24,10 +24,10 @@ namespace bundle\mades\Controller;
 /**
  * Class for archive transfer
  *
- * @package Medona
+ * @package Mades
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-class ArchiveTransfer implements \ext\thirdPartyArchiving\bundle\medona\Controller\ArchiveTransferInterface
+class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterface
 {
 
     public $errors = [];
@@ -60,18 +60,120 @@ class ArchiveTransfer implements \ext\thirdPartyArchiving\bundle\medona\Controll
     {
         $this->loadMessage($message);
 
-        if (!isset($message->object->archiveId)) {
-            $message->object->archiveId = \laabs::newId();
+        if (isset($message->object->comment)) {
+            $message->comment = $message->object->comment;
+        }
+        $message->date = $message->object->date;
+
+        $message->senderOrgRegNumber = $message->object->transferringAgency->identifier->value;
+        $message->recipientOrgRegNumber = $message->object->archivalAgency->identifier->value;
+
+        $message->reference = $message->object->messageIdentifier->value;
+        
+        if (isset($message->object->archivalAgreement)) {
+            $message->archivalAgreementReference = $message->object->archivalAgreement->value;
         }
 
-        $message->date = \laabs::newTimestamp();
-
-        $message->senderOrgRegNumber = \laabs::getToken("ORGANIZATION")->registrationNumber;
-        $message->recipientOrgRegNumber = $this->orgController->getOrgsByRole('owner')[0]->registrationNumber;
-
-        $message->reference = \laabs::newId();
+        $this->receiveAttachments($message);
 
         return $message;
+    }
+
+    protected function receiveAttachments($message) 
+    {
+        $archiveUnits = $message->object->dataObjectPackage->descriptiveMetadata->archiveUnit;
+        $binaryDataObjects = (array) $message->object->dataObjectPackage->binaryDataObject;
+        $physicalDataObjects = (array) $message->object->dataObjectPackage->physicalDataObject;
+        
+        $message->dataObjectCount = count($binaryDataObjects) + count($physicalDataObjects);
+
+        $this->validateReference($$message->object->dataObjectPackage->descriptiveMetadata, $binaryDataObjects);
+        
+        $messageDir = $message->path;
+        // List received files
+        $receivedFiles = glob($messageDir.DIRECTORY_SEPARATOR."*.*");
+
+        $messageFiles = [];
+        if (count($binaryDataObjects)) {
+            foreach ($binaryDataObjects as $dataObjectId => $binaryDataObject) {
+                
+                $message->size += (integer) $binaryDataObject->size;
+
+                if (isset($binaryDataObject->attachment)) {
+                    $attachment = $binaryDataObject->attachment;
+
+                    $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+                    if (!is_file($filepath)) {
+                        $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+
+                        continue;
+                    }
+
+                    $contents = file_get_contents($filepath);
+
+                    $messageFiles[] = $attachment->filename;
+                } elseif ($binaryDataObject->uri) {
+                    $contents = file_get_contents($messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri));
+
+                    if (!$contents) {
+                        $this->sendError("211", "Le document à l'adresse '$attachment->uri' est indisponible.");
+
+                        continue;
+                    }
+
+                    $filepath = $messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri);
+                    $messageFiles[] = $filepath;
+                } else {
+                    if (strlen($attachmentElement->value) == 0) {
+                        $this->sendError("211", "Le contenu du document n'a pas été transmis.");
+
+                        continue;
+                    }
+
+                    $contents = base64_decode($attachment->value);
+
+                    $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+                }
+
+                // Validate hash
+                $messageDigest = $binaryDataObject->messageDigest;
+                if (strtolower($messageDigest->value) != strtolower(hash($messageDigest->algorithm, $contents))) {
+                    $this->sendError("207", "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise.");
+                }
+            }
+        }
+
+        // Check all files received are part of the message
+        foreach ($receivedFiles as $receivedFile) {
+            if (!in_array($receivedFile, $messageFiles) && !in_array(basename($receivedFile), $messageFiles)) {
+                $this->sendError("101", "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le bordereau.");
+            }
+        }
+
+        return $this->errors;
+    }
+
+    protected function validateReference($archiveUnitContainer, $binaryDataObjects)
+    {
+        foreach ($archiveUnitContainer->archiveUnit as $archiveUnit) {
+            if (!empty($archiveUnit->dataObjectReference)) {
+                foreach ($archiveUnit->dataObjectReference as $dataObjectReference) {
+                    $res = false;
+                    foreach ($binaryDataObjects as $binaryDataObject) {
+                        if ($binaryDataObject->id == $dataObjectReference->dataObjectReferenceId) {
+                            $res = true;
+                        }
+                    }
+                    if (!$res) {
+                        $this->sendError("213", "Le document identifié par '$dataObjectReference->dataObjectReferenceId' est introuvable.");
+                    }
+                }
+            }
+
+            if (!empty($archiveUnit->archiveUnit)) {
+                $this->validateReference($archiveUnit, $binaryDataObjects);
+            }
+        }
     }
 
     /**
@@ -80,10 +182,8 @@ class ArchiveTransfer implements \ext\thirdPartyArchiving\bundle\medona\Controll
      */
     public function loadMessage($message)
     {
-        $message->object = json_decode(file_get_contents($message->path));
-
-        $message->object->binaryDataObject = get_object_vars($message->object->binaryDataObject);
-        $message->object->descriptiveMetadata = get_object_vars($message->object->descriptiveMetadata);
+        $message->object->binaryDataObject = get_object_vars($message->object->dataObjectPackage->binaryDataObject);
+        $message->object->descriptiveMetadata = get_object_vars($message->object->dataObjectPackage->descriptiveMetadata);
     }
 
     /**

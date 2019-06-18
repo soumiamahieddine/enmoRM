@@ -145,6 +145,23 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receivePackage($message, $messageFile, $attachments, $filename)
     {
+        if (is_object($messageFile)) {
+            $this->receiveObject($message, $messageFile, $attachments, $filename);
+        } else {
+            $this->receiveStream($message, $messageFile, $attachments, $filename);
+        }
+    }
+
+    protected function receiveObject($message, $messageFile, $attachments, $filename)
+    {
+        $message->object = $messageFile;
+        $message->data = json_encode($messageFile);
+
+        $this->receiveFiles($message, $message->data, $attachments, $filename, 'application/json');       
+    }
+
+    protected function receiveStream($message, $messageFile, $attachments, $filename)
+    {
         // Valid URL file:// http:// data://
         if (filter_var($messageFile, FILTER_VALIDATE_URL)) {
             $data = stream_get_contents($messageFile);
@@ -168,7 +185,7 @@ class ArchiveTransfer extends abstractMessage
                 break;
 
             default:
-                $this->receiveFiles($message, $data, $attachments, $filename);
+                $this->receiveFiles($message, $data, $attachments, $filename, $mediatype);
         }
     }
 
@@ -224,17 +241,29 @@ class ArchiveTransfer extends abstractMessage
         rmdir($zipFolder);
     }
 
-    protected function receiveFiles($message, $data, $attachments, $filename=false)
+    protected function receiveFiles($message, $data, $attachments, $filename = false, $mediatype = null)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
         if (!$filename) {
-            $filename = (string) $message->messageId . '.xml';
+            $filename = (string) $message->messageId;
+
+            if ($mediatype) {
+                $filename .= '.'.\laabs\basename($mediatype);
+            }
         }
 
         file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $data);
         
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$filename;
+
+        $this->receiveAttachments($message, $data, $attachments, $filename);
+    }
+
+    protected function receiveAttachments($message, $data, $attachments, $filename=false)
+    {
+        $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
+        
         $message->attachments = [];
         
         if (count($attachments)) {
