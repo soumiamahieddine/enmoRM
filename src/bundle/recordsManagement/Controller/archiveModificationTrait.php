@@ -389,7 +389,6 @@ trait archiveModificationTrait
                                         }
                                     }
                                 } else {
-                                    exit();
                                     if (count( $archiveNewField ) != count( $archiveOldField ) OR array_diff( $archiveNewField , $archiveOldField )){
                                         throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
                                     }
