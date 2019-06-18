@@ -1071,6 +1071,9 @@ msgstr "Voulez-vous vraiment supprimer cette ressource ?"
 msgid "This action will be irreversible."
 msgstr "Cette action sera irréversible."
 
+msgid "Modification request sent"
+msgstr "Demande de modification envoyée"
+
 msgid "Click to add '%1$s'"
 msgstr "Cliquer pour ajouter '%1$s'"
 
