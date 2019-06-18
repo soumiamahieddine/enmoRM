@@ -154,10 +154,9 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveObject($message, $messageFile, $attachments, $filename)
     {
-        $message->object = $messageFile;
-        $message->data = json_encode($messageFile);
+        $data = json_encode($messageFile);
 
-        $this->receiveFiles($message, $message->data, $attachments, $filename, 'application/json');       
+        $this->receiveFiles($message, $data, $attachments, $filename, 'application/json');       
     }
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
