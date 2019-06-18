@@ -146,7 +146,7 @@ autoValidateSize = 2147000
 
 packageSchemas = "{
     'mades' : {
-          'label' : 'Format d'échange Maarch RM,
+         'label' : 'Format d\'échange Maarch RM',
          'phpNamespace' : 'mades'
     }
 }"
