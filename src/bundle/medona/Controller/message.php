@@ -868,12 +868,20 @@ class message
      */
     protected function changeStatus($messageId, $status, $comment = null)
     {
-        $messageStatus = \laabs::newMessage('medona/messageStatus');
-        $messageStatus->messageId = $messageId;
+        $messageStatus = $this->sdoFactory->read('medona/messageStatus', $messageId);
+        
+
         $messageStatus->status = strtolower($status);
 
         if ($comment) {
+            if (!empty($messageStatus->comment)) {
+                $messageStatus->comment = json_decode($messageStatus->comment);
+            } else {
+                $messageStatus->comment = [];
+            }   
+
             $messageStatus->comment[] = $comment;
+            $messageStatus->comment = json_encode($messageStatus->comment);
         }
 
         $this->sdoFactory->update($messageStatus, 'medona/message');
