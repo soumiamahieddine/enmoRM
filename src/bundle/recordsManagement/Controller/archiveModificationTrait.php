@@ -383,13 +383,13 @@ trait archiveModificationTrait
                                 sort($archiveNewField);
                                 sort($archiveOldField);
                                 if (is_object($descriptionObject->$fieldName[0])){
-                                    foreach($archiveNewField as $index => $object) {
+                                     foreach($archiveNewField as $index => $object) {
                                         if ($archiveOldField[$index] != $object) {
                                             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                                         }
                                     }
                                 } else {
-                                    if (count( $archiveNewField ) != count( $archiveOldField ) OR array_diff( $archiveNewField , $archiveOldField )){
+                                    if (count($archiveNewField) != count($archiveOldField) || array_diff($archiveNewField, $archiveOldField)){
                                         throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
                                     }
                                 }
