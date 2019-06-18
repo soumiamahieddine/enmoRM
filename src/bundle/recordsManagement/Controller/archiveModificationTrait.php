@@ -378,17 +378,18 @@ trait archiveModificationTrait
                         $fieldName = (string)$descriptionImmutable->fieldName;
                         if (isset($descriptionObject->$fieldName)){
                             if (is_array($descriptionObject->$fieldName)) {
+                                $archiveNewField = $descriptionObject->$fieldName;
+                                $archiveOldField = $archive->descriptionObject->$fieldName;
+                                sort($archiveNewField);
+                                sort($archiveOldField);
                                 if (is_object($descriptionObject->$fieldName[0])){
-                                    foreach($descriptionObject->$fieldName as $index => $object) {
-                                        if ($archive->descriptionObject->$fieldName[$index] != $object) {
+                                    foreach($archiveNewField as $index => $object) {
+                                        if ($archiveOldField[$index] != $object) {
                                             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
                                         }
                                     }
                                 } else {
-                                    $archiveNewField = $descriptionObject->$fieldName;
-                                    $archiveOldField = $archive->descriptionObject->$fieldName;
-                                    sort($archiveNewField);
-                                    sort($archiveOldField);
+                                    exit();
                                     if (count( $archiveNewField ) != count( $archiveOldField ) OR array_diff( $archiveNewField , $archiveOldField )){
                                         throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
                                     }
