@@ -32,7 +32,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
 
     public $errors = [];
     public $infos = [];
-    public $replyCode = [];
+    public $replyCode;
     public $filePlan = [];
     public $originatorOrgs = [];
     public $processedArchives = [];
@@ -74,93 +74,92 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
             $message->archivalAgreementReference = $message->object->archivalAgreement->value;
         }
 
-        $this->receiveAttachments($message);
+        $binaryDataObjects = $physicalDataObjects = [];
+        $message->dataObjectCount = 0;
+
+        if (isset($message->object->dataObjectPackage->binaryDataObject)) {
+            $message->dataObjectCount += count($message->object->dataObjectPackage->binaryDataObject);
+            $this->receiveAttachments($message);
+        }
+        if (isset($message->object->dataObjectPackage->physicalDataObject)) {
+            $message->dataObjectCount += count($message->object->dataObjectPackage->physicalDataObject);
+        }        
 
         return $message;
     }
 
     protected function receiveAttachments($message) 
     {
-        $archiveUnits = $message->object->dataObjectPackage->descriptiveMetadata->archiveUnit;
-        $binaryDataObjects = (array) $message->object->dataObjectPackage->binaryDataObject;
-        $physicalDataObjects = (array) $message->object->dataObjectPackage->physicalDataObject;
+        $this->validateReference($message->object->dataObjectPackage->descriptiveMetadata, $message->object->dataObjectPackage->binaryDataObject);
         
-        $message->dataObjectCount = count($binaryDataObjects) + count($physicalDataObjects);
-
-        $this->validateReference($$message->object->dataObjectPackage->descriptiveMetadata, $binaryDataObjects);
-        
-        $messageDir = $message->path;
+        $messageDir = dirname($message->path);
         // List received files
         $receivedFiles = glob($messageDir.DIRECTORY_SEPARATOR."*.*");
 
-        $messageFiles = [];
-        if (count($binaryDataObjects)) {
-            foreach ($binaryDataObjects as $dataObjectId => $binaryDataObject) {
-                
-                $message->size += (integer) $binaryDataObject->size;
+        $messageFiles = [$message->path];
+        foreach ($message->object->dataObjectPackage->binaryDataObject as $dataObjectId => $binaryDataObject) {
+            
+            $message->size += (integer) $binaryDataObject->size;
 
-                if (isset($binaryDataObject->attachment)) {
-                    $attachment = $binaryDataObject->attachment;
+            if (isset($binaryDataObject->attachment)) {
+                $attachment = $binaryDataObject->attachment;
 
-                    $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
-                    if (!is_file($filepath)) {
-                        $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+                if (!is_file($filepath)) {
+                    $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
 
-                        continue;
-                    }
-
-                    $contents = file_get_contents($filepath);
-
-                    $messageFiles[] = $attachment->filename;
-                } elseif ($binaryDataObject->uri) {
-                    $contents = file_get_contents($messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri));
-
-                    if (!$contents) {
-                        $this->sendError("211", "Le document à l'adresse '$attachment->uri' est indisponible.");
-
-                        continue;
-                    }
-
-                    $filepath = $messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri);
-                    $messageFiles[] = $filepath;
-                } else {
-                    if (strlen($attachmentElement->value) == 0) {
-                        $this->sendError("211", "Le contenu du document n'a pas été transmis.");
-
-                        continue;
-                    }
-
-                    $contents = base64_decode($attachment->value);
-
-                    $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+                    continue;
                 }
 
-                // Validate hash
-                $messageDigest = $binaryDataObject->messageDigest;
-                if (strtolower($messageDigest->value) != strtolower(hash($messageDigest->algorithm, $contents))) {
-                    $this->sendError("207", "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise.");
+                $contents = file_get_contents($filepath);
+
+                $messageFiles[] = $attachment->filename;
+            } elseif ($binaryDataObject->uri) {
+                $contents = file_get_contents($messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri));
+
+                if (!$contents) {
+                    $this->sendError("211", "Le document à l'adresse '$attachment->uri' est indisponible.");
+
+                    continue;
                 }
+
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri);
+                $messageFiles[] = $filepath;
+            } else {
+                if (strlen($attachmentElement->value) == 0) {
+                    $this->sendError("211", "Le contenu du document n'a pas été transmis.");
+
+                    continue;
+                }
+
+                $contents = base64_decode($attachment->value);
+
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+            }
+
+            // Validate hash
+            $messageDigest = $binaryDataObject->messageDigest;
+            if (strtolower($messageDigest->content) != strtolower(hash($messageDigest->algorithm, $contents))) {
+                $this->sendError("207", "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise.");
             }
         }
 
         // Check all files received are part of the message
         foreach ($receivedFiles as $receivedFile) {
-            if (!in_array($receivedFile, $messageFiles) && !in_array(basename($receivedFile), $messageFiles)) {
+            if (!in_array($receivedFile, $messageFiles) && !in_array(basename($receivedFile), $messageFiles) && !in_array(basename($receivedFile), $messageFiles)) {
                 $this->sendError("101", "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le bordereau.");
             }
         }
-
-        return $this->errors;
     }
 
     protected function validateReference($archiveUnitContainer, $binaryDataObjects)
     {
-        foreach ($archiveUnitContainer->archiveUnit as $archiveUnit) {
+        foreach ($archiveUnitContainer as $archiveUnit) {
             if (!empty($archiveUnit->dataObjectReference)) {
                 foreach ($archiveUnit->dataObjectReference as $dataObjectReference) {
                     $res = false;
-                    foreach ($binaryDataObjects as $binaryDataObject) {
-                        if ($binaryDataObject->id == $dataObjectReference->dataObjectReferenceId) {
+                    foreach ($binaryDataObjects as $id => $binaryDataObject) {
+                        if ($id == $dataObjectReference) {
                             $res = true;
                         }
                     }
@@ -182,8 +181,24 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
      */
     public function loadMessage($message)
     {
+        $data = file_get_contents($message->path);
+
+        $message->object = json_decode($data);
         $message->object->binaryDataObject = get_object_vars($message->object->dataObjectPackage->binaryDataObject);
         $message->object->descriptiveMetadata = get_object_vars($message->object->dataObjectPackage->descriptiveMetadata);
+    }
+
+    protected function sendError($code, $message = false)
+    {
+        if ($message) {
+            array_push($this->errors, new \core\Error($message, null, $code));
+        } else {
+            array_push($this->errors, new \core\Error($this->getReplyMessage($code), null, $code));
+        }
+
+        if ($this->replyCode == null) {
+            $this->replyCode = $code;
+        }
     }
 
     /**
