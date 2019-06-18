@@ -586,9 +586,9 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive object
      */
-    protected function validateArchiveDescriptionObject($archive)
+    public function validateArchiveDescriptionObject($archive)
     {
-        if (!isset($this->currentArchivalProfile)) {
+        if (!isset($archive->archivalProfileReference)) {
             return;
         }
 
@@ -658,7 +658,7 @@ trait archiveEntryTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    protected function validateManagementMetadata($archive)
+    public function validateManagementMetadata($archive)
     {
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
             throw new \core\Exception\NotFoundException("The archival profile reference not found");
@@ -706,7 +706,7 @@ trait archiveEntryTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    protected function validateFileplan($archive)
+    public function validateFileplan($archive)
     {
         // No parent, check orgUnit can deposit with the profile
         if (empty($archive->parentArchiveId)) {
