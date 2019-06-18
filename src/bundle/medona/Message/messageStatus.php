@@ -40,4 +40,10 @@ class messageStatus
      * @var string
      */
     public $status;
+
+    /**
+     * The comments
+     * @var string
+     */
+    public $comment;
 }
