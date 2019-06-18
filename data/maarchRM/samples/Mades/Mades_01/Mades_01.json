@@ -1,0 +1,41 @@
+{
+    "comment" : [
+        "coucou"
+    ],
+    "date" : "2019-06-18",
+    "messageIdentifier" : {
+        "value" : "01"
+    },
+    "archivalAgency" : {
+        "identifier" : {
+            "value" : "GIC"
+        }
+    },
+    "transferringAgency" : {
+        "identifier" : {
+            "value" : "DAF"
+        }
+    },
+    "dataObjectPackage" : {
+        "binaryDataObject" : {
+            "bdo1" : {
+                "attachment" : {
+                    "filename" : "17.pdf"
+                },
+                "size" : 26893,
+                "format" : "fmt/18",
+                "messageDigest" : {
+                    "content" : "df5df627fa8ac22fe91e518b382963da8d15636f90b239a8afeb5a63de649214",
+                    "algorithm" : "SHA256"
+                }
+            }
+        },
+        "descriptiveMetadata" : {
+            "au01" : {
+                "dataObjectReference" : [
+                    "bdo1"
+                ]
+            }
+        }
+    }
+}
