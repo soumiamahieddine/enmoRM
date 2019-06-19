@@ -5,12 +5,12 @@
     For the full copyright and license information, please view the LICENSE
     file that was distributed with this source code.
 #-->
-
-<form class="form-horizontal" data-translate-catalog="documentManagement/document">
+<form id="descriptionForm" class="form-horizontal" data-translate-catalog="documentManagement/document">
     <div id="allFields">
         <div id="archivalProfileFields"></div>
         <div id="customFields"></div>
     </div>
+
     <div class="form-group">
         <div class="dropup col-xs-12" id="customFieldAddBtn">
             <button type="button" class="addCustomField btn btn-sm btn-link pull-right" data-type="text" title="Add field">
@@ -26,6 +26,7 @@
         </div>
     </div>
 </form>
+
 <div class="hide">
     <!-- TEXT VARIABLE -->
     <div data-translate-catalog="documentManagement/documentMetadata">
@@ -38,6 +39,9 @@
     <span id="preservation_text">Preservation</span>
     <span id="destruction_text">Destruction</span>
     <span id="retentionRule_text">%1$s after %2$s</span>
+    <span id="object_header_new_text">Click to add '%1$s'</span>
+    <span id="object_header_modify_text">Click to modify '%1$s'</span>
+    <span id="object_required_text">* At least one field must be filled in.</span>
 
     <div data-translate-catalog="dates/dates">
         <span id="days_text">days</span>
@@ -55,80 +59,10 @@
         <span id="retentionRuleCodeMissing_error">The retention rule is missing.</span>
         <span id="documentMissing_error">You must deposit at least one document.</span>
     </div>
-
-    <div data-translate-catalog="documentManagement/documentMetadata">
-        <!-- TEXT FIELD TEMPLATE -->
-        <div class="form-group" id="inputFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <input type="text" class="form-control input-sm"/>
-            </div>
-        </div>
-
-        <!-- DATE FIELD TEMPLATE -->
-        <div class="form-group" id="inputDateTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-6">
-                <input type="text" class="form-control input-sm"/>
-            </div>
-        </div>
-
-        <!-- TEXTAREA FIELD TEMPLATE -->
-        <div class="form-group" id="textareaFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;"></textarea>
-            </div>
-        </div>
-
-        <!-- SELECT FIELD TEMPLATE -->
-        <div class="form-group" id="selectFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-6">
-                <select class="form-control input-sm">
-                    <option value=""></option>
-                </select>
-            </div>
-        </div>
-
-        <!-- BOOLEAN FIELD TEMPLATE -->
-        <div class="form-group" id="booleanFieldTemplate">
-            <label class="col-md-3 small control-label"></label>
-            <div class="col-md-9">
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                    </label>
-                    <label class="btn btn-default active">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="">&nbsp;
-                    </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- CUSTOM TEXTAREA FIELD TEMPLATE -->
-        <div class="form-group" id="customTextareaFieldTemplate">
-            <div class="col-md-3">
-                <input type="text" class="form-control input-sm name" placeholder="Label"/>
-            </div>
-            <div class="col-md-9">
-                <div class="input-group">
-                    <textarea class="form-control input-sm value" rows="1" placeholder="Text" style="resize: vertical"></textarea>
-                    <a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <!-- REQUIRED FIELD TEMPLATE -->
-        <span style="color: red" id="requiredFieldTemplate">&nbsp;*</span>
-    </div>
 </div>
 
 <span  id="addBtnTpl" class="input-group-btn hide">
-    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-plus"></span></button>
+    <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-check"></span></button>
 </span>
 <div id="keywordTpl" class="input-group hide" name="keyword">
     <input type="text" class="form-control input-sm" data-enumerate ="true" disabled="" />
@@ -137,12 +71,99 @@
     </span>
 </div>
 
+
+<style>
+.arrayDiv {
+    padding-left: 0px;
+    padding-right: 40px;
+    list-style: none;
+}
+
+input:invalid {
+    border-color: red;
+}
+
+.panel-title {
+    font-size: 14px;
+}
+
+.control-label {
+    padding-top: 3px;
+}
+</style>
+
 <script type="text/javascript">
+    $("#descriptionForm").keypress(function(e) {
+    //To disable Enter keypress in this form
+        if (e.which == 13) {
+            return false;
+        }
+    });
+
     // METADATAS
     $('.addCustomField').on('click', function(e) {
         e.preventDefault();
-        Metadata.addCustomField($(this));
+        Metadata.addCustomField();
     });
+
+    // Add row in array of metadata
+    $('#allFields').on('click', '.addRowArray', function(e) {
+        // click on button addRowArray won't work if input is empty
+        var text = $(this).next("ul").children("li").children("input").val();
+        if (text === "") {
+            return;
+        }
+        Metadata.addArrayItem($(this).parent());
+    });
+
+    $('#allFields').on('click', '.removeRowArray', function(e) {
+        e.preventDefault();
+        Metadata.removeRowArray($(this));
+    });
+
+    function onError(e) {
+        var parentCollapse = e.closest(".panel-collapse");
+        if (parentCollapse.length) {
+            parentCollapse.addClass("in");
+            var focusOn = parentCollapse;
+        } else {
+            focusOn = e;
+        }
+        $('html,body').animate({
+            scrollTop: $(focusOn).offset().top
+        }, 'slow');
+        e.focus();
+        e.css({"border-color":"red"});
+        Metadata.isValid = false;
+    }
+
+    function checkErrorInput(e){
+        if (!e.val()){
+            onError(e);
+        }
+        else {
+            e.css({"border-color":""});
+        }
+    }
+
+    function checkNumberInput(e){
+        if (e.val() && isNaN(e.val())){
+           onError(e);
+        }
+        else {
+            e.css({"border-color":""});
+        }
+    }
+
+    function checkInput(e){
+        var field = $(e).find("input");
+        if (!field.val()){
+            field.css({"border-color":"red"});
+        }
+        else {
+            field.css({"border-color":""});
+        }
+    }
 
     $('#allFields').on('click', '.removeField', function(e) {
         e.preventDefault();
@@ -180,7 +201,6 @@
 
         var tpl = $('#keywordTpl').clone().removeClass('hide');
 
-
         if(val) {
             tpl.find('input').val(val).attr('name',name);
             $('[name="list-'+name+'"]').append(tpl);
@@ -209,159 +229,576 @@
     }
 
     var Metadata = {
+        flagEmptyRequiredField : false,
+        flagEmptyCustomField : false,
+        isValid : true,
+        isModification : false,
+
         addArchiveDescription : function(archiveDescription) {
+            var descriptionField = archiveDescription.descriptionField;
             var target = $("#archivalProfileFields");
-            var type = archiveDescription.descriptionField.type;
-            var defaultVal = archiveDescription.descriptionField.default;
-            var enumeration= archiveDescription.descriptionField.enumeration;
-            var label = archiveDescription.descriptionField.label;
-            var name = archiveDescription.descriptionField.name;
-            var required = archiveDescription.required;
-            var origin = archiveDescription.origin;
-
-            var field = null;
-
-            switch (type) {
-                case 'text':
-                case 'string':
-                    template = $('#textareaFieldTemplate').clone();
-                    field = template.find('textarea');
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'name':
-                    if (enumeration) {
-                        template = $('#selectFieldTemplate').clone();
-                        field = template.find('select');
-
-                        field.attr('id', name);
-
-                        $.each(enumeration, function (index, value) {
-                            field.append($('<option>', {
-                                value: value,
-                                text: value
-                            }));
-                        });
-                        field.val(defaultVal);
-                    } else {
-                        var template = $('#inputFieldTemplate').clone();
-                        field = template.find('input');
-                        if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                            field.val(defaultVal);
-                        }
-                    }
-                    break;
-                case 'number':
-                    var template = $('#inputFieldTemplate').clone();
-                    field = template.find('input');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').text());
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.val(defaultVal);
-                    }
-                    break;
-                case 'date':
-                case 'timestamp':
-                    var template = $('#inputDateTemplate').clone();
-                    field = template.find('input');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    if (defaultVal !== null && defaultVal !== undefined && defaultVal !== "") {
-                        field.data("datepicker").setDate(defaultVal);
-                    }
-
-                    break;
-                case 'boolean':
-                    var template = $('#booleanFieldTemplate').clone();
-                    field = template.find("input");
-                    template.find('.active').removeClass("active");
-                    if (defaultVal == 1 || defaultVal == 0) {
-                        template.find('[value="'+defaultVal+'"]').parent().addClass("active");
-                        template.find('[value="'+defaultVal+'"]').prop("checked", "checked");
-                    } else {
-                        template.find('[value=""]').parent().addClass("active");
-                        template.find('[value=""]').prop("checked", "checked");
-                    }
-                    break;
-
-                case 'array':
-                case 'object':
-                default:
-                    console.log("Type "+type+" of field "+name+" is not managed");
-                    return;
-                    break;
-            }
-
-            field.attr('name', name).attr('data-origin', origin).attr('data-type', type);
-
-            template.find("label:first").text(label);
-
-            if (required) {
-                $("#requiredFieldTemplate").clone().removeAttr('id').appendTo(template.find("label:first"));
-                field.attr("data-required", required);
-            }
-
-            /*if(isArray) {
-                var btnGroup  = $('#addBtnTpl').clone();
-                btnGroup.removeClass('hide');
-                btnGroup.find('button').attr('data-select',name);
-                if (enumeration) {
-                    btnGroup.find('button').attr('data-input-type',"select");
-                } else {
-                    btnGroup.find('button').attr('data-input-type',"input");
-                    template.find('input').attr('data-enumerate', 'NOT_VALUE');
-                }
-
-                template.find('div').addClass('input-group').append(btnGroup);
-                template.append('<label class="col-md-3 small control-label"></label>');
-                template.append('<div name="list-'+name+'" class="col-md-9 input-group"><\/div>');
-            }*/
-
-            template.appendTo(target);
-
-            template.removeAttr('id').appendTo(target);
+            var formGroup = Metadata.getFormGroup(descriptionField);
+            target.append(formGroup);
         },
 
-        addCustomField : function(source) {
-            var target = $("#customFields");
-            var template = $('#customTextFieldTemplate').clone();
-            var type = source.attr('data-type');
+        getFormGroup: function(descriptionField) {
+            var formGroup = $('<div class="form-group" />');
+            var label = $('<label class="col-md-3 control-label" />')
+            var spanLabel = $('<span name=descriptionLabel />').text(descriptionField.label);
+            label.append(spanLabel);
+            formGroup.append(label);
+            var div = $('<div class="col-md-9" />');
+            formGroup.append(div);
 
-            var field = null;
-
-            switch (type) {
-                case 'text'   :
-                    template = $('#customTextareaFieldTemplate').clone();
-                    field = template.find('.value');
+            switch (descriptionField.type) {
+                case 'array':
+                    var field = Metadata.getArrayDiv(descriptionField);
                     break;
+
+                case 'object':
+                    var field = Metadata.getObjectDiv(descriptionField);
+                    break;
+
+                case 'text':
+                case 'string':
+                    var field = Metadata.getTextInput(descriptionField);
+                    break;
+
                 case 'name':
-                    field = template.find('input');
+                    var field = Metadata.getKeywordInput(descriptionField);
                     break;
-                case 'number' :
-                    field = template.find('.value');
-                    field.attr('type', 'number').attr('placeholder', $('#number_text').html());
-                    break;
-                case 'date':
-                    field = template.find('.value');
-                    field.attr('placeholder', $('#date_text').text());
-                    field.datepicker(DatePickerParams);
-                    break;
-                case 'boolean':
-                    var template = $('#customBooleanFieldTemplate').clone();
-                    token = guid();
 
-                    field = template.find("input[type=radio]").each(function () {
-                        $(this).attr("name", token);
-                    });
+                case 'number':
+                    var field = Metadata.getNumberInput(descriptionField);
                     break;
+
+                case 'date':
+                case 'timestamp':
+                    var field = Metadata.getDateInput(descriptionField);
+                    break;
+
+                case 'boolean':
+                    var field = Metadata.getRadioInput(descriptionField);
+                    break;
+
                 default:
+                    console.log("Type "+descriptionField.type+" of field "+descriptionField.name+" is not managed");
                     return;
-                    break;
             }
 
-            field.attr('data-type', type);
-            template.removeAttr('id').appendTo(target);
+            formGroup.attr('name', descriptionField.name).attr('data-type', descriptionField.type);
+            formGroup.data('description', descriptionField);
 
+            div.append(field);
+
+            if (descriptionField.required) {
+                label.append($("<span style='color: red'>").text(" *"));
+                field.attr("data-required", descriptionField.required);
+            }
+
+            if (descriptionField.readonly) {
+                field.attr("data-readonly", descriptionField.readonly);
+            }
+
+            formGroup.data('field', field);
+
+            return formGroup;
+        },
+
+        getTextInput : function (descriptionField) {
+            var field = $('<input>')
+                        .attr('type', 'text')
+                        .addClass('form-control')
+                        .addClass('input-sm');
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
+            }
+
+            field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                return this.val();
+            };
+
+            return field;
+        },
+
+        getKeywordInput : function (descriptionField) {
+            if (descriptionField.ref) {
+                return Metadata.getTypeahead(descriptionField);
+            } else if (descriptionField.enumeration) {
+                return Metadata.getSelect(descriptionField);
+            } else {
+                return Metadata.getTextInput(descriptionField);
+            }
+        },
+
+        getNumberInput : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
+            field.attr('placeholder', $('#number_text').text()).attr("pattern", "[0-9]*");
+
+            field.getValue = function() {
+                checkNumberInput(field);
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                return this.val();
+            };
+
+            return field;
+        },
+
+        getDateInput : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
+            field.attr('placeholder', $('#date_text').text());
+            field.datepicker(DatePickerParams);
+
+            field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                if (this.val()){
+                    var dateObject = this.datepicker('getDate');
+                    return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                }
+            };
+
+            return field;
+        },
+
+        getTextArea : function(descriptionField) {
+            var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
+            }
+
+            field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                return $.trim(this.val());
+            };
+
+            return field;
+        },
+
+        getRadioInput : function(descriptionField) {
+            var field = $('<div class="btn-group" data-toggle="buttons"/>');
+            var falseGroup = $('<label class="btn btn-default"/>');
+            falseGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="0">')
+                      .append($('<i class="fa fa-times" />'));
+            field.append(falseGroup);
+
+            var nullGroup = $('<label class="btn btn-default active"/>');
+            nullGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value=""> &nbsp');
+            field.append(nullGroup);
+
+            var trueGroup = $('<label class="btn btn-default"/>');
+            trueGroup.append('<input type="radio" name="defaultValue" autocomplete="off" value="1">')
+                     .append($('<i class="fa fa-check" />'));
+            field.append(trueGroup);
+
+            if (descriptionField.default == 1 || descriptionField.default == 0) {
+                field.find('[value=""]').parent().removeClass("active");
+                field.find('[value="'+descriptionField.default+'"]').parent().addClass("active");
+                field.find('[value="'+descriptionField.default+'"]').prop("checked", "checked");
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                $(field).find(".btn").addClass("disabled");
+            }
+
+            field.getValue = function() {
+                if(field.data('required')){
+                    if (this.find('.active').children("input").val()=="") {
+                        this.css({"border-color":"red",
+                                    "border-style":"solid"});
+                        this.focus();
+                        Metadata.isValid = false;
+                    } else {
+                        this.css({"border-color":"",
+                                    "border-style":"unset"});
+                    }
+                }
+                return this.find('.active').children("input").val();
+            };
+
+            return field;
+        },
+
+        getSelect : function(descriptionField) {
+            var field = $('<select class="form-control input-sm"><option value="" /></select>')
+
+            $.each(descriptionField.enumeration, function (index, value) {
+                text = value;
+                if (descriptionField.enumNames && descriptionField.enumNames[index]) {
+                    text = descriptionField.enumNames[index]
+                }
+                field.append($('<option>', {
+                    value: value,
+                    text: text
+                }));
+            });
+            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
+                field.val(descriptionField.default);
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                field.attr("readonly", true);
+                field.attr("disabled", true);
+            }
+
+            field.getValue = function() {
+                if(field.data('required')){
+                    checkErrorInput(field);
+                }
+                return $.trim(this.val());
+            };
+
+            return field;
+        },
+
+        getTypeahead : function(descriptionField) {
+            var field = Metadata.getTextInput(descriptionField);
+            field.attr('name', 'test');
+            setTimeout(function(){
+                var data = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/descriptionRef/'+descriptionField.name+'?query=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+                data.initialize();
+
+                field.typeahead(
+                    {
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'data',
+                        source: data.ttAdapter(),
+                        templates: {
+                            suggestion: function(data) {
+                                delete data._query;
+                                var html = $('<div>');
+                                var keyname = Object.keys(data)[0];
+                                var key = data.keyname;
+                                html.append($('<strong class="badge">').text(key));
+                                delete data[keyname];
+                                var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
+                                html.append(' '+value);
+                                return html;
+                            }
+                        }
+                    }
+                ).on('typeahead:selected', function ($event, suggestion, source) {
+                    var keys = Object.keys(suggestion); //fetched the key at first index
+                    field.val(suggestion[keys[0]]);
+                    field.typeahead('val', suggestion[keys[0]]);
+                });
+            }, 300);
+
+
+            return field;
+        },
+
+        getObjectDiv : function(descriptionField) {
+            id = guid();
+            var div = $('<div class="panel panel-default" style="margin-bottom:0px;">');
+
+            var heading = $('<div class="panel-heading"/>');
+            div.append(heading);
+
+            var title = $('<h4 class="panel-title" style="display: inline-block;" />');
+            heading.append(title);
+
+            var anchor = $('<a role="button" data-toggle="collapse" aria-expanded="true"/>');
+
+            // Add title to Collapse
+            var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
+            anchor.attr('href', "#"+id);
+            anchor.text(objectHeader);
+            title.append(anchor);
+
+            if (descriptionField.required) {
+                var requiredTitle = $("#object_required_text").clone();
+                requiredTitle.css({"font-size":"12px", "color":"red", "display":"block"});
+                heading.append(requiredTitle);
+            }
+
+            var collapse = $('<div class="panel-collapse collapse">').attr('id', id);
+            div.append(collapse);
+
+            var panelBody = $('<div class="panel-body">');
+            collapse.append(panelBody);
+
+            var input = $('<input class="hide" type="text" data-type="object" value="">');
+            panelBody.append(input);
+
+            var propertyList = $('<ul style="padding-left: 0px; padding-right: 40px; list-style: none">');
+            panelBody.append(propertyList);
+
+            $.each(descriptionField.properties, function() {
+                if (this.internal) {
+                    return;
+                }
+                formGroup = Metadata.getFormGroup(this);
+
+                item = $("<li class='col-12'></li>");
+                item.append(formGroup);
+
+                item.data('formgroup', formGroup);
+                item.data('field', formGroup.data('field'));
+
+                propertyList.append(item);
+            });
+
+            div.data('propertyList', propertyList);
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                $(div).find(".btn").addClass("disabled");
+            }
+
+            div.getValue = function() {
+                var object = {};
+                var properties = this.data('propertyList').children('li');
+
+                $.each(properties, function() {
+                    var field = $(this).data('field');
+                    var name = $(this).data('formgroup').attr('name');
+                    var value = field.getValue();
+                    if (value) {
+                        object[name] = value;
+                    }
+                });
+
+                if (!div.parent("li").length){
+                    if(field.data('required')){
+                        if (!Object.keys(object).length) {
+                            onError(field);
+                        } else {
+                            field.css({"border-color":""});
+                        }
+                    }
+                }
+
+                if (Object.keys(object).length) {
+                    return object;
+                }
+            };
+
+            return div;
+        },
+
+        getArrayDiv : function(descriptionField) {
+            var div = $('<div>');
+
+            div.attr("data-itemtype", descriptionField.itemType);
+            if (descriptionField.itemType.type) {
+                div.attr("data-itemtype", descriptionField.itemType.type)
+            }
+
+            var addButton = $('<button type="button" class="addRowArray btn btn-sm btn-success pull-right" title="Add data">&nbsp;<i class="fa fa-check">&nbsp;</i></button>');
+            div.append(addButton);
+
+            var itemList = $('<ul class="arrayDiv">');
+            div.append(itemList);
+            div.data('itemlist', itemList);
+            div.data('item-description', descriptionField.itemtype);
+            div.data('description', descriptionField);
+
+            var item = Metadata.getArrayItem(descriptionField);
+            itemList.append(item);
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                $(div).find(".btn").addClass("disabled");
+            }
+
+            div.getValue = function() {
+                var values = [];
+                var items = this.data('itemlist').children('li');
+
+                $.each(items, function() {
+                    var field = $(this).data('field');
+                    var value = field.getValue();
+                    if (value) {
+                        values.push(value);
+                    }
+                });
+
+                if(this.data('required')){
+                    if (values.length == 0) {
+                        if (this.data("itemtype") == "object") {
+                            onError(div.find("div").first());
+                        } else {
+                            onError(div.find("input").first());
+                        }
+                    } else {
+                        if (this.data("itemtype") == "object") {
+                            div.find("div").first().css({"border-color":""});
+                        } else {
+                            div.find("input").first().css({"border-color":""});
+                        }
+                    }
+                }
+
+                if (values.length) {
+                    return values;
+                }
+            };
+
+            return div;
+        },
+
+        getArrayItem : function(descriptionField)
+        {
+            var item = $('<li class="input-group col-sm-12">');
+
+            switch (descriptionField.itemType) {
+                case 'text':
+                case 'string':
+                    var field = Metadata.getTextInput(descriptionField);
+                    break;
+
+                case 'name':
+                    var field = Metadata.getKeywordInput(descriptionField);
+                    break;
+
+                case 'number':
+                    var field = Metadata.getNumberInput(descriptionField);
+                    break;
+
+                case 'date':
+                case 'timestamp':
+                    var field = Metadata.getDateInput(descriptionField);
+                    break;
+
+                case 'boolean':
+                    var field = Metadata.getRadioInput(descriptionField);
+                    break;
+
+                default:
+                    if ($.isPlainObject(descriptionField.itemType)) {
+                        switch (descriptionField.itemType.type) {
+                            case 'object' :
+                                var field = Metadata.getObjectDiv(descriptionField.itemType);
+
+                                // Add title to Collapse
+                                var objectHeader = $("#object_header_new_text").text().replace(/%1\$s/g, descriptionField.label);
+                                header = field.find(".panel-title").first().find("a");
+                                header.text(objectHeader);
+
+                                break;
+                            case 'array' :
+                                var field = Metadata.getArrayDiv(descriptionField.itemType);
+                                break;
+                        }
+                    } else {
+                        console.log("Type "+descriptionField.itemType+" of field "+descriptionField.name+" is not managed");
+                        return;
+                    }
+            }
+
+            item.data('field', field);
+
+            item.append(field);
+
+            return item;
+        },
+
+        addArrayItem : function(arrayDiv) {
+            var itemList = arrayDiv.data('itemlist');
+            var descriptionField = arrayDiv.data('description');
+
+            // New empty item
+            var div = Metadata.getArrayItem(descriptionField);
+
+            var items = itemList.children("li");
+            items.css({'margin-bottom': '0px'});
+            
+            if (items.length) {
+                var index = items.length;
+
+                previous = items.first();
+                previous.find('a').first().text('#'+index);
+
+                // Button to remove item
+                if ($.isPlainObject(descriptionField.itemType)) {
+                    previous.children().css({'border-color':''});
+                    previous.find(".panel-heading").css({ "padding-top": "2px", "padding-bottom": "2px" });
+                    previous.find(".panel-collapse").removeClass("in");
+                    previous.find(".panel-heading").append('<a href="#" class="btn btn-default removeRowArray" style="display: inline-block;margin-left: 90%;"><i class="fa fa-times text-danger"></i></a>');
+                } else {
+                    previous.children().css({'border-color':''});
+                    previous.attr("oninput", "checkInput(this)");
+                    previous.append('<a href="#" class="btn btn-default removeRowArray input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+                }
+            }
+
+            if(descriptionField.readonly && Metadata.isModification) {
+                div.find("input, select").attr("readonly", true);
+                div.find("input, select").attr("disabled", true);
+                div.find(".btn").addClass("disabled");
+                // Disable 'removeRowArray' button
+                previous.find(".btn").addClass("disabled");
+            }
+
+            div.css({'margin-bottom': '5px'});
+            itemList.prepend(div);
+            itemList.append(previous);
+        },
+
+        addCustomField : function(source = "", target = $("#customFields")) {
+            var formGroup = $('<div class="form-group" />');
+            var label = $('<div class="col-md-3"/>');
+            var name = $('<input type="text" class="form-control input-sm name" />');
+            name.val(source.property);
+
+            label.append(name);
+            formGroup.append(label);
+            var div = $('<div class="input-group col-md-9" style="padding-left: 15px;"/>');
+            formGroup.append(div);
+
+            var field = $('<textarea class="form-control input-sm" rows="1" style="resize: none; resize: vertical; height: 2.5em;" />');
+            field.attr('data-type', 'text');
+            field.text(source.value);
+
+            var removeButton = $('<a href="#" class="btn btn-default removeField input-group-addon"><i class="fa fa-times text-danger"></i></a>');
+
+            div.append(field);
+            div.append(removeButton);
+
+            formGroup.data('name', name);
+            formGroup.data('field', field);
+
+            field.getValue = function() {
+                return $.trim(this.val());
+            };
+
+            target.append(formGroup);
+        },
+
+        removeRowArray : function(source) {
+            source.closest('li').remove();
         },
 
         removeField : function(source) {
@@ -369,109 +806,41 @@
         },
 
         serialize : function(target) {
+            Metadata.flagEmptyRequiredField = false;
+            Metadata.flagEmptyCustomField = false;
+
             var selectedProfile = $('#archivalProfile').find('option:selected').data('json');
-            var inputsArchivalProfile = target.find("#archivalProfileFields").find('input, textarea, select');
-            var inputsCustom = target.find("#customFields").children();
-            var flagEmptyRequiredField = false;
-            var flagEmptyCustomField = false;
+            var formGroups = target.find("#archivalProfileFields").children('div');
+            var customFormGroups = target.find("#customFields").children('div');
 
-            if (selectedProfile != undefined && selectedProfile.descriptionClass != null && selectedProfile.descriptionClass != '') {
-                var descriptionObject = {};
-                var fulltext = false;
-            } else {
-                var descriptionObject = {};
-                var fulltext = true;
-            }
+            var descriptionObject = {};
 
-            $.each(inputsArchivalProfile, function() {
-                //var value = $.trim($(this).val());
-                var type = $(this).attr("data-type");
-                var inputType = $(this).attr("type");
-                var name = $(this).attr('name');
-                var required = $(this).attr('data-required');
-                var enumerate = $(this).attr('data-enumerate');
+            $.each(formGroups, function() {
+                name = $(this).attr('name');
 
-                if(enumerate == 'NOT_VALUE'){
-                    return;
-                }
-                switch(type) {
-                    case "boolean":
-                        if (!$(this).prop("checked")) {
-                            return;
-                        }
+                field = $(this).data('field');
+                value = field.getValue();
 
-                        switch ($(this).val()) {
-                            case "1":
-                            case "0": value = $(this).val();
-                                break;
-                            default: value = null;
-                                break;
-                        }
-
-                        break;
-
-                    case "date":
-                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        break;
-
-                    case 'number':
-                        value = Number($.trim($(this).val()));
-                        break;
-
-                    default :
-                        value = $.trim($(this).val());
-                }
-
-
-                if (required == "true" && (value === "" || value === null || value === undefined)) {
-                    flagEmptyRequiredField = true;
-                    $(this).closest(".form-group").addClass('has-error');
-                    return;
-                } else {
-                    $(this).closest(".form-group").removeClass('has-error');
-                }
-
-                if (enumerate) {
-                    if(enumerate != 'NOT_VALUE'){
-
-                        if(!descriptionObject[name]) {
-                            descriptionObject[name] = [value];
-                        } else {
-                            descriptionObject[name].push(value)
-                        }
-                    }
-                } else {
+                if (value) {
                     descriptionObject[name] = value;
                 }
             });
+            if (!Metadata.isValid) {
+                Metadata.isValid = true;
+                Metadata.flagEmptyRequiredField.field = true;
+                return -1 ;
+            }
 
 
-            $.each(inputsCustom, function() {
-                var value = "";
-                var type = $(this).find('[data-type]').attr("data-type");
-                var name = $(this).find('.name').val();
+            $.each(customFormGroups, function() {
+                name = $(this).data('name').val();
+                var value = $.trim($(this).find('.value').val());
+                field = $(this).data('field');
+                value = field.getValue();
 
-                switch(type) {
-                    case "boolean":
-                        value = $(this).find("input:checked").val();
-
-                        break;
-
-                    case "date":
-                        value = $(this).find('.value').data('datepicker').getFormattedDate('yyyy-mm-dd');
-                        break;
-
-                    case 'number':
-                        value = Number($.trim($(this).find('.value').val()));
-                        break;
-
-                    default :
-                        value = $.trim($(this).find('.value').val());
-                }
-
-                if ((value === '' && type != "boolean") || value == undefined || value == null || name == ''|| name == undefined || name == null) {
+                if (value == undefined || value == null || name == ''|| name == undefined || name == null) {
                     $(this).closest(".form-group").addClass('has-error');
-                    flagEmptyCustomField = true;
+                    Metadata.flagEmptyCustomField = true;
                     return;
                 } else {
                     $(this).closest(".form-group").removeClass('has-error');
@@ -480,18 +849,18 @@
                 descriptionObject[name] = value;
             });
 
-            var result = descriptionObject;
-
-            if (flagEmptyRequiredField) {
-                result = true;
+            if (Metadata.flagEmptyRequiredField) {
                 gritter.show($('#fieldLabel_error').text(), false);
+
+                return -1;
             }
-            if (flagEmptyCustomField) {
-                result = true
+            if (Metadata.flagEmptyCustomField) {
                 gritter.show($('#customFieldLabel_error').text(), false);
+
+                return -1;
             }
 
-            return result;
+            return descriptionObject;
         },
 
         clear : function() {
@@ -507,7 +876,99 @@
                 $('#customFields').empty();
                 $('#customFieldAddBtn').addClass("hide");
             }
+        },
+
+        fillInMetadata : function(archiveId) {
+            $.ajax({
+                url         : "/archive/"+archiveId,
+                type        : "GET",
+                headers     : {"Accept":"application/json"},
+                async       : false,
+                success     : function (response) {
+                    Metadata.archive = response;
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            });
+            $('#modifyArchive').data("archive-id", archiveId);
+            $('#modifyArchive').removeClass("hide");
+            $("#syncImport").addClass("hide");
+            $("#managementMetadataDiv").addClass("hide");
+            Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
+        },
+
+        checkAndFill : function(data, target) {
+            if (target.attr("data-type")==="date") {
+                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                field = target.find("input");
+                field.datepicker('setDate', data);
+            }
+
+            if (target.attr("data-type")==="name") {
+                field = target.find("select, input");
+                field.val(data);
+            } else if (target.attr("data-type")==="boolean") {
+                $.each($(target).find("input"), function(){
+                    if($(this).val() === data) {
+                        $(this).parent().siblings("label").removeClass("active");
+                        $(this).parent().removeClass("disabled");
+                        $(this).parent().addClass("active");
+                    }
+                });
+            } else if ($.isPlainObject(data)) {
+                $.each(data, function(property, value) {
+                    if (property == "description") {
+                        $.each(value, function(descProperty, descValue) {
+                            if(target.find("[name='"+descProperty+"']").first().length > 0) {
+                                if ($.isPlainObject(descValue)){
+                                    objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
+                                    var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
+                                    header = objectTarget.find(".panel-title").first().find("a");
+                                    header.text(objectHeader);
+                                }
+                                Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
+                            } else {
+                                custom = {
+                                    "property" : descProperty,
+                                    "value": descValue
+                                    }
+                                Metadata.addCustomField(custom);
+                            }
+                        });
+                    } else if (property == "descriptionObject") {
+                        return true;
+                    } else {
+                        objectTarget = target.find("[name="+property+"]").first();
+                        var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, property);
+                        header = objectTarget.find(".panel-title").first().find("a");
+                        header.text(objectHeader);
+                        Metadata.checkAndFill(value, objectTarget);
+                    }
+                })
+            } else if ($.isArray(data)){
+                array = target.find("ul").first();
+                $.each(data, function(index, item) {
+                    newItem = array.find("li").first();
+                    Metadata.checkAndFill(item, newItem);
+                    Metadata.addArrayItem(array.parent());
+                })
+                if(array.parent().data("readonly")){
+                    array.find("input, select").attr("readonly", true);
+                    array.find("input, select").attr("disabled", true);
+                }
+            } else {
+                field = target.find("select, input");
+                field.val(data);
+                if(field.data("readonly")){
+                    field.attr("readonly", true);
+                }
+            }
         }
     }
+
+    $('#importPanel').on('click', '#modifyArchive', function(e) {
+        ArchiveForm.modify(e, $(this));
+    });
 </script>
 <script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>

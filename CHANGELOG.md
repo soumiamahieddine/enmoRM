@@ -2,7 +2,14 @@
 
 ## Version 2.5
 
+### Métadonnées
+
+- `Added` Possiblité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Possiblité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
+- `Added` Possiblité d'ajout de referentiels externes (exemple : CSV, base de données...) pour les données descriptives.
+
 ### IHM
+
 - `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
 
 ## Version 2.4.4 
@@ -37,6 +44,7 @@ peuvent désormais n'envoyer que le code de la règle, le système utilisant le 
 automatique, notamment pour les connexions sans authentification
 
 ## Version 2.4.2
+
 
 ### Script d'import
 
@@ -91,7 +99,7 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Changed` Nouveau design de l'écran principal pour la navigation, la recherche et la consultation
+- `Changed` Nouvau design de l'écran principal pour la navigation, la recherche et la consultation
 - `Added` Personnalisation de la page de connexion avec une image de fonds et un style configurables
 - `Fixed` Blocage des double-clics sur les boutons
 

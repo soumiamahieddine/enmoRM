@@ -28,6 +28,7 @@ class archive
 {
 
     use archiveEntryTrait,
+        archiveValidationTrait,
         archiveAccessTrait,
         archiveModificationTrait,
         archiveRestitutionTrait,

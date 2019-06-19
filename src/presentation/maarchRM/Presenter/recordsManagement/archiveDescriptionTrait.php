@@ -34,10 +34,10 @@ trait archiveDescriptionTrait
         $descriptionFields = $archivalProfileFields = [];
 
         $archivalProfile = $this->loadArchivalprofile($archive->archivalProfileReference);
-        
+
         // Retrieve scheme properties (description fields)
         $descriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $archive->descriptionClass);
-        
+
         if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
             // Index profile fields and set immutale fields as readonly
             $archivalProfileFieldNames = [];
@@ -66,7 +66,7 @@ trait archiveDescriptionTrait
     {
         $table = $this->view->createElement('table');
         $table->setAttribute('class', "table table-condensed table-striped");
-        
+
         $object = (object) $this->sortFields(get_object_vars($object), array_keys($descriptionFields));
         foreach ($object as $name => $value) {
             $descriptionField = $this->getDescriptionField($name, $value, $descriptionFields);
@@ -147,6 +147,11 @@ trait archiveDescriptionTrait
 
     protected function getTableData($value, $descriptionField)
     {
+        // if I have an external ref in my decription Field, I load it and attributes it its first value
+        if (isset($descriptionField->ref) && $descriptionField->ref === true) {
+            $value = \laabs::callService('recordsManagement/descriptionRef/read_name__key_', $descriptionField->name, $value)[1];
+        }
+
         $td = $this->view->createElement('td');
         $td->setAttribute('style', 'padding: 0 5px 0 5px');
         $td->setAttribute('data-value', json_encode($value));
@@ -178,6 +183,13 @@ trait archiveDescriptionTrait
 
                     return $this->getObjectTable($value, $properties);
                 } else {
+                    if (!empty($descriptionField->enumeration) && !empty($descriptionField->enumNames)) {
+                        $index = array_search($value, $descriptionField->enumeration);
+                        if ($index!== false && isset($descriptionField->enumNames[$index])) {
+                            $value = $descriptionField->enumNames[$index];
+                        }
+                    }
+
                     return $this->view->createTextNode($value);
                 }
         }
@@ -197,7 +209,7 @@ trait archiveDescriptionTrait
                 $checker->setAttribute('data-value', '0');
             }
         }
-        
+
         return $checker;
     }
 
@@ -241,7 +253,7 @@ trait archiveDescriptionTrait
                 $sortedFields[$name] = $value;
             }
         }
-        
+
         return $sortedFields;
     }
 }

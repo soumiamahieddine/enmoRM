@@ -440,6 +440,7 @@
     }
 
     $("#folderPanel").on('click', '.newArchive', function() {
+        Metadata.isModification = false;
         NewArchive.loadImportForm($(this));
     });
 

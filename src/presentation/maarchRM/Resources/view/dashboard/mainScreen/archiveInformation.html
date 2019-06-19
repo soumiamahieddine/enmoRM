@@ -567,10 +567,6 @@
          ArchiveInformation.saveManagementMetadata();
     });
     
-    $('#editMetadata').on('click', function(){
-        ArchiveInformation.editMetadata();
-    });
-    
     $('#archiveInformation').on('click','.addCustomField',function(){
        ArchiveInformation.addField($(this).data('type'));
     });
@@ -580,7 +576,22 @@
     });
 
     $("#archiveToolbarBtn").on('click', '.newArchive', function() {
+        Metadata.isModification = false;
         ArchiveInformation.loadImportForm($(this));
+    });
+
+    $('#editMetadata').on('click', function(){
+        $("#documentForm").hide();
+        var profile = $(this).parent().text().trim();
+        var profileMetadata = $("#folderToolbarBtn").find(".newArchive").filter(function() {
+            if ($(this).text().trim() === profile) {
+                return $(this);
+            }
+        })
+        archiveId = $(".archiveInformationId").val();
+        Metadata.isModification = true;
+        NewArchive.loadImportForm(profileMetadata);
+        Metadata.fillInMetadata(archiveId);
     });
         
 </script>

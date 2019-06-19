@@ -80,6 +80,16 @@ class descriptionField
     public $enumeration;
 
     /**
+    * @var string[]
+    */
+    public $enumNames;
+
+    /**
+    * @var boolean
+    */
+    public $ref;
+
+    /**
     * @var string
     */
     public $pattern;

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2019 Maarch
  *
  * This file is part of bundle recordsManagement.
  *
@@ -74,7 +74,6 @@ class descriptionScheme
         if (empty($name)) {
             return \laabs::newController('recordsManagement/descriptionField')->index();
         }
-
         if (isset($this->descriptionSchemes[$name])) {
             $descriptionSchemeConfig = $this->descriptionSchemes[$name];
         } elseif (strpos($name, '/') !== false) {
@@ -93,11 +92,11 @@ class descriptionScheme
 
     protected function getDescriptionFieldsFromPhpClass($name)
     {
-        $descriptionScheme = \laabs::getClass($name);
+        $descriptionClass = \laabs::getClass($name);
         $fields = [];
 
-        foreach ($descriptionScheme->getProperties() as $descriptionSchemeProperty) {
-            $fields[$descriptionSchemeProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionSchemeProperty);
+        foreach ($descriptionClass->getProperties() as $descriptionProperty) {
+            $fields[$descriptionProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionProperty);
         }
 
         return $fields;
@@ -119,6 +118,16 @@ class descriptionScheme
 
         if (isset($schemeProperty->enumeration)) {
             $descriptionField->enumeration = $schemeProperty->enumeration;
+            if (isset($schemeProperty->tags['enumNames'])) {
+                @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+                if (isset($enumNames) && isset($descriptionField->enumeration) && count($enumNames) == count($descriptionField->enumeration)) {
+                    $descriptionField->enumNames = $enumNames;
+                }
+            }
+        }
+
+        if (isset($schemeProperty->tags['ref'])) {
+            $descriptionField->ref = $schemeProperty->tags['ref'][0];
         }
 
         if (isset($schemeProperty->tags['internal'])) {
@@ -129,45 +138,27 @@ class descriptionScheme
             $descriptionField->readonly = true;
         }
 
+        if (isset($schemeProperty->tags['required'])) {
+            $descriptionField->required = true;
+        }
+
         switch (true) {
             case substr($type, -2) == '[]':
                 $descriptionField->type = 'array';
                 $itemType = substr($type, 0, -2);
-                if (strpos($itemType, '/') !== false) {
-                    $descriptionField->itemType = '#'.$itemType;
-                } else {
-                    $descriptionField->itemType = $itemType;
-                }
+                $descriptionField->itemType = $this->getPropertyTypeName($itemType);
                 break;
 
             case $type == 'string':
                 if (isset($schemeProperty->tags['scheme'])
                     || isset($schemeProperty->tags['uses'])
                     || isset($schemeProperty->enumeration)
-                    || isset($schemeProperty->index)) {
+                    || isset($schemeProperty->index)
+                    || isset($schemeProperty->tags['ref'])) {
                     $descriptionField->type = 'name';
                 } else {
                     $descriptionField->type = 'text';
                 }
-                break;
-
-            case $type == 'int':
-            case $type == 'integer':
-            case $type == 'float':
-            case $type == 'real':
-            case $type == 'double':
-                $descriptionField->type = 'number';
-                break;
-
-            case $type == 'bool':
-            case $type == 'boolean':
-                $descriptionField->type = 'boolean';
-                break;
-
-            case $type == 'timestamp':
-            case $type == 'datetime':
-            case $type == 'date':
-                $descriptionField->type = 'date';
                 break;
 
             case strpos($type, '/') !== false:
@@ -176,9 +167,39 @@ class descriptionScheme
                 break;
 
             default:
-                $descriptionField->type = $type;
+                $descriptionField->type = $this->getPropertyTypeName($type);
         }
 
         return $descriptionField;
+    }
+
+    protected function getPropertyTypeName($type)
+    {
+        switch (true) {
+            case $type == 'string':
+                return 'text';
+
+            case $type == 'int':
+            case $type == 'integer':
+            case $type == 'float':
+            case $type == 'real':
+            case $type == 'double':
+                return 'number';
+
+            case $type == 'bool':
+            case $type == 'boolean':
+                return 'boolean';
+
+            case $type == 'timestamp':
+            case $type == 'datetime':
+            case $type == 'date':
+                return 'date';
+
+            case strpos($type, '/') !== false:
+                return '#'.$type;
+
+            default:
+                return $type;
+        }
     }
 }

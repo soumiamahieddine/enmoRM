@@ -472,3 +472,16 @@ menu = "[
 Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.4_V2.5.sql
+
+## Branchement de listes externes
+Une nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser
+des valeurs ou des paires de clé et valeur dans les métadonnées descriptives des archives.
+
+Pour le moment, uniquement les csv sur deux colonnes sont gérés. Il est nécessaire de créer un dossier avec l'ensemble des référentiels externes à l'intérieur. Le chemin vers ce fichier est à renseigner dans la valeur de configuration [recordsManagement] refDirectoy, par exemple :
+
+[recordsManagement]
+refDirectory = "%laabsDirectory%/data/maarchRM/ref"
+
+Les csv sont considérés comme étant séparés par des virgules et les données présentes entre des guillemets ("").
+Lors de l'ajout d'un mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentiel externe doit correspondre avec le nom du fichier csv à charger dans le dossier renseigné dans la configuration, sans son extension.
+Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxième colonne. Les colonnes surnuméraires sont chargées mais ne servent que d'aide à la recherche lors de la saisie.

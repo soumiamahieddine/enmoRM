@@ -1017,6 +1017,9 @@ msgstr "Demander le transfert sortant"
 msgid "Invalid object"
 msgstr "Objet invalide"
 
+msgid "Attempt to modify readonly field(s)"
+msgstr "Tentative de modification d'une donnée en lecture seule."
+
 msgid "Do not update the final disposition"
 msgstr "Ne pas mettre à jour le sort final"
 

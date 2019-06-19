@@ -371,7 +371,7 @@ trait archiveModificationTrait
      * @param string $originatorArchiveId
      * @param string $archiverArchiveId
      * @param string $archiveName
-     * @param string $description
+     * @param object $description
      * @param date   $originatingDate
      *
      * @return boolean The result of the operation
@@ -419,11 +419,32 @@ trait archiveModificationTrait
                 foreach ($archivalProfileDescription as $descriptionImmutable) {
                     if ($descriptionImmutable->isImmutable) {
                         $fieldName = (string)$descriptionImmutable->fieldName;
-                        if ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
-                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Invalid object');
+                        if (isset($descriptionObject->$fieldName)){
+                            if (is_array($descriptionObject->$fieldName)) {
+                                $archiveNewField = $descriptionObject->$fieldName;
+                                $archiveOldField = $archive->descriptionObject->$fieldName;
+                                sort($archiveNewField);
+                                sort($archiveOldField);
+                                if (is_object($descriptionObject->$fieldName[0])){
+                                     foreach($archiveNewField as $index => $object) {
+                                        if ($archiveOldField[$index] != $object) {
+                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                                        }
+                                    }
+                                } else {
+                                    if (count($archiveNewField) != count($archiveOldField) || array_diff($archiveNewField, $archiveOldField)){
+                                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                                    }
+                                }
+                            }
+                            elseif (!isset($archive->descriptionObject->$fieldName)) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                            }
+                            elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                            }
                         }
                     }
-
                 }
             }
             
