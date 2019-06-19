@@ -894,6 +894,7 @@ input:invalid {
             $('#modifyArchive').data("archive-id", archiveId);
             $('#modifyArchive').removeClass("hide");
             $("#syncImport").addClass("hide");
+            $("#asyncImport").addClass("hide");
             $("#managementMetadataDiv").addClass("hide");
             Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
         },
