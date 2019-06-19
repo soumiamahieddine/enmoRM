@@ -1082,3 +1082,12 @@ msgstr "Cette action sera irréversible."
 
 msgid "Modification request sent"
 msgstr "Demande de modification envoyée"
+
+msgid "Click to add '%1$s'"
+msgstr "Cliquer pour ajouter '%1$s'"
+
+msgid "Click to modify '%1$s'"
+msgstr "Cliquer pour modifier '%1$s'"
+
+msgid "* At least one field must be filled in."
+msgstr "* Au moins un champ doit être renseigné."
