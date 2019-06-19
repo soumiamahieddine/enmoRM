@@ -1,5 +1,4 @@
 <?php
-
 /* 
  * Copyright (C) Maarch
  *
@@ -27,9 +26,8 @@ namespace bundle\mades\Controller;
  * @package Mades
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterface
-{
-
+class ArchiveTransfer extends Message implements \bundle\medona\Controller\ArchiveTransferInterface
+{   
     public $errors = [];
     public $infos = [];
     public $replyCode;
@@ -40,6 +38,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
     public $orgController;
     public $filePlanController;
     public $archivalProfileController;
+    public $archiveController;
     public $sdoFactory;
 
     public function __construct(\dependency\sdo\Factory $sdoFactory)
@@ -48,6 +47,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         $this->orgController = \laabs::newController("organization/organization");
         $this->filePlanController = \laabs::newController("filePlan/filePlan");
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
+        $this->archiveController = \laabs::newController("recordsManagement/archive");
     }
 
     /**
@@ -176,32 +176,6 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
     }
 
     /**
-     * Load a message
-     * @param medona\message $message The message object
-     */
-    public function loadMessage($message)
-    {
-        $data = file_get_contents($message->path);
-
-        $message->object = json_decode($data);
-        $message->object->binaryDataObject = get_object_vars($message->object->dataObjectPackage->binaryDataObject);
-        $message->object->descriptiveMetadata = get_object_vars($message->object->dataObjectPackage->descriptiveMetadata);
-    }
-
-    protected function sendError($code, $message = false)
-    {
-        if ($message) {
-            array_push($this->errors, new \core\Error($message, null, $code));
-        } else {
-            array_push($this->errors, new \core\Error($this->getReplyMessage($code), null, $code));
-        }
-
-        if ($this->replyCode == null) {
-            $this->replyCode = $code;
-        }
-    }
-
-    /**
      * Validate message against schema and rules
      * @param string $messageId The message identifier
      * @param object $archivalAgreement The archival agreement
@@ -216,12 +190,22 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         $message->object->binaryDataObject = get_object_vars($message->object->binaryDataObject);
         $message->object->descriptiveMetadata = get_object_vars($message->object->descriptiveMetadata);
         
-        foreach ($message->object->descriptiveMetadata as $archive) {
-            $this->validateArchive($archive);
-        }
-
+        $this->validateDescriptiveMetadata($message->object->descriptiveMetadata);
 
         return true;
+    }
+
+    protected function validateDescriptiveMetadata($archiveUnitContainer)
+    {
+        foreach ($archiveUnitContainer as $archiveUnit) {
+            $this->archiveController->validateFileplan($archiveUnit);
+            $this->archiveController->validateArchiveDescriptionObject($archiveUnit);
+            $this->archiveController->validateManagementMetadata($archiveUnit);
+        }
+
+        if (!empty($archiveUnit->archiveUnit)) {
+            $this->validateDescriptiveMetadata($archiveUnit);
+        }
     }
 
     /**
@@ -249,7 +233,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         return [$this->processedArchives, null];
     }
 
-    private function processArchiveUnit($archive, $message, $archiveUnit)
+    protected function processArchiveUnit($archive, $message, $archiveUnit)
     {
         $archive->archiveName = $archiveUnit->archiveName;
 
@@ -305,7 +289,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         return $archive;
     }
 
-    private function processManagementMetadata($archive, $archiveManagementMetadata, $messageManagementMetadata)
+    protected function processManagementMetadata($archive, $archiveManagementMetadata, $messageManagementMetadata)
     {
         if (!empty($archiveManagementMetadata->archivalProfile)) {
             $archive->archivalProfileReference = $archiveManagementMetadata->archivalProfile;
@@ -338,7 +322,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         }
     }
 
-    private function processAccessRule($archive, $managementMetadata)
+    protected function processAccessRule($archive, $managementMetadata)
     {
         if (!empty($managementMetadata->accessRule->startDate)) {
             $archive->accessRuleCode = $managementMetadata->accessRule->code;
@@ -349,7 +333,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         }
     }
 
-    private function processAppraisalRule($archive, $managementMetadata)
+    protected function processAppraisalRule($archive, $managementMetadata)
     {
         if (!empty($managementMetadata->appraisalRule->code)) {
             $archive->retentionRuleCode = $managementMetadata->appraisalRule->code;
@@ -363,7 +347,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         }
     }
 
-    private function processOriginitorOrg($archive, $descriptiveMetadata)
+    protected function processOriginitorOrg($archive, $descriptiveMetadata)
     {
         $archive->originatorOrgRegNumber = $descriptiveMetadata->originatorId;
 
@@ -378,7 +362,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
     }
 
-    private function processClassificationRule($archive, $managementMetadata)
+    protected function processClassificationRule($archive, $managementMetadata)
     {
         $archive->classificationRuleCode = $managementMetadata->classificationRule->code;
         $archive->classificationRuleStartDate = $managementMetadata->classificationRule->startDate;
@@ -386,7 +370,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         $archive->classificationOwner = $managementMetadata->classificationRule->classificationOwner;
     }
 
-    private function processFilePlan($archive, $descriptiveMetadata) {
+    protected function processFilePlan($archive, $descriptiveMetadata) {
         if (isset($this->filePlan[$descriptiveMetadata->folderPath])) {
             $archive->filePlanPosition = $this->filePlan[$descriptiveMetadata->folderPath];
         } else {
@@ -397,7 +381,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         $archive->fileplanLevel = $descriptiveMetadata->archiveType;
     }
 
-    private function processBinaryDataObject($archive, $archiveUnit, $message)
+    protected function processBinaryDataObject($archive, $archiveUnit, $message)
     {
         if (empty($archiveUnit->dataObjects)) {
             return;
@@ -425,7 +409,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         }
     }
 
-    private function processLifeCycleEvents($archive, $archiveUnit)
+    protected function processLifeCycleEvents($archive, $archiveUnit)
     {
         if(empty($archiveUnit->lifeCycleEvents)) {
             return;
@@ -443,7 +427,7 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
         }
     }
 
-    private function processRelationship($archive, $archiveUnit, $message)
+    protected function processRelationship($archive, $archiveUnit, $message)
     {
         $archive->archiveRelationship = [];
 
@@ -459,203 +443,6 @@ class ArchiveTransfer implements \bundle\medona\Controller\ArchiveTransferInterf
             $archiveRelationship->description = $relationships->description;
 
             $archive->archiveRelationship[] = $archiveRelationship;
-        }
-    }
-
-    private function validateArchive($archive)
-    {
-        $this->validateFileplan($archive);
-        $this->validateArchiveDescriptionObject($archive);
-        $this->validateManagementMetadata($archive);
-
-        if (!empty($archive->archiveUnit)) {
-            foreach ($archive->archiveUnit as $archiveUnit) {
-                $this->validateArchive($archiveUnit);
-            }
-        }
-    }
-
-    private function validateFileplan($archive)
-    {
-        if (empty($archive->managementMetadata->archivalProfile)) {
-            $archive->managementMetadata->archivalProfile = null;
-        }
-
-        // No parent, check orgUnit can deposit with the profile
-        if (empty($archive->parentArchiveId)) {
-            if (!$this->orgController->checkProfileInOrgAccess($archive->managementMetadata->archivalProfile, $archive->originatorId)) {
-                throw new \core\Exception\BadRequestException("Invalid archive profile");
-            }
-
-            return;
-        }
-
-        // Parent : read and check fileplan
-        $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-
-        // Check level in file plan
-        if ($parentArchive->fileplanLevel == 'item') {
-            throw new \core\Exception\BadRequestException("Parent archive is an item and can not contain items.");
-        }
-
-        // No profile on parent, accept any profile
-        if (empty($parentArchive->archivalProfileReference)) {
-            return;
-        }
-
-        // Load parent archive profile
-        if (!isset($this->archivalProfiles[$parentArchive->archivalProfileReference])) {
-            $parentArchivalProfile = $this->archivalProfileController->getByReference($parentArchive->archivalProfileReference);
-            $this->archivalProfiles[$parentArchive->archivalProfileReference] = $parentArchivalProfile;
-        } else {
-            $parentArchivalProfile = $this->archivalProfiles[$parentArchive->archivalProfileReference];
-        }
-
-        // No profile : check parent profile accepts archives without profile
-        if (empty($archive->managementMetadata->archivalProfile) && $parentArchivalProfile->acceptArchiveWithoutProfile) {
-            return;
-        }
-
-        // Profile on content : check profile is accepted
-        foreach ($parentArchivalProfile->containedProfiles as $containedProfile) {
-            if ($containedProfile->reference == $archive->managementMetadata->archivalProfile) {
-                return;
-            }
-        }
-
-        throw new \core\Exception\BadRequestException("Invalid archive profile");
-    }
-
-    private function validateArchiveDescriptionObject($archive)
-    {
-        if (empty($archive->managementMetadata->archivalProfile)) {
-            return;
-        }
-
-        $archivalProfile = $this->archivalProfileController->getByReference($archive->managementMetadata->archivalProfile);
-
-        if (!empty($archivalProfile->descriptionClass)) {
-            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $archivalProfile->descriptionClass);
-
-            $this->validateDescriptionClass($archive->descriptionObject, $archivalProfile);
-        } else {
-            $this->validateDescriptionModel($archive->descriptionObject, $archivalProfile);
-        }
-    }
-
-    private function validateDescriptionClass($object, $archivalProfile)
-    {
-        if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
-        foreach ($archivalProfile->archiveDescription as $description) {
-            $fieldName = explode(LAABS_URI_SEPARATOR, $description->fieldName);
-            $propertiesList = array($object);
-
-            foreach ($fieldName as $name) {
-                $newPropertiesList = array();
-                foreach ($propertiesList as $propertyValue) {
-                    if (isset($propertyValue->{$name})) {
-                        if (is_array($propertyValue->{$name})) {
-                            foreach ($propertyValue->{$name} as $value) {
-                                $newPropertiesList[] = $value;
-                            }
-                        } else {
-                            $newPropertiesList[] = $propertyValue->{$name};
-                        }
-                    } else {
-                        $newPropertiesList[] = null;
-                    }
-                }
-                $propertiesList = $newPropertiesList;
-            }
-
-            foreach ($propertiesList as $propertyValue) {
-                if ($description->required && $propertyValue == null) {
-                    throw new \core\Exception\BadRequestException('The description class does not match with the archival profile.');
-                }
-            }
-        }
-    }
-
-    private function validateDescriptionModel($object, $archivalProfile)
-    {
-        $names = [];
-
-        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            $name = $archiveDescription->fieldName;
-            $names[] = $name;
-            $value = null;
-            if (isset($object->{$name})) {
-                $value = $object->{$name};
-            }
-
-            $this->validateDescriptionMetadata($value, $archiveDescription);
-        }
-
-        foreach ($object as $name => $value) {
-            if (!in_array($name, $names) && !$archivalProfile->acceptUserIndex) {
-                throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
-            }
-        }
-    }
-
-    private function validateDescriptionMetadata($value, $archiveDescription)
-    {
-        if (is_null($value)) {
-            if ($archiveDescription->required) {
-                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-            }
-
-            return;
-        }
-
-        $descriptionField = $archiveDescription->descriptionField;
-
-        $type = $descriptionField->type;
-        switch ($type) {
-            case 'name':
-                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
-                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-
-            case 'text':
-                break;
-
-            case 'number':
-                if (!is_int($value) && !is_float($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-
-            case 'boolean':
-                if (!is_bool($value) && !in_array($value, [0, 1])) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-
-            case 'date':
-                if (!is_string($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-        }
-    }
-
-    protected function validateManagementMetadata($archive)
-    {
-        if (isset($archive->managementMetadata->archivalProfile) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->managementMetadata->archivalProfile])) {
-            throw new \core\Exception\NotFoundException("The archival profile reference not found");
-        }
-
-        if (isset($archive->managementMetadata->appraisalRule->code) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->managementMetadata->appraisalRule->code)) {
-            throw new \core\Exception\NotFoundException("The retention rule not found");
-        }
-
-        if (isset($archive->managementMetadata->accessRule->code) && !$this->sdoFactory->exists("recordsManagement/accessRule", $archive->managementMetadata->accessRule->code)) {
-            throw new \core\Exception\NotFoundException("The access rule not found");
         }
     }
 }
