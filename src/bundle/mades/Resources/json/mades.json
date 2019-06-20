@@ -17,7 +17,7 @@
                 { "$ref": "#/definitions/Message" },
                 { 
                     "properties": { 
-                        "messageReceivedIdentifier": { "$ref": "#/definitions/Identifier" },
+                        "messageReceivedIdentifier": { "type" : "string" },
                         "sender": { "$ref": "#/definitions/Organization" },
                         "receiver": { "$ref": "#/definitions/Organization" }
                     },
@@ -37,7 +37,7 @@
                         },
                         "unitIdentifier": {
                             "type": "array",
-                            "items": { "$ref": "#/definitions/Identifier" }
+                            "items": { "type" : "string" }
                         },
                         "archivalAgency": { "$ref": "#/definitions/Organization" },
                         "requester": { "$ref": "#/definitions/Organization" }
@@ -52,10 +52,10 @@
                 { "$ref": "#/definitions/BusinessReplyMessage" },
                 { 
                     "properties": { 
-                        "authorizationRequestReplyIdentifier": { "$ref": "#/definitions/Identifier" },
+                        "authorizationRequestReplyIdentifier": { "type" : "string" },
                         "unitIdentifier": {
                             "type": "array",
-                            "items": { "$ref": "#/definitions/Identifier" }
+                            "items": { "type" : "string" }
                         },
                         "archivalAgency": { "$ref": "#/definitions/Organization" },
                         "requester": { "$ref": "#/definitions/Organization" }
@@ -72,9 +72,9 @@
                     "properties": { 
                         "relatedTransferReference": { 
                             "type": "array",
-                            "items": { "$ref": "#/definitions/Identifier" }
+                            "items": { "type" : "string" }
                         },
-                        "transferRequestReplyIdentifier": { "$ref": "#/definitions/Identifier" },
+                        "transferRequestReplyIdentifier": { "type" : "string" },
                         "archivalAgency": { "$ref": "#/definitions/Organization" },
                         "transferringAgency": { "$ref": "#/definitions/Organization" }
                     },
@@ -112,7 +112,7 @@
                 {
                     "properties": { 
                         "replyCode": { "$ref": "#/definitions/Token" },
-                        "messageRequestIdentifier": { "$ref": "#/definitions/Identifier" }
+                        "messageRequestIdentifier": { "type" : "string" }
                     },
                     "required": [ "messageRequestIdentifier" ]
                 }
@@ -142,7 +142,7 @@
                 { "$ref": "#/definitions/Message" },
                 { 
                     "properties": { 
-                        "archivalAgreement": { "$ref": "#/definitions/Identifier" },
+                        "archivalAgreement": { "type" : "string" },
                         "codeListVersions": { "$ref": "#/definitions/CodeListVersions" },
                         "dataObjectPackage": { "$ref": "#/definitions/DataObjectPackage" }
                     },
@@ -162,7 +162,7 @@
                     "type": "string",
                     "format": "date-time"
                 },
-                "messageIdentifier": { "$ref": "#/definitions/Identifier" },
+                "messageIdentifier": { "type": "string" },
                 "signature": {
                     "OneOf": [
                         { "type": "string" },
@@ -188,7 +188,7 @@
                 },
                 "unitIdentifier": {
                     "type": "array",
-                    "items": { "$ref": "#/definitions/Identifier" }
+                    "items": { "type" : "string" }
                 },
                 "requester": { "$ref": "#/definitions/Organization" },
                 "authorizationRequestReply": {
@@ -243,7 +243,7 @@
         "Organization": {
             "type": "object",
             "properties": { 
-                "identifier": { "$ref": "#/definitions/Identifier" },
+                "identifier": { "type" : "string" },
                 "organizationDescriptiveMetadata": {
                     "type": "object"
                 }
@@ -261,14 +261,14 @@
                         { "$ref": "#/definitions/ArchiveRelationship" }
                     ] 
                 }
-            },
+            }
         },
    
         "ManagementMetadata" : {
             "type": "object",
             "properties": {
-                "archivalProfile": { "$ref": "#/definitions/Identifier" },
-                "serviceLevel": { "$ref": "#/definitions/Identifier" }
+                "archivalProfile": { "type" : "string" },
+                "serviceLevel": { "type" : "string" }
             },
             "additionnalProperties" : true
         },

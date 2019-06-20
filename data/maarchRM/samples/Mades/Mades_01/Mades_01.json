@@ -3,18 +3,12 @@
         "coucou"
     ],
     "date" : "2019-06-18",
-    "messageIdentifier" : {
-        "value" : "01"
-    },
+    "messageIdentifier" : "01",
     "archivalAgency" : {
-        "identifier" : {
-            "value" : "GIC"
-        }
+        "identifier" : "GIC"
     },
     "transferringAgency" : {
-        "identifier" : {
-            "value" : "DAF"
-        }
+        "identifier" : "DAF"
     },
     "dataObjectPackage" : {
         "binaryDataObject" : {
