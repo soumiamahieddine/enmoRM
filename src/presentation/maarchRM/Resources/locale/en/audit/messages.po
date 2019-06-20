@@ -1548,13 +1548,13 @@ msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "organization/organization/createArchivalprofileaccess"
-msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
+msgstr "New profile access to services association created"
 
 msgid "organization/organization/updateArchivalprofileaccess"
-msgstr "Mise à jour d'une association d'un profil d'archive à un service"
+msgstr "Relationships between a service and an archival profile updated"
 
 msgid "organization/orgTree/deleteArchivalProfileAccess"
-msgstr "Suppression d'une association d'un profil d'archive à un service"
+msgstr "Relationships between a service and an archival profile deleted"
 
 msgid "organization/orgTree/readList"
 msgstr "Retrieve list of organization's type"

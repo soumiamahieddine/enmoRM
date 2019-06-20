@@ -1779,13 +1779,64 @@ msgid "recordsManagement/archives/readRegistry"
 msgstr "Recherche du registre"
 
 msgid "organization/organization/createArchivalprofileaccess"
-msgstr "New profile access to services association created"
+msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
 
 msgid "organization/organization/updateArchivalprofileaccess"
-msgstr "Relationships between a service and an archival profile updated"
+msgstr "Mise à jour d'une association d'un profil d'archive à un service"
 
 msgid "organization/orgTree/deleteArchivalProfileAccess"
-msgstr "Relationships between a service and an archival profile deleted"
+msgstr "Suppression d'une association d'un profil d'archive à un service"
 
 msgid "organization/orgTree/readList"
 msgstr "Charge la liste des types d'organisation"
+
+msgid "medona/archiveModificationRequest/read"
+msgstr "Lecture des demande de modification d'archive"
+
+msgid "medona/archiveModificationRequest/create"
+msgstr "Ajouts d'une modificaiton d'archive"
+
+msgid "medona/archiveModificationRequest/update_messageId_Reject"
+msgstr "Rejet de la demande de modification d'archive"
+
+msgid "medona/archiveModificationRequest/update_messageId_Accept"
+msgstr "Acceptations de la demande de modification d'archive"
+
+msgid "medona/archiveModificationRequest/readHistory"
+msgstr "Historique des modification d'archive"
+
+msgid "medona/archiveModificationRequest/readReference"
+msgstr "Liste des références des modifications d'archive"
+
+msgid "medona/archiveModificationRequest/read_message_Id_"
+msgstr "Lecture d'une moification d'archive"
+
+msgid "medona/archiveModificationRequest/read_message_Id_Export"
+msgstr "Lecture des exports de modification d'archive"
+
+msgid "medona/archiveModificationRequest/read_message_Id_Retry"
+msgstr "Lecture des relances d'exports de modification d'archive"
+
+msgid "medona/archiveModificationRequest/read_message_Id_Attachment_attachmentId_"
+msgstr "Lecture des pièces jointes aux demandes de modification d'archives"
+
+msgid "medona/archiveModificationRequest/"
+msgstr ""
+
+msgid "medona/archiveModificationRequest/"
+msgstr ""
+
+msgid "medona/archiveModificationRequest/"
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
+
+msgid ""
+msgstr ""
