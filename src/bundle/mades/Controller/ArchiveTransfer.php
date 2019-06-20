@@ -66,12 +66,12 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         $message->date = $message->object->date;
 
         $this->receiveTransferringAgency($message);
-        $message->recipientOrgRegNumber = $message->object->archivalAgency->identifier->value;
+        $message->recipientOrgRegNumber = $message->object->archivalAgency->identifier;
 
-        $message->reference = $message->object->messageIdentifier->value;
+        $message->reference = $message->object->messageIdentifier;
         
         if (isset($message->object->archivalAgreement)) {
-            $message->archivalAgreementReference = $message->object->archivalAgreement->value;
+            $message->archivalAgreementReference = $message->object->archivalAgreement;
         }
 
         $binaryDataObjects = $physicalDataObjects = [];
@@ -95,11 +95,12 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
 
         if (is_object($message->object->transferringAgency)) {
             if (isset($message->object->transferringAgency->identifier)) {
-                $message->senderOrgRegNumber = $message->object->transferringAgency->identifier->value;
-        
+                $message->senderOrgRegNumber = $message->object->transferringAgency->identifier;
+            }
+        }
     }
 
-    protected function receiveAttachments($message) 
+    protected function receiveAttachments($message)
     {
         $this->validateReference($message->object->dataObjectPackage->descriptiveMetadata, $message->object->dataObjectPackage->binaryDataObject);
         
@@ -109,7 +110,6 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
 
         $messageFiles = [$message->path];
         foreach ($message->object->dataObjectPackage->binaryDataObject as $dataObjectId => $binaryDataObject) {
-            
             $message->size += (integer) $binaryDataObject->size;
 
             if (isset($binaryDataObject->attachment)) {
@@ -117,7 +117,10 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
 
                 $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
                 if (!is_file($filepath)) {
-                    $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+                    $this->sendError(
+                        "211",
+                        "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé."
+                    );
 
                     continue;
                 }
@@ -151,14 +154,22 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
             // Validate hash
             $messageDigest = $binaryDataObject->messageDigest;
             if (strtolower($messageDigest->content) != strtolower(hash($messageDigest->algorithm, $contents))) {
-                $this->sendError("207", "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise.");
+                $this->sendError(
+                    "207",
+                    "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise."
+                );
             }
         }
 
         // Check all files received are part of the message
         foreach ($receivedFiles as $receivedFile) {
-            if (!in_array($receivedFile, $messageFiles) && !in_array(basename($receivedFile), $messageFiles) && !in_array(basename($receivedFile), $messageFiles)) {
-                $this->sendError("101", "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le bordereau.");
+            if (!in_array($receivedFile, $messageFiles) &&
+                !in_array(basename($receivedFile), $messageFiles) &&
+                !in_array(basename($receivedFile), $messageFiles)) {
+                $this->sendError(
+                    "101",
+                    "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le bordereau."
+                );
             }
         }
     }
@@ -175,7 +186,10 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
                         }
                     }
                     if (!$res) {
-                        $this->sendError("213", "Le document identifié par '$dataObjectReference->dataObjectReferenceId' est introuvable.");
+                        $this->sendError(
+                            "213",
+                            "Le document identifié par '$dataObjectReference->dataObjectReferenceId' est introuvable."
+                        );
                     }
                 }
             }
@@ -267,7 +281,11 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
             $message->object->managementMetadata = null;
         }
 
-        $this->processManagementMetadata($archive, $archiveUnit->managementMetadata, $message->object->managementMetadata);
+        $this->processManagementMetadata(
+            $archive,
+            $archiveUnit->managementMetadata,
+            $message->object->managementMetadata
+        );
 
         $this->processOriginitorOrg($archive, $archiveUnit);
 
@@ -385,7 +403,11 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         if (isset($this->filePlan[$descriptiveMetadata->folderPath])) {
             $archive->filePlanPosition = $this->filePlan[$descriptiveMetadata->folderPath];
         } else {
-            $archive->filePlanPosition = $this->filePlanController->createFromPath($descriptiveMetadata->folderPath, $archive->depositorOrgRegNumber, true);
+            $archive->filePlanPosition = $this->filePlanController->createFromPath(
+                $descriptiveMetadata->folderPath,
+                $archive->depositorOrgRegNumber,
+                true
+            );
             $this->filePlan[$descriptiveMetadata->folderPath] = $archive->filePlanPosition;
         }
 
@@ -422,7 +444,7 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
 
     protected function processLifeCycleEvents($archive, $archiveUnit)
     {
-        if(empty($archiveUnit->lifeCycleEvents)) {
+        if (empty($archiveUnit->lifeCycleEvents)) {
             return;
         }
 
