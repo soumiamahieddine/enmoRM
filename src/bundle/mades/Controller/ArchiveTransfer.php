@@ -27,7 +27,7 @@ namespace bundle\mades\Controller;
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
 class ArchiveTransfer extends Message implements \bundle\medona\Controller\ArchiveTransferInterface
-{   
+{
     public $errors = [];
     public $infos = [];
     public $replyCode;
@@ -65,7 +65,7 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         }
         $message->date = $message->object->date;
 
-        $message->senderOrgRegNumber = $message->object->transferringAgency->identifier->value;
+        $this->receiveTransferringAgency($message);
         $message->recipientOrgRegNumber = $message->object->archivalAgency->identifier->value;
 
         $message->reference = $message->object->messageIdentifier->value;
@@ -83,9 +83,20 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         }
         if (isset($message->object->dataObjectPackage->physicalDataObject)) {
             $message->dataObjectCount += count($message->object->dataObjectPackage->physicalDataObject);
-        }        
+        }
 
         return $message;
+    }
+
+    protected function receiveTransferringAgency($message)
+    {
+        // Organization object OR Identifier object OR string
+        // Identifier is object OR string 
+
+        if (is_object($message->object->transferringAgency)) {
+            if (isset($message->object->transferringAgency->identifier)) {
+                $message->senderOrgRegNumber = $message->object->transferringAgency->identifier->value;
+        
     }
 
     protected function receiveAttachments($message) 

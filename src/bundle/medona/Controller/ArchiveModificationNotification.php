@@ -45,7 +45,7 @@ class ArchiveModificationNotification extends ArchiveNotification
         $message->messageId = \laabs::newId();
         $message->type = "ArchiveModificationNotification";
 
-        $schema = "";
+        $schema = "mades";
         if (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
@@ -80,7 +80,6 @@ class ArchiveModificationNotification extends ArchiveNotification
 
         try {
             if ($message->schema) {
-
                 $archiveModificationNotificationController = \laabs::newController($message->schema.'/ArchiveModificationNotification');
                 $archiveModificationNotificationController->send($message);
             }
