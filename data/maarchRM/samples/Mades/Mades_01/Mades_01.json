@@ -3,7 +3,7 @@
         "Test"
     ],
     "date" : "2019-06-18",
-    "messageIdentifier" : "01",
+    "messageIdentifier" : "03",
     "archivalAgency" : {
         "identifier" : "GIC"
     },
@@ -11,7 +11,7 @@
         "identifier" : "DAF"
     },
     "dataObjectPackage" : {
-        "binaryDataObject" : {
+        "binaryDataObjects" : {
             "bdo1" : {
                 "attachment" : {
                     "filename" : "17.pdf"

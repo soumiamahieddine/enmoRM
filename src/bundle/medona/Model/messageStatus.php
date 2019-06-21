@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (C) 2015 Maarch
+ * Copyright (C) 2019 Maarch
  *
  * This file is part of bundle medona.
  *
@@ -17,14 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle medona.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\medona\Message;
+namespace bundle\medona\Model;
 
 /**
  * Class model that represents a message's comment
  *
- * @package RecordsManagement
+ * @package Medona
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
  * 
+ * @substitution medona/message
+ * @pkey [messageId]
  */
 class messageStatus
 {

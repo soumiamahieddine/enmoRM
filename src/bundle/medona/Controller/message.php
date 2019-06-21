@@ -870,7 +870,6 @@ class message
     {
         $messageStatus = $this->sdoFactory->read('medona/messageStatus', $messageId);
         
-
         $messageStatus->status = strtolower($status);
 
         if ($comment) {

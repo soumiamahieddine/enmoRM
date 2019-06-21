@@ -34,20 +34,17 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
     public $filePlan = [];
     public $originatorOrgs = [];
     public $processedArchives = [];
+    public $processedRelationships = [];
 
-    public $orgController;
-    public $filePlanController;
-    public $archivalProfileController;
-    public $archiveController;
-    public $sdoFactory;
+    protected $orgController;
+    protected $archiveController;
+    protected $archivalProfileController;
 
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct()
     {
-        $this->sdoFactory = $sdoFactory;
-        $this->orgController = \laabs::newController("organization/organization");
-        $this->filePlanController = \laabs::newController("filePlan/filePlan");
-        $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
-        $this->archiveController = \laabs::newController("recordsManagement/archive");
+        $this->orgController = \laabs::newController('organization/organization');
+        $this->archiveController = \laabs::newController('recordsManagement/archive');
+        $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
     }
 
     /**
@@ -58,78 +55,67 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
      */
     public function receive($message)
     {
-        $this->loadMessage($message);
+        $data = file_get_contents($message->path);
 
-        if (isset($message->object->comment)) {
-            $message->comment = $message->object->comment;
+        $message->object = $archiveTransfer = json_decode($data);
+
+        if (isset($archiveTransfer->comment)) {
+            $message->comment = $archiveTransfer->comment;
         }
-        $message->date = $message->object->date;
+        $message->date = $archiveTransfer->date;
 
-        $this->receiveTransferringAgency($message);
-        $message->recipientOrgRegNumber = $message->object->archivalAgency->identifier;
+        $message->senderOrgRegNumber = $archiveTransfer->transferringAgency->identifier;
+        $message->recipientOrgRegNumber = $archiveTransfer->archivalAgency->identifier;
 
-        $message->reference = $message->object->messageIdentifier;
+        $message->reference = $archiveTransfer->messageIdentifier;
         
-        if (isset($message->object->archivalAgreement)) {
-            $message->archivalAgreementReference = $message->object->archivalAgreement;
+        if (isset($archiveTransfer->archivalAgreement)) {
+            $message->archivalAgreementReference = $archiveTransfer->archivalAgreement;
         }
 
         $binaryDataObjects = $physicalDataObjects = [];
         $message->dataObjectCount = 0;
 
-        if (isset($message->object->dataObjectPackage->binaryDataObject)) {
-            $message->dataObjectCount += count($message->object->dataObjectPackage->binaryDataObject);
+        if (isset($archiveTransfer->dataObjectPackage->binaryDataObjects)) {
+            $message->dataObjectCount += count($archiveTransfer->dataObjectPackage->binaryDataObjects);
             $this->receiveAttachments($message);
         }
-        if (isset($message->object->dataObjectPackage->physicalDataObject)) {
-            $message->dataObjectCount += count($message->object->dataObjectPackage->physicalDataObject);
+        if (isset($archiveTransfer->dataObjectPackage->physicalDataObject)) {
+            $message->dataObjectCount += count($archiveTransfer->dataObjectPackage->physicalDataObjects);
         }
 
         return $message;
     }
 
-    protected function receiveTransferringAgency($message)
-    {
-        // Organization object OR Identifier object OR string
-        // Identifier is object OR string 
-
-        if (is_object($message->object->transferringAgency)) {
-            if (isset($message->object->transferringAgency->identifier)) {
-                $message->senderOrgRegNumber = $message->object->transferringAgency->identifier;
-            }
-        }
-    }
-
     protected function receiveAttachments($message)
     {
-        $this->validateReference($message->object->dataObjectPackage->descriptiveMetadata, $message->object->dataObjectPackage->binaryDataObject);
+        $this->validateReference($message->object->dataObjectPackage->descriptiveMetadata, $message->object->dataObjectPackage->binaryDataObjects);
         
-        $messageDir = dirname($message->path);
-        // List received files
-        $receivedFiles = glob($messageDir.DIRECTORY_SEPARATOR."*.*");
-
+        $dirname = dirname($message->path);
+        
         $messageFiles = [$message->path];
-        foreach ($message->object->dataObjectPackage->binaryDataObject as $dataObjectId => $binaryDataObject) {
+        foreach ($message->object->dataObjectPackage->binaryDataObjects as $dataObjectId => $binaryDataObject) {
             $message->size += (integer) $binaryDataObject->size;
 
-            if (isset($binaryDataObject->attachment)) {
-                $attachment = $binaryDataObject->attachment;
+            if (!isset($binaryDataObject->attachment->filename)) {
+                $this->sendError("211", "Le document identifié par le nom '$dataObjectId' n'a pas été trouvé.");
 
-                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
-                if (!is_file($filepath)) {
-                    $this->sendError(
-                        "211",
-                        "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé."
-                    );
+                continue;
+            }
+
+            $attachment = $binaryDataObject->attachment;
+
+            if (isset($attachment->filename)) {
+                $filename = $dirname.DIRECTORY_SEPARATOR.$attachment->filename;
+                if (!is_file($filename)) {
+                    $this->sendError("211", "e document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
 
                     continue;
                 }
 
-                $contents = file_get_contents($filepath);
-
-                $messageFiles[] = $attachment->filename;
-            } elseif ($binaryDataObject->uri) {
-                $contents = file_get_contents($messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri));
+                $contents = file_get_contents($filename);
+            } elseif (isset($attachment->uri)) {
+                $contents = file_get_contents($attachment->uri);
 
                 if (!$contents) {
                     $this->sendError("211", "Le document à l'adresse '$attachment->uri' est indisponible.");
@@ -137,39 +123,38 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
                     continue;
                 }
 
-                $filepath = $messageDir.DIRECTORY_SEPARATOR.basename($binaryDataObject->uri);
-                $messageFiles[] = $filepath;
-            } else {
-                if (strlen($attachmentElement->value) == 0) {
+                $filename = $dirname.DIRECTORY_SEPARATOR.$dataObjectId;
+                file_put_contents($filename, $contents);
+
+            } elseif (isset($attachment->content)) {
+                if (strlen($attachment->content) == 0) {
                     $this->sendError("211", "Le contenu du document n'a pas été transmis.");
 
                     continue;
                 }
 
-                $contents = base64_decode($attachment->value);
-
-                $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+                $contents = base64_decode($attachment->content);
+                $filename = $dirname.DIRECTORY_SEPARATOR.$dataObjectId;
+                file_put_contents($filename, $contents);
             }
+
+            $messageFiles[] = $filename;
 
             // Validate hash
             $messageDigest = $binaryDataObject->messageDigest;
             if (strtolower($messageDigest->content) != strtolower(hash($messageDigest->algorithm, $contents))) {
-                $this->sendError(
-                    "207",
-                    "L'empreinte numérique du document '".basename($filepath)."' ne correspond pas à celle transmise."
-                );
+                $this->sendError("207", "L'empreinte numérique du document '".basename($filename)."' ne correspond pas à celle transmise.");
+
+                continue;
             }
         }
 
+        $receivedFiles = glob($dirname.DIRECTORY_SEPARATOR."*.*");
+
         // Check all files received are part of the message
         foreach ($receivedFiles as $receivedFile) {
-            if (!in_array($receivedFile, $messageFiles) &&
-                !in_array(basename($receivedFile), $messageFiles) &&
-                !in_array(basename($receivedFile), $messageFiles)) {
-                $this->sendError(
-                    "101",
-                    "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le bordereau."
-                );
+            if (!in_array($receivedFile, $messageFiles)) {
+                $this->sendError("101", "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le message.");
             }
         }
     }
@@ -177,19 +162,12 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
     protected function validateReference($archiveUnitContainer, $binaryDataObjects)
     {
         foreach ($archiveUnitContainer as $archiveUnit) {
-            if (!empty($archiveUnit->dataObjectReference)) {
-                foreach ($archiveUnit->dataObjectReference as $dataObjectReference) {
-                    $res = false;
-                    foreach ($binaryDataObjects as $id => $binaryDataObject) {
-                        if ($id == $dataObjectReference) {
-                            $res = true;
-                        }
-                    }
-                    if (!$res) {
-                        $this->sendError(
-                            "213",
-                            "Le document identifié par '$dataObjectReference->dataObjectReferenceId' est introuvable."
-                        );
+            if (!empty($archiveUnit->dataObjectReferences)) {
+                foreach ($archiveUnit->dataObjectReferences as $dataObjectId) {
+                    if (!isset($binaryDataObjects->{$dataObjectId})) {
+                        $this->sendError("213", "Le document identifié par '$dataObjectId' est introuvable.");
+
+                        continue;
                     }
                 }
             }
@@ -212,24 +190,372 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         $this->errors = array();
         $this->replyCode = null;
 
-        $message->object->binaryDataObject = get_object_vars($message->object->binaryDataObject);
-        $message->object->descriptiveMetadata = get_object_vars($message->object->descriptiveMetadata);
+        if (!empty($archivalAgreement)) {
+            if ($archivalAgreement->originatorOrgIds) {
+                $this->knownOrgUnits = [];
         
-        $this->validateDescriptiveMetadata($message->object->descriptiveMetadata);
+                $this->validateOriginators($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
+            }
 
+            if ($archivalAgreement->signed && !isset($message->object->signature)) {
+                $this->sendError("309");
+            }
+
+            /*if (isset($archivalAgreement->archivalProfileReference)
+                || isset($message->object->dataObjectPackage->managementMetadata->archivalProfile)) {
+                $this->validateProfile($message, $archivalAgreement);
+            }*/
+        }
+
+        $this->validateDataObjects($message, $archivalAgreement);
+        $this->validateArchiveUnits($message, $archivalAgreement);
+      
         return true;
     }
 
-    protected function validateDescriptiveMetadata($archiveUnitContainer)
+    protected function validateOriginators($archiveUnitContainer, $archivalAgreement)
+    {
+        foreach ($archiveUnitContainer as $id => $archiveUnit) {
+            if (isset($archiveUnit->filing->activity) && !isset($knownOrgUnits[$archiveUnit->filing->activity])) {
+                try {
+                    $this->knownOrgUnits[$archiveUnit->filing->activity] = $orgUnit = $this->orgController->getOrgByRegNumber($archiveUnit->filing->activity);
+                } catch (\Exception $e) {
+                    $this->sendError("200", "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas référencé dans le système.");
+
+                    continue;
+                }
+                
+                if (!in_array('originator', (array) $orgUnit->orgRoleCodes)) {
+                    $this->sendError("302", "Le service identifié par '$archiveUnit->filing->activity' n'est pas référencé comme producteur dans le système.");
+                
+                    continue;
+                }
+
+                if (!in_array((string) $orgUnit->orgId, (array) $archivalAgreement->originatorOrgIds)) {
+                    $this->sendError("302", "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas indiqué dans l'accord de versement.");
+                }
+            }
+
+            if (!empty($archiveUnit->archiveUnits)) {
+                $this->validateOriginators($archiveUnit, $archivalAgreement);
+            }
+        }
+    }
+
+    protected function validateAttachments($message, $archivalAgreement)
+    {
+        $serviceLevelController = \laabs::newController("recordsManagement/serviceLevel");
+
+        if (isset($message->object->dataObjectPackage->managementMetadata->serviceLevel)) {
+            $serviceLevelReference = $message->object->dataObjectPackage->managementMetadata->serviceLevel->value;
+        } elseif (isset($archivalAgreement)) {
+            $serviceLevelReference = $archivalAgreement->serviceLevelReference;
+        }
+
+        $serviceLevel = $serviceLevelController->getByReference($serviceLevelReference);
+
+        $formatController = \laabs::newController("digitalResource/format");
+        if ($archivalAgreement) {
+            $allowedFormats = \laabs\explode(' ', $archivalAgreement->allowedFormats);
+        } else {
+            $allowedFormats = [];
+        }
+
+        $binaryDataObjects = $message->object->dataObjectPackage->binaryDataObjects;
+
+        $messageDir = dirname($message->path);
+        
+        foreach ($binaryDataObjects as $dataObjectId => $binaryDataObject) {
+            if (!isset($binaryDataObject->attachment)) {
+                continue;
+            }
+
+            $attachment = $binaryDataObject->attachment;
+
+            if (isset($attachment->filename)) {
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+            } else {
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+            }
+
+            $contents = file_get_contents($filepath);
+
+            // Get file format information
+            $fileInfo = new \stdClass();
+
+            if (strpos($serviceLevel->control, 'formatDetection') !== false) {
+                $format = $formatController->identifyFormat($filepath);
+
+                if (!$format) {
+                    $this->sendError("205", "Le format du document '".basename($filepath)."' n'a pas pu être déterminé");
+                } else {
+                    $puid = $format->puid;
+                    $fileInfo->format = $format;
+                }
+            }
+
+            // Validate format is allowed
+            if (count($allowedFormats) && isset($puid) && !in_array($puid, $allowedFormats)) {
+                $this->sendError("307", "Le format du document '".basename($filepath)."' ".$puid." n'est pas autorisé par l'accord de versement.");
+            }
+
+            // Validate format
+            if (strpos($serviceLevel->control, 'formatValidation') !== false) {
+                $validation = $formatController->validateFormat($filepath);
+                if (!$validation !== true && is_array($validation)) {
+                    $this->sendError("307", "Le format du document '".basename($filepath)."' n'est pas valide : ".implode(', ', $validation));
+                }
+                $this->infos[] = (string) \laabs::newDateTime().": Validation du format par JHOVE 1.11";
+            }
+
+            if (($arr = get_object_vars($fileInfo)) && !empty($arr)) {
+                file_put_contents(
+                    $messageDir.DIRECTORY_SEPARATOR.$dataObjectId.'.info',
+                    json_encode($fileInfo, \JSON_PRETTY_PRINT)
+                );
+            }
+        }
+    }
+
+    protected function validateArchiveUnits($archiveUnitContainer, $message, $archivalAgreement)
     {
         foreach ($archiveUnitContainer as $archiveUnit) {
-            $this->archiveController->validateFileplan($archiveUnit);
-            $this->archiveController->validateArchiveDescriptionObject($archiveUnit);
-            $this->archiveController->validateManagementMetadata($archiveUnit);
+            $this->validateFiling($archiveUnit);
+            
+            if (isset($archiveUnit->profile)) {
+                $this->archiveController->validateDescriptionModel($archiveUnit->description, $archiveUnit->profile);
+            }
+
+            if (isset($archiveUnit->management)) {
+                $this->validateManagementMetadata($archiveUnit);
+            }
         }
 
         if (!empty($archiveUnit->archiveUnit)) {
-            $this->validateDescriptiveMetadata($archiveUnit);
+            $this->validateArchiveUnits($archiveUnit);
+        }
+    }
+
+    protected function validateFiling($archiveUnit, $profile)
+    {
+        // No parent, check orgUnit can deposit with the profile
+        if (empty($archiveUnit->filing->container)) {
+            return $this->validateFilingActivity($archiveUnit);
+        } 
+
+        $this->validateFilingContainer($archiveUnit);
+
+        $this->validateFilingContents($archiveUnit);
+        
+    }
+
+    protected function validateFilingActivity($archiveUnit)
+    {
+        // Validate insertion
+        $profile = null;
+        if (isset($archiveUnit->profile)) {
+            $profile = $archiveUnit->profile;
+        }
+
+        if ($this->orgController->checkProfileInOrgAccess($profile, $archive->originatorId)) {
+            return;
+        }
+
+        throw new \core\Exception\BadRequestException("Invalid archive profile");
+    }
+
+    protected function validateFilingContainer($archiveUnit)
+    {
+        $containerArchive = $archiveController->read($archiveUnit->filing->container);      
+
+        // Check level in file plan
+        if ($containerArchive->fileplanLevel == 'item') {
+            throw new \core\Exception\BadRequestException("Parent archive is an item and can not contain items.");
+        }
+
+        // No profile on parent, accept any profile
+        if (empty($containerArchive->archivalProfileReference)) {
+            return;
+        }
+
+        // Load parent archive profile
+        if (!isset($this->archivalProfiles[$containerArchive->archivalProfileReference])) {
+            $parentArchivalProfile = $this->archivalProfileController->getByReference($containerArchive->archivalProfileReference);
+            $this->archivalProfiles[$containerArchive->archivalProfileReference] = $parentArchivalProfile;
+        } else {
+            $parentArchivalProfile = $this->archivalProfiles[$containerArchive->archivalProfileReference];
+        }
+
+        // No profile : check parent profile accepts archives without profile
+        if (!isset($archiveUnit->profile) && $parentArchivalProfile->acceptArchiveWithoutProfile) {
+            return;
+        }
+
+        // Profile on content : check profile is accepted
+        foreach ($parentArchivalProfile->containedProfiles as $containedProfile) {
+            if ($containedProfile->reference == $archiveUnit->profile) {
+                return;
+            }
+        }
+
+        throw new \core\Exception\BadRequestException("Invalid archive profile");
+    }
+
+    protected function validateFilingContents($archiveUnit)
+    {
+        if (isset($archiveUnit->filing->level) && $archiveUnit->filing->level == 'item' && count($archiveUnit->archiveUnits) > 0) {
+            throw new \core\Exception\BadRequestException("Invalid contained archiveUnit profile %s", 400);
+        }
+
+        if (isset($archiveUnit->profile)) {
+            if (!isset($this->archivalProfiles[$archiveUnit->profile])) {
+                $this->archivalProfiles[$archiveUnit->profile] = $this->archivalProfileController->getByReference($archiveUnit->profile);
+            }
+
+            $archivalProfile = $this->archivalProfiles[$archiveUnit->profile];
+            $containedProfiles = [];
+            foreach ($archivalProfile->containedProfiles as $containedProfile) {
+                $containedProfiles[] = $containedProfile->reference;
+            }
+
+            foreach ($archiveUnit->archiveUnits as $containedArchiveUnit) {
+                if (empty($containedArchiveUnit->profile)) {
+                    if (!$archivalprofile->acceptArchiveWithoutProfile) {
+                        throw new \core\Exception\BadRequestException("Invalid contained archiveUnit profile %s", 400, null, $containedArchiveUnit->profile);
+                    }
+                } elseif (!in_array($containedArchiveUnit->profile, $containedProfiles)) {
+                    throw new \core\Exception\BadRequestException("Invalid contained archiveUnit profile %s", 400, null, $containedArchiveUnit->profile);
+                }
+            }
+        }
+    }
+
+    protected function validateArchiveDescriptionObject($archive)
+    {
+        if (empty($archiveUnit->profile)) {
+            return;
+        }
+
+        $archivalProfile = $this->archivalProfileController->getByReference($archiveUnit->profile);
+
+        if (!empty($archivalProfile->descriptionClass)) {
+            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $archivalProfile->descriptionClass);
+
+            $this->validateDescriptionClass($archive->descriptionObject, $archivalProfile);
+        } else {
+            $this->validateDescriptionModel($archive->descriptionObject, $archivalProfile);
+        }
+    }
+
+    protected function validateDescriptionClass($object, $archivalProfile)
+    {
+        if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
+            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
+        }
+
+        foreach ($archivalProfile->archiveDescription as $description) {
+            $fieldName = explode(LAABS_URI_SEPARATOR, $description->fieldName);
+            $propertiesList = array($object);
+
+            foreach ($fieldName as $name) {
+                $newPropertiesList = array();
+                foreach ($propertiesList as $propertyValue) {
+                    if (isset($propertyValue->{$name})) {
+                        if (is_array($propertyValue->{$name})) {
+                            foreach ($propertyValue->{$name} as $value) {
+                                $newPropertiesList[] = $value;
+                            }
+                        } else {
+                            $newPropertiesList[] = $propertyValue->{$name};
+                        }
+                    } else {
+                        $newPropertiesList[] = null;
+                    }
+                }
+                $propertiesList = $newPropertiesList;
+            }
+
+            foreach ($propertiesList as $propertyValue) {
+                if ($description->required && $propertyValue == null) {
+                    throw new \core\Exception\BadRequestException('The description class does not match with the archival profile.');
+                }
+            }
+        }
+    }
+
+    protected function validateDescriptionModel($object, $archivalProfile)
+    {
+        $names = [];
+
+        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            $name = $archiveDescription->fieldName;
+            $names[] = $name;
+            $value = null;
+            if (isset($object->{$name})) {
+                $value = $object->{$name};
+            }
+
+            $this->validateDescriptionMetadata($value, $archiveDescription);
+        }
+
+        foreach ($object as $name => $value) {
+            if (!in_array($name, $names) && !$archivalProfile->acceptUserIndex) {
+                throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
+            }
+        }
+    }
+
+    protected function validateDescriptionMetadata($value, $archiveDescription)
+    {
+        if (is_null($value)) {
+            if ($archiveDescription->required) {
+                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+            }
+
+            return;
+        }
+
+        $descriptionField = $archiveDescription->descriptionField;
+
+        $type = $descriptionField->type;
+        switch ($type) {
+            case 'name':
+                if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration)) {
+                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                }
+                break;
+
+            case 'text':
+                break;
+
+            case 'number':
+                if (!is_int($value) && !is_float($value)) {
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                }
+                break;
+
+            case 'boolean':
+                if (!is_bool($value) && !in_array($value, [0, 1])) {
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                }
+                break;
+
+            case 'date':
+                if (!is_string($value)) {
+                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
+                }
+                break;
+        }
+    }
+
+    protected function validateManagementMetadata($administration)
+    {
+        if (isset($administration->appraisalRule->code) && !$this->retentionRuleController->read($administration->appraisalRule->code)) {
+            throw new \core\Exception\NotFoundException("The retention rule not found");
+        }
+
+        if (isset($administration->accessRule->code) && !$this->accessRuleControler->edit($administration->accessRule->code)) {
+            throw new \core\Exception\NotFoundException("The access rule not found");
         }
     }
 
@@ -241,203 +567,207 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
      */
     public function process($message)
     {
-        $message->object->binaryDataObject = get_object_vars($message->object->binaryDataObject);
-        $message->object->descriptiveMetadata = get_object_vars($message->object->descriptiveMetadata);
-
         $this->processedArchives = [];
 
         foreach ($message->object->descriptiveMetadata as $key => $archiveUnit) {
-            $archiveUnit = \laabs::castMessageObject($archiveUnit, "recordsManagement/ArchiveUnit");
-            $archive = \laabs::newInstance("recordsManagement/archive");
-            $archive->archiveId = \laabs::newId();
-            $archive = $this->processArchiveUnit($archive, $message, $archiveUnit);
+            $archive = $this->processArchiveUnit($archiveUnit, $message);
 
             $this->processedArchives[] = $archive;
         }
 
-        return [$this->processedArchives, null];
+        return [$this->processedArchives, $this->processedRelationships];
     }
 
-    protected function processArchiveUnit($archive, $message, $archiveUnit)
+    protected function processArchiveUnit($archiveUnit, $message)
     {
-        $archive->archiveName = $archiveUnit->archiveName;
+        $archive = \laabs::newInstance('recordsManagement/archive');
 
-        $archive->depositorOrgRegNumber = $message->senderOrgRegNumber;
-        $archive->archiverOrgRegNumber = $message->recipientOrgRegNumber;
+        $archiveTransfer = $message->object;
 
-        $archive->originatorArchiveId = $archiveUnit->originatorArchiveId;
-
-        $archive->depositorArchiveId = $archiveUnit->depositorArchiveId;
-
-        $archive->archiverArchiveId = $archiveUnit->archiverArchiveId;
-
-        $archive->descriptionClass = $archiveUnit->descriptionClass;
-
-        $archive->description = $archiveUnit->descriptionObject;
-
-        $archive->originatingDate = $archiveUnit->originatingDate;
-
-        if (empty($message->object->managementMetadata)) {
-            $message->object->managementMetadata = null;
+        if (isset($archiveUnit->identifier)) {
+            $archive->originatorArchiveId = $archiveUnit->identifier;
         }
 
-        $this->processManagementMetadata(
-            $archive,
-            $archiveUnit->managementMetadata,
-            $message->object->managementMetadata
-        );
+        if (isset($archiveUnit->displayName)) {
+            $archive->archiveName = $archiveUnit->displayName;
+        }
 
-        $this->processOriginitorOrg($archive, $archiveUnit);
+        if (isset($archiveUnit->refDate)) {
+            $archive->originatingDate = $archiveUnit->refDate;
+        }
 
-        $this->processFilePlan($archive, $archiveUnit);
+        if (isset($archiveUnit->profile)) {
+            $archive->archivalProfileReference = $archiveUnit->profile;
+        } elseif (isset($archiveTransfer->dataObjectPackage->managementMetadata->archivalProfile)) {
+            $archive->archivalProfileReference = $archiveTransfer->dataObjectPackage->managementMetadata->archivalProfile;
+        }
 
-        $this->processBinaryDataObject($archive, $archiveUnit, $message);
+        if (isset($archiveUnit->description)) {
+            $archive->descriptionObject = $archiveUnit->description;
+        }
 
-        $this->processLifeCycleEvents($archive, $archiveUnit);
-        $this->processRelationship($archive, $archiveUnit, $message);
+        $archive->depositorOrgRegNumber = $archiveTransfer->transferringAgency->identifier;
+        $archive->archiverOrgRegNumber = $archiveTransfer->archivalAgency->identifier;
         
-        if (empty($archiveUnit->archiveUnit)) {
-            return $archive;
+        if (isset($archiveUnit->filing->activity)) {
+            $archive->originatorOrgRegNumber = $archiveUnit->filing->activity;
+        } else {
+            $archive->originatorOrgRegNumber = $archive->depositorOrgRegNumber;
+        }
+        
+        $this->processManagementMetadata($archive, $archiveUnit, $archiveTransfer);
+
+        $this->processFiling($archive, $archiveUnit);
+
+        $this->archiveController->completeMetadata($archive);
+
+        if (!empty($archiveUnit->dataObjectReferences)) {
+            $this->processBinaryDataObjects($archive, $archiveUnit->dataObjectReferences, $message);
+        }
+        
+        if (!empty($archiveUnit->log)) {
+            $this->processLifeCycleEvents($archive, $archiveUnit);
         }
 
-        foreach ($archiveUnit->archiveUnit as $key => $subArchiveUnit) {
-            $subArchiveUnit = \laabs::castMessageObject($subArchiveUnit, "recordsManagement/ArchiveUnit");
-            $content = \laabs::newInstance("recordsManagement/archive");
-            $content->archiveId = $key;
-            $content->parentArchiveId = $archive->archiveId;
-            $content->serviceLevelReference = $archive->serviceLevelReference;
-
-            $subArchiveUnit->originatorId = $subArchiveUnit->originatorId;
-
-            $content = $this->processArchiveUnit($content, $message, $subArchiveUnit);
-
-            $this->processedArchives[] = $content;
-
+        if (!empty($archiveUnit->archiveUnitReferences)) {
+            $this->processRelationships($archive, $archiveUnit->archiveUnitReferences, $archiveTransfer);
         }
+        
+        if (!empty($archiveUnit->archiveUnit)) {
+            foreach ($archiveUnit->archiveUnit as $key => $subArchiveUnit) {
+                $subArchive = $this->processArchiveUnit($subArchiveUnit, $message);
+                $subArchive->parentArchiveId = $archive->archiveId;
 
+                $this->processedArchives[] = $subArchive;
+            }
+        }
+        
         return $archive;
     }
 
-    protected function processManagementMetadata($archive, $archiveManagementMetadata, $messageManagementMetadata)
+    protected function processManagementMetadata($archive, $archiveUnit, $message)
     {
-        if (!empty($archiveManagementMetadata->archivalProfile)) {
-            $archive->archivalProfileReference = $archiveManagementMetadata->archivalProfile;
-        } elseif (!empty($messageManagementMetadata->archivalProfile)) {
-            $archive->archivalProfileReference = $messageManagementMetadata->archivalProfile;
+        if (isset($archiveUnit->management->accessRule)) {
+            $this->processAccessRule($archive, $archiveUnit->management->accessRule);
+        } elseif (isset($message->dataObjectPackage->managementMetadata->accessRule)) {
+            $this->processAccessRule($archive, $message->dataObjectPackage->managementMetadata->accessRule);
         }
 
-        if (!empty($archiveManagementMetadata->serviceLevel)) {
-            $archive->serviceLevelReference = $archiveManagementMetadata->serviceLevel;
-        } elseif (!empty($messageManagementMetadata->serviceLevel)) {
-            $archive->serviceLevelReference = $messageManagementMetadata->serviceLevel;
+        if (isset($archiveUnit->management->appraisalRule)) {
+            $this->processAppraisalRule($archive, $archiveUnit->management->appraisalRule);
+        } elseif (isset($message->dataObjectPackage->managementMetadata->appraisalRule)) {
+            $this->processAppraisalRule($archive, $message->dataObjectPackage->managementMetadata->appraisalRule);
         }
 
-        if (!empty($archiveManagementMetadata->accessRule)) {
-            $this->processAccessRule($archive, $archiveManagementMetadata);
-        } elseif (!empty($messageManagementMetadata->accessRule)) {
-            $this->processAccessRule($archive, $messageManagementMetadata);
-        }
-
-        if (!empty($archiveManagementMetadata->appraisalRule)) {
-            $this->processAppraisalRule($archive, $archiveManagementMetadata);
-        } elseif (!empty($messageManagementMetadata->appraisalRule)) {
-            $this->processAppraisalRule($archive, $messageManagementMetadata);
-        }
-
-        if (!empty($archiveManagementMetadata->classificationRule)) {
-            $this->processClassificationRule($archive, $archiveManagementMetadata);
-        } elseif (!empty($messageManagementMetadata->classificationRule)) {
-            $this->processClassificationRule($archive, $messageManagementMetadata);
+        if (isset($archiveUnit->management->classificationRule)) {
+            $this->processClassificationRule($archive, $archiveUnit->management->classificationRule);
+        } elseif (isset($message->dataObjectPackage->managementMetadata->classificationRule)) {
+            $this->processClassificationRule($archive, $message->dataObjectPackage->managementMetadata->classificationRule);
         }
     }
 
-    protected function processAccessRule($archive, $managementMetadata)
+    protected function processAccessRule($archive, $accessRule)
     {
-        if (!empty($managementMetadata->accessRule->startDate)) {
-            $archive->accessRuleCode = $managementMetadata->accessRule->code;
+        if (!empty($accessRule->code)) {
+            $archive->accessRuleCode = $accessRule->code;
         }
 
-        if (!empty($managementMetadata->accessRule->startDate)) {
-            $archive->accessRuleStartDate = $managementMetadata->accessRule->startDate;
+        if (!empty($accessRule->duration)) {
+            $archive->accessRuleDuration = $accessRule->duration;
+        }
+
+        if (!empty($accessRule->startDate)) {
+            $archive->accessRuleStartDate = $accessRule->startDate;
         }
     }
 
-    protected function processAppraisalRule($archive, $managementMetadata)
+    protected function processAppraisalRule($archive, $appraisalRule)
     {
-        if (!empty($managementMetadata->appraisalRule->code)) {
-            $archive->retentionRuleCode = $managementMetadata->appraisalRule->code;
+        if (!empty($appraisalRule->code)) {
+            $archive->retentionRuleCode = $appraisalRule->code;
         }
 
-        if (!empty($managementMetadata->appraisalRule->startDate)) {
-            $archive->retentionStartDate = $managementMetadata->appraisalRule->startDate;
+        if (!empty($appraisalRule->duration)) {
+            $archive->retentionDuration = $appraisalRule->duration;
         }
-        if (!empty($managementMetadata->appraisalRule->finalDisposition)) {
-            $archive->finalDisposition = $managementMetadata->appraisalRule->finalDisposition;
+
+        if (!empty($appraisalRule->startDate)) {
+            $archive->retentionStartDate = $appraisalRule->startDate;
+        }
+
+        if (!empty($appraisalRule->finalDisposition)) {
+            $archive->finalDisposition = $appraisalRule->finalDisposition;
         }
     }
 
-    protected function processOriginitorOrg($archive, $descriptiveMetadata)
+    protected function processClassificationRule($archive, $classificationRule)
     {
-        $archive->originatorOrgRegNumber = $descriptiveMetadata->originatorId;
-
-        if (!isset($this->originatorOrgs[$archive->originatorOrgRegNumber])) {
-            $originatorOrg = $this->orgController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-            $this->originatorOrgs[$archive->originatorOrgRegNumber] = $originatorOrg;
-        } else {
-            $originatorOrg = $this->originatorOrgs[$archive->originatorOrgRegNumber];
+        if (!empty($classificationRule->code)) {
+            $archive->classificationRuleCode = $classificationRule->code;
         }
 
-        $archive->originatorOwnerOrgId = $originatorOrg->ownerOrgId;
-        $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
-    }
-
-    protected function processClassificationRule($archive, $managementMetadata)
-    {
-        $archive->classificationRuleCode = $managementMetadata->classificationRule->code;
-        $archive->classificationRuleStartDate = $managementMetadata->classificationRule->startDate;
-        $archive->classificationLevel = $managementMetadata->classificationRule->classificationLevel;
-        $archive->classificationOwner = $managementMetadata->classificationRule->classificationOwner;
-    }
-
-    protected function processFilePlan($archive, $descriptiveMetadata) {
-        if (isset($this->filePlan[$descriptiveMetadata->folderPath])) {
-            $archive->filePlanPosition = $this->filePlan[$descriptiveMetadata->folderPath];
-        } else {
-            $archive->filePlanPosition = $this->filePlanController->createFromPath(
-                $descriptiveMetadata->folderPath,
-                $archive->depositorOrgRegNumber,
-                true
-            );
-            $this->filePlan[$descriptiveMetadata->folderPath] = $archive->filePlanPosition;
+        if (!empty($classificationRule->duration)) {
+            $archive->classificationDuration = $classificationRule->duration;
         }
 
-        $archive->fileplanLevel = $descriptiveMetadata->archiveType;
-    }
-
-    protected function processBinaryDataObject($archive, $archiveUnit, $message)
-    {
-        if (empty($archiveUnit->dataObjects)) {
-            return;
+        if (!empty($classificationRule->startDate)) {
+            $archive->classificationStartDate = $classificationRule->startDate;
         }
 
-        foreach ($archiveUnit->dataObjects as $dataObjectId) {
-            $binaryDataObject = $message->object->binaryDataObject[$dataObjectId];
+        if (!empty($classificationRule->owner)) {
+            $archive->classificationOnwer = $classificationRule->owner->identifier;
+        }
+
+        if (!empty($classificationRule->level)) {
+            $archive->classificationLevel = $classificationRule->level;
+        }
+    }
+
+    
+    protected function processFiling($archive, $archiveUnit)
+    {
+        if (isset($archiveUnit->filing->folder)) {
+            $archive->filePlanPosition = $archiveUnit->filing->folder;
+        }
+    }
+
+    protected function processBinaryDataObjects($archive, $dataObjectReferences, $message)
+    {
+        foreach ($dataObjectReferences as $dataObjectId) {
+            $binaryDataObject = $message->object->dataObjectPackage->binaryDataObjects->{$dataObjectId};
 
             $digitalResource = \laabs::newInstance("digitalResource/digitalResource");
             $digitalResource->archiveId = $archive->archiveId;
             $digitalResource->resId = \laabs::newId();
             $digitalResource->size = $binaryDataObject->size;
-            if (isset($binaryDataObject->format)) {
-                $digitalResource->puid = $binaryDataObject->format;
+            
+            if (isset($binaryDataObject->format->puid)) {
+                $digitalResource->puid = $binaryDataObject->format->puid;
             }
-            $digitalResource->mimetype = $binaryDataObject->mimetype;
+
+            if (isset($binaryDataObject->format->mimetype)) {
+                $digitalResource->mimetype = $binaryDataObject->format->mimetype;
+            }
+
             if (isset($binaryDataObject->messageDigest)) {
-                $digitalResource->hash = $binaryDataObject->messageDigest->value;
+                $digitalResource->hash = $binaryDataObject->messageDigest->content;
                 $digitalResource->hashAlgorithm = $binaryDataObject->messageDigest->algorithm;
             }
-            $digitalResource->fileName = $binaryDataObject->attachment->filename;
-            $digitalResource->setContents(base64_decode($binaryDataObject->attachment->value));
 
+            if (isset($binaryDataObject->fileInformation->filename)) {
+                $digitalResource->fileName = $binaryDataObject->fileInformation->filename;
+            } elseif (isset($binaryDataObject->attachment->filename)) {
+                $digitalResource->fileName = basename($binaryDataObject->attachment->filename);
+            }
+
+            if (isset($binaryDataObject->attachment->content)) {
+                $digitalResource->setContents(base64_decode($binaryDataObject->attachment->content));
+            } elseif (isset($binaryDataObject->attachment->filename)) {
+                $digitalResource->setHandler(fopen(dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename, 'r'));
+            } elseif (isset($binaryDataObject->attachment->uri)) {
+                $digitalResource->setHandler(fopen($binaryDataObject->attachment->uri, 'r'));
+            }
+            
             $archive->digitalResources[] = $digitalResource;
         }
     }
@@ -460,22 +790,16 @@ class ArchiveTransfer extends Message implements \bundle\medona\Controller\Archi
         }
     }
 
-    protected function processRelationship($archive, $archiveUnit, $message)
+    protected function processRelationships($archive, $archiveUnit, $message)
     {
-        $archive->archiveRelationship = [];
-
-        if (empty($archiveUnit->relationships)) {
-            return;
-        }
-
-        foreach ($archiveUnit->relationships as $relationships) {
+        foreach ($archiveUnit->archiveUnitReferences as $archiveUnitReference) {
             $archiveRelationship = \laabs::newInstance("recordsManagement/archiveRelationship");
             $archiveRelationship->archiveId = $archiveUnit->archiveId;
-            $archiveRelationship->relatedArchiveId = $relationships->relatedArchiveId;
-            $archiveRelationship->typeCode = $relationships->relationshipType;
-            $archiveRelationship->description = $relationships->description;
+            $archiveRelationship->relatedArchiveId = $archiveUnitReference->refId;
+            $archiveRelationship->typeCode = $archiveUnitReference->type;
+            //$archiveRelationship->description = $archiveUnitReference->description;
 
-            $archive->archiveRelationship[] = $archiveRelationship;
+            $this->processedRelationships[] = $archiveRelationship;
         }
     }
 }
