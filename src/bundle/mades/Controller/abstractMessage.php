@@ -43,10 +43,22 @@ abstract class abstractMessage
         return $madesMessage;
     }
 
+    protected function sendError($code, $message = false)
+    {
+        if ($message) {
+            array_push($this->errors, new \core\Error($message, null, $code));
+        } else {
+            array_push($this->errors, new \core\Error($this->getReplyMessage($code), null, $code));
+        }
+
+        if ($this->replyCode == null) {
+            $this->replyCode = $code;
+        }
+    }
+
     protected function sendOrganization($orgOrganization)
     {
-        $organization = \laabs::newInstance('mades/organization');
-        $organization->id = (string) $orgOrganization->orgId;
+        $organization = new \StdClass();
         $organization->identifier = $orgOrganization->registrationNumber;
         $organization->name = $orgOrganization->orgName;
 
