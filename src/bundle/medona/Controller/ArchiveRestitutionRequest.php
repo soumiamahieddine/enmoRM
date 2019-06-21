@@ -381,7 +381,7 @@ class ArchiveRestitutionRequest extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "error";
             $operationResult = false;
-            $this->sdoFactory->update($message);
+            $this->update($message);
             throw $e;
         }
 
@@ -394,7 +394,7 @@ class ArchiveRestitutionRequest extends abstractMessage
         );
 
         $message->status = "processed";
-        $this->sdoFactory->update($message);
+        $this->update($message);
 
         return true;
     }

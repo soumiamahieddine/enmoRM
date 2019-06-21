@@ -284,7 +284,7 @@ class ArchiveDeliveryRequest extends abstractMessage
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
 
         $message->derogation = "true";
-        $this->sdoFactory->update($message);
+        $this->update($message);
 
         $event = $this->lifeCycleJournalController->logEvent(
             'medona/authorization',
@@ -407,7 +407,7 @@ class ArchiveDeliveryRequest extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "error";
             $operationResult = false;
-            $this->sdoFactory->update($message);
+            $this->update($message);
             throw $e;
         }
 
@@ -421,7 +421,7 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         $message->status = "processed";
 
-        return $this->sdoFactory->update($message);
+        return $this->update($message);
     }
 
     /**

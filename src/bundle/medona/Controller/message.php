@@ -623,10 +623,10 @@ class message
 
             $parentMessage = $this->sdoFactory->read('medona/message', $parentKey);
             $parentMessage->active = false;
-            $this->sdoFactory->update($parentMessage);
+            $this->update($parentMessage);
         }
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
 
         return true;
     }
