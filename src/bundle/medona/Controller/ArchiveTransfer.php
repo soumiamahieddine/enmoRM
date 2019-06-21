@@ -464,7 +464,7 @@ class ArchiveTransfer extends abstractMessage
                 );
             }
 
-            $this->sdoFactory->update($message);
+            $this->update($message);
         }
 
         if ($this->currentArchivalAgreement && $this->currentArchivalAgreement->autoTransferAcceptance) {
@@ -563,7 +563,7 @@ class ArchiveTransfer extends abstractMessage
             $message->comment = json_encode($message->comment);
         }
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
 
         if ($sendReply) {
             $archiveTransferReplyController = \laabs::newController('medona/ArchiveTransferReply');
@@ -777,7 +777,7 @@ class ArchiveTransfer extends abstractMessage
             $operationResult = true;
         } catch (\Exception $e) {
             $message->status = "error";
-            $this->sdoFactory->update($message);
+            $this->update($message);
 
             $this->lifeCycleJournalController->logEvent(
                 'medona/processing',
@@ -850,7 +850,7 @@ class ArchiveTransfer extends abstractMessage
             }
 
             $message->status = "processed";
-            $this->sdoFactory->update($message);
+            $this->update($message);
         } catch (\Exception $e) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -858,7 +858,7 @@ class ArchiveTransfer extends abstractMessage
 
             $message->status = "error";
             $operationResult = false;
-            $this->sdoFactory->update($message);
+            $this->update($message);
 
             $this->lifeCycleJournalController->logEvent(
                 'medona/processing',

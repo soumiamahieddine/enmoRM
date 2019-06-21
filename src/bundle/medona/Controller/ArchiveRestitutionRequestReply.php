@@ -61,7 +61,7 @@ class ArchiveRestitutionRequestReply extends abstractMessage
 
         $requestMessage->replyReference = $message->reference;
 
-        $this->sdoFactory->update($requestMessage, "medona/message");
+        $this->update($requestMessage);
 
         $message->senderOrgRegNumber = $requestMessage->recipientOrgRegNumber;
         $message->recipientOrgRegNumber = $requestMessage->senderOrgRegNumber;
