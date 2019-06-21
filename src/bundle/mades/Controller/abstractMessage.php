@@ -45,7 +45,7 @@ abstract class abstractMessage
 
     protected function sendOrganization($orgOrganization)
     {
-        $organization = \laabs::newInstance('organization/organization');
+        $organization = \laabs::newInstance('mades/organization');
         $organization->id = (string) $orgOrganization->orgId;
         $organization->identifier = $orgOrganization->registrationNumber;
         $organization->name = $orgOrganization->orgName;

@@ -559,6 +559,10 @@ class ArchiveTransfer extends abstractMessage
             );
         }
 
+        if (isset($message->comment)) {
+            $message->comment = json_encode($message->comment);
+        }
+
         $this->sdoFactory->update($message);
 
         if ($sendReply) {
@@ -596,7 +600,7 @@ class ArchiveTransfer extends abstractMessage
         }
 
         $recipientRoles = (array) $recipientOrg->orgRoleCodes;
-        if (!in_array("archiver", $recipientRoles)) {
+        if (!in_array("archiver", $recipientRoles) && !in_array("owner", $recipientRoles)) {
             $this->sendError("202", "Le service d'archives identifié par '".$message->recipientOrgRegNumber."' ne possède pas le rôle d'acteur adéquat dans le système.");
         }
 

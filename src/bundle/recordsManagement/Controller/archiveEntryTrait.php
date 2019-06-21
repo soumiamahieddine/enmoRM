@@ -335,7 +335,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function manageFileplanPosition($archive)
+    public function manageFileplanPosition($archive)
     {
         // Could classify automatically regarding archival profile rule
         if (empty($archive->filePlanPosition)) {
@@ -357,7 +357,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function completeManagementMetadata($archive)
+    public function completeManagementMetadata($archive)
     {
         $this->completeArchivalProfileCodes($archive);
         $this->completeRetentionRule($archive);
@@ -367,7 +367,7 @@ trait archiveEntryTrait
         $this->completeArchiver($archive);
     }
 
-    protected function completeOriginator($archive)
+    public function completeOriginator($archive)
     {
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {

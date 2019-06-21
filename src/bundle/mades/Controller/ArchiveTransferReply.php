@@ -26,18 +26,11 @@ namespace bundle\mades\Controller;
  * @package Mades
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-abstract class Message
+class ArchiveTransferReply extends Message
 {
-    protected function sendError($code, $message = false)
+    public function send($message)
     {
-        if ($message) {
-            array_push($this->errors, new \core\Error($message, null, $code));
-        } else {
-            array_push($this->errors, new \core\Error($this->getReplyMessage($code), null, $code));
-        }
-
-        if ($this->replyCode == null) {
-            $this->replyCode = $code;
-        }
+        $message->object = new \stdClass();
     }
+
 }
