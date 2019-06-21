@@ -1,6 +1,6 @@
 {
     "comment" : [
-        "coucou"
+        "Test"
     ],
     "date" : "2019-06-18",
     "messageIdentifier" : "01",
@@ -26,7 +26,22 @@
         },
         "descriptiveMetadata" : {
             "au01" : {
-                "dataObjectReference" : [
+                "identifier" : "F17",
+                "displayName" : "Facture 17 du 01/01/2019",
+                "profile" : "FACVEN",
+                "description" : {
+                    "supplier" : "Maarch SAS - 11 bd du Sud-Est - Nanterre"
+                },
+                "filing" : {
+                    "activity" : "FOUR"
+                },
+                "management" : {
+                    "appraisalRule" : {
+                        "code" : "COM",
+                        "startDate" : "2019-01-01"
+                    }
+                },
+                "dataObjectReferences" : [
                     "bdo1"
                 ]
             }
