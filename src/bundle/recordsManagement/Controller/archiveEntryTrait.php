@@ -586,7 +586,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive object
      */
-    public function validateArchiveDescriptionObject($archive)
+    protected function validateArchiveDescriptionObject($archive)
     {
         if (!isset($archive->archivalProfileReference)) {
             return;
@@ -595,7 +595,7 @@ trait archiveEntryTrait
         $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
     }
 
-    protected function validateDescriptionModel($object, $archivalProfile)
+    public function validateDescriptionModel($object, $archivalProfile)
     {
         $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
 
