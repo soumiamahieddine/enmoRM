@@ -26,7 +26,7 @@ namespace bundle\mades\Controller;
  * @package Mades
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-class ArchiveTransferReply extends Message
+class ArchiveTransferReply extends abstractMessage
 {
     public function send($message)
     {
