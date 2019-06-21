@@ -38,6 +38,8 @@ abstract class abstractMessage
 
         $madesMessage->date = $message->date;
 
+        $madesMessage->comment = $message->comment;
+
         return $madesMessage;
     }
 
@@ -129,5 +131,13 @@ abstract class abstractMessage
         }
 
         return $contact;
+    }
+
+    protected function sendUnitIdentifiers($message) {
+        if (isset($message->unitIdentifier)) {
+            foreach ($message->unitIdentifier as $unitIdentifier) {
+                $message->object->unitIdentifier[] = $unitIdentifier->objectId;
+            }
+        }
     }
 }
