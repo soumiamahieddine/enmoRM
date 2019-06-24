@@ -37,11 +37,6 @@
 
     "management": { "$ref": "#/definitions/Management" },
 
-    "serviceLevelId": { 
-      "description": "The service level identifier",
-      "type" : "string"
-    },
-
     "status": { 
       "description": "The preservation status",
       "type" : "string",
@@ -74,8 +69,12 @@
     "Management" : {
       "type" : "object",
       "properties" : {
-          "accessRule" : { "$ref": "#/definitions/AccessRule" },
-          "appraisalRule" : { "$ref": "#/definitions/AppraisalRule" }
+            "serviceLevelId": { 
+              "description": "The service level identifier",
+              "type" : "string"
+            },
+            "accessRule" : { "$ref": "#/definitions/AccessRule" },
+            "appraisalRule" : { "$ref": "#/definitions/AppraisalRule" }
       },
       "additionalProperties": true,
     },
@@ -116,6 +115,7 @@
       },
       "required" : ["code"]
     },
+    
     "DataObject" : {
       "type" : "object",
       "properties" : {

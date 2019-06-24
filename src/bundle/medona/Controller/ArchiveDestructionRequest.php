@@ -216,7 +216,7 @@ class ArchiveDestructionRequest extends abstractMessage
             $this->archiveController->eliminate((string) $unitIdentifier->objectId);
         }
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
     }
 
     /**
@@ -239,7 +239,7 @@ class ArchiveDestructionRequest extends abstractMessage
             true
         );
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
     }
 
     /**

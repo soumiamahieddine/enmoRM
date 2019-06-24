@@ -94,7 +94,7 @@ class AuthorizationOriginatingAgencyRequestReply extends abstractMessage
                 $this->save($message);
             }
 
-            $this->sdoFactory->update($requestMessage, "medona/message");
+            $this->update($requestMessage);
         } catch (\Exception $e) {
             $message->status = "invalid";
         }

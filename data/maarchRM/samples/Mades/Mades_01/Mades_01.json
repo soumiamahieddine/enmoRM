@@ -3,7 +3,7 @@
         "Test"
     ],
     "date" : "2019-06-18",
-    "messageIdentifier" : "01",
+    "messageIdentifier" : "05",
     "archivalAgency" : {
         "identifier" : "GIC"
     },
@@ -11,7 +11,7 @@
         "identifier" : "DAF"
     },
     "dataObjectPackage" : {
-        "binaryDataObject" : {
+        "binaryDataObjects" : {
             "bdo1" : {
                 "attachment" : {
                     "filename" : "17.pdf"
@@ -28,9 +28,12 @@
             "au01" : {
                 "identifier" : "F17",
                 "displayName" : "Facture 17 du 01/01/2019",
-                "profile" : "FACVEN",
+                "profile" : "FACACH",
                 "description" : {
-                    "supplier" : "Maarch SAS - 11 bd du Sud-Est - Nanterre"
+                    "supplier" : "Maarch SAS - 11 bd du Sud-Est - Nanterre",
+                    "taxIdentifier" : "FR1736448383",
+                    "netPayable" : 1234.56,
+                    "dueDate" : "2019-03-01"
                 },
                 "filing" : {
                     "activity" : "FOUR"

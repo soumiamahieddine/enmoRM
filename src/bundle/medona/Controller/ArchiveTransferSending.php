@@ -324,7 +324,7 @@ class ArchiveTransferSending extends abstractMessage
         $messageObject = json_decode($message->data);
         $messageObject->comment[] = $comment;
         $message->data = json_encode($messageObject);
-        $this->sdoFactory->update($message, "medona/message");
+        $this->update($message, "medona/message");
 
         $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
 
@@ -357,7 +357,7 @@ class ArchiveTransferSending extends abstractMessage
         $message = $this->sdoFactory->read('medona/message', array("messageId" => $messageId));
         $message->active = false;
 
-        $this->sdoFactory->update($message, "medona/message");
+        $this->update($message, "medona/message");
 
         $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
 

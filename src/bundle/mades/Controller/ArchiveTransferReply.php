@@ -26,31 +26,11 @@ namespace bundle\mades\Controller;
  * @package Mades
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-abstract class Message
+class ArchiveTransferReply extends abstractMessage
 {
-    /**
-     * Load a message
-     * @param medona\message $message The message object
-     */
-    public function loadMessage($message)
+    public function send($message)
     {
-        $data = file_get_contents($message->path);
-
-        $message->object = json_decode($data);
-        $message->object->binaryDataObject = get_object_vars($message->object->dataObjectPackage->binaryDataObject);
-        $message->object->descriptiveMetadata = get_object_vars($message->object->dataObjectPackage->descriptiveMetadata);
+        $message->object = new \stdClass();
     }
 
-    protected function sendError($code, $message = false)
-    {
-        if ($message) {
-            array_push($this->errors, new \core\Error($message, null, $code));
-        } else {
-            array_push($this->errors, new \core\Error($this->getReplyMessage($code), null, $code));
-        }
-
-        if ($this->replyCode == null) {
-            $this->replyCode = $code;
-        }
-    }
 }
