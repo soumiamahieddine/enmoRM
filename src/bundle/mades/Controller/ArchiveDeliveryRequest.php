@@ -21,29 +21,28 @@ namespace bundle\mades\Controller;
 
 /**
  * Class for Modification Notification message handling
+ *
+ * @author Arnaud PAUGET <arnaud.pauget@maarch.org>
  */
-class ArchiveModificationNotification extends abstractMessage
+class ArchiveDeliveryRequest extends abstractMessage
 {
+
     /**
-     * Send message with all contents embedded
+     * Receive message with all contents embedded
      * @param string $message The message
      */
     public function send($message)
     {
+        $archiveDeliveryRequest = abstractMessage::send($message);
 
-        $archiveModificationNotification = abstractMessage::send($message);
+        $archiveDeliveryRequest->deliveryRequestIdentifier = $message->reference;
+
+        $archiveDeliveryRequest->derogation = $message->derogation;
+
+        $archiveDeliveryRequest->archivalAgency = $this->sendOrganization($message->recipientOrg);
+
+        $archiveDeliveryRequest->requester = $this->sendOrganization($message->senderOrg);
         
-        $archiveModificationNotification->modificationNotificationIdentifier = $message->reference; 
-
-        $archiveModificationNotification->archivalAgency = $this->sendOrganization($message->senderOrg);
-
-        $archiveModificationNotification->originatingAgency = $this->sendOrganization($message->recipientOrg);
-
-        $archiveModificationNotification->unitIdentifier = $this->sendUnitIdentifiers($message);
-
-        // TODO 
-        // foreach ($message->archive as $archive) {
-        //     $archiveModificationNotification->archive[] = $this->sendArchive($archive, $withAttachment = false);
-        // }
+        $archiveDeliveryRequest->unitIdentifier = $this->sendUnitIdentifiers($message);
     }
 }
