@@ -29,6 +29,31 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
  */
 class archiveDescription
 {
+    public $view;
+    protected $json;
+    protected $translator;
+
+    /**
+     * Constuctor
+     * @param \dependency\html\Document                    $view
+     * @param \dependency\json\JsonObject                  $json
+     * @param \dependency\localisation\TranslatorInterface $translator
+     */
+    public function __construct(
+        \dependency\html\Document $view,
+        \dependency\json\JsonObject $json,
+        \dependency\localisation\TranslatorInterface $translator
+    )
+    {
+        $this->view = $view;
+
+        $this->json = $json;
+        $this->json->status = true;
+
+        $this->translator = $translator;
+        $this->translator->setCatalog('recordsManagement/messages');
+    }
+
     public function read($descriptionObject, $archivalProfile = null, $descriptionClass = null)
     {        
         if (!is_null($archivalProfile) && is_null($descriptionClass)) {
@@ -58,9 +83,7 @@ class archiveDescription
 
         $table = $this->getObjectTable($descriptionObject, $descriptionFields);
 
-        $container = $this->view->getElementById("metadata");
-
-        $container->appendChild($table);
+        return $this->view->saveHtml($table);
     }
 
 

@@ -29,7 +29,7 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
  */
 class archive
 {
-    use \presentation\maarchRM\Presenter\exceptions\exceptionTrait, archiveDescriptionTrait;
+    use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
     protected $json;
@@ -1053,7 +1053,7 @@ class archive
         $presenter = $this->getDescriptionPresenter($archive->descriptionClass);
 
         $archivalProfile = null;
-        if (isset($archive->archivalProfileReference))
+        if (isset($archive->archivalProfileReference)) {
             $archivalProfile = $this->loadArchivalprofile($archive->archivalProfileReference);
         }
 
