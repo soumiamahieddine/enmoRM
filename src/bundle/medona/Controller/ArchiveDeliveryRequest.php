@@ -181,7 +181,7 @@ class ArchiveDeliveryRequest extends abstractMessage
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
 
-        $schema = "medona";
+        $schema = "mades";
         if (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
@@ -245,13 +245,14 @@ class ArchiveDeliveryRequest extends abstractMessage
             throw $e;
         }
 
-        $this->lifeCycleJournalController->logEvent(
-            'medona/sending',
-            'medona/message',
-            $message->messageId,
-            $message,
-            $operationResult
-        );
+        // TODO
+        // $this->lifeCycleJournalController->logEvent(
+        //     'medona/sending',
+        //     'medona/message',
+        //     $message->messageId,
+        //     $message,
+        //     $operationResult
+        // );
 
         return $message;
     }
