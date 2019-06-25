@@ -168,7 +168,7 @@ class message
                         $archiveUnit->descriptionHTML = $fragment;
                     }
 
-                    if (!$archiveUnit->management->serviceLevel) {
+                    if (!isset($archiveUnit->management->serviceLevel)) {
                         $serviceLevel = \laabs::callService(
                             'recordsManagement/serviceLevel/read_Default/'
                         );
