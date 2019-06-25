@@ -39,9 +39,9 @@ class ArchiveDeliveryRequestReply extends abstractMessage
 
         $archiveDeliveryRequestReply->replyCode = $this->sendReplyCode($message->replyCode);
 
-        $archiveDeliveryRequestReply->deliveryRequestIdentifier = $message->requestReference;
+        $archiveDeliveryRequestReply->messageRequestIdentifier = $message->requestReference;
 
-        $archiveDeliveryRequestReply->deliveryRequestReplyIdentifier = $message->reference;
+        $archiveDeliveryRequestReply->messageRequestReplyIdentifier = $message->reference;
 
         $archiveDeliveryRequestReply->authorizationRequestReplyIdentifier = $message->authorizationReference;
 
@@ -57,5 +57,7 @@ class ArchiveDeliveryRequestReply extends abstractMessage
                 $archiveDeliveryRequestReply->unitIdentifier[] = $archive->archiveId;
             }
         }
+        
+        $this->sendJSON($message);
     }
 }
