@@ -29,7 +29,7 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
  */
 class archive
 {
-    use \presentation\maarchRM\Presenter\exceptions\exceptionTrait, archiveDescriptionTrait;
+    use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
     protected $json;
@@ -1052,14 +1052,17 @@ class archive
     {
         $presenter = $this->getDescriptionPresenter($archive->descriptionClass);
 
+        $archivalProfile = null;
+        if (isset($archive->archivalProfileReference)) {
+            $archivalProfile = $this->loadArchivalprofile($archive->archivalProfileReference);
+        }
+
         if (!empty($presenter)) {
-            $descriptionHtml = $presenter->read($archive->descriptionObject);
+            $descriptionHtml = $presenter->read($archive->descriptionObject, $archivalProfile, $archive->descriptionClass);
 
             $container = $this->view->getElementById("metadata");
             
             $this->view->addContent($descriptionHtml, $container);
-        } else {
-            $this->setDescription($archive);
         }
     }
 
@@ -1086,7 +1089,7 @@ class archive
     {
         // Default description class
         if (empty($descriptionScheme)) {
-            return;
+            return \laabs::newPresenter('recordsManagement/archiveDescription');
         }
 
         $descriptionSchemeConfig =\laabs::callService('recordsManagement/descriptionScheme/read_name_', $descriptionScheme);

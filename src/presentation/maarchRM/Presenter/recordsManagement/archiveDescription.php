@@ -27,16 +27,43 @@ namespace presentation\maarchRM\Presenter\recordsManagement;
  * @package RecordsManagement
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
-trait archiveDescriptionTrait
+class archiveDescription
 {
-    protected function setDescription($archive)
+    public $view;
+    protected $json;
+    protected $translator;
+
+    /**
+     * Constuctor
+     * @param \dependency\html\Document                    $view
+     * @param \dependency\json\JsonObject                  $json
+     * @param \dependency\localisation\TranslatorInterface $translator
+     */
+    public function __construct(
+        \dependency\html\Document $view,
+        \dependency\json\JsonObject $json,
+        \dependency\localisation\TranslatorInterface $translator
+    )
     {
+        $this->view = $view;
+
+        $this->json = $json;
+        $this->json->status = true;
+
+        $this->translator = $translator;
+        $this->translator->setCatalog('recordsManagement/messages');
+    }
+
+    public function read($descriptionObject, $archivalProfile = null, $descriptionClass = null)
+    {        
+        if (!is_null($archivalProfile) && is_null($descriptionClass)) {
+            $descriptionClass = $archivalProfile->descriptionClass;
+        }
+
         $descriptionFields = $archivalProfileFields = [];
 
-        $archivalProfile = $this->loadArchivalprofile($archive->archivalProfileReference);
-        
         // Retrieve scheme properties (description fields)
-        $descriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $archive->descriptionClass);
+        $descriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $descriptionClass);
         
         if ($archivalProfile && !empty($archivalProfile->archiveDescription)) {
             // Index profile fields and set immutale fields as readonly
@@ -54,11 +81,9 @@ trait archiveDescriptionTrait
         // Sort description fields as in profile
         $descriptionFields = $this->sortFields($descriptionFields, $archivalProfileFieldNames);
 
-        $table = $this->getObjectTable($archive->descriptionObject, $descriptionFields);
+        $table = $this->getObjectTable($descriptionObject, $descriptionFields);
 
-        $container = $this->view->getElementById("metadata");
-
-        $container->appendChild($table);
+        return $this->view->saveHtml($table);
     }
 
 
