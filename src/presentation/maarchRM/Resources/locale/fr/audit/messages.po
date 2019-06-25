@@ -1791,16 +1791,16 @@ msgid "organization/orgTree/readList"
 msgstr "Charge la liste des types d'organisation"
 
 msgid "medona/archiveModificationRequest/read"
-msgstr "Lecture des demande de modification d'archive"
+msgstr "Lecture des demandes de modification d'archive"
 
 msgid "medona/archiveModificationRequest/create"
-msgstr "Ajouts d'une modificaiton d'archive"
+msgstr "Ajout d'une modification d'archive"
 
 msgid "medona/archiveModificationRequest/update_messageId_Reject"
 msgstr "Rejet de la demande de modification d'archive"
 
 msgid "medona/archiveModificationRequest/update_messageId_Accept"
-msgstr "Acceptations de la demande de modification d'archive"
+msgstr "Acceptation de la demande de modification d'archive"
 
 msgid "medona/archiveModificationRequest/readHistory"
 msgstr "Historique des modification d'archive"
@@ -1808,35 +1808,32 @@ msgstr "Historique des modification d'archive"
 msgid "medona/archiveModificationRequest/readReference"
 msgstr "Liste des références des modifications d'archive"
 
-msgid "medona/archiveModificationRequest/read_message_Id_"
-msgstr "Lecture d'une moification d'archive"
+msgid "medona/archiveModificationRequest/read_messageId_"
+msgstr "Lecture d'une modification d'archive"
 
-msgid "medona/archiveModificationRequest/read_message_Id_Export"
+msgid "medona/archiveModificationRequest/read_messageId_Export"
 msgstr "Lecture des exports de modification d'archive"
 
-msgid "medona/archiveModificationRequest/read_message_Id_Retry"
+msgid "medona/archiveModificationRequest/read_messageId_Retry"
 msgstr "Lecture des relances d'exports de modification d'archive"
 
-msgid "medona/archiveModificationRequest/read_message_Id_Attachment_attachmentId_"
+msgid "medona/archiveModificationRequest/read_messageId_Attachment_attachmentId_"
 msgstr "Lecture des pièces jointes aux demandes de modification d'archives"
 
-msgid "medona/archiveModificationRequest/"
-msgstr ""
+msgid "medona/archiveModificationRequest/updateEndtransaction_messageId_"
+msgstr "Mise à jour de la fin de transaction de la demande de modification d'une archive"
 
-msgid "medona/archiveModificationRequest/"
-msgstr ""
+msgid "medona/archiveModificationRequest/readCount"
+msgstr "Somme du nombre de demande de modification d'archives"
 
-msgid "medona/archiveModificationRequest/"
-msgstr ""
+msgid "medona/archiveModificationRequest/readSearch"
+msgstr "Liste de recherches aux requêtes de modifications d'archive"
 
-msgid ""
-msgstr ""
+msgid "medona/archiveModificationRequest/updateArchive"
+msgstr "Mise à jour des demandes de modification d'archives"
 
-msgid ""
-msgstr ""
+msgid "medona/archiveModificationRequest/update_messageId_Archive"
+msgstr "Mise à jour du message de la demande de modification de l'archive"
 
-msgid ""
-msgstr ""
-
-msgid ""
-msgstr ""
+msgid "medona/archiveModificationRequest/deleteMessagedirectorypurge"
+msgstr "Suppression du dossier temporaire des demandes de modification d'archive"

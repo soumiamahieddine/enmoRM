@@ -1558,3 +1558,51 @@ msgstr "Relationships between a service and an archival profile deleted"
 
 msgid "organization/orgTree/readList"
 msgstr "Retrieve list of organization's type"
+
+msgid "medona/archiveModificationRequest/read"
+msgstr "Archive modification request list"
+
+msgid "medona/archiveModificationRequest/create"
+msgstr "Create an archive modification request"
+
+msgid "medona/archiveModificationRequest/update_messageId_Reject"
+msgstr "Archive modification request refused"
+
+msgid "medona/archiveModificationRequest/update_messageId_Accept"
+msgstr "Archive modification request accepted"
+
+msgid "medona/archiveModificationRequest/readHistory"
+msgstr "History or archive modification request"
+
+msgid "medona/archiveModificationRequest/readReference"
+msgstr "References of archive modification request"
+
+msgid "medona/archiveModificationRequest/read_messageId_"
+msgstr "Read archive modification request"
+
+msgid "medona/archiveModificationRequest/read_messageId_Export"
+msgstr "Read archive modification request for export"
+
+msgid "medona/archiveModificationRequest/read_messageId_Retry"
+msgstr "Read archive modification retry request for export"
+
+msgid "medona/archiveModificationRequest/read_messageId_Attachment_attachmentId_"
+msgstr "Read archive modification request for attachement"
+
+msgid "medona/archiveModificationRequest/updateEndtransaction_messageId_"
+msgstr "Update end transaction of archive modification request"
+
+msgid "medona/archiveModificationRequest/readCount"
+msgstr "Count of archive modification request"
+
+msgid "medona/archiveModificationRequest/readSearch"
+msgstr "Archive modification request searched"
+
+msgid "medona/archiveModificationRequest/updateArchive"
+msgstr "Update archive modification request"
+
+msgid "medona/archiveModificationRequest/update_messageId_Archive"
+msgstr "Update mmessage with archive modification request"
+
+msgid "medona/archiveModificationRequest/deleteMessagedirectorypurge"
+msgstr "Delete temporary files of archive modification request"
