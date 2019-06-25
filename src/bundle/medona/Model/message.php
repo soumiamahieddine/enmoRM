@@ -75,7 +75,7 @@ class message
     /**
      * The comment
      *
-     * @var json
+     * @var string
      */
     public $comment;
 
