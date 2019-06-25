@@ -49,20 +49,13 @@ class ArchiveDeliveryRequestReply extends abstractMessage
 
         $archiveDeliveryRequestReply->requester = $this->sendOrganization($message->recipientOrg);
 
-        // if (isset($message->archive)) {
-        //     foreach ($message->archive as $archive) {
-        //         $unitIdentifier = \laabs::newInstance('seda/ID');
-        //         $unitIdentifier->value = $archive->archiveId;
-        //         $unitIdentifier->schemeName = 'ArchivalAgencyArchiveIdentifier';
-        //         $archive->lifeCycleEvent = $this->lifeCycleJournalController->getEvents((string)$archive->archiveId, $archive->depositDate);
+        $archiveDeliveryRequestReply->unitIdentifier = [];
 
-        //         $archive = $this->sendArchive($archive, $withAttachment = true);
-
-        //         $archiveDeliveryRequestReply->archive[] = $archive;
-        //         $archiveDeliveryRequestReply->unitIdentifier[] = $unitIdentifier;
-        //     }
-
-        //     $this->sendXml($message, $withData = true);
-        // }
+        $this->sendDataObjectPackage($message, $withAttachment = true);
+        if (isset($message->archive)) {
+            foreach ($message->archive as $archive) {
+                $archiveDeliveryRequestReply->unitIdentifier[] = $archive->archiveId;
+            }
+        }
     }
 }
