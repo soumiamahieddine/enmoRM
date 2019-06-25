@@ -158,7 +158,7 @@ class message
             $message->object = json_decode($message->data);
         }
 
-        if (!empty($message->comment)) {
+        if (!empty($message->comment) && is_string($message)) {
             $message->comment = json_decode($message->comment);
         }
     }
