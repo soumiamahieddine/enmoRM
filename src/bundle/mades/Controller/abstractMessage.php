@@ -44,6 +44,8 @@ abstract class abstractMessage
 
         $madesMessage->date = $message->date;
 
+        $madesMessage->replyCode = $message->replyCode;
+
         $madesMessage->comment = $message->comment;
 
         $madesMessage->version = "1.0";
@@ -225,7 +227,10 @@ abstract class abstractMessage
             'classificationAudience' => 'management->classificationRule->audience',
             'classificationStatus' => 'management->classificationRule->status',
             'classificationReassessingDate' => 'management->classificationRule->reassessingDate',
-            'classificationEndDate' => 'management->classificationRule->releaseDueDate'
+            'classificationEndDate' => 'management->classificationRule->releaseDueDate',
+
+            'depositDate' => 'control->creationDate',
+            'lastModificationDate' => 'control->lastModificationDate'
         ];
 
         $archiveUnit = $this->getObjectFromBindingArray($archive, $this->metadataBindings);
@@ -273,9 +278,6 @@ abstract class abstractMessage
         // $archiveUnit->security->org
         // $archiveUnit->security->accessControlList
 
-        $archiveUnit->control = new \stdClass();
-        $archiveUnit->control->creationDate = $archive->depositDate;
-        $archiveUnit->control->lastModificationDate = $archive->lastModificationDate;
         // $archiveUnit->control->lastUseDate = 
         // $archiveUnit->control->status = "active";
 
