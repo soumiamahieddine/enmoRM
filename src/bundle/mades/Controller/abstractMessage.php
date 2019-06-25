@@ -151,7 +151,8 @@ abstract class abstractMessage
         return $contact;
     }
 
-    protected function sendUnitIdentifiers($message) {
+    protected function sendUnitIdentifiers($message)
+    {
         if (isset($message->unitIdentifier)) {
             foreach ($message->unitIdentifier as $unitIdentifier) {
                 $message->object->unitIdentifier[] = $unitIdentifier->objectId;
@@ -159,20 +160,23 @@ abstract class abstractMessage
         }
     }
 
-    protected function sendReplyCode($message) {
+    protected function sendReplyCode($message)
+    {
         if (isset($message->replyCode)) {
             $message->object->replyCode = $message->replyCode;
         }
     }
 
-    protected function sendDataObjectPackage($message, $withBinaries = false) {
+    protected function sendDataObjectPackage($message, $withBinaries = false)
+    {
         $message->object->dataObjectPackage = new \stdClass();
         $message->object->dataObjectPackage->descriptiveMetadata = new \stdClass();
         $message->object->dataObjectPackage->binaryDataObjects = new \stdClass();
 
         if (is_array($message->archive)) {
             foreach ($message->archive as $archive) {
-                $message->object->dataObjectPackage->descriptiveMetadata->{$archive->archiveId} = $this->sendArchiveMetadata($archive);
+                $message->object->dataObjectPackage->descriptiveMetadata->{$archive->archiveId} =
+                    $this->sendArchiveMetadata($archive);
             }
         }
         if ($withBinaries) {
@@ -180,7 +184,8 @@ abstract class abstractMessage
         }
     }
 
-    protected function sendArchiveMetadata($archive) {
+    protected function sendArchiveMetadata($archive)
+    {
         $archiveUnit = new \stdClass();
         
         if (isset($archive->archiveName)) {
@@ -231,11 +236,9 @@ abstract class abstractMessage
         if (isset($archive->relationships)
             && is_array($archive->relationships)
             && (
-                !empty($archive->relationships->parentRelationships) 
+                !empty($archive->relationships->parentRelationships)
                 || !empty($archive->relationships->childrenRelationships)
-                )
-            )
-        {
+            )) {
             $archiveUnit->relationships = [];
             foreach ($archive->relationships->parentRelationships as $parentRelationship) {
                 $relationship = new \stdClass();
@@ -253,7 +256,7 @@ abstract class abstractMessage
             }
         }
 
-        foreach($archive->digitalResources as $digitalResource) {
+        foreach ($archive->digitalResources as $digitalResource) {
             $archiveUnit->dataObjectReferences[] = $digitalResource->resId;
 
             $this->currentDigitalResources[] = $digitalResource;
@@ -284,13 +287,15 @@ abstract class abstractMessage
         return $archiveUnit;
     }
 
-    protected function sendArchiveBinaries($dataObjectPackage) {
+    protected function sendArchiveBinaries($dataObjectPackage)
+    {
         foreach ($this->currentDigitalResources as $digitalResource) {
             $dataObjectPackage->binaryDataObjects->{$digitalResource->resId} = $this->sendArchiveBinary($digitalResource);
         }
     }
 
-    protected function sendArchiveBinary($digitalResource) {
+    protected function sendArchiveBinary($digitalResource)
+    {
         
         $binaryDataObject = new \stdClass();
 
@@ -344,5 +349,61 @@ abstract class abstractMessage
         }
 
         return $binaryDataObject;
+    }
+
+    /**
+     * Get an attachment resource from a message
+     * @param mades/message $message      The message
+     * @param string         $attachmentId The attachment identifier
+     *
+     * @return digitalResource/digitalResource The resource
+     */
+    public function getAttachment($message, $attachmentId)
+    {
+        $attachment = $this->findAttachment($attachmentId, $message->object->dataObjectPackage->binaryDataObjects);
+
+        if (!$attachment) {
+            return false;
+        }
+
+        $resource = \laabs::newInstance('digitalResource/digitalResource');
+
+        switch (true) {
+            case isset($attachment->filename):
+                $messageDir = dirname($message->path);
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+                $contents = file_get_contents($filepath);
+
+                $resource->fileExtension = pathinfo($attachment->filename, \PATHINFO_EXTENSION);
+                $resource->fileName = basename($attachment->filename);
+                break;
+
+            case isset($attachment->uri):
+                $contents = file_get_contents($attachment->uri);
+                break;
+
+            case isset($attachment->value):
+                $contents = base64_decode($attachment->value);
+                break;
+
+            default:
+                return false;
+        }
+
+        $finfo = new \finfo(\FILEINFO_MIME_TYPE);
+        $resource->mimetype = $finfo->buffer($contents);
+
+        $resource->setContents($contents);
+
+        return $resource;
+    }
+
+    protected function findAttachment($attachmentId, $binaryDataObjects)
+    {
+        foreach ($binaryDataObjects as $key => $binaryDataObject) {
+            if ($key === $attachmentId) {
+                return $binaryDataObject->attachment;
+            }
+        }
     }
 }
