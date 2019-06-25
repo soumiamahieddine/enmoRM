@@ -28,7 +28,9 @@
                         <?merge .type.in('ArchiveTransferReply','ArchiveDeliveryRequestReply','ArchiveRestitutionRequestReply') ?>
                         <h4>
                             <b><span>En r&eacute;ponse &agrave;</span> : </b>
-                            <?merge .type.ifeq('ArchiveTransferReply') ?><span><?merge .object.messageRequestIdentifier ?></span>
+                            <span>
+                                <?merge .object.messageRequestIdentifier ?>
+                            </span>
 
                         </h4>
                         <?merge .type.in('ArchiveDeliveryRequestReply','ArchiveDestructionNotification') ?>
