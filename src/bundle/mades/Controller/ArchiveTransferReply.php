@@ -30,7 +30,18 @@ class ArchiveTransferReply extends abstractMessage
 {
     public function send($message)
     {
-        $message->object = new \stdClass();
-    }
+        $archiveTransferReply = abstractMessage::send($message);
 
+        $archiveTransferReply->replyCode = $this->sendReplyCode($message->replyCode);
+       
+        $archiveTransferReply->messageRequestIdentifier = $message->requestReference;
+
+        $archiveTransferReply->messageIdentifier = $message->reference;
+
+        $archiveTransferReply->grantDate = $message->operationDate;
+
+        $archiveTransferReply->archivalAgency = $this->sendOrganization($message->senderOrg);
+
+        $archiveTransferReply->transferringAgency = $this->sendOrganization($message->recipientOrg);
+    }
 }
