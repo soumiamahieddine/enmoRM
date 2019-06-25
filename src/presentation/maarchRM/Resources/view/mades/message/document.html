@@ -1,0 +1,115 @@
+<div id="containList" class="row" data-translate-catalog="medona/messages">
+    <div class="panel panel-primary">
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <!--<th>Identifiant</th>-->
+                        <th class="hidden-md" data-translate-catalog="recordsManagement/messages">Nom de fichier</th>
+                        <th data-sortable="false"/>
+                    </tr>
+                </thead>
+                <tbody id="objectList_tabl">
+                    <?merge $binaryDataObjects ?>
+                    <div>
+                        <tr id="[?merge $binaryDataObjects.key() ?]">
+                            <td class="hidden-md" >
+                                <span>
+                                    <?merge .attachment.filename.bool() ?>
+                                    <span>
+                                        <?merge .attachment.filename ?>
+                                    </span>
+                                </span>
+                                <?merge .attachment.uri.bool() ?>
+                                <span>
+                                    <?merge .attachment.uri ?>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-primary showDocument" title="View" data-id="[?merge $binaryDataObjects.key() ?]" data-filename="[?merge .attachment.filename ?]">
+                                        <span class="fa fa-eye">&nbsp;</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="descriptionObjectModal hide">
+    <div id="messageModal">
+    <div class="container-fluid">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4>Description</h4>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive" data-translate-catalog="businessRecords/messages">
+                <table class="table table-condensed table-striped table-condensed">
+                    <tbody class="descriptionBody">
+                        <!--Description information-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>
+    <div class="hide" data-translate-catalog="businessRecords/messages">
+    </div>
+</div>
+
+
+<script>
+   // view the archive description
+    $('#objectList_tabl').on('click', '.viewRelatedArchive', function () {
+        archiveInfoModal.load($(this).data('objectid'));
+    })
+    
+    $("#archiveList_tabl").on('click',".info", function() {
+
+        description = $.parseJSON($(this).attr('data-json'));
+        var table = $(".descriptionBody");
+        
+        table.empty();
+        
+        $.each(description, function(index, value) {
+            if (value) {
+                var tr = $('<tr/>');
+                var td = $('<td/>').appendTo(tr);
+                var strong = $('<strong/>').text($("#"+index+"_text").html()).appendTo(td);
+                var tdValue = $('<td/>').text(value).appendTo(tr);
+                
+                tr.appendTo(table);
+            }
+        });
+        
+        $('#modalContainerInfo').html($(".descriptionObjectModal").html());
+        $('#viewModalInfo').modal();
+    });
+    archiveDocumentViewer = {
+        load: function(archiveId, action) {
+                    
+            var url = "/recordsManagement/contents/" + archiveId;
+            if (action) {
+                url = action + archiveId;
+            }
+            
+            window.open(url, 'document');
+        },
+        
+        loadDoc: function(docId, action) {
+            var url = "/recordsManagement/document/" + docId;
+            if (action) {
+                url = action + docId;
+            }
+            window.open(url, 'document');
+        }
+    }
+</script>

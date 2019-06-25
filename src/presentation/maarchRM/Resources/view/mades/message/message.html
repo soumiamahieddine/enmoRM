@@ -1,0 +1,238 @@
+<div class="panel-group" id="messageAccordion" role="tablist" aria-multiselectable="true">
+    <?merge messages ?>
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab">
+            <h3 class="panel-title">
+                <h4>
+                    <a data-toggle="collapse" data-parent="#messageAccordion" href="#message_[?merge .messageId?]" aria-expanded="true" aria-controls="[?merge .messageId ?]">
+                        <span><?merge .type ?></span>&nbsp;
+                        <small><?merge .date ?></small>
+                    </a>
+                </h4>
+            </h3>
+        </div>
+        <div id="message_[?merge .messageId ?]" class="panel-collapse collapse [?merge .last.bool().then('in', '') ?]" role="tabpanel">
+            <div class="panel-body">
+                <div class="dataObjects col-xs-12" id="[?merge .messageId ?]">
+                    <div class="row" style="padding:20px">
+                        <h4>
+                            <b>
+                                <span>Date</span> :</b>
+                            <?merge .date ?>
+                        </h4>
+                        <h4>
+                            <b><span>Identifier</span> : </b>
+                            <span><?merge .object.messageIdentifier ?></span>
+                        </h4>
+
+                        <?merge .type.in('ArchiveTransferReply','ArchiveDeliveryRequestReply','ArchiveRestitutionRequestReply') ?>
+                        <h4>
+                            <b><span>En r&eacute;ponse &agrave;</span> : </b>
+                            <?merge .type.ifeq('ArchiveTransferReply') ?><span><?merge .object.messageRequestIdentifier.value ?></span>
+
+                        </h4>
+                        <?merge .type.in('ArchiveDeliveryRequestReply','ArchiveDestructionNotification') ?>
+                        <h4>
+                            <b><span>Autorisation donn&eacute;e</span> : </b>
+                            <?merge .type.ifeq('ArchiveDeliveryRequestReply') ?><span><?merge .object.authorizationRequestReplyIdentifier.value ?></span>
+                            <?merge .type.ifeq('ArchiveDestructionNotification') ?><span><?merge .object.authorizationRequestReplyIdentifier.value ?></span>
+                        </h4>
+
+                        <?merge .object.comment.bool() ?>
+                        <div>
+                            <h4><b><span>Comment</span> : </b></h4>
+                            <ul>
+                                <?merge .object.comment ?><li><?merge . ?></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row" data-translate-catalog="organization/messages" >
+                        <?merge .object.archivalAgency.bool() ?>
+                        <span>
+                            <?merge .object.archivalAgency $organization ?>
+                            <?merge 'Archival agency' $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.transferringAgency.bool() ?>
+                        <span>
+                            <?merge .object.transferringAgency $organization ?>
+                            <?merge 'Service Versant' $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.controlAuthority.bool() ?>
+                        <span>
+                            <?merge .object.controlAuthority $organization ?>
+                            <?merge 'Service de contrôle' $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.originatingAgency.bool() ?>
+                        <span>
+                            <?merge .object.originatingAgency $organization ?>
+                            <?merge 'Service producteur' $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.requester.bool() ?>
+                        <span>
+                            <?merge .object.requester $organization ?>
+                            <?merge "Demandeur" $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.sender.bool() ?>
+                        <span>
+                            <?merge .object.sender $organization ?>
+                            <?merge "Expéditeur" $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                        <?merge .object.receiver.bool() ?>
+                        <span>
+                            <?merge .object.receiver $organization ?>
+                            <?merge "Destinataire" $rolename ?>
+                            <?hinclude mades/message/organization.html ?>
+                        </span>
+                    </div>
+
+                    <?merge .bool().not() ?>
+                    <?hinclude /mades/message/authorization.html ?>
+                    <br/>
+
+                    <?merge .object.dataObjectPackage.descriptiveMetadata ?>
+                    <div class="panel panel-info" id="[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]">
+                        <div class="panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" href="#descriptiveMetadata[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                    Archive <?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="descriptiveMetadata[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <dl class="dl-horizontal" data-translate-catalog="recordsManagement/messages">
+                                    <?merge .identifier.bool() ?>
+                                    <dt>Identifier</dt>
+                                    <dd translate="no">
+                                        <?merge .identifier ?>
+                                    </dd>
+                                </dl>
+                                <dl class="dl-horizontal" data-translate-catalog="recordsManagement/messages">
+                                    <?merge .displayName.bool() ?>
+                                    <dt>Name</dt>
+                                    <dd translate="no">
+                                        <?merge .displayName ?>
+                                    </dd>
+                                </dl>
+                                <dl class="dl-horizontal"data-translate-catalog="medona/messages">
+                                    <dt>Archival profile</dt>
+                                    <dd><?merge .profile ?></dd>
+                                    <dt>Service level</dt>
+                                    <dd><?merge .management.serviceLevel ?></dd>
+                                </dl>
+
+                                <?merge .description.bool() ?>
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading" role="tab">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" href="#description[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                                Description
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="description[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body" id="description">
+                                            <?merge .descriptionHTML ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading" role="tab">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" href="#managmentMetadata[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                                Management metadata
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="managmentMetadata[?merge messages.current().object.dataObjectPackage.descriptiveMetadata.key() ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body">
+                                            <dl class="dl-horizontal" data-translate-catalog="medona/messages">
+                                                <h4>Appraisal rule</h4>
+                                                <dt>Code</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.appraisalRule.code ?>
+                                                </dd>
+                                                <dt>Duration</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.appraisalRule.durationNumber ?>&nbsp;<?merge .management.appraisalRule.durationToDisplay ?>
+                                                </dd>
+                                                <?merge .management.appraisalRule.finalAction.bool() ?>
+                                                <dt>Final action</dt>
+                                                    <?merge .management.appraisalRule.finalAction.ifeq('Keep') ?>
+                                                    <dd>Keep</dd>
+                                                    <?merge .management.appraisalRule.finalAction.ifeq('Destroy') ?>
+                                                    <dd>Destroy</dd>
+                                                <?merge .management.appraisalRule.startDate.bool() ?>
+                                                <dt>Start date</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.appraisalRule.startDate ?>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dl-horizontal"data-translate-catalog="medona/messages">
+                                                <h4>Access rule</h4>
+                                                <dt>Code</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.accessRule.code ?>
+                                                </dd>
+                                                <dt>Duration</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.accessRule.durationNumber ?>&nbsp;<?merge .management.accessRule.durationToDisplay ?>
+                                                </dd>
+                                                <?merge .management.accessRule.startDate.bool() ?>
+                                                <dt>Start date</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.accessRule.startDate ?>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dl-horizontal"data-translate-catalog="medona/messages">
+                                                <h4>Classification rule</h4>
+                                                <dt>Code</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.classificationRule.code ?>
+                                                </dd>
+                                                <dt>Start date</dt>
+                                                <dd translate="no">
+                                                    <?merge .management.classificationRule.startDate ?>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <?merge .object.dataObjectPackage.binaryDataObjects.bool() ?>
+                    <span>
+                        <?merge .object.dataObjectPackage.binaryDataObjects $binaryDataObjects ?>
+                        <?hinclude mades/message/document.html ?>
+                    </span>
+<!--                    <?merge .object.archive.bool().not() ?>-->
+<!--                    <div>-->
+<!--                        <?merge .object.unitIdentifier.bool() ?>-->
+<!--                        <span>-->
+<!--                            <br>-->
+<!--                            <?merge .object.unitIdentifier $unitIdentifier ?>-->
+<!--                            <?hinclude seda/message/unitIdentifier.html ?>-->
+<!--                        </span>-->
+<!--                        <?merge .object.request.unitIdentifier.bool() ?>-->
+<!--                        <span>-->
+<!--                            <br>-->
+<!--                            <?merge .object.request.unitIdentifier $unitIdentifier ?>-->
+<!--                            <?hinclude seda/message/unitIdentifier.html ?>-->
+<!--                        </span>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
