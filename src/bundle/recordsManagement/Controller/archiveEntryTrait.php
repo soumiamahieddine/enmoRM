@@ -894,6 +894,9 @@ trait archiveEntryTrait
         }
 
         try {
+            if (!isset($archive->archiveId)) {
+                $archive->archiveId = \laabs::newId();
+            }
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
 
