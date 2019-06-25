@@ -444,6 +444,9 @@ trait archiveEntryTrait
         }
 
         if (!empty($archive->accessRuleStartDate) && !empty($archive->accessRuleDuration)) {
+            if (is_string($archive->accessRuleStartDate)) {
+                $archive->accessRuleStartDate = \laabs::newDate($archive->accessRuleStartDate);
+            }
             $archive->accessRuleComDate = $archive->accessRuleStartDate->shift($archive->accessRuleDuration);
         }
     }
@@ -487,6 +490,9 @@ trait archiveEntryTrait
 
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
+            if (is_string($archive->retentionStartDate)) {
+                $archive->retentionStartDate = \laabs::newDate($archive->retentionStartDate);
+            }
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }
