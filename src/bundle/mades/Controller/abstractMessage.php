@@ -28,8 +28,12 @@ namespace bundle\mades\Controller;
  */
 abstract class abstractMessage
 {
+    protected $currentDigitalResources;
+
     protected function send($message)
     {
+        $this->currentDigitalResources = [];
+
         $madesMessage = new \stdClass();
 
         $message->object = $madesMessage;
@@ -39,6 +43,8 @@ abstract class abstractMessage
         $madesMessage->date = $message->date;
 
         $madesMessage->comment = $message->comment;
+
+        $madesMessage->version = "1.0";
 
         return $madesMessage;
     }
@@ -151,5 +157,192 @@ abstract class abstractMessage
                 $message->object->unitIdentifier[] = $unitIdentifier->objectId;
             }
         }
+    }
+
+    protected function sendReplyCode($message) {
+        if (isset($message->replyCode)) {
+            $message->object->replyCode = $message->replyCode;
+        }
+    }
+
+    protected function sendDataObjectPackage($message, $withBinaries = false) {
+        $message->object->dataObjectPackage = new \stdClass();
+        $message->object->dataObjectPackage->descriptiveMetadata = new \stdClass();
+        $message->object->dataObjectPackage->binaryDataObjects = new \stdClass();
+
+        if (is_array($message->archive)) {
+            foreach ($message->archive as $archive) {
+                $message->object->dataObjectPackage->descriptiveMetadata->{$archive->archiveId} = $this->sendArchiveMetadata($archive);
+            }
+        }
+        if ($withBinaries) {
+            $this->sendArchiveBinaries($message->object->dataObjectPackage);
+        }
+    }
+
+    protected function sendArchiveMetadata($archive) {
+        $archiveUnit = new \stdClass();
+        
+        if (isset($archive->archiveName)) {
+            $archiveUnit->displayName = $archive->archiveName;
+        }
+        $archiveUnit->refDate = $archive->originatingDate;
+        $archiveUnit->profile = $archive->archivalProfileReference;
+        $archiveUnit->description = $archive->description;
+
+        $archiveUnit->filing = new \stdClass();
+        $archiveUnit->filing->level = $archive->fileplanLevel;
+        $archiveUnit->filing->folder = $archive->filePlanPosition;
+        $archiveUnit->filing->activity = $archive->originatorOrgRegNumber;
+        $archiveUnit->filing->originator = $archive->originatorOwnerOrgRegNumber;
+        $archiveUnit->filing->container = $archive->parentArchiveId;
+
+        $archiveUnit->management = new \stdClass();
+        $archiveUnit->management->preservationStatus = $archive->status;
+        $archiveUnit->management->processingStatus = $archive->processingStatus;
+        $archiveUnit->management->serviceLevel = $archive->serviceLevelReference;
+
+        $archiveUnit->management->appraisalRule = new \stdClass();
+        $archiveUnit->management->appraisalRule->code = $archive->retentionRuleCode;
+        $archiveUnit->management->appraisalRule->startDate = $archive->retentionStartDate;
+        $archiveUnit->management->appraisalRule->finalDisposition = $archive->finalDisposition;
+        $archiveUnit->management->appraisalRule->duration = $archive->retentionDuration;
+        $archiveUnit->management->appraisalRule->status = $archive->retentionRuleStatus;
+        $archiveUnit->management->appraisalRule->disposalDueDate = $archive->disposalDate;
+
+        $archiveUnit->management->accessRule = new \stdClass();
+        $archiveUnit->management->accessRule->code = $archive->accessRuleCode;
+        $archiveUnit->management->accessRule->startDate = $archive->accessRuleStartDate;
+        $archiveUnit->management->accessRule->duration = $archive->accessRuleDuration;
+        // $archiveUnit->management->accessRule->status = $archive->accessRuleStatus;
+        $archiveUnit->management->accessRule->disclosureDueDate = $archive->accessRuleComDate;
+
+        $archiveUnit->management->classificationRule = new \stdClass();
+        $archiveUnit->management->classificationRule->code = $archive->classificationRuleCode;
+        $archiveUnit->management->classificationRule->startDate = $archive->classificationRuleStartDate;
+        $archiveUnit->management->classificationRule->duration = $archive->classificationRuleDuration;
+        $archiveUnit->management->classificationRule->level = $archive->classificationLevel;
+        $archiveUnit->management->classificationRule->owner = $archive->classificationOwner;
+        // $archiveUnit->management->classificationRule->audience = $archive->classificationAudience;
+        // $archiveUnit->management->classificationRule->status = $archive->classificationStatus;
+        // $archiveUnit->management->classificationRule->reassessingDate = $archive->classificationReassessingDate;
+        $archiveUnit->management->classificationRule->releaseDueDate = $archive->classificationEndDate;
+
+        if (isset($archive->relationships)
+            && is_array($archive->relationships)
+            && (
+                !empty($archive->relationships->parentRelationships) 
+                || !empty($archive->relationships->childrenRelationships)
+                )
+            )
+        {
+            $archiveUnit->relationships = [];
+            foreach ($archive->relationships->parentRelationships as $parentRelationship) {
+                $relationship = new \stdClass();
+                $relationship->refId = $parentRelationship->relatedArchiveId;
+                $relationship->type = $parentRelationship->typeCode;
+                $relationship->description = $parentRelationship->description;
+                $archiveUnit->relationships[] = $relationship;
+            }
+            foreach ($archive->relationships->childrenRelationships as $childrenRelationship) {
+                $relationship = new \stdClass();
+                $relationship->refId = $childrenRelationship->archiveId;
+                $relationship->type = $childrenRelationship->typeCode;
+                $relationship->description = $childrenRelationship->description;
+                $archiveUnit->relationships[] = $relationship;
+            }
+        }
+
+        foreach($archive->digitalResources as $digitalResource) {
+            $archiveUnit->dataObjectReferences[] = $digitalResource->resId;
+
+            $this->currentDigitalResources[] = $digitalResource;
+        }
+
+        if (isset($archive->contents) && is_array($archive->contents)) {
+            $archiveUnit->archiveUnits = new \stdClass();
+            foreach ($archive->contents as $content) {
+                $archiveUnit->archiveUnits->{$content->archiveId} = $this->sendArchiveMetadata($content);
+            }
+        }
+        
+        // TODO
+        // $archiveUnit->security = new \stdClass();
+        // $archiveUnit->security->user
+        // $archiveUnit->security->group
+        // $archiveUnit->security->org
+        // $archiveUnit->security->accessControlList
+
+        $archiveUnit->control = new \stdClass();
+        $archiveUnit->control->creationDate = $archive->depositDate;
+        $archiveUnit->control->lastModificationDate = $archive->lastModificationDate;
+        // $archiveUnit->control->lastUseDate = 
+        // $archiveUnit->control->status = "active";
+
+        // $archiveUnit->log = 
+
+        return $archiveUnit;
+    }
+
+    protected function sendArchiveBinaries($dataObjectPackage) {
+        foreach ($this->currentDigitalResources as $digitalResource) {
+            $dataObjectPackage->binaryDataObjects->{$digitalResource->resId} = $this->sendArchiveBinary($digitalResource);
+        }
+    }
+
+    protected function sendArchiveBinary($digitalResource) {
+        
+        $binaryDataObject = new \stdClass();
+
+        if (isset($digitalResource->resId)) {
+            $binaryDataObject->attachment = new \stdClass();
+            // $binaryDataObject->attachment->uri = $digitalResource->address[0]->path;
+            $binaryDataObject->attachment->fileName = $digitalResource->resId;
+            // $binaryDataObject->attachment->content = base64_encode($digitalResource->getContents());
+            $binaryDataObject->size = $digitalResource->size;
+        }
+
+        if (isset($digitalResource->mimetype)) {
+            $binaryDataObject->format = new \stdClass();
+            // $binaryDataObject->format->name = 
+            $binaryDataObject->format->mimeType = $digitalResource->mimetype;
+            // $binaryDataObject->format->identifier = $digitalResource->puid;
+            // $binaryDataObject->format->containerType =
+        }
+
+        if (isset($digitalResource->hash)) {
+            $binaryDataObject->messageDigest = new \stdClass();
+            // $binaryDataObject->messageDigest->uri = 
+            // $binaryDataObject->messageDigest->fileName = 
+            $binaryDataObject->messageDigest->content = $digitalResource->hash;
+            $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
+        }
+
+        if (isset($digitalResource->fileName)) {
+            $binaryDataObject->fileInformation = new \stdClass();
+            $binaryDataObject->fileInformation->fileName = $digitalResource->fileName;
+            // $binaryDataObject->fileInformation->application = 
+            // $binaryDataObject->fileInformation->creationDate = 
+            // $binaryDataObject->fileInformation->lastModificationDate = 
+        }
+
+        // $binaryDataObject->technicalMetadata = new \stdClass();
+        // $binaryDataObject->technicalMetadata->text = 
+        // $binaryDataObject->technicalMetadata->audio = 
+        // $binaryDataObject->technicalMetadata->video =
+        // $binaryDataObject->technicalMetadata->image =
+        // $binaryDataObject->technicalMetadata->document = 
+        // $binaryDataObject->technicalMetadata->{'3D'} = 
+        // $binaryDataObject->technicalMetadata->nom = ?? // TODO
+
+        if (isset($digitalResource->relatedResId)) {
+            $relationship = new \stdClass();
+            $relationship->type = $digitalResource->relationshipType;
+            $relationship->refId = $digitalResource->relatedResId;
+            // $relationship->displayName = 
+            $binaryDataObject->relationships[] = $relationship;
+        }
+
+        return $binaryDataObject;
     }
 }
