@@ -42,7 +42,7 @@ class message
         $this->json->status = true;
 
         $this->translator = $translator;
-        $this->translator->setCatalog('seda2/messages');
+        $this->translator->setCatalog('medona/messages');
     }
 
     /**
@@ -53,14 +53,199 @@ class message
      */
     public function read($messages)
     {
-        //$this->view->addContentFile("seda/message/message.html");
-        return '<pre>'.print_r($messages, true).'</pre>';
+        foreach ($messages as $message) {
+            if (isset($message->object->archivalAgency)) {
+                $message->object->archivalAgency->name = $this->loadOrganizationName(
+                    $message->object->archivalAgency,
+                    $message->object
+                );
+            }
+            if (isset($message->object->transferringAgency)) {
+                $message->object->transferringAgency->name = $this->loadOrganizationName(
+                    $message->object->transferringAgency,
+                    $message->object
+                );
+            }
+            if (isset($message->object->controlAuthority)) {
+                $message->object->controlAuthority->name = $this->loadOrganizationName(
+                    $message->object->controlAuthority,
+                    $message->object
+                );
+            }
+            if (isset($message->object->originatingAgency)) {
+                $message->object->originatingAgency->name = $this->loadOrganizationName(
+                    $message->object->originatingAgency,
+                    $message->object
+                );
+            }
+            if (isset($message->object->requester)) {
+                $message->object->requester->name = $this->loadOrganizationName(
+                    $message->object->requester,
+                    $message->object
+                );
+            }
+            if (isset($message->object->sender)) {
+                $message->object->sender->name = $this->loadOrganizationName(
+                    $message->object->sender,
+                    $message->object
+                );
+            }
+            if (isset($message->object->receiver)) {
+                $message->object->receiver->name = $this->loadOrganizationName(
+                    $message->object->receiver,
+                    $message->object
+                );
+            }
 
-        $this->view->setSource('messages', $messages);
-        $this->view->merge();
+            if (isset($message->object->dataObjectPackage->descriptiveMetadata)) {
+                $message->object->dataObjectPackage->descriptiveMetadata =
+                    get_object_vars($message->object->dataObjectPackage->descriptiveMetadata);
+                foreach ($message->object->dataObjectPackage->descriptiveMetadata as $key => $archiveUnit) {
+                    if (isset($archiveUnit->management->appraisalRule)) {
+                        $appraisalRule = \laabs::callService(
+                            'recordsManagement/retentionRule/read_code_/',
+                            $archiveUnit->management->appraisalRule->code
+                        );
+                        $dateInter = new \DateInterval($appraisalRule->duration);
+                        $numberDuration = 0;
+                        $toDisplay = '';
+
+                        if ($dateInter->y != 0) {
+                            if ($dateInter->y == 999999999) {
+                                $toDisplay = "Unlimited";
+                            } else {
+                                $numberDuration = $dateInter->y;
+                                $toDisplay = "Year(s)";
+                            }
+                        } elseif ($dateInter->m != 0) {
+                            $numberDuration = $dateInter->m;
+                            $toDisplay = "Month(s)";
+                        } elseif ($dateInter->d != 0) {
+                            $numberDuration = $dateInter->d;
+                            $toDisplay = "Day(s)";
+                        }
+                        $archiveUnit->management->appraisalRule->durationNumber = $numberDuration;
+                        $archiveUnit->management->appraisalRule->durationToDisplay = $this->translator->getText($toDisplay);
+                    }
+                    if (isset($archiveUnit->management->accessRule)) {
+                        $accessRule = \laabs::callService(
+                            'recordsManagement/accessRule/read_code_/',
+                            $archiveUnit->management->accessRule->code
+                        );
+                        $dateInter = new \DateInterval($accessRule->duration);
+                        $numberDuration = 0;
+                        $toDisplay = '';
+
+                        if ($dateInter->y != 0) {
+                            if ($dateInter->y == 999999999) {
+                                $toDisplay = "Unlimited";
+                            } else {
+                                $numberDuration = $dateInter->y;
+                                $toDisplay = "Year(s)";
+                            }
+                        } elseif ($dateInter->m != 0) {
+                            $numberDuration = $dateInter->m;
+                            $toDisplay = "Month(s)";
+                        } elseif ($dateInter->d != 0) {
+                            $numberDuration = $dateInter->d;
+                            $toDisplay = "Day(s)";
+                        }
+                        $archiveUnit->management->accessRule->durationNumber = $numberDuration;
+                        $archiveUnit->management->accessRule->durationToDisplay = $this->translator->getText($toDisplay);
+                    }
+                    $archivePresenter = \laabs::newPresenter('recordsManagement/archive');
+                    $archivalProfile = $this->loadArchivalprofile($archiveUnit->profile);
+
+                    if ($archivalProfile) {
+                        $presenter = $archivePresenter->getDescriptionPresenter($archivalProfile->descriptionClass);
+                        $descriptionHtml = $presenter->read(
+                            $archiveUnit->description,
+                            $archivalProfile
+                        );
+
+                        $fragment = $this->view->createDocumentFragment();
+                        $fragment->appendHTML($descriptionHtml);
+                        $archiveUnit->descriptionHTML = $fragment;
+                    }
+
+                    if (!$archiveUnit->management->serviceLevel) {
+                        $serviceLevel = \laabs::callService(
+                            'recordsManagement/serviceLevel/read_Default/'
+                        );
+
+                        $archiveUnit->management->serviceLevel = $serviceLevel->reference;
+                    }
+                }
+            } else {
+                $message->object->dataObjectPackage = new \stdClass();
+                $message->object->dataObjectPackage->descriptiveMetadata = [];
+            }
+
+            if (isset($message->object->dataObjectPackage->binaryDataObjects)) {
+                $message->object->dataObjectPackage->binaryDataObjects =
+                get_object_vars($message->object->dataObjectPackage->binaryDataObjects);
+            }
+        }
+        $this->view->addContentFile("mades/message/message.html");
+
+        if ($this->view->getElementsByClass("dataTable")->item(2)) {
+            $dataTable = $this->view->getElementsByClass("dataTable")->item(2)->plugin['dataTable'];
+            $dataTable->setPaginationType("full_numbers");
+            $dataTable->setSorting(array(array(0, 'desc')));
+        }
 
         $this->view->translate();
 
+        $this->view->setSource("messages", $messages);
+        $this->view->merge();
+
         return $this->view->saveHtml();
+    }
+
+    protected function loadArchivalProfile($reference)
+    {
+        if (!isset($this->archivalProfiles[$reference])) {
+            try {
+                $this->archivalProfiles[$reference] = \laabs::callService(
+                    'recordsManagement/archivalProfile/readProfiledescription_archivalProfileReference_',
+                    $reference
+                );
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        return $this->archivalProfiles[$reference];
+    }
+
+    /**
+     * Load organization name
+     * @param object         $object
+     * @param medona/message $message
+     */
+    protected function loadOrganizationName($object, $message)
+    {
+        $organization = null;
+
+        if (!isset($object->identifier)) {
+            return;
+        }
+
+        if ($object->identifier == $message->recipientOrg->registrationNumber) {
+            $organization = $message->recipientOrg;
+        } elseif ($object->identifier == $message->senderOrg->registrationNumber) {
+            $organization = $message->senderOrg;
+        } else {
+            try {
+                $organization = \laabs::callService(
+                    'organization/organization/readByregnumber',
+                    $object->identifier
+                )->orgName;
+            } catch (\Exception $e) {
+                $organization = "Organisation inconnue (" . $object->identifier . ")";
+            }
+        }
+
+        return $organization;
     }
 }
