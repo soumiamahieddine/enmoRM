@@ -1091,7 +1091,7 @@ class archive
         }
     }
 
-    protected function getDescriptionPresenter($descriptionScheme)
+    public function getDescriptionPresenter($descriptionScheme)
     {
         // Default description class
         if (empty($descriptionScheme)) {
