@@ -30,6 +30,8 @@ abstract class abstractMessage
 {
     protected $currentDigitalResources;
 
+    protected $metadataBindings;
+
     protected function send($message)
     {
         $this->currentDigitalResources = [];
@@ -38,7 +40,7 @@ abstract class abstractMessage
 
         $message->object = $madesMessage;
 
-        $madesMessage->id = (string) $message->messageId;
+        $madesMessage->messageIdentifier = (string) $message->messageId;
 
         $madesMessage->date = $message->date;
 
@@ -186,52 +188,47 @@ abstract class abstractMessage
 
     protected function sendArchiveMetadata($archive)
     {
-        $archiveUnit = new \stdClass();
-        
-        if (isset($archive->archiveName)) {
-            $archiveUnit->displayName = $archive->archiveName;
-        }
-        $archiveUnit->refDate = $archive->originatingDate;
-        $archiveUnit->profile = $archive->archivalProfileReference;
-        $archiveUnit->description = $archive->description;
+        $this->metadataBindings = [
+            'archiveName' => 'displayName',
+            'originatingDate' => 'refDate',
+            'archivalProfileReference' => 'profile',
+            'description' => 'description',
 
-        $archiveUnit->filing = new \stdClass();
-        $archiveUnit->filing->level = $archive->fileplanLevel;
-        $archiveUnit->filing->folder = $archive->filePlanPosition;
-        $archiveUnit->filing->activity = $archive->originatorOrgRegNumber;
-        $archiveUnit->filing->originator = $archive->originatorOwnerOrgRegNumber;
-        $archiveUnit->filing->container = $archive->parentArchiveId;
+            'fileplanLevel' => 'filing->level',
+            'filePlanPosition' => 'filing->folder',
+            'originatorOrgRegNumber' => 'filing->activity',
+            'originatorOwnerOrgRegNumber' => 'filing->originator',
+            'parentArchiveId' => 'filing->container',
 
-        $archiveUnit->management = new \stdClass();
-        $archiveUnit->management->preservationStatus = $archive->status;
-        $archiveUnit->management->processingStatus = $archive->processingStatus;
-        $archiveUnit->management->serviceLevel = $archive->serviceLevelReference;
+            'status' => 'management->preservationStatus',
+            'processingStatus' => 'management->processingStatus',
+            'serviceLevelReference' => 'management->serviceLevel',
 
-        $archiveUnit->management->appraisalRule = new \stdClass();
-        $archiveUnit->management->appraisalRule->code = $archive->retentionRuleCode;
-        $archiveUnit->management->appraisalRule->startDate = $archive->retentionStartDate;
-        $archiveUnit->management->appraisalRule->finalDisposition = $archive->finalDisposition;
-        $archiveUnit->management->appraisalRule->duration = $archive->retentionDuration;
-        $archiveUnit->management->appraisalRule->status = $archive->retentionRuleStatus;
-        $archiveUnit->management->appraisalRule->disposalDueDate = $archive->disposalDate;
+            'retentionRuleCode' => 'management->appraisalRule->code',
+            'retentionStartDate' => 'management->appraisalRule->startDate',
+            'finalDisposition' => 'management->appraisalRule->finalDisposition',
+            'retentionDuration' => 'management->appraisalRule->duration',
+            'retentionRuleStatus' => 'management->appraisalRule->status',
+            'disposalDate' => 'management->appraisalRule->disposalDueDate',
 
-        $archiveUnit->management->accessRule = new \stdClass();
-        $archiveUnit->management->accessRule->code = $archive->accessRuleCode;
-        $archiveUnit->management->accessRule->startDate = $archive->accessRuleStartDate;
-        $archiveUnit->management->accessRule->duration = $archive->accessRuleDuration;
-        // $archiveUnit->management->accessRule->status = $archive->accessRuleStatus;
-        $archiveUnit->management->accessRule->disclosureDueDate = $archive->accessRuleComDate;
+            'accessRuleCode' => 'management->accessRule->code',
+            'accessRuleStartDate' => 'management->accessRule->startDate',
+            'accessRuleDuration' => 'management->accessRule->duration',
+            'accessRuleStatus' => 'management->accessRule->status',
+            'accessRuleComDate' => 'management->accessRule->disclosureDueDate',
 
-        $archiveUnit->management->classificationRule = new \stdClass();
-        $archiveUnit->management->classificationRule->code = $archive->classificationRuleCode;
-        $archiveUnit->management->classificationRule->startDate = $archive->classificationRuleStartDate;
-        $archiveUnit->management->classificationRule->duration = $archive->classificationRuleDuration;
-        $archiveUnit->management->classificationRule->level = $archive->classificationLevel;
-        $archiveUnit->management->classificationRule->owner = $archive->classificationOwner;
-        // $archiveUnit->management->classificationRule->audience = $archive->classificationAudience;
-        // $archiveUnit->management->classificationRule->status = $archive->classificationStatus;
-        // $archiveUnit->management->classificationRule->reassessingDate = $archive->classificationReassessingDate;
-        $archiveUnit->management->classificationRule->releaseDueDate = $archive->classificationEndDate;
+            'classificationRuleCode' => 'management->classificationRule->code',
+            'classificationRuleStartDate' => 'management->classificationRule->startDate',
+            'classificationRuleDuration' => 'management->classificationRule->duration',
+            'classificationLevel' => 'management->classificationRule->level',
+            'classificationOwner' => 'management->classificationRule->owner',
+            'classificationAudience' => 'management->classificationRule->audience',
+            'classificationStatus' => 'management->classificationRule->status',
+            'classificationReassessingDate' => 'management->classificationRule->reassessingDate',
+            'classificationEndDate' => 'management->classificationRule->releaseDueDate'
+        ];
+
+        $archiveUnit = $this->getObjectFromBindingArray($archive, $this->metadataBindings);
 
         if (isset($archive->relationships)
             && is_array($archive->relationships)
@@ -302,7 +299,7 @@ abstract class abstractMessage
         if (isset($digitalResource->resId)) {
             $binaryDataObject->attachment = new \stdClass();
             // $binaryDataObject->attachment->uri = $digitalResource->address[0]->path;
-            $binaryDataObject->attachment->fileName = $digitalResource->resId;
+            $binaryDataObject->attachment->filename = $digitalResource->resId;
             // $binaryDataObject->attachment->content = base64_encode($digitalResource->getContents());
             $binaryDataObject->size = $digitalResource->size;
         }
@@ -318,14 +315,14 @@ abstract class abstractMessage
         if (isset($digitalResource->hash)) {
             $binaryDataObject->messageDigest = new \stdClass();
             // $binaryDataObject->messageDigest->uri = 
-            // $binaryDataObject->messageDigest->fileName = 
+            // $binaryDataObject->messageDigest->filename = 
             $binaryDataObject->messageDigest->content = $digitalResource->hash;
             $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
         }
 
-        if (isset($digitalResource->fileName)) {
+        if (isset($digitalResource->filename)) {
             $binaryDataObject->fileInformation = new \stdClass();
-            $binaryDataObject->fileInformation->fileName = $digitalResource->fileName;
+            $binaryDataObject->fileInformation->filename = $digitalResource->filename;
             // $binaryDataObject->fileInformation->application = 
             // $binaryDataObject->fileInformation->creationDate = 
             // $binaryDataObject->fileInformation->lastModificationDate = 
@@ -375,7 +372,7 @@ abstract class abstractMessage
                 $contents = file_get_contents($filepath);
 
                 $resource->fileExtension = pathinfo($attachment->filename, \PATHINFO_EXTENSION);
-                $resource->fileName = basename($attachment->filename);
+                $resource->filename = basename($attachment->filename);
                 break;
 
             case isset($attachment->uri):
@@ -406,4 +403,49 @@ abstract class abstractMessage
             }
         }
     }
+
+    protected function sendJSON($message)
+    {
+        $this->messageDirectory = \laabs::configuration('medona')['messageDirectory'];
+
+        $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.$message->messageId;
+        if (!is_dir($messageDir)) {
+            mkdir($messageDir, 0775, true);
+        }
+
+        // Documents
+        foreach ($this->currentDigitalResources as $digitalResource) {
+            file_put_contents($messageDir.DIRECTORY_SEPARATOR.$digitalResource->resId, $digitalResource->getContents());
+        }
+        
+        $message->path = $messageDir.DIRECTORY_SEPARATOR.$message->messageId.'.json';
+        file_put_contents($message->path, json_encode($message->object));
+    }
+
+    protected function getObjectFromBindingArray($sourceObject, $bindingArray)
+    {
+        $targetObject = new \stdClass();
+
+        foreach ($bindingArray as $sourceProperty => $targetProperty) {
+            if (isset($sourceObject->{$sourceProperty})) {
+                if (substr_count($targetProperty, "->") > 0) {
+                    $properties = explode("->", $targetProperty);
+                    $property = array_pop($properties);
+                    $propertyToAdd = $targetObject;
+                    foreach ($properties as $objectProperty) {
+                        if (!property_exists($propertyToAdd, $objectProperty)) {
+                            $propertyToAdd->{$objectProperty} = new \stdClass();
+                        }
+                        $propertyToAdd = $propertyToAdd->{$objectProperty};
+                    }
+                    $propertyToAdd->{$property} = $sourceObject->{$sourceProperty};
+                } else {
+                    $targetObject->{$targetProperty} = $sourceObject->{$sourceProperty};
+                }
+            }
+        }
+
+        return $targetObject;
+    }
+
 }

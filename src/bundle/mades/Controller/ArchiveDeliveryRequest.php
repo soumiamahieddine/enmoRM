@@ -35,7 +35,7 @@ class ArchiveDeliveryRequest extends abstractMessage
     {
         $archiveDeliveryRequest = abstractMessage::send($message);
 
-        $archiveDeliveryRequest->deliveryRequestIdentifier = $message->reference;
+        $archiveDeliveryRequest->messageRequestIdentifier = $message->reference;
 
         $archiveDeliveryRequest->derogation = $message->derogation;
 
