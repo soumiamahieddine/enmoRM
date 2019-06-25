@@ -28,14 +28,14 @@
                         <?merge .type.in('ArchiveTransferReply','ArchiveDeliveryRequestReply','ArchiveRestitutionRequestReply') ?>
                         <h4>
                             <b><span>En r&eacute;ponse &agrave;</span> : </b>
-                            <?merge .type.ifeq('ArchiveTransferReply') ?><span><?merge .object.messageRequestIdentifier.value ?></span>
+                            <?merge .type.ifeq('ArchiveTransferReply') ?><span><?merge .object.messageRequestIdentifier ?></span>
 
                         </h4>
                         <?merge .type.in('ArchiveDeliveryRequestReply','ArchiveDestructionNotification') ?>
                         <h4>
                             <b><span>Autorisation donn&eacute;e</span> : </b>
-                            <?merge .type.ifeq('ArchiveDeliveryRequestReply') ?><span><?merge .object.authorizationRequestReplyIdentifier.value ?></span>
-                            <?merge .type.ifeq('ArchiveDestructionNotification') ?><span><?merge .object.authorizationRequestReplyIdentifier.value ?></span>
+                            <?merge .type.ifeq('ArchiveDeliveryRequestReply') ?><span><?merge .object.authorizationRequestReplyIdentifier ?></span>
+                            <?merge .type.ifeq('ArchiveDestructionNotification') ?><span><?merge .object.authorizationRequestReplyIdentifier ?></span>
                         </h4>
 
                         <?merge .object.comment.bool() ?>
