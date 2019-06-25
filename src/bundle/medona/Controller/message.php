@@ -158,7 +158,7 @@ class message
             $message->object = json_decode($message->data);
         }
 
-        if (!empty($message->comment) && is_string($message)) {
+        if (!empty($message->comment) && is_string($message->comment)) {
             $message->comment = json_decode($message->comment);
         }
     }
@@ -497,6 +497,7 @@ class message
     public function read($messageId)
     {
         $message = $this->sdoFactory->read('medona/message', $messageId);
+
         $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
 
         $message->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($message->messageId, 'medona/message');
@@ -873,7 +874,7 @@ class message
         $messageStatus->status = strtolower($status);
 
         if ($comment) {
-            if (!empty($messageStatus->comment)) {
+            if (!empty($messageStatus->comment) && is_array($messageStatus->comment)) {
                 $messageStatus->comment = json_decode($messageStatus->comment);
             } else {
                 $messageStatus->comment = [];
