@@ -135,6 +135,14 @@ INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", freque
 INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled');
 INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('deleteArchive', 'Destruction', '04', '00;19;;;;;;;', NULL, 'System', '2019-03-14 17:17:10.155329', '2019-03-15 18:00:00', 'scheduled');
 INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled');
+INSERT INTO "batchProcessing"."scheduling"
+("schedulingId", "name", "executedBy", "taskId", "frequency","parameters","lastExecution","nextExecution","status") VALUES
+('processDelivery', 'Traiter les communications', 'System','04', '00;03;;;;;;;',null,null,null,'paused'),
+('processdestruction', 'Traiter les destructions', 'System','05', '00;04;;;;;;;',null,null,null,'paused'),
+('processRestitution', 'Traiter les restitutions', 'System','06', '00;05;;;;;;;',null,null,null,'paused'),
+('processTransfer', 'Traiter les transferts', 'System','07', '00;06;;;;;;;',null,null,null,'paused'),
+('validateTransfer', 'Valider les transfert', 'System','08', '00;07;;;;;;;',null,null,null,'paused'),
+('purge', 'Purge', 'System', '09', '00;08;;;;;;;',null,null,null,'paused');
 
 INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('TE', 'Téléphone', true);
 INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('AL', 'Téléphone mobile', true);
@@ -167,6 +175,8 @@ INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALU
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Demande de destruction de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Annulation de la demande de destruction de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Destruction de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Élimination de l''archive %6$s');
+
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Gel de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info', 'Validation d''intégrité', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Modification des métadonnées de l''archive %6$s', false);
@@ -178,6 +188,17 @@ INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALU
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Dégel de l''archive %6$s', false);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Destruction de la ressource %9$s', FALSE);
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', 'Dépôt d''une ressource dans l''archive', FALSE);
+
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+    ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)'),
+    ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Validation du message %14$s : %16$s (%15$s)'),
+    ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', FALSE, 'Acquittement du message %14$s : %16$s (%15$s)'),
+    ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
+    ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s accepté par %13$s (%12$s)'),
+    ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s rejeté par %13$s (%12$s)'),
+    ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
+
 
 INSERT INTO organization."orgType" (code, name) VALUES ('Collectivite', 'Collectivité');
 INSERT INTO organization."orgType" (code, name) VALUES ('Societe', 'Société');
