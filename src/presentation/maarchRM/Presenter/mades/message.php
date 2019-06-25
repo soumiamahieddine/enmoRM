@@ -123,7 +123,11 @@ class message
                         } elseif ($dateInter->d != 0) {
                             $numberDuration = $dateInter->d;
                             $toDisplay = "Day(s)";
+                        } else {
+                            $numberDuration = 0;
+                            $toDisplay = "Year(s)";
                         }
+                        
                         $archiveUnit->management->appraisalRule->durationNumber = $numberDuration;
                         $archiveUnit->management->appraisalRule->durationToDisplay = $this->translator->getText($toDisplay);
                     }
@@ -149,7 +153,11 @@ class message
                         } elseif ($dateInter->d != 0) {
                             $numberDuration = $dateInter->d;
                             $toDisplay = "Day(s)";
+                        } else {
+                            $numberDuration = 0;
+                            $toDisplay = "Year(s)";
                         }
+
                         $archiveUnit->management->accessRule->durationNumber = $numberDuration;
                         $archiveUnit->management->accessRule->durationToDisplay = $this->translator->getText($toDisplay);
                     }
