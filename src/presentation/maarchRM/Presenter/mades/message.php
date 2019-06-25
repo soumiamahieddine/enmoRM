@@ -57,43 +57,43 @@ class message
             if (isset($message->object->archivalAgency)) {
                 $message->object->archivalAgency->name = $this->loadOrganizationName(
                     $message->object->archivalAgency,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->transferringAgency)) {
                 $message->object->transferringAgency->name = $this->loadOrganizationName(
                     $message->object->transferringAgency,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->controlAuthority)) {
                 $message->object->controlAuthority->name = $this->loadOrganizationName(
                     $message->object->controlAuthority,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->originatingAgency)) {
                 $message->object->originatingAgency->name = $this->loadOrganizationName(
                     $message->object->originatingAgency,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->requester)) {
                 $message->object->requester->name = $this->loadOrganizationName(
                     $message->object->requester,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->sender)) {
                 $message->object->sender->name = $this->loadOrganizationName(
                     $message->object->sender,
-                    $message->object
+                    $message
                 );
             }
             if (isset($message->object->receiver)) {
                 $message->object->receiver->name = $this->loadOrganizationName(
                     $message->object->receiver,
-                    $message->object
+                    $message
                 );
             }
 
