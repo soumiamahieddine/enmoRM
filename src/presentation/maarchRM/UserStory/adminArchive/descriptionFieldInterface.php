@@ -61,6 +61,14 @@ interface descriptionFieldInterface
      * @uses recordsManagement/descriptionField/update
      */
     public function updateDescriptionfield_name_($descriptionField);
+    
+    /**
+     * Delete a description field
+     *
+     * @return recordsManagement/descriptionField/delete
+     * @uses recordsManagement/descriptionField/delete_name_
+     */
+    public function deleteDescriptionfield_name_();
 
     /**
      * Update a description field
