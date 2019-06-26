@@ -97,8 +97,8 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         foreach ($message->object->dataObjectPackage->binaryDataObjects as $dataObjectId => $binaryDataObject) {
             $message->size += (integer) $binaryDataObject->size;
 
-            if (!isset($binaryDataObject->attachment->filename)) {
-                $this->sendError("211", "Le document identifié par le nom '$dataObjectId' n'a pas été trouvé.");
+            if (!isset($binaryDataObject->attachment)) {
+                $this->sendError("211", "Le document identifié par le nom '$dataObjectId' n'a pas été transmis.");
 
                 continue;
             }
@@ -108,7 +108,13 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (isset($attachment->filename)) {
                 $filename = $dirname.DIRECTORY_SEPARATOR.$attachment->filename;
                 if (!is_file($filename)) {
-                    $this->sendError("211", "e document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+                    $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+
+                    continue;
+                }
+
+                if (filesize($filename) == 0) {
+                    $this->sendError("211", "Le document identifié par le nom '$attachment->filename' est vide.");
 
                     continue;
                 }
@@ -134,6 +140,13 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                 }
 
                 $contents = base64_decode($attachment->content);
+
+                if (strlen($contents) == 0) {
+                    $this->sendError("211", "Le contenu du document n'a pas pu être décodé.");
+
+                    continue;
+                }
+
                 $filename = $dirname.DIRECTORY_SEPARATOR.$dataObjectId;
                 file_put_contents($filename, $contents);
             }
