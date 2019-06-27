@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  * Copyright (C) 2019  Maarch
  *
@@ -19,7 +19,7 @@
  */
 namespace presentation\maarchRM\Presenter\mades;
 /**
- * 
+ *
  * @author  Maarch Cyril Vazquez <cyril.vazquez@maarch.com>
  */
 class message
@@ -35,8 +35,11 @@ class message
      * @param \dependency\json\JsonObject                  $json       The JSON dependency
      * @param \dependency\localisation\TranslatorInterface $translator The localisation dependency
      */
-    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json, \dependency\localisation\TranslatorInterface $translator)
-    {
+    public function __construct(
+        \dependency\html\Document $view,
+        \dependency\json\JsonObject $json,
+        \dependency\localisation\TranslatorInterface $translator
+    ) {
         $this->view = $view;
         $this->json = $json;
         $this->json->status = true;
@@ -46,10 +49,9 @@ class message
     }
 
     /**
-     * Reads a message
-     * @param array $messages
-     * 
-     * @return string The html
+     * @param $messages
+     * @return string
+     * @throws \Exception
      */
     public function read($messages)
     {
@@ -129,7 +131,8 @@ class message
                         }
                         
                         $archiveUnit->management->appraisalRule->durationNumber = $numberDuration;
-                        $archiveUnit->management->appraisalRule->durationToDisplay = $this->translator->getText($toDisplay);
+                        $archiveUnit->management->appraisalRule->durationToDisplay =
+                            $this->translator->getText($toDisplay);
                     }
                     if (isset($archiveUnit->management->accessRule)) {
                         $accessRule = \laabs::callService(
@@ -227,9 +230,9 @@ class message
     }
 
     /**
-     * Load organization name
-     * @param object         $object
-     * @param medona/message $message
+     * @param $object
+     * @param $message
+     * @return string|void|null
      */
     protected function loadOrganizationName($object, $message)
     {
