@@ -77,11 +77,15 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         $message->dataObjectCount = 0;
 
         if (isset($archiveTransfer->dataObjectPackage->binaryDataObjects)) {
-            $message->dataObjectCount += count($archiveTransfer->dataObjectPackage->binaryDataObjects);
+            $message->dataObjectCount += count(
+                get_object_vars($archiveTransfer->dataObjectPackage->binaryDataObjects)
+            );
             $this->receiveAttachments($message);
         }
         if (isset($archiveTransfer->dataObjectPackage->physicalDataObject)) {
-            $message->dataObjectCount += count($archiveTransfer->dataObjectPackage->physicalDataObjects);
+            $message->dataObjectCount += count(
+                get_object_vars($archiveTransfer->dataObjectPackage->physicalDataObjects)
+            );
         }
 
         return $message;
@@ -89,7 +93,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
     protected function receiveAttachments($message)
     {
-        $this->validateReference($message->object->dataObjectPackage->descriptiveMetadata, $message->object->dataObjectPackage->binaryDataObjects);
+        $this->validateReference(
+            $message->object->dataObjectPackage->descriptiveMetadata,
+            $message->object->dataObjectPackage->binaryDataObjects
+        );
         
         $dirname = dirname($message->path);
         
@@ -108,7 +115,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (isset($attachment->filename)) {
                 $filename = $dirname.DIRECTORY_SEPARATOR.$attachment->filename;
                 if (!is_file($filename)) {
-                    $this->sendError("211", "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé.");
+                    $this->sendError(
+                        "211",
+                        "Le document identifié par le nom '$attachment->filename' n'a pas été trouvé."
+                    );
 
                     continue;
                 }
@@ -156,7 +166,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             // Validate hash
             $messageDigest = $binaryDataObject->messageDigest;
             if (strtolower($messageDigest->content) != strtolower(hash($messageDigest->algorithm, $contents))) {
-                $this->sendError("207", "L'empreinte numérique du document '".basename($filename)."' ne correspond pas à celle transmise.");
+                $this->sendError(
+                    "207",
+                    "L'empreinte numérique du document '".basename($filename)."' ne correspond pas à celle transmise."
+                );
 
                 continue;
             }
@@ -167,7 +180,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         // Check all files received are part of the message
         foreach ($receivedFiles as $receivedFile) {
             if (!in_array($receivedFile, $messageFiles)) {
-                $this->sendError("101", "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le message.");
+                $this->sendError(
+                    "101",
+                    "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le message."
+                );
             }
         }
     }
@@ -207,7 +223,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if ($archivalAgreement->originatorOrgIds) {
                 $this->knownOrgUnits = [];
         
-                $this->validateOriginators($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
+                $this->validateOriginators(
+                    $message->object->dataObjectPackage->descriptiveMetadata,
+                    $archivalAgreement
+                );
             }
 
             if ($archivalAgreement->signed && !isset($message->object->signature)) {
@@ -231,21 +250,32 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         foreach ($archiveUnitContainer as $id => $archiveUnit) {
             if (isset($archiveUnit->filing->activity) && !isset($knownOrgUnits[$archiveUnit->filing->activity])) {
                 try {
-                    $this->knownOrgUnits[$archiveUnit->filing->activity] = $orgUnit = $this->orgController->getOrgByRegNumber($archiveUnit->filing->activity);
+                    $this->knownOrgUnits[$archiveUnit->filing->activity] =
+                    $orgUnit =
+                        $this->orgController->getOrgByRegNumber($archiveUnit->filing->activity);
                 } catch (\Exception $e) {
-                    $this->sendError("200", "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas référencé dans le système.");
+                    $this->sendError(
+                        "200",
+                        "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas référencé dans le système."
+                    );
 
                     continue;
                 }
                 
                 if (!in_array('originator', (array) $orgUnit->orgRoleCodes)) {
-                    $this->sendError("302", "Le service identifié par '$archiveUnit->filing->activity' n'est pas référencé comme producteur dans le système.");
+                    $this->sendError(
+                        "302",
+                        "Le service identifié par '$archiveUnit->filing->activity' n'est pas référencé comme producteur dans le système."
+                    );
                 
                     continue;
                 }
 
                 if (!in_array((string) $orgUnit->orgId, (array) $archivalAgreement->originatorOrgIds)) {
-                    $this->sendError("302", "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas indiqué dans l'accord de versement.");
+                    $this->sendError(
+                        "302",
+                        "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas indiqué dans l'accord de versement."
+                    );
                 }
             }
 
@@ -302,7 +332,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                 $format = $formatController->identifyFormat($filepath);
 
                 if (!$format) {
-                    $this->sendError("205", "Le format du document '".basename($filepath)."' n'a pas pu être déterminé");
+                    $this->sendError(
+                        "205",
+                        "Le format du document '".basename($filepath)."' n'a pas pu être déterminé"
+                    );
                 } else {
                     $puid = $format->puid;
                     $fileInfo->format = $format;
@@ -311,14 +344,20 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
             // Validate format is allowed
             if (count($allowedFormats) && isset($puid) && !in_array($puid, $allowedFormats)) {
-                $this->sendError("307", "Le format du document '".basename($filepath)."' ".$puid." n'est pas autorisé par l'accord de versement.");
+                $this->sendError(
+                    "307",
+                    "Le format du document '".basename($filepath)."' ".$puid." n'est pas autorisé par l'accord de versement."
+                );
             }
 
             // Validate format
             if (strpos($serviceLevel->control, 'formatValidation') !== false) {
                 $validation = $formatController->validateFormat($filepath);
                 if (!$validation !== true && is_array($validation)) {
-                    $this->sendError("307", "Le format du document '".basename($filepath)."' n'est pas valide : ".implode(', ', $validation));
+                    $this->sendError(
+                        "307",
+                        "Le format du document '".basename($filepath)."' n'est pas valide : ".implode(', ', $validation)
+                    );
                 }
                 $this->infos[] = (string) \laabs::newDateTime().": Validation du format par JHOVE 1.11";
             }
@@ -379,7 +418,12 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             return;
         }
 
-        throw new \core\Exception\BadRequestException("The activity %s can not produce this type of archive units", 400, null, $archiveUnit->filing->activity);
+        throw new \core\Exception\BadRequestException(
+            "The activity %s can not produce this type of archive units",
+            400,
+            null,
+            $archiveUnit->filing->activity
+        );
     }
 
     protected function useArchivalProfile($archivalProfileReference)
@@ -388,14 +432,14 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (!isset($this->archivalProfiles[$archivalProfileReference])) {
             $archivalProfile = $this->archivalProfileController->getByReference($archivalProfileReference);
             $this->archivalProfiles[$archivalProfileReference] = $archivalProfile;
-        } 
+        }
 
         return $this->archivalProfiles[$archivalProfileReference];
     }
 
     protected function validateFilingContainer($archiveUnit)
     {
-        $containerArchive = $archiveController->read($archiveUnit->filing->container);      
+        $containerArchive = $archiveController->read($archiveUnit->filing->container);
 
         // Check level in file plan
         if ($containerArchive->fileplanLevel == 'item') {
@@ -444,10 +488,20 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             foreach ($archiveUnit->archiveUnits as $containedArchiveUnit) {
                 if (empty($containedArchiveUnit->profile)) {
                     if (!$archivalprofile->acceptArchiveWithoutProfile) {
-                        throw new \core\Exception\BadRequestException("Invalid contained archiveUnit profile %s", 400, null, $containedArchiveUnit->profile);
+                        throw new \core\Exception\BadRequestException(
+                            "Invalid contained archiveUnit profile %s",
+                            400,
+                            null,
+                            $containedArchiveUnit->profile
+                        );
                     }
                 } elseif (!in_array($containedArchiveUnit->profile, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archiveUnit profile %s", 400, null, $containedArchiveUnit->profile);
+                    throw new \core\Exception\BadRequestException(
+                        "Invalid contained archiveUnit profile %s",
+                        400,
+                        null,
+                        $containedArchiveUnit->profile
+                    );
                 }
             }
         }
@@ -455,11 +509,15 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
     protected function validateManagementMetadata($administration)
     {
-        if (isset($administration->appraisalRule->code) && !$this->retentionRuleController->read($administration->appraisalRule->code)) {
+        if (isset($administration->appraisalRule->code)
+            && !$this->retentionRuleController->read($administration->appraisalRule->code)
+        ) {
             throw new \core\Exception\NotFoundException("The retention rule not found");
         }
 
-        if (isset($administration->accessRule->code) && !$this->accessRuleControler->edit($administration->accessRule->code)) {
+        if (isset($administration->accessRule->code)
+            && !$this->accessRuleControler->edit($administration->accessRule->code)
+        ) {
             throw new \core\Exception\NotFoundException("The access rule not found");
         }
     }
@@ -480,7 +538,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             $this->processedArchives[] = $archive;
         }
 
-        return [$this->processedArchives, $this->processedRelationships];
+        return [
+            $this->processedArchives,
+            $this->processedRelationships
+        ];
     }
 
     protected function processArchiveUnit($archiveUnit, $message)
@@ -504,7 +565,8 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (isset($archiveUnit->profile)) {
             $archive->archivalProfileReference = $archiveUnit->profile;
         } elseif (isset($archiveTransfer->dataObjectPackage->managementMetadata->archivalProfile)) {
-            $archive->archivalProfileReference = $archiveTransfer->dataObjectPackage->managementMetadata->archivalProfile;
+            $archive->archivalProfileReference =
+                $archiveTransfer->dataObjectPackage->managementMetadata->archivalProfile;
         }
 
         if (isset($archiveUnit->description)) {
@@ -567,7 +629,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (isset($archiveUnit->management->classificationRule)) {
             $this->processClassificationRule($archive, $archiveUnit->management->classificationRule);
         } elseif (isset($message->dataObjectPackage->managementMetadata->classificationRule)) {
-            $this->processClassificationRule($archive, $message->dataObjectPackage->managementMetadata->classificationRule);
+            $this->processClassificationRule(
+                $archive,
+                $message->dataObjectPackage->managementMetadata->classificationRule
+            );
         }
     }
 
@@ -668,7 +733,12 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (isset($binaryDataObject->attachment->content)) {
                 $digitalResource->setContents(base64_decode($binaryDataObject->attachment->content));
             } elseif (isset($binaryDataObject->attachment->filename)) {
-                $digitalResource->setHandler(fopen(dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename, 'r'));
+                $digitalResource->setHandler(
+                    fopen(
+                        dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename,
+                        'r'
+                    )
+                );
             } elseif (isset($binaryDataObject->attachment->uri)) {
                 $digitalResource->setHandler(fopen($binaryDataObject->attachment->uri, 'r'));
             }
