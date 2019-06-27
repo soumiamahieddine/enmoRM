@@ -218,21 +218,21 @@
                         <?merge .object.dataObjectPackage.binaryDataObjects $binaryDataObjects ?>
                         <?hinclude mades/message/document.html ?>
                     </span>
-<!--                    <?merge .object.archive.bool().not() ?>-->
-<!--                    <div>-->
-<!--                        <?merge .object.unitIdentifier.bool() ?>-->
-<!--                        <span>-->
-<!--                            <br>-->
-<!--                            <?merge .object.unitIdentifier $unitIdentifier ?>-->
-<!--                            <?hinclude seda/message/unitIdentifier.html ?>-->
-<!--                        </span>-->
-<!--                        <?merge .object.request.unitIdentifier.bool() ?>-->
-<!--                        <span>-->
-<!--                            <br>-->
-<!--                            <?merge .object.request.unitIdentifier $unitIdentifier ?>-->
-<!--                            <?hinclude seda/message/unitIdentifier.html ?>-->
-<!--                        </span>-->
-<!--                    </div>-->
+                    <?merge .object.archive.bool().not() ?>
+                    <div>
+                        <?merge .object.unitIdentifier.bool() ?>
+                        <span>
+                            <br>
+                            <?merge .object.unitIdentifier $unitIdentifier ?>
+                            <?hinclude mades/message/unitIdentifier.html ?>
+                        </span>
+                        <?merge .object.request.unitIdentifier.bool() ?>
+                        <span>
+                            <br>
+                            <?merge .object.request.unitIdentifier $unitIdentifier ?>
+                            <?hinclude mades/message/unitIdentifier.html ?>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
