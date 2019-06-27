@@ -350,6 +350,22 @@ abstract class abstractMessage
         return $binaryDataObject;
     }
 
+    protected function sendRequest($authorizationRequestContent)
+    {
+        $request = new \stdClass();
+
+        $request->authorisationReason = $authorizationRequestContent->authorizationReason;
+        $request->requestDate = $authorizationRequestContent->requestDate;
+
+        foreach ($authorizationRequestContent->unitIdentifier as $unitIdentifier) {
+            $request->unitIdentifier[] = $unitIdentifier->objectId;
+        }
+
+        $request->requester = $this->sendOrganization($authorizationRequestContent->requester);
+
+        return $request;
+    }
+
     /**
      * Get an attachment resource from a message
      * @param mades/message $message      The message
