@@ -447,16 +447,7 @@ abstract class abstractMessage
         foreach ($bindingArray as $sourceProperty => $targetProperty) {
             if (isset($sourceObject->{$sourceProperty})) {
                 if (substr_count($targetProperty, "->") > 0) {
-                    $properties = explode("->", $targetProperty);
-                    $property = array_pop($properties);
-                    $propertyToAdd = $targetObject;
-                    foreach ($properties as $objectProperty) {
-                        if (!property_exists($propertyToAdd, $objectProperty)) {
-                            $propertyToAdd->{$objectProperty} = new \stdClass();
-                        }
-                        $propertyToAdd = $propertyToAdd->{$objectProperty};
-                    }
-                    $propertyToAdd->{$property} = $sourceObject->{$sourceProperty};
+                    createObjectProperties($targetObject, $targetProperty);
                 } else {
                     $targetObject->{$targetProperty} = $sourceObject->{$sourceProperty};
                 }
@@ -466,4 +457,18 @@ abstract class abstractMessage
         return $targetObject;
     }
 
+    protected function createObjectProperties($targetObject, $objectProperties)
+    {
+        $allProperties = explode("->", $targetProperty);
+        $lastProperty = array_pop($allProperties);
+        $objectToAdd = $targetObject;
+
+        foreach ($allProperties as $objectProperty) {
+            if (!property_exists($objectToAdd, $objectProperty)) {
+                $objectToAdd->{$objectProperty} = new \stdClass();
+            }
+            $objectToAdd = $objectToAdd->{$objectProperty};
+        }
+        $objectToAdd->{$lastProperty} = $sourceObject->{$sourceProperty};
+    }
 }
