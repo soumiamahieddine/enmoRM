@@ -140,6 +140,10 @@ class authentication
             foreach ($userPositions as $position) {
                 if ($position->orgId == $organization->orgId) {
                     $isUserPosition = true;
+
+                    if (!$default) {
+                        $default = $position;
+                    }
                 }
                 if ($position->default) {
                     $default = $position;
