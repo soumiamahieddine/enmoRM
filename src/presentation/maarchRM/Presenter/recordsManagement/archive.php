@@ -188,6 +188,14 @@ class archive
                     $archive->hasRights = false;
                 }
             }
+
+            $archive->isCommunicable = '2';
+            if ($archive->accessRuleComDate) {
+                $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
+                if ($communicationDelay->invert != 0) {
+                    $archive->isCommunicable = '1';
+                }
+            }
         }
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
