@@ -43,6 +43,6 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         $archiveDeliveryRequest->requester = $this->sendOrganization($message->senderOrg);
         
-        $archiveDeliveryRequest->unitIdentifier = $this->sendUnitIdentifiers($message);
+        $this->sendUnitIdentifiers($message);
     }
 }
