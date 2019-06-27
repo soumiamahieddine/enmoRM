@@ -154,8 +154,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             url: url,
             dataType : 'html',
             success: function(response) {
-                $('#log_modalContainer').html(response);
-                $('#infoModal').modal();
+                var responseJSON = isJson(response);
+                if (responseJSON) {
+                    gritter.show(responseJSON.message, responseJSON.status, responseJSON.errors);
+                } else {
+                    $('#log_modalContainer').html(response);
+                    $('#infoModal').modal();
+                }
             }
         });
         $(this).removeAttr("disabled");
@@ -189,7 +194,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 if (response.message == 'success') {
                     LogIntegrityModal.load(true);
                 } else {
-                    LogIntegrityModal.load(false);
+                    LogIntegrityModal.load(false, response.message);
                 }
             },
             error    : function(response) {
@@ -201,4 +206,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     $("#contain").on('click', '.showEvent', function () {
         eventInfo.load($(this).data('eventid'));
     })
+
+    function isJson(str) {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+    }
 </script>
