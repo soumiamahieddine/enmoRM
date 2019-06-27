@@ -308,7 +308,7 @@ abstract class abstractMessage
 
         if (isset($digitalResource->mimetype)) {
             $binaryDataObject->format = new \stdClass();
-            // $binaryDataObject->format->name = 
+            // $binaryDataObject->format->name =
             $binaryDataObject->format->mimeType = $digitalResource->mimetype;
             // $binaryDataObject->format->identifier = $digitalResource->puid;
             // $binaryDataObject->format->containerType =
@@ -316,8 +316,8 @@ abstract class abstractMessage
 
         if (isset($digitalResource->hash)) {
             $binaryDataObject->messageDigest = new \stdClass();
-            // $binaryDataObject->messageDigest->uri = 
-            // $binaryDataObject->messageDigest->filename = 
+            // $binaryDataObject->messageDigest->uri =
+            // $binaryDataObject->messageDigest->filename =
             $binaryDataObject->messageDigest->content = $digitalResource->hash;
             $binaryDataObject->messageDigest->algorithm = $digitalResource->hashAlgorithm;
         }
@@ -325,25 +325,25 @@ abstract class abstractMessage
         if (isset($digitalResource->filename)) {
             $binaryDataObject->fileInformation = new \stdClass();
             $binaryDataObject->fileInformation->filename = $digitalResource->filename;
-            // $binaryDataObject->fileInformation->application = 
-            // $binaryDataObject->fileInformation->creationDate = 
-            // $binaryDataObject->fileInformation->lastModificationDate = 
+            // $binaryDataObject->fileInformation->application =
+            // $binaryDataObject->fileInformation->creationDate =
+            // $binaryDataObject->fileInformation->lastModificationDate =
         }
 
         // $binaryDataObject->technicalMetadata = new \stdClass();
-        // $binaryDataObject->technicalMetadata->text = 
-        // $binaryDataObject->technicalMetadata->audio = 
+        // $binaryDataObject->technicalMetadata->text =
+        // $binaryDataObject->technicalMetadata->audio =
         // $binaryDataObject->technicalMetadata->video =
         // $binaryDataObject->technicalMetadata->image =
-        // $binaryDataObject->technicalMetadata->document = 
-        // $binaryDataObject->technicalMetadata->{'3D'} = 
+        // $binaryDataObject->technicalMetadata->document =
+        // $binaryDataObject->technicalMetadata->{'3D'} =
         // $binaryDataObject->technicalMetadata->nom = ?? // TODO
 
         if (isset($digitalResource->relatedResId)) {
             $relationship = new \stdClass();
             $relationship->type = $digitalResource->relationshipType;
             $relationship->refId = $digitalResource->relatedResId;
-            // $relationship->displayName = 
+            // $relationship->displayName =
             $binaryDataObject->relationships[] = $relationship;
         }
 

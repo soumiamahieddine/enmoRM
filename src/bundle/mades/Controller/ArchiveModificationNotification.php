@@ -39,7 +39,7 @@ class ArchiveModificationNotification extends abstractMessage
 
         $archiveModificationNotification->originatingAgency = $this->sendOrganization($message->recipientOrg);
 
-        $archiveModificationNotification->unitIdentifier = $this->sendUnitIdentifiers($message);
+        $this->sendUnitIdentifiers($message);
 
         // TODO 
         // foreach ($message->archive as $archive) {
