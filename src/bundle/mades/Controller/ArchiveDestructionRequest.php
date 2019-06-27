@@ -38,6 +38,6 @@ class ArchiveDestructionRequest extends abstractMessage
 
         $archiveDestructionRequest->requester = $this->sendOrganization($message->senderOrg);
 
-        $archiveDestructionRequest->unitIdentifier[] = $this->sendUnitIdentifiers($message);
+        $this->sendUnitIdentifiers($message);
     }
 }

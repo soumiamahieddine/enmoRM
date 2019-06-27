@@ -42,6 +42,6 @@ class ArchiveDestructionNotification extends abstractMessage
 
         $archiveDestructionNotification->originatingAgency = $this->sendOrganization($message->recipientOrg);
 
-        $archiveDestructionNotification->unitIdentifier[] = $this->sendUnitIdentifiers($message);
+        $this->sendUnitIdentifiers($message);
     }
 }
