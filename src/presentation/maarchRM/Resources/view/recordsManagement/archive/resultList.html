@@ -30,7 +30,7 @@
                 </thead>
                 <tbody>
                     <?merge archive ?>
-                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]">
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]" data-iscommunicable="[?merge .isCommunicable ?]">
                         <td>
                             <?merge .hasRights.bool() ?>
                             <input type="checkbox" 
