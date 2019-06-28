@@ -48,7 +48,6 @@ trait archiveModificationTrait
         }
 
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
-
     }
 
     /**
@@ -89,7 +88,10 @@ trait archiveModificationTrait
     public function modifyRetentionRule($retentionRule, $archiveIds, $comment = null, $identifier = null)
     {
         // #10629 Get finalDisposition and duration from ref when empty and code is received
-        if ((empty($retentionRule->finalDisposition) || empty($retentionRule->retentionDuration)) && !empty($retentionRule->retentionRuleCode)) {
+        if ((empty($retentionRule->finalDisposition)
+                || empty($retentionRule->retentionDuration))
+            && !empty($retentionRule->retentionRuleCode)
+        ) {
             $refRetentionRule = $this->retentionRuleController->read($retentionRule->retentionRuleCode);
 
             if (empty($retentionRule->finalDisposition)) {
@@ -306,7 +308,11 @@ trait archiveModificationTrait
 
 
         for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
-            $archive = $archives[$res['success'][$i]];
+            if (array_key_exists($res['success'][$i], $archives)) {
+                $archive = $archives[$res['success'][$i]];
+            } else {
+                $archive = $this->retrieve($res['success'][$i]);
+            }
             $this->logFreeze($archive, true);
         }
 
@@ -349,7 +355,11 @@ trait archiveModificationTrait
 
 
         for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
-            $archive = $archives[$res['success'][$i]];
+            if (array_key_exists($res['success'][$i], $archives)) {
+                $archive = $archives[$res['success'][$i]];
+            } else {
+                $archive = $this->retrieve($res['success'][$i]);
+            }
             $this->logUnfreeze($archive, true);
         }
 
@@ -419,29 +429,37 @@ trait archiveModificationTrait
                 foreach ($archivalProfileDescription as $descriptionImmutable) {
                     if ($descriptionImmutable->isImmutable) {
                         $fieldName = (string)$descriptionImmutable->fieldName;
-                        if (isset($descriptionObject->$fieldName)){
+                        if (isset($descriptionObject->$fieldName)) {
                             if (is_array($descriptionObject->$fieldName)) {
                                 $archiveNewField = $descriptionObject->$fieldName;
                                 $archiveOldField = $archive->descriptionObject->$fieldName;
                                 sort($archiveNewField);
                                 sort($archiveOldField);
-                                if (is_object($descriptionObject->$fieldName[0])){
-                                     foreach($archiveNewField as $index => $object) {
+                                if (is_object($descriptionObject->$fieldName[0])) {
+                                    foreach ($archiveNewField as $index => $object) {
                                         if ($archiveOldField[$index] != $object) {
-                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                                            throw new \bundle\recordsManagement\Exception\invalidArchiveException(
+                                                'Attempt to modify readonly field(s)'
+                                            );
                                         }
                                     }
                                 } else {
-                                    if (count($archiveNewField) != count($archiveOldField) || array_diff($archiveNewField, $archiveOldField)){
-                                        throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                                    if (count($archiveNewField) != count($archiveOldField)
+                                        || array_diff($archiveNewField, $archiveOldField)
+                                    ) {
+                                        throw new \bundle\recordsManagement\Exception\invalidArchiveException(
+                                            'Attempt to modify readonly field(s)'
+                                        );
                                     }
                                 }
-                            }
-                            elseif (!isset($archive->descriptionObject->$fieldName)) {
-                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
-                            }
-                            elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
-                                throw new \bundle\recordsManagement\Exception\invalidArchiveException('Attempt to modify readonly field(s)');
+                            } elseif (!isset($archive->descriptionObject->$fieldName)) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException(
+                                    'Attempt to modify readonly field(s)'
+                                );
+                            } elseif ($descriptionObject->$fieldName != $archive->descriptionObject->$fieldName) {
+                                throw new \bundle\recordsManagement\Exception\invalidArchiveException(
+                                    'Attempt to modify readonly field(s)'
+                                );
                             }
                         }
                     }
@@ -520,12 +538,12 @@ trait archiveModificationTrait
     }
 
     /**
-     * Index full text 
+     * Index full text
      * @param int $limit The maximum number of archive to index
      *
      * @return array The result of the operation
      */
-    public function indexFullText($limit=200)
+    public function indexFullText($limit = 200)
     {
         $res = [];
         $res['success'] = [];
@@ -562,7 +580,7 @@ trait archiveModificationTrait
                         $fullTextArray = array_diff($fullTextArray, $stopWords);
                         $fullText = implode(" ", $fullTextArray);
                     } else {
-                        $fullText = preg_replace('/\b[a-z]{1,2}\b/', "",  $fullText);
+                        $fullText = preg_replace('/\b[a-z]{1,2}\b/', "", $fullText);
                     }
 
                     $descriptionController->create($archive, $fullText);
@@ -614,7 +632,8 @@ trait archiveModificationTrait
             $retentionRule->previousFinalDisposition = $archive->finalDisposition;
 
             if (!isset($retentionRules[$archive->retentionRuleCode])) {
-                $retentionRules[$archive->retentionRuleCode] = $this->retentionRuleController->read($archive->retentionRuleCode);
+                $retentionRules[$archive->retentionRuleCode] =
+                    $this->retentionRuleController->read($archive->retentionRuleCode);
             }
 
             $archive->retentionDuration =  $retentionRules[$archive->retentionRuleCode]->duration;

@@ -941,7 +941,7 @@ trait archiveAccessTrait
                 $archiveStatus->lastModificationDate = \laabs::newTimestamp();
 
                 $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
-                $this->setStatus($childrenArchives, $status);
+                $res = array_merge_recursive($this->setStatus($childrenArchives, $status));
 
                 $this->sdoFactory->update($archiveStatus);
                 array_push($res['success'], $archiveId);
