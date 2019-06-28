@@ -342,6 +342,8 @@ class log implements archiveDescriptionInterface
         $journalResource->archiveId = $archive->archiveId;
         $digitalResourceController->getHash($journalResource, "SHA256");
 
+        $archive->digitalResources[] = $journalResource;
+
         if ($timestampFileName) {
             // Create timestamp resource
             $timestampResource = $digitalResourceController->createFromFile($timestampFileName);
@@ -356,8 +358,6 @@ class log implements archiveDescriptionInterface
 
             $archive->digitalResources[] = $timestampResource;
         }
-
-        $archive->digitalResources[] = $journalResource;
 
         $archive->descriptionObject = $log;
         $archive->descriptionClass = 'recordsManagement/log';
