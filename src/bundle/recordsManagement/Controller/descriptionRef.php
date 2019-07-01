@@ -117,7 +117,7 @@ class descriptionRef
         }
 
         $item = [];
-        $header = fgetcsv($handler, 1000, ",");
+        // $header = fgetcsv($handler, 1000, ",");
         while (($row = fgetcsv($handler, 1000, ",")) !== false) {
             if ($row[0] == $key) {
                 // foreach ($header as $i => $name) {
