@@ -27,7 +27,7 @@ namespace bundle\recordsManagement\Controller;
  */
 class descriptionScheme
 {
-    protected $descriptionSchemes;
+    protected $descriptionSchemes = [];
 
     /**
      * Constructor
@@ -35,9 +35,11 @@ class descriptionScheme
      *
      * @return void
      */
-    public function __construct($descriptionSchemes = [])
+    public function __construct($descriptionSchemes)
     {
-        $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
+        if (!is_null($descriptionSchemes)) {
+            $this->descriptionSchemes = get_object_vars(json_decode(json_encode($descriptionSchemes)));
+        }
     }
 
     /**
