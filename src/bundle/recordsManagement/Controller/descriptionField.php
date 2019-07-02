@@ -204,7 +204,7 @@ class descriptionField
         }
 
         if ($this->isUsed($descriptionField)) {
-            throw new \core\Exception\ForbiddenException("The description field %s is currently used in an archival profile. It can't be deleted as long as it is used by any archival profile.", 403, null, [$descriptionField->name]);
+            throw new \core\Exception\ForbiddenException("The description field %s is currently used in an archival profile. It can't be deleted as long as it is used in any archival profile.", 403, null, [$descriptionField->name]);
         }
 
         try {
