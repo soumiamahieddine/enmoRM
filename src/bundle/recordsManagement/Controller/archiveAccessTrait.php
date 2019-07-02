@@ -930,8 +930,20 @@ trait archiveAccessTrait
 
             return $res;
         }
-        foreach ($archiveIds as $archiveId) {
+
+        $archiveIdsWithChildren = [];
+        $archiveIds = array_flip($archiveIds);
+        foreach ($archiveIds as $archiveId => $key) {
+            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        }
+
+        $archiveIds = array_merge($archiveIds, $archiveIdsWithChildren);
+        foreach ($archiveIds as $archiveId => $value) {
             $archiveStatus = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
+
+            if ($archiveStatus->status === $status) {
+                continue;
+            }
 
             if (!in_array($archiveStatus->status, $statusList[$status])) {
                 array_push($res['error'], $archiveId);
@@ -939,10 +951,6 @@ trait archiveAccessTrait
                 $archiveStatus->status = $status;
 
                 $archiveStatus->lastModificationDate = \laabs::newTimestamp();
-
-                $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
-                $res = array_merge_recursive($this->setStatus($childrenArchives, $status));
-
                 $this->sdoFactory->update($archiveStatus);
                 array_push($res['success'], $archiveId);
             }
@@ -951,6 +959,20 @@ trait archiveAccessTrait
         return $res;
     }
 
+    public function getChildrenArchives($archiveId)
+    {
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            "archiveId",
+            "parentArchiveId = '$archiveId'"
+        );
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveIds = array_merge($archiveIds, $this->getChildrenArchives($archiveId));
+        }
+
+        return $archiveIds;
+    }
 
     /**
      * Change the processing status of an archive
