@@ -777,7 +777,10 @@ class journal
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
-            throw \laabs::newException('recordsManagement/journalException', "Invalid journal: invalid hash integrity.");
+            throw \laabs::newException(
+                'recordsManagement/journalException',
+                "Invalid journal: invalid hash integrity."
+            );
         }
 
         $nextJournal = $logController->getNextJournal($journal);
@@ -790,7 +793,10 @@ class journal
 
             // In the future ????
             if ($diff->invert) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal date: latest date is in the future.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal date: latest date is in the future."
+                );
             }
 
             return true;
@@ -805,12 +811,18 @@ class journal
         // For older version compatibility
         if (count($chainEvent) < 7) {
             if (empty($chainEvent[3]) || empty($chainEvent[4]) || empty($chainEvent[5])) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal chaining event is incomplete.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal chaining event is incomplete."
+                );
             }
 
             $chainedJournalId = $chainEvent[3];
             if ($chainedJournalId != $archiveId) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
+                );
             }
 
             $chainedJournalHashAlgo = $chainEvent[4];
@@ -819,17 +831,26 @@ class journal
             $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Chaining event has a different hash."
+                );
             }
 
         } else {
             if (empty($chainEvent[8]) || empty($chainEvent[9]) || empty($chainEvent[10])) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal chaining event is incomplete.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal chaining event is incomplete."
+                );
             }
 
             $chainedJournalId = $chainEvent[8];
             if ($chainedJournalId != $archiveId) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
+                );
             }
 
             $chainedJournalHashAlgo = $chainEvent[9];
@@ -838,7 +859,10 @@ class journal
             $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Chaining event has a different hash."
+                );
             }
         }
 

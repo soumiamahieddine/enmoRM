@@ -23,7 +23,7 @@
 <script>
 
 var LogIntegrityModal = {
-    load : function(status) {
+    load : function(status, message) {
         var title = $('#integrityModal_title');
         if (status) {
             title.addClass('text-success').removeClass('text-danger').find('i').addClass('fa-check').removeClass('fa-close');
@@ -36,6 +36,7 @@ var LogIntegrityModal = {
             title.addClass('text-danger').removeClass('text-success').find('i').addClass('fa-close').removeClass('fa-check');
             title.find('span').html($("#error_text").html());
 
+            $('#integrityFailure').html(message);
             $('#integrityFailure').removeClass('hide');
             $('#integritySuccess').addClass('hide');
 
