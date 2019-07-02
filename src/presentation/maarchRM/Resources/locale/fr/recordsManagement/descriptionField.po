@@ -56,6 +56,9 @@ msgstr "Champ de description modifié"
 msgid "Description field deleted"
 msgstr "Champ de description supprimé"
 
+msgid "The description field %s is currently used in an archival profile."
+msgstr "Le champ de description %s est utilisé dans un profil d'archive"
+
 msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
 msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
 
