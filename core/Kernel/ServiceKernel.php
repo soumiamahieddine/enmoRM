@@ -319,23 +319,20 @@ class ServiceKernel extends AbstractKernel
         }
         // Try to find serializer output for the raised exception else send exception as string as response content
         if (isset($this->outputRouter)) {
-
             switch (true) {
                 case $this->outputRouter->serializer->hasOutput($exceptionName):
                     $this->outputRouter->setOutput($exceptionName);
-                    $this->serviceReturn = $exception;
-
-                    return true;
+                    break;
 
                 case $this->outputRouter->serializer->hasOutput('Exception'):
                     $this->outputRouter->setOutput('Exception');
-                    $this->serviceReturn = $exception;
-
-                    return true;
+                    break;
             }
         }
+        
+        $this->serviceReturn = $exception;
 
-        return false;
+        return true;
     }
 
     /**
