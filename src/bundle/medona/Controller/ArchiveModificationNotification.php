@@ -91,14 +91,13 @@ class ArchiveModificationNotification extends ArchiveNotification
             throw $e;
         }
         
-        // TODO
-        // $this->lifeCycleJournalController->logEvent(
-        //     'medona/sending',
-        //     'medona/message',
-        //     $message->messageId,
-        //     $message,
-        //     $operationResult
-        // );
+        $this->lifeCycleJournalController->logEvent(
+            'medona/sending',
+            'medona/message',
+            $message->messageId,
+            $message,
+            $operationResult
+        );
 
         $this->create($message);
 
