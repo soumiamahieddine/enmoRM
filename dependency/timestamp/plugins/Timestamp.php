@@ -37,7 +37,7 @@ class Timestamp implements \dependency\timestamp\TimestampInterface
      * Get a timestamp file for a journal
      * @param string $journalFile The journal file name
      *
-     * @return string the timestamp file name
+     * @return string the timestamp file path
      */
     public function getTimestamp($journalFile)
     {
