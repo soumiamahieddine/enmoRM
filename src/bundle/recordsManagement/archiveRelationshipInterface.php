@@ -56,7 +56,7 @@ interface archiveRelationshipInterface
     
     /**
      * Create a relationship
-     * @param recordsManagement/archiveRelationShip $archiveRelationship The archive relationship object
+     * @param recordsManagement/archiveRelationship $archiveRelationship The archive relationship object
      *
      * @return boolean
      *

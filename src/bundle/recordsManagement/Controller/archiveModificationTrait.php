@@ -483,7 +483,7 @@ trait archiveModificationTrait
      */
     public function addRelationship($archiveRelationship)
     {
-        $this->archiveRelationshipController->createRelationship($archiveRelationship);
+        $this->archiveRelationshipController->create($archiveRelationship);
 
         $archive = $this->retrieve($archiveRelationship->archiveId, false, false);
 
@@ -505,7 +505,7 @@ trait archiveModificationTrait
      */
     public function deleteRelationship($archiveRelationship)
     {
-        $this->archiveRelationshipController->deleteRelationship($archiveRelationship);
+        $this->archiveRelationshipController->delete($archiveRelationship);
 
         $archive = $this->retrieve($archiveRelationship->archiveId, $withBinary = false, $checkAccess = false);
 
