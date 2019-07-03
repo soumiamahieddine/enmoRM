@@ -271,7 +271,6 @@ abstract class abstractMessage
             }
         }
         
-        // TODO
         // $archiveUnit->security = new \stdClass();
         // $archiveUnit->security->user
         // $archiveUnit->security->group
@@ -337,7 +336,6 @@ abstract class abstractMessage
         // $binaryDataObject->technicalMetadata->image =
         // $binaryDataObject->technicalMetadata->document =
         // $binaryDataObject->technicalMetadata->{'3D'} =
-        // $binaryDataObject->technicalMetadata->nom = ?? // TODO
 
         if (isset($digitalResource->relatedResId)) {
             $relationship = new \stdClass();

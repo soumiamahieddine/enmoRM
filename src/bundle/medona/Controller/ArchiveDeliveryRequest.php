@@ -245,14 +245,13 @@ class ArchiveDeliveryRequest extends abstractMessage
             throw $e;
         }
 
-        // TODO
-        // $this->lifeCycleJournalController->logEvent(
-        //     'medona/sending',
-        //     'medona/message',
-        //     $message->messageId,
-        //     $message,
-        //     $operationResult
-        // );
+        $this->lifeCycleJournalController->logEvent(
+            'medona/sending',
+            'medona/message',
+            $message->messageId,
+            $message,
+            $operationResult
+        );
 
         return $message;
     }
