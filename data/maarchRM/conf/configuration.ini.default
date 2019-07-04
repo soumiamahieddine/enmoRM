@@ -142,13 +142,6 @@ transaction = false
 messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
 autoValidateSize = 2147000
 
-packageSchemas = "{
-    'mades' : {
-         'label' : 'Format d\'échange Maarch RM',
-         'phpNamespace' : 'mades'
-    }
-}"
-
 ; Array of task to remove medona message directories
 ; 'type' is an array of medona message type
 ; 'status' is an array of medona message status
