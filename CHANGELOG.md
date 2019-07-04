@@ -2,6 +2,10 @@
 
 ## Version 2.5
 
+### Administration
+
+- `Added` Si la directive "chainWithTimestamp" est passé à 'true' dans le ficheir de confgiruation, un fichier d'horodatage sera généré par défaut lors de la génération du journal de l'application ou du cycle de vie.
+
 ### Métadonnées
 
 - `Added` Possiblité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
