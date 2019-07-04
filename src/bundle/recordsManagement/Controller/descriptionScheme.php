@@ -76,6 +76,7 @@ class descriptionScheme
         if (empty($name)) {
             return \laabs::newController('recordsManagement/descriptionField')->index();
         }
+
         if (isset($this->descriptionSchemes[$name])) {
             $descriptionSchemeConfig = $this->descriptionSchemes[$name];
         } elseif (strpos($name, '/') !== false) {
@@ -83,12 +84,33 @@ class descriptionScheme
             $descriptionSchemeConfig->type = 'php';
             $descriptionSchemeConfig->uri = $name;
         }
-
         switch ($descriptionSchemeConfig->type) {
             case 'php':
-                return $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->uri);
+                $fields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->uri);
+                break;
+
+            case 'json':
+                $fields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeConfig->uri);
+                break;
+
+            default:
+                $fields = [];
         }
 
+        if (isset($descriptionSchemeConfig->extension)) {
+            switch ($descriptionSchemeConfig->extension->type) {
+                case 'php':
+                    $extendedFields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->extension->uri);
+                    break;
+
+                case 'json':
+                    $extendedFields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeConfig->extension->uri);
+                    break;
+            }
+
+            $fields = array_merge($fields, $extendedFields);
+        }
+        
         return $fields;
     }
 
@@ -148,7 +170,7 @@ class descriptionScheme
             case substr($type, -2) == '[]':
                 $descriptionField->type = 'array';
                 $itemType = substr($type, 0, -2);
-                $descriptionField->itemType = $this->getPropertyTypeName($itemType);
+                $descriptionField->itemType = $this->getPhpPropertyTypeName($itemType);
                 break;
 
             case $type == 'string':
@@ -169,13 +191,13 @@ class descriptionScheme
                 break;
 
             default:
-                $descriptionField->type = $this->getPropertyTypeName($type);
+                $descriptionField->type = $this->getPhpPropertyTypeName($type);
         }
 
         return $descriptionField;
     }
 
-    protected function getPropertyTypeName($type)
+    protected function getPhpPropertyTypeName($type)
     {
         switch (true) {
             case $type == 'string':
@@ -202,6 +224,118 @@ class descriptionScheme
 
             default:
                 return $type;
+        }
+    }
+
+    protected function getDescriptionFieldsFromJsonSchema($uri)
+    {
+        $schema = json_decode(file_get_contents($uri));
+        
+        $fields = $this->getJsonObjectProperties($schema);
+
+        return $fields;
+    }
+
+    protected function getJsonObjectProperties($schema)
+    {
+        $fields = [];
+
+        foreach ($schema->properties as $name => $property) {
+            $fields[$name] = $this->getDescriptionFieldFromJsonSchema($name, $property);
+        }
+
+        if (isset($schema->requiredProperties)) {
+            foreach ($schema->requiredProperties as $requiredProperty) {
+                if (isset($fields[$requiredProperty])) {
+                    $fields[$requiredProperty]->required = true;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    protected function getDescriptionFieldFromJsonSchema($name, $property)
+    {
+        $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+        $descriptionField->name = $name;
+
+        if (isset($property->title)) {
+            $descriptionField->label = $property->title;
+        } else {
+            $descriptionField->label = $name;
+        }
+
+        if (isset($property->default)) {
+            $descriptionField->default = $property->default;
+        }
+
+        if (isset($property->enum)) {
+            $descriptionField->enumeration = $property->enum;
+            if (isset($property->enumNames)) {
+                if (count($property->enumNames) == count($descriptionField->enumeration)) {
+                    $descriptionField->enumNames = $property->enumNames;
+                }
+            }
+        }
+
+        if (isset($property->ref)) {
+            $descriptionField->ref = $property->ref[0];
+        }
+
+        if (isset($property->readonly)) {
+            $descriptionField->readonly = true;
+        }
+
+        switch ($property->type) {
+            case 'array':
+                $descriptionField->type = 'array';
+                if (isset($property->items)) {
+                    $descriptionField->itemType = $this->getJsonPropertyTypeName($property->items);
+                }
+
+                break;
+
+            case 'string':
+                if (isset($property->enum)
+                    || isset($property->ref)) {
+                    $descriptionField->type = 'name';
+                } else {
+                    $descriptionField->type = 'text';
+                }
+                break;
+
+            case 'object':
+                $descriptionField->type = 'object';
+                $descriptionField->properties = $this->getJsonObjectProperties($property);
+                break;
+
+            default:
+                $descriptionField->type = $this->getJsonPropertyTypeName($property);
+        }
+
+        return $descriptionField;
+    }
+
+    protected function getJsonPropertyTypeName($type)
+    {
+        switch (true) {
+            case isset($type->format) && (
+                $type->format == 'dateTime'|| $type->format == 'date'):
+                return 'date';
+
+            case $type->type == 'string':
+                return 'text';
+
+            case $type->type == 'integer':
+            case $type->type == 'number':
+                return 'number';
+
+            case isset($type->{'$ref'}):
+                return '#'.$type->{'$ref'};
+
+            default:
+                return $type->type;
         }
     }
 }
