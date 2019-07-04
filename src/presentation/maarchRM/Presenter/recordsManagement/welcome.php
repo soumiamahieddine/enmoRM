@@ -305,7 +305,7 @@ class welcome
 
     protected function loadScheme($descriptionField)
     {
-        if ($descriptionField->type == 'array' && isset($descriptionField->itemType) && $descriptionField->itemType[0] == '#') {
+        if ($descriptionField->type == 'array' && isset($descriptionField->itemType) && is_string($descriptionField->itemType) && $descriptionField->itemType[0] == '#') {
             $objectType = new \StdClass();
             $objectType->type = 'object';
 
