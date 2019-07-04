@@ -81,13 +81,13 @@ class ArchiveDestructionNotification extends ArchiveNotification
             throw $e;
         }
 
-        // $event = $this->lifeCycleJournalController->logEvent(
-        //     'medona/sending',
-        //     'medona/message',
-        //     $message->messageId,
-        //     $message,
-        //     $operationResult
-        // );
+        $event = $this->lifeCycleJournalController->logEvent(
+            'medona/sending',
+            'medona/message',
+            $message->messageId,
+            $message,
+            $operationResult
+        );
 
         $this->create($message);
 

@@ -150,13 +150,13 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             throw $e;
         }
 
-        // $this->lifeCycleJournalController->logEvent(
-        //     'medona/sending',
-        //     'medona/message',
-        //     $message->messageId,
-        //     $message,
-        //     $operationResult
-        // );
+        $this->lifeCycleJournalController->logEvent(
+            'medona/sending',
+            'medona/message',
+            $message->messageId,
+            $message,
+            $operationResult
+        );
 
         $this->create($message);
 
