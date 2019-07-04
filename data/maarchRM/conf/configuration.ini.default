@@ -106,14 +106,6 @@ translationLogType = "{
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
-packageSchemas = "{
-    'mades' : {
-         'label' : 'Format d\'échange Maarch RM',
-         'phpNamespace' : 'mades',
-         'presenter' : 'mades/message'
-    }
-}"
-
 [audit]
 ; Send notifications on audit event
 ;notifications = "{
@@ -159,6 +151,14 @@ autoValidateSize = 2147000
 ;        'delay' : '-P6M'
 ;    }
 ;}"
+
+packageSchemas = "{
+    'mades' : {
+         'label' : 'Format d\'échange Maarch RM',
+         'phpNamespace' : 'mades',
+         'presenter' : 'mades/message'
+    }
+}"
 
 menu = "[
    {
