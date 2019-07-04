@@ -23,13 +23,11 @@ namespace dependency\timestamp;
  */
 interface TimestampInterface
 {
-
-	/**
+    /**
      * Get a timestamp file for a journal
      * @param string $journalFile The journal file name
      *
      * @return string the timestamp file name
      */
     public function getTimestamp($journalFile);
-
 }
