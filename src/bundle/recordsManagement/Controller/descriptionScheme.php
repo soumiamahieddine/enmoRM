@@ -291,7 +291,7 @@ class descriptionScheme
             case 'array':
                 $descriptionField->type = 'array';
                 if (isset($property->items)) {
-                    $descriptionField->itemType = $this->getJsonPropertyTypeName($property->items);
+                    $descriptionField->itemType = $this->getJsonType($property->items);
                 }
 
                 break;
@@ -311,13 +311,13 @@ class descriptionScheme
                 break;
 
             default:
-                $descriptionField->type = $this->getJsonPropertyTypeName($property);
+                $descriptionField->type = $this->getJsonType($property);
         }
 
         return $descriptionField;
     }
 
-    protected function getJsonPropertyTypeName($type)
+    protected function getJsonType($type)
     {
         switch (true) {
             case isset($type->format) && (
@@ -330,6 +330,13 @@ class descriptionScheme
             case $type->type == 'integer':
             case $type->type == 'number':
                 return 'number';
+
+            case $type->type == 'object':
+                $descriptionField = \laabs::newInstance('recordsManagement/descriptionField');
+                $descriptionField->type = 'object';
+                $descriptionField->properties = $this->getJsonObjectProperties($type);
+
+                return $descriptionField;
 
             case isset($type->{'$ref'}):
                 return '#'.$type->{'$ref'};
