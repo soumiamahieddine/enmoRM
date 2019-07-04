@@ -201,7 +201,7 @@ class archiveDescription
                 return $this->getObjectTable($value, $descriptionField->properties);
 
             default:
-                if ($descriptionField->type[0] == '#') {
+                if (is_string($descriptionField->type) && $descriptionField->type[0] == '#') {
                     // Object type is given by ref, assume complex type/object
                     $itemTypeName = substr($descriptionField->itemType, 1);
                     $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $itemTypeName);
@@ -241,7 +241,7 @@ class archiveDescription
     protected function getArrayTable($array, $descriptionField)
     {
         $table = $this->view->createElement('table');
-        if ($descriptionField->itemType[0] == '#') {
+        if (is_string($descriptionField->itemType) && $descriptionField->itemType[0] == '#') {
             $itemTypeName = substr($descriptionField->itemType, 1);
             $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $itemTypeName);
             $descriptionField = $this->getDummyDescriptionField('dummy', 'object');

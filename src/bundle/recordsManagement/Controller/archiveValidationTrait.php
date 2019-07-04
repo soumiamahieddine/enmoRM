@@ -137,7 +137,7 @@ trait archiveValidationTrait
                 break;
 
             default:
-                if ($descriptionField->type[0] == '#') {
+                if (is_string($descriptionField->itemType) && $descriptionField->type[0] == '#') {
                     $descriptionField->properties = $this->descriptionSchemeController->getDescriptionFields(substr($descriptionField->type, 1));
                     $this->validateObject($value, $descriptionField);
                 }
