@@ -159,7 +159,9 @@ class archiveDescription
     {
         $th = $this->view->createElement('th', $descriptionField->label);
         $th->setAttribute('name', $descriptionField->name);
-        $th->setAttribute('data-type', $descriptionField->type);
+        if (is_string($descriptionField->type))  {
+            $th->setAttribute('data-type', $descriptionField->type);
+        }
         if (isset($descriptionField->readonly)) {
             $th->setAttribute('data-readonly', 'readonly');
         }
@@ -246,6 +248,8 @@ class archiveDescription
             $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $itemTypeName);
             $descriptionField = $this->getDummyDescriptionField('dummy', 'object');
             $descriptionField->properties = $properties;
+        } elseif (is_object($descriptionField->itemType)) {
+            $descriptionField = $descriptionField->itemType;
         } else {
             $descriptionField = $this->getDummyDescriptionField('dummy', $descriptionField->itemType);
         }
