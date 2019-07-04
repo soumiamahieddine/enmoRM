@@ -72,7 +72,7 @@ trait archiveValidationTrait
      */
     protected function validateArchiveDescriptionObject($archive)
     {
-        if (!isset($this->currentArchivalProfile)) {
+        if (!isset($this->currentArchivalProfile) || !is_object($archive->descriptionObject)) {
             return;
         }
 

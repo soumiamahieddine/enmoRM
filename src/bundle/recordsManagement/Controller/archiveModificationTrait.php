@@ -448,7 +448,7 @@ trait archiveModificationTrait
                 }
             }
             
-            if (!empty($archive->archivalProfileReference)) {
+            if (!empty($archive->archivalProfileReference) && is_object($descriptionObject)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
                 
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
