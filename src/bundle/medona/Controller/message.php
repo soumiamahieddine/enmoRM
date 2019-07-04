@@ -158,7 +158,7 @@ class message
             $message->object = json_decode($message->data);
         }
 
-        if (!empty($message->comment)) {
+        if (!empty($message->comment) && is_string($message->comment)) {
             $message->comment = json_decode($message->comment);
         }
     }
@@ -497,6 +497,7 @@ class message
     public function read($messageId)
     {
         $message = $this->sdoFactory->read('medona/message', $messageId);
+
         $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
 
         $message->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($message->messageId, 'medona/message');
@@ -623,10 +624,10 @@ class message
 
             $parentMessage = $this->sdoFactory->read('medona/message', $parentKey);
             $parentMessage->active = false;
-            $this->sdoFactory->update($parentMessage);
+            $this->update($parentMessage);
         }
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
 
         return true;
     }
@@ -868,12 +869,19 @@ class message
      */
     protected function changeStatus($messageId, $status, $comment = null)
     {
-        $messageStatus = \laabs::newMessage('medona/messageStatus');
-        $messageStatus->messageId = $messageId;
+        $messageStatus = $this->sdoFactory->read('medona/messageStatus', $messageId);
+        
         $messageStatus->status = strtolower($status);
 
         if ($comment) {
+            if (!empty($messageStatus->comment) && is_array($messageStatus->comment)) {
+                $messageStatus->comment = json_decode($messageStatus->comment);
+            } else {
+                $messageStatus->comment = [];
+            }   
+
             $messageStatus->comment[] = $comment;
+            $messageStatus->comment = json_encode($messageStatus->comment);
         }
 
         $this->sdoFactory->update($messageStatus, 'medona/message');

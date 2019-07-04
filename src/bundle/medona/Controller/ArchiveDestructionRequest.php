@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -113,7 +113,7 @@ class ArchiveDestructionRequest extends abstractMessage
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
 
-        $schema = "medona";
+        $schema = "mades";
         if (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
@@ -216,7 +216,7 @@ class ArchiveDestructionRequest extends abstractMessage
             $this->archiveController->eliminate((string) $unitIdentifier->objectId);
         }
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
     }
 
     /**
@@ -239,7 +239,7 @@ class ArchiveDestructionRequest extends abstractMessage
             true
         );
 
-        $this->sdoFactory->update($message);
+        $this->update($message);
     }
 
     /**
@@ -283,8 +283,8 @@ class ArchiveDestructionRequest extends abstractMessage
             'medona/message',
             array('messageId'),
             '(
-                type = "ArchiveDestructionRequest" 
-                OR type = "ArchiveRestitution" 
+                type = "ArchiveDestructionRequest"
+                OR type = "ArchiveRestitution"
                 OR (
                     type = "ArchiveTransfer"
                     && isIncoming = false

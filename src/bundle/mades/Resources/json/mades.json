@@ -1,0 +1,436 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Maarch Data Exchange Schema",
+    "type": "object",
+    
+    "oneOf": [
+        { "$ref": "#/definitions/ArchiveDeliveryRequest" },
+        { "$ref": "#/definitions/ArchiveDeliveryRequestReply" },
+        { "$ref": "#/definitions/ArchiveTransfer" },
+        { "$ref": "#/definitions/ArchiveTransferReply" },
+        { "$ref": "#/definitions/Acknowledgement" }
+    ],
+
+    "definitions": {
+        "Acknowledgement": {
+            "allOf": [
+                { "$ref": "#/definitions/Message" },
+                { 
+                    "properties": { 
+                        "messageReceivedIdentifier": { "type" : "string" },
+                        "sender": { "$ref": "#/definitions/Organization" },
+                        "receiver": { "$ref": "#/definitions/Organization" }
+                    },
+                    "required": [ "messageReceivedIdentifier", "sender", "receiver" ]
+                }
+            ]
+        },
+
+        "ArchiveDeliveryRequest": { 
+            "allOf": [
+                { "$ref": "#/definitions/BusinessRequestMessage" },
+                { 
+                    "properties": { 
+                        "derogation": { 
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "unitIdentifier": {
+                            "type": "array",
+                            "items": { "type" : "string" }
+                        },
+                        "archivalAgency": { "$ref": "#/definitions/Organization" },
+                        "requester": { "$ref": "#/definitions/Organization" }
+                    },
+                    "required": [ "derogation", "unitIdentifier", "archivalAgency", "requester" ]
+                }
+            ]
+        },
+
+        "ArchiveDeliveryRequestReply": { 
+            "allOf": [
+                { "$ref": "#/definitions/BusinessReplyMessage" },
+                { 
+                    "properties": { 
+                        "authorizationRequestReplyIdentifier": { "type" : "string" },
+                        "unitIdentifier": {
+                            "type": "array",
+                            "items": { "type" : "string" }
+                        },
+                        "archivalAgency": { "$ref": "#/definitions/Organization" },
+                        "requester": { "$ref": "#/definitions/Organization" }
+                    },
+                    "required": [ "unitIdentifier", "archivalAgency", "requester" ]
+                }
+            ]
+        },
+
+        "ArchiveTransfer": { 
+            "allOf": [
+                { "$ref": "#/definitions/BusinessRequestMessage" },
+                { 
+                    "properties": { 
+                        "relatedTransferReference": { 
+                            "type": "array",
+                            "items": { "type" : "string" }
+                        },
+                        "transferRequestReplyIdentifier": { "type" : "string" },
+                        "archivalAgency": { "$ref": "#/definitions/Organization" },
+                        "transferringAgency": { "$ref": "#/definitions/Organization" }
+                    },
+                    "required": [ "archivalAgency", "transferringAgency" ]
+                }
+            ]
+        },
+
+        "ArchiveTransferReply": { 
+            "allOf": [
+                { "$ref": "#/definitions/BusinessReplyMessage" },
+                { 
+                    "properties": { 
+                        "grantDate": { 
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "archivalAgency": { "$ref": "#/definitions/Organization" },
+                        "transferringAgency": { "$ref": "#/definitions/Organization" }
+                    },
+                    "required": [ "archivalAgency", "transferringAgency" ]
+                }
+            ]
+        },
+
+        "BusinessRequestMessage": {
+            "allOf": [
+                { "$ref": "#/definitions/BusinessMessage"  }
+            ]
+        },
+
+        "BusinessReplyMessage": {
+            "allOf": [
+                { "$ref": "#/definitions/BusinessMessage" },
+                {
+                    "properties": { 
+                        "replyCode": { "$ref": "#/definitions/Token" },
+                        "messageRequestIdentifier": { "type" : "string" }
+                    },
+                    "required": [ "messageRequestIdentifier" ]
+                }
+            ]
+        },
+
+        "BusinessNotificationMessage": {
+            "allOf": [
+                { "$ref": "#/definitions/BusinessMessage"  }
+            ]
+        },
+
+        "BusinessAuthorizationRequestMessage": {
+            "allOf": [
+                { "$ref": "#/definitions/BusinessRequestMessage" },
+                {
+                    "properties": { 
+                        "authorizationRequestContent": { "$ref": "#/definitions/AuthorizationRequestContent" }
+                    },
+                    "required": [ "authorizationRequestContent" ]
+                }
+            ]
+        },
+
+        "BusinessMessage": { 
+            "allOf": [
+                { "$ref": "#/definitions/Message" },
+                { 
+                    "properties": { 
+                        "archivalAgreement": { "type" : "string" },
+                        "codeListVersions": { "$ref": "#/definitions/CodeListVersions" },
+                        "dataObjectPackage": { "$ref": "#/definitions/DataObjectPackage" }
+                    },
+                    "required": [ "codeListVersions" ]
+                }
+            ]
+        },
+
+        "Message": { 
+            "type": "object",
+            "properties": { 
+                "comment": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "messageIdentifier": { "type": "string" },
+                "signature": {
+                    "OneOf": [
+                        { "type": "string" },
+                        { "type": "object" }
+                    ]
+                }
+            },
+            "required": [ "date", "messageIdentifier" ]
+        },
+
+        "AuthorizationRequestContent": {
+            "description" : "The contents of an authorization request",
+            "type": "object",
+            "properties": { 
+                "authorizationReason": { "$ref": "#/definitions/Token" },
+                "comment": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "requestDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "unitIdentifier": {
+                    "type": "array",
+                    "items": { "type" : "string" }
+                },
+                "requester": { "$ref": "#/definitions/Organization" },
+                "authorizationRequestReply": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/BusinessAuthorizationRequestReplyMessage" }
+                }
+            },
+            "required": [ "authorizationReason", "requestDate", "unitIdentifier", "requester" ]
+        },
+
+        "BusinessAuthorizationRequestReplyMessage": {
+            "description" : "The details of an authorization granted by an agency",
+            "allOf": [
+                { "$ref": "#/definitions/BusinessReplyMessage"  }
+            ]
+        },
+
+        "CodeListVersions": {
+            "type": "object",
+            "properties": {
+                "AuthorizationReasonCodeListVersion": { "$ref": "#/definitions/Code" },
+                "FileEncodingCodeListVersion": { "$ref": "#/definitions/Code" },
+                "FileFormatCodeListVersion": { "$ref": "#/definitions/Code" },
+                "MessageDigestAlgorithmCodeListVersion": { "$ref": "#/definitions/Code" },
+                "RelationshipCodeListVersion": { "$ref": "#/definitions/Code" },
+                "ReplyCodeListVersion": { "$ref": "#/definitions/Code" },
+                "SignatureStatusCodeListVersion": { "$ref": "#/definitions/Code" }
+            }
+        },
+
+        "DataObjectPackage": {
+            "type": "object",
+            "properties": { 
+                "descriptiveMetadata": {
+                    "$ref": "#/definitions/DescriptiveMetadata"
+                },
+                "managementMetadata": {
+                    "$ref": "#/definitions/ManagementMetadata"
+                }
+            },
+            "patternProperties" : {
+                "^[A-z_][A-z0-9\\-_]*$": { 
+                    "oneOf": [
+                        { "$ref": "#/definitions/BinaryDataObject" },
+                        { "$ref": "#/definitions/PhysicalDataObject" }
+                    ] 
+                }
+            },
+            "required": [ "descriptiveMetadata", "managementMetadata" ]
+        },       
+
+        "Organization": {
+            "type": "object",
+            "properties": { 
+                "identifier": { "type" : "string" },
+                "organizationDescriptiveMetadata": {
+                    "type": "object"
+                }
+            },
+            "required": [ "identifier" ]
+        },
+
+        "DescriptiveMetadata" : {
+            "type": "object",
+            "additionnalProperties" : false,
+            "patternProperties" : {
+                "^[A-z_][A-z0-9\\-_]*$": { 
+                    "oneOf": [
+                        { "$ref": "ArchiveUnit.json" },
+                        { "$ref": "#/definitions/ArchiveRelationship" }
+                    ] 
+                }
+            }
+        },
+   
+        "ManagementMetadata" : {
+            "type": "object",
+            "properties": {
+                "archivalProfile": { "type" : "string" },
+                "serviceLevel": { "type" : "string" }
+            },
+            "additionnalProperties" : true
+        },
+        
+        "DataObject": {
+            "type": "object",
+            "properties": { 
+                "relationship": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/Relationship" }
+                }
+            }
+        },
+
+        "BinaryDataObject": { 
+            "allOf": [
+                { "$ref": "#/definitions/DataObject" },
+                { 
+                    "properties": { 
+                        "attachment": { "$ref": "#/definitions/BinaryObject" },
+                        "format": { "$ref": "#/definitions/Token" },
+                        "messageDigest": { "$ref": "#/definitions/MessageDigestBinaryObject" },
+                        "signatureStatus": { "$ref": "#/definitions/Token" },
+                        "size": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    "required": [ "attachment", "format", "messageDigest", "signatureStatus", "size" ]
+                }
+            ]
+        },
+
+        "PhysicalDataObject": { 
+            "allOf": [
+                { "$ref": "#/definitions/DataObject" },
+                { 
+                    "properties": { 
+                        "size": { "$ref": "#/definitions/Measure" }
+                    },
+                    "required": [ "size" ]
+                }
+            ]
+        },
+
+        "Measure": {
+            "type": "object",
+            "properties": { 
+                "value": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "unitCode": {
+                    "type": "string"
+                }
+            },
+            "required": [ "value" ]
+        },
+
+        "Relationship": {
+            "type": "object",
+            "properties": { 
+                "target": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [ "target", "type" ]
+        },
+
+        "BinaryObject": {
+            "type": "object",
+            "properties": { 
+                "content": {
+                    "type": "string",
+                    "format": "byte"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "uri": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [ "content" ]
+        },
+
+        "MessageDigestBinaryObject": { 
+            "allOf": [
+                { "$ref": "#/definitions/BinaryObject" },
+                { 
+                    "properties": { 
+                        "algorithm": { "$ref": "#/definitions/Token" }
+                    },
+                    "required": [ "algorithm" ]
+                }
+            ]
+        },
+
+        "Token": {
+            "type": "string"
+        },
+
+        "Identifier": {
+            "type": "object",
+            "properties": { 
+                "value": { "$ref": "#/definitions/Token" },
+                "schemeID": { "$ref": "#/definitions/Token" },
+                "schemeName": {
+                    "type": "string"
+                },
+                "schemeAgencyID": { "$ref": "#/definitions/Token" },
+                "schemeAgencyName": {
+                    "type": "string"
+                },
+                "schemeVersionID": { "$ref": "#/definitions/Token" },
+                "schemeDataURI": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "schemeURI": {
+                    "type": "string",
+                    "format": "uri"
+                }
+            },
+            "required": [ "value" ]
+        },
+
+        "Code": {
+            "type": "object",
+            "properties": { 
+                "value": { "$ref": "#/definitions/Token" },
+                "listID": { "$ref": "#/definitions/Token" },
+                "listName": {
+                    "type": "string"
+                },
+                "listAgencyID": { "$ref": "#/definitions/Token" },
+                "listAgencyName": {
+                    "type": "string"
+                },
+                "listVersionID": { "$ref": "#/definitions/Token" },
+                "listDataURI": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "listURI": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "listSchemeURI": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "languageID": { "$ref": "#/definitions/Token" },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [ "value" ]
+        }
+    }
+}

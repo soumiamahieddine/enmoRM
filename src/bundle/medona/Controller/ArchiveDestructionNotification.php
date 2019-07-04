@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -41,7 +41,7 @@ class ArchiveDestructionNotification extends ArchiveNotification
         $message->messageId = \laabs::newId();
         $message->type = "ArchiveDestructionNotification";
 
-        $schema = "medona";
+        $schema = "mades";
         if (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }

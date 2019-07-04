@@ -335,7 +335,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function manageFileplanPosition($archive)
+    public function manageFileplanPosition($archive)
     {
         // Could classify automatically regarding archival profile rule
         if (empty($archive->filePlanPosition)) {
@@ -357,7 +357,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function completeManagementMetadata($archive)
+    public function completeManagementMetadata($archive)
     {
         $this->completeArchivalProfileCodes($archive);
         $this->completeRetentionRule($archive);
@@ -367,7 +367,7 @@ trait archiveEntryTrait
         $this->completeArchiver($archive);
     }
 
-    protected function completeOriginator($archive)
+    public function completeOriginator($archive)
     {
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
@@ -444,6 +444,9 @@ trait archiveEntryTrait
         }
 
         if (!empty($archive->accessRuleStartDate) && !empty($archive->accessRuleDuration)) {
+            if (is_string($archive->accessRuleStartDate)) {
+                $archive->accessRuleStartDate = \laabs::newDate($archive->accessRuleStartDate);
+            }
             $archive->accessRuleComDate = $archive->accessRuleStartDate->shift($archive->accessRuleDuration);
         }
     }
@@ -487,6 +490,9 @@ trait archiveEntryTrait
 
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
+            if (is_string($archive->retentionStartDate)) {
+                $archive->retentionStartDate = \laabs::newDate($archive->retentionStartDate);
+            }
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }
@@ -622,6 +628,9 @@ trait archiveEntryTrait
         }
 
         try {
+            if (!isset($archive->archiveId)) {
+                $archive->archiveId = \laabs::newId();
+            }
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
 

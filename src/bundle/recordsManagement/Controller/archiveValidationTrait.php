@@ -79,30 +79,28 @@ trait archiveValidationTrait
         $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
     }
 
-    protected function validateDescriptionModel($object, $archivalProfile)
+    public function validateDescriptionModel($object, $archivalProfile)
     {
+        $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
+
         $archivalProfileFields = [];
-        // Validate object against profile fields
+        
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            if (!isset($object->{$archiveDescription->fieldName})) {
-                if ($archiveDescription->required) {
-                    throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                continue;
+            if (!isset($object->{$archiveDescription->fieldName}) && $archiveDescription->required) {
+                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
             }
 
-            $value = $object->{$archiveDescription->fieldName};
-
-            $this->validateDescriptionField($value, $archiveDescription->descriptionField);
-
-            // Add field name to the list of declared fields
-            $archivalProfileFields[] = $archiveDescription->fieldName;
+            $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
         }
 
-        // Validate additionnal properties
         foreach ($object as $name => $value) {
-            if (!in_array($name, $archivalProfileFields) && !$archivalProfile->acceptUserIndex) {
+            if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
+
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
+            }
+
+            if (isset($descriptionSchemeProperties[$name])) {
+                $this->validateDescriptionField($value, $descriptionSchemeProperties[$name]);
             }
         }
     }
@@ -241,7 +239,7 @@ trait archiveValidationTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    protected function validateManagementMetadata($archive)
+    public function validateManagementMetadata($archive)
     {
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
             throw new \core\Exception\NotFoundException("The archival profile reference not found");
@@ -288,7 +286,7 @@ trait archiveValidationTrait
      *
      * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
      */
-    protected function validateFileplan($archive)
+    public function validateFileplan($archive)
     {
         // No parent, check orgUnit can deposit with the profile
         if (empty($archive->parentArchiveId)) {

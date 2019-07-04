@@ -185,7 +185,7 @@ interface archivesInterface
      * @action recordsManagement/archive/modifyRetentionRule
      *
      */
-    public function updateRetentionrule($retentionRule, $archiveIds);
+    public function updateRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null);
 
     /**
      * Find archives

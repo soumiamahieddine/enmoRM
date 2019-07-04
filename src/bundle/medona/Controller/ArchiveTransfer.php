@@ -145,6 +145,22 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receivePackage($message, $messageFile, $attachments, $filename)
     {
+        if (is_object($messageFile)) {
+            $this->receiveObject($message, $messageFile, $attachments, $filename);
+        } else {
+            $this->receiveStream($message, $messageFile, $attachments, $filename);
+        }
+    }
+
+    protected function receiveObject($message, $messageFile, $attachments, $filename)
+    {
+        $data = json_encode($messageFile);
+
+        $this->receiveFiles($message, $data, $attachments, $filename, 'application/json');       
+    }
+
+    protected function receiveStream($message, $messageFile, $attachments, $filename)
+    {
         // Valid URL file:// http:// data://
         if (filter_var($messageFile, FILTER_VALIDATE_URL)) {
             $data = stream_get_contents($messageFile);
@@ -168,7 +184,7 @@ class ArchiveTransfer extends abstractMessage
                 break;
 
             default:
-                $this->receiveFiles($message, $data, $attachments, $filename);
+                $this->receiveFiles($message, $data, $attachments, $filename, $mediatype);
         }
     }
 
@@ -224,17 +240,29 @@ class ArchiveTransfer extends abstractMessage
         rmdir($zipFolder);
     }
 
-    protected function receiveFiles($message, $data, $attachments, $filename=false)
+    protected function receiveFiles($message, $data, $attachments, $filename = false, $mediatype = null)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
         if (!$filename) {
-            $filename = (string) $message->messageId . '.xml';
+            $filename = (string) $message->messageId;
+
+            if ($mediatype) {
+                $filename .= '.'.\laabs\basename($mediatype);
+            }
         }
 
         file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $data);
         
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$filename;
+
+        $this->receiveAttachments($message, $data, $attachments, $filename);
+    }
+
+    protected function receiveAttachments($message, $data, $attachments, $filename=false)
+    {
+        $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
+        
         $message->attachments = [];
         
         if (count($attachments)) {
@@ -436,7 +464,7 @@ class ArchiveTransfer extends abstractMessage
                 );
             }
 
-            $this->sdoFactory->update($message);
+            $this->update($message);
         }
 
         if ($this->currentArchivalAgreement && $this->currentArchivalAgreement->autoTransferAcceptance) {
@@ -531,7 +559,11 @@ class ArchiveTransfer extends abstractMessage
             );
         }
 
-        $this->sdoFactory->update($message);
+        if (isset($message->comment)) {
+            $message->comment = json_encode($message->comment);
+        }
+
+        $this->update($message);
 
         if ($sendReply) {
             $archiveTransferReplyController = \laabs::newController('medona/ArchiveTransferReply');
@@ -568,7 +600,7 @@ class ArchiveTransfer extends abstractMessage
         }
 
         $recipientRoles = (array) $recipientOrg->orgRoleCodes;
-        if (!in_array("archiver", $recipientRoles)) {
+        if (!in_array("archiver", $recipientRoles) && !in_array("owner", $recipientRoles)) {
             $this->sendError("202", "Le service d'archives identifié par '".$message->recipientOrgRegNumber."' ne possède pas le rôle d'acteur adéquat dans le système.");
         }
 
@@ -745,7 +777,7 @@ class ArchiveTransfer extends abstractMessage
             $operationResult = true;
         } catch (\Exception $e) {
             $message->status = "error";
-            $this->sdoFactory->update($message);
+            $this->update($message);
 
             $this->lifeCycleJournalController->logEvent(
                 'medona/processing',
@@ -818,7 +850,7 @@ class ArchiveTransfer extends abstractMessage
             }
 
             $message->status = "processed";
-            $this->sdoFactory->update($message);
+            $this->update($message);
         } catch (\Exception $e) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -826,7 +858,7 @@ class ArchiveTransfer extends abstractMessage
 
             $message->status = "error";
             $operationResult = false;
-            $this->sdoFactory->update($message);
+            $this->update($message);
 
             $this->lifeCycleJournalController->logEvent(
                 'medona/processing',

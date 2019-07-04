@@ -1,0 +1,183 @@
+{  
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Maarch Archive Unit",
+  "description": "Maarch Archive Unit",
+  "type" : "object",
+
+  "properties" : {
+    "name" : { 
+      "description": "The name as shown to data clients",
+      "type" : "string" 
+    },
+    
+    "originatorOrgId" : { 
+      "description": "The originator organization identifier",
+      "type" : "string" 
+    },
+    "originatorServiceId" : { 
+      "description": "The originator service identifier",
+      "type" : "string" 
+    },
+    "containerArchiveUnitId" : { 
+      "description": "The container archive unit identifier",
+      "type" : "string" 
+    },
+
+    "profileId" : {
+      "description": "The archive profile identifier",
+      "type" : "string" 
+    },
+    "description": { 
+      "description": "The descriptive metadata",
+      "oneOf" : [
+        {"type" : "object"}, 
+        {"type" : "array"} 
+      ]
+    },
+
+    "management": { "$ref": "#/definitions/Management" },
+
+    "status": { 
+      "description": "The preservation status",
+      "type" : "string",
+      "enum": [ "preserved", "frozen", "restituable", "disposable", "restitued", "disposed" ] 
+    },
+
+    "dataObjects": {
+      "description": "The described and managed data objects, indexed by identifier",
+      "type" : "object",
+      "patternProperties": {
+        "^[A-z0-9_]+$": {
+          "anyOf": [
+            { "$ref": "#/definitions/BinaryDataObject" },
+            { "$ref": "#/definitions/PhysicalDataObject" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "lifeCycleEvents" : {
+      "type" : "array",
+      "items" : { "$ref": "#/definitions/AppraisalRule" }
+    },
+  },
+
+  "required" : ["name"],
+
+  "definitions" : {
+    "Management" : {
+      "type" : "object",
+      "properties" : {
+            "serviceLevelId": { 
+              "description": "The service level identifier",
+              "type" : "string"
+            },
+            "accessRule" : { "$ref": "#/definitions/AccessRule" },
+            "appraisalRule" : { "$ref": "#/definitions/AppraisalRule" }
+      },
+      "additionalProperties": true,
+    },
+    "AccessRule" : {
+      "type" : "object",
+      "allOf": [
+        { "$ref": "#/definitions/AbstractRule" }
+      ]
+    },
+    "AppraisalRule" : {
+      "type" : "object",
+      "allOf": [
+        { "$ref": "#/definitions/AbstractRule" },
+        { 
+          "properties" : {
+            "finalDisposition" : {
+                "type" : "string",
+                "enum": [ "preserve", "destroy" ]
+            }
+          }
+        }
+      ]
+    },
+    "AbstractRule" : {
+      "type" : "object",
+      "properties" : {
+          "code" : {
+              "type" : "string"
+          },
+          "duration" : {
+              "type" : "string",
+              "format" : "duration"
+          },
+          "startDate" : {
+              "type" : "string",
+              "format" : "date"
+          }
+      },
+      "required" : ["code"]
+    },
+    
+    "DataObject" : {
+      "type" : "object",
+      "properties" : {
+        "name" : { "type" : "string" }, 
+        "relationships" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "relatedDataObjectId" : { "type" : "string"},
+              "relationshipType" : { "type" : "string"},
+            }
+          }
+        }
+      },
+      "required" : ["name"],
+    },
+    "BinaryDataObject" : {
+      "type" : "object",
+      "allOf": [
+        { "$ref": "#/definitions/DataObject" },
+        {
+          "properties" : {
+            "size" : { "type" : "integer" },
+
+            "format" : {
+              "type" : "object",
+              "properties" : {
+                "id" : { "type" : "string" },
+                "name" : { "type" : "string" },
+                "mimetype" : { "type" : "string" },
+              }
+            },
+
+            "hash" : {
+              "type" : "object",
+              "properties" : {
+                "value" : { "type" : "string" },
+                "algorithm" : { "type" : "string" }
+              }
+            },
+
+            "metadata" : {
+              "oneOf" : [
+                {"type" : "object"}, 
+                {"type" : "array"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "PhysicalDataObject" : {
+      "type" : "object",
+      "allOf": [
+        { "$ref": "#/definitions/DataObject" },
+        {
+          "properties" : {
+
+          }
+        }
+      ]
+    }
+  }
+}

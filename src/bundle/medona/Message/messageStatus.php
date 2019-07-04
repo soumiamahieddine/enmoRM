@@ -24,6 +24,7 @@ namespace bundle\medona\Message;
  *
  * @package RecordsManagement
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
+ * 
  */
 class messageStatus
 {
@@ -40,4 +41,10 @@ class messageStatus
      * @var string
      */
     public $status;
+
+    /**
+     * The comments
+     * @var string
+     */
+    public $comment;
 }

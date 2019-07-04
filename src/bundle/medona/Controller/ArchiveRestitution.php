@@ -404,9 +404,8 @@ class ArchiveRestitution extends abstractMessage
         $message = $this->sdoFactory->read('medona/message', array("messageId" => $messageId));
         $message->active = false;
 
-        $this->sdoFactory->update($message, "medona/message");
+        $this->update($message);
 
-        
         $this->changeStatus($messageId, "validated");
 
         $uri = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
