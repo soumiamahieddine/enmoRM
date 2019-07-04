@@ -311,10 +311,29 @@ class descriptionScheme
                 break;
 
             default:
-                $descriptionField->type = $this->getJsonType($property);
+                $descriptionField->type = $this->getJsonTypeName($property);
         }
 
         return $descriptionField;
+    }
+
+    protected function getJsonTypeName($type)
+    {
+        switch (true) {
+            case isset($type->format) && (
+                $type->format == 'dateTime'|| $type->format == 'date'):
+                return 'date';
+
+            case $type->type == 'string':
+                return 'text';
+
+            case $type->type == 'integer':
+            case $type->type == 'number':
+                return 'number';
+
+            default:
+                return $type->type;
+        }
     }
 
     protected function getJsonType($type)
@@ -337,9 +356,6 @@ class descriptionScheme
                 $descriptionField->properties = $this->getJsonObjectProperties($type);
 
                 return $descriptionField;
-
-            case isset($type->{'$ref'}):
-                return '#'.$type->{'$ref'};
 
             default:
                 return $type->type;
