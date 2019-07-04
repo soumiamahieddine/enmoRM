@@ -202,12 +202,27 @@ class descriptionField
         if (!$descriptionField) {
             return false;
         }
+
+        if ($this->isUsed($descriptionField)) {
+            throw new \core\Exception\ForbiddenException("The description field %s is currently used in an archival profile. It can't be deleted as long as it is used in any archival profile.", 403, null, [$descriptionField->name]);
+        }
+
         try {
             $this->sdoFactory->delete($descriptionField);
         } catch (\core\Exception $e) {
             throw new \bundle\recordsManagement\Exception\descriptionFieldException("Description field not deleted.");
         }
-
         return true;
+    }
+
+    /**
+     * Check descriptionField usage
+     * @param recordsManagement/descriptionField $descriptionField The descriptionField
+     *
+     * @return bool The result of the operation
+     */
+    public function isUsed($descriptionField)
+    {
+        return (bool) $this->sdoFactory->count('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
     }
 }
