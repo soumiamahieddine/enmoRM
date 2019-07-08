@@ -230,7 +230,7 @@ class JsonObject
 
     public function formatDateTimes($value = null, $depth=0)
     {
-        if (is_null($value)) {
+        if (is_null($value) && $depth == 0) {
             $value = $this->storage;
         }
 
@@ -242,7 +242,6 @@ class JsonObject
         
         // Get type of value
         $type = gettype($value);
-        //var_dump($type);
         
         switch(true) {
             // If value is scalar, merge text before Pi
