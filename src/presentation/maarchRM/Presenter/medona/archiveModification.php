@@ -304,7 +304,7 @@ class archiveModification
         $this->json->message = sprintf($this->json->message, $success);
 
         if ($echec > 0) {
-            $message = ' %1$s restitution(s) can not be canceled.';
+            $message = '%1$s restitution(s) can not be canceled.';
             $message = $this->translator->getText($message);
             $message = sprintf($message, $echec);
 

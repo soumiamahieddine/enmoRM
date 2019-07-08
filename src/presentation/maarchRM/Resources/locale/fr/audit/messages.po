@@ -399,7 +399,7 @@ msgid "recordsManagement/archives/updateSetforrestitution"
 msgstr "Paramétrer une archive pour la restitution"
 
 msgid "recordsManagement/archives/updateDisposearchives"
-msgstr "Modification d'un dépôt d'archive"
+msgstr "Demande de destruction"
 
 msgid "recordsManagement/archives/cancelDestruction"
 msgstr "Annuler une destruction"

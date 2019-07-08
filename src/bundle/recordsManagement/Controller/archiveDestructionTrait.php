@@ -47,6 +47,12 @@ trait archiveDestructionTrait
         foreach ($archiveChildrenIds as $archiveChildrenId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
 
+            foreach ($archives as $a) {
+                if ($a->archiveId == $archive->archiveId) {
+                    continue 2;
+                }
+            }
+
             $this->checkRights($archive);
 
             $this->checkDisposalRights($archive) ;

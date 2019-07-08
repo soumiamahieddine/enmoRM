@@ -351,7 +351,7 @@ trait archiveModificationTrait
             $archives[$archiveId] = $archive;
         }
 
-        $res = $this->setStatus($archiveIds, 'preserved');
+        $res = $this->setStatus($archiveIds, 'preserved', true);
 
 
         for ($i = 0, $count = count($res['success']); $i < $count; $i++) {

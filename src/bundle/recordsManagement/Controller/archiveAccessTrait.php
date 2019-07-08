@@ -903,13 +903,19 @@ trait archiveAccessTrait
      * Change the status of an archive
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
+     * @param bool   $isUnFreeze
      *
      * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
-    public function setStatus($archiveIds, $status)
+    public function setStatus($archiveIds, $status, $unFreeze = false)
     {
         $statusList = [];
-        $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+
+        if ($unFreeze) {
+            $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+        } else {
+            $statusList['preserved'] = array('disposable', 'error', 'restituable', 'transferable');
+        }
         $statusList['restituable'] = array('preserved');
         $statusList['restituted'] = array('restituable');
         $statusList['transfered'] = array('transferable');
