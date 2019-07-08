@@ -359,6 +359,13 @@ trait archiveDestructionTrait
                 $beforeError."Disposal date not reached."
             );
         }
+
+        if ($archive->status === "frozen") {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Archive not set for destruction."
+            );
+        }
+
         if ((!isset($archive->finalDisposition)
                 || empty($archive->finalDisposition)
                 || empty($archive->disposalDate)
