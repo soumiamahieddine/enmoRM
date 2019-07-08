@@ -387,6 +387,7 @@ class journal
     public function openJournal($journalReference)
     {
         $logController = \laabs::newController('recordsManagement/log');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         if (is_scalar($journalReference) || get_class($journalReference) == 'core\Type\Id') {
             $journalReference = $logController->read($journalReference);
@@ -395,8 +396,8 @@ class journal
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
             $resources = $archiveController->getDigitalResources($journalReference->archiveId);
-            $journalResource = $resources[0];
-
+            $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
+            
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
 
