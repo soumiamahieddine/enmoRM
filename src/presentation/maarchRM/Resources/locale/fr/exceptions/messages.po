@@ -191,6 +191,9 @@ msgstr "Le dossier n'existe pas."
 msgid "Journal hash is incorrect."
 msgstr "L'empreinte numérique du journal est incorrecte."
 
+msgid "The journal file can't be opened."
+msgstr "Le fichier de journal ne peut pas être ouvert."
+
 msgid "Invalid journal: invalid hash integrity."
 msgstr "Journal invalide : empreinte numérique non valide."
 
