@@ -445,7 +445,7 @@ abstract class abstractMessage
         foreach ($bindingArray as $sourceProperty => $targetProperty) {
             if (isset($sourceObject->{$sourceProperty})) {
                 if (substr_count($targetProperty, "->") > 0) {
-                    createObjectProperties($targetObject, $targetProperty);
+                    $this->createObjectProperties($targetObject, $targetProperty);
                 } else {
                     $targetObject->{$targetProperty} = $sourceObject->{$sourceProperty};
                 }
@@ -457,7 +457,7 @@ abstract class abstractMessage
 
     protected function createObjectProperties($targetObject, $objectProperties)
     {
-        $allProperties = explode("->", $targetProperty);
+        $allProperties = explode("->", $objectProperties);
         $lastProperty = array_pop($allProperties);
         $objectToAdd = $targetObject;
 
