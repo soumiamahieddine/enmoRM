@@ -254,6 +254,9 @@ msgstr "Vous devez vous positionner dans un service pour vérifier l'intégité 
 msgid "A frozen archive can't be modified."
 msgstr "Une archive gelée ne peut pas être modifiée."
 
+msgid "An archive that does not have the status 'preserved' can't be modified."
+msgstr "Une archive n'ayant pas le statut 'Conservée' ne peut pas être modifiée"
+
 msgid "An action is already in progress on this archive."
 msgstr "Une action est déjà en cours sur cette archive."
 

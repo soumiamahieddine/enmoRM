@@ -37,14 +37,10 @@ trait archiveModificationTrait
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        if ($archive->status === 'frozen') {
-            throw new \bundle\recordsManagement\Exception\retentionRuleException(
-                'A frozen archive can\'t be modified.'
-            );
-        }
-
         if ($archive->status !== 'preserved') {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+            throw new \bundle\recordsManagement\Exception\retentionRuleException(
+                "An archive that does not have the status 'preserved' can't be modified."
+            );
         }
 
         return \laabs::castMessage($archive, 'recordsManagement/archiveRetentionRule');
@@ -60,14 +56,10 @@ trait archiveModificationTrait
     {
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
-        if ($archive->status === 'frozen') {
-            throw new \bundle\recordsManagement\Exception\retentionRuleException(
-                'A frozen archive can\'t be modified.'
-            );
-        }
-
         if ($archive->status !== 'preserved') {
-            throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+            throw new \bundle\recordsManagement\Exception\accessRuleException(
+                "An archive that does not have the status 'preserved' can't be modified."
+            );
         }
 
         $this->getAccessRule($archive);
