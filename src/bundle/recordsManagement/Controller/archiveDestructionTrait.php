@@ -47,6 +47,12 @@ trait archiveDestructionTrait
         foreach ($archiveChildrenIds as $archiveChildrenId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
 
+            foreach ($archives as $a) {
+                if ($a->archiveId == $archive->archiveId) {
+                    continue 2;
+                }
+            }
+
             $this->checkRights($archive);
 
             $this->checkDisposalRights($archive) ;
@@ -157,7 +163,12 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        $archiveIdsWithChildren = $archiveIds;
         foreach ($archiveIds as $archiveId) {
+            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        }
+
+        foreach ($archiveIdsWithChildren as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $this->logDestructionRequestCancel($archive);
         }
@@ -353,6 +364,13 @@ trait archiveDestructionTrait
                 $beforeError."Disposal date not reached."
             );
         }
+
+        if ($archive->status === "frozen") {
+            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Archive not set for destruction."
+            );
+        }
+
         if ((!isset($archive->finalDisposition)
                 || empty($archive->finalDisposition)
                 || empty($archive->disposalDate)

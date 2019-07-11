@@ -746,10 +746,10 @@ msgstr "%1$s archive(s) ne sont pas dégelée(s)."
 msgid "%1$s restitution(s) can not be validate(s)."
 msgstr "%1$s restitution(s) ne sont pas validée(s)."
 
-msgid "%1$s restitution(s) can not be canceled.'"
+msgid "%1$s restitution(s) can not be canceled."
 msgstr "%1$s restitution(s) ne sont pas annulée(s)."
 
-msgid "%1$s destruction(s) can not be canceled.'"
+msgid "%1$s destruction(s) can not be canceled."
 msgstr "%1$s destruction(s) ne sont pas annulée(s)."
 
 msgid "%1$s resource(s) can\'t be deleted."

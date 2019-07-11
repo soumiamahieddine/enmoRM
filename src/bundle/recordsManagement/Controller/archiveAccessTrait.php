@@ -903,13 +903,19 @@ trait archiveAccessTrait
      * Change the status of an archive
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
+     * @param bool   $isUnFreeze
      *
      * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
-    public function setStatus($archiveIds, $status)
+    public function setStatus($archiveIds, $status, $isUnFreeze = false)
     {
         $statusList = [];
-        $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+
+        if ($isUnFreeze) {
+            $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+        } else {
+            $statusList['preserved'] = array('disposable', 'error', 'restituable', 'transferable');
+        }
         $statusList['restituable'] = array('preserved');
         $statusList['restituted'] = array('restituable');
         $statusList['transfered'] = array('transferable');
@@ -930,8 +936,20 @@ trait archiveAccessTrait
 
             return $res;
         }
-        foreach ($archiveIds as $archiveId) {
+
+        $archiveIdsWithChildren = [];
+        $archiveIds = array_flip($archiveIds);
+        foreach ($archiveIds as $archiveId => $key) {
+            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        }
+
+        $archiveIds = array_merge($archiveIds, $archiveIdsWithChildren);
+        foreach ($archiveIds as $archiveId => $value) {
             $archiveStatus = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
+
+            if ($archiveStatus->status === $status) {
+                continue;
+            }
 
             if (!in_array($archiveStatus->status, $statusList[$status])) {
                 array_push($res['error'], $archiveId);
@@ -939,10 +957,6 @@ trait archiveAccessTrait
                 $archiveStatus->status = $status;
 
                 $archiveStatus->lastModificationDate = \laabs::newTimestamp();
-
-                $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
-                $this->setStatus($childrenArchives, $status);
-
                 $this->sdoFactory->update($archiveStatus);
                 array_push($res['success'], $archiveId);
             }
@@ -951,6 +965,20 @@ trait archiveAccessTrait
         return $res;
     }
 
+    public function getChildrenArchives($archiveId)
+    {
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            "archiveId",
+            "parentArchiveId = '$archiveId'"
+        );
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveIds = array_merge($archiveIds, $this->getChildrenArchives($archiveId));
+        }
+
+        return $archiveIds;
+    }
 
     /**
      * Change the processing status of an archive
