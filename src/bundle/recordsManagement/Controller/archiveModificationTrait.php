@@ -297,6 +297,7 @@ trait archiveModificationTrait
         }
 
         $res = $this->setStatus($archiveIds, 'frozen');
+        $this->setStatus($archiveIds, 'preserved', false, false, true);
 
 
         for ($i = 0, $count = count($res['success']); $i < $count; $i++) {
