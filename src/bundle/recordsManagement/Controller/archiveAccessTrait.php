@@ -907,11 +907,11 @@ trait archiveAccessTrait
      *
      * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
-    public function setStatus($archiveIds, $status, $unFreeze = false)
+    public function setStatus($archiveIds, $status, $isUnFreeze = false)
     {
         $statusList = [];
 
-        if ($unFreeze) {
+        if ($isUnFreeze) {
             $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
         } else {
             $statusList['preserved'] = array('disposable', 'error', 'restituable', 'transferable');

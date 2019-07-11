@@ -163,7 +163,12 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        $archiveIdsWithChildren = $archiveIds;
         foreach ($archiveIds as $archiveId) {
+            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        }
+
+        foreach ($archiveIdsWithChildren as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $this->logDestructionRequestCancel($archive);
         }
