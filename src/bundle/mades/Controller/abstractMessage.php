@@ -445,17 +445,18 @@ abstract class abstractMessage
         foreach ($bindingArray as $sourceProperty => $targetProperty) {
             if (isset($sourceObject->{$sourceProperty})) {
                 if (substr_count($targetProperty, "->") > 0) {
-                    $this->createObjectProperties($targetObject, $targetProperty);
+                    $this->createObjectProperties($targetObject, $targetProperty, $sourceObject->{$sourceProperty});
                 } else {
                     $targetObject->{$targetProperty} = $sourceObject->{$sourceProperty};
                 }
             }
         }
+        // var_dump($targetObject);
 
         return $targetObject;
     }
 
-    protected function createObjectProperties($targetObject, $objectProperties)
+    protected function createObjectProperties($targetObject, $objectProperties, $valueToAdd)
     {
         $allProperties = explode("->", $objectProperties);
         $lastProperty = array_pop($allProperties);
@@ -467,6 +468,6 @@ abstract class abstractMessage
             }
             $objectToAdd = $objectToAdd->{$objectProperty};
         }
-        $objectToAdd->{$lastProperty} = $sourceObject->{$sourceProperty};
+        $objectToAdd->{$lastProperty} = $valueToAdd;
     }
 }
