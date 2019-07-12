@@ -188,6 +188,7 @@ INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALU
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', 'Dépôt d''une ressource dans l''archive', FALSE);
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+    ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Élimination de l''archive %6$s'),
     ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)'),
     ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
     ('medona/authorization', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Demande d''autorisation du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
