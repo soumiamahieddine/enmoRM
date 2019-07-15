@@ -16,6 +16,10 @@
 
 - `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible
 
+### Stockage
+
+- `Changed` Modification du nombre de site de stockage minimum, il est desormais possible d'utiliser un unique site.
+
 ## Version 2.4.4 
 
 ### IHM
