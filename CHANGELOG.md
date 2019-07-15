@@ -8,9 +8,10 @@
 
 ### Métadonnées
 
-- `Added` Possiblité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
-- `Added` Possiblité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
-- `Added` Possiblité d'ajout de referentiels externes (exemple : CSV, base de données...) pour les données descriptives.
+- `Added` Possibilité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Possibilité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
+- `Added` Possibilité d'ajout de référentiels externes (exemple : CSV, base de données...) pour les données descriptives.
+- `Added` Possibilité d'ajouter un fichier pour surcharger les propriétés d'un modèle de description d'un format d'échange (exemple : format d'échange SEDA 2 avec des champs complémentaires pour la modification).
 
 ### IHM
 
