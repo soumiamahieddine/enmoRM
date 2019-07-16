@@ -649,7 +649,7 @@ msgid "bits"
 msgstr "octets"
 
 msgid "Identifier"
-msgstr "Cote"
+msgstr "Identifiant"
 
 msgid "Document type"
 msgstr "Type de document"
