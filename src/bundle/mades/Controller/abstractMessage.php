@@ -300,7 +300,11 @@ abstract class abstractMessage
         if (isset($digitalResource->resId)) {
             $binaryDataObject->attachment = new \stdClass();
             // $binaryDataObject->attachment->uri = $digitalResource->address[0]->path;
-            $binaryDataObject->attachment->filename = $digitalResource->resId;
+            if (isset($digitalResource->fileName)) {
+                $binaryDataObject->attachment->filename = $digitalResource->fileName;
+            } else {
+                $binaryDataObject->attachment->filename = $digitalResource->resId;
+            }
             // $binaryDataObject->attachment->content = base64_encode($digitalResource->getContents());
             $binaryDataObject->size = $digitalResource->size;
         }
@@ -431,7 +435,16 @@ abstract class abstractMessage
 
         // Documents
         foreach ($this->currentDigitalResources as $digitalResource) {
-            file_put_contents($messageDir.DIRECTORY_SEPARATOR.$digitalResource->resId, $digitalResource->getContents());
+            if ($digitalResource->fileName) {
+                $filename = $digitalResource->fileName;
+            } else {
+                $filename = $digitalResource->resId;
+
+                if (isset($digitalResource->fileExtension)) {
+                    $filename .= ".".$digitalResource->fileExtension;
+                }
+            }
+            file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $digitalResource->getContents());
         }
         
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$message->messageId.'.json';
