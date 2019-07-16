@@ -41,28 +41,37 @@ trait archiveDestructionTrait
 
         $archiveChildrenIds = [];
         foreach ($archiveIds as $archiveId) {
-            $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+            $archiveChildrenIds[$archiveId] = $this->listChildrenArchiveId($archiveId);
         }
 
-        foreach ($archiveChildrenIds as $archiveChildrenId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+        $res = [];
+        $res['success'] = [];
+        $res['error'] = [];
 
-            foreach ($archives as $a) {
-                if ($a->archiveId == $archive->archiveId) {
-                    continue 2;
+        foreach ($archiveChildrenIds as $archiveParentId => $childrenArchiveIds) {
+            foreach ($childrenArchiveIds as $childrenArchiveId) {
+                $archive = $this->sdoFactory->read('recordsManagement/archive', $childrenArchiveId);
+                foreach ($archives as $a) {
+                    if ($a->archiveId == $archive->archiveId) {
+                        continue 2;
+                    }
                 }
+
+                $this->checkRights($archive);
+                if ($this->checkDisposalRights($archive)) {
+                    $res['error'][] = $archiveParentId;
+                    continue 2;
+                } else {
+                    $res['success'][] = $archiveParentId;
+                }
+
+                $this->listChildrenArchive($archive, true);
+                $archives[] = $archive;
             }
-
-            $this->checkRights($archive);
-
-            $this->checkDisposalRights($archive) ;
-
-            $this->listChildrenArchive($archive, true);
-
-            $archives[] = $archive;
         }
 
-        $archiveList = $this->setStatus($archiveIds, 'disposable');
+        $archiveList = $this->setStatus($res['success'], 'disposable');
+
         foreach ($archives as $archive) {
             $this->logDestructionRequest($archive);
         }
@@ -71,7 +80,7 @@ trait archiveDestructionTrait
             $this->sendDestructionRequest($archives, $identifier, $comment);
         }
 
-        return $archiveList;
+        return $res;
     }
 
     /**
@@ -341,7 +350,7 @@ trait archiveDestructionTrait
      */
     public function checkDisposalRights($archive, $isChild = false)
     {
-        $archiveIds = [];
+        $error = "";
 
         $this->checkRights($archive);
         $currentDate = \laabs::newTimestamp();
@@ -355,18 +364,27 @@ trait archiveDestructionTrait
         }
 
         if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Archive not set for destruction."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
                 $beforeError."Archive not set for destruction."
             );
         }
         if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Disposal date not reached."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
                 $beforeError."Disposal date not reached."
             );
         }
 
         if ($archive->status === "frozen") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Archive not set for destruction."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
                 $beforeError."Archive not set for destruction."
             );
         }
@@ -376,12 +394,13 @@ trait archiveDestructionTrait
                 || empty($archive->disposalDate)
             )
             && $actionWithoutRetentionRule == "preserve") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."There is a missing management information (date or retention rule)."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
                 $beforeError."There is a missing management information (date or retention rule)."
             );
         }
-
-        return $archiveIds ;
     }
     
     public function deleteResource($archiveId, $resIds)

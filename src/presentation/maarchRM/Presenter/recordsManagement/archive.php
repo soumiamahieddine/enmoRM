@@ -753,15 +753,42 @@ class archive
     public function dispose($result)
     {
         $echec = 0;
+        $success = 0;
+
         $success = count($result['success']);
         if (array_key_exists('error', $result)) {
             $echec = count($result['error']);
         }
 
+        $archivesNumber = $echec+$success;
         $this->translator->setCatalog('recordsManagement/messages');
-        $this->json->message = '%1$s / %2$s archive(s) flagged for destruction.';
-        $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->message = sprintf($this->json->message, $success, ($echec+$success));
+
+        $this->json->message = $message = "";
+
+        if ($archivesNumber > 1) {
+            if ($success) {
+                $message = '%1$s / %3$s archive(s) flagged for destruction.';
+                $message = $this->translator->getText($message);
+                $this->json->message .= $message;
+                $this->json->message .= "</br>";
+            }
+            if ($echec) {
+                (!empty($this->json->message)) ? $this->json->message .= "</br>" : "";
+                $message = '%2$s / %3$s archive(s) not eliminable.';
+                $message = $this->translator->getText($message);
+                $this->json->message .= $message;
+            }
+        } else {
+            if ($success) {
+                $this->json->message = 'The archive is flagged for destruction.';
+                $this->json->message = $this->translator->getText($this->json->message);
+            } else {
+                $this->json->message = 'The archive cannot be eliminated.';
+                $this->json->message = $this->translator->getText($this->json->message);
+            }
+        }
+        
+        $this->json->message = sprintf($this->json->message, $success, $echec, $archivesNumber);
 
         return $this->json->save();
     }
