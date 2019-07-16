@@ -162,6 +162,12 @@ msgstr "Identifiant utilisateur"
 msgid "User name"
 msgstr "Utilisateur"
 
+msgid "certificationDateTime"
+msgstr "Attestation générée le "
+
+msgid "bytes"
+msgstr "octet(s)"
+
 # ---------------------------------------------------------
 # Event info detail
 # ---------------------------------------------------------
@@ -692,3 +698,19 @@ msgstr "Données d'Archive"
 
 msgid "Service level"
 msgstr "Niveau de service"
+
+# ---------------------------------------------------------
+# deposit certificate
+# ---------------------------------------------------------
+
+msgid "certificateName"
+msgstr "Attestation de dépot"
+msgctxt "recordsManagement/deposit"
+
+msgid "certificateName"
+msgstr "Attestation de conformité"
+msgctxt "recordsManagement/integrityCheck"
+
+msgid "certificateName"
+msgstr "Attestation de destruction"
+msgctxt "recordsManagement/elimination"
