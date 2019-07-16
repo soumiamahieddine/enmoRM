@@ -196,20 +196,31 @@ class journal
     public function searchEvent($events)
     {
         $this->view->addContentFile("lifeCycle/searchResult.html");
-        
+
         $conf = \laabs::configuration('lifeCycle');
         if (is_array($conf) && array_key_exists('separateInstance', $conf)) {
             $multipleInstance = !(bool) $conf['separateInstance'];
         } else {
             $multipleInstance = false;
-
         }
 
         $this->view->setSource('multipleInstance', $multipleInstance);
+
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        if ($hasCertificatePrivilege) {
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/elimination'];
+            foreach ($events as $key => $event) {
+                if (in_array($event->eventType, $eventsToCertificate)) {
+                    $events[$key]->hasCertificate = true;
+                }
+            }
+        }
+
+        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
         $this->view->setSource('events', $events);
         $this->view->merge();
         $this->view->translate();
-        
+
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
@@ -286,5 +297,88 @@ class journal
         $this->json->status = false;
 
         return $this->json->save();
+    }
+
+    /**
+     * Display a pdf attestation
+     *
+     * @param  lifeCycle/event $event   Event to certificate
+     *
+     * @return  pdf            $pdfFile Certificate in pdf format of the event
+     */
+    public function certificate($event)
+    {
+        $wkhtmltopdf = \laabs::newService('dependency/fileSystem/plugins/wkhtmltopdf');
+        $fragment = $this->view->createDocumentFragment();
+
+        $eventObject = new \stdClass();
+
+        $this->translator->setCatalog('lifeCycle/messages');
+
+        $event->certificateName = $event->eventType;
+
+        foreach ($event as $key => $value) {
+            $translatedKey = $this->translator->getText($key, 'eventInfo');
+            $eventObject->$key = new \stdClass();
+            $eventObject->$key->translatedKey = $translatedKey;
+            $eventObject->$key->value = $value;
+        }
+
+        $fragment->appendHtmlFile("lifeCycle/certificate.html");
+        $eventObject->eventType = $this->translator->getText($eventObject->eventType->value);
+
+        $user = \laabs::callService('auth/userAccount/read_userAccountId_', $eventObject->accountId->value);
+        $eventObject->accountDisplayName = new \stdClass();
+        $eventObject->accountDisplayName->value = $user->displayName.' ('.$user->accountName.')';
+        $eventObject->accountDisplayName->translatedKey = $this->translator->getText('User identifier');
+
+        $eventObject->eventId->translatedKey = $this->translator->getText($eventObject->eventId->translatedKey);
+        $eventObject->timestamp->translatedKey = $this->translator->getText('Timestamp');
+        $eventObject->operationResult->translatedKey = $this->translator->getText($eventObject->operationResult->translatedKey);
+        $eventObject->objectId->translatedKey = $this->translator->getText($eventObject->objectId->translatedKey);
+        $eventObject->objectClass->translatedKey = $this->translator->getText($eventObject->objectClass->translatedKey);
+
+        $eventObject->certificateName = new \stdClass();
+        $eventObject->certificateName->value = $event->eventType;
+        $eventObject->certificateName->translatedKey = $this->translator->getText('certificateName', $event->eventType);
+
+        if ($eventObject->operationResult->value) {
+            $eventObject->operationResult->value = $this->translator->getText('Success');
+        } else {
+            $eventObject->operationResult->value = $this->translator->getText('Failure');
+        }
+
+        $eventObject->certificationDateTime = new \stdClass();
+        $eventObject->certificationDateTime->translatedKey = $this->translator->getText('certificationDateTime');
+        $eventObject->certificationDateTime->value = \laabs::newDateTime()->format(\laabs::configuration('dependency.localisation')['dateTimeFormat']);
+
+        if (isset($event->size)) {
+            $eventObject->sizeValue = new \stdClass();
+            $eventObject->sizeValue->translatedKey = $this->translator->getText('bytes');
+        }
+
+        $this->view->setSource('logo', dirname(getcwd()) . '/src/presentation/maarchRM/Resources/public/img/RM.svg');
+        $this->view->setSource('title', \laabs::configuration('presentation.maarchRM')['title']);
+
+        $this->view->setSource("event", $eventObject);
+        $this->json->load($eventObject);
+
+        $this->view->translate();
+        $this->view->merge($fragment);
+        $html = $this->view->saveHtml($fragment);
+
+        $exportDirectory = \laabs\tempdir();
+        $htmlFile = $exportDirectory . DIRECTORY_SEPARATOR . $eventObject->eventId->value . '.html';
+        $pdfFile = $exportDirectory . DIRECTORY_SEPARATOR . $eventObject->eventId->value . '.pdf';
+        file_put_contents($htmlFile, $html);
+
+        $wkhtmltopdf->send($htmlFile, $pdfFile);
+        unlink($htmlFile);
+
+        \laabs::setResponseType('application/pdf');
+        $response = \laabs::kernel()->response;
+        $response->setHeader("Content-Disposition", "inline;");
+
+        return file_get_contents($pdfFile);
     }
 }
