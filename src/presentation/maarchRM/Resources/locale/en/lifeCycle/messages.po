@@ -52,3 +52,22 @@ msgstr "Metadata consultation"
 
 msgid "recordsManagement/resourceDestruction"
 msgstr "Delete resource"
+
+msgid "certificationDateTime"
+msgstr "Certification created at"
+
+# ---------------------------------------------------------
+# deposit certificate
+# ---------------------------------------------------------
+
+msgid "certificateName"
+msgstr "Deposit certificate"
+msgctxt "recordsManagement/deposit"
+
+msgid "certificateName"
+msgstr "Integrity check certificate"
+msgctxt "recordsManagement/integrityCheck"
+
+msgid "certificateName"
+msgstr "Elimination certificate"
+msgctxt "recordsManagement/elimination"
