@@ -105,6 +105,9 @@ msgstr "Attestation"
 msgid "Show the certificate"
 msgstr "Voir l'attestation"
 
+msgid "Download certificate"
+msgstr "Télécharger l'attestation"
+
 msgid "Deposit"
 msgstr "Dépôt"
 
