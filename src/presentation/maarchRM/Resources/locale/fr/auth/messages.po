@@ -147,7 +147,7 @@ msgstr "Consulter le journal de l'application"
 msgctxt "userStory"
 
 msgid "logBatchScheduling"
-msgstr "Historique de planification"
+msgstr "Historique des tâches planifiées"
 msgctxt "userStory"
 
 msgid "searchLogArchive"
@@ -172,6 +172,10 @@ msgctxt "userStory"
 
 msgid "checkIntegrity"
 msgstr "Contrôler l'intégrité des archives"
+msgctxt "userStory"
+
+msgid "certificate"
+msgstr "Télécharger les attestations"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
