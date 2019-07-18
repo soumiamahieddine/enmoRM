@@ -222,6 +222,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     {
         $this->errors = array();
         $this->replyCode = null;
+        $this->knownOrgUnits = [];
 
         if (!empty($archivalAgreement)) {
             if ($archivalAgreement->originatorOrgIds) {
@@ -241,10 +242,19 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                 || isset($message->object->dataObjectPackage->managementMetadata->archivalProfile)) {
                 $this->validateProfile($message, $archivalAgreement);
             }*/
+        } else {
+            $this->validateOriginators(
+                $message->object->dataObjectPackage->descriptiveMetadata,
+                $archivalAgreement
+            );
         }
 
         $this->validateDataObjects($message, $archivalAgreement);
-        $this->validateArchiveUnits($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
+        try {
+            $this->validateArchiveUnits($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
+        } catch (\Exception $e) {
+            // $this->sendError("200", "Le producteur de l'archive est inconnu du système.");
+        }
       
         return true;
     }
@@ -253,32 +263,31 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     {
         foreach ($archiveUnitContainer as $id => $archiveUnit) {
             if (isset($archiveUnit->filing->activity) && !isset($knownOrgUnits[$archiveUnit->filing->activity])) {
+                $archiveOriginator = $archiveUnit->filing->activity;
                 try {
-                    $this->knownOrgUnits[$archiveUnit->filing->activity] =
-                    $orgUnit =
-                        $this->orgController->getOrgByRegNumber($archiveUnit->filing->activity);
+                    $this->knownOrgUnits[$archiveOriginator] =
+                    $orgUnit = $this->orgController->getOrgByRegNumber($archiveOriginator);
                 } catch (\Exception $e) {
                     $this->sendError(
                         "200",
-                        "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas référencé dans le système."
+                        "Le producteur de l'archive identifié par '$archiveOriginator' n'est pas référencé dans le système."
                     );
-
                     continue;
                 }
                 
                 if (!in_array('originator', (array) $orgUnit->orgRoleCodes)) {
                     $this->sendError(
                         "302",
-                        "Le service identifié par '$archiveUnit->filing->activity' n'est pas référencé comme producteur dans le système."
+                        "Le service identifié par '$archiveOriginator' n'est pas référencé comme producteur dans le système."
                     );
                 
                     continue;
                 }
 
-                if (!in_array((string) $orgUnit->orgId, (array) $archivalAgreement->originatorOrgIds)) {
+                if (!is_null($archivalAgreement) && !in_array((string) $orgUnit->orgId, (array) $archivalAgreement->originatorOrgIds)) {
                     $this->sendError(
                         "302",
-                        "Le producteur de l'archive identifié par '$archiveUnit->filing->activity' n'est pas indiqué dans l'accord de versement."
+                        "Le producteur de l'archive identifié par '$archiveOriginator' n'est pas indiqué dans l'accord de versement."
                     );
                 }
             }
@@ -407,7 +416,6 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (isset($archiveUnit->archiveUnits) && count($archiveUnit->archiveUnits) > 0) {
             $this->validateFilingContents($archiveUnit);
         }
-        
     }
 
     protected function validateFilingActivity($archiveUnit)
