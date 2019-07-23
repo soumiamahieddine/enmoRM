@@ -218,6 +218,10 @@ msgid "destructionRequest"
 msgstr "Demander l'élimination"
 msgctxt "userStory"
 
+msgid "destructionCancel"
+msgstr "Annuler les demandes l'élimination"
+msgctxt "userStory"
+
 msgid "destructionAuthorizationRequest"
 msgstr "Traiter les demandes d'autorisation"
 msgctxt "userStory"
