@@ -44,15 +44,6 @@ interface destructionRequestInterface
     public function updateRecordsmanagementDispose($archiveIds, $comment = null, $identifier = null);
 
     /**
-     * Cancel destruction
-     * @param array $archiveIds Array of archive identifier
-     *
-     * @uses recordsManagement/archives/updateCancelDestruction
-     * @return recordsManagement/archive/cancelDestruction
-     */
-    public function updateRecordsmanagementCanceldestruction($archiveIds);
-
-    /**
      * Resource destruction
      * @param array $resIds Id List of resource
      *

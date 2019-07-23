@@ -17,7 +17,7 @@
     <li class="flagForRestitution" data-type="flagForRestitution"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for restitution</a></li>
     <?merge hasDestructionPrivilege.bool() ?>
     <li class="flagForDestruction [?merge .status.ifeq('disposable').then('hide', '') ?]" data-type="flagForDestruction"><a href="#"><i class="fa fa-trash">&nbsp;</i>&nbsp;Flag for destruction</a></li>
-    <?merge hasDestructionPrivilege.bool() ?>
+    <?merge hasDestructionCancelPrivilege.bool() ?>
     <li class="cancelDestruction [?merge .status.ifne('disposable').then('hide', '') ?]" data-type="cancelDestruction"><a href="#"><i class="fa fa-undo">&nbsp;</i>&nbsp;Cancel destruction request</a></li>
     <?merge hasTransferPrivilege.bool() ?>
     <li class="flagForTransfer" data-type="flagForTransfer"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for transfer</a></li>

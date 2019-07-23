@@ -343,7 +343,8 @@ blacklistUserStories = "[
 ; TPA
 ;blacklistUserStories = "[
 ;   'adminFunc/contact',
-;   'adminArchive/adminStorageRule'
+;   'adminArchive/adminStorageRule',
+;   'definitiveTransfer/*'
 ;]"
 
 csrfWhiteList = "['user/login', 'user/password']"

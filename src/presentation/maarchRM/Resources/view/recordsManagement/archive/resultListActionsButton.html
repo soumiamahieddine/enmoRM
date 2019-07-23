@@ -9,10 +9,18 @@
     <li class="unfreeze" data-type="unfreeze"><a href="#"><i class="fa fa-unlock">&nbsp;</i>&nbsp;Unfreeze</a></li>
     <?merge hasModificationPrivilege.bool() ?>
     <li class="divider"></li>
+    <?merge hasDeliveryPrivilege.bool() ?>
+    <li class="requestDelivery" data-type="requestCommunication"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request of communication</a></li>
+    <?merge hasModificationRequestPrivilege.bool() ?>
+    <li class="requestModification" data-type="requestModification"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request a modification</a></li>
     <?merge hasDestructionPrivilege.bool() ?>
     <li class="flagForDestruction" data-type="flagForDestruction"><a href="#"><i class="fa fa-trash">&nbsp;</i>&nbsp;Flag for destruction</a></li>
-    <?merge hasDestructionPrivilege.bool() ?>
+    <?merge hasDestructionCancelPrivilege.bool() ?>
     <li class="cancelDestruction" data-type="cancelDestruction"><a href="#"><i class="fa fa-undo">&nbsp;</i>&nbsp;Cancel destruction request</a></li>
+    <?merge hasRestitutionPrivilege.bool() ?>
+    <li class="flagForRestitution" data-type="flagForRestitution"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for restitution</a></li>
+    <?merge hasTransferPrivilege.bool() ?>
+    <li class="flagForTransfer" data-type="flagForTransfer"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for transfer</a></li>
     <?merge hasDestructionPrivilege.bool() ?>
     <li class="divider"></li>
     <?merge hasIntegrityCheckPrivilege.bool() ?>
