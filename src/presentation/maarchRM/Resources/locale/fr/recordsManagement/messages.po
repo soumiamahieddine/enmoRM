@@ -698,8 +698,17 @@ msgctxt "validationModal"
 msgid "%1$s archive(s) flagged for restitution."
 msgstr "%1$s archive(s) marquée(s) pour restitution."
 
-msgid "%1$s / %2$s archive(s) flagged for destruction."
+msgid "%1$s / %3$s archive(s) flagged for destruction."
 msgstr "%1$s archive(s) marquée(s) pour destruction."
+
+msgid "%2$s / %3$s archive(s) not eliminable."
+msgstr "%2$s archive(s) non éliminable(s)."
+
+msgid "The archive is flagged for destruction."
+msgstr "L'archive est marquée pour la destruction."
+
+msgid "The archive cannot be eliminated."
+msgstr "L'archive n'est pas éliminable."
 
 msgid "%1$s archive(s) flagged for conversion."
 msgstr "%1$s archive(s) marquée(s) pour conversion."

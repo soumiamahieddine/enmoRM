@@ -904,11 +904,18 @@ trait archiveAccessTrait
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
      * @param bool   $isUnFreeze
+     * @param bool   $withChildren
+     * @param bool   $withParents
      *
      * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
-    public function setStatus($archiveIds, $status, $isUnFreeze = false)
-    {
+    public function setStatus(
+        $archiveIds,
+        $status,
+        $isUnFreeze = false,
+        $withChildren = true,
+        $withParents = false
+    ) {
         $statusList = [];
 
         if ($isUnFreeze) {
@@ -937,13 +944,31 @@ trait archiveAccessTrait
             return $res;
         }
 
-        $archiveIdsWithChildren = [];
-        $archiveIds = array_flip($archiveIds);
-        foreach ($archiveIds as $archiveId => $key) {
-            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        if ($withChildren || $withParents) {
+            $archiveIdsWithChildren = $archiveIdsWithParents = [];
+
+            $archiveIds = array_flip($archiveIds);
+            foreach ($archiveIds as $archiveId => $key) {
+                if ($withChildren) {
+                    $archiveIdsWithChildren = array_merge(
+                        $archiveIdsWithChildren,
+                        $this->getChildrenArchives($archiveId)
+                    );
+                }
+
+                if ($withParents) {
+                    $archiveIdsWithParents = array_merge(
+                        $archiveIdsWithParents,
+                        $this->getParentsArchives($archiveId)
+                    );
+
+                }
+            }
+
+            $archiveIds = array_merge($archiveIds, $archiveIdsWithChildren);
+            $archiveIds = array_merge($archiveIds, $archiveIdsWithParents);
         }
 
-        $archiveIds = array_merge($archiveIds, $archiveIdsWithChildren);
         foreach ($archiveIds as $archiveId => $value) {
             $archiveStatus = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
 
@@ -979,6 +1004,22 @@ trait archiveAccessTrait
 
         return $archiveIds;
     }
+
+    public function getParentsArchives($archiveId)
+    {
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            "parentArchiveId",
+            "archiveId = '$archiveId'"
+        );
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveIds = array_merge($archiveIds, $this->getParentsArchives($archiveId));
+        }
+
+        return $archiveIds;
+    }
+
 
     /**
      * Change the processing status of an archive
