@@ -208,7 +208,7 @@ class journal
 
         $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
         if ($hasCertificatePrivilege) {
-            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/elimination'];
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
             foreach ($events as $key => $event) {
                 if (in_array($event->eventType, $eventsToCertificate)) {
                     $events[$key]->hasCertificate = true;
@@ -336,7 +336,8 @@ class journal
         $eventObject->timestamp->translatedKey = $this->translator->getText('Timestamp');
         $eventObject->operationResult->translatedKey = $this->translator->getText($eventObject->operationResult->translatedKey);
         $eventObject->objectId->translatedKey = $this->translator->getText($eventObject->objectId->translatedKey);
-        $eventObject->objectClass->translatedKey = $this->translator->getText($eventObject->objectClass->translatedKey);
+        $eventObject->description->translatedKey = $this->translator->getText($eventObject->description->translatedKey);
+        $eventObject->objectClass->translatedKey = $this->translator->getText("Archive identifier");
 
         $eventObject->certificateName = new \stdClass();
         $eventObject->certificateName->value = $event->eventType;
