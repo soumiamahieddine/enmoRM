@@ -62,6 +62,12 @@ msgstr "Un Opérateur d'Archivage est déjà défini."
 msgid "Profile %s not found"
 msgstr "Le profil %s n'a pas été trouvé"
 
+msgid "The retention rule %s not found"
+msgstr "La règle de conservation %s n'existe pas"
+
+msgid "The access rule %s not found"
+msgstr "La règle de communication %s n'existe pas"
+
 msgid "Role not created"
 msgstr "Rôle non créé"
 

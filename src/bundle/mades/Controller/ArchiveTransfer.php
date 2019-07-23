@@ -39,12 +39,16 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     protected $orgController;
     protected $archiveController;
     protected $archivalProfileController;
+    protected $retentionRuleController;
+    protected $accessRuleController;
 
     public function __construct()
     {
         $this->orgController = \laabs::newController('organization/organization');
         $this->archiveController = \laabs::newController('recordsManagement/archive');
         $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+        $this->retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $this->accessRuleController = \laabs::newController('recordsManagement/accessRule');
     }
 
     /**
@@ -383,7 +387,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             }
 
             if (isset($archiveUnit->management)) {
-                $this->validateManagementMetadata($archiveUnit);
+                $this->validateManagementMetadata($archiveUnit->management);
             }
         }
 
@@ -509,16 +513,30 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
     protected function validateManagementMetadata($administration)
     {
-        if (isset($administration->appraisalRule->code)
-            && !$this->retentionRuleController->read($administration->appraisalRule->code)
-        ) {
-            throw new \core\Exception\NotFoundException("The retention rule not found");
+        if (isset($administration->appraisalRule->code)) {
+            try {
+                $this->retentionRuleController->read($administration->appraisalRule->code);
+            } catch (\Exception $exception) {
+                throw new \core\Exception\NotFoundException(
+                    "The retention rule %s not found",
+                    400,
+                    null,
+                    $administration->appraisalRule->code
+                );
+            }
         }
 
-        if (isset($administration->accessRule->code)
-            && !$this->accessRuleControler->edit($administration->accessRule->code)
-        ) {
-            throw new \core\Exception\NotFoundException("The access rule not found");
+        if (isset($administration->accessRule->code)) {
+            try {
+                $this->retentionRuleController->read($administration->accessRule->code);
+            } catch (\Exception $exception) {
+                throw new \core\Exception\NotFoundException(
+                    "The access rule %s not found",
+                    400,
+                    null,
+                    $administration->accessRule->code
+                );
+            }
         }
     }
 
