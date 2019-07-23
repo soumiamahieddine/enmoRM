@@ -108,61 +108,67 @@ class message
                             'recordsManagement/retentionRule/read_code_/',
                             $archiveUnit->management->appraisalRule->code
                         );
-                        $dateInter = new \DateInterval($appraisalRule->duration);
-                        $numberDuration = 0;
-                        $toDisplay = '';
 
-                        if ($dateInter->y != 0) {
-                            if ($dateInter->y == 999999999) {
-                                $toDisplay = "Unlimited";
+                        if ($appraisalRule) {
+                            $dateInter = new \DateInterval($appraisalRule->duration);
+                            $numberDuration = 0;
+                            $toDisplay = '';
+
+                            if ($dateInter->y != 0) {
+                                if ($dateInter->y == 999999999) {
+                                    $toDisplay = "Unlimited";
+                                } else {
+                                    $numberDuration = $dateInter->y;
+                                    $toDisplay = "Year(s)";
+                                }
+                            } elseif ($dateInter->m != 0) {
+                                $numberDuration = $dateInter->m;
+                                $toDisplay = "Month(s)";
+                            } elseif ($dateInter->d != 0) {
+                                $numberDuration = $dateInter->d;
+                                $toDisplay = "Day(s)";
                             } else {
-                                $numberDuration = $dateInter->y;
+                                $numberDuration = 0;
                                 $toDisplay = "Year(s)";
                             }
-                        } elseif ($dateInter->m != 0) {
-                            $numberDuration = $dateInter->m;
-                            $toDisplay = "Month(s)";
-                        } elseif ($dateInter->d != 0) {
-                            $numberDuration = $dateInter->d;
-                            $toDisplay = "Day(s)";
-                        } else {
-                            $numberDuration = 0;
-                            $toDisplay = "Year(s)";
+
+                            $archiveUnit->management->appraisalRule->durationNumber = $numberDuration;
+                            $archiveUnit->management->appraisalRule->durationToDisplay =
+                                $this->translator->getText($toDisplay);
                         }
-                        
-                        $archiveUnit->management->appraisalRule->durationNumber = $numberDuration;
-                        $archiveUnit->management->appraisalRule->durationToDisplay =
-                            $this->translator->getText($toDisplay);
                     }
                     if (isset($archiveUnit->management->accessRule)) {
                         $accessRule = \laabs::callService(
                             'recordsManagement/accessRule/read_code_/',
                             $archiveUnit->management->accessRule->code
                         );
-                        $dateInter = new \DateInterval($accessRule->duration);
-                        $numberDuration = 0;
-                        $toDisplay = '';
 
-                        if ($dateInter->y != 0) {
-                            if ($dateInter->y == 999999999) {
-                                $toDisplay = "Unlimited";
+                        if ($accessRule) {
+                            $dateInter = new \DateInterval($accessRule->duration);
+                            $numberDuration = 0;
+                            $toDisplay = '';
+
+                            if ($dateInter->y != 0) {
+                                if ($dateInter->y == 999999999) {
+                                    $toDisplay = "Unlimited";
+                                } else {
+                                    $numberDuration = $dateInter->y;
+                                    $toDisplay = "Year(s)";
+                                }
+                            } elseif ($dateInter->m != 0) {
+                                $numberDuration = $dateInter->m;
+                                $toDisplay = "Month(s)";
+                            } elseif ($dateInter->d != 0) {
+                                $numberDuration = $dateInter->d;
+                                $toDisplay = "Day(s)";
                             } else {
-                                $numberDuration = $dateInter->y;
+                                $numberDuration = 0;
                                 $toDisplay = "Year(s)";
                             }
-                        } elseif ($dateInter->m != 0) {
-                            $numberDuration = $dateInter->m;
-                            $toDisplay = "Month(s)";
-                        } elseif ($dateInter->d != 0) {
-                            $numberDuration = $dateInter->d;
-                            $toDisplay = "Day(s)";
-                        } else {
-                            $numberDuration = 0;
-                            $toDisplay = "Year(s)";
-                        }
 
-                        $archiveUnit->management->accessRule->durationNumber = $numberDuration;
-                        $archiveUnit->management->accessRule->durationToDisplay = $this->translator->getText($toDisplay);
+                            $archiveUnit->management->accessRule->durationNumber = $numberDuration;
+                            $archiveUnit->management->accessRule->durationToDisplay = $this->translator->getText($toDisplay);
+                        }
                     }
                     $archivePresenter = \laabs::newPresenter('recordsManagement/archive');
                     $archivalProfile = $this->loadArchivalprofile($archiveUnit->profile);
