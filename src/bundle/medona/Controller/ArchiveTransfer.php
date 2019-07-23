@@ -433,7 +433,7 @@ class ArchiveTransfer extends abstractMessage
         // Non blocking errors
         if (count($this->errors) > 0) {
             if ($res = -1) {
-                $this->sendValidationError($message, false,'toBeModified');
+                $this->sendValidationError($message, false, 'toBeModified');
             } else {
                 $this->sendValidationError($message);
             }
@@ -443,7 +443,6 @@ class ArchiveTransfer extends abstractMessage
 
             throw $exception;
         } else {
-
             $message->status = "valid";
 
             foreach ((array) $this->infos as $info) {

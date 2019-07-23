@@ -250,11 +250,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         }
 
         $this->validateDataObjects($message, $archivalAgreement);
-        try {
-            $this->validateArchiveUnits($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
-        } catch (\Exception $e) {
-            // $this->sendError("200", "Le producteur de l'archive est inconnu du système.");
-        }
+        $this->validateArchiveUnits($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
       
         return true;
     }
