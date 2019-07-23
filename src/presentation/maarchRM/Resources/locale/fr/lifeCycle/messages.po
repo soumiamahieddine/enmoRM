@@ -72,6 +72,9 @@ msgstr "Adresse :"
 msgid "Archive identifier :"
 msgstr "Identifiant de l'archive :"
 
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
 msgid "Archiver name :"
 msgstr "Nom du Service d'Archives :"
 
@@ -124,7 +127,7 @@ msgid "Profile deleted"
 msgstr "Suppression de profil"
 
 msgid "eventId"
-msgstr "identifiant d'évènement"
+msgstr "Identifiant d'évènement"
 
 msgid "eventType"
 msgstr "Type d'événement"
@@ -716,4 +719,4 @@ msgctxt "recordsManagement/integrityCheck"
 
 msgid "certificateName"
 msgstr "Attestation de destruction"
-msgctxt "recordsManagement/elimination"
+msgctxt "recordsManagement/destruction"
