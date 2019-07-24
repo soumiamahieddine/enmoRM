@@ -467,8 +467,7 @@ class message
             if (isset($message->object)) {
                 $message->data = json_encode($message->object);
             }
-
-            if (isset($message->comment)) {
+            if (isset($message->comment) && !is_string($message->comment)) {
                 $message->comment = json_encode($message->comment);
             }
 
