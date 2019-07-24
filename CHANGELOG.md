@@ -2,9 +2,17 @@
 
 ## Version 2.5
 
-### Administration
+### Évènements
+
+- `Added` Possibilité de télécharger des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
+
+### Administration Technique
 
 - `Added` Si la directive "chainWithTimestamp" est passé à 'true' dans le fichier de configuration, un fichier d'horodatage sera généré par défaut lors de la génération du journal de l'application ou du cycle de vie.
+
+### Administration Fonctionnelle
+
+- `Added` Dans la section "Journaux" des privilèges de rôle, ajout du droit de télécharger les attestations de dépôt, de validation d'intégrité et de destruction des archives.
 
 ### Métadonnées
 
