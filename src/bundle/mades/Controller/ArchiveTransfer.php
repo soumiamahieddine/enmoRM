@@ -528,7 +528,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
         if (isset($administration->accessRule->code)) {
             try {
-                $this->accessRuleController->read($administration->accessRule->code);
+                $this->accessRuleController->index($administration->accessRule->code);
             } catch (\Exception $exception) {
                 throw new \core\Exception\NotFoundException(
                     "The access rule %s not found",
