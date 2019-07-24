@@ -72,6 +72,9 @@ msgstr "Adresse :"
 msgid "Archive identifier :"
 msgstr "Identifiant de l'archive :"
 
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
 msgid "Archiver name :"
 msgstr "Nom du Service d'Archives :"
 
@@ -105,6 +108,9 @@ msgstr "Attestation"
 msgid "Show the certificate"
 msgstr "Voir l'attestation"
 
+msgid "Download certificate"
+msgstr "Télécharger l'attestation"
+
 msgid "Deposit"
 msgstr "Dépôt"
 
@@ -121,7 +127,7 @@ msgid "Profile deleted"
 msgstr "Suppression de profil"
 
 msgid "eventId"
-msgstr "identifiant d'évènement"
+msgstr "Identifiant d'évènement"
 
 msgid "eventType"
 msgstr "Type d'événement"
@@ -161,6 +167,12 @@ msgstr "Identifiant utilisateur"
 
 msgid "User name"
 msgstr "Utilisateur"
+
+msgid "certificationDateTime"
+msgstr "Attestation générée le "
+
+msgid "bytes"
+msgstr "octet(s)"
 
 # ---------------------------------------------------------
 # Event info detail
@@ -692,3 +704,19 @@ msgstr "Données d'Archive"
 
 msgid "Service level"
 msgstr "Niveau de service"
+
+# ---------------------------------------------------------
+# deposit certificate
+# ---------------------------------------------------------
+
+msgid "certificateName"
+msgstr "Attestation de dépot"
+msgctxt "recordsManagement/deposit"
+
+msgid "certificateName"
+msgstr "Attestation de conformité"
+msgctxt "recordsManagement/integrityCheck"
+
+msgid "certificateName"
+msgstr "Attestation de destruction"
+msgctxt "recordsManagement/destruction"

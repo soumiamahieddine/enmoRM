@@ -28,13 +28,6 @@
                         </dl>
                     </div>
 
-                    <div class="row hide" id="eventCertificate">
-                        <div class="col-xs-offset-1">
-                            <button type="button" class="btn btn-warning" id="showEventCertificate" title="Certificate"><i class="fa fa-eye">&nbsp;</i>Certificate</button>
-                        </div>
-                        <br/>
-                    </div>
-
                     <div class="row">
                         <div class="panel panel-default col-md-10 col-md-offset-1">
                             <div class="panel-body">
@@ -69,10 +62,6 @@ $(document).on('show.bs.modal', '.modal', function () {
         $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
     }, 0);
 });
-
-$('#showEventCertificate').on('click', function(){
-    eventCertificate.load($(this).data('url'));
-})
 
 eventInfo = {
     load: function(eventId) {
@@ -132,18 +121,9 @@ eventInfo = {
 }
 
 eventCertificate = {
-    load: function(url) {
-        $.ajax({
-            url         : url,
-            type        : "GET",
-            success     : function (response) {
-                $('#certificateContent').html(response);
-                $('#certificateModal').modal();
-            },
-            error       : function (response) {
-                gritter.show(response.responseText, false);
-            }
-        });
+    load: function(eventId) {
+        var url = '/journal/eventcertificate/' + eventId;
+        window.open(url, 'document');
     }
 }
 

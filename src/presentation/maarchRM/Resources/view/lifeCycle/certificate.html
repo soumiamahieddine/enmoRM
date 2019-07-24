@@ -1,0 +1,164 @@
+<html>
+	<head>
+			<style>
+				table {
+					border-collapse: collapse;
+				}
+
+				td, th {
+					padding: 0;
+					display: table-cell;
+				}
+
+				th {
+					white-space: nowrap;
+				}
+
+				.table {
+					width: 100%;
+					max-width: 100%;
+					margin-bottom: 20px;
+				}
+
+				.table > thead > tr > th,
+				.table > tbody > tr > th,
+				.table > tfoot > tr > th,
+				.table > thead > tr > td,
+				.table > tbody > tr > td,
+				.table > tfoot > tr > td  {
+					padding: 8px;
+					vertical-align: top;
+					border-top: 1px solid #ddd;
+				}
+
+				.table  tr {
+					border-bottom: 2px solid #ddd;
+				}
+
+				.table-bordered  thead > tr {
+					border: 1px solid #ddd;
+				}
+
+				.table-bordered > thead > tr > th,
+				.table-bordered > thead > tr > td {
+					border-bottom-width: 2px;
+				}
+
+				.table-striped > tbody > tr:nth-of-type(odd) {
+				    background-color: #f9f9f9;
+				}
+
+				footer {
+					display: block;
+				}
+			</style>
+	</head>
+	<body>
+		<header>
+			<table class="table table-bordered">
+				<tbody>
+					<tr style="text-align: left; vertical-align: middle;">
+						<th style="width: 10%; height: 50px;">
+							<img src="[?merge logo ?]" alt="" style="height: 100%;">
+						</th>
+						<th style="min-width: 65%; text-align: center; padding-top: 1em;">
+							<h1><?merge title ?></h1>
+						</th>
+					</tr>
+				</tbody>
+			</table>
+		</header>
+		<div>
+            <div class="page-header">
+                <h2><?merge event.certificateName.translatedKey ?></h2>
+            </div>
+			<table class="table table-bordered table-striped" style="text-align: left;">
+				<tbody>
+					<tr>
+						<th><?merge event.eventId.translatedKey ?></th>
+		                <td><?merge event.eventId.value ?></td>
+					</tr>
+	                <tr>
+	                	<th><?merge event.eventType.translatedKey ?></th>
+		                <td><?merge event.eventType.value ?></td>
+	                </tr>
+	                <tr>
+	                	<th><?merge event.timestamp.translatedKey ?></th>
+		                <td><?merge event.timestamp.value ?></td>
+	                </tr>
+	                <tr>
+	                	<th><?merge event.objectClass.translatedKey ?></th>
+		                <td><?merge event.objectId.value ?></td>
+	                </tr>
+	                <tr>
+	                	<th><?merge event.accountDisplayName.translatedKey ?></th>
+		                <td><?merge event.accountDisplayName.value ?></td>
+	                </tr>
+	                <tr>
+	                	<th><?merge event.operationResult.translatedKey ?></th>
+		                <td><?merge event.operationResult.value ?></td>
+	                </tr>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th><?merge event.description.translatedKey ?></th>
+						<td><?merge event.description.value ?></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th><?merge event.instanceName.translatedKey ?></th>
+						<td><?merge event.instanceName.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.orgRegNumber.translatedKey ?></th>
+						<td><?merge event.orgRegNumber.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.orgUnitRegNumber.translatedKey ?></th>
+						<td><?merge event.orgUnitRegNumber.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.resId.translatedKey ?></th>
+						<td><?merge event.resId.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.hashAlgorithm.translatedKey ?></th>
+						<td><?merge event.hashAlgorithm.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.hash.translatedKey ?></th>
+						<td><?merge event.hash.value ?></td>
+					</tr>
+					<tr>
+						<th><?merge event.address.translatedKey ?></th>
+						<td><?merge event.address.value ?></td>
+					</tr>
+					<?merge event.originatorOrgRegNumber.isset() ?>
+					<tr>
+						<th><?merge event.originatorOrgRegNumber.translatedKey ?></th>
+						<td><?merge event.originatorOrgRegNumber.value ?></td>
+					</tr>
+					<?merge event.archiverOrgRegNumber.isset() ?>
+					<tr>
+						<th><?merge event.archiverOrgRegNumber.translatedKey ?></th>
+						<td><?merge event.archiverOrgRegNumber.value ?></td>
+					</tr>
+					<?merge event.size.isset() ?>
+					<tr>
+						<th><?merge event.size.translatedKey ?></th>
+						<td><?merge event.size.value ?>&nbsp;<?merge event.sizeValue.translatedKey  ?></td>
+					</tr>
+				</tbody>
+            </table>
+		</div>
+	</body>
+	<footer>
+		<hr>
+		<p><?merge event.certificationDateTime.translatedKey ?> : <?merge event.certificationDateTime.value ?></p>
+	</footer>
+</html>
