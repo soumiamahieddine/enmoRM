@@ -222,6 +222,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     {
         $this->errors = array();
         $this->replyCode = null;
+        $this->knownOrgUnits = [];
 
         if (!empty($archivalAgreement)) {
             if ($archivalAgreement->originatorOrgIds) {
