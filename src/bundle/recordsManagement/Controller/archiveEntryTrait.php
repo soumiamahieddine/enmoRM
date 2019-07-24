@@ -444,6 +444,11 @@ trait archiveEntryTrait
         }
 
         if (!empty($archive->accessRuleStartDate) && !empty($archive->accessRuleDuration)) {
+            $dateInter = new \DateInterval($archive->accessRuleDuration);
+            if ($dateInter->y == 9999) {
+                return;
+            }
+
             if (is_string($archive->accessRuleStartDate)) {
                 $archive->accessRuleStartDate = \laabs::newDate($archive->accessRuleStartDate);
             }

@@ -115,7 +115,8 @@ class message
                             $toDisplay = '';
 
                             if ($dateInter->y != 0) {
-                                if ($dateInter->y == 999999999) {
+                                if ($dateInter->y == 9999) {
+                                    $numberDuration = null;
                                     $toDisplay = "Unlimited";
                                 } else {
                                     $numberDuration = $dateInter->y;
@@ -149,8 +150,9 @@ class message
                             $toDisplay = '';
 
                             if ($dateInter->y != 0) {
-                                if ($dateInter->y == 999999999) {
+                                if ($dateInter->y == 9999) {
                                     $toDisplay = "Unlimited";
+                                    $numberDuration = null;
                                 } else {
                                     $numberDuration = $dateInter->y;
                                     $toDisplay = "Year(s)";
