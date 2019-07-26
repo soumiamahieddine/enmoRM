@@ -8,10 +8,12 @@
 
 ### Administration Technique
 
+- `Added` Nouveau rôle "Administrateur Général", n'ayant pas accès aux archives mais autorisé à creer, modifier et supprimer des administrateurs fonctionnels au sein d'une organisation.
 - `Added` Si la directive "chainWithTimestamp" est passé à 'true' dans le fichier de configuration, un fichier d'horodatage sera généré par défaut lors de la génération du journal de l'application ou du cycle de vie.
 
 ### Administration Fonctionnelle
 
+- `Added` Nouveau rôle "Administrateur Fonctionnel", n'ayant pas accès aux archives mais autorisé à creer, modifier et supprimer des utilisateurs au sein de son organisation. Il peut également créer ou désactiver des conteneurs.
 - `Added` Dans la section "Journaux" des privilèges de rôle, ajout du droit de télécharger les attestations de dépôt, de validation d'intégrité et de destruction des archives.
 
 ### Métadonnées
