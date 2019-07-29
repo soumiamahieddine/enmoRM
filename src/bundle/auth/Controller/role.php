@@ -86,7 +86,7 @@ class role
     }
 
     /**
-     * Recorde a new role
+     * Record a new role
      * @param auth/role $role The role object to create
      *
      * @return string The new role id

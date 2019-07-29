@@ -27,7 +27,7 @@ namespace bundle\auth\Model;
  *
  * @pkey [accountId]
  * @key [accountName]
- * @fkey [orgId] organization/organization [orgId]
+ * @fkey [ownerOrgId] organization/organization [orgId]
  */
 class account
 {
@@ -162,13 +162,14 @@ class account
     public $preferences;
 
     /**
-     * Array of organization object
-     * @var organization/organization[]
+     * organization object
+     * @var organization/organization
      */
     public $ownerOrgId;
 
     /**
      * @var bool
+     * @notempty
      */
     public $isAdmin;
 }
