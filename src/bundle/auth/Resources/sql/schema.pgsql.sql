@@ -42,12 +42,13 @@ CREATE TABLE "auth"."account"
   
   "salt" text,
   "tokenDate" timestamp,
-  "ownerOrgId" text,
-  "isAdmin" boolean NOT NULL,
 
   "authentication" jsonb,
   "preferences" jsonb,
     
+  "ownerOrgId" text,
+  "isAdmin" boolean NOT NULL,
+  
   PRIMARY KEY ("accountId"),
   UNIQUE ("accountName") 
 )
