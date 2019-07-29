@@ -27,6 +27,7 @@ namespace bundle\auth\Model;
  *
  * @pkey [accountId]
  * @key [accountName]
+ * @fkey [orgId] organization/organization [orgId]
  */
 class account
 {
@@ -94,7 +95,7 @@ class account
     /**
      * @var timestamp
      */
-    public $lockDate;   
+    public $lockDate;
 
     /**
      * @var integer
@@ -160,4 +161,14 @@ class account
      */
     public $preferences;
 
+    /**
+     * Array of organization object
+     * @var organization/organization[]
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
 }
