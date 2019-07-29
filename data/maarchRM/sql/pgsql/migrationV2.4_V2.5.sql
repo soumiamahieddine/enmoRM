@@ -1,5 +1,9 @@
 -- Migration script for PGSQL from Maarch RM V2.4 to V2.5
 
+-- add columns for Digital Safe in auth.account
+ALTER TABLE "auth"."account" ADD COLUMN "ownerOrgId" text;
+ALTER TABLE "auth"."account" ADD COLUMN "isAdmin" boolean NOT NULL;
+
 -- Add columns for facets in descriptionField
 ALTER TABLE "recordsManagement"."descriptionField" ADD COLUMN "facets" jsonb;
 

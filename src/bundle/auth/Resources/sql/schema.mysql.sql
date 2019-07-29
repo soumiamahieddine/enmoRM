@@ -38,6 +38,8 @@ CREATE TABLE `auth.account`
   
   `salt` text,
   `tokenDate` timestamp(6),
+  "ownerOrgId" text,
+  "isAdmin" boolean NOT NULL,
     
   PRIMARY KEY (`accountId`),
   UNIQUE (`accountName`) 
