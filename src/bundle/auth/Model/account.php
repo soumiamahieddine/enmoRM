@@ -162,14 +162,12 @@ class account
     public $preferences;
 
     /**
-     * organization object
-     * @var organization/organization
+     * @var string
      */
     public $ownerOrgId;
 
     /**
      * @var bool
-     * @notempty
      */
     public $isAdmin;
 }

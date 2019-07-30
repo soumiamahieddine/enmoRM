@@ -164,12 +164,14 @@ class userAccount
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
 
-        if(!$organizations) {
-            throw \laabs::newException('auth/noOrganizationException', "No organization chosen");
+        if (!$userAccount->isAdmin) {
+            if (!$organizations) {
+                throw \laabs::newException('auth/noOrganizationException', "No organization chosen");
+            }
         }
 
         if ($this->sdoFactory->exists('auth/account', array('accountName' => $userAccount->accountName))) {
-            throw \laabs::newException("auth/userAlreadyExistException","User already exist");
+            throw \laabs::newException("auth/userAlreadyExistException", "User already exist");
         }
 
         if (!\laabs::validate($userAccount, 'auth/account')) {
@@ -193,8 +195,10 @@ class userAccount
         $this->sdoFactory->create($userAccount, 'auth/account');
         $organizationController = \laabs::newController("organization/organization");
 
-        foreach ($organizations as $orgId){
-            $organizationController->addUserPosition($userAccount->accountId ,$orgId);
+        if (!$userAccount->isAdmin) {
+            foreach ($organizations as $orgId) {
+                $organizationController->addUserPosition($userAccount->accountId, $orgId);
+            }
         }
 
         return $userAccount->accountId;
@@ -301,13 +305,15 @@ class userAccount
             $userAccount->emailAddress = $user->emailAddress;
         }
 
-        if(isset($userAccount->modificationRight)) {
-            if($userAccount->organizations == null) {
-                throw new \core\Exception\BadRequestException('No service chosen', 400);
-            }
+        if (!$userAccount->isAdmin) {
+            if (isset($userAccount->modificationRight)) {
+                if ($userAccount->organizations == null) {
+                    throw new \core\Exception\BadRequestException('No service chosen', 400);
+                }
 
-            $organizationController = \laabs::newController("organization/organization");
-            $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
+                $organizationController = \laabs::newController("organization/organization");
+                $organizationController->updateUserPosition($userAccount->accountId, $userAccount->organizations);
+            }
         }
 
 
