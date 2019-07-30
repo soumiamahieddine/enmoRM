@@ -33,6 +33,8 @@ class serviceAccount
     protected $sdoFactory;
     protected $passwordEncryption;
     protected $securityPolicy;
+    protected $organizationController;
+    protected $servicePositionController;
 
     /**
      * Constructor
@@ -45,6 +47,8 @@ class serviceAccount
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
+        $this->organizationController = \laabs::newController('organization/organization');
+        $this->servicePositionController = \laabs::newController('organization/servicePosition');
     }
 
     /**
@@ -64,7 +68,17 @@ class serviceAccount
      */
     public function search()
     {
-        $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'");
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+
+        $queryAssert = [];
+        $queryAssert[] = "accountType='service'";
+
+        if ($account->ownerOrgId) {
+            $queryAssert[] = "ownerOrgId='". $account->ownerOrgId."'";
+        }
+
+        $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $serviceAccounts;
     }
@@ -146,7 +160,9 @@ class serviceAccount
         try {
             $this->sdoFactory->create($serviceAccount, 'auth/account');
             $this->createServicePrivilege($servicesURI, $serviceAccount->accountId);
-            \laabs::callService("organization/organization/createServiceposition_orgId__userAccountId_", $orgId, $serviceAccount->accountId);
+            if (!$serviceAccount->isAdmin) {
+                $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
+            }
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -171,11 +187,11 @@ class serviceAccount
     public function edit($serviceAccountId)
     {
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
-        $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccountId);
+        $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 
 
-        foreach ($servicePrivilegesTmp as $value){
+        foreach ($servicePrivilegesTmp as $value) {
             $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
             $servicePrivilege->serviceURI = $value['serviceURI'];
             $servicePrivilege->description = $value['description'];
@@ -186,7 +202,10 @@ class serviceAccount
             $serviceAccount->orgId = $servicePosition->organization->orgId;
         }
 
-        $serviceAccount->servicePrivilege = $this->sdoFactory->find('auth/servicePrivilege', "accountId='$serviceAccountId'");
+        $serviceAccount->servicePrivilege = $this->sdoFactory->find(
+            'auth/servicePrivilege',
+            "accountId='$serviceAccountId'"
+        );
 
         return $serviceAccount;
     }
@@ -227,14 +246,15 @@ class serviceAccount
         }
 
         try {
-            if ($orgId) {
-                $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccount->accountId);
+            if (!$serviceAccount->isAdmin) {
+                if ($orgId) {
+                    $servicePosition = $this->servicePositionController->getPosition($serviceAccount->accountId);
 
-                if (isset($servicePosition->organization)) {
-                    \laabs::callService("organization/organization/deleteServiceposition_orgId__serviceAccountId_", $servicePosition->organization->orgId, $serviceAccount->accountId);
+                    if (isset($servicePosition->organization)) {
+                        $this->organizationController->deleteUserPosition($orgId, $serviceAccount->accountId);
+                    }
+                    $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
                 }
-
-                \laabs::callService("organization/organization/createServiceposition_orgId__userAccountId_", $orgId, $serviceAccount->accountId);
             }
 
             $this->sdoFactory->update($serviceAccount, 'auth/account');
@@ -266,7 +286,10 @@ class serviceAccount
         // Check userAccount exists
         $currentDate = \laabs::newTimestamp();
 
-        if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccountId, "accountType" => "service"))) {
+        if (!$this->sdoFactory->exists(
+            'auth/account',
+            array('accountId' => $serviceAccountId, "accountType" => "service")
+        )) {
             \laabs::newController('audit/entry')->add(
                 "auth/serviceTokenGenerationFailure",
                 "auth/account",
@@ -349,7 +372,7 @@ class serviceAccount
     {
         $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $accountId), 'auth/account');
 
-        if(!empty($servicesURI)){
+        if (!empty($servicesURI)) {
             foreach ($servicesURI as $key => $service) {
                 $service = trim($service);
                 if (preg_match('/\s/', $service)) {
