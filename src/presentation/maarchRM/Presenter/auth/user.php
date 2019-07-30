@@ -47,9 +47,7 @@ class user
         \dependency\json\JsonObject $json,
         \dependency\localisation\TranslatorInterface $translator,
         \dependency\sdo\Factory $sdoFactory = null
-    )
-    {
-
+    ) {
         $this->view = $view;
 
         $this->json = $json;
@@ -106,6 +104,15 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if (!$account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('configAdmin', true);
+        } else {
+            $view->setSource('configAdmin', false);
+        }
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
@@ -169,12 +176,21 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if (!$account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('configAdmin', true);
+        } else {
+            $view->setSource('configAdmin', false);
+        }
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
         $view->setSource('user', $user);
         $view->setSource('userPositions', false);
+
 
         $view->merge();
         $view->translate();
