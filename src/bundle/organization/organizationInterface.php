@@ -69,15 +69,6 @@ interface organizationInterface
     public function create($organization);
 
     /**
-     * Read an organization by his orgId
-     *
-     * @return organization/organization the organization
-     *
-     * @action organization/organization/read
-     */
-    public function read_orgId_();
-
-    /**
      * Get an organization by his regitration number
      *
      * @return organization/organization the organization
@@ -314,20 +305,14 @@ interface organizationInterface
     /**
      * List of organizations
      *
+     * @param bool $ownerOrg
+     * @param bool $orgUnit
+     *
      * @return array An array of organization and service
      *
      * @action organization/organization/todisplay
      */
-    public function readTodisplay();
-
-    /**
-     * List of organizations
-     *
-     * @return An array of organization and service
-     *
-     * @action organization/organization/todisplayOrgUnit
-     */
-    public function readTodisplayorgunit();
+    public function readTodisplay($ownerOrg = false, $orgUnit = false);
 
     /**
      * Get originator
@@ -335,4 +320,13 @@ interface organizationInterface
      * @action organization/organization/getOriginator
      */
     public function readOriginator();
+
+    /**
+     * Read an organization by his orgId
+     *
+     * @return organization/organization the organization
+     *
+     * @action organization/organization/read
+     */
+    public function read_orgId_();
 }

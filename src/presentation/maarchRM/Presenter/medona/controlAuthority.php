@@ -70,7 +70,10 @@ class controlAuthority
 
         foreach ($originatorsOrg as $originator) {
             if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
-                $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
+                $orgObject = \laabs::callService(
+                    'organization/organization/read_orgId_',
+                    (string) $originator->ownerOrgId
+                );
 
                 $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
@@ -81,7 +84,10 @@ class controlAuthority
         }
         foreach ($controlAuthoritiesOrg as $controlAuthority) {
             if (!isset($ownerControlAuthority[(string) $controlAuthority->ownerOrgId])) {
-                $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $controlAuthority->ownerOrgId);
+                $orgObject = \laabs::callService(
+                    'organization/organization/read_orgId_',
+                    (string) $controlAuthority->ownerOrgId
+                );
                 $ownerControlAuthority[(string) $orgObject->orgId] = new \stdClass();
                 $ownerControlAuthority[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
                 $ownerControlAuthority[(string) $orgObject->orgId]->depositors = [];
@@ -94,11 +100,25 @@ class controlAuthority
         if ($controlAuthorities) {
             foreach ($controlAuthorities as $controlAuthority) {
                 $controlAuthorityList[$controlAuthority->originatorOrgUnitId] = new \stdClass();
-                $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->controlAuthorityOrgUnitId = \laabs::callService('organization/organization/read_orgId_',(string)$controlAuthority->controlAuthorityOrgUnitId);         
+                $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->controlAuthorityOrgUnitId =
+                    \laabs::callService(
+                        'organization/organization/read_orgId_',
+                        (string)$controlAuthority->controlAuthorityOrgUnitId
+                    );
                 if ($controlAuthority->originatorOrgUnitId != '*') {
-                    $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId = \laabs::callService('organization/organization/read_orgId_',(string)$controlAuthority->originatorOrgUnitId);
-                    if (isset($controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->ownerOrgId)) {
-                        $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->owner = \laabs::callService('organization/organization/read_orgId_', (string)$controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->ownerOrgId);
+                    $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId =
+                        \laabs::callService(
+                            'organization/organization/read_orgId_',
+                            (string)$controlAuthority->originatorOrgUnitId
+                        );
+                    if (isset(
+                        $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->ownerOrgId
+                    )) {
+                        $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->owner =
+                            \laabs::callService(
+                                'organization/organization/read_orgId_',
+                                (string)$controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId->ownerOrgId
+                            );
                     }
                 } else {
                     $controlAuthorityList[$controlAuthority->originatorOrgUnitId]->originatorOrgUnitId = '*';
@@ -113,12 +133,12 @@ class controlAuthority
         $dataTable->setUnsortableColumns(2);
 
         $this->view->translate();
-        $organizationsOriginator = \laabs::callService('organization/organization/readTodisplay');
+        $organizationsOriginator = \laabs::callService('organization/organization/readTodisplay', true, true);
 
         foreach ($organizationsOriginator as $orgOrignator) {
-            if(!$orgOrignator->isOrgUnit) {
+            if (!$orgOrignator->isOrgUnit) {
                 foreach ($organizationsOriginator as $originator) {
-                    if($orgOrignator->orgId == $originator->ownerOrgId ) {
+                    if ($orgOrignator->orgId == $originator->ownerOrgId) {
                         $originator->ownerOrgName = $orgOrignator->displayName;
                     }
                 }
