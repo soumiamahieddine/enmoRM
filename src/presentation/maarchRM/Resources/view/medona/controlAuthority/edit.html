@@ -207,7 +207,7 @@
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
         limit: 100
     });
 

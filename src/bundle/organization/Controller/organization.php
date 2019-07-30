@@ -56,11 +56,15 @@ class organization
     /**
      * List of organizations
      *
+     * @param bool $ownerOrg
+     * @param bool $orgUnit
+     *
      * @return organization/organization[] An array of organization whith service
      */
-    public function todisplay()
+    public function todisplay($ownerOrg, $orgUnit)
     {
         $currentOrg = \laabs::getToken("ORGANIZATION");
+        $orgList = [];
 
         if (!$currentOrg || (!empty($currentOrg->orgRoleCodes) && in_array('owner', $currentOrg->orgRoleCodes))) {
             $orgUnitList = $this->getOwnerOriginatorsOrgs();
@@ -73,12 +77,17 @@ class organization
             $organization->displayName = $org->displayName;
             $organization->orgId = $org->orgId;
             $organization->parentOrgId = $org->parentOrgId;
-            $orgList[] = $organization;
 
-            foreach ($org->originators as $orgUnit) {
-                if ($org->orgId == $orgUnit->ownerOrgId) {
-                    $orgUnit->ownerOrgName = $org->displayName;
-                    $orgList[] = $orgUnit;
+            if ($ownerOrg) {
+                $orgList[] = $organization;
+            }
+
+            if ($orgUnit) {
+                foreach ($org->originators as $orgUnit) {
+                    if ($org->orgId == $orgUnit->ownerOrgId) {
+                        $orgUnit->ownerOrgName = $org->displayName;
+                        $orgList[] = $orgUnit;
+                    }
                 }
             }
         }
@@ -93,37 +102,7 @@ class organization
                     }
                 }
             }
-
-            return $orgList;
         }
-    }
-
-    /**
-     * List of orgUnit
-     *
-     * @return object[] An array of orgUnit
-     */
-    public function todisplayOrgUnit()
-    {
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-        $orgList = [];
-
-        if (isset($currentOrg)) {
-            $organizations = $this->getOwnerOriginatorsOrgs($currentOrg);
-        } else {
-            $owner = $this->getOrgsByRole('owner')[0];
-            $organizations = $this->getOwnerOriginatorsOrgs($owner);
-        }
-
-        foreach ($organizations as $org) {
-            foreach ($org->originators as $orgUnit) {
-                if ($org->orgId == $orgUnit->ownerOrgId) {
-                    $orgUnit->ownerOrgName = $org->displayName;
-                    $orgList[] = $orgUnit;
-                }
-            }
-        }
-
         return $orgList;
     }
 
