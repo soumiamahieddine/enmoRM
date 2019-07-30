@@ -91,6 +91,10 @@ class userAccount
 
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
 
+        if ($account->ownerOrgId) {
+            $queryAssert[] = "ownerOrgId='". $account->ownerOrgId."'";
+        }
+
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
         }
