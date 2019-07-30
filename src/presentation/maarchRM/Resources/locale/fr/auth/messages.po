@@ -807,3 +807,6 @@ msgstr "Attention, vous êtes sur le point de générer un nouveau jeton. Cela a
 
 msgid "No organization chosen"
 msgstr "Aucune organisation choisie"
+
+msgid "Admin Rights"
+msgstr "Droits Administrateur"

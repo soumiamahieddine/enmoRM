@@ -43,6 +43,13 @@
                                     <input type="password" class="form-control" id="verification" name="verification" placeholder="Password verification" autocomplete="off">
                                 </div>
                             </div>
+                            <?merge configAdmin.bool() ?>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -98,6 +105,7 @@
         <span class="hide" id="empty_text">The fields with a star are required.</span>
 
     </div>
+    <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 </div>
 
 <script >
@@ -171,6 +179,13 @@
             organizations : [],
             modificationRight : $('#editMyProfile').html()
         };
+
+        //Toggle adminUser
+        if($('#adminUser').prop('checked')){
+            userAccount['isAdmin'] = true;
+        } else {
+            userAccount['isAdmin'] = false;
+        }
 
         var userAccountInfo = $('#user_userAccountForm').find('input');
         var inputs = $('#user_userInformationForm').find('input').add(userAccountInfo);
