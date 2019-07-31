@@ -222,7 +222,7 @@ trait archiveComplianceTrait
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
 
-        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess = false);
 
         $errors = [];
         if (count($archive->digitalResources)) {
