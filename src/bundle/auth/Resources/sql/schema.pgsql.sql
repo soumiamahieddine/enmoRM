@@ -47,7 +47,7 @@ CREATE TABLE "auth"."account"
   "preferences" jsonb,
     
   "ownerOrgId" text,
-  "isAdmin" boolean NOT NULL,
+  "isAdmin" boolean,
   
   PRIMARY KEY ("accountId"),
   UNIQUE ("accountName") 
