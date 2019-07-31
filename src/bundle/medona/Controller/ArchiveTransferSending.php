@@ -110,7 +110,8 @@ class ArchiveTransferSending extends abstractMessage
         $user = \laabs::getToken('AUTH');
         $userName = false;
         if($user) {
-            $user = \laabs::callService('auth/userAccount/read_userAccountId_', $user->accountId);
+            $userAccountController = \laabs::newController('auth/userAccount');
+            $user = $userAccountController->edit($user->accountId);
             $userName = $user->accountName;
         }
 

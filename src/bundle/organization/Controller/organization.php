@@ -805,7 +805,8 @@ class organization
         $contacts = array();
         foreach ($orgContacts as $orgContact) {
             try {
-                $contact = \laabs::callService('contact/contact/read_contactId_', $orgContact->contactId);
+                $contactController = \laabs::newController('contact/contact');
+                $contact = $contactController->get($orgContact->contactId);
                 $contacts[] = (object)array_merge((array)$contact, (array)$orgContact);
             } catch (\Exception $e) {
 
@@ -873,9 +874,9 @@ class organization
         $address = null;
 
         try {
-            $contact = \laabs::callService('contact/contact/read_contactId_', $orgContacts[0]->contactId);
+            $contactController = \laabs::newController('contact/contact');
+            $contact = $contactController->get($orgContacts[0]->contactId);
             $address = $contact->address;
-
         } catch (\Exception $e) {
             throw $e;
         }
@@ -896,7 +897,8 @@ class organization
             return array();
         }
 
-        $contact = \laabs::callService('contact/contact/read_contactId_', (string)$orgContacts[0]->contactId);
+        $contactController = \laabs::newController('contact/contact');
+        $contact = $contactController->get((string)$orgContacts[0]->contactId);
 
         return $contact->communication;
     }
@@ -1245,17 +1247,20 @@ class organization
             }
         }
 
+        $organizationController = \laabs::newController('organization/organization');
         if ($owner) {
-            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+            $originators = $organizationController->index('isOrgUnit=true');
         } else {
-            $originators = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']");
+            $originators = $organizationController->index(
+                "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
+            );
         }
 
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
             if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
-                $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
+                $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
                 $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
@@ -1302,7 +1307,8 @@ class organization
      */
     protected function getOwnerOrgsByRole($currentService, $role)
     {
-        $orgUnits = \laabs::callService('organization/organization/readByrole_role_', $role);
+        $organizationController = \laabs::newController('organization/organization');
+        $orgUnits = $organizationController->getOrgsByRole($role);
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
@@ -1330,8 +1336,7 @@ class organization
 
         foreach ($userOrgUnits as $userOrgUnit) {
             foreach ($orgUnits as $orgUnit) {
-                if (
-                // Owner = all originators
+                if (// Owner = all originators
                 $owner
                     // Archiver = all originators fo the same org
                 || ($archiver && $orgUnit->ownerOrgId == $userOrgUnit->ownerOrgId)
@@ -1340,7 +1345,7 @@ class organization
                     // Depositor = all
                 || $role == 'depositor') {
                     if (!isset($userOrgs[(string)$orgUnit->ownerOrgId])) {
-                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
+                        $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
 
                         $userOrgs[(string)$orgObject->orgId] = new \stdClass();
                         $userOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;

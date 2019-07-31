@@ -89,7 +89,13 @@ class userAuthentication
 
         // Check enabled
         if ($userAccount->enabled != true) {
-            $e = \laabs::newException('auth/authenticationException', 'User %1$s is disabled', 403, null, array($userName));
+            $e = \laabs::newException(
+                'auth/authenticationException',
+                'User %1$s is disabled',
+                403,
+                null,
+                array($userName)
+            );
             throw $e;
         }
 
@@ -100,9 +106,20 @@ class userAuthentication
             $this->sdoFactory->update($userLogin, 'auth/account');
 
             // If count exceeds max attempts, lock user
-            if ($this->securityPolicy['loginAttempts'] && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1) {
-                \laabs::callService("auth/userAccount/updateLock_userAccountId_", $userLogin->accountId, true);
-                \laabs::callService('audit/event/create', "auth/userAccount/updateLock_userAccountId_", array("accountId" => $userLogin->accountId), null, true, true);
+            if ($this->securityPolicy['loginAttempts']
+                && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1
+            ) {
+                $userAccountController = \laabs::newController('auth/userAccount');
+                $userAccountController->lock($userLogin->accountId);
+
+                $eventController = \laabs::newController('audit/event');
+                $eventController->add(
+                    "auth/userAccount/updateLock_userAccountId_",
+                    array("accountId" => $userLogin->accountId),
+                    null,
+                    true,
+                    true
+                );
             }
 
             throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);

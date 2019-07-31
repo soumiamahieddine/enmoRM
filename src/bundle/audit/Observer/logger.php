@@ -188,8 +188,13 @@ class logger
             $this->output = json_encode($this->output);
         }
 
-        \laabs::callService(
-            'audit/event/create', $this->servicePath->getName(), $this->servicePath->variables, $this->input, $this->output, true
+        $eventController = \laabs::newController('audit/event');
+        $eventController->create(
+            $this->servicePath->getName(),
+            $this->servicePath->variables,
+            $this->input,
+            $this->output,
+            true
         );
 
         $this->servicePath = null;
@@ -214,9 +219,15 @@ class logger
 
         // Output with failure
         $output = utf8_encode($businessException->getMessage());
-        
-        \laabs::callService(
-            'audit/event/create', $this->servicePath->getName(), $this->servicePath->variables, $this->input, $output, false
+
+        $eventController = \laabs::newController('audit/event');
+        $eventController->create(
+            'audit/event/create',
+            $this->servicePath->getName(),
+            $this->servicePath->variables,
+            $this->input,
+            $output,
+            false
         );
     }
 

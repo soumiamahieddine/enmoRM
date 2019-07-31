@@ -407,9 +407,10 @@ trait archiveDestructionTrait
     {
         $currentService = \laabs::getToken("ORGANIZATION");
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        
+
+        $userAccountController = \laabs::newController('auth/userAccount');
         if (($currentService->registrationNumber != $archive->archiverOrgRegNumber
-                || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+                || !$userAccountController->hasPrivilege("destruction/destructionRequest"))
             && !in_array("owner", $currentService->orgRoleCodes)) {
             return false ;
         }

@@ -141,7 +141,8 @@ class userAccount
 
         if (is_array($userAccount->roles) && !empty($userAccount->roles[0])) {
             foreach ($userAccount->roles as $roleId) {
-                \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
+                $roleMemberController = \laabs::newController('auth/roleMember');
+                $roleMemberController->create($roleId, $userAccountId);
             }
         }
 
@@ -228,7 +229,8 @@ class userAccount
         }
 
         foreach ($roleMembers as $roleMember) {
-            $role = \laabs::callService('auth/role/read_roleId_', $roleMember->roleId);
+            $roleController = \laabs::newController('auth/role');
+            $role = $roleController->edit($roleMember->roleId);
             $userRole = \laabs::newMessage('auth/userRole');
             $userRole->roleId = $role->roleId;
             $userRole->roleName = $role->roleName;
@@ -268,7 +270,8 @@ class userAccount
                     continue;
                 }
 
-                \laabs::callService("auth/roleMember/create", $roleId, $userAccount->accountId);
+                $roleMemberController = \laabs::newController('auth/roleMember');
+                $roleMemberController->create($roleId, $userAccount->accountId);
             }
         }
     }

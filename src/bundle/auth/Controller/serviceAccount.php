@@ -146,7 +146,8 @@ class serviceAccount
         try {
             $this->sdoFactory->create($serviceAccount, 'auth/account');
             $this->createServicePrivilege($servicesURI, $serviceAccount->accountId);
-            \laabs::callService("organization/organization/createServiceposition_orgId__userAccountId_", $orgId, $serviceAccount->accountId);
+            $organizationController = \laabs::newController("organization/organization");
+            $organizationController->addServicePosition($orgId, $serviceAccount->accountId);
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -171,11 +172,12 @@ class serviceAccount
     public function edit($serviceAccountId)
     {
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
-        $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccountId);
+        $servicePositionController = \laabs::newController("organization/servicePosition");
+        $servicePosition = $servicePositionController->edit($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 
 
-        foreach ($servicePrivilegesTmp as $value){
+        foreach ($servicePrivilegesTmp as $value) {
             $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
             $servicePrivilege->serviceURI = $value['serviceURI'];
             $servicePrivilege->description = $value['description'];
@@ -186,7 +188,10 @@ class serviceAccount
             $serviceAccount->orgId = $servicePosition->organization->orgId;
         }
 
-        $serviceAccount->servicePrivilege = $this->sdoFactory->find('auth/servicePrivilege', "accountId='$serviceAccountId'");
+        $serviceAccount->servicePrivilege = $this->sdoFactory->find(
+            'auth/servicePrivilege',
+            "accountId='$serviceAccountId'"
+        );
 
         return $serviceAccount;
     }
@@ -228,13 +233,17 @@ class serviceAccount
 
         try {
             if ($orgId) {
-                $servicePosition = \laabs::callService("organization/servicePosition/read_serviceAccountId_", $serviceAccount->accountId);
+                $servicePositionController = \laabs::newController("organization/servicePosition");
+                $servicePosition = $servicePositionController->edit($serviceAccount->accountId);
 
+                $organizationController = \laabs::newController("organization/organization");
                 if (isset($servicePosition->organization)) {
-                    \laabs::callService("organization/organization/deleteServiceposition_orgId__serviceAccountId_", $servicePosition->organization->orgId, $serviceAccount->accountId);
+                    $organizationController->deleteServicePosition(
+                        $servicePosition->organization->orgId,
+                        $serviceAccount->accountId
+                    );
                 }
-
-                \laabs::callService("organization/organization/createServiceposition_orgId__userAccountId_", $orgId, $serviceAccount->accountId);
+                $organizationController->addServicePosition($orgId, $serviceAccount->accountId);
             }
 
             $this->sdoFactory->update($serviceAccount, 'auth/account');
