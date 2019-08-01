@@ -179,12 +179,33 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
+        /* Gestion des rôles pour Securité CCFN */
+        // 'Anciens' utilisateur
         if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('configAdmin', true);
+            $view->setSource('configIsAdmin', true);
         } else {
-            $view->setSource('configAdmin', false);
+            $view->setSource('configIsAdmin', false);
         }
-
+        // Utilisateurs Courants
+        if (!$account->isAdmin && $account->ownerOrgId) {
+            $view->setSource('isUser', true);
+        } else {
+            $view->setSource('isUser', false);
+        }
+        
+        // Admin Fonctionnel
+        if ($account->isAdmin && $account->ownerOrgId) {
+            $view->setSource('adminF', true);
+        } else {
+            $view->setSource('adminF', false);
+        }
+        // Admin Général
+        if ($account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('adminG', true);
+        } else {
+            $view->setSource('adminG', false);
+        }
+        
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
