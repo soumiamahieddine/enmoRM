@@ -71,7 +71,6 @@ class organization
         } else {
             $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
         }
-
         foreach ($orgUnitList as $org) {
             $organization = \laabs::newInstance('organization/organization');
             $organization->displayName = $org->displayName;
@@ -1189,14 +1188,12 @@ class organization
     protected function getOwnerOriginatorsOrgs($currentService = null)
     {
         $userPositionController = \laabs::newController('organization/userPosition');
-
         $owner = false;
         $userOrgs = [];
         $userOwnerOrgs = [];
 
         if (!$currentService) {
             $userPositions = $userPositionController->getMyPositions();
-
             foreach ($userPositions as $userPosition) {
                 $userOrgs[] = $userPosition->organization;
             }
@@ -1225,7 +1222,7 @@ class organization
         }
 
         if ($owner) {
-            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=false');
         } else {
             $originators = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']");
         }
@@ -1233,7 +1230,7 @@ class organization
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
+            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId]) && isset($orgUnit->ownerOrgId)) {
                 $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
                 $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
@@ -1243,7 +1240,6 @@ class organization
             }
             $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
         }
-
         return $ownerOriginatorOrgs;
     }
 
