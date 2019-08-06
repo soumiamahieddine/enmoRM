@@ -351,13 +351,15 @@ class journal
 
         $events = $this->sdoFactory->find('lifeCycle/event', $queryString, $queryParams, $sortBy, null, $numberOfResult);
 
-        $users = \laabs::callService('auth/userAccount/readIndex');
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $users = $userAccountController->index();
         foreach ($users as $i => $user) {
             $users[(string) $user->accountId] = $user;
             unset($users[$i]);
         }
 
-        $services = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $services = $serviceAccountController->index();
         foreach ($services as $i => $service) {
             $services[(string) $service->accountId] = $service;
             unset($services[$i]);
@@ -441,7 +443,14 @@ class journal
 
             $queryString['timestamp'] = "timestamp>'$timestamp'";
 
-            $nextEvent = $this->sdoFactory->find("lifeCycle/event", implode(' and ', $queryString), [], "<timestamp", 0, 1);
+            $nextEvent = $this->sdoFactory->find(
+                "lifeCycle/event",
+                implode(' and ', $queryString),
+                [],
+                "<timestamp",
+                0,
+                1
+            );
 
             if (count($nextEvent)) {
                 $nextEvent = $nextEvent[0];
@@ -454,7 +463,6 @@ class journal
                     $this->getNextEvent($eventType, $chain);
 
                 } else {
-
                     $nextEvent = false;
                 }
 
@@ -1111,6 +1119,7 @@ class journal
         $body .= "The object '$event->objectId' of class '$event->objectClass'. ";
         $body .= "Description : $event->description ";
 
-        \laabs::callService("batchProcessing/notification/create", $subject, $body, array());
+        $notificationController = \laabs::newController('batchProcessing/notification');
+        $notificationController->create($subject, $body, array());
     }
 }

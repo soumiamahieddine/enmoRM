@@ -239,8 +239,9 @@ class ArchiveRestitution extends abstractMessage
         $senderOrgRegNumber = $senderOrg->registrationNumber;
         $user = \laabs::getToken('AUTH');
         $userName = false;
-        if($user) {
-            $user = \laabs::callService('auth/userAccount/read_userAccountId_', $user->accountId);
+        if ($user) {
+            $userAccountController = \laabs::newController('auth/userAccount');
+            $user = $userAccountController->edit($user->accountId);
             $userName = $user->accountName;
         }
 

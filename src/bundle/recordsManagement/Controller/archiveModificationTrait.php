@@ -395,8 +395,8 @@ trait archiveModificationTrait
         }
 
         if (!empty($archive->archivalProfileReference)) {
-            $archivalProfileDescription = \laabs::callService(
-                'recordsManagement/archivalProfile/readByreference_reference_',
+            $archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+            $archivalProfileDescription = $archivalProfileController->getByReference(
                 $archive->archivalProfileReference
             )->archiveDescription;
         }

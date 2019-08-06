@@ -344,7 +344,8 @@ class message
     protected function getCurrentRegistrationNumber()
     {
         if ($this->parentsDerogation) {
-            $childrenOrgs = \laabs::callService('organization/userPosition/readDescendantservices');
+            $userPositionController = \laabs::newController('organization/userPosition');
+            $childrenOrgs = $userPositionController->listMyCurrentDescendantServices();
 
             if ($childrenOrgs == null) {
                 $registrationNumber = "''";
