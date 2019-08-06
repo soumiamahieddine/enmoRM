@@ -1191,14 +1191,12 @@ class organization
     protected function getOwnerOriginatorsOrgs($currentService = null)
     {
         $userPositionController = \laabs::newController('organization/userPosition');
-
         $owner = false;
         $userOrgs = [];
         $userOwnerOrgs = [];
 
         if (!$currentService) {
             $userPositions = $userPositionController->getMyPositions();
-
             foreach ($userPositions as $userPosition) {
                 $userOrgs[] = $userPosition->organization;
             }
@@ -1228,7 +1226,7 @@ class organization
 
         $organizationController = \laabs::newController('organization/organization');
         if ($owner) {
-            $originators = $organizationController->index('isOrgUnit=true');
+            $originators = $organizationController->index('isOrgUnit=false');
         } else {
             $originators = $organizationController->index(
                 "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
@@ -1238,7 +1236,7 @@ class organization
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
+            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId]) && isset($orgUnit->ownerOrgId)) {
                 $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
                 $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
@@ -1248,7 +1246,6 @@ class organization
             }
             $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
         }
-
         return $ownerOriginatorOrgs;
     }
 

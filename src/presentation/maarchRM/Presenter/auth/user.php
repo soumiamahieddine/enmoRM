@@ -109,9 +109,14 @@ class user
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
         if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('configAdmin', true);
+            $view->setSource('configIsAdmin', true);
         } else {
-            $view->setSource('configAdmin', false);
+            $view->setSource('configIsAdmin', false);
+        }
+        if ($account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('adminG', true);
+        } else {
+            $view->setSource('adminG', false);
         }
 
         $view->setSource('allowUserModification', true);
@@ -179,7 +184,6 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        /* Gestion des rôles pour Securité CCFN */
         // 'Anciens' utilisateur
         if (!$account->isAdmin && !$account->ownerOrgId) {
             $view->setSource('configIsAdmin', true);
@@ -192,7 +196,6 @@ class user
         } else {
             $view->setSource('isUser', false);
         }
-        
         // Admin Fonctionnel
         if ($account->isAdmin && $account->ownerOrgId) {
             $view->setSource('adminF', true);
