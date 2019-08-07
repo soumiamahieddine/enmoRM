@@ -55,13 +55,11 @@
                 },
                 suggestion: function(organization) {
                     var display;
-                    if(organization.ownerOrgName) {
+                    if(organization.displayName) {
                         display =
                             "<span>"
                             + "<span class='fa fa-user' >&nbsp;</span>"
                             + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + organization.ownerOrgName
-                            + " > "
                             + organization.displayName
                             + "</span></span><br>";
                     }
@@ -114,7 +112,7 @@
             .attr('type', 'text')
             .attr('readonly', 'true')
             .attr('data-orgid', orgId)
-            .val(ownerOrgName+' > '+orgName)
+            .val(orgName)
             .data('orgId', orgId)
             .appendTo(inputGroup);
 

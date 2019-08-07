@@ -63,6 +63,11 @@ class organization
      */
     public function todisplay($ownerOrg, $orgUnit)
     {
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
+        
+
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $orgList = [];
 
@@ -72,6 +77,10 @@ class organization
             $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
         }
         foreach ($orgUnitList as $org) {
+            if ($user->ownerOrgId && $org->orgId != $user->ownerOrgId) {
+                continue;
+            }
+
             $organization = \laabs::newInstance('organization/organization');
             $organization->displayName = $org->displayName;
             $organization->orgId = $org->orgId;
@@ -80,7 +89,7 @@ class organization
             if ($ownerOrg) {
                 $orgList[] = $organization;
             }
-
+            
             if ($orgUnit) {
                 foreach ($org->originators as $orgUnit) {
                     if ($org->orgId == $orgUnit->ownerOrgId) {
@@ -1222,7 +1231,7 @@ class organization
         }
 
         if ($owner) {
-            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=false');
+            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
         } else {
             $originators = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']");
         }
@@ -1230,7 +1239,7 @@ class organization
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId]) && isset($orgUnit->ownerOrgId)) {
+            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
                 $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
                 $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
