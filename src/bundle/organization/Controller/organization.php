@@ -63,6 +63,11 @@ class organization
      */
     public function todisplay($ownerOrg, $orgUnit)
     {
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
+
+
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $orgList = [];
 
@@ -73,6 +78,10 @@ class organization
         }
 
         foreach ($orgUnitList as $org) {
+            if ($user->ownerOrgId && $org->orgId != $user->ownerOrgId) {
+                continue;
+            }
+
             $organization = \laabs::newInstance('organization/organization');
             $organization->displayName = $org->displayName;
             $organization->orgId = $org->orgId;
@@ -1226,7 +1235,7 @@ class organization
 
         $organizationController = \laabs::newController('organization/organization');
         if ($owner) {
-            $originators = $organizationController->index('isOrgUnit=false');
+            $originators = $organizationController->index('isOrgUnit=true');
         } else {
             $originators = $organizationController->index(
                 "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
@@ -1236,7 +1245,7 @@ class organization
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId]) && isset($orgUnit->ownerOrgId)) {
+            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
                 $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
                 $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
                 $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;

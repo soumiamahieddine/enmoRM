@@ -163,7 +163,7 @@
             error = true;
         }
 
-        if (user.organizations.length == 0) {
+        if (user.organizations.length == 0 && user.isAdmin == false) {
             gritter.show($('#emptyOrganization_text').text(), false);
             error = true;
         }
@@ -228,6 +228,11 @@
         $.each(inputs, function () {
             userAccount[$(this).attr('name')] = jQuery.trim($(this).val());
         })
+
+        if (userAccount['isAdmin'] == true) {
+            userAccount.ownerOrgId = userAccount.organizations[0];
+            userAccount.organizations = [];
+        }
 
         let roleConfig = $("#user_RoleContain").attr('data-restrictroles');
         //parametre.roleMembers.push(null);

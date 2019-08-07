@@ -1,127 +1,135 @@
 <div class="form-group">
-        <div id="servicePositions" class="col-xs-12" translate="no">
-            <?merge servicePosition ?>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Service" id="orgTypeahead"/>
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="button" id="addOrg" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
+            </span>
+        </div>
+    </div>
+    <div id="orgs" class="col-xs-12" translate="no">
+        <div>
             <div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Service Position" id="servicePosition"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-success" type="button" id="addServicePosition" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
-                        </span>
-                    </div>
+                <?merge userPositions ?>
+                <div class="input-group">
+                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" readOnly="true">
+                    <span class="input-group-btn">
+                        <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
+                            <i class="fa fa-trash-o fa-fw"></i>&nbsp;
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
-    
-    <span class="hide" id="noServiceFound">No service found</span>
-    <span class="hide" id="editMyProfile">true</span>
-    
-    <script>
-    
-        window.localStorage.clear();
-    
-        var organizations = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
-            limit: 100
-        });
-    
-        organizations.initialize();
-    
-    
-    
-        // initialize typeahead
-        $('#servicePosition').typeahead(
-            {
-                hint: true,
-                highlight: true,
-                minLength: 2
-            },
-            {
-                name: 'organization',
-                displayKey: 'servicePosition',
-                templates: {
-                    empty: function() {
-                        return "<span class='well well-sm'>"+$('#noServiceFound').text()+"</span>";
-                    },
-                    suggestion: function(account) {
-                        var display;
-                        if(organization.servicePosition) {
-                            display =
-                                "<span>"
-                                + "<span class='fa fa-user' >&nbsp;</span>"
-                                + "<span style='font-family:Helvetica, sans-serif;'>"
-                                + organization.servicePosition
-                                + "</span></span><br>";
-                        }
-                        else {
-                            display = this.empty();
-                        }
-                        return display;
+</div>
+<span class="hide" id="noServiceFound">No service found</span>
+<span class="hide" id="editMyProfile">true</span>
+
+<script>
+
+    window.localStorage.clear();
+
+    var organizations = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
+        limit: 100
+    });
+
+    organizations.initialize();
+
+    // initialize typeahead
+    $('#orgTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'organizations',
+            displayKey: 'displayName',
+            templates: {
+                empty: function() {
+                    return "<span class='well well-sm'>"+$('#noServiceFound').text()+"</span>";
+                },
+                suggestion: function(organization) {
+                    var display;
+                    if(organization.ownerOrgId) {
+                        display =
+                            "<span>"
+                            + "<span class='fa fa-user' >&nbsp;</span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + organization.ownerOrgName
+                            + " > "
+                            + organization.displayName
+                            + "</span></span><br>";
                     }
-                },
-                source: function(query, cb) {
-                    organizations.search(query, function(suggestions) {
-                        var i = suggestions.length
-                        while (i--) {
-                            if ($('#servicePositions').find('[data-servicePosition="'+ suggestions[i].servicePosition +'"]').length)
-                                suggestions.splice(i, 1);
-                        }
-                        cb(suggestions);
-                    });
-                },
-                skipCache: true
-            }
-        ).on('typeahead:selected', function($event, suggestion, source) {
-            $("#servicePosition").prop('servicePosition', suggestion);
-        });
-    
-        // add Service
-        $("#addServicePosition").on('click', function() {
-            //TODO faire fonctionner le add
-            if(suggestion = $("#servicePosition").prop('servicePosition')) {
-                addService(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName);
-                $("#servicePosition").val('');
-            }
-        });
-    
-        // remove Service
-        $("#servicePositions").on('click', '.removeServicePosition', function() {
-            $(this).closest('.input-group').remove();
-        })
-    
-        function addService(serviceName, serviceId, ownerOrgName) {
-    
-            var userTypeahead = $('#userTypeahead');
-    
-            var inputGroup = $('<div/>')
-                .addClass('input-group')
-                .data('orgId', orgId)
-                .appendTo($('#orgs'));
-    
-            var input = $('<input/>')
-                .addClass('form-control')
-                .attr('type', 'text')
-                .attr('readonly', 'true')
-                .attr('data-orgid', orgId)
-                .val(ownerOrgName+' > '+orgName)
-                .data('orgId', orgId)
-                .appendTo(inputGroup);
-    
-            var inputGrpBtn = $('<span/>')
-                .addClass('input-group-btn')
-                .appendTo(inputGroup);
-    
-            var btn = $('<button/>')
-                .addClass('btn btn-danger removeServicePosition')
-                .attr('type', 'button')
-                .html("&nbsp;")
-                .appendTo(inputGrpBtn);
-    
-            var icon = $('<i/>')
-                .addClass('fa fa-trash-o fa-fw')
-                .prependTo(btn);
+                    else {
+                        display = this.empty();
+                    }
+                    return display;
+                }
+            },
+            source: function(query, cb) {
+                organizations.search(query, function(suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
         }
-    </script>
+    ).on('typeahead:selected', function($event, suggestion, source) {
+        $("#orgTypeahead").prop('org', suggestion);
+    });
+
+    //add Organizations
+    $("#addOrg").on('click', function() {
+        if(suggestion = $("#orgTypeahead").prop('org')) {
+            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName);
+            $("#orgTypeahead").val('');
+        }
+    });
+
+    //remove Organizations
+    $("#orgs").on('click', '.removeOrg', function() {
+        $(this).closest('.input-group').remove();
+    })
+
+    function addOrg(orgName, orgId, ownerOrgName) {
+
+        var userTypeahead = $('#userTypeahead');
+
+        var inputGroup = $('<div/>')
+            .addClass('input-group')
+            .data('orgId', orgId)
+            .appendTo($('#orgs'));
+
+        var input = $('<input/>')
+            .addClass('form-control')
+            .attr('type', 'text')
+            .attr('readonly', 'true')
+            .attr('data-orgid', orgId)
+            .val(ownerOrgName + " > " + orgName)
+            .data('orgId', orgId)
+            .appendTo(inputGroup);
+
+        var inputGrpBtn = $('<span/>')
+            .addClass('input-group-btn')
+            .appendTo(inputGroup);
+
+        var btn = $('<button/>')
+            .addClass('btn btn-danger removeOrg')
+            .attr('type', 'button')
+            .html("&nbsp;")
+            .appendTo(inputGrpBtn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-trash-o fa-fw')
+            .prependTo(btn);
+    }
+</script>
