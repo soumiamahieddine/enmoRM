@@ -250,6 +250,8 @@ input:invalid {
             var div = $('<div class="col-md-9" />');
             formGroup.append(div);
 
+            console.log(descriptionField);
+
             switch (descriptionField.type) {
                 case 'array':
                     var field = Metadata.getArrayDiv(descriptionField);
@@ -273,7 +275,10 @@ input:invalid {
                     break;
 
                 case 'date':
-                case 'timestamp':
+                    var field = Metadata.getDateInput(descriptionField);
+                    break;
+
+                case 'datetime':
                     var field = Metadata.getDateInput(descriptionField);
                     break;
 
@@ -688,7 +693,10 @@ input:invalid {
                     break;
 
                 case 'date':
-                case 'timestamp':
+                    var field = Metadata.getDateInput(descriptionField);
+                    break;
+
+                case 'datetime':
                     var field = Metadata.getDateInput(descriptionField);
                     break;
 
@@ -901,6 +909,12 @@ input:invalid {
 
         checkAndFill : function(data, target) {
             if (target.attr("data-type")==="date") {
+                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                field = target.find("input");
+                field.datepicker('setDate', data);
+            }
+
+            if (target.attr("data-type")==="datetime") {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 field.datepicker('setDate', data);

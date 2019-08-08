@@ -125,6 +125,7 @@ trait archiveValidationTrait
                 break;
 
             case 'date':
+            case 'datetime':
                 $this->validateDate($value, $descriptionField);
                 break;
 

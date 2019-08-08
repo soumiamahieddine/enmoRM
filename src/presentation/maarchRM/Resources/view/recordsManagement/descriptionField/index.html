@@ -78,6 +78,9 @@ file that was distributed with this source code.
                                         <input type="radio" name="type" autocomplete="off" value="date"/>Date
                                     </label>
                                     <label class="btn btn-default">
+                                        <input type="radio" name="type" autocomplete="off" value="datetime"/>Date and time
+                                    </label>
+                                    <label class="btn btn-default">
                                         <input type="radio" name="type" autocomplete="off" value="number"/>Number
                                     </label>
                                     <label class="btn btn-default">
@@ -118,12 +121,6 @@ file that was distributed with this source code.
                             <label class="col-md-2 control-label">Default value</label>
                             <div class="col-md-8">
                                 <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
-                            </div>
-                        </div>
-                        <div class="form-group hide" id="datePropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control datePicker" name="defaultValue" placeholder="Default value"/>
                             </div>
                         </div>
                         <div class="form-group hide" id="numberPropertyDefaultValue">
@@ -395,7 +392,7 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue').addClass('hide');
         $('#keywordEnumList').empty();
         $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
@@ -412,7 +409,6 @@ file that was distributed with this source code.
                 break;
 
             case "date" :
-                $('#datePropertyDefaultValue').removeClass('hide');
                 break;
 
             case "number" :
@@ -441,7 +437,7 @@ file that was distributed with this source code.
         $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
         $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
 
-        $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #datePropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn').addClass('hide');
+        $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
 
@@ -501,8 +497,9 @@ file that was distributed with this source code.
                 break;
 
             case "date" :
-                $('#datePropertyDefaultValue').removeClass('hide');
-                $('#datePropertyDefaultValue').find("input").val(descriptionField.default);
+                break;
+
+            case "datetime" :
                 break;
 
             case "number" :
@@ -573,7 +570,6 @@ file that was distributed with this source code.
                 property['default'] = $('#numberPropertyDefaultValue').find('input').val();
                 break;
             case "date":
-                property['default'] = $('#datePropertyDefaultValue').find('input').val();
                 break;
         }
 
