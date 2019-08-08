@@ -214,10 +214,12 @@ class descriptionScheme
             case $type == 'boolean':
                 return 'boolean';
 
-            case $type == 'timestamp':
-            case $type == 'datetime':
             case $type == 'date':
                 return 'date';
+
+            case $type == 'timestamp':
+            case $type == 'datetime':
+                return 'datetime';
 
             case strpos($type, '/') !== false:
                 return '#'.$type;
@@ -320,9 +322,11 @@ class descriptionScheme
     protected function getJsonTypeName($type)
     {
         switch (true) {
-            case isset($type->format) && (
-                $type->format == 'dateTime'|| $type->format == 'date'):
+            case isset($type->format) && $type->format == 'date':
                 return 'date';
+
+            case isset($type->format) && $type->format == 'dateTime':
+                return 'datetime';
 
             case $type->type == 'string':
                 return 'text';
@@ -339,9 +343,11 @@ class descriptionScheme
     protected function getJsonType($type)
     {
         switch (true) {
-            case isset($type->format) && (
-                $type->format == 'dateTime'|| $type->format == 'date'):
+            case isset($type->format) && $type->format == 'date':
                 return 'date';
+
+            case isset($type->format) && $type->format == 'dateTime':
+                return 'datetime';
 
             case $type->type == 'string':
                 return 'text';

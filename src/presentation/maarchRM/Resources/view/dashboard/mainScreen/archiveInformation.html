@@ -399,6 +399,18 @@
                         td.html('').append(input);
                         break;
 
+                    case 'datetime':
+                        input = $("#inputText").clone().removeAttr('id');
+                        input.datepicker(DatePickerParams).datepicker('setDate', td.html());
+                        
+                        input.datepicker({
+                            language:$('#wrapper').attr('lang'),
+                            autoclose:true
+                        }).datepicker('setDate', td.html());
+
+                        td.html('').append(input);
+                        break;
+
                     case 'array':
                         // Add data-itemtype to manage arrays
                         input = $("#inputHidden").clone().removeAttr('id');
@@ -455,6 +467,9 @@
                         break;
                     case "date" :
                         value = inputValue.data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        break;
+                    case "datetime" :
+                        value = inputValue.data('datepicker').getFormattedDate('yyyy-mm-dd HH:mm:ss');
                         break;
                     case "number" :
                         value = parseInt(inputValue.val());

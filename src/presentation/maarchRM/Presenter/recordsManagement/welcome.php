@@ -95,6 +95,7 @@ class welcome
                     case 'text':
                     case 'name':
                     case 'date':
+                    case 'datetime':
                     case 'number':
                     case 'boolean':
                         $archivalProfile->searchFields[] = $archiveDescription->descriptionField;
@@ -203,7 +204,7 @@ class welcome
 
         foreach ($archives as $archive) {
             $archive->originatorOrgName = $orgsName[$archive->originatorOrgRegNumber];
-            if (!empty($archive->archivalProfileReference)) {
+            if (!empty($archive->archivalProfileReference) && isset($profilesName[$archive->archivalProfileReference])) {
                 $archive->archivalProfileName = $profilesName[$archive->archivalProfileReference];
             }
         }
@@ -295,7 +296,6 @@ class welcome
                 }
             }
         }
-
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);
