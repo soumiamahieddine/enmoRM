@@ -189,7 +189,7 @@ class logger
         }
 
         $eventController = \laabs::newController('audit/event');
-        $eventController->create(
+        $eventController->add(
             $this->servicePath->getName(),
             $this->servicePath->variables,
             $this->input,
@@ -221,7 +221,7 @@ class logger
         $output = utf8_encode($businessException->getMessage());
 
         $eventController = \laabs::newController('audit/event');
-        $eventController->create(
+        $eventController->add(
             'audit/event/create',
             $this->servicePath->getName(),
             $this->servicePath->variables,
