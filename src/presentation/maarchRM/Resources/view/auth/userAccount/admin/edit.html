@@ -223,6 +223,7 @@
         var userPositions = $("#orgs").find('input');
         $.each(userPositions, function(){
             userAccount.organizations.push($(this).data('orgid'));
+            userAccount.ownerOrgId=$(this).data('ownerOrgId');
         })
 
         $.each(inputs, function () {
@@ -232,6 +233,8 @@
         if (userAccount['isAdmin'] == true) {
             userAccount.ownerOrgId = userAccount.organizations[0];
             userAccount.organizations = [];
+        } else {
+            userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerOrgId');
         }
 
         let roleConfig = $("#user_RoleContain").attr('data-restrictroles');

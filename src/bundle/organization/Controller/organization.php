@@ -124,13 +124,16 @@ class organization
     {
         $tree = array();
 
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $owner = true;
 
         if (isset($currentOrg)) {
             if (!$currentOrg->orgRoleCodes) {
                 $owner = false;
-            } else if (is_array($currentOrg->orgRoleCodes) && !in_array('owner', $currentOrg->orgRoleCodes)) {
+            } elseif (is_array($currentOrg->orgRoleCodes) && !in_array('owner', $currentOrg->orgRoleCodes)) {
                 $owner = false;
             }
         }
@@ -143,6 +146,11 @@ class organization
         foreach ($organizationList as $organization) {
             $parentOrgId = (string)$organization->parentOrgId;
 
+            if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
+                if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
+                    continue;
+                }
+            }
 
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
@@ -198,7 +206,6 @@ class organization
         $queryParts = array();
         $variables = array();
         $query = null;
-
 
         if ($name) {
             $variables['name'] = "*$name*";

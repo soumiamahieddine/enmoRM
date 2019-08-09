@@ -12,7 +12,7 @@
             <div>
                 <?merge userPositions ?>
                 <div class="input-group">
-                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" readOnly="true">
+                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" data-ownerOrgId="[?merge .ownerOrgId ?]" readOnly="true">
                     <span class="input-group-btn">
                         <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
                             <i class="fa fa-trash-o fa-fw"></i>&nbsp;

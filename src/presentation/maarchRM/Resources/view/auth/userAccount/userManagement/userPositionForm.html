@@ -12,7 +12,7 @@
             <div>
                 <?merge userPositions ?>
                 <div class="input-group">
-                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" readOnly="true">
+                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" data-ownerOrgId="[?merge .ownerOrgId ?]" readOnly="true">
                     <span class="input-group-btn">
                         <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
                             <i class="fa fa-trash-o fa-fw"></i>&nbsp;
@@ -90,7 +90,7 @@
     //add Organizations
     $("#addOrg").on('click', function() {
         if(suggestion = $("#orgTypeahead").prop('org')) {
-            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName);
+            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName, suggestion.ownerOrgId);
             $("#orgTypeahead").val('');
         }
     });
@@ -100,13 +100,14 @@
         $(this).closest('.input-group').remove();
     })
 
-    function addOrg(orgName, orgId, ownerOrgName) {
+    function addOrg(orgName, orgId, ownerOrgName, ownerOrgId) {
 
         var userTypeahead = $('#userTypeahead');
 
         var inputGroup = $('<div/>')
             .addClass('input-group')
             .data('orgId', orgId)
+            .data('ownerOrgId', ownerOrgId)
             .appendTo($('#orgs'));
 
         var input = $('<input/>')
@@ -116,6 +117,7 @@
             .attr('data-orgid', orgId)
             .val(ownerOrgName + " > " + orgName)
             .data('orgId', orgId)
+            .data('ownerOrgId', ownerOrgId)
             .appendTo(inputGroup);
 
         var inputGrpBtn = $('<span/>')
