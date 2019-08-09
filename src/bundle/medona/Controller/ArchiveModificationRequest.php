@@ -138,7 +138,15 @@ class ArchiveModificationRequest extends abstractMessage
 
         $queryParts[] = "type='ArchiveModificationRequest' and status='received'";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -153,9 +161,25 @@ class ArchiveModificationRequest extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $requester = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveModificationRequest", $reference, $archiver, $requester, null, null, $fromDate, $toDate, $status);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $requester = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveModificationRequest",
+            $reference,
+            $archiver,
+            $requester,
+            null,
+            null,
+            $fromDate,
+            $toDate,
+            $status
+        );
     }
 
 

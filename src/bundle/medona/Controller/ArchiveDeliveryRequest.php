@@ -50,7 +50,15 @@ class ArchiveDeliveryRequest extends abstractMessage
         $queryParts[] = "status = 'sent'";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -67,9 +75,27 @@ class ArchiveDeliveryRequest extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveDelivery", $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveDelivery",
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status
+        );
     }
 
     /**
@@ -122,7 +148,12 @@ class ArchiveDeliveryRequest extends abstractMessage
         $messages = array();
 
         foreach ($archiveIds as $archiveId) {
-            $archive = $this->archiveController->retrieve($archiveId, $withBinary = false, $checkAccess = true, $isCommunication = true);
+            $archive = $this->archiveController->retrieve(
+                $archiveId,
+                $withBinary = false,
+                $checkAccess = true,
+                $isCommunication = true
+            );
             
             if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
                 $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
@@ -152,7 +183,14 @@ class ArchiveDeliveryRequest extends abstractMessage
 
             $archiverOrgRegNumber = $archives[0]->archiverOrgRegNumber;
 
-            $message = $this->send($reference, $archives, $derogation, $comment, $requesterOrgRegNumber, $archiverOrgRegNumber);
+            $message = $this->send(
+                $reference,
+                $archives,
+                $derogation,
+                $comment,
+                $requesterOrgRegNumber,
+                $archiverOrgRegNumber
+            );
 
             $messages[] = $message;
         }
@@ -172,8 +210,15 @@ class ArchiveDeliveryRequest extends abstractMessage
      *
      * @return The reply message generated
      */
-    public function send($reference, $archives, $derogation = false, $comment = false, $requesterOrgRegNumber = false, $archiverOrgRegNumber = false, $userName = false)
-    {
+    public function send(
+        $reference,
+        $archives,
+        $derogation = false,
+        $comment = false,
+        $requesterOrgRegNumber = false,
+        $archiverOrgRegNumber = false,
+        $userName = false
+    ) {
         if (!is_array($archives)) {
             $archives = array($archives);
         }
@@ -354,7 +399,10 @@ class ArchiveDeliveryRequest extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find("medona/message", "status='accepted' AND type='ArchiveDeliveryRequest' AND active=true");
+        $messages = $this->sdoFactory->find(
+            "medona/message",
+            "status='accepted' AND type='ArchiveDeliveryRequest' AND active=true"
+        );
         foreach ($messages as $message) {
             $this->changeStatus($message->messageId, "processing");
             $this->readOrgs($message);

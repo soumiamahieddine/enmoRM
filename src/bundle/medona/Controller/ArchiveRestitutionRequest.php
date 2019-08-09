@@ -43,7 +43,15 @@ class ArchiveRestitutionRequest extends abstractMessage
         $queryParts[] = "active=true";
         $queryParts[] = "status != 'processed' AND status != 'error' AND status != 'rejected'";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -61,7 +69,15 @@ class ArchiveRestitutionRequest extends abstractMessage
         $queryParts[] = "active=true";
         $queryParts[] = "status=['sent', 'accepted']";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -74,15 +90,28 @@ class ArchiveRestitutionRequest extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function listSending($sender = false, $recipient = false, $fromDate = false, $toDate = false, $reference = false)
-    {
+    public function listSending(
+        $sender = false,
+        $recipient = false,
+        $fromDate = false,
+        $toDate = false,
+        $reference = false
+    ) {
         $registrationNumber = $this->getCurrentRegistrationNumber();
 
         $queryParts[] = "type='ArchiveRestitutionRequest'";
         $queryParts[] = "senderOrgRegNumber=$registrationNumber";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', '('.implode(') and (', $queryParts).')', null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            '('.implode(') and (', $queryParts).')',
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -120,8 +149,14 @@ class ArchiveRestitutionRequest extends abstractMessage
      *
      * @return The reply message generated
      */
-    public function send($reference, $archives, $comment = false, $senderOrg = false, $recipientOrg = false,  $userName = false)
-    {
+    public function send(
+        $reference,
+        $archives,
+        $comment = false,
+        $senderOrg = false,
+        $recipientOrg = false,
+        $userName = false
+    ) {
         if (!is_array($archives)) {
             $archives = array($archives);
         }
@@ -331,7 +366,11 @@ class ArchiveRestitutionRequest extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find("medona/message", "status='accepted' AND type='ArchiveRestitutionRequest' AND active=true");
+        $messages = $this->sdoFactory->find(
+            "medona/message",
+            "status='accepted' AND type='ArchiveRestitutionRequest' AND active=true"
+        );
+
         foreach ($messages as $message) {
             try {
                 $results[(string) $message->messageId] = $this->process((string)$message->messageId);
@@ -408,7 +447,11 @@ class ArchiveRestitutionRequest extends abstractMessage
     {
         $results = array();
 
-        $restitutionIds = $this->sdoFactory->index('medona/message', array('messageId'), 'type = "ArchiveRestitution" AND status = "validated"');
+        $restitutionIds = $this->sdoFactory->index(
+            'medona/message',
+            array('messageId'),
+            'type = "ArchiveRestitution" AND status = "validated"'
+        );
 
         foreach ($restitutionIds as $restitutionId) {
             $this->changeStatus($restitutionId, "processing");
@@ -428,9 +471,15 @@ class ArchiveRestitutionRequest extends abstractMessage
     public function destruct($messageId)
     {
         $restitution = $this->sdoFactory->read('medona/message', array("messageId" => $messageId));
-        $restitutionRequest = $this->sdoFactory->find('medona/message', "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$restitution->recipientOrgRegNumber."' AND replyReference='".$restitution->relatedReference."'")[0];
+        $restitutionRequest = $this->sdoFactory->find(
+            'medona/message',
+            "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$restitution->recipientOrgRegNumber."' AND replyReference='".$restitution->relatedReference."'"
+        )[0];
 
-        $restitutionRequest->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $restitutionRequest);
+        $restitutionRequest->unitIdentifier = $this->sdoFactory->readChildren(
+            'medona/unitIdentifier',
+            $restitutionRequest
+        );
 
         $removedArchiveIds = [];
         foreach ($restitutionRequest->unitIdentifier as $unitIdentifier) {

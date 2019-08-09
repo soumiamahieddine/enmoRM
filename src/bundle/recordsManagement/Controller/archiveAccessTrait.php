@@ -284,7 +284,15 @@ trait archiveAccessTrait
         }
 
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
@@ -341,7 +349,15 @@ trait archiveAccessTrait
         }
         
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {

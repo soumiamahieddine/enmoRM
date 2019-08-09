@@ -51,7 +51,14 @@ class ArchiveDeliveryRequestReply extends abstractMessage
         $queryParts[] = "status = 'sent'";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults);
     }
 
     /**
@@ -68,7 +75,15 @@ class ArchiveDeliveryRequestReply extends abstractMessage
         $queryParts[] = "active=true";
         $queryParts[] = "status = ['sent']";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -87,7 +102,10 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             $requestMessage = $this->sdoFactory->read('medona/message', $messageId);
         }
 
-        $authorizationMessage = $this->sdoFactory->find('medona/message', "authorizationReference='$requestMessage->reference'");
+        $authorizationMessage = $this->sdoFactory->find(
+            'medona/message',
+            "authorizationReference='$requestMessage->reference'"
+        );
 
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();

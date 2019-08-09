@@ -158,6 +158,14 @@ class ArchiveConversionRequest extends abstractMessage
 
         $queryParts[] = "type='ArchiveConversionRequest'";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 }

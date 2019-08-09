@@ -551,7 +551,16 @@ class digitalSafe
         $queryParts['archive'] = "status != 'disposed'";
 
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
 
         $replyMessage->archiveIds = [];
         foreach ($archives as $archive) {
