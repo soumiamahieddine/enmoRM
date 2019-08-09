@@ -43,14 +43,14 @@
                                     <input type="password" class="form-control" id="verification" name="verification" placeholder="Password verification" autocomplete="off">
                                 </div>
                             </div>
-                            <?merge configIsAdmin.bool() ?>
+                            <?merge whatAmI.ifeq('oldUser') ?>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
                                 <div class="col-sm-6">
                                     <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
                                 </div>
                             </div>
-                            <?merge adminG.bool() ?>
+                            <?merge whatAmI.ifeq('adminG') ?>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="adminGUser">Admin Rights</label>
                                 <div class="col-sm-6">
@@ -68,16 +68,16 @@
                 <li class="active"><a href="#userInformationsTab" data-toggle="tab">User information</a></li>
                 <?merge profile.bool().not() ?>
                 <li><a href="#userRoleTab" data-toggle="tab">User role</a></li>
-                <?merge isUser.bool()?>
-                <li><a href="#userTab" data-toggle="tab">Test User Tab</a></li>
+               <!-- <?merge whatAmI.ifeq('simpleUser') ?>
+                <li><a href="#userTab" data-toggle="tab">User Tab</a></li>-->
                 <?merge user.accountId.bool()?>
                 <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
-                <?merge configIsAdmin.bool()?>
-                <li><a href="#servicePositionTab" data-toggle="tab">Test Service Position</a></li>
-                <?merge adminF.bool()?>               
-                <li><a href="#userPositionTab" data-toggle="tab">Test User Position</a></li>
-                <?merge adminG.bool()?>
-                <li><a href="#orgTab" data-toggle="tab">Test Organization units<span style="color : red">*</span></a></li>
+                <?merge whatAmI.ifeq('oldUser') ?>
+                <li><a href="#servicePositionTab" data-toggle="tab">Service Position</a></li>
+                <?merge whatAmI.ifeq('adminF') ?>         
+                <li><a href="#userPositionTab" data-toggle="tab">User Position<span style="color : red">*</span></a></li>
+                <?merge whatAmI.ifeq('adminG') ?>
+                <li><a href="#orgTab" data-toggle="tab">Organization units<span style="color : red">*</span></a></li>
             </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
                 <div class="panel-body clearfix">
@@ -94,21 +94,21 @@
                         <div class="tab-pane fade" id="userRoleTab">
                             <?hinclude auth/authorization/roleInformationForm.html ?>
                         </div>
-                         <!--<?merge isUser.bool()?>
+                         <!--<?merge whatAmI.ifeq('simpleUser') ?>
                         <div class="tab-pane fade" id="userTab">
                             <?hinclude auth/userAccount/userManagement/TODO.html ?>
                         </div>-->
-                        <?merge configIsAdmin.bool()?>
+                        <?merge whatAmI.ifeq('oldUser') ?>
                         <div class="tab-pane fade" id="servicePositionTab">
                             <!-- User information form -->
                             <?hinclude auth/userAccount/userManagement/servicePositionForm.html ?>
                         </div>
-                        <?merge adminF.bool() ?>
+                        <?merge whatAmI.ifeq('adminF') ?>
                         <div class="tab-pane fade" id="userPositionTab">
                             <!-- User information form -->
                             <?hinclude auth/userAccount/userManagement/userPositionForm.html ?>
                         </div>
-                        <?merge adminG.bool()?>
+                        <?merge whatAmI.ifeq('adminG') ?>
                         <div class="tab-pane fade" id="orgTab">
                         <!-- User information form -->
                         <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
