@@ -106,7 +106,7 @@
                         <?merge whatAmI.ifeq('adminF') ?>
                         <div class="tab-pane fade" id="userPositionTab">
                             <!-- User information form -->
-                            <?hinclude auth/userAccount/userManagement/userPositionForm.html ?>
+                            <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
                         </div>
                         <?merge whatAmI.ifeq('adminG') ?>
                         <div class="tab-pane fade" id="orgTab">
@@ -231,7 +231,7 @@
         })
 
         if (userAccount['isAdmin'] == true) {
-            userAccount.ownerOrgId = userAccount.organizations[0];
+            userAccount.ownerOrgId = $("#orgSelect").val();
             userAccount.organizations = [];
         } else {
             userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerOrgId');
@@ -256,6 +256,14 @@
 
         return userAccount;
     }
+
+    $("#adminGUser").on('click', function () {
+        selectOrTypeheadOrg();
+    });
+
+    $("#adminUser").on('click', function () {
+        selectOrTypeheadOrg();
+    });
 
     function validateEmail($email) {
         var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
