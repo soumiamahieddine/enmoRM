@@ -413,6 +413,15 @@ msgctxt "eventInfo"
 msgid "serviceDestinataire"
 msgstr "Service du destinataire"
 msgctxt "eventInfo"
+
+msgid "orgName"
+msgstr "Nom de l'activité"
+msgctxt "eventInfo"
+
+msgid "ownerOrgId"
+msgstr "Identifiant de l'organisation"
+msgctxt "eventInfo"
+
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------
@@ -567,6 +576,15 @@ msgstr "Demande d'autorisation d'un bordereau"
 msgid "medona/message"
 msgstr "Identifiant bordereau"
 
+msgid "organization/counting"
+msgstr "Compter le nombre d'identifiant"
+
+msgid "organization/listing"
+msgstr "Lister le nombre d'identifiant"
+
+msgid "organization/journal"
+msgstr "Lecture journal"
+
 msgid "Result"
 msgstr "Résultat"
 
@@ -720,3 +738,7 @@ msgctxt "recordsManagement/integrityCheck"
 msgid "certificateName"
 msgstr "Attestation de destruction"
 msgctxt "recordsManagement/destruction"
+
+
+msgid "Organization"
+msgstr "Organisation"
