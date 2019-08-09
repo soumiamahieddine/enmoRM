@@ -210,6 +210,7 @@
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
+        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").prop("data-ownerOrgId");
         serviceAccount.emailAddress = '';
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
@@ -368,8 +369,9 @@
         }
     ).on('typeahead:selected', function($event, suggestion, source) {
         $("#orgTypeahead").prop('org', suggestion);
-        $("#serviceOrgId").val(suggestion.orgId)
-        $("#originatorOwnerOrgName").val(suggestion.ownerOrgName)
+        $("#serviceOrgId").val(suggestion.orgId);
+        $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
+        $("#originatorOwnerOrgName").prop("data-ownerOrgId", suggestion.ownerOrgId);
     });
 
     $('#orgTypeahead').keyup(function () {
