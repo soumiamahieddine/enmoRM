@@ -97,4 +97,14 @@ class userAccountUpdate
      */
     public $modificationRight;
 
+    /**
+     * @var string
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
+
 }
