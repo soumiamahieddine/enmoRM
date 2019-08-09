@@ -1364,7 +1364,7 @@ trait laabsAppTrait
         $versions = [];
         $version = new \stdClass();
         $version->name = 'Maarch RM';
-        $version->number = file_get_contents('../VERSION.md');
+        $version->number = trim(file_get_contents('../VERSION.md'));
         $versions[] = $version;
 
         $extensions = \laabs::getExtensions();
@@ -1373,7 +1373,7 @@ trait laabsAppTrait
             if (file_exists($versionPath)) {
                 $version = new \stdClass();
                 $version->name = ucfirst($extension);
-                $version->number = file_get_contents($versionPath);
+                $version->number = trim(file_get_contents($versionPath));
                 $versions[] = $version;
             }
         }

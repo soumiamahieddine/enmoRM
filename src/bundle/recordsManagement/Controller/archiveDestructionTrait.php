@@ -225,7 +225,6 @@ trait archiveDestructionTrait
         }
 
         $archives = $this->verifyIntegrity($archiveIds);
-        
         $destructArchives = [];
         $destructArchives['error'] = $archives['error'];
         $destructArchives['success'] = [];

@@ -197,8 +197,11 @@ INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "messag
     ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)'),
     ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s accepté par %13$s (%12$s)'),
     ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s rejeté par %13$s (%12$s)'),
-    ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)');
-
+    ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', FALSE, 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)'),
+    
+    ('organization/counting', 'orgName ownerOrgId', FALSE, 'Compter le nombre d''objet numerique dans l''activité %6$s'),
+    ('organization/listing', 'orgName ownerOrgId', FALSE, 'Lister les identifiants d''objet numeriques de l''activité %6$s'),
+    ('organization/journal', 'orgName ownerOrgId', FALSE, 'Lecture du journal de l''organisation %6$s');
 
 INSERT INTO organization."orgType" (code, name) VALUES ('Collectivite', 'Collectivité');
 INSERT INTO organization."orgType" (code, name) VALUES ('Societe', 'Société');

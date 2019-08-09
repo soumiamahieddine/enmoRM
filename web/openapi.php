@@ -89,7 +89,7 @@ class Openapi
     {
         $this->info          = new \StdClass();
         $this->info->title   = 'Maarch RM';
-        $this->info->version = '2.1';
+        $this->info->version = \laabs::getVersion()[0]->number;
         $this->info->contact         = new \StdClass();
         $this->info->contact->name   = 'Cyril VAZQUEZ';
         $this->info->contact->email  = 'cyril.vazquez@maarch.org';

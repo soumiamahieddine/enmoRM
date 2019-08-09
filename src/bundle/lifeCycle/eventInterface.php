@@ -28,6 +28,24 @@ interface eventInterface
 {
 
     /**
+     * Search a journal event
+     * @param string    $eventType   The type of the event
+     * @param string    $objectClass The class of the object
+     * @param string    $objectId    The identifier of the object
+     * @param timestamp $minDate     The minimum date of the event
+     * @param timestamp $maxDate     The maximum date of the event
+     *
+     * @action lifeCycle/journal/searchEvent
+     */
+    public function readSearch(
+        $eventType = false,
+        $objectClass = false,
+        $objectId = false,
+        $minDate = false,
+        $maxDate = false
+    );
+
+    /**
      * Get an events by id
      *
      * @action lifeCycle/journal/getEventFromJournal
@@ -42,17 +60,4 @@ interface eventInterface
      *
      */
     public function readEventtypelist();
-
-    /**
-     * Search a journal event
-     * @param string    $eventType   The type of the event
-     * @param string    $objectClass The class of the object
-     * @param string    $objectId    The identifier of the object
-     * @param timestamp $minDate     The minimum date of the event
-     * @param timestamp $maxDate     The maximum date of the event
-     *
-     * @action lifeCycle/journal/searchEvent
-     */
-    public function readSearch($eventType = false, $objectClass = false, $objectId = false, $minDate = false, $maxDate = false);
-
 }

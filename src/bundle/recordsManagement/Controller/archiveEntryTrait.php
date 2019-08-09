@@ -227,7 +227,7 @@ trait archiveEntryTrait
     {
         $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
 
-        $this->digitalResourceController->getHash($resource, "SHA256");
+        $this->digitalResourceController->getHash($resource, \laabs::configuration('auth')['passwordEncryption']);
 
         return $resource;
     }
