@@ -82,7 +82,7 @@ class journal
             $name = strtok('');
 
             switch ($bundle) {
-                case 'recordsManagement' :
+                case 'recordsManagement':
                     $domainLabel = 'Archive';
                     $objectType = 'recordsManagement/archive';
                     switch ($name) {
@@ -100,9 +100,14 @@ class journal
                     }
                     break;
 
-                case 'medona' : 
+                case 'medona':
                     $objectType = 'medona/message';
                     $domainLabel = 'Message';
+                    break;
+                case 'organization':
+                    $objectType = 'organization/organization';
+                    $domainLabel = 'Organization';
+                    break;
             }
 
             $domainLabel = $this->view->translator->getText($domainLabel);

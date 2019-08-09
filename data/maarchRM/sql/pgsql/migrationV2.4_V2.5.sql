@@ -6,6 +6,15 @@ ALTER TABLE "recordsManagement"."descriptionField" ADD COLUMN "facets" jsonb;
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
  ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt d''une ressource dans l''archive %6$s');
 
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+('organization/counting', 'orgName ownerOrgId', FALSE, 'Compter le nombre d''objet numerique dans l''activité %6$s');
+
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+('organization/listing', 'orgName ownerOrgId', FALSE, 'Lister les identifiants d''objet numeriques de l''activité %6$s');
+
+INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
+('organization/journal', 'orgName ownerOrgId', FALSE, 'Lecture du journal de l''organisation %6$s');
+
 CREATE SCHEMA "medona";
 
 CREATE TABLE "medona"."archivalAgreement"

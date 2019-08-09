@@ -624,12 +624,12 @@ trait archiveAccessTrait
         $res['childrenRelationships'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
         foreach ($res['childrenRelationships'] as $childRelationship) {
             $relatedArchiveInfo = $this->read($childRelationship->relatedArchiveId);
-            $childRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+            $childRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName;
         }
         $res['parentRelationships'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
         foreach ($res['parentRelationships'] as $parentRelationship) {
             $relatedArchiveInfo = $this->read($parentRelationship->archiveId);
-            $parentRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+            $parentRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName;
         }
 
         return $res;

@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "Maarch RM",
-        "version": "2.1",
+        "version": "2.5",
         "contact": {
             "name": "Cyril VAZQUEZ",
             "email": "cyril.vazquez@maarch.org",
@@ -13,7 +13,7 @@
             "url": "http://www.gnu.org/licenses/lgpl.txt"
         }
     },
-    "host": "maarchrm.svc:80",
+    "host": "maarchrm:80",
     "basePath": "/",
     "schemes": [
         "http",
@@ -215,7 +215,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "$ref": "#/definitions/auth/properties/account"
                         }
                     }
                 }
@@ -225,11 +225,8 @@
                 "operationId": "auth/authentication/deleteUserlogin",
                 "parameters": [],
                 "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
-                        }
+                    "default": {
+                        "description": "No documentation available"
                     }
                 }
             }
@@ -276,7 +273,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "string"
                         }
                     }
                 }
@@ -292,58 +289,6 @@
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/auth/properties/publicUserStory"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new user story public",
-                "operationId": "auth/publicUserStory/create",
-                "parameters": [
-                    {
-                        "name": "entity",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "publicUserStory"
-                            ],
-                            "properties": {
-                                "publicUserStory": {
-                                    "description": "user story public",
-                                    "$ref": "#/definitions/auth/properties/publicUserStory"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete an user story public",
-                "operationId": "auth/publicUserStory/delete",
-                "parameters": [
-                    {
-                        "name": "publicUserStory",
-                        "in": "query",
-                        "description": "The user story public",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
                         }
                     }
                 }
@@ -505,7 +450,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "string"
                         }
                     }
                 }
@@ -814,6 +759,28 @@
                 }
             }
         },
+        "/auth/serviceAccount/Privilege/{serviceAccountId}": {
+            "get": {
+                "description": "List service account privilege",
+                "operationId": "auth/serviceAccount/readPrivilege_serviceAccountId_",
+                "parameters": [
+                    {
+                        "name": "serviceAccountId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/serviceAccount": {
             "post": {
                 "description": "Create a new service Account",
@@ -936,9 +903,9 @@
             }
         },
         "/auth/serviceAccount/Servicetoken/{serviceAccountId}": {
-            "get": {
+            "put": {
                 "description": "Generate service account token",
-                "operationId": "auth/serviceAccount/readServicetoken_serviceAccountId_",
+                "operationId": "auth/serviceAccount/updateServicetoken_serviceAccountId_",
                 "parameters": [
                     {
                         "name": "serviceAccountId",
@@ -951,7 +918,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "string"
+                            "type": "object"
                         }
                     }
                 }
@@ -1364,23 +1331,6 @@
                         "in": "path",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "entity",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "replacingUserAccountId"
-                            ],
-                            "properties": {
-                                "replacingUserAccountId": {
-                                    "description": "The replacing user acocount id",
-                                    "type": "string"
-                                }
-                            }
-                        }
                     }
                 ],
                 "responses": {
@@ -1477,10 +1427,14 @@
                         "schema": {
                             "type": "object",
                             "required": [
-                                "newPassword"
+                                "newPassword",
+                                "oldPassword"
                             ],
                             "properties": {
                                 "newPassword": {
+                                    "type": "string"
+                                },
+                                "oldPassword": {
                                     "type": "string"
                                 }
                             }
@@ -1497,10 +1451,10 @@
                 }
             }
         },
-        "/auth/userAccount/Generate/Password": {
+        "/auth/userAccount/Forgotaccount": {
             "put": {
-                "description": "Generate a new password",
-                "operationId": "auth/userAccount/updateGeneratePassword",
+                "description": "Generate reset token",
+                "operationId": "auth/userAccount/updateForgotaccount",
                 "parameters": [
                     {
                         "name": "entity",
@@ -1519,6 +1473,44 @@
                                 },
                                 "email": {
                                     "description": "The email of the user",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/userAccount/Resetpassword": {
+            "put": {
+                "description": "Reset password",
+                "operationId": "auth/userAccount/updateResetpassword",
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "newPassword",
+                                "token"
+                            ],
+                            "properties": {
+                                "newPassword": {
+                                    "description": "The new password",
+                                    "type": "string"
+                                },
+                                "token": {
+                                    "description": "The token",
                                     "type": "string"
                                 }
                             }
@@ -1579,13 +1571,19 @@
                 }
             }
         },
-        "/batchProcessing/logscheduling/{schedulingId}": {
+        "/batchProcessing/logscheduling/{schedulingId}/{logDate}": {
             "get": {
                 "description": "Get search form for entries",
-                "operationId": "batchProcessing/logscheduling/read_schedulingId_",
+                "operationId": "batchProcessing/logscheduling/read_schedulingId__logDate_",
                 "parameters": [
                     {
                         "name": "schedulingId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "logDate",
                         "in": "path",
                         "required": true,
                         "type": "string"
@@ -1595,7 +1593,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/batchProcessing/properties/logScheduling"
+                            "type": "array"
                         }
                     }
                 }
@@ -1801,7 +1799,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "array"
                         }
                     }
                 }
@@ -1834,133 +1832,6 @@
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/batchProcessing/properties/scheduling"
-                        }
-                    }
-                }
-            }
-        },
-        "/batchProcessing/task/Index": {
-            "get": {
-                "description": "List the task",
-                "operationId": "batchProcessing/task/readIndex",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/batchProcessing/properties/task"
-                        }
-                    }
-                }
-            }
-        },
-        "/batchProcessing/task/{taskId}": {
-            "get": {
-                "description": "Edit a task",
-                "operationId": "batchProcessing/task/read_taskId_",
-                "parameters": [
-                    {
-                        "name": "taskId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/batchProcessing/properties/task"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "description": "update a task",
-                "operationId": "batchProcessing/task/update_taskId_",
-                "parameters": [
-                    {
-                        "name": "taskId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "entity",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "task"
-                            ],
-                            "properties": {
-                                "task": {
-                                    "description": "The task",
-                                    "$ref": "#/definitions/batchProcessing/properties/task"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "delete a task",
-                "operationId": "batchProcessing/task/delete_taskId_",
-                "parameters": [
-                    {
-                        "name": "taskId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                }
-            }
-        },
-        "/batchProcessing/task": {
-            "post": {
-                "description": "create a task",
-                "operationId": "batchProcessing/task/create",
-                "parameters": [
-                    {
-                        "name": "entity",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "task"
-                            ],
-                            "properties": {
-                                "task": {
-                                    "description": "The task",
-                                    "$ref": "#/definitions/batchProcessing/properties/task"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "boolean"
                         }
                     }
                 }
@@ -2200,7 +2071,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "object"
                         }
                     }
                 }
@@ -2341,7 +2212,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "object"
                         }
                     }
                 }
@@ -2652,7 +2523,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/digitalResource/properties/contentType"
+                            }
                         }
                     }
                 }
@@ -2704,7 +2578,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/digitalResource/properties/contentType"
                         }
                     }
                 }
@@ -2757,7 +2631,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/digitalResource/properties/$conversionRule"
+                                "$ref": "#/definitions/digitalResource/properties/conversionRule"
                             }
                         }
                     }
@@ -2937,7 +2811,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/digitalResource/properties/format"
+                            }
                         }
                     }
                 }
@@ -3209,7 +3086,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/lifeCycle/properties/eventFormat"
+                            }
                         }
                     }
                 }
@@ -3324,43 +3204,6 @@
                 }
             }
         },
-        "/lifeCycle/event/{eventId}": {
-            "get": {
-                "description": "Get an events by id",
-                "operationId": "lifeCycle/event/read_eventId_",
-                "parameters": [
-                    {
-                        "name": "eventId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/lifeCycle/event/Eventtypelist": {
-            "get": {
-                "description": "Get eventType list",
-                "operationId": "lifeCycle/event/readEventtypelist",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array"
-                        }
-                    }
-                }
-            }
-        },
         "/lifeCycle/event/Search": {
             "get": {
                 "description": "Search a journal event",
@@ -3403,7 +3246,50 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/lifeCycle/event/{eventId}": {
+            "get": {
+                "description": "Get an events by id",
+                "operationId": "lifeCycle/event/read_eventId_",
+                "parameters": [
+                    {
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/lifeCycle/event/Eventtypelist": {
+            "get": {
+                "description": "Get eventType list",
+                "operationId": "lifeCycle/event/readEventtypelist",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/lifeCycle/properties/eventFormat"
+                            }
                         }
                     }
                 }
@@ -3459,7 +3345,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/lifeCycle/properties/event"
+                                "type": "object"
                             }
                         }
                     }
@@ -3585,17 +3471,14 @@
                 }
             }
         },
-        "/organization/orgRole/List": {
+        "/organization/orgContact/Countries/Codes": {
             "get": {
-                "description": "Get the organization roles",
-                "operationId": "organization/orgRole/readList",
+                "description": "Get countries codes",
+                "operationId": "organization/orgContact/readCountriesCodes",
                 "parameters": [],
                 "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array"
-                        }
+                    "default": {
+                        "description": "No documentation available"
                     }
                 }
             }
@@ -3609,7 +3492,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/orgType"
+                            }
                         }
                     }
                 }
@@ -3664,7 +3550,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/organization/properties/orgType"
                         }
                     }
                 }
@@ -3705,6 +3591,26 @@
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Delete an org type",
+                "operationId": "organization/orgType/delete_code_",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
             }
         },
         "/organization/organization/Index": {
@@ -3722,7 +3628,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/organization"
+                            }
                         }
                     }
                 }
@@ -3970,7 +3879,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/organization"
+                            }
                         }
                     }
                 }
@@ -3992,7 +3904,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/organization"
+                            }
                         }
                     }
                 }
@@ -4385,17 +4300,11 @@
                 }
             }
         },
-        "/organization/organization/{orgId}/Archivalprofileaccess": {
-            "put": {
-                "description": "Add an organization archival profile access",
-                "operationId": "organization/organization/update_orgId_Archivalprofileaccess",
+        "/organization/organization/Archivalprofileaccess": {
+            "post": {
+                "description": "Create an organization archival profile access",
+                "operationId": "organization/organization/createArchivalprofileaccess",
                 "parameters": [
-                    {
-                        "name": "orgId",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    },
                     {
                         "name": "entity",
                         "in": "body",
@@ -4407,11 +4316,68 @@
                             ],
                             "properties": {
                                 "archivalProfileAccess": {
-                                    "description": "The archival profile access array",
-                                    "type": "array"
+                                    "$ref": "#/definitions/organization/properties/archivalProfileAccess"
                                 }
                             }
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/organization/properties/archivalProfileAccess"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Add an organization archival profile access",
+                "operationId": "organization/organization/updateArchivalprofileaccess",
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "archivalProfileAccess"
+                            ],
+                            "properties": {
+                                "archivalProfileAccess": {
+                                    "$ref": "#/definitions/organization/properties/archivalProfileAccess"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/organization/properties/archivalProfileAccess"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Add an organization archival profile access",
+                "operationId": "organization/organization/deleteArchivalprofileaccess",
+                "parameters": [
+                    {
+                        "name": "orgId",
+                        "in": "query",
+                        "description": "id of organization of archivalProfileAccess to delete",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "archivalProfileReference",
+                        "in": "query",
+                        "description": "archival profile reference of archivalProfileAccess",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -4445,7 +4411,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recordsManagement/properties/archivalProfile"
+                            }
                         }
                     }
                 }
@@ -4485,7 +4454,46 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/organization"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/organization/Todisplayorgunit": {
+            "get": {
+                "description": "List of organizations",
+                "operationId": "organization/organization/readTodisplayorgunit",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/organization/organization/Originator": {
+            "get": {
+                "description": "Get originator",
+                "operationId": "organization/organization/readOriginator",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4522,7 +4530,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/servicePosition"
+                            }
                         }
                     }
                 }
@@ -4559,7 +4570,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4574,7 +4588,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4611,7 +4628,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4641,7 +4661,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4656,7 +4679,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4671,7 +4697,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4686,7 +4715,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -4701,7 +4733,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -5061,14 +5096,94 @@
                 }
             }
         },
+        "/recordsManagement/archivalProfile/Archivalprofile/Upload/{profileReference}": {
+            "post": {
+                "description": "upload an archival profile",
+                "operationId": "recordsManagement/archivalProfile/createArchivalprofileUpload_profileReference_",
+                "parameters": [
+                    {
+                        "name": "profileReference",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "archivalProfile",
+                                "content"
+                            ],
+                            "properties": {
+                                "archivalProfile": {
+                                    "description": "The profile object",
+                                    "$ref": "#/definitions/recordsManagement/properties/archivalProfile"
+                                },
+                                "content": {
+                                    "description": "The profile binary file",
+                                    "type": "string"
+                                },
+                                "format": {
+                                    "description": "The profile file format",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archivalProfile/Archivalprofile/Export/{profileReference}": {
+            "get": {
+                "description": "Download the profile file",
+                "operationId": "recordsManagement/archivalProfile/readArchivalprofileExport_profileReference_",
+                "parameters": [
+                    {
+                        "name": "profileReference",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/recordsManagement/archiveCompliance/Periodic": {
             "get": {
                 "description": "Archive compliance",
                 "operationId": "recordsManagement/archiveCompliance/readPeriodic",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "serviceLevelReference",
+                        "in": "query",
+                        "description": "The service level reference",
+                        "type": "string"
+                    }
+                ],
                 "responses": {
-                    "default": {
-                        "description": "No documentation available"
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
                     }
                 }
             }
@@ -5082,6 +5197,11 @@
                         "name": "archiveId",
                         "in": "path",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "isCommunication",
+                        "in": "query",
                         "type": "string"
                     }
                 ],
@@ -5167,6 +5287,97 @@
                 }
             }
         },
+        "/recordsManagement/archive/Metadata/{archiveId}": {
+            "get": {
+                "description": "Get archive metadata",
+                "operationId": "recordsManagement/archive/readMetadata_archiveId_",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/recordsManagement/properties/archive"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archive/Relatedinformation/{archiveId}": {
+            "get": {
+                "description": "Get archive related Information",
+                "operationId": "recordsManagement/archive/readRelatedinformation_archiveId_",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/recordsManagement/properties/archive"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archive/Listchildrenarchive/{archiveId}": {
+            "get": {
+                "description": "Get the children of an archive as an index",
+                "operationId": "recordsManagement/archive/readListchildrenarchive_archiveId_",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archive/Digitalresources/{archiveId}": {
+            "get": {
+                "description": "Retrieve an archive resource contents",
+                "operationId": "recordsManagement/archive/readDigitalresources_archiveId_",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/digitalResource/properties/digitalResource"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/recordsManagement/archive/Document/{docId}": {
             "get": {
                 "description": "Retrieve an archive document by its id",
@@ -5186,10 +5397,10 @@
                 }
             }
         },
-        "/recordsManagement/archive/Consultation/{archiveId}/Digital/Resource/{resId}": {
+        "/recordsManagement/archive/Consultation/{archiveId}/Digitalresource/{resId}": {
             "get": {
                 "description": "Retrieve an archive resource by its id",
-                "operationId": "recordsManagement/archive/readConsultation_archiveId_DigitalResource_resId_",
+                "operationId": "recordsManagement/archive/readConsultation_archiveId_Digitalresource_resId_",
                 "parameters": [
                     {
                         "name": "archiveId",
@@ -5201,6 +5412,11 @@
                         "name": "resId",
                         "in": "path",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "isCommunication",
+                        "in": "query",
                         "type": "string"
                     }
                 ],
@@ -5382,6 +5598,70 @@
                 }
             }
         },
+        "/recordsManagement/archive/{archiveId}/Digitalresource": {
+            "post": {
+                "description": "Add a resource to the archive",
+                "operationId": "recordsManagement/archive/create_archiveId_Digitalresource",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "contents"
+                            ],
+                            "properties": {
+                                "contents": {
+                                    "type": "string"
+                                },
+                                "filename": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove a resource to the archive",
+                "operationId": "recordsManagement/archive/delete_archiveId_Digitalresource",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "resIds",
+                        "in": "query",
+                        "required": true,
+                        "type": "array"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
         "/recordsManagement/archiveRelationship/Relationship": {
             "post": {
                 "description": "Create a relationship",
@@ -5399,7 +5679,7 @@
                             "properties": {
                                 "archiveRelationship": {
                                     "description": "The archive relationship object",
-                                    "$ref": "#/definitions/recordsManagement/properties/archiveRelationShip"
+                                    "$ref": "#/definitions/recordsManagement/properties/archiveRelationship"
                                 }
                             }
                         }
@@ -5545,6 +5825,11 @@
                         "name": "originatingEndDate",
                         "in": "query",
                         "type": "string"
+                    },
+                    {
+                        "name": "archiverArchiveId",
+                        "in": "query",
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -5555,6 +5840,165 @@
                             "items": {
                                 "$ref": "#/definitions/recordsManagement/properties/archive"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archives/Registry": {
+            "get": {
+                "description": "Search archives by profile / dates / agreement",
+                "operationId": "recordsManagement/archives/readRegistry",
+                "parameters": [
+                    {
+                        "name": "archiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "profileReference",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveName",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "agreementReference",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveExpired",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "finalDisposition",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOwnerOrgId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatingDate",
+                        "in": "query",
+                        "type": "array"
+                    },
+                    {
+                        "name": "filePlanPosition",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "hasParent",
+                        "in": "query",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "partialRetentionRule",
+                        "in": "query",
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "retentionRuleCode",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "depositStartDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "depositEndDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatingStartDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatingEndDate",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recordsManagement/properties/archive"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/archives/List": {
+            "get": {
+                "description": "Get archives list",
+                "operationId": "recordsManagement/archives/readList",
+                "parameters": [
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "query",
+                        "description": "The organization registration number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "filePlanPosition",
+                        "in": "query",
+                        "description": "The file plan position",
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveUnit",
+                        "in": "query",
+                        "description": "List the archive unit",
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
                         }
                     }
                 }
@@ -5583,8 +6027,8 @@
                                     "description": "The comment of modification",
                                     "type": "string"
                                 },
-                                "identifiant": {
-                                    "description": "Message identifiant",
+                                "identifier": {
+                                    "description": "Message identifier",
                                     "type": "string"
                                 }
                             }
@@ -5624,8 +6068,8 @@
                                     "description": "The comment of modification",
                                     "type": "string"
                                 },
-                                "identifiant": {
-                                    "description": "Message identifiant",
+                                "identifier": {
+                                    "description": "Message identifier",
                                     "type": "string"
                                 }
                             }
@@ -5686,7 +6130,9 @@
                                 "archiveIds": {
                                     "description": "The archives ids",
                                     "type": "array"
-                                }
+                                },
+                                "comment": {},
+                                "identifier": {}
                             }
                         }
                     }
@@ -5695,7 +6141,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "array"
                         }
                     }
                 }
@@ -5786,8 +6232,8 @@
                                     "description": "The comment of modification",
                                     "type": "string"
                                 },
-                                "identifiant": {
-                                    "description": "Message identifiant",
+                                "identifier": {
+                                    "description": "Message identifier",
                                     "type": "string"
                                 }
                             }
@@ -5798,7 +6244,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "array"
                         }
                     }
                 }
@@ -5823,7 +6269,7 @@
                                     "description": "Array of archive identifier",
                                     "type": "array"
                                 },
-                                "identifiant": {
+                                "identifier": {
                                     "description": "The message reference",
                                     "type": "string"
                                 },
@@ -5868,8 +6314,8 @@
                                     "description": "The comment of modification",
                                     "type": "string"
                                 },
-                                "identifiant": {
-                                    "description": "Message identifiant",
+                                "identifier": {
+                                    "description": "Message identifier",
                                     "type": "string"
                                 }
                             }
@@ -5880,7 +6326,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "boolean"
+                            "type": "string"
                         }
                     }
                 }
@@ -6008,34 +6454,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
-                        }
-                    }
-                }
-            }
-        },
-        "/recordsManagement/archives/Folder": {
-            "get": {
-                "description": "Get archives by file plan position",
-                "operationId": "recordsManagement/archives/readFolder",
-                "parameters": [
-                    {
-                        "name": "orgRegNumber",
-                        "in": "query",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "folderId",
-                        "in": "query",
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recordsManagement/properties/archive"
+                            }
                         }
                     }
                 }
@@ -6060,6 +6482,9 @@
                                     "type": "string"
                                 },
                                 "originatorArchiveId": {
+                                    "type": "string"
+                                },
+                                "archiverArchiveId": {
                                     "type": "string"
                                 },
                                 "archiveName": {
@@ -6138,17 +6563,29 @@
                 }
             }
         },
-        "/recordsManagement/descriptionClass/Index": {
-            "get": {
-                "description": "Get the description class",
-                "operationId": "recordsManagement/descriptionClass/readIndex",
-                "parameters": [],
-                "responses": {
-                    "200": {
-                        "description": "",
+        "/recordsManagement/archives/Archivesretentionrule": {
+            "put": {
+                "description": "Update archive with changed retention rule",
+                "operationId": "recordsManagement/archives/updateArchivesretentionrule",
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "type": "array"
+                            "type": "object",
+                            "properties": {
+                                "limit": {
+                                    "description": "The maximum number of archive to update",
+                                    "type": "integer"
+                                }
+                            }
                         }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
                     }
                 }
             }
@@ -6272,6 +6709,120 @@
                         "description": "",
                         "schema": {
                             "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/descriptionRef/{name}": {
+            "get": {
+                "description": "Search the list",
+                "operationId": "recordsManagement/descriptionRef/read_name_",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/descriptionRef/{name}/{key}": {
+            "get": {
+                "description": "Get the description class properties",
+                "operationId": "recordsManagement/descriptionRef/read_name__key_",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/descriptionScheme/Index": {
+            "get": {
+                "description": "Get the description classes",
+                "operationId": "recordsManagement/descriptionScheme/readIndex",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/descriptionScheme/{name}": {
+            "get": {
+                "description": "Get the description class",
+                "operationId": "recordsManagement/descriptionScheme/read_name_",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/descriptionScheme/{name}/Descriptionfields": {
+            "get": {
+                "description": "Get the description class properties",
+                "operationId": "recordsManagement/descriptionScheme/read_name_Descriptionfields",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array"
                         }
                     }
                 }
@@ -6633,6 +7184,130 @@
                 }
             }
         },
+        "/recordsManagement/storageRule/Index": {
+            "get": {
+                "description": "List the storage rules",
+                "operationId": "recordsManagement/storageRule/readIndex",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/recordsManagement/properties/storageRule"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/storageRule": {
+            "post": {
+                "description": "Create a storage rule",
+                "operationId": "recordsManagement/storageRule/create",
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "storageRule"
+                            ],
+                            "properties": {
+                                "storageRule": {
+                                    "description": "The storage rule",
+                                    "$ref": "#/definitions/recordsManagement/properties/storageRule"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a storage rule",
+                "operationId": "recordsManagement/storageRule/update",
+                "parameters": [
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "storageRule"
+                            ],
+                            "properties": {
+                                "storageRule": {
+                                    "description": "The storage rule",
+                                    "$ref": "#/definitions/recordsManagement/properties/storageRule"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/recordsManagement/storageRule/{code}": {
+            "get": {
+                "description": "Read a storage rule",
+                "operationId": "recordsManagement/storageRule/read_code_",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/recordsManagement/properties/storageRule"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a storage rule",
+                "operationId": "recordsManagement/storageRule/delete_code_",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
         "/filePlan/filePlan/Tree": {
             "get": {
                 "description": "Get the file plan's list",
@@ -6642,7 +7317,10 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "type": "array"
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
                         }
                     }
                 }
@@ -6768,6 +7446,317 @@
                     }
                 }
             }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/{originatorOrgRegNumber}": {
+            "post": {
+                "description": "Create an archive",
+                "operationId": "digitalSafe/digitalSafe/create_originatorOwnerOrgRegNumber__originatorOrgRegNumber_",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "entity",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "digitalResources"
+                            ],
+                            "properties": {
+                                "digitalResources": {
+                                    "description": "@param object                            The descriptive metadata object",
+                                    "$ref": "#/definitions/digitalResource/properties/digitalResource"
+                                },
+                                "descriptionObject": {
+                                    "description": "organisation Archive identifier",
+                                    "type": "string"
+                                },
+                                "originatorArchiveId": {}
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            },
+            "get": {
+                "description": "List the archives",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/{originatorOrgRegNumber}/Count": {
+            "get": {
+                "description": "Counting the archives",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_Count",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/events": {
+            "get": {
+                "description": "Verify archives integrity",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber_events",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "fromOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "toOriginatorArchiveId",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "query",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/{originatorOrgRegNumber}/{archiveId}": {
+            "delete": {
+                "description": "Destruct an archive",
+                "operationId": "digitalSafe/digitalSafe/delete_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            },
+            "get": {
+                "description": "Retrieve an archive resource by its id",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/{originatorOrgRegNumber}/{archiveId}/Integritycheck": {
+            "get": {
+                "description": "Verify archives integrity",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Integritycheck",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
+        },
+        "/digitalSafe/digitalSafe/{originatorOwnerOrgRegNumber}/{originatorOrgRegNumber}/{archiveId}/Metadata": {
+            "get": {
+                "description": "View the archive",
+                "operationId": "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Metadata",
+                "parameters": [
+                    {
+                        "name": "originatorOwnerOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "originatorOrgRegNumber",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "archiveId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No documentation available"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -6834,70 +7823,6 @@
         "auth": {
             "type": "object",
             "properties": {
-                "publicUserStory": {
-                    "type": "object",
-                    "description": "Class model that represents the public user story",
-                    "properties": {
-                        "userStory": {
-                            "description": "The userStory",
-                            "type": "string"
-                        }
-                    }
-                },
-                "role": {
-                    "type": "object",
-                    "description": "auth role definition",
-                    "properties": {
-                        "roleId": {
-                            "description": "The role identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "roleName": {
-                            "description": "The role name",
-                            "type": "string"
-                        },
-                        "description": {
-                            "description": "The role description",
-                            "type": "string"
-                        },
-                        "enabled": {
-                            "description": "Status of role",
-                            "type": "boolean"
-                        },
-                        "privileges": {
-                            "description": "Array of user story names",
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "roleMembers": {
-                            "description": "Array of role member object",
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                            }
-                        }
-                    }
-                },
-                "roleMember": {
-                    "type": "object",
-                    "description": "auth roleMember definition",
-                    "properties": {
-                        "userAccountId": {
-                            "description": "The user's identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "roleId": {
-                            "description": "The user's identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        }
-                    }
-                },
                 "account": {
                     "type": "object",
                     "description": "auth userAccount definition",
@@ -6981,6 +7906,76 @@
                         "tokenDate": {
                             "type": "string",
                             "format": "date-time"
+                        },
+                        "authentication": {
+                            "type": "string"
+                        },
+                        "preferences": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "publicUserStory": {
+                    "type": "object",
+                    "description": "Class model that represents the public user story",
+                    "properties": {
+                        "userStory": {
+                            "description": "The userStory",
+                            "type": "string"
+                        }
+                    }
+                },
+                "role": {
+                    "type": "object",
+                    "description": "auth role definition",
+                    "properties": {
+                        "roleId": {
+                            "description": "The role identifier",
+                            "type": "string",
+                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
+                        },
+                        "roleName": {
+                            "description": "The role name",
+                            "type": "string"
+                        },
+                        "description": {
+                            "description": "The role description",
+                            "type": "string"
+                        },
+                        "enabled": {
+                            "description": "Status of role",
+                            "type": "boolean"
+                        },
+                        "privileges": {
+                            "description": "Array of user story names",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "roleMembers": {
+                            "description": "Array of role member object",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "pattern": "^[a-z_][a-z0-9\\-_]*$"
+                            }
+                        }
+                    }
+                },
+                "roleMember": {
+                    "type": "object",
+                    "description": "auth roleMember definition",
+                    "properties": {
+                        "userAccountId": {
+                            "description": "The user's identifier",
+                            "type": "string",
+                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
+                        },
+                        "roleId": {
+                            "description": "The user's identifier",
+                            "type": "string",
+                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
                         }
                     }
                 },
@@ -7218,6 +8213,10 @@
                         },
                         "title": {
                             "description": "The person title (civility)",
+                            "type": "string"
+                        },
+                        "modificationRight": {
+                            "description": "The permisions to modify other profiles",
                             "type": "string"
                         }
                     }
@@ -7626,7 +8625,7 @@
                     "description": "Class message that represents a stored digital resource",
                     "properties": {
                         "resId": {
-                            "description": "The universal identifier",
+                            "description": "The resource identifier",
                             "type": "string",
                             "pattern": "^[a-z_][a-z0-9\\-_]*$"
                         },
@@ -7690,7 +8689,7 @@
                             }
                         },
                         "handler": {
-                            "description": "The handler to ressource",
+                            "description": "The handler to resource",
                             "type": "string"
                         },
                         "metadata": {
@@ -7854,34 +8853,6 @@
                             "type": "boolean"
                         }
                     }
-                },
-                "clusterRepository": {
-                    "type": "object",
-                    "description": "Class message that represents a digital resource cluster repository",
-                    "properties": {
-                        "clusterId": {
-                            "description": "The cluster's universal identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "repositoryId": {
-                            "description": "The repository's universal identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "writePriority": {
-                            "description": "The priority on writing",
-                            "type": "integer"
-                        },
-                        "readPriority": {
-                            "description": "The priority on reading",
-                            "type": "integer"
-                        },
-                        "deletePriority": {
-                            "description": "The priority on deleting",
-                            "type": "integer"
-                        }
-                    }
                 }
             }
         },
@@ -7907,74 +8878,6 @@
                         "notification": {
                             "description": "The list of event's column",
                             "type": "boolean"
-                        }
-                    }
-                },
-                "event": {
-                    "type": "object",
-                    "description": "Class model that represents an event of a journal",
-                    "properties": {
-                        "eventId": {
-                            "description": "The universal identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "eventType": {
-                            "description": "The name of the event type",
-                            "type": "string",
-                            "enum": [
-                                "deposit",
-                                "compliance",
-                                "modification",
-                                "disposal",
-                                "restitution",
-                                "profileAdded",
-                                "profileModified",
-                                "profileDeleted"
-                            ]
-                        },
-                        "instanceName": {
-                            "description": "The application instance name",
-                            "type": "string"
-                        },
-                        "timestamp": {
-                            "description": "The timestamp of the event",
-                            "type": "string",
-                            "format": "date-time"
-                        },
-                        "orgRegNumber": {
-                            "description": "The user organization registration number",
-                            "type": "string"
-                        },
-                        "orgUnitRegNumber": {
-                            "description": "The user orgUnit registration number",
-                            "type": "string"
-                        },
-                        "accountId": {
-                            "description": "The account identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "objectClass": {
-                            "description": "The class of the aimed object",
-                            "type": "string"
-                        },
-                        "objectId": {
-                            "description": "The identifier of the aimed object",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "operationResult": {
-                            "description": "The operation result",
-                            "type": "boolean"
-                        },
-                        "description": {
-                            "description": "The description of the event",
-                            "type": "string"
-                        },
-                        "eventInfo": {
-                            "description": "The event extra information",
-                            "type": "string"
                         }
                     }
                 }
@@ -8024,62 +8927,6 @@
                             "type": "string"
                         }
                     }
-                },
-                "organizationTree": {
-                    "type": "object",
-                    "description": "Organization tree",
-                    "properties": {
-                        "orgId": {
-                            "description": "The organization's identifier",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
-                        "displayName": {
-                            "description": "The displayed name of the object",
-                            "type": "string"
-                        },
-                        "registrationNumber": {
-                            "description": "The registration number",
-                            "type": "string"
-                        },
-                        "parentOrgId": {
-                            "description": "The organization's parent orgId",
-                            "type": "string"
-                        },
-                        "ownerOrgId": {
-                            "description": "The organization owner orgId",
-                            "type": "string"
-                        },
-                        "isOrgUnit": {
-                            "description": "The organization is a service",
-                            "type": "boolean"
-                        },
-                        "organization": {
-                            "description": "The children organizations",
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/organization/properties/organization"
-                            }
-                        },
-                        "userPosition": {
-                            "description": "The users list attached to the organization",
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/organization/properties/userPosition"
-                            }
-                        },
-                        "servicePosition": {
-                            "description": "The service list attached to the organization",
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/organization/properties/servicePosition"
-                            }
-                        }
-                    },
-                    "required": [
-                        "displayName",
-                        "registrationNumber"
-                    ]
                 },
                 "organization": {
                     "type": "object",
@@ -8174,6 +9021,62 @@
                         "registrationNumber"
                     ]
                 },
+                "organizationTree": {
+                    "type": "object",
+                    "description": "Organization tree",
+                    "properties": {
+                        "orgId": {
+                            "description": "The organization's identifier",
+                            "type": "string",
+                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
+                        },
+                        "displayName": {
+                            "description": "The displayed name of the object",
+                            "type": "string"
+                        },
+                        "registrationNumber": {
+                            "description": "The registration number",
+                            "type": "string"
+                        },
+                        "parentOrgId": {
+                            "description": "The organization's parent orgId",
+                            "type": "string"
+                        },
+                        "ownerOrgId": {
+                            "description": "The organization owner orgId",
+                            "type": "string"
+                        },
+                        "isOrgUnit": {
+                            "description": "The organization is a service",
+                            "type": "boolean"
+                        },
+                        "organization": {
+                            "description": "The children organizations",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/organization"
+                            }
+                        },
+                        "userPosition": {
+                            "description": "The users list attached to the organization",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/userPosition"
+                            }
+                        },
+                        "servicePosition": {
+                            "description": "The service list attached to the organization",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/organization/properties/servicePosition"
+                            }
+                        }
+                    },
+                    "required": [
+                        "displayName",
+                        "registrationNumber"
+                    ]
+                },
                 "userPositionTree": {
                     "type": "object",
                     "description": "Model of the userPosition",
@@ -8218,27 +9121,34 @@
                         }
                     }
                 },
-                "userPosition": {
+                "archivalProfileAccess": {
                     "type": "object",
-                    "description": "Model of the userPosition",
+                    "description": "Class model that represents an acces to profile for a given org unit",
+                    "required": [
+                        "orgId",
+                        "archivalProfileReference"
+                    ],
                     "properties": {
-                        "userAccountId": {
-                            "description": "The user account of the person",
-                            "type": "string",
-                            "pattern": "^[a-z_][a-z0-9\\-_]*$"
-                        },
                         "orgId": {
-                            "description": "The organization's identifier",
+                            "description": "The organization identifier",
                             "type": "string",
                             "pattern": "^[a-z_][a-z0-9\\-_]*$"
                         },
-                        "function": {
-                            "description": "The person's function",
+                        "archivalProfileReference": {
+                            "description": "The archival profile reference",
                             "type": "string"
                         },
-                        "default": {
-                            "description": "The user's default organization",
+                        "originatorAccess": {
+                            "description": "The access is read only",
                             "type": "boolean"
+                        },
+                        "serviceLevelReference": {
+                            "description": "The service level reference",
+                            "type": "string"
+                        },
+                        "userAccess": {
+                            "description": "The user access",
+                            "type": "string"
                         }
                     }
                 }
@@ -8247,25 +9157,6 @@
         "recordsManagement": {
             "type": "object",
             "properties": {
-                "accessRule": {
-                    "type": "object",
-                    "description": "Class model that represents access rule",
-                    "properties": {
-                        "code": {
-                            "description": "The code of the access",
-                            "type": "string"
-                        },
-                        "duration": {
-                            "description": "The duration of the access",
-                            "type": "string",
-                            "pattern": "^(\\-\\+)?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
-                        },
-                        "description": {
-                            "description": "The description",
-                            "type": "string"
-                        }
-                    }
-                },
                 "archivalProfile": {
                     "type": "object",
                     "description": "Class model that represents an archival profile",
@@ -8329,6 +9220,32 @@
                         "containedProfiles": {
                             "description": "The list of child archival profiles",
                             "type": "array"
+                        },
+                        "processingStatuses": {
+                            "description": "The processing statuses, actions and views",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "reference"
+                    ]
+                },
+                "accessRule": {
+                    "type": "object",
+                    "description": "Class model that represents access rule",
+                    "properties": {
+                        "code": {
+                            "description": "The code of the access",
+                            "type": "string"
+                        },
+                        "duration": {
+                            "description": "The duration of the access",
+                            "type": "string",
+                            "pattern": "^(\\-\\+)?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
+                        },
+                        "description": {
+                            "description": "The description",
+                            "type": "string"
                         }
                     }
                 },
@@ -8347,6 +9264,10 @@
                         },
                         "originatorArchiveId": {
                             "description": "Originator organisation Archive identifier",
+                            "type": "string"
+                        },
+                        "archiverArchiveId": {
+                            "description": "Archiver Archive identifier",
                             "type": "string"
                         },
                         "filePlanPosition": {
@@ -8387,6 +9308,10 @@
                             "description": "The disposal date of the archive",
                             "type": "string",
                             "format": "date"
+                        },
+                        "retentionRuleStatus": {
+                            "description": "The retention rule status",
+                            "type": "string"
                         },
                         "originatingDate": {
                             "description": "The originating date of the archive",
@@ -8452,6 +9377,10 @@
                                 "restitued"
                             ]
                         },
+                        "processingStatus": {
+                            "description": "Status code for workflow and current use process",
+                            "type": "string"
+                        },
                         "parentArchiveId": {
                             "description": "The parent archive identifier",
                             "type": "string"
@@ -8499,6 +9428,10 @@
                             "description": "Register number of archiver organisation",
                             "type": "string"
                         },
+                        "userOrgRegNumbers": {
+                            "description": "Registration number of user organisation",
+                            "type": "string"
+                        },
                         "fileplanLevel": {
                             "description": "The archive description level",
                             "type": "string"
@@ -8509,6 +9442,25 @@
                             "items": {
                                 "$ref": "#/definitions/recordsManagement/properties/archive"
                             }
+                        },
+                        "storageRuleCode": {
+                            "description": "The storage rule code",
+                            "type": "string"
+                        },
+                        "storageStartDate": {
+                            "description": "The starting date of the storage rule calculation",
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "storageEndDate": {
+                            "description": "The ending date of the storage rule calculation",
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "storageDuration": {
+                            "description": "The duration of storage",
+                            "type": "string",
+                            "pattern": "^(\\-\\+)?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
                         }
                     }
                 },
@@ -8547,6 +9499,10 @@
                             "description": "Disposal date",
                             "type": "string",
                             "format": "date"
+                        },
+                        "changeStartDate": {
+                            "description": "change start date",
+                            "type": "boolean"
                         }
                     }
                 },
@@ -8581,33 +9537,10 @@
                             "description": "communication date",
                             "type": "string",
                             "format": "date"
-                        }
-                    }
-                },
-                "archiveRelationShip": {
-                    "type": "object",
-                    "description": "Message that represents a relationship between 2 archives",
-                    "required": [
-                        "archiveId",
-                        "relatedArchiveId",
-                        "typeCode"
-                    ],
-                    "properties": {
-                        "archiveId": {
-                            "description": "The archive identifier",
-                            "type": "string"
                         },
-                        "relatedArchiveId": {
-                            "description": "The related archive identifier",
-                            "type": "string"
-                        },
-                        "typeCode": {
-                            "description": "The relationship type code",
-                            "type": "string"
-                        },
-                        "description": {
-                            "description": "The relationship information",
-                            "type": "string"
+                        "changeStartDate": {
+                            "description": "change start date",
+                            "type": "boolean"
                         }
                     }
                 },
@@ -8683,8 +9616,20 @@
                                 "type": "string"
                             }
                         },
+                        "enumNames": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "ref": {
+                            "type": "boolean"
+                        },
                         "pattern": {
                             "type": "string"
+                        },
+                        "isArray": {
+                            "type": "boolean"
                         }
                     }
                 },
@@ -8716,6 +9661,11 @@
                         "label": {
                             "description": "The label of the rule",
                             "type": "string"
+                        },
+                        "implementationDate": {
+                            "description": "The implementation date of the rule",
+                            "type": "string",
+                            "format": "date"
                         }
                     }
                 },
@@ -8755,21 +9705,26 @@
                         }
                     }
                 },
-                "archiveDescription": {
+                "storageRule": {
                     "type": "object",
-                    "description": "Class model that represents an archival profile",
+                    "description": "Class model that represents a storageRule",
                     "properties": {
-                        "fieldName": {
-                            "description": "The name of the property",
+                        "code": {
+                            "description": "The storage rule code",
                             "type": "string"
                         },
-                        "required": {
-                            "description": "The status of the property (required or not)",
-                            "type": "boolean"
+                        "duration": {
+                            "description": "The duration of the rule",
+                            "type": "string",
+                            "pattern": "^(\\-\\+)?P(\\d+Y)?(\\d+M)?(\\d+D)?(T(\\d+H)?(\\d+M)?(\\d+S)?)?$"
                         },
-                        "position": {
-                            "description": "The position of field",
-                            "type": "integer"
+                        "description": {
+                            "description": "The description of the rule",
+                            "type": "string"
+                        },
+                        "label": {
+                            "description": "The label of the rule",
+                            "type": "string"
                         }
                     }
                 }

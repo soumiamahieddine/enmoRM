@@ -292,7 +292,6 @@ class archive
      */
     public function getArchiveInfo($archive)
     {
-
         if(\laabs::kernel()->request->getHeader("Accept")=="application/json") {
             \laabs::setResponseHeader('Content-Type', "application/json");
             return json_encode($archive);
@@ -374,7 +373,7 @@ class archive
 
     /**
      * Get metadata to edit
-     * @param archive   $archive
+     * @param archive $archive
      *
      * @return string
      */
