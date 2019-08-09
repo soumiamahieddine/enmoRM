@@ -109,14 +109,11 @@ class user
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
         if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('configIsAdmin', true);
-        } else {
-            $view->setSource('configIsAdmin', false);
-        }
-        if ($account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('adminG', true);
-        } else {
-            $view->setSource('adminG', false);
+            $view->setSource('whatAmI', 'oldUser');
+        } else if ($account->isAdmin && $account->ownerOrgId) {
+            $view->setSource('whatAmI', 'adminF');
+        } else if ($account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('whatAmI', 'adminG');
         }
 
         $view->setSource('allowUserModification', true);
@@ -184,29 +181,14 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        // 'Anciens' utilisateur
         if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('configIsAdmin', true);
-        } else {
-            $view->setSource('configIsAdmin', false);
-        }
-        // Utilisateurs Courants
-        if (!$account->isAdmin && $account->ownerOrgId) {
-            $view->setSource('isUser', true);
-        } else {
-            $view->setSource('isUser', false);
-        }
-        // Admin Fonctionnel
-        if ($account->isAdmin && $account->ownerOrgId) {
-            $view->setSource('adminF', true);
-        } else {
-            $view->setSource('adminF', false);
-        }
-        // Admin Général
-        if ($account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('adminG', true);
-        } else {
-            $view->setSource('adminG', false);
+            $view->setSource('whatAmI', 'oldUser');
+        } else if (!$account->isAdmin && $account->ownerOrgId) {
+            $view->setSource('whatAmI', 'simpleUser');
+        } else if ($account->isAdmin && $account->ownerOrgId) {
+            $view->setSource('whatAmI', 'adminF');
+        } else if ($account->isAdmin && !$account->ownerOrgId) {
+            $view->setSource('whatAmI', 'adminG');
         }
         
         $view->setSource('allowUserModification', true);
