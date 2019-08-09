@@ -78,9 +78,6 @@ file that was distributed with this source code.
                                         <input type="radio" name="type" autocomplete="off" value="date"/>Date
                                     </label>
                                     <label class="btn btn-default">
-                                        <input type="radio" name="type" autocomplete="off" value="datetime"/>Date and time
-                                    </label>
-                                    <label class="btn btn-default">
                                         <input type="radio" name="type" autocomplete="off" value="number"/>Number
                                     </label>
                                     <label class="btn btn-default">
@@ -102,6 +99,8 @@ file that was distributed with this source code.
                                 <input type="text" class="form-control" name="label" placeholder="Label"/>
                             </div>
                         </div>
+
+                        <!-- Keyword -->
                         <div class="form-group hide" id="namePropertyDefaultValue">
                             <label class="col-md-2 control-label">Default value</label>
                             <div class="col-md-8">
@@ -109,42 +108,6 @@ file that was distributed with this source code.
                             </div>
                         </div>
 
-                        <div class="form-group hide" id="nameSelectPropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <select class="form-control" name="defaultValue">
-                                    <option value=""></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group hide" id="textPropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
-                            </div>
-                        </div>
-                        <div class="form-group hide" id="numberPropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <input type='number' class="form-control" name="defaultValue" placeholder="Default value"/>
-                            </div>
-                        </div>
-                        <div class="form-group hide" id="booleanPropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <div class="btn-group" data-toggle="buttons">
-                                    <label class="btn btn-default">
-                                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
-                                    </label>
-                                    <label class="btn btn-default active">
-                                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
-                                    </label>
-                                    <label class="btn btn-default">
-                                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
                         <div class="form-group hide" id="keywordEnumForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Enumeration</label>
                             <div class="col-md-8">
@@ -178,9 +141,61 @@ file that was distributed with this source code.
                         <div class="form-group">
                             <ul class="col-md-offset-2 col-md-8 hide" id="keywordEnumList"></ul>
                         </div>
+
                         <div class="form-group hide" id="keywordRefForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Reference</label>
                             <?hinclude recordsManagement/descriptionField/fileUpload.html ?>
+                        </div>
+
+                        <div class="form-group hide" id="nameSelectPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="defaultValue">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Simple text -->
+                        <div class="form-group hide" id="textPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+
+                        <!-- Number -->
+                        <div class="form-group hide" id="numberPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-8">
+                                <input type='number' class="form-control" name="defaultValue" placeholder="Default value"/>
+                            </div>
+                        </div>
+
+                        <!-- Boolean -->
+                        <div class="form-group hide" id="booleanPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-8">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="0"><i class="fa fa-times"></i>
+                                    </label>
+                                    <label class="btn btn-default active">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="" checked>&nbsp;
+                                    </label>
+                                    <label class="btn btn-default">
+                                        <input type="radio" name="defaultValue" autocomplete="off" value="1"><i class="fa fa-check"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="form-group hide" id="dateWithTimeGroup">
+                            <label id="toggleText" class="col-md-6 control-label">With time</label>
+                            <div class="col-md-6">
+                                <input type="checkbox" class="disableToggle" name="dateWithTime" id="dateWithTime" data-toggle="toggle" >
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -209,8 +224,6 @@ file that was distributed with this source code.
         </li>
     </div>
 </div>
-<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
-
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <script type="text/javascript">
@@ -392,7 +405,7 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue, #dateWithTimeGroup').addClass('hide');
         $('#keywordEnumList').empty();
         $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
@@ -409,6 +422,7 @@ file that was distributed with this source code.
                 break;
 
             case "date" :
+                $('#dateWithTimeGroup').removeClass('hide');
                 break;
 
             case "number" :
@@ -437,7 +451,9 @@ file that was distributed with this source code.
         $('#booleanPropertyDefaultValue').find('.active').removeClass("active");
         $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
 
-        $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn').addClass('hide');
+        $('#dateWithTime').bootstrapToggle('off');
+
+        $('#namePropertyDefaultValue, #nameSelectPropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
 
@@ -497,9 +513,10 @@ file that was distributed with this source code.
                 break;
 
             case "date" :
-                break;
-
-            case "datetime" :
+                $('#dateWithTimeGroup').removeClass('hide');
+                if (descriptionField.format == 'datetime') {
+                    $('#dateWithTime').bootstrapToggle('on');
+                }
                 break;
 
             case "number" :
@@ -541,7 +558,7 @@ file that was distributed with this source code.
     function serialize () {
         var type = $('.active > input[type=radio][name=type]').val();
 
-        var property = {
+        var field = {
             name         : $('#fieldName').find('input').val(),
             label        : $('#propertyLabel').find('input').val(),
             type         : type,
@@ -549,40 +566,48 @@ file that was distributed with this source code.
 
 
         // Default value
-        switch(property['type']) {
+        switch(field['type']) {
             case "name":
-                property = serializeName(property);
+                field = serializeName(field);
                 break;
+                
             case "text":
-                property['default'] = $('#textPropertyDefaultValue').find('input').val();
+                field['default'] = $('#textPropertyDefaultValue').find('input').val();
                 break;
+
             case "boolean":
                 switch ($('#booleanPropertyDefaultValue').find('input:checked').val()) {
-                    case "1": property['default'] = 1;
+                    case "1": field['default'] = 1;
                         break;
-                    case "0": property['default'] = 0;
+                    case "0": field['default'] = 0;
                         break;
-                    default: property['default'] = "";
+                    default: field['default'] = "";
                         break;
                 }
                 break;
+
             case "number":
-                property['default'] = $('#numberPropertyDefaultValue').find('input').val();
+                field['default'] = $('#numberPropertyDefaultValue').find('input').val();
                 break;
+
             case "date":
+                if ($('#dateWithTime').prop('checked') === true) {
+                    field['format'] ='datetime';
+                }
+
                 break;
         }
 
-        return property;
+        return field;
     }
 
-    function serializeName(property) {
+    function serializeName(field) {
         var nbResult = $("#keywordEnumList").find(".list-group-item").length;
 
         if (nbResult == 0) {
-            property['default'] = $('#namePropertyDefaultValue').find('input').val();
+            field['default'] = $('#namePropertyDefaultValue').find('input').val();
             if ($('#keywordExternalRef').prop('checked') === true) {
-                property['ref'] = true;
+                field['ref'] = true;
             }
         } else {
             var enumeration = new Array();
@@ -596,13 +621,12 @@ file that was distributed with this source code.
                 }
             });
 
-            property['enumeration'] = enumeration;
-            property.enumNames = enumNames;
-            property['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
+            field['enumeration'] = enumeration;
+            field.enumNames = enumNames;
+            field['default'] = $('#nameSelectPropertyDefaultValue').find(":selected").text();
         }
-        property['isArray'] = false;
 
-        return property;
+        return field;
     }
 
     $("#descriptionField_formContent").on("keyup","[name='fieldName']", function(){

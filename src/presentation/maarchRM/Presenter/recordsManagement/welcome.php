@@ -95,7 +95,6 @@ class welcome
                     case 'text':
                     case 'name':
                     case 'date':
-                    case 'datetime':
                     case 'number':
                     case 'boolean':
                         $archivalProfile->searchFields[] = $archiveDescription->descriptionField;

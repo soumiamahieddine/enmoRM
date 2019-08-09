@@ -159,7 +159,7 @@ class archiveDescription
     {
         $th = $this->view->createElement('th', $descriptionField->label);
         $th->setAttribute('name', $descriptionField->name);
-        if (is_string($descriptionField->type))  {
+        if (is_string($descriptionField->type)) {
             $th->setAttribute('data-type', $descriptionField->type);
         }
         if (isset($descriptionField->readonly)) {

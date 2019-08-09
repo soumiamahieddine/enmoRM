@@ -170,7 +170,9 @@ class descriptionField
         $differences = array_diff_key(get_object_vars($descriptionField), $model->getProperties());
         $facets = new \stdClass();
         foreach ($differences as $property => $value) {
-            $facets->{$property} = $value;
+            if (!is_null($value)) {
+                $facets->{$property} = $value;
+            }
         }
         $descriptionField->facets = json_encode($facets);
 

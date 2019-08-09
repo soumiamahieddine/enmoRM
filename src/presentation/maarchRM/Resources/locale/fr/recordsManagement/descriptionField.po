@@ -29,11 +29,8 @@ msgstr "Indicateur"
 msgid "date"
 msgstr "Date"
 
-msgid "Date and time"
-msgstr "Date et heure"
-
-msgid "datetime"
-msgstr "Date et heure"
+msgid "With time"
+msgstr "Avec heure"
 
 msgid "Description field"
 msgstr "Champ de description"
