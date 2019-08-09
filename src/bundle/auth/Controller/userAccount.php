@@ -92,11 +92,16 @@ class userAccount
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
 
         if ($account->ownerOrgId) {
-            $queryAssert[] = "ownerOrgId='". $account->ownerOrgId."'";
+            $queryAssert[] = "(ownerOrgId='". $account->ownerOrgId."' OR ownerOrgId=null)";
         }
-
+        
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
+        }
+
+        if (!empty($this->adminUsers) && in_array($account->accountName, $this->adminUsers)) {
+            $queryAssert[] = "isAdmin=TRUE";
+            $queryAssert[] = "ownerOrgId!=null";
         }
 
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));

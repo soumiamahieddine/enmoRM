@@ -75,7 +75,7 @@ class serviceAccount
         $queryAssert[] = "accountType='service'";
 
         if ($account->ownerOrgId) {
-            $queryAssert[] = "ownerOrgId='". $account->ownerOrgId."'";
+            $queryAssert[] = "(ownerOrgId='". $account->ownerOrgId."' OR ownerOrgId=null)";
         }
 
         $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
@@ -234,7 +234,6 @@ class serviceAccount
     public function updateServiceInformation($serviceAccount, $orgId = null, $servicesURI = [])
     {
         $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccount');
-
         if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccount->accountId))) {
             throw \laabs::newException("auth/unknownServiceException");
         }
@@ -251,7 +250,7 @@ class serviceAccount
                     $servicePosition = $this->servicePositionController->getPosition($serviceAccount->accountId);
 
                     if (isset($servicePosition->organization)) {
-                        $this->organizationController->deleteUserPosition($orgId, $serviceAccount->accountId);
+                        $this->organizationController->deleteServicePosition($orgId, $serviceAccount->accountId);
                     }
                     $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
                 }
