@@ -100,10 +100,8 @@ class userAccount
         }
 
         if (!empty($this->adminUsers) && in_array($account->accountName, $this->adminUsers)) {
-            $queryAssert[] = "isAdmin=TRUE";
-            $queryAssert[] = "ownerOrgId!=null";
+            $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null) OR (isAdmin!=TRUE AND ownerOrgId=null)";
         }
-
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $userAccounts;
