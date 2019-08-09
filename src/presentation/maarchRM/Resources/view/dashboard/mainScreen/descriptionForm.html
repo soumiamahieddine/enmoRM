@@ -250,8 +250,6 @@ input:invalid {
             var div = $('<div class="col-md-9" />');
             formGroup.append(div);
 
-            console.log(descriptionField);
-
             switch (descriptionField.type) {
                 case 'array':
                     var field = Metadata.getArrayDiv(descriptionField);
@@ -275,10 +273,6 @@ input:invalid {
                     break;
 
                 case 'date':
-                    var field = Metadata.getDateInput(descriptionField);
-                    break;
-
-                case 'datetime':
                     var field = Metadata.getDateInput(descriptionField);
                     break;
 
@@ -362,15 +356,26 @@ input:invalid {
         getDateInput : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
             field.attr('placeholder', $('#date_text').text());
-            field.datepicker(DatePickerParams);
+            
+            if (descriptionField.format == 'datetime') {
+                field.data('format', 'datetime');
+                field.datepicker(DatePickerParams);
+            } else {
+                field.datepicker(DatePickerParams);
+            }
 
             field.getValue = function() {
                 if(field.data('required')){
                     checkErrorInput(field);
                 }
                 if (this.val()){
-                    var dateObject = this.datepicker('getDate');
-                    return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                    if (field.data('format') == 'datetime') {
+                        var dateObject = this.datepicker('getDate');
+                        return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                    } else {
+                        var dateObject = this.datepicker('getDate');
+                        return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                    }
                 }
             };
 
@@ -696,10 +701,6 @@ input:invalid {
                     var field = Metadata.getDateInput(descriptionField);
                     break;
 
-                case 'datetime':
-                    var field = Metadata.getDateInput(descriptionField);
-                    break;
-
                 case 'boolean':
                     var field = Metadata.getRadioInput(descriptionField);
                     break;
@@ -911,13 +912,11 @@ input:invalid {
             if (target.attr("data-type")==="date") {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
-                field.datepicker('setDate', data);
-            }
-
-            if (target.attr("data-type")==="datetime") {
-                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
-                field = target.find("input");
-                field.datepicker('setDate', data);
+                if (field.data('format') == 'datetime') {
+                    field.datepicker('setDate', data);
+                } else {
+                    field.datepicker('setDate', data);
+                }
             }
 
             if (target.attr("data-type")==="name") {
