@@ -15,6 +15,7 @@
         <div class="col-md-6">
             <div class="panel panel-info">
                 <div class="panel-heading">User account</div>
+
                 <div class="panel-body">
                     <?merge user ?>
                     <form class='form-horizontal row' id="user_userAccountForm">
@@ -43,20 +44,12 @@
                                     <input type="password" class="form-control" id="verification" name="verification" placeholder="Password verification" autocomplete="off">
                                 </div>
                             </div>
-                            <?merge whatAmI.ifeq('oldUser') ?>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
                                 <div class="col-sm-6">
                                     <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
                                 </div>
-                            </div>
-                            <?merge whatAmI.ifeq('adminG') ?>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="adminGUser">Admin Rights</label>
-                                <div class="col-sm-6">
-                                    <input type="checkbox" checked disabled data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminGUser" id="adminGUser">
-                                </div>
-                            </div>
+                            </div>                          
                         </div>
                     </form>
                 </div>
@@ -68,15 +61,8 @@
                 <li class="active"><a href="#userInformationsTab" data-toggle="tab">User information</a></li>
                 <?merge profile.bool().not() ?>
                 <li><a href="#userRoleTab" data-toggle="tab">User role</a></li>
-               <!-- <?merge whatAmI.ifeq('simpleUser') ?>
-                <li><a href="#userTab" data-toggle="tab">User Tab</a></li>-->
                 <?merge user.accountId.bool()?>
                 <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
-                <?merge whatAmI.ifeq('oldUser') ?>
-                <li><a href="#servicePositionTab" data-toggle="tab">Service Position</a></li>
-                <?merge whatAmI.ifeq('adminF') ?>         
-                <li><a href="#userPositionTab" data-toggle="tab">User Position<span style="color : red">*</span></a></li>
-                <?merge whatAmI.ifeq('adminG') ?>
                 <li><a href="#orgTab" data-toggle="tab">Organization units<span style="color : red">*</span></a></li>
             </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
@@ -94,21 +80,6 @@
                         <div class="tab-pane fade" id="userRoleTab">
                             <?hinclude auth/authorization/roleInformationForm.html ?>
                         </div>
-                         <!--<?merge whatAmI.ifeq('simpleUser') ?>
-                        <div class="tab-pane fade" id="userTab">
-                            <?hinclude auth/userAccount/userManagement/TODO.html ?>
-                        </div>-->
-                        <?merge whatAmI.ifeq('oldUser') ?>
-                        <div class="tab-pane fade" id="servicePositionTab">
-                            <!-- User information form -->
-                            <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
-                        </div>
-                        <?merge whatAmI.ifeq('adminF') ?>
-                        <div class="tab-pane fade" id="userPositionTab">
-                            <!-- User information form -->
-                            <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
-                        </div>
-                        <?merge whatAmI.ifeq('adminG') ?>
                         <div class="tab-pane fade" id="orgTab">
                         <!-- User information form -->
                         <?hinclude auth/userAccount/userManagement/organisationsAdministrationForm.html ?>
@@ -127,7 +98,7 @@
                 </div>
             </div>
         </div>
-
+        <span class="hide" id="whatAmI"><?merge whatAmI ?></span>
         <span class="hide" id="emptyOrganization_text">No organization chosen</span>
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
         <span class="hide" id="invalidEmail_text">Email malformed</span>
@@ -141,6 +112,8 @@
     $("#userAccountCancelBtn").on('click', function () {
         history.back();
     });
+
+    setAdminButton($('#whatAmI').text());
     
 //create
     $("#user_saveUser").on('click', function () {
@@ -208,10 +181,7 @@
             modificationRight : $('#editMyProfile').html()
         };
 
-        // Check if 'button isAdmin' is visible && checked before save
-        if($('#adminUser').prop('checked') && $('#adminUser').prop('hidden') !== undefined) {
-            userAccount['isAdmin'] = true;
-        } else if ($('#adminGUser').prop('checked') && $('#adminGUser').prop('hidden') !== undefined) {
+        if($('#adminUser').prop('checked')) {
             userAccount['isAdmin'] = true;
         } else {
             userAccount['isAdmin'] = false;
@@ -255,6 +225,20 @@
         }
 
         return userAccount;
+    }
+
+    // manage Adminbutton's attributes according to UserType
+    function setAdminButton(whatAmI) {
+        if(whatAmI == "adminG") {
+                $('#adminUser').attr("checked", true);
+                $('#adminUser').attr("disabled","disabled");
+        } else if (whatAmI == "adminF") {
+                $('#adminUser').attr("checked", false);
+                $('#adminUser').attr("disabled","disabled");
+        } else if (whatAmI == "oldUser") {
+                $('#adminUser').attr("checked", false);
+                $('#adminUser').attr("disabled", false);
+        }
     }
 
     $("#adminGUser").on('click', function () {
