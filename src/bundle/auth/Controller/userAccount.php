@@ -90,6 +90,7 @@ class userAccount
         }
 
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+        $queryAssert[] = "accountId!=['".$accountId."']";
 
         if ($account->ownerOrgId) {
             $queryAssert[] = "(ownerOrgId='". $account->ownerOrgId."' OR ownerOrgId=null)";
