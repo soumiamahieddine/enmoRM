@@ -183,8 +183,6 @@ class user
 
         if (!$account->isAdmin && !$account->ownerOrgId) {
             $view->setSource('whatAmI', 'oldUser');
-        } else if (!$account->isAdmin && $account->ownerOrgId) {
-            $view->setSource('whatAmI', 'simpleUser');
         } else if ($account->isAdmin && $account->ownerOrgId) {
             $view->setSource('whatAmI', 'adminF');
         } else if ($account->isAdmin && !$account->ownerOrgId) {
