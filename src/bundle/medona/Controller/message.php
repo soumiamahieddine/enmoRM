@@ -178,12 +178,35 @@ class message
      *
      * @return array Array of medona/message object
      */
-    public function search($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null, $isIncoming = null)
-    {
+    public function search(
+        $type,
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null,
+        $isIncoming = null
+    ) {
         $queryParams = array();
-        $queryString = $this->searchMessage($type, $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status, $isIncoming, $queryParams);
+        $queryString = $this->searchMessage(
+            $type,
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status,
+            $isIncoming,
+            $queryParams
+        );
 
-        return $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, $maxResults);
     }
 
     /**
@@ -203,8 +226,19 @@ class message
      *
      * @return medona/message[]
      */
-    public function searchMessage($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null, $isIncoming = null, &$queryParams)
-    {
+    public function searchMessage(
+        $type,
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null,
+        $isIncoming = null,
+        &$queryParams
+    ) {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
         $currentService->orgRoleCodes = (array) $currentService->orgRoleCodes;
@@ -282,7 +316,8 @@ class message
                     }
 
                     if (in_array('controlAuthority', $currentService->orgRoleCodes)) {
-                        $clause[] =  "type='AuthorizationControlAuthorityRequest' AND authorizationReason='ArchiveDeliveryRequest'";
+                        $clause[] =  "type='AuthorizationControlAuthorityRequest' 
+                        AND authorizationReason='ArchiveDeliveryRequest'";
                     }
                     break;
 
@@ -292,11 +327,14 @@ class message
                     }
 
                     if ($isOriginator) {
-                        $clause[] = "type='ArchiveDestructionRequest' OR (type='AuthorizationOriginatingAgencyRequest' AND authorizationReason='ArchiveDestructionRequest')";
+                        $clause[] = "type='ArchiveDestructionRequest' 
+                        OR (type='AuthorizationOriginatingAgencyRequest' 
+                        AND authorizationReason='ArchiveDestructionRequest')";
                     }
 
                     if ($isControlAuthority) {
-                        $clause[] = "type='AuthorizationControlAuthorityRequest' AND authorizationReason='ArchiveDestructionRequest'";
+                        $clause[] = "type='AuthorizationControlAuthorityRequest' 
+                        AND authorizationReason='ArchiveDestructionRequest'";
                     }
 
                     if (!$isArchiver && !$isOriginator && !$isControlAuthority) {
@@ -308,14 +346,16 @@ class message
                     break;
 
                 case "ArchiveNotification":
-                    $clause[] = "type=['ArchiveModificationNotification','ArchiveDestructionNotification','ArchivalProfileModificationNotification']";
+                    $clause[] = "type=['ArchiveModificationNotification',
+                    'ArchiveDestructionNotification',
+                    'ArchivalProfileModificationNotification']";
                     break;
 
                 case "ArchiveModificationRequest":
                     $clause[] = "type='ArchiveModificationRequest'";
                     break;
 
-                default :
+                default:
                     $clause[] = "type= :type AND status !='template'";
                     $queryParams['type'] = $type;
                     break;
@@ -330,7 +370,8 @@ class message
         }
 
         $currentServiceOrgRegNumber = $currentService->registrationNumber;
-        $queryParts[] = "(recipientOrgRegNumber= :currentServiceOrgRegNumber OR senderOrgRegNumber= :currentServiceOrgRegNumber)";
+        $queryParts[] = "(recipientOrgRegNumber= :currentServiceOrgRegNumber 
+        OR senderOrgRegNumber= :currentServiceOrgRegNumber)";
         $queryParams['currentServiceOrgRegNumber'] = $currentServiceOrgRegNumber;
 
         return '('.implode(') and (', $queryParts).')';
@@ -372,7 +413,9 @@ class message
     public function save($message)
     {
         if (isset($message->xml)) {
-            $messageFile = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId.DIRECTORY_SEPARATOR.(string) $message->messageId.'.xml';
+            $messageFile = $this->messageDirectory.DIRECTORY_SEPARATOR.
+                (string) $message->messageId.DIRECTORY_SEPARATOR.
+                (string) $message->messageId.'.xml';
 
             if (!is_dir($this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId)) {
                 mkdir($this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId, 0777, true);
@@ -402,8 +445,22 @@ class message
         );
 
         if ($this->sdoFactory->exists("medona/message", $unique)) {
-            $this->sendError("103", "The message has already been received ('%s' Ref. '%s' from '%s')", array($message->type, $message->reference, $message->senderOrgRegNumber));
-            throw \laabs::newException("medona/invalidMessageException", "The message has already been received ('%s' Ref. '%s' from '%s')", 409, null, array($message->type, $message->reference, $message->senderOrgRegNumber));
+            $this->sendError(
+                "103",
+                "The message has already been received ('%s' Ref. '%s' from '%s')",
+                array($message->type,
+                    $message->reference,
+                    $message->senderOrgRegNumber)
+            );
+            throw \laabs::newException(
+                "medona/invalidMessageException",
+                "The message has already been received ('%s' Ref. '%s' from '%s')",
+                409,
+                null,
+                array($message->type,
+                    $message->reference,
+                    $message->senderOrgRegNumber)
+            );
         }
 
         $transactionControl = !$this->sdoFactory->inTransaction();
@@ -431,7 +488,7 @@ class message
                 foreach ($message->unitIdentifier as $unitIdentifier) {
                     $this->sdoFactory->create($unitIdentifier);
                 }
-            }           
+            }
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -500,13 +557,18 @@ class message
 
         $message->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $message);
 
-        $message->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents($message->messageId, 'medona/message');
+        $message->lifeCycleEvent = $this->lifeCycleJournalController->getObjectEvents(
+            $message->messageId,
+            'medona/message'
+        );
 
         $this->loadData($message);
 
         // Parent request to child reply
         try {
-            $replyMessages = $this->sdoFactory->find('medona/message', "type='".$message->type."Reply' AND recipientOrgRegNumber='".$message->senderOrgRegNumber."' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND requestReference='".$message->reference."'");
+            $replyMessages = $this->sdoFactory->find(
+                'medona/message',
+                "type='".$message->type."Reply' AND recipientOrgRegNumber='".$message->senderOrgRegNumber."' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND requestReference='".$message->reference."'");
             if (count($replyMessages) > 0) {
                 $replyMessage = $replyMessages[0];
                 $this->loadData($replyMessage);
@@ -518,7 +580,9 @@ class message
 
         // Ack
         try {
-            $ackMessages = $this->sdoFactory->find('medona/message', "type='Acknowledgement' AND recipientOrgRegNumber='".$message->senderOrgRegNumber."' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND requestReference='".$message->reference."'");
+            $ackMessages = $this->sdoFactory->find(
+                'medona/message',
+                "type='Acknowledgement' AND recipientOrgRegNumber='".$message->senderOrgRegNumber."' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND requestReference='".$message->reference."'");
             if (count($ackMessages) > 0) {
                 $ackMessage = $ackMessages[0];
                 $this->loadData($ackMessage);
@@ -530,7 +594,9 @@ class message
 
         // Related authorization messages for communication and destruction requests
         try {
-            $authorizationMessages = $this->sdoFactory->find('medona/message', "type=['AuthorizationOriginatingAgencyRequest', 'AuthorizationControlAuthorityRequest'] AND authorizationReason='".$message->type."' AND authorizationRequesterOrgRegNumber='".$message->senderOrgRegNumber."' AND authorizationReference='".$message->reference."'", null, "date");
+            $authorizationMessages = $this->sdoFactory->find(
+                'medona/message',
+                "type=['AuthorizationOriginatingAgencyRequest', 'AuthorizationControlAuthorityRequest'] AND authorizationReason='".$message->type."' AND authorizationRequesterOrgRegNumber='".$message->senderOrgRegNumber."' AND authorizationReference='".$message->reference."'", null, "date");
             if (count($authorizationMessages) > 0) {
                 foreach ($authorizationMessages as $authorizationMessage) {
                     if ($message->messageId != $authorizationMessage->messageId) {
@@ -751,7 +817,8 @@ class message
 
         switch (true) {
             case isset($attachment->filename):
-                $filepath = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId.DIRECTORY_SEPARATOR.$attachment->filename;
+                $filepath = $this->messageDirectory.DIRECTORY_SEPARATOR.
+                    (string) $message->messageId.DIRECTORY_SEPARATOR.$attachment->filename;
                 $contents = file_get_contents($filepath);
 
                 $resource->fileExtension = pathinfo($attachment->filename, \PATHINFO_EXTENSION);
@@ -801,7 +868,11 @@ class message
     {
         $messageNamespace = $message->xml->documentElement->namespaceURI;
         if (!$messageSchema = \laabs::resolveXmlNamespace($messageNamespace)) {
-            throw \laabs::newException('medona/invalidMessageException', "Unknown message namespace'.$messageNamespace", 400);
+            throw \laabs::newException(
+                'medona/invalidMessageException',
+                "Unknown message namespace'.$messageNamespace",
+                400
+            );
         }
         $message->schema = $messageSchema;
 
@@ -854,7 +925,10 @@ class message
             }
             $message->schema = $messageSchema;
         }
-        $this->messageTypeSerializer = \laabs::newSerializer($message->schema.LAABS_URI_SEPARATOR.$message->type, $format);
+        $this->messageTypeSerializer = \laabs::newSerializer(
+            $message->schema. LAABS_URI_SEPARATOR. $message->type,
+            $format
+        );
 
         return $this->messageTypeSerializer;
     }
@@ -878,7 +952,7 @@ class message
                 $messageStatus->comment = json_decode($messageStatus->comment);
             } else {
                 $messageStatus->comment = [];
-            }   
+            }
 
             $messageStatus->comment[] = $comment;
             $messageStatus->comment = json_encode($messageStatus->comment);
@@ -924,7 +998,10 @@ class message
             $messageId = (string) $message->messageId;
         }
 
-        $filename = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $messageId.DIRECTORY_SEPARATOR.(string) $messageId.'.xml';
+        $filename = $this->messageDirectory.DIRECTORY_SEPARATOR.
+            (string) $messageId.DIRECTORY_SEPARATOR.
+            (string) $messageId.
+            '.xml';
         if (!is_file($filename)) {
             return false;
         }
@@ -954,7 +1031,11 @@ class message
 
         $archive->digitalResources[] = $messageResource;
 
-        if ($message->type == 'ArchiveTransferReply' || $message->type == 'ArchiveDeliveryRequestReply' || $message->type == 'ArchiveModificationNotification' || $message->type == 'ArchiveDestructionNotification') {
+        if ($message->type == 'ArchiveTransferReply'
+            || $message->type == 'ArchiveDeliveryRequestReply'
+            || $message->type == 'ArchiveModificationNotification'
+            || $message->type == 'ArchiveDestructionNotification'
+        ) {
             $archive->archiverOrgRegNumber = $archive->depositorOrgRegNumber = (string) $message->senderOrgRegNumber;
             $archive->originatorOrgRegNumber = (string) $message->recipientOrgRegNumber;
             $archive->originatorOwnerOrgId = (string) $message->recipientOrg->orgId;
@@ -1001,9 +1082,22 @@ class message
     {
         //$queryParts = $this->searchMessage(null, $reference);
         $queryParams = array();
-        $queryString = $this->searchMessage(null, $reference, null, null, null, null, null, null, null, null, $queryParams);
+        $queryString = $this->searchMessage(
+            null,
+            $reference,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $queryParams
+        );
 
-        $message = $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $message = $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, $maxResults);
 
         if (!$message) {
             return null;

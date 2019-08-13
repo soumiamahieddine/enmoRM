@@ -44,7 +44,15 @@ class ArchiveRestitution extends abstractMessage
         $queryParts[] = "status=['sent', 'received']";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -62,7 +70,15 @@ class ArchiveRestitution extends abstractMessage
         $queryParts[] = "status='acknowledge'";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -79,9 +95,27 @@ class ArchiveRestitution extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveRestitution", $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveRestitution",
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status
+        );
     }
 
     /**
@@ -143,7 +177,9 @@ class ArchiveRestitution extends abstractMessage
             //$this->load($message);
         }
 
-        $replyMessage = $this->sdoFactory->find('medona/message', "type='".$requestMessage->type."Reply' AND recipientOrgRegNumber='".$requestMessage->senderOrgRegNumber."' AND senderOrgRegNumber='".$requestMessage->recipientOrgRegNumber."' AND requestReference='".$requestMessage->reference."'");
+        $replyMessage = $this->sdoFactory->find(
+            'medona/message',
+            "type='".$requestMessage->type."Reply' AND recipientOrgRegNumber='".$requestMessage->senderOrgRegNumber."' AND senderOrgRegNumber='".$requestMessage->recipientOrgRegNumber."' AND requestReference='".$requestMessage->reference."'");
         if (count($replyMessage) > 0) {
             $replyMessage = $replyMessage[0];
         } else {
@@ -267,7 +303,6 @@ class ArchiveRestitution extends abstractMessage
 
         $reference = $identifier;
         foreach ($archivesIdsByOriginator as $originatorOrgRegNumber => $archiveIds) {
-            
             $candidates = $this->archiveController->setForRestitution($archiveIds);
             $result["success"] = array_merge($result["success"], $candidates["success"]);
             $result["error"] = array_merge($result["error"], $candidates["error"]);
@@ -298,7 +333,14 @@ class ArchiveRestitution extends abstractMessage
 
             $recipientOrgRegNumber = $archivesForRestitution[0]->archiverOrgRegNumber;
 
-            $archiveRestitutionRequestController->send($reference, $archivesForRestitution, $comment, $senderOrgRegNumber, $recipientOrgRegNumber, $userName);
+            $archiveRestitutionRequestController->send(
+                $reference,
+                $archivesForRestitution,
+                $comment,
+                $senderOrgRegNumber,
+                $recipientOrgRegNumber,
+                $userName
+            );
         }
 
         return $result;
@@ -337,7 +379,9 @@ class ArchiveRestitution extends abstractMessage
         $this->changeStatus($messageId, "acknowledge");
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        $requestMessage = $this->sdoFactory->find('medona/message', "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'")[0];
+        $requestMessage = $this->sdoFactory->find(
+            'medona/message',
+            "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'")[0];
 
         $requestMessage->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $requestMessage);
 
@@ -373,7 +417,9 @@ class ArchiveRestitution extends abstractMessage
         $this->changeStatus($messageId, "rejected");
 
         $message = $this->sdoFactory->read('medona/message', $messageId);
-        $requestMessage = $this->sdoFactory->find('medona/message', "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'")[0];
+        $requestMessage = $this->sdoFactory->find(
+            'medona/message',
+            "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'")[0];
         $requestMessage->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $requestMessage);
 
         foreach ($requestMessage->unitIdentifier as $unitIdentifier) {

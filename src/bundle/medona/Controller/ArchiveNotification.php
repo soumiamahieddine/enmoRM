@@ -40,16 +40,33 @@ class ArchiveNotification extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function listReception($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null)
-    {
+    public function listReception(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null
+    ) {
         $registrationNumber = $this->getCurrentRegistrationNumber();
 
         $queryParts = [];
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber OR senderOrgRegNumber=$registrationNumber";
-        $queryParts[] = "type='ArchiveModificationNotification' OR type='ArchiveDestructionNotification' OR type='ArchivalProfileModificationNotification'";
+        $queryParts[] = "type='ArchiveModificationNotification' 
+        OR type='ArchiveDestructionNotification' 
+        OR type='ArchivalProfileModificationNotification'";
         $queryParts[] = "active=true";
 
-        return $this->sdoFactory->find('medona/message', '('.implode(') and (', $queryParts).')', null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            '('.implode(') and (', $queryParts).')',
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -66,9 +83,28 @@ class ArchiveNotification extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveNotification", $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status, false);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveNotification",
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status,
+            false
+        );
     }
 
     /**
@@ -82,7 +118,9 @@ class ArchiveNotification extends abstractMessage
 
         $res = array();
         $queryParts = array();
-        $queryParts[] = "(type='ArchiveModificationNotification' OR type='ArchiveDestructionNotification' OR type='ArchivalProfileModificationNotification')";
+        $queryParts[] = "(type='ArchiveModificationNotification' 
+        OR type='ArchiveDestructionNotification' 
+        OR type='ArchivalProfileModificationNotification')";
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber OR senderOrgRegNumber=$registrationNumber";
         $queryParts[] = "active=true";
         $res['received'] = $this->sdoFactory->count('medona/message', implode(' and ', $queryParts));

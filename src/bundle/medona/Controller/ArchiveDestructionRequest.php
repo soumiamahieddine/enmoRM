@@ -41,9 +41,21 @@ class ArchiveDestructionRequest extends abstractMessage
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
         $queryParts[] = "type='ArchiveDestructionRequest'";
         $queryParts[] = "active=true";
-        $queryParts[] = "status != 'processed' AND status != 'error' AND status != 'sent' AND status != 'validated' AND status != 'rejected'";
+        $queryParts[] = "status != 'processed' 
+        AND status != 'error' 
+        AND status != 'sent' 
+        AND status != 'validated' 
+        AND status != 'rejected'";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -60,9 +72,27 @@ class ArchiveDestructionRequest extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveDestruction", $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveDestruction",
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status
+        );
     }
 
     /**
@@ -181,15 +211,14 @@ class ArchiveDestructionRequest extends abstractMessage
         if ($senderOrg->registrationNumber == $message->recipientOrgRegNumber) {
             $authorizationOriginatingAgencyRequestController = \laabs::newController('medona/AuthorizationOriginatingAgencyRequest');
             $authorizationOriginatingAgencyRequestController->send($message, $originatorOrgRegNumber);
-
-            $message->status == "originator_authorization_wait";
+            $message->status = "originator_authorization_wait";
         } else {
             // Requested by originator
             $controlAuthorities = $this->orgController->getOrgsByRole('controlAuthority');
 
             // Check if control authority is set on system
             if (count($controlAuthorities)) {
-                $message->status == "control_authorization_wait";
+                $message->status = "control_authorization_wait";
                 $authorizationControlAuthorityRequestController = \laabs::newController('medona/AuthorizationControlAuthorityRequest');
                 $authorizationControlAuthorityRequestController->send($message, $originatorOrgRegNumber);
             }

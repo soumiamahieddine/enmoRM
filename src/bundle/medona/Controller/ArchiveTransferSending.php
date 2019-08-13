@@ -45,7 +45,16 @@ class ArchiveTransferSending extends abstractMessage
         $queryParts[] = "active=true";
         $queryParts[] = "isIncoming=false";
         $queryParts[] = "status != 'processed' AND status != 'error' AND status != 'invalid' AND status !='draft' AND status !='template' AND status !='rejected' AND status !='acknowledge'";
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -64,7 +73,15 @@ class ArchiveTransferSending extends abstractMessage
         $queryParts[] = "active=true";
         $queryParts[] = "isIncoming=false";
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**

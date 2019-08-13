@@ -903,9 +903,23 @@ class ArchiveTransfer extends abstractMessage
         $queryParts[] = "type='ArchiveTransfer'";
         $queryParts[] = "active=true";
         $queryParts[] = "isIncoming=true";
-        $queryParts[] = "status != 'processed' AND status != 'error' AND status != 'invalid' AND status !='draft' AND status !='template' AND status !='rejected' AND status !='acknowledge'" ;
+        $queryParts[] = "status != 'processed' 
+        AND status != 'error' 
+        AND status != 'invalid' 
+        AND status !='draft' 
+        AND status !='template' 
+        AND status !='rejected' 
+        AND status !='acknowledge'" ;
 
-        return $this->sdoFactory->find('medona/message', implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -925,7 +939,15 @@ class ArchiveTransfer extends abstractMessage
         $queryParts[] = "isIncoming=true";
         $queryParts[] = "status=['sent', 'valid', 'received','accepted']";
 
-        return $this->sdoFactory->find("medona/message", implode(' and ', $queryParts), null, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 
     /**
@@ -942,9 +964,28 @@ class ArchiveTransfer extends abstractMessage
      *
      * @return array Array of medona/message object
      */
-    public function history($reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null)
-    {
-        return $this->search("ArchiveTransfer", $reference, $archiver, $originator, $depositor, $archivalAgreement, $fromDate, $toDate, $status, true);
+    public function history(
+        $reference = null,
+        $archiver = null,
+        $originator = null,
+        $depositor = null,
+        $archivalAgreement = null,
+        $fromDate = null,
+        $toDate = null,
+        $status = null
+    ) {
+        return $this->search(
+            "ArchiveTransfer",
+            $reference,
+            $archiver,
+            $originator,
+            $depositor,
+            $archivalAgreement,
+            $fromDate,
+            $toDate,
+            $status,
+            true
+        );
     }
 
     /**
@@ -958,7 +999,10 @@ class ArchiveTransfer extends abstractMessage
 
         $message = $this->sdoFactory->read('medona/message', $messageId);
         if (isset($message->archivalAgreementReference)) {
-            $archivalAgreement = $this->sdoFactory->read('medona/archivalAgreement', array("reference" => $message->archivalAgreementReference));
+            $archivalAgreement = $this->sdoFactory->read(
+                'medona/archivalAgreement',
+                array("reference" => $message->archivalAgreementReference)
+            );
 
             if ($archivalAgreement->processSmallArchive && $message->size <= $this->autoProcessSize) {
                 $this->process($messageId);

@@ -312,8 +312,15 @@ class journal
      *
      * @return object[] The result of the request
      */
-    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = ">timestamp", $numberOfResult = 300)
-    {
+    public function searchEvent(
+        $eventType = null,
+        $objectClass = null,
+        $objectId = null,
+        $minDate = null,
+        $maxDate = null,
+        $sortBy = ">timestamp",
+        $numberOfResult = null
+    ) {
         $query = array();
         $queryParams = array();
 
@@ -349,7 +356,18 @@ class journal
 
         $queryString = implode(' AND ', $query);
 
-        $events = $this->sdoFactory->find('lifeCycle/event', $queryString, $queryParams, $sortBy, null, $numberOfResult);
+        if (!$numberOfResult) {
+            $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
+        $events = $this->sdoFactory->find(
+            'lifeCycle/event',
+            $queryString,
+            $queryParams,
+            $sortBy,
+            null,
+            $numberOfResult
+        );
 
         $userAccountController = \laabs::newController('auth/userAccount');
         $users = $userAccountController->index();
@@ -746,11 +764,15 @@ class journal
      *
      * @return object[] Array of life cycle event
      */
-    public function readJournal($journalId, $offset = 0, $limit = 300)
+    public function readJournal($journalId, $offset = 0, $limit = null)
     {
         $this->openJournal($journalId);
 
         $events = array();
+
+        if (!$limit) {
+            $limit = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
 
         while ($limit > 0 && $event = $this->getNextEvent(null, false)) {
             $events[] = $event;

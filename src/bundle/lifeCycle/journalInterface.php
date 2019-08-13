@@ -44,7 +44,7 @@ interface journalInterface
      * @action lifeCycle/journal/readJournal
      *
      */
-    public function read_journalId_($journalId, $offset = 0, $limit = 300);
+    public function read_journalId_($journalId, $offset = 0, $limit = null);
 
     /**
      * Chain the last journal
