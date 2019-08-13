@@ -112,8 +112,6 @@
     $("#userAccountCancelBtn").on('click', function () {
         history.back();
     });
-
-    setAdminButton($('#whatAmI').text());
     
 //create
     $("#user_saveUser").on('click', function () {
@@ -230,22 +228,18 @@
     // manage Adminbutton's attributes according to UserType
     function setAdminButton(whatAmI) {
         if(whatAmI == "adminG") {
-                $('#adminUser').attr("checked", true);
-                $('#adminUser').attr("disabled","disabled");
+                $('#adminUser').bootstrapToggle('on');
+                $('#adminUser').bootstrapToggle('disabled');
         } else if (whatAmI == "adminF") {
-                $('#adminUser').attr("checked", false);
-                $('#adminUser').attr("disabled","disabled");
+                $('#adminUser').bootstrapToggle("off");
+                $('#adminUser').bootstrapToggle('disabled');
         } else if (whatAmI == "oldUser") {
-                $('#adminUser').attr("checked", false);
-                $('#adminUser').attr("disabled", false);
+                $('#adminUser').bootstrapToggle("off");
+                $('#adminUser').bootstrapToggle('enable');
         }
     }
 
-    $("#adminGUser").on('click', function () {
-        selectOrTypeheadOrg();
-    });
-
-    $("#adminUser").on('click', function () {
+    $("#adminUser").on('change', function () {
         selectOrTypeheadOrg();
     });
 
@@ -253,4 +247,6 @@
         var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         return emailReg.test($email);
     }
+
+    setAdminButton($('#whatAmI').text());
 </script>
