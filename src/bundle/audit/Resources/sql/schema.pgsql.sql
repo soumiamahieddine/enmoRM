@@ -26,3 +26,7 @@ CREATE TABLE "audit"."event"
 WITH (
   OIDS=FALSE
 );
+
+CREATE INDEX "audit_event_instanceName_idx" ON "audit"."event" USING btree ("instanceName");
+
+CREATE INDEX "audit_event_eventDate_idx" ON "audit"."event" USING btree ("eventDate");
