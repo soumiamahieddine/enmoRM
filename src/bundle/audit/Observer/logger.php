@@ -222,7 +222,6 @@ class logger
 
         $eventController = \laabs::newController('audit/event');
         $eventController->add(
-            'audit/event/create',
             $this->servicePath->getName(),
             $this->servicePath->variables,
             $this->input,
