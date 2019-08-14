@@ -92,17 +92,24 @@ class userAccount
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
         $queryAssert[] = "accountId!=['".$accountId."']";
 
-        if ($account->ownerOrgId) {
-            $queryAssert[] = "(ownerOrgId='". $account->ownerOrgId."' OR ownerOrgId=null)";
-        }
-        
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
         }
 
-        if (!empty($this->adminUsers) && in_array($account->accountName, $this->adminUsers)) {
-            $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null) OR (isAdmin!=TRUE AND ownerOrgId=null)";
+        switch ($this->getSecurityLevel()) {
+            case $account::SECLEVEL_GENADMIN:
+                $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
+                break;
+
+            case $account::SECLEVEL_FONCADMIN:
+                $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_USER:
+                $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                break;
         }
+
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $userAccounts;

@@ -71,11 +71,23 @@ class serviceAccount
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
 
+        $userAccountController = \laabs::newController("auth/userAccount");
+
         $queryAssert = [];
         $queryAssert[] = "accountType='service'";
 
-        if ($account->ownerOrgId) {
-            $queryAssert[] = "(ownerOrgId='". $account->ownerOrgId."' OR ownerOrgId=null)";
+        switch ($userAccountController->getSecurityLevel()) {
+            case $account::SECLEVEL_GENADMIN:
+                $queryAssert[] = "((isAdmin='TRUE' AND ownerOrgId!=null) OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_FONCADMIN:
+                $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_USER:
+                $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                break;
         }
 
         $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
