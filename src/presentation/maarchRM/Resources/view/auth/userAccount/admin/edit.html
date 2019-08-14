@@ -229,13 +229,14 @@
     function setAdminButton(whatAmI) {
         if(whatAmI == "adminG") {
                 $('#adminUser').bootstrapToggle('on');
-                $('#adminUser').bootstrapToggle('disabled');
+                $('#adminUser').parent().addClass('disabled');
+                console.log($('#adminUser'));
         } else if (whatAmI == "adminF") {
                 $('#adminUser').bootstrapToggle("off");
-                $('#adminUser').bootstrapToggle('disabled');
+                $('#adminUser').parent().addClass('disabled');
         } else if (whatAmI == "oldUser") {
                 $('#adminUser').bootstrapToggle("off");
-                $('#adminUser').bootstrapToggle('enable');
+                $('#adminUser').parent().removeClass('disabled');
         }
     }
 
