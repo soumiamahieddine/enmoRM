@@ -607,4 +607,40 @@ class userAccount
 
         return $userAccounts;
     }
+
+    public function isAuthorized($roles)
+    {
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if (is_null($account->isAdmin) && !$account->ownerOrgId) {
+            return true;
+        }
+
+        foreach ($roles as $role) {
+            switch ($role) {
+                case 'adminG':
+                    if ($account->isAdmin && !$account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'adminF':
+                    if ($account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'user':
+                    if (!$account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+    }
 }
