@@ -112,6 +112,8 @@
     $("#userAccountCancelBtn").on('click', function () {
         history.back();
     });
+
+    setAdminButton($('#whatAmI').text());
     
 //create
     $("#user_saveUser").on('click', function () {
@@ -249,5 +251,4 @@
         return emailReg.test($email);
     }
 
-    setAdminButton($('#whatAmI').text());
 </script>
