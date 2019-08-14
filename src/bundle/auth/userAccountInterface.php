@@ -142,6 +142,13 @@ interface userAccountInterface
      */
     public function readHasprivilege($userStory);
 
+     /**
+     * Get the Security Level
+     * 
+     * @action auth/userAccount/getSecurityLevel
+     */
+    public function readSecurityLevel();
+
     /**
      * Get list of user access rules of current user
      *
