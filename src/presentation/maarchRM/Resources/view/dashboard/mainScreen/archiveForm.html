@@ -24,6 +24,16 @@
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Test DateTime </label>
+        <div class='input-group col-sm-9' id='datetimepicker1'>
+            <input class="form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+
     <div class="form-group" id="fileplanLevelDiv">
         <label class="col-md-3 control-label">Fileplan level</label>
         <div class="col-md-9">
@@ -78,7 +88,36 @@
 </div>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+
+<!-- TODO voir quel librairies on importe --> 
+
+<!-- en local 
+<link rel="stylesheet" src="/public/css/bootstrap_3.1.1/bootstrap.min.css">
+<link rel="stylesheet" src="/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+<link rel="stylesheet" src="/public/css/bootstrap-datetimepicker/test.css">
+-->
+
+<script src="/public/js/moment_2.14.1/moment.js"></script>
+<script src="/public/js/dateTimePicker/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.1/css/bootstrap-datetimepicker.css" />
+<link rel="stylesheet" src="/public/css/bootstrap-datetimepicker/test.css">
+
+<!--en CDN
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.1/css/bootstrap-datetimepicker.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.1/js/bootstrap-datetimepicker.min.js"></script>
+-->
+
 <script type="text/javascript">
+
+
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            inline: true,
+            sideBySide: true,
+            format: 'DD-MM-YYYY HH:mm',
+        });
+    });
+
 
     FilePlanLevelToggle = {
         load: function (isWithoutProfile = true) {
