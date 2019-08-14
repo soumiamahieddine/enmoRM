@@ -33,7 +33,6 @@
 <script>
 
     window.localStorage.clear();
-    selectOrTypeheadOrg();
 
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
@@ -149,7 +148,7 @@
             .attr('type', 'text')
             .attr('readonly', 'true')
             .attr('data-orgid', orgId)
-            .val(sorgName)
+            .val(orgName)
             .data('orgId', orgId)
             .data('ownerOrgId', ownerOrgId)
             .appendTo(inputGroup);
@@ -168,6 +167,12 @@
             .addClass('fa fa-trash-o fa-fw')
             .prependTo(btn);
     }
+
+    selectOrTypeheadOrg();
+
+    $("#adminUser").on('change', function () {
+        selectOrTypeheadOrg();
+    });
 
 
 </script>

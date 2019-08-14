@@ -63,7 +63,10 @@
                 <li><a href="#userRoleTab" data-toggle="tab">User role</a></li>
                 <?merge user.accountId.bool()?>
                 <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
+                <?merge whatAmI.ifne('adminG') ?>
                 <li><a href="#orgTab" data-toggle="tab">Organization units<span style="color : red">*</span></a></li>
+                <?merge whatAmI.ifeq('adminG') ?>
+                <li><a href="#orgTab" data-toggle="tab">Organization<span style="color : red">*</span></a></li>
             </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
                 <div class="panel-body clearfix">
@@ -230,7 +233,7 @@
     // manage Adminbutton's attributes according to UserType
     function setAdminButton(whatAmI) {
         if(whatAmI == "adminG") {
-                $('#adminUser').bootstrapToggle('on');
+                $('#adminUser').bootstrapToggle("on");
                 $('#adminUser').parent().addClass('disabled');
         } else if (whatAmI == "adminF") {
                 $('#adminUser').bootstrapToggle("off");
@@ -241,10 +244,6 @@
                 $('#adminUser').parent().removeClass('disabled');
         }
     }
-
-    $("#adminUser").on('change', function () {
-        selectOrTypeheadOrg();
-    });
 
     function validateEmail($email) {
         var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
