@@ -30,6 +30,7 @@ use core\Exception;
 class organization
 {
     protected $sdoFactory;
+    protected $accountController;
 
     /**
      * Constructor
@@ -40,6 +41,7 @@ class organization
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->accountController = \laabs::newController('auth/userAccount');
     }
 
     /**
@@ -251,9 +253,13 @@ class organization
      */
     public function create($organization)
     {
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized('funcAdmin');
+        } else {
+            $this->accountController->isAuthorized('genAdmin');
+        }
 
-        $authController = \laabs::newController("auth/userAccount");
-        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
 
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {
@@ -447,6 +453,12 @@ class organization
      */
     public function update($orgId, $organization)
     {
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized('funcAdmin');
+        } else {
+            $this->accountController->isAuthorized('genAdmin');
+        }
+
         $organization->orgId = $orgId;
 
         if ($organization->beginDate > $organization->endDate) {
@@ -495,7 +507,6 @@ class organization
         }
 
         if ($newParentOrgId) {
-
             $oldParentOrg = $this->readParentOrg($orgId);
             $newParentOrg = $this->readParentOrg($newParentOrgId);
 
@@ -507,7 +518,12 @@ class organization
                 $newParentOrg = end($newParentOrg);
             }
 
-            if ($oldParentOrg->orgId === null || ($oldParentOrg->orgId !== null && $oldParentOrg->orgId != $newParentOrg->orgId && $oldParentOrg->orgId != $newParentOrgId)) {
+            if ($oldParentOrg->orgId === null
+                || ($oldParentOrg->orgId !== null
+                    && $oldParentOrg->orgId != $newParentOrg->orgId
+                    && $oldParentOrg->orgId != $newParentOrgId
+                )
+            ) {
                 throw new \core\Exception("Organization can''t be moved to an other organization");
             }
         }
@@ -561,6 +577,11 @@ class organization
     public function delete($orgId)
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized('funcAdmin');
+        } else {
+            $this->accountController->isAuthorized('genAdmin');
+        }
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -570,12 +591,25 @@ class organization
 
         try {
             if ($this->isUsed($organization->registrationNumber)) {
-                throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
+                throw new \core\Exception\ForbiddenException(
+                    "The organization %s is used in archives.",
+                    403,
+                    null,
+                    [$organization->registrationNumber]
+                );
             }
 
-            $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'");
+            $controlAuthorities = $this->sdoFactory->find(
+                'medona/controlAuthority',
+                "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'"
+            );
             if (count($controlAuthorities) > 0) {
-                throw new \core\Exception\ForbiddenException("The organization %s is used in control authority.", 403, null, [$organization->registrationNumber]);
+                throw new \core\Exception\ForbiddenException(
+                    "The organization %s is used in control authority.",
+                    403,
+                    null,
+                    [$organization->registrationNumber]
+                );
             }
             
             $children = $this->sdoFactory->readChildren("organization/organization", $organization);
@@ -589,9 +623,16 @@ class organization
             }
 
             foreach ($children as $child) {
-                $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
+                $controlAuthorities = $this->sdoFactory->find(
+                    'medona/controlAuthority',
+                    "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'"
+                );
                 if (count($controlAuthorities) > 0) {
-                    throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
+                    throw new \core\Exception\ForbiddenException(
+                        "The child organization is used in control authority.",
+                        403,
+                        null
+                    );
                 }
                 $this->delete($child->orgId);
             }
@@ -636,7 +677,10 @@ class organization
         $userPosition->orgId = $orgId;
         $userPosition->function = $function;
         $userPosition->default = false;
-        $userDefaultPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId = '$userAccountId' AND default = true");
+        $userDefaultPosition = $this->sdoFactory->find(
+            'organization/userPosition',
+            "userAccountId = '$userAccountId' AND default = true"
+        );
 
         if (empty($userDefaultPosition)) {
             $userPosition->default = true;
@@ -664,7 +708,6 @@ class organization
         }
 
         try {
-
             if ($userPositions) {
                 $this->sdoFactory->deleteCollection($userPositions, "organization/userPosition");
             }
@@ -717,7 +760,8 @@ class organization
      */
     public function setDefaultUserPosition($orgId, $userAccountId)
     {
-        $previousDefaultUserPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId='$userAccountId' AND default=true");
+        $previousDefaultUserPosition = $this->sdoFactory->find(
+            'organization/userPosition', "userAccountId='$userAccountId' AND default=true");
 
         if (!empty($previousDefaultUserPosition)) {
             $previousDefaultUserPosition = $previousDefaultUserPosition[0];
@@ -725,7 +769,10 @@ class organization
             $this->sdoFactory->update($previousDefaultUserPosition, 'organization/userPosition');
         }
 
-        $userPosition = $this->sdoFactory->read("organization/userPosition", array("userAccountId" => $userAccountId, "orgId" => $orgId));
+        $userPosition = $this->sdoFactory->read(
+            "organization/userPosition",
+            array("userAccountId" => $userAccountId, "orgId" => $orgId)
+        );
         $userPosition->default = true;
 
         return $this->sdoFactory->update($userPosition, 'organization/userPosition');
@@ -740,10 +787,16 @@ class organization
      */
     public function deleteUserPosition($userAccountId, $orgId)
     {
-        $userPosition = $this->sdoFactory->read("organization/userPosition", array("userAccountId" => $userAccountId, "orgId" => $orgId));
+        $userPosition = $this->sdoFactory->read(
+            "organization/userPosition",
+            array("userAccountId" => $userAccountId, "orgId" => $orgId)
+        );
 
         if ($userPosition->default) {
-            $newDefaultUserPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId='$userAccountId'");
+            $newDefaultUserPosition = $this->sdoFactory->find(
+                'organization/userPosition',
+                "userAccountId='$userAccountId'"
+            );
 
             if (!empty($newDefaultUserPosition)) {
                 $newDefaultUserPosition = $newDefaultUserPosition[0];
@@ -765,7 +818,10 @@ class organization
      */
     public function deleteContactPosition($contactId, $orgId)
     {
-        $contactPosition = $this->sdoFactory->read("organization/orgContact", array("contactId" => $contactId, "orgId" => $orgId));
+        $contactPosition = $this->sdoFactory->read(
+            "organization/orgContact",
+            array("contactId" => $contactId, "orgId" => $orgId)
+        );
 
         $contactController = \laabs::newController('contact/contact');
         $this->sdoFactory->delete($contactPosition);
@@ -782,7 +838,10 @@ class organization
      */
     public function deleteServicePosition($orgId, $serviceAccountId)
     {
-        $servicePosition = $this->sdoFactory->read("organization/servicePosition", array("serviceAccountId" => $serviceAccountId, "orgId" => $orgId));
+        $servicePosition = $this->sdoFactory->read(
+            "organization/servicePosition",
+            array("serviceAccountId" => $serviceAccountId, "orgId" => $orgId)
+        );
 
         return $this->sdoFactory->delete($servicePosition);
     }
@@ -939,7 +998,10 @@ class organization
 
         while ($hasDescendants) {
             $idsString = \laabs\implode("','", $ids);
-            $descendants = $this->sdoFactory->find('organization/organization', "parentOrgId=['$idsString'] AND isOrgUnit=false");
+            $descendants = $this->sdoFactory->find(
+                'organization/organization',
+                "parentOrgId=['$idsString'] AND isOrgUnit=false"
+            );
 
             if (empty($descendants)) {
                 $hasDescendants = false;
@@ -965,7 +1027,10 @@ class organization
      */
     public function readDescendantServices($parentId)
     {
-        $childrenServices = $this->sdoFactory->find('organization/organization', "parentOrgId = '$parentId' AND isOrgUnit = true");
+        $childrenServices = $this->sdoFactory->find(
+            'organization/organization',
+            "parentOrgId = '$parentId' AND isOrgUnit = true"
+        );
 
         foreach ($childrenServices as $childService) {
             $childrenServices = array_merge($this->readDescendantServices($childService->orgId), $childrenServices);
@@ -983,7 +1048,10 @@ class organization
      */
     public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        if (null ==! $this->getArchivalProfileAccess($archivalProfileAccess->orgId, $archivalProfileAccess->archivalProfileReference)) {
+        if (null ==! $this->getArchivalProfileAccess(
+            $archivalProfileAccess->orgId,
+            $archivalProfileAccess->archivalProfileReference
+        )) {
             throw new \core\Exception("Organization Archival Profile Access already exists.");
         }
         $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
@@ -997,15 +1065,24 @@ class organization
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
-            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access");
+            throw new \core\Exception(
+                "Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access"
+            );
         }
 
-        if ($archivalProfileAccess->archivalProfileReference !== '*' && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
-            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile does not exists");
+        if ($archivalProfileAccess->archivalProfileReference !== '*'
+            && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)
+        ) {
+            throw new \core\Exception(
+                "Organization Archival Profile Access cannot be created, archival profile does not exists"
+            );
         }
 
         try {
-            $archivalProfileAccess = $this->sdoFactory->create($archivalProfileAccess, 'organization/archivalProfileAccess');
+            $archivalProfileAccess = $this->sdoFactory->create(
+                $archivalProfileAccess,
+                'organization/archivalProfileAccess'
+            );
         } catch (Exception $e) {
             throw $e;
         }
@@ -1033,7 +1110,9 @@ class organization
 
         if ($archivalProfileAccess->archivalProfileReference === '*') {
             if (!$archivalProfileAccess->originatorAccess) {
-                throw new \core\Exception("User cannot be associated with archival profile when archival without profiles is selected");
+                throw new \core\Exception(
+                    "User cannot be associated with archival profile when archival without profiles is selected"
+                );
             }
         }
 
@@ -1106,12 +1185,21 @@ class organization
     {
         $orgUnitArchivalProfiles = [];
 
-        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
+        $organization = $this->sdoFactory->read(
+            "organization/organization",
+            array('registrationNumber' => $orgRegNumber)
+        );
 
         if ($originatorAccess) {
-            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'");
+            $archivalProfileAccesses = $this->sdoFactory->find(
+                'organization/archivalProfileAccess',
+                "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'"
+            );
         } else {
-            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+            $archivalProfileAccesses = $this->sdoFactory->find(
+                'organization/archivalProfileAccess',
+                "orgId='" . $organization->orgId . "'"
+            );
         }
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
@@ -1143,7 +1231,11 @@ class organization
         $queryParam["orgId"] = $orgId;
         $queryParam["archivalProfileReference"] = $archivalProfileReference;
 
-        $archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', $queryString, $queryParam);
+        $archivalProfileAccess = $this->sdoFactory->find(
+            'organization/archivalProfileAccess',
+            $queryString,
+            $queryParam
+        );
 
         if (empty($archivalProfileAccess)) {
             return null;
@@ -1161,14 +1253,20 @@ class organization
      */
     public function checkProfileInOrgAccess($archivalProfileReference, $registrationNumber)
     {
-        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $registrationNumber));
+        $organization = $this->sdoFactory->read(
+            "organization/organization",
+            array('registrationNumber' => $registrationNumber)
+        );
 
         if (!$archivalProfileReference) {
             $archivalProfileReference = "*";
         }
 
         try {
-            $this->sdoFactory->read("organization/archivalProfileAccess", array('orgId' => $organization->orgId, 'archivalProfileReference' => $archivalProfileReference));
+            $this->sdoFactory->read(
+                "organization/archivalProfileAccess",
+                array('orgId' => $organization->orgId, 'archivalProfileReference' => $archivalProfileReference)
+            );
         } catch (\Exception $e) {
             return false;
         }

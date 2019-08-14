@@ -608,10 +608,10 @@ class userAccount
         return $userAccounts;
     }
 
-    public function isAuthorized($roles)
+    public function isAuthorized($securitiesLevel)
     {
-        if (!is_array($roles)) {
-            $roles = [$roles];
+        if (!is_array($securitiesLevel)) {
+            $securitiesLevel = [$securitiesLevel];
         }
 
         $accountToken = \laabs::getToken('AUTH');
@@ -621,14 +621,14 @@ class userAccount
             return true;
         }
 
-        foreach ($roles as $role) {
-            switch ($role) {
-                case 'adminG':
+        foreach ($securitiesLevel as $securityLevel) {
+            switch ($securityLevel) {
+                case 'genAdmin':
                     if ($account->isAdmin && !$account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'adminF':
+                case 'funcAdmin':
                     if ($account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }
