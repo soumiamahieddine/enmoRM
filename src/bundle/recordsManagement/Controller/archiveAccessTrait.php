@@ -82,6 +82,9 @@ trait archiveAccessTrait
         $processingStatus = null,
         $checkAccess = true
     ) {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $archives = [];
 
         $archiveArgs = [
@@ -186,6 +189,9 @@ trait archiveAccessTrait
         $originatingStartDate = null,
         $originatingEndDate = null
     ) {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $queryParts = array();
         $queryParams = array();
 
@@ -510,6 +516,9 @@ trait archiveAccessTrait
      */
     public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($checkAccess) {
@@ -574,6 +583,9 @@ trait archiveAccessTrait
      */
     public function retrieve($archiveId, $withBinary = false, $checkAccess = true, $isCommunication = false)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } else {
