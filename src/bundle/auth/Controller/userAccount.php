@@ -190,7 +190,7 @@ class userAccount
                 (!$account->ownerOrgId && !$userAccount->isAdmin) ||
                 ($account->ownerOrgId && $userAccount->isAdmin)
             ) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
 
@@ -303,7 +303,7 @@ class userAccount
             (!$account->ownerOrgId && !$userAccount->isAdmin) ||
             ($account->ownerOrgId && $userAccount->isAdmin)
         ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
         }
 
         $oldUserAccount = $this->sdoFactory->read('auth/account', $userAccount->accountId);

@@ -166,7 +166,7 @@ class serviceAccount
                 (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
                 ($account->ownerOrgId && $serviceAccount->isAdmin)
             ) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
 
@@ -275,7 +275,7 @@ class serviceAccount
             (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
             ($account->ownerOrgId && $serviceAccount->isAdmin)
         ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
         }
 
         $oldServiceAccount = $this->sdoFactory->read('auth/account', $serviceAccount->accountId);
