@@ -42,5 +42,5 @@ msgid "Conversion rule deleted"
 msgstr "Règle de conversion supprimée"
 
 msgid "Old Browser download"
-msgstr "La version de votre navigateur est malheureusement trop vieille pour pouvoir prévisualiser ce document. Veuillez le mettre à jour afin de pouvoir profiter de cette fonctionnalité"
+msgstr "Votre navigateur ne permet pas de prévisualiser ce document"
 
