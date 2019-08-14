@@ -643,4 +643,18 @@ class userAccount
 
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
     }
+
+    public function getSecurityLevel()
+    {
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if ($account->isAdmin && !$account->ownerOrgId) {
+            return $account::SECLEVEL_GENADMIN;
+        } elseif ($account->isAdmin && $account->ownerOrgId) {
+            return $account::SECLEVEL_FONCADMIN;
+        } elseif (!$account->isAdmin && $account->ownerOrgId) {
+            return $account::SECLEVEL_USER;
+        }
+    }
 }

@@ -32,6 +32,16 @@ namespace bundle\auth\Model;
 class account
 {
     /**
+     * The security level (about NF_Z42020)
+     *
+     * @var string
+     * @notempty
+     */
+    const SECLEVEL_GENADMIN = "gen_admin";
+    const SECLEVEL_FONCADMIN = "fonc_admin";
+    const SECLEVEL_USER = "user";
+
+    /**
      * The account identifier
      *
      * @var id
