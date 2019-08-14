@@ -168,14 +168,30 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
+        $organizationController = \laabs::newController("organization/organization");
+
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
 
-        if (!$userAccount->isAdmin) {
-            if (!$organizations) {
-                throw \laabs::newException('auth/noOrganizationException', "No organization chosen");
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if ($account->isAdmin || $account->owner) {
+            if (!$account->isAdmin ||
+                (!$account->ownerOrgId && !$userAccount->isAdmin) ||
+                ($account->ownerOrgId && $userAccount->isAdmin)
+            ) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+            }
+        }
+
+        if ($userAccount->ownerOrgId) {
+            try {
+                $organizationController->read($userAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
             }
         }
 
@@ -202,7 +218,6 @@ class userAccount
         $userAccount->lastIp = null;
 
         $this->sdoFactory->create($userAccount, 'auth/account');
-        $organizationController = \laabs::newController("organization/organization");
 
         if (!$userAccount->isAdmin) {
             foreach ($organizations as $orgId) {
@@ -273,6 +288,23 @@ class userAccount
     public function update($userAccountId, $userAccount)
     {
         $userAccount = $this->updateUserInformation($userAccount);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if (!$account->isAdmin ||
+            (!$account->ownerOrgId && !$userAccount->isAdmin) ||
+            ($account->ownerOrgId && $userAccount->isAdmin)
+        ) {
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+        }
+
+        $oldUserAccount = $this->sdoFactory->read('auth/account', $userAccount->accountId);
+        if ($oldUserAccount->ownerOrgId && $oldUserAccount->ownerOrgId != $userAccount->ownerOrgId ||
+            !$oldUserAccount->ownerOrgId && $userAccount->ownerOrgId
+        ) {
+            throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
+        }
 
         $this->sdoFactory->deleteChildren("auth/roleMember", $userAccount, "auth/account");
 
@@ -574,5 +606,41 @@ class userAccount
         $userAccounts = $this->sdoFactory->find('auth/account', $userAccountQueryString);
 
         return $userAccounts;
+    }
+
+    public function isAuthorized($roles)
+    {
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if (is_null($account->isAdmin) && !$account->ownerOrgId) {
+            return true;
+        }
+
+        foreach ($roles as $role) {
+            switch ($role) {
+                case 'adminG':
+                    if ($account->isAdmin && !$account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'adminF':
+                    if ($account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'user':
+                    if (!$account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
     }
 }
