@@ -30,20 +30,29 @@
                                     <option value="[?merge .orgId ?]" name="orgId"><?merge .displayName ?></option>
                                 </select>
                             </div>
+                            <div id="selectOrgGroup" class="input-group">
+                                <select id="orgSelect">
+                                </select>
+                            </div>
                         </div>
                         <?merge serviceAccount ?>
                         <div id="orgGroup" class="form-group hide">
                             <label class="control-label" for="serviceOrgId">Organization<span> : </span></label>
                             <input name="ownerOrgName" id="originatorOwnerOrgName" disabled class="form-control">
-                            <!--<span name="ownerOrgName" id="originatorOwnerOrgName"></span>-->
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="serviceEnabled">Enabled</label>
+                        <label class="col-md-3 control-label" for="serviceEnabled">Enabled</label>
                         <div>
-                            <input type="checkbox" class="form-control" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
+                            <input type="checkbox" data-size="small" class="form-control" data-on="Oui" data-off="Non" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
+                        <div>
+                            <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
+                        </div>
+                    </div> 
                     <div class="clearfix pull-right">
                         <button type="button" class="btn btn-warning" id="cancelServiceAccount" title="Cancel">
                             <span class="fa fa-undo">&nbsp;</span>Cancel
@@ -152,6 +161,7 @@
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <div style="display:none">
+    <span class="hide" id="whatAmI"><?merge whatAmI ?></span>
     <span id="empty_text">The fields with a star are required.</span>
     <span id="whiteSpace_text">The fields contain white spaces.</span>
     <span id="nullValue_text">The fields is empty.</span>
@@ -159,6 +169,11 @@
 </div>
 
 <script type="application/javascript">
+
+    $("#adminUser").on('change', function () {
+        selectOrTypeheadOrg();
+    });
+
     $('#tokenRegenerateRequest').on('click', function() {
         if (!$("#generatedToken").text()) {
             $("#tokenRegenerateValidation").click();
@@ -207,6 +222,12 @@
         var param = new Object();
         var serviceAccount = new Object();
 
+        if($('#adminUser').prop('checked')) {
+            serviceAccount['isAdmin'] = true;
+        } else {
+            serviceAccount['isAdmin'] = false;
+        }
+
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
@@ -215,13 +236,20 @@
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
 
-        var servicesURI = new Array();
-        $("#listPrivilege").find("[name=privilegeURI]").each(function(){
+        if (serviceAccount['isAdmin'] == true) {
+            serviceAccount.ownerOrgId = $("#orgSelect").val();
+            orgId = [];
+        } else {
+            serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerOrgId");
+        }
 
+        var servicesURI = new Array();
+
+        $("#listPrivilege").find("[name=privilegeURI]").each(function(){
             servicesURI.push($(this).find("input").data('serviceuri'));
         });
 
-        if(serviceAccount.displayName == "" || orgId == "") {
+        if(serviceAccount.displayName == "" || (orgId == "" && serviceAccount['isAdmin'] == false)) {
             gritter.show($('#empty_text').text(),false);
             return false;
         }
@@ -276,7 +304,6 @@
 
     });
 
-
     $("#selectPrivilegeURI").on("change", function(){
         $("#btnAddPrivilege").attr('disabled',false);
 
@@ -321,7 +348,6 @@
     });
     window.localStorage.clear();
     organizations.initialize();
-
 
     // initialize typeahead
     $('#orgTypeahead').typeahead(
@@ -385,5 +411,52 @@
             $("#orgGroup").removeClass('hide');
         }
     });
+
+    $.ajax({
+        type: 'GET',
+        url: '/organizations/todisplay?orgUnit=false&ownerOrg=true',
+        contentType : 'application/json',
+        dataType    : 'json',
+        success: function (response) {
+            $.each(response, function(index, org){
+                addSelectOrgs(org);
+            })
+        }
+    });
+
+    function addSelectOrgs(org){
+        var orgSelect = $('#orgSelect');
+
+        var option = $('<option/>')
+            .val(org.orgId)
+            .text(org.displayName)
+            .appendTo(orgSelect);
+    }
+
+    function selectOrTypeheadOrg(){
+        if ($("#adminUser").prop("checked")) {
+            $("#orgTypeahead").hide();
+            $("#selectOrgGroup").show();
+        } else {
+            $("#orgTypeahead").show();
+            $("#selectOrgGroup").hide();
+        }
+    }
+
+    // manage Adminbutton's attributes according to UserType
+    function setAdminButton(whatAmI) {
+        if(whatAmI == "adminG") {
+                $('#adminUser').bootstrapToggle('on');
+                $('#adminUser').parent().addClass('disabled');
+        } else if (whatAmI == "adminF") {
+                $('#adminUser').bootstrapToggle("off");
+                $('#adminUser').parent().addClass('disabled');
+        } else if (whatAmI == "oldUser") {
+                $('#adminUser').bootstrapToggle("off");
+                $('#adminUser').parent().removeClass('disabled');
+        }
+    }
+
+    setAdminButton($('#whatAmI').text());
 
 </script>

@@ -84,49 +84,55 @@ class serviceAccount
      */
     public function edit($serviceAccount)
     {
-
         $tabOrganizations = \laabs::callService('organization/organization/readIndex');
         $ownerOrganizations = [];
         $organizations = [];
 
-
         foreach ($tabOrganizations as $org) {
-            if($org->isOrgUnit){
+            if ($org->isOrgUnit) {
                 $organizations[] = $org;
             } else {
                 $ownerOrganizations []= $org;
             }
         }
 
-
-        if($serviceAccount->servicePrivilege){
+        if ($serviceAccount->servicePrivilege) {
             $noDescription = true;
-            foreach ($serviceAccount->servicePrivilege as $servicePrivilege ) {
+            foreach ($serviceAccount->servicePrivilege as $servicePrivilege) {
                 foreach ($serviceAccount->servicePrivilegeOptions as $option) {
-                    if($servicePrivilege->serviceURI == $option->serviceURI ) {
+                    if ($servicePrivilege->serviceURI == $option->serviceURI) {
                         $servicePrivilege->description = $option->description;
                         $noDescription = false;
                     }
                 }
-                if($noDescription) {
+                if ($noDescription) {
                     $servicePrivilege->description =  $servicePrivilege->serviceURI;
                 }
                 $noDescription = true;
             }
         }
 
-
-        foreach ( $organizations as $org) {
-            if(isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
+        foreach ($organizations as $org) {
+            if (isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
                 $serviceAccount->orgName = $org->displayName;
                 $ownerOrgid = $org->ownerOrgId;
             }
         }
-        foreach ( $ownerOrganizations as $org) {
-            if(isset($ownerOrgid) && $ownerOrgid == $org->orgId) {
+        foreach ($ownerOrganizations as $org) {
+            if (isset($ownerOrgid) && $ownerOrgid == $org->orgId) {
                 $serviceAccount->ownerOrgName = $org->displayName;
-
             }
+        }
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if (!$account->isAdmin && !$account->ownerOrgId) {
+            $this->view->setSource('whatAmI', 'oldUser');
+        } elseif ($account->isAdmin && $account->ownerOrgId) {
+            $this->view->setSource('whatAmI', 'adminF');
+        } elseif ($account->isAdmin && !$account->ownerOrgId) {
+            $this->view->setSource('whatAmI', 'adminG');
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
