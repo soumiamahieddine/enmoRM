@@ -507,21 +507,29 @@ class organization
         }
 
         if ($newParentOrgId) {
-            $oldParentOrg = $this->readParentOrg($orgId);
-            $newParentOrg = $this->readParentOrg($newParentOrgId);
+            $oldParentOrgs = $this->readParentOrg($orgId);
+            $newParentOrgs = $this->readParentOrg($newParentOrgId);
 
-            if (is_array($oldParentOrg)) {
-                $oldParentOrg = end($oldParentOrg);
+            $newParentOrg = $this->sdoFactory->read("organization/organization", $newParentOrgId);
+            if ($newParentOrg->isOrgUnit) {
+                for ($i = 0; $i < count($newParentOrgs); $i++) {
+                    if (!$newParentOrgs[$i]->isOrgUnit) {
+                        $newParentOrg = $newParentOrgs[$i];
+                        break;
+                    }
+                }
             }
 
-            if (is_array($newParentOrg)) {
-                $newParentOrg = end($newParentOrg);
+            for ($i = 0; $i < count($oldParentOrgs); $i++) {
+                if (!$oldParentOrgs[$i]->isOrgUnit) {
+                    $oldParentOrg = $oldParentOrgs[$i];
+                    break;
+                }
             }
 
             if ($oldParentOrg->orgId === null
                 || ($oldParentOrg->orgId !== null
                     && $oldParentOrg->orgId != $newParentOrg->orgId
-                    && $oldParentOrg->orgId != $newParentOrgId
                 )
             ) {
                 throw new \core\Exception("Organization can''t be moved to an other organization");
