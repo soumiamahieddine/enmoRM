@@ -617,7 +617,7 @@ class userAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if (is_null($account->isAdmin) && !$account->ownerOrgId) {
+        if (!$account->isAdmin && !$account->ownerOrgId) {
             return true;
         }
 
