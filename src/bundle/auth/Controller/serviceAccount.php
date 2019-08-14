@@ -144,6 +144,26 @@ class serviceAccount
      */
     public function addService($serviceAccount, $orgId, $servicesURI = [])
     {
+        $organizationController = \laabs::newController("organization/organization");
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        if (!$account->isAdmin ||
+            (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
+            ($account->ownerOrgId && $serviceAccount->isAdmin)
+        ) {
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+        }
+
+        if ($serviceAccount->ownerOrgId) {
+            try {
+                $organizationController->read($serviceAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($serviceAccount->ownerOrgId . " does not exist.");
+            }
+        }
+
         $serviceAccount = \laabs::cast($serviceAccount, 'auth/account');
         $serviceAccount->accountId = \laabs::newId();
 
@@ -233,6 +253,24 @@ class serviceAccount
      */
     public function updateServiceInformation($serviceAccount, $orgId = null, $servicesURI = [])
     {
+        $organizationController = \laabs::newController("organization/organization");
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        if (!$account->isAdmin ||
+            (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
+            ($account->ownerOrgId && $serviceAccount->isAdmin)
+        ) {
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+        }
+
+        $oldServiceAccount = $this->sdoFactory->read('auth/account', $serviceAccount->accountId);
+        if ($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId ||
+            !$serviceAccount->ownerOrgId && $serviceAccount->ownerOrgId
+        ) {
+            throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
+        }
+
         $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccount');
         if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccount->accountId))) {
             throw \laabs::newException("auth/unknownServiceException");
