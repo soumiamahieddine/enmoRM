@@ -178,11 +178,13 @@ class userAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if (!$account->isAdmin ||
-            (!$account->ownerOrgId && !$userAccount->isAdmin) ||
-            ($account->ownerOrgId && $userAccount->isAdmin)
-        ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+        if ($account->isAdmin || $account->owner) {
+            if (!$account->isAdmin ||
+                (!$account->ownerOrgId && !$userAccount->isAdmin) ||
+                ($account->ownerOrgId && $userAccount->isAdmin)
+            ) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+            }
         }
 
         if ($userAccount->ownerOrgId) {

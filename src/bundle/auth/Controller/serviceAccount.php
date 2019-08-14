@@ -149,11 +149,13 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        if (!$account->isAdmin ||
-            (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
-            ($account->ownerOrgId && $serviceAccount->isAdmin)
-        ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+        if ($account->isAdmin || $account->owner) {
+            if (!$account->isAdmin ||
+                (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
+                ($account->ownerOrgId && $serviceAccount->isAdmin)
+            ) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action.");
+            }
         }
 
         if ($serviceAccount->ownerOrgId) {
