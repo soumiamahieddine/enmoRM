@@ -76,7 +76,7 @@ class serviceAccount
         $queryAssert = [];
         $queryAssert[] = "accountType='service'";
 
-        switch ($userAccountController->getSecurityLevel()) {
+        switch ($account->getSecurityLevel()) {
             case $account::SECLEVEL_GENADMIN:
                 $queryAssert[] = "((isAdmin='TRUE' AND ownerOrgId!=null) OR (isAdmin!='TRUE' AND ownerOrgId=null))";
                 break;

@@ -16,6 +16,7 @@
                             <h4><?merge serviceAccounts.count() ?> Service account(s)</h4>
                         </div>
                         <div class="pull-right">
+                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                             <button type="button" class="btn btn-default btn-sm" id="addServiceAccount" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
                         </div>
                     </div>
@@ -40,14 +41,17 @@
                                     <td><?merge .tokenDate ?></td>
                                     <td>
                                         <div class="btn-group pull-right">
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                                             <button type="button" class="btn btn-info edit" title="Edit">
                                                 <span class="fa fa-fw fa-edit"></span>
                                             </button>
                                             <?merge .enabled.not() ?>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                                             <button type="button" class="btn btn-danger enable" title="Enable">
                                                 <span class="fa fa-fw fa-check"></span>
                                             </button>
                                             <?merge .enabled.ifne(false) ?>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                                             <button type="button" class="btn btn-danger disable" title="Disable">
                                                 <span class="fa fa-fw fa-times"></span>
                                             </button>

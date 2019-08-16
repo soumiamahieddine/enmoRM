@@ -64,6 +64,18 @@ class serviceAccount
         $this->view->addContentFile("auth/serviceAccount/index.html");
         $this->view->setSource("serviceAccounts", $serviceAccounts);
 
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        $securityLevel = $account->securityLevel;
+
+        $manageUserRights = true;
+        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $manageUserRights = false;
+        }
+
+        $this->view->setSource('manageUserRights', $manageUserRights);
+
         $table = $this->view->getElementById("list-serviceAccount");
         $dataTable = $table->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
