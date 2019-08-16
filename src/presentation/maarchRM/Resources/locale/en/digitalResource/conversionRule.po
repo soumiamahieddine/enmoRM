@@ -3,4 +3,4 @@
 # Content-Type: text/plain; charset=UTF-8
 
 msgid "Old Browser download"
-msgstr "Your browser cannot show this kind of document"
+msgstr "Your browser cannot preview this kind of document"
