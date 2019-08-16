@@ -96,7 +96,7 @@ class userAccount
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
         }
 
-        switch ($this->getSecurityLevel()) {
+        switch ($account->getSecurityLevel()) {
             case $account::SECLEVEL_GENADMIN:
                 $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
                 break;
@@ -254,9 +254,11 @@ class userAccount
      */
     public function edit($userAccountId)
     {
-        $userAccount = $this->sdoFactory->read('auth/account', $userAccountId);
+        $userAccountModel = $this->sdoFactory->read('auth/account', $userAccountId);
         $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccountId'");
-        $userAccount = \laabs::castMessage($userAccount, 'auth/userAccount');
+        $userAccount = \laabs::castMessage($userAccountModel, 'auth/userAccount');
+
+        $userAccount->securityLevel = $userAccountModel->getSecurityLevel();
 
         if (empty($roleMembers)) {
             return $userAccount;
@@ -649,19 +651,5 @@ class userAccount
         }
 
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-    }
-
-    public function getSecurityLevel()
-    {
-        $accountToken = \laabs::getToken('AUTH');
-        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
-
-        if ($account->isAdmin && !$account->ownerOrgId) {
-            return $account::SECLEVEL_GENADMIN;
-        } elseif ($account->isAdmin && $account->ownerOrgId) {
-            return $account::SECLEVEL_FONCADMIN;
-        } elseif (!$account->isAdmin && $account->ownerOrgId) {
-            return $account::SECLEVEL_USER;
-        }
     }
 }

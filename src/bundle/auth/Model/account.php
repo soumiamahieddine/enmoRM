@@ -180,4 +180,15 @@ class account
      * @var bool
      */
     public $isAdmin;
+
+    public function getSecurityLevel()
+    {
+        if ($this->isAdmin && !$this->ownerOrgId) {
+            return $this::SECLEVEL_GENADMIN;
+        } elseif ($this->isAdmin && $this->ownerOrgId) {
+            return $this::SECLEVEL_FONCADMIN;
+        } elseif (!$this->isAdmin && $this->ownerOrgId) {
+            return $this::SECLEVEL_USER;
+        }
+    }
 }
