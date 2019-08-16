@@ -29,7 +29,11 @@
 
 - `Changed` Modification du nombre de site de stockage minimum, il est desormais possible d'utiliser un unique site.
 
-## Version 2.4.4 
+### Modèle conceptuelle
+
+- `Added`   Ajouts de plusieurs indexs afin d'améliorer les performances de l'application
+
+## Version 2.4.4
 
 ### IHM
 
@@ -41,23 +45,23 @@
 - `Fixed` Rétablissement de l'affichage des fichiers convertis et des relations dans la modale de détails de l'archive
 - `Changed` Différenciation entre le fichier d'origine et ses conversions dans l'arborescence du plan de classement
 
-### Sécurité 
+### Sécurité
 
 - `Changed` Ajout du paramètre `lifetime` pour le jeton CSRF qui définit la durée de validité des jetons en secondes. Si omis, durée de 1 heure par défaut.
-- `Fixed` Jeton CRSF consommé lorsqu'utilisé. 
+- `Fixed` Jeton CRSF consommé lorsqu'utilisé.
 
-## Version 2.4.3 
+## Version 2.4.3
 
 ### Métadonnées
 
-- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation 
+- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation
 et de communicabilité accepte désormais les caractères numériques en première position, ainsi que les tirets
-- `Changed` Les appels au service de modification de la règle de conservation des archives 
+- `Changed` Les appels au service de modification de la règle de conservation des archives
 peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée qui y est associée.
 
-### Exploitation 
+### Exploitation
 
-- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
+- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS
 automatique, notamment pour les connexions sans authentification
 
 ## Version 2.4.2
@@ -65,7 +69,7 @@ automatique, notamment pour les connexions sans authentification
 
 ### Script d'import
 
-- `Fixed` Correction d'un bug lors de l'utilisation de cli 
+- `Fixed` Correction d'un bug lors de l'utilisation de cli
 
 ## Version 2.4.1
 
@@ -83,7 +87,7 @@ automatique, notamment pour les connexions sans authentification
 ### IHM
 
 - `Changed` Nouveau design de la modale de détails des informations de l'archive
-- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
+- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2)
 - `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
 - `Fixed` Le bouton Annuler est également non cliquable durant l'execution d'un versement
 - `Fixed` Le choix "sans profil" au versement d'une archive ne doit apparaître que si le dossier qui la receptionne l'autorise

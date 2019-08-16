@@ -143,3 +143,52 @@ CREATE TABLE medona."controlAuthority"
     "controlAuthorityOrgUnitId" text NOT NULL,
     PRIMARY KEY ("originatorOrgUnitId")
 );
+
+-- Add indexes
+CREATE INDEX "audit_event_instanceName_idx" ON "audit"."event" USING btree ("instanceName");
+
+CREATE INDEX "audit_event_eventDate_idx" ON "audit"."event" USING btree ("eventDate");
+
+CREATE INDEX "digitalResource_digitalResource_archiveId_idx" ON "digitalResource"."digitalResource" USING btree ("archiveId");
+
+CREATE INDEX "digitalResource_digitalResource_relatedResId__relationshipType_idx" ON "digitalResource"."digitalResource" USING btree ("relatedResId", "relationshipType");
+
+CREATE INDEX "batchProcessing_logScheduling_schedulingId_idx" ON "batchProcessing"."logScheduling" USING btree ("schedulingId");
+
+CREATE INDEX "filePlan_folder_ownerOrgRegNumber_idx" ON "filePlan"."folder" USING btree ("ownerOrgRegNumber");
+
+CREATE INDEX "lifeCycle_event_objectClass_idx" ON "lifeCycle"."event" USING btree ("objectClass");
+
+CREATE INDEX "lifeCycle_event_instanceName_idx" ON "lifeCycle"."event" USING btree ("instanceName");
+
+CREATE INDEX "lifeCycle_event_eventType_idx" ON "lifeCycle"."event" USING btree ("eventType");
+
+CREATE INDEX "lifeCycle_event_objectClass_objectId_idx" ON "lifeCycle"."event" USING btree ("objectClass", "objectId");
+
+CREATE INDEX "medona_message_recipientOrgRegNumber_idx" ON "medona"."message" USING btree ("recipientOrgRegNumber");
+
+CREATE INDEX "medona_message_date_idx" ON "medona"."message" USING btree ("date");
+
+CREATE INDEX "medona_message_status_active_idx" ON "medona"."message" USING btree ("status", "active");
+
+CREATE INDEX "recordsManagement_archive_originatingDate_idx" ON "recordsManagement"."archive" USING btree ("originatingDate");
+
+CREATE INDEX "recordsManagement_archive_parentArchiveId_idx" ON "recordsManagement"."archive" USING btree ("parentArchiveId");
+
+CREATE INDEX "recordsManagement_archive_descriptionClass_idx" ON "recordsManagement"."archive" USING btree ("descriptionClass");
+
+CREATE INDEX "recordsManagement_archive_originatorOwnerOrgId_idx" ON "recordsManagement"."archive" USING btree ("originatorOwnerOrgId");
+
+CREATE INDEX "recordsManagement_archive_archiverOrgRegNumber_idx" ON "recordsManagement"."archive" USING btree ("archiverOrgRegNumber");
+
+CREATE INDEX "recordsManagement_archive_originatorOrgRegNumber_idx" ON "recordsManagement"."archive" USING btree ("originatorOrgRegNumber");
+
+CREATE INDEX "recordsManagement_archive_originatorArchiveId_idx" ON "recordsManagement"."archive" USING btree ("originatorArchiveId");
+
+CREATE INDEX "recordsManagement_archiveRelationship_archiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("archiveId");
+
+CREATE INDEX "recordsManagement_archiveRelationship_relatedArchiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("relatedArchiveId");
+
+CREATE INDEX "medona_unitIdentifier_messageId_idx" ON "medona"."unitIdentifier" USING btree ("messageId");
+
+CREATE INDEX "medona_unitIdentifier_objectClass_idx" ON "medona"."unitIdentifier" USING btree ("objectClass", "objectId");
