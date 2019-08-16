@@ -140,7 +140,23 @@ class organization
             }
         }
 
-        $organizationList = $this->sdoFactory->find("organization/organization", null, [], 'orgName');
+        $user->getSecurityLevel();
+
+        if ($user::SECLEVEL_GENADMIN) {
+            $organizationList = $this->sdoFactory->find(
+                "organization/organization",
+                'isOrgUnit = false',
+                [],
+                'orgName'
+            );
+        } else {
+            $organizationList = $this->sdoFactory->find(
+                "organization/organization",
+                null,
+                [],
+                'orgName'
+            );
+        }
         $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationTree");
 
         // sort organization by parentOrgId
