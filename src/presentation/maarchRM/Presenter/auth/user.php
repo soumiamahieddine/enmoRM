@@ -119,12 +119,14 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('whatAmI', 'oldUser');
-        } else if ($account->isAdmin && $account->ownerOrgId) {
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
             $view->setSource('whatAmI', 'adminF');
-        } else if ($account->isAdmin && !$account->ownerOrgId) {
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
             $view->setSource('whatAmI', 'adminG');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $view->setSource('whatAmI', 'user');
+        } else {
+            $view->setSource('whatAmI', 'oldUser');
         }
 
         $view->setSource('allowUserModification', true);
@@ -192,12 +194,14 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if (!$account->isAdmin && !$account->ownerOrgId) {
-            $view->setSource('whatAmI', 'oldUser');
-        } else if ($account->isAdmin && $account->ownerOrgId) {
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
             $view->setSource('whatAmI', 'adminF');
-        } else if ($account->isAdmin && !$account->ownerOrgId) {
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
             $view->setSource('whatAmI', 'adminG');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $view->setSource('whatAmI', 'user');
+        } else {
+            $view->setSource('whatAmI', 'oldUser');
         }
         
         $view->setSource('allowUserModification', true);
