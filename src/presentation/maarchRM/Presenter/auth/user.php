@@ -69,7 +69,15 @@ class user
     {
         $view = $this->view;
 
-        $securityLevel = \laabs::callService("auth/userAccount/readSecurityLevel");
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        $securityLevel = $account->securityLevel;
+
+        $manageUserRights = true;
+        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $manageUserRights = false;
+        }
 
         $view->addContentFile("auth/userAccount/admin/index.html");
         $view->translate();
@@ -82,7 +90,7 @@ class user
         $dataTable->setUnsearchableColumns(3, 4, 5);
 
         $view->setSource('users', $users);
-        $view->setSource('securityLevel', $securityLevel);
+        $view->setSource('manageUserRights', $manageUserRights);
 
         $view->merge();
 
