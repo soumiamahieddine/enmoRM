@@ -68,8 +68,6 @@ class organization
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
 
-
-
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $orgList = [];
 
@@ -1333,6 +1331,10 @@ class organization
         $userOrgs = [];
         $userOwnerOrgs = [];
 
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        $securityLevel = $user->getSecurityLevel();
+
         if (!$currentService) {
             $userPositions = $userPositionController->getMyPositions();
             foreach ($userPositions as $userPosition) {
@@ -1364,7 +1366,7 @@ class organization
 
         $organizationController = \laabs::newController('organization/organization');
         if ($owner) {
-            $originators = $organizationController->index('isOrgUnit=true');
+            $originators = $organizationController->index();
         } else {
             $originators = $organizationController->index(
                 "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
@@ -1374,15 +1376,26 @@ class organization
         $ownerOriginatorOrgs = [];
 
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
-                $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
-                $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+            if (isset($orgUnit->ownerOrgId)) {
+                if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
+                    $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+                }
+                $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
+            } else {
+                if (!isset($ownerOriginatorOrgs[(string)$orgUnit->orgId])) {
+                    $orgObject = $organizationController->read((string)$orgUnit->orgId);
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+                }
             }
-            $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
         }
         return $ownerOriginatorOrgs;
     }
