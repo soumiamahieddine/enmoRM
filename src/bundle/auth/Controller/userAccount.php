@@ -185,7 +185,7 @@ class userAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if ($account->isAdmin || $account->owner) {
+        if ($account->isAdmin || $account->ownerOrgId) {
             if (!$account->isAdmin ||
                 (!$account->ownerOrgId && !$userAccount->isAdmin) ||
                 ($account->ownerOrgId && $userAccount->isAdmin)
@@ -400,7 +400,7 @@ class userAccount
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $oldPasswordHash = hash($this->passwordEncryption, $oldPassword);
 
-        if($userAccount->password != $oldPasswordHash) {
+        if ($userAccount->password != $oldPasswordHash) {
             throw new \core\Exception\UnauthorizedException("User password error.");
         }
 
@@ -517,7 +517,6 @@ class userAccount
     {
         $userAccountId = (string) $userAccountId;
         if (!isset($this->accountPrivileges[$userAccountId])) {
-
             $roleMemberController = \laabs::newController("auth/roleMember");
             $roles = $roleMemberController->readByUseraccount($userAccountId);
 
