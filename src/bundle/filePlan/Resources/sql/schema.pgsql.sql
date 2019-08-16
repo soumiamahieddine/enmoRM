@@ -36,7 +36,7 @@ CREATE TABLE "filePlan"."position"
 (
   "folderId" text NOT NULL,
   "archiveId" text NOT NULL,
-  
+
   CONSTRAINT "position_filePlan_fkey" FOREIGN KEY ("folderId")
       REFERENCES "filePlan"."folder" ("folderId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -44,3 +44,5 @@ CREATE TABLE "filePlan"."position"
 WITH (
   OIDS=FALSE
 );
+
+CREATE INDEX "filePlan_folder_ownerOrgRegNumber_idx" ON "filePlan"."folder" USING btree ("ownerOrgRegNumber");

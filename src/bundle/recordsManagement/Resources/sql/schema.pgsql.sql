@@ -39,7 +39,7 @@ WITH (
   OIDS=FALSE
 );
 
- 
+
 -- Table: "recordsManagement"."archivalProfile"
 
 -- DROP TABLE "recordsManagement"."archivalProfile";
@@ -161,13 +161,13 @@ CREATE TABLE "recordsManagement"."archive"
   "originatorArchiveId" text,
   "depositorArchiveId" text,
   "archiverArchiveId" text,
-    
+
   "archiveName" text,
   "storagePath" text,
   "filePlanPosition" text,
   "fileplanLevel" text,
   "originatingDate" date,
-  
+
   "descriptionClass" text,
   "description" jsonb,
   "text" text,
@@ -182,7 +182,7 @@ CREATE TABLE "recordsManagement"."archive"
   "archivalProfileReference" text,
   "archivalAgreementReference" text,
   "serviceLevelReference" text,
-  
+
   "retentionRuleCode" text,
   "retentionStartDate" date,
   "retentionDuration" text,
@@ -211,7 +211,7 @@ CREATE TABLE "recordsManagement"."archive"
   "lastCheckDate" timestamp,
   "lastDeliveryDate" timestamp,
   "lastModificationDate" timestamp,
-  
+
   "status" text NOT NULL,
   "processingStatus" text,
 
@@ -230,7 +230,7 @@ CREATE TABLE "recordsManagement"."archive"
 WITH (
   OIDS=FALSE
 );
-  
+
 CREATE INDEX
   ON "recordsManagement"."archive"
   ("filePlanPosition");
@@ -246,7 +246,7 @@ CREATE INDEX
 CREATE INDEX
   ON "recordsManagement"."archive"
   ("originatorOrgRegNumber", "originatorArchiveId");
-  
+
 CREATE INDEX
   ON "recordsManagement"."archive"
   ("disposalDate");
@@ -269,10 +269,10 @@ CREATE TABLE "recordsManagement"."archiveRelationship"
   "description" jsonb,
 
   PRIMARY KEY ("archiveId", "relatedArchiveId", "typeCode"),
-  FOREIGN KEY ("archiveId") 
+  FOREIGN KEY ("archiveId")
 	  REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  FOREIGN KEY ("relatedArchiveId") 
+  FOREIGN KEY ("relatedArchiveId")
 	  REFERENCES "recordsManagement"."archive" ("archiveId") MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
@@ -287,7 +287,7 @@ WITH (
 CREATE TABLE "recordsManagement"."log"
 (
   "archiveId" text NOT NULL,
-  
+
   "fromDate" timestamp NOT NULL,
   "toDate" timestamp NOT NULL,
   "processId" text,
@@ -330,3 +330,20 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE INDEX "recordsManagement_archive_originatingDate_idx" ON "recordsManagement"."archive" USING btree ("originatingDate");
+
+CREATE INDEX "recordsManagement_archive_parentArchiveId_idx" ON "recordsManagement"."archive" USING btree ("parentArchiveId");
+
+CREATE INDEX "recordsManagement_archive_descriptionClass_idx" ON "recordsManagement"."archive" USING btree ("descriptionClass");
+
+CREATE INDEX "recordsManagement_archive_originatorOwnerOrgId_idx" ON "recordsManagement"."archive" USING btree ("originatorOwnerOrgId");
+
+CREATE INDEX "recordsManagement_archive_archiverOrgRegNumber_idx" ON "recordsManagement"."archive" USING btree ("archiverOrgRegNumber");
+
+CREATE INDEX "recordsManagement_archive_originatorOrgRegNumber_idx" ON "recordsManagement"."archive" USING btree ("originatorOrgRegNumber");
+
+CREATE INDEX "recordsManagement_archive_originatorArchiveId_idx" ON "recordsManagement"."archive" USING btree ("originatorArchiveId");
+
+CREATE INDEX "recordsManagement_archiveRelationship_archiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("archiveId");
+
+CREATE INDEX "recordsManagement_archiveRelationship_relatedArchiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("relatedArchiveId");

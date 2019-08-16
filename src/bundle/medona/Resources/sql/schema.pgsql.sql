@@ -13,10 +13,10 @@ CREATE TABLE "medona"."archivalAgreement"
   "name" text NOT NULL,
   "reference" text NOT NULL,
   "description" text,
-  
+
   "archivalProfileReference" text,
   "serviceLevelReference" text,
-  
+
   "archiverOrgRegNumber" text NOT NULL,
   "depositorOrgRegNumber" text NOT NULL,
   "originatorOrgIds" text,
@@ -24,9 +24,9 @@ CREATE TABLE "medona"."archivalAgreement"
   "beginDate" date,
   "endDate" date,
   "enabled" boolean,
-  
+
   "allowedFormats" text,
-  
+
   "maxSizeAgreement" integer,
   "maxSizeTransfer" integer,
   "maxSizeDay" integer,
@@ -55,10 +55,10 @@ CREATE TABLE "medona"."message"
   "schema" text,
   "type" text NOT NULL,
   "status" text NOT NULL,
-  
+
   "date" timestamp NOT NULL,
   "reference" text NOT NULL,
-  
+
   "accountId" text,
   "senderOrgRegNumber" text NOT NULL,
   "senderOrgName" text,
@@ -69,7 +69,7 @@ CREATE TABLE "medona"."message"
   "replyCode" text,
   "operationDate" timestamp,
   "receptionDate" timestamp,
-  
+
   "relatedReference" text,
   "requestReference" text,
   "replyReference" text,
@@ -78,10 +78,10 @@ CREATE TABLE "medona"."message"
   "authorizationRequesterOrgRegNumber" text,
 
   "derogation" boolean,
-  
+
   "dataObjectCount" integer,
   "size" numeric,
-  
+
   "data" text,
   "path" text,
 
@@ -135,3 +135,13 @@ CREATE TABLE medona."controlAuthority"
   "controlAuthorityOrgUnitId" text NOT NULL,
   PRIMARY KEY ("originatorOrgUnitId")
 );
+
+CREATE INDEX "medona_message_recipientOrgRegNumber_idx" ON "medona"."message" USING btree ("recipientOrgRegNumber");
+
+CREATE INDEX "medona_message_date_idx" ON "medona"."message" USING btree ("date");
+
+CREATE INDEX "medona_message_status_active_idx" ON "medona"."message" USING btree ("status", "active");
+
+CREATE INDEX "medona_unitIdentifier_messageId_idx" ON "medona"."unitIdentifier" USING btree ("messageId");
+
+CREATE INDEX "medona_unitIdentifier_objectClass_idx" ON "medona"."unitIdentifier" USING btree ("objectClass", "objectId");
