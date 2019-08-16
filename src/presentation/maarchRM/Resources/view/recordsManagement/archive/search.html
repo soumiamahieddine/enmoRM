@@ -249,7 +249,9 @@
                 $('#archive_searchResult').empty().html(response);
                 $('#archive_search').prop('disabled', false);
             },
-            error    : function(e) {
+            error    : function(response) {
+                responseJSON = JSON.parse(response.responseText);
+                gritter.show(responseJSON.message);
                 $('#archive_search').prop('disabled', false);
             }
         });
