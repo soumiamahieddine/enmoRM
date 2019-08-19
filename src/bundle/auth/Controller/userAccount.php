@@ -37,6 +37,7 @@ class userAccount
     protected $adminUsers;
     protected $currentAccount;
     protected $accountPrivileges;
+    protected $organizationController;
 
     /**
      * Constructor
@@ -50,6 +51,7 @@ class userAccount
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
+        $this->organizationController = \laabs::newController('organization/organization');
     }
 
     /**
@@ -175,7 +177,7 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
-        $organizationController = \laabs::newController("organization/organization");
+        $this->isAuthorized(['gen_admin', 'fonc_admin']);
 
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
@@ -185,18 +187,20 @@ class userAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if ($account->isAdmin || $account->ownerOrgId) {
-            if (!$account->isAdmin ||
-                (!$account->ownerOrgId && !$userAccount->isAdmin) ||
-                ($account->ownerOrgId && $userAccount->isAdmin)
-            ) {
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$userAccount->ownerOrgId || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
 
         if ($userAccount->ownerOrgId) {
             try {
-                $organizationController->read($userAccount->ownerOrgId);
+                $this->organizationController->read($userAccount->ownerOrgId);
             } catch (\Exception $e) {
                 throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
             }
@@ -228,7 +232,7 @@ class userAccount
 
         if (!$userAccount->isAdmin) {
             foreach ($organizations as $orgId) {
-                $organizationController->addUserPosition($userAccount->accountId, $orgId);
+                $this->organizationController->addUserPosition($userAccount->accountId, $orgId);
             }
         }
 
@@ -296,16 +300,30 @@ class userAccount
      */
     public function update($userAccountId, $userAccount)
     {
+        $this->isAuthorized(['gen_admin', 'fonc_admin']);
+
         $userAccount = $this->updateUserInformation($userAccount);
 
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if (!$account->isAdmin ||
-            (!$account->ownerOrgId && !$userAccount->isAdmin) ||
-            ($account->ownerOrgId && $userAccount->isAdmin)
-        ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$userAccount->ownerOrgId || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        if ($userAccount->ownerOrgId) {
+            try {
+                $this->organizationController->read($userAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
+            }
         }
 
         $oldUserAccount = $this->sdoFactory->read('auth/account', $userAccount->accountId);
