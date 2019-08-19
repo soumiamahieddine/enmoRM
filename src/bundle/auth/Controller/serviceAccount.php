@@ -279,8 +279,8 @@ class serviceAccount
         }
 
         $oldServiceAccount = $this->sdoFactory->read('auth/account', $serviceAccount->accountId);
-        if ($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId ||
-            !$serviceAccount->ownerOrgId && $serviceAccount->ownerOrgId
+        if (($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId) 
+            || !$oldServiceAccount->ownerOrgId && $serviceAccount->ownerOrgId
         ) {
             throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
         }
