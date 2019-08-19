@@ -241,6 +241,7 @@ class Document extends \dependency\xml\Document
 
         // add css
         $this->addStyle("/public/css/bootstrap-toggle/bootstrap-toggle.css");
+        $this->addStyle("/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css");
         //$this->addStyle("/public/css/bootstrap-daterangepicker/daterangepicker.css");
 
         // Add js scripts
