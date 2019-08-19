@@ -37,7 +37,6 @@ class userAccount
     protected $adminUsers;
     protected $currentAccount;
     protected $accountPrivileges;
-    protected $organizationController;
 
     /**
      * Constructor
@@ -51,7 +50,6 @@ class userAccount
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->adminUsers = $adminUsers;
-        $this->organizationController = \laabs::newController('organization/organization');
     }
 
     /**
@@ -198,9 +196,10 @@ class userAccount
             }
         }
 
+        $organizationController = \laabs::newController('organization/organization');
         if ($userAccount->ownerOrgId) {
             try {
-                $this->organizationController->read($userAccount->ownerOrgId);
+                $organizationController->read($userAccount->ownerOrgId);
             } catch (\Exception $e) {
                 throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
             }
@@ -232,7 +231,7 @@ class userAccount
 
         if (!$userAccount->isAdmin) {
             foreach ($organizations as $orgId) {
-                $this->organizationController->addUserPosition($userAccount->accountId, $orgId);
+                $organizationController->addUserPosition($userAccount->accountId, $orgId);
             }
         }
 
@@ -320,7 +319,8 @@ class userAccount
 
         if ($userAccount->ownerOrgId) {
             try {
-                $this->organizationController->read($userAccount->ownerOrgId);
+                $organizationController = \laabs::newController('organization/organization');
+                $organizationController->read($userAccount->ownerOrgId);
             } catch (\Exception $e) {
                 throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
             }
