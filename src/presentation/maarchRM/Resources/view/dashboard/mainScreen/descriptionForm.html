@@ -60,7 +60,6 @@
         <span id="documentMissing_error">You must deposit at least one document.</span>
     </div>
 </div>
-
 <span  id="addBtnTpl" class="input-group-btn hide">
     <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-check"></span></button>
 </span>
@@ -356,10 +355,11 @@ input:invalid {
         getDateInput : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
             field.attr('placeholder', $('#date_text').text());
-            
+
             if (descriptionField.format == 'datetime') {
-                field.data('format', 'datetime');
-                field.datepicker(DatePickerParams);
+                console.log('toto');
+                field.data('format', 'dateTimePicker');
+                field.dateTimePicker(dateTimePickerParams);
             } else {
                 field.datepicker(DatePickerParams);
             }
@@ -370,8 +370,9 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        var dateObject = this.datepicker('getDate');
-                        return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                        var dateObject = this.dateTimePicker('getDate');
+                        console.log(dateObject);
+                        return $.dateTimePicker.formatDate('yy-mm-dd', dateObject);
                     } else {
                         var dateObject = this.datepicker('getDate');
                         return $.datepicker.formatDate('yy-mm-dd', dateObject);
@@ -743,7 +744,7 @@ input:invalid {
 
             var items = itemList.children("li");
             items.css({'margin-bottom': '0px'});
-            
+
             if (items.length) {
                 var index = items.length;
 
@@ -913,7 +914,7 @@ input:invalid {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
-                    field.datepicker('setDate', data);
+                    // field.datetimepicker('setDate', data);
                 } else {
                     field.datepicker('setDate', data);
                 }
