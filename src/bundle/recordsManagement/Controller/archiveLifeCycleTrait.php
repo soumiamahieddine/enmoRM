@@ -97,7 +97,7 @@ trait archiveLifeCycleTrait
 
     /**
      * Log an archive deposit
-     * @param recordsManagement/archive $archive   	 The archive
+     * @param recordsManagement/archive $archive         The archive
      * @param bool                      $operationResult The operation result
      *
      * @return mixed The created event or the list of created event
@@ -105,11 +105,12 @@ trait archiveLifeCycleTrait
     public function logDeposit($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/deposit',
-            $archive, $operationResult,
-            false,
-            false,
-            true
+            $type = 'recordsManagement/deposit',
+            $archive,
+            $operationResult,
+            $digitalResource = false,
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -138,12 +139,12 @@ trait archiveLifeCycleTrait
         }
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/consultation',
+            $type = 'recordsManagement/consultation',
             $archive,
             $operationResult,
             $resource,
-            false,
-            true
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -158,12 +159,12 @@ trait archiveLifeCycleTrait
     public function logDelivery($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/delivery',
+            $type = 'recordsManagement/delivery',
             $archive,
             $operationResult,
-            false,
-            false,
-            true
+            $digitalResource = false,
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -197,12 +198,12 @@ trait archiveLifeCycleTrait
         }
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/conversion',
+            $type = 'recordsManagement/conversion',
             $archive,
             $operationResult,
             $originalResource,
             $eventInfo,
-            true
+            $logDigitalResources = true
         );
     }
 
@@ -252,7 +253,7 @@ trait archiveLifeCycleTrait
     public function logDestruction($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/destruction',
+            $type = 'recordsManagement/destruction',
             $archive,
             $operationResult
         );
@@ -269,11 +270,11 @@ trait archiveLifeCycleTrait
     public function logDestructionResource($archive, $digitalResource, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/resourceDestruction',
+            $type = 'recordsManagement/resourceDestruction',
             $archive,
             $operationResult,
             $digitalResource,
-            false,
+            $eventInfo = false,
             true
         );
     }
@@ -312,12 +313,12 @@ trait archiveLifeCycleTrait
     public function logRestitution($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/restitution',
+            $type = 'recordsManagement/restitution',
             $archive,
             $operationResult,
-            false,
-            false,
-            true
+            $digitalResource = false,
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -355,10 +356,10 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/retentionRuleModification',
+            $type = 'recordsManagement/retentionRuleModification',
             $archive,
             $operationResult,
-            false,
+            $digitalResource = false,
             $eventInfo
         );
     }
@@ -383,10 +384,10 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/accessRuleModification',
+            $type = 'recordsManagement/accessRuleModification',
             $archive,
             $operationResult,
-            false,
+            $digitalResource = false,
             $eventInfo
         );
     }
@@ -401,12 +402,12 @@ trait archiveLifeCycleTrait
     public function logFreeze($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/freeze',
+            $type = 'recordsManagement/freeze',
             $archive,
             $operationResult,
-            false,
-            false,
-            true
+            $digitalResource = false,
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -420,12 +421,12 @@ trait archiveLifeCycleTrait
     public function logUnfreeze($archive, $operationResult = true)
     {
         return $this->logLifeCycleEvent(
-            'recordsManagement/unfreeze',
+            $type = 'recordsManagement/unfreeze',
             $archive,
             $operationResult,
-            false,
-            false,
-            true
+            $digitalResource = false,
+            $eventInfo = false,
+            $logDigitalResources = true
         );
     }
 
@@ -444,10 +445,10 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/metadataModification',
+            $type = 'recordsManagement/metadataModification',
             $archive,
             $operationResult,
-            false,
+            $digitalResource = false,
             $eventInfo
         );
     }
@@ -469,10 +470,10 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/addRelationship',
+            $type = 'recordsManagement/addRelationship',
             $archive,
             $operationResult,
-            false,
+            $digitalResource = false,
             $eventInfo
         );
     }
@@ -494,10 +495,10 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/deleteRelationship',
+            $type = 'recordsManagement/deleteRelationship',
             $archive,
             $operationResult,
-            false,
+            $digitalResource = false,
             $eventInfo
         );
     }
@@ -522,12 +523,12 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/integrityCheck',
+            $type = 'recordsManagement/integrityCheck',
             $archive,
             $operationResult,
             $resource,
             $eventInfo,
-            true
+            $logDigitalResources = true
         );
     }
 
@@ -547,12 +548,12 @@ trait archiveLifeCycleTrait
         );
 
         return $this->logLifeCycleEvent(
-            'recordsManagement/depositNewResource',
+            $type = 'recordsManagement/depositNewResource',
             $archive,
             $operationResult,
             $resource,
             $eventInfo,
-            true
+            $logDigitalResources = true
         );
     }
 
