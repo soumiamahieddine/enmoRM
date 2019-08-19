@@ -294,10 +294,11 @@ class Document extends \dependency\xml\Document
         $this->addScript("/public/js/dataList_0.0.1/dataList.js");
         $this->addScript("/public/js/datePicker/bootstrap-datepicker.js");
 
-        $this->addScript("/public/js/csrf/csrfprotector.js");
 
         $this->addScript("/public/js/moment_2.14.1/moment.js");
         $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
+
+        $this->addScript("/public/js/csrf/csrfprotector.js");
 
         //$this->addScript("/public/js/webodf.js-0.5.8/webodf.js");
 
@@ -429,7 +430,7 @@ class Document extends \dependency\xml\Document
                 if (method_exists($plugin, 'saveHtml')) {
                     $plugin->saveHtml();
                 }
-                // var_dump($plugin);
+
                 if (!isset($parameters[$name]) && method_exists($plugin, 'saveParameters')) {
                     $parameters[$name]=$plugin;
                     $plugin->saveParameters();

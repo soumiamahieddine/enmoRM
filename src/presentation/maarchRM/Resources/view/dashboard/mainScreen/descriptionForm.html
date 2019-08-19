@@ -357,9 +357,10 @@ input:invalid {
             field.attr('placeholder', $('#date_text').text());
 
             if (descriptionField.format == 'datetime') {
-                console.log('toto');
-                field.data('format', 'dateTimePicker');
-                field.dateTimePicker(dateTimePickerParams);
+                setTimeout(function(){
+                    field.data('format', 'datetime');
+                    field.datetimepicker(dateTimePickerParams);
+                }, 300);
             } else {
                 field.datepicker(DatePickerParams);
             }
@@ -370,9 +371,9 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        var dateObject = this.dateTimePicker('getDate');
-                        console.log(dateObject);
-                        return $.dateTimePicker.formatDate('yy-mm-dd', dateObject);
+                        console.log(this.data('DateTimePicker'));
+                        var dateObject = this.data('DateTimePicker').date();
+                        return dateObject;
                     } else {
                         var dateObject = this.datepicker('getDate');
                         return $.datepicker.formatDate('yy-mm-dd', dateObject);
@@ -827,9 +828,10 @@ input:invalid {
 
             $.each(formGroups, function() {
                 name = $(this).attr('name');
-
                 field = $(this).data('field');
                 value = field.getValue();
+                console.log(field);
+                console.log(value);
 
                 if (value) {
                     descriptionObject[name] = value;
@@ -840,7 +842,6 @@ input:invalid {
                 Metadata.flagEmptyRequiredField.field = true;
                 return -1 ;
             }
-
 
             $.each(customFormGroups, function() {
                 name = $(this).data('name').val();
@@ -914,7 +915,7 @@ input:invalid {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
-                    // field.datetimepicker('setDate', data);
+                    field.datetimepicker('setDate', data);
                 } else {
                     field.datepicker('setDate', data);
                 }
