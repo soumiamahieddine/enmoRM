@@ -108,7 +108,7 @@ class dateTimePicker
         $view = $this->element->ownerDocument;
         $translator = $view->translator;
 
-        $this->parameters->language = $translator->lang;
+        // $this->parameters->language = $translator->lang;
         // if (\laabs::hasPublicResource('public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
         //     $view->addScript('/public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
         // }
