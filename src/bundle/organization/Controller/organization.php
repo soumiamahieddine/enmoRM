@@ -138,9 +138,9 @@ class organization
             }
         }
 
-        $user->getSecurityLevel();
+        $securityLevel = $user->getSecurityLevel();
 
-        if ($user::SECLEVEL_GENADMIN) {
+        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
             $organizationList = $this->sdoFactory->find(
                 "organization/organization",
                 'isOrgUnit = false',
@@ -268,9 +268,9 @@ class organization
     public function create($organization)
     {
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized('funcAdmin');
+            $this->accountController->isAuthorized(['fonc_admin', 'user']);
         } else {
-            $this->accountController->isAuthorized('genAdmin');
+            $this->accountController->isAuthorized('gen_admin');
         }
 
         $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
@@ -468,9 +468,9 @@ class organization
     public function update($orgId, $organization)
     {
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized('funcAdmin');
+            $this->accountController->isAuthorized('fonc_admin');
         } else {
-            $this->accountController->isAuthorized('genAdmin');
+            $this->accountController->isAuthorized('gen_admin');
         }
 
         $organization->orgId = $orgId;
@@ -600,9 +600,9 @@ class organization
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized('funcAdmin');
+            $this->accountController->isAuthorized('fonc_admin');
         } else {
-            $this->accountController->isAuthorized('genAdmin');
+            $this->accountController->isAuthorized('gen_admin');
         }
 
         $transactionControl = !$this->sdoFactory->inTransaction();

@@ -631,12 +631,12 @@ class userAccount
 
         foreach ($securitiesLevel as $securityLevel) {
             switch ($securityLevel) {
-                case 'genAdmin':
+                case 'gen_admin':
                     if ($account->isAdmin && !$account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'funcAdmin':
+                case 'fonc_admin':
                     if ($account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }
