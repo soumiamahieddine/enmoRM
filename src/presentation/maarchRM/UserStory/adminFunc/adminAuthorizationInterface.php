@@ -90,7 +90,7 @@ interface adminAuthorizationInterface
     /**
      * List all users to display
      *
-     * @uses auth/userAccount/readIndex
+     * @uses auth/userAccount/readUserlist
      */
     public function readUserTodisplay();
 }
