@@ -2,10 +2,15 @@
 
 ## Version 2.5
 
+### Sécurité
+
+- `Added` Ajout de 3 types d'utilisateurs : Administrateur général, administrateur fonctionnel et simple utilisateur.
+
 ### Évènements
 
 - `Fixed` Affichage de toute les métadonnées d'un évènement même lorsque celui-ci est chaîné dans une journal.
 - `Added` Possibilité de télécharger des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
+- `Fixed` Gestion des événements sur les ressources
 
 ### Administration Technique
 
@@ -65,8 +70,7 @@ peuvent désormais n'envoyer que le code de la règle, le système utilisant le 
 - `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS
 automatique, notamment pour les connexions sans authentification
 
-## Version 2.4.2
-
+## Version 2.4.2
 
 ### Script d'import
 
