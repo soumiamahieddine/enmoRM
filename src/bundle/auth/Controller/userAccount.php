@@ -191,12 +191,17 @@ class userAccount
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
-            if (!$userAccount->ownerOrgId || $userAccount->isAdmin) {
+            if (!$organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
 
         $organizationController = \laabs::newController('organization/organization');
+        if (!is_null($organizations)) {
+            $organization = $organizationController->read($organizations[0]);
+            $userAccount->ownerOrgId = $organization->ownerOrgId;
+        }
+
         if ($userAccount->ownerOrgId) {
             try {
                 $organizationController->read($userAccount->ownerOrgId);
@@ -301,8 +306,6 @@ class userAccount
     {
         $this->isAuthorized(['gen_admin', 'fonc_admin']);
 
-        $userAccount = $this->updateUserInformation($userAccount);
-
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
@@ -312,19 +315,26 @@ class userAccount
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
-            if (!$userAccount->ownerOrgId || $userAccount->isAdmin) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
 
+        $organizationController = \laabs::newController('organization/organization');
+        if (!is_null($userAccount->organizations)) {
+            $organization = $organizationController->read($userAccount->organizations[0]);
+            $userAccount->ownerOrgId = $organization->ownerOrgId;
+        }
+
         if ($userAccount->ownerOrgId) {
             try {
-                $organizationController = \laabs::newController('organization/organization');
                 $organizationController->read($userAccount->ownerOrgId);
             } catch (\Exception $e) {
                 throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
             }
         }
+
+        $userAccount = $this->updateUserInformation($userAccount);
 
         $oldUserAccount = $this->sdoFactory->read('auth/account', $userAccount->accountId);
         if ($oldUserAccount->ownerOrgId && $oldUserAccount->ownerOrgId != $userAccount->ownerOrgId ||

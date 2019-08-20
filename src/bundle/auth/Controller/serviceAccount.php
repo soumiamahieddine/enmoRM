@@ -35,6 +35,7 @@ class serviceAccount
     protected $securityPolicy;
     protected $organizationController;
     protected $servicePositionController;
+    protected $userAccountController;
 
     /**
      * Constructor
@@ -49,6 +50,7 @@ class serviceAccount
         $this->securityPolicy = $securityPolicy;
         $this->organizationController = \laabs::newController('organization/organization');
         $this->servicePositionController = \laabs::newController('organization/servicePosition');
+        $this->userAccountController = \laabs::newController('auth/userAccount');
     }
 
     /**
@@ -156,18 +158,26 @@ class serviceAccount
      */
     public function addService($serviceAccount, $orgId, $servicesURI = [])
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'fonc_admin']);
         $organizationController = \laabs::newController("organization/organization");
 
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        if ($account->isAdmin || $account->owner) {
-            if (!$account->isAdmin ||
-                (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
-                ($account->ownerOrgId && $serviceAccount->isAdmin)
-            ) {
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$orgId || $serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        if (!is_null($orgId)) {
+            $organization = $organizationController->read($orgId);
+            $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
         if ($serviceAccount->ownerOrgId) {
@@ -267,19 +277,30 @@ class serviceAccount
      */
     public function updateServiceInformation($serviceAccount, $orgId = null, $servicesURI = [])
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'fonc_admin']);
+
         $organizationController = \laabs::newController("organization/organization");
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        if (!$account->isAdmin ||
-            (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
-            ($account->ownerOrgId && $serviceAccount->isAdmin)
-        ) {
-            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$orgId || $serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        if (!is_null($orgId)) {
+            $organization = $organizationController->read($orgId);
+            $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
         $oldServiceAccount = $this->sdoFactory->read('auth/account', $serviceAccount->accountId);
-        if (($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId) 
+        if (($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId)
             || !$oldServiceAccount->ownerOrgId && $serviceAccount->ownerOrgId
         ) {
             throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
@@ -306,7 +327,6 @@ class serviceAccount
                     }
                     $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
                 }
-                $organizationController->addServicePosition($orgId, $serviceAccount->accountId);
             }
 
             $this->sdoFactory->update($serviceAccount, 'auth/account');
