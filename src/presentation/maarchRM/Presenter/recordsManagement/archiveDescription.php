@@ -202,6 +202,9 @@ class archiveDescription
             case 'object':
                 return $this->getObjectTable($value, $descriptionField->properties);
 
+            case 'date':
+                return $this->view->createTextNode(\laabs::newDatetime($value));
+
             default:
                 if (is_string($descriptionField->type) && $descriptionField->type[0] == '#') {
                     // Object type is given by ref, assume complex type/object
