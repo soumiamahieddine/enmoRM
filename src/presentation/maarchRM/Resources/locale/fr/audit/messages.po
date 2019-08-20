@@ -1803,7 +1803,7 @@ msgid "medona/archiveModificationRequest/update_messageId_Accept"
 msgstr "Acceptation de la demande de modification d'archive"
 
 msgid "medona/archiveModificationRequest/readHistory"
-msgstr "Historique des modification d'archive"
+msgstr "Historique des modifications d'archive"
 
 msgid "medona/archiveModificationRequest/readReference"
 msgstr "Liste des références des modifications d'archive"
@@ -1840,7 +1840,7 @@ msgstr "Suppression du dossier temporaire des demandes de modification d'archive
 
 # CCFN
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber_events"
-msgstr "Coffre fort numérique : Lecture des evenements"
+msgstr "Coffre fort numérique : Lecture des événements"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_"
 msgstr "Coffre fort numérique : Lister les identifiants d'objet numérique"
@@ -1849,16 +1849,16 @@ msgid "digitalSafe/digitalSafe/delete_originatorOwnerOrgRegNumber__originatorOrg
 msgstr "Coffre fort numérique : Suppression d'une archive"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Metadata"
-msgstr "Coffre fort numérique : Lecture des métdadonnées d'un objet numérique"
+msgstr "Coffre fort numérique : Lecture des métadonnées d'un objet numérique"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_"
 msgstr "Coffre fort numérique : Lecture d'un objet numérique"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_Count"
-msgstr "Coffre fort numérique : Compter le nombre d'objet numérique"
+msgstr "Coffre fort numérique : Somme du nombre d'objet numérique"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_List"
-msgstr "Coffre fort numérique : Lister les identifiants des objets numérique"
+msgstr "Coffre fort numérique : Lister les identifiants des objets numériques"
 
 msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Integritycheck"
 msgstr "Coffre fort numérique : Valider l'intégrité d'un objet numérique"
