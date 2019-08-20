@@ -196,7 +196,7 @@
         var userPositions = $("#orgs").find('input');
         $.each(userPositions, function(){
             userAccount.organizations.push($(this).data('orgid'));
-            userAccount.ownerOrgId=$(this).data('ownerOrgId');
+            userAccount.ownerOrgId=$(this).data('ownerorgid');
         })
 
         $.each(inputs, function () {
@@ -207,7 +207,7 @@
             userAccount.ownerOrgId = $("#orgSelect").val();
             userAccount.organizations = [];
         } else {
-            userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerOrgId');
+            userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerorgid');
         }
 
         let roleConfig = $("#user_RoleContain").attr('data-restrictroles');

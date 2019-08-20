@@ -418,6 +418,7 @@ class organization
                     foreach ($organizations as $orgName) {
                         if ($org->ownerOrgId == $orgName->orgId) {
                             $user->ownerOrgName = $orgName->displayName;
+                            $user->ownerOrgId = $orgName->orgId;
                         }
                     }
                 }

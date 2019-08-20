@@ -35,9 +35,9 @@
                             </div>
                         </div>
                         <?merge serviceAccount ?>
-                        <div id="orgGroup" class="form-group hide">
+                        <div id="orgGroup" class="form-group">
                             <label class="control-label" for="serviceOrgId">Organization<span> : </span></label>
-                            <input name="ownerOrgName" id="originatorOwnerOrgName" disabled class="form-control">
+                            <input name="ownerOrgName" data-ownerorgid="[?merge serviceAccount.ownerOrgId ?]" id="originatorOwnerOrgName" disabled class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
@@ -230,7 +230,7 @@
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
-        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").prop("data-ownerOrgId");
+        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").prop("data-ownerorgid");
         serviceAccount.emailAddress = '';
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
@@ -239,7 +239,7 @@
             serviceAccount.ownerOrgId = $("#orgSelect").val();
             orgId = [];
         } else {
-            serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerOrgId");
+            serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerorgid");
         }
 
         var servicesURI = new Array();
@@ -396,7 +396,7 @@
         $("#orgTypeahead").prop('org', suggestion);
         $("#serviceOrgId").val(suggestion.orgId);
         $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
-        $("#originatorOwnerOrgName").prop("data-ownerOrgId", suggestion.ownerOrgId);
+        $("#originatorOwnerOrgName").prop("data-ownerorgid", suggestion.ownerOrgId);
     });
 
     $('#orgTypeahead').keyup(function () {
