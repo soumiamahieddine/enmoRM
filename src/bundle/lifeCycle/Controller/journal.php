@@ -186,7 +186,7 @@ class journal
         $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         if (!\laabs\file_exists($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId)) {
-            $resources = $archiveController->getDigitalResources($journal->archiveId);
+            $resources = $archiveController->getDigitalResources($journal->archiveId, $checkAccess = false);
             $journalResource = $resources[0];
 
             $journalContents = $digitalResourceController->contents($journalResource->resId);
@@ -412,10 +412,10 @@ class journal
         if (is_scalar($journalReference) || get_class($journalReference) == 'core\Type\Id') {
             $journalReference = $logController->read($journalReference);
         }
-
+        
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $resources = $archiveController->getDigitalResources($journalReference->archiveId);
+            $resources = $archiveController->getDigitalResources($journalReference->archiveId, $checkAccess = false);
             $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
             
             $journalFile = $journalResource->getContents();
@@ -803,7 +803,7 @@ class journal
             $journal = $archiveId;
             $archiveId = (string) $journal->archiveId;
         }
-        $resources = $archiveController->getDigitalResources($journal->archiveId);
+        $resources = $archiveController->getDigitalResources($journal->archiveId, $checkAccess = false);
         $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
@@ -833,7 +833,7 @@ class journal
             return true;
         }
 
-        $resources = $archiveController->getDigitalResources($nextJournal->archiveId);
+        $resources = $archiveController->getDigitalResources($nextJournal->archiveId, $checkAccess = false);
         $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $nextJournalContents = $nextJournalResource->getContents();
 
