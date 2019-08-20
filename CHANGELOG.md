@@ -4,6 +4,7 @@
 
 ### Évènements
 
+- `Fixed` Affichage de toute les métadonnées d'un évènement même lorsque celui-ci est chaîné dans une journal.
 - `Added` Possibilité de télécharger des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
 
 ### Administration Technique
