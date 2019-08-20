@@ -19,11 +19,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 control-label">Originating date</label>
-        <div class="col-md-6" name="originatingDate">
+        <label class="col-sm-3 control-label">Originating date</label>
+        <div class="input-group col-sm-9" name="originatingDate" style="padding-left: 15px; padding-right: 15px;">
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
+
     <div class="form-group" id="fileplanLevelDiv">
         <label class="col-md-3 control-label">Fileplan level</label>
         <div class="col-md-9">
@@ -78,7 +79,9 @@
 </div>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+
 <script type="text/javascript">
+
 
     FilePlanLevelToggle = {
         load: function (isWithoutProfile = true) {
@@ -209,7 +212,7 @@
                 archiveId           : archiveId,
                 originatorArchiveId : archive.originatorArchiveId,
                 archiveName         : archive.archiveName,
-                originatingDate     : archive.originatingDate, 
+                originatingDate     : archive.originatingDate,
                 description         : archive.descriptionObject
             };
 
@@ -260,7 +263,7 @@
                 || selectedProfile.retentionStartDate == ''
                 || selectedProfile.retentionStartDate == null) {
                 var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]");
-                retentionStartDate.data("datepicker").setDate(new Date())
+                retentionStartDate.data("datepicker").setDate(new Date());
                 retentionStartDate.closest(".form-group").removeClass("hide");
 
             } else {

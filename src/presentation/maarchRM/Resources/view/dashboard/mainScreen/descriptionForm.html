@@ -60,7 +60,6 @@
         <span id="documentMissing_error">You must deposit at least one document.</span>
     </div>
 </div>
-
 <span  id="addBtnTpl" class="input-group-btn hide">
     <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-check"></span></button>
 </span>
@@ -273,8 +272,7 @@ input:invalid {
                     break;
 
                 case 'date':
-                case 'timestamp':
-                    var field = Metadata.getDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField, div);
                     break;
 
                 case 'boolean':
@@ -354,18 +352,31 @@ input:invalid {
             return field;
         },
 
-        getDateInput : function(descriptionField) {
+        getDateInput : function(descriptionField, parent) {
             var field = Metadata.getTextInput(descriptionField);
             field.attr('placeholder', $('#date_text').text());
-            field.datepicker(DatePickerParams);
+
+            parent.append(field);
+
+            if (descriptionField.format == 'datetime') {
+                field.data('format', 'datetime');
+                field.datetimepicker(dateTimePickerParams);
+            } else {
+                field.datepicker(DatePickerParams);
+            }
 
             field.getValue = function() {
                 if(field.data('required')){
                     checkErrorInput(field);
                 }
                 if (this.val()){
-                    var dateObject = this.datepicker('getDate');
-                    return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                    if (field.data('format') == 'datetime') {
+                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:MM:SS');
+                        return dateObject;
+                    } else {
+                        var dateObject = this.datepicker('getDate');
+                        return $.datepicker.formatDate('yy-mm-dd', dateObject);
+                    }
                 }
             };
 
@@ -688,8 +699,7 @@ input:invalid {
                     break;
 
                 case 'date':
-                case 'timestamp':
-                    var field = Metadata.getDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField, item);
                     break;
 
                 case 'boolean':
@@ -734,7 +744,7 @@ input:invalid {
 
             var items = itemList.children("li");
             items.css({'margin-bottom': '0px'});
-            
+
             if (items.length) {
                 var index = items.length;
 
@@ -817,7 +827,6 @@ input:invalid {
 
             $.each(formGroups, function() {
                 name = $(this).attr('name');
-
                 field = $(this).data('field');
                 value = field.getValue();
 
@@ -830,7 +839,6 @@ input:invalid {
                 Metadata.flagEmptyRequiredField.field = true;
                 return -1 ;
             }
-
 
             $.each(customFormGroups, function() {
                 name = $(this).data('name').val();
@@ -859,7 +867,6 @@ input:invalid {
 
                 return -1;
             }
-
             return descriptionObject;
         },
 
@@ -901,9 +908,15 @@ input:invalid {
 
         checkAndFill : function(data, target) {
             if (target.attr("data-type")==="date") {
-                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
-                field.datepicker('setDate', data);
+                if (field.data('format') == 'datetime') {
+                    data = data.replace('T', ' ');
+                    field.data('DateTimePicker').date(data)
+                    field.data('DateTimePicker').format('YYYY-MM-DDTHH:MM:SS');
+                } else {
+                    data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                    field.datepicker('setDate', data);
+                }
             }
 
             if (target.attr("data-type")==="name") {

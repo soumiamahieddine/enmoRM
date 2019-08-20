@@ -101,20 +101,27 @@ class welcome
                 }
             }
         }
-        
+
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         $this->view->translate();
-
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-        
+
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
             $this->view->translate($dateRangePickerInput);
         }
+
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->saveParameters());
+
+        $datePickerPlugin = \laabs::newService('dependency/html/plugins/datePicker/datePicker', $this->view->getContainer());
+        $datePickerPlugin->translate();
+        $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
 
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
@@ -203,7 +210,7 @@ class welcome
 
         foreach ($archives as $archive) {
             $archive->originatorOrgName = $orgsName[$archive->originatorOrgRegNumber];
-            if (!empty($archive->archivalProfileReference)) {
+            if (!empty($archive->archivalProfileReference) && isset($profilesName[$archive->archivalProfileReference])) {
                 $archive->archivalProfileName = $profilesName[$archive->archivalProfileReference];
             }
         }
@@ -295,7 +302,6 @@ class welcome
                 }
             }
         }
-
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);

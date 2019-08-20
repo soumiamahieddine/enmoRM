@@ -241,6 +241,7 @@ class Document extends \dependency\xml\Document
 
         // add css
         $this->addStyle("/public/css/bootstrap-toggle/bootstrap-toggle.css");
+        $this->addStyle("/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css");
         //$this->addStyle("/public/css/bootstrap-daterangepicker/daterangepicker.css");
 
         // Add js scripts
@@ -293,6 +294,10 @@ class Document extends \dependency\xml\Document
         $this->addScript("/public/js/bootstrap-tree/bootstrap-tree.js");
         $this->addScript("/public/js/dataList_0.0.1/dataList.js");
         $this->addScript("/public/js/datePicker/bootstrap-datepicker.js");
+
+
+        $this->addScript("/public/js/moment_2.14.1/moment.js");
+        $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
 
         $this->addScript("/public/js/csrf/csrfprotector.js");
 

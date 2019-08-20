@@ -108,7 +108,7 @@ class archivalProfile
             $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
             $dateFields = [];
             foreach ($descriptionFields as $descriptionField) {
-                if (in_array(strtolower($descriptionField->type), ['date', 'datetime', 'timestamp'])) {
+                if (strtolower($descriptionField->type) == 'date') {
                     $dateFields[] = $descriptionField;
                 }
             }

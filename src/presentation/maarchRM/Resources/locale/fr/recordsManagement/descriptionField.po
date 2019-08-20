@@ -21,13 +21,16 @@ msgid "number"
 msgstr "Nombre"
 
 msgid "Boolean"
-msgstr "Booléen"
+msgstr "Indicateur"
 
 msgid "boolean"
-msgstr "Booléen"
+msgstr "Indicateur"
 
 msgid "date"
 msgstr "Date"
+
+msgid "With time"
+msgstr "Avec heure"
 
 msgid "Description field"
 msgstr "Champ de description"

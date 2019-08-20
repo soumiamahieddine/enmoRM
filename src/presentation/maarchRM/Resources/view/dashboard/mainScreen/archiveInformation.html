@@ -456,6 +456,9 @@
                     case "date" :
                         value = inputValue.data('datepicker').getFormattedDate('yyyy-mm-dd');
                         break;
+                    case "datetime" :
+                        value = inputValue.data('datepicker').getFormattedDate('yyyy-mm-dd HH:mm:ss');
+                        break;
                     case "number" :
                         value = parseInt(inputValue.val());
                         break;
