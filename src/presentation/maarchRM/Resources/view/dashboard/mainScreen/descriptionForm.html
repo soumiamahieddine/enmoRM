@@ -357,10 +357,10 @@ input:invalid {
             field.attr('placeholder', $('#date_text').text());
 
             if (descriptionField.format == 'datetime') {
+                field.data('format', 'datetime');
                 setTimeout(function(){
-                    field.data('format', 'datetime');
                     field.datetimepicker(dateTimePickerParams);
-                }, 300);
+                }, 2000);
             } else {
                 field.datepicker(DatePickerParams);
             }
@@ -371,8 +371,7 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        console.log(this.data('DateTimePicker'));
-                        var dateObject = this.data('DateTimePicker').date();
+                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:MM');
                         return dateObject;
                     } else {
                         var dateObject = this.datepicker('getDate');
@@ -830,8 +829,6 @@ input:invalid {
                 name = $(this).attr('name');
                 field = $(this).data('field');
                 value = field.getValue();
-                console.log(field);
-                console.log(value);
 
                 if (value) {
                     descriptionObject[name] = value;
@@ -870,7 +867,6 @@ input:invalid {
 
                 return -1;
             }
-
             return descriptionObject;
         },
 
@@ -915,7 +911,8 @@ input:invalid {
                 data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
-                    field.datetimepicker('setDate', data);
+                    // this.data('DateTimePicker').date().format('YYYY-MM-DD HH:MM');
+                    field.data('DateTimePicker').date(data);
                 } else {
                     field.datepicker('setDate', data);
                 }
