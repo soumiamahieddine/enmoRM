@@ -413,7 +413,7 @@
 .glyphicon-calendar:before {
   content: "\e109";
 }
-
+/*
 .btn {
   display: inline-block;
   padding: 6px 12px;
@@ -434,7 +434,7 @@
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
-}
+}*/
 
 .collapse {
   display: none;
