@@ -289,10 +289,6 @@ input:invalid {
 
             div.append(field);
 
-            if (descriptionField.format == 'datetime') {
-                
-            }
-
             if (descriptionField.required) {
                 label.append($("<span style='color: red'>").text(" *"));
                 field.attr("data-required", descriptionField.required);
@@ -375,7 +371,7 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:MM');
+                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:MM:SS');
                         return dateObject;
                     } else {
                         var dateObject = this.datepicker('getDate');
@@ -912,12 +908,13 @@ input:invalid {
 
         checkAndFill : function(data, target) {
             if (target.attr("data-type")==="date") {
-                data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
-                    // this.data('DateTimePicker').date().format('YYYY-MM-DD HH:MM');
-                    field.data('DateTimePicker').date(data);
+                    data = data.replace('T', ' ');
+                    field.data('DateTimePicker').date(data)
+                    field.data('DateTimePicker').format('YYYY-MM-DDTHH:MM:SS');
                 } else {
+                    data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                     field.datepicker('setDate', data);
                 }
             }
