@@ -73,6 +73,16 @@ class dateTimePicker
         $this->parameters->inline = true;
         $this->parameters->sideBySide = true;
         $this->parameters->format = 'DD-MM-YYYY HH:mm';
+        $this->parameters->useCurrent = false;
+        // $this->parameters->focusOnShow = false;
+
+        // $closeFocus = new \stdClass();
+        // $closeFocus->focusOnShow = false;
+        // $this->parameters->tooltips = $closeFocus;
+
+        // $close = new \stdClass();
+        // $close->close = true;
+        // $this->parameters->tooltips = $close;
         // format: 'DD-MM-YYYY HH:mm',
         // $this->parameters->weekstart = 1;
         // $this->parameters->autoclose = 'true';
