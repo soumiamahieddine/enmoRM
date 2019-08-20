@@ -101,16 +101,15 @@ class welcome
                 }
             }
         }
-        
+
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
         $this->view->translate();
-
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-        
+
 
         foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
             $this->view->translate($dateRangePickerInput);
