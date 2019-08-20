@@ -237,7 +237,7 @@
 
         if (serviceAccount['isAdmin'] == true) {
             serviceAccount.ownerOrgId = $("#orgSelect").val();
-            orgId = [];
+            orgId = "";
         } else {
             serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerorgid");
         }
@@ -435,10 +435,12 @@
     function selectOrTypeheadOrg(){
         if ($("#adminUser").prop("checked")) {
             $("#orgTypeahead").hide();
+            $("#orgGroup").hide();
             $("#selectOrgGroup").show();
         } else {
             $("#orgTypeahead").show();
             $("#selectOrgGroup").hide();
+            $("#orgGroup").show();
         }
     }
 
