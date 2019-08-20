@@ -272,7 +272,7 @@ input:invalid {
                     break;
 
                 case 'date':
-                    var field = Metadata.getDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField, div);
                     break;
 
                 case 'boolean':
@@ -288,6 +288,10 @@ input:invalid {
             formGroup.data('description', descriptionField);
 
             div.append(field);
+
+            if (descriptionField.format == 'datetime') {
+                
+            }
 
             if (descriptionField.required) {
                 label.append($("<span style='color: red'>").text(" *"));
@@ -352,15 +356,15 @@ input:invalid {
             return field;
         },
 
-        getDateInput : function(descriptionField) {
+        getDateInput : function(descriptionField, parent) {
             var field = Metadata.getTextInput(descriptionField);
             field.attr('placeholder', $('#date_text').text());
 
+            parent.append(field);
+
             if (descriptionField.format == 'datetime') {
                 field.data('format', 'datetime');
-                setTimeout(function(){
-                    field.datetimepicker(dateTimePickerParams);
-                }, 2000);
+                field.datetimepicker(dateTimePickerParams);
             } else {
                 field.datepicker(DatePickerParams);
             }
@@ -699,7 +703,7 @@ input:invalid {
                     break;
 
                 case 'date':
-                    var field = Metadata.getDateInput(descriptionField);
+                    var field = Metadata.getDateInput(descriptionField, item);
                     break;
 
                 case 'boolean':
