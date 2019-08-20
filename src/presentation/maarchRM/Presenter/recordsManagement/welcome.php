@@ -116,6 +116,14 @@ class welcome
             $this->view->translate($dateRangePickerInput);
         }
 
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->saveParameters());
+
+        $datePickerPlugin = \laabs::newService('dependency/html/plugins/datePicker/datePicker', $this->view->getContainer());
+        $datePickerPlugin->translate();
+        $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
+
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();

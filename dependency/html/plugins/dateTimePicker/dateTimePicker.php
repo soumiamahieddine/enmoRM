@@ -70,11 +70,11 @@ class dateTimePicker
         parent::__construct($element);
 
         $this->parameters = new \StdClass();
-        $this->parameters->inline = true;
-        $this->parameters->sideBySide = true;
+        //$this->parameters->inline = false;
+        //$this->parameters->sideBySide = false;
         $this->parameters->format = 'DD-MM-YYYY HH:mm';
-        $this->parameters->useCurrent = false;
-        // $this->parameters->focusOnShow = false;
+        //$this->parameters->useCurrent = false;
+        //$this->parameters->focusOnShow = false;
 
         // $closeFocus = new \stdClass();
         // $closeFocus->focusOnShow = false;
@@ -103,25 +103,16 @@ class dateTimePicker
         // $format = str_replace('l', 'DD', $format);   // Full day name
         // $this->parameters->format = $format;
     }
-    /*
-    {
-        format: "yyyy-mm-dd",
-        weekStart: 1,
-        language: "fr",
-        autoclose: true,
-        todayHighlight: true,
-    };
-    */
 
     public function translate()
     {
         $view = $this->element->ownerDocument;
         $translator = $view->translator;
 
-        // $this->parameters->language = $translator->lang;
-        // if (\laabs::hasPublicResource('public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
-        //     $view->addScript('/public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
-        // }
+        $this->parameters->locale = $translator->lang;
+        if (\laabs::hasPublicResource('public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js')) {
+            $view->addScript('/public/js/datePicker/locales/bootstrap-datepicker.' . $translator->lang . '.js');
+        }
     }
 
 
