@@ -72,7 +72,7 @@ class dateTimePicker
         $this->parameters = new \StdClass();
         //$this->parameters->inline = false;
         //$this->parameters->sideBySide = false;
-        $this->parameters->format = 'DD-MM-YYYY HH:mm';
+        $this->parameters->format = 'DD-MM-YYYY HH:mm:ss';
         //$this->parameters->useCurrent = false;
         //$this->parameters->focusOnShow = false;
 
