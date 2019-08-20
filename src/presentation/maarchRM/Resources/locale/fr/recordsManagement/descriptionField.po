@@ -47,6 +47,15 @@ msgstr "Valeur par défaut"
 msgid "Enumeration"
 msgstr "Énumération"
 
+msgid "Simple list"
+msgstr "Liste simple"
+
+msgid "List with labels"
+msgstr "Liste avec libellés"
+
+msgid "External repository"
+msgstr "Référentiel externe"
+
 msgid "Multiple value"
 msgstr "Valeur multiple"
 
