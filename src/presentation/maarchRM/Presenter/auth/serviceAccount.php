@@ -139,12 +139,14 @@ class serviceAccount
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if (!$account->isAdmin && !$account->ownerOrgId) {
-            $this->view->setSource('whatAmI', 'oldUser');
-        } elseif ($account->isAdmin && $account->ownerOrgId) {
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
             $this->view->setSource('whatAmI', 'adminF');
-        } elseif ($account->isAdmin && !$account->ownerOrgId) {
+        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
             $this->view->setSource('whatAmI', 'adminG');
+        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $this->view->setSource('whatAmI', 'user');
+        } else {
+            $this->view->setSource('whatAmI', 'oldUser');
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
