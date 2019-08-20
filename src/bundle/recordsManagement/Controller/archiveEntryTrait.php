@@ -620,6 +620,9 @@ trait archiveEntryTrait
      */
     public function deposit($archive, $path = null)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {

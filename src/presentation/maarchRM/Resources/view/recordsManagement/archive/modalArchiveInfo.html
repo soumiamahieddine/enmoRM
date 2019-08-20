@@ -161,6 +161,10 @@
                         $('#modalArchiveInfo').find('.nav-tabs').find('li:last').remove();
                     }
 
+                },
+                error   : function (response) {
+                    responseJSON = JSON.parse(response.responseText);
+                    gritter.show(responseJSON.message);
                 }
             });
          },

@@ -472,3 +472,6 @@ msgstr "Le journal ne peut pas être écrit"
 
 msgid "You're not allowed to create an organization"
 msgstr "Vous n'êtes pas autorisé à créer une organisation"
+
+msgid "You are not allowed to do this action"
+msgstr "Vous n'êtes pas autorisé à effectuer cette action"

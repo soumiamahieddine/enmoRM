@@ -27,9 +27,20 @@ namespace bundle\auth\Model;
  *
  * @pkey [accountId]
  * @key [accountName]
+ * @fkey [ownerOrgId] organization/organization [orgId]
  */
 class account
 {
+    /**
+     * The security level (about NF_Z42020)
+     *
+     * @var string
+     * @notempty
+     */
+    const SECLEVEL_GENADMIN = "gen_admin";
+    const SECLEVEL_FONCADMIN = "fonc_admin";
+    const SECLEVEL_USER = "user";
+
     /**
      * The account identifier
      *
@@ -94,7 +105,7 @@ class account
     /**
      * @var timestamp
      */
-    public $lockDate;   
+    public $lockDate;
 
     /**
      * @var integer
@@ -160,4 +171,24 @@ class account
      */
     public $preferences;
 
+    /**
+     * @var string
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
+
+    public function getSecurityLevel()
+    {
+        if ($this->isAdmin && !$this->ownerOrgId) {
+            return $this::SECLEVEL_GENADMIN;
+        } elseif ($this->isAdmin && $this->ownerOrgId) {
+            return $this::SECLEVEL_FONCADMIN;
+        } elseif (!$this->isAdmin && $this->ownerOrgId) {
+            return $this::SECLEVEL_USER;
+        }
+    }
 }

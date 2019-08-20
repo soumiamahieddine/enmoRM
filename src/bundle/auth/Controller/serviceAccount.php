@@ -33,6 +33,8 @@ class serviceAccount
     protected $sdoFactory;
     protected $passwordEncryption;
     protected $securityPolicy;
+    protected $organizationController;
+    protected $servicePositionController;
 
     /**
      * Constructor
@@ -45,6 +47,8 @@ class serviceAccount
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
+        $this->organizationController = \laabs::newController('organization/organization');
+        $this->servicePositionController = \laabs::newController('organization/servicePosition');
     }
 
     /**
@@ -64,7 +68,29 @@ class serviceAccount
      */
     public function search()
     {
-        $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'");
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+
+        $userAccountController = \laabs::newController("auth/userAccount");
+
+        $queryAssert = [];
+        $queryAssert[] = "accountType='service'";
+
+        switch ($account->getSecurityLevel()) {
+            case $account::SECLEVEL_GENADMIN:
+                $queryAssert[] = "((isAdmin='TRUE' AND ownerOrgId!=null) OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_FONCADMIN:
+                $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_USER:
+                $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                break;
+        }
+
+        $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $serviceAccounts;
     }
@@ -130,6 +156,28 @@ class serviceAccount
      */
     public function addService($serviceAccount, $orgId, $servicesURI = [])
     {
+        $organizationController = \laabs::newController("organization/organization");
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        if ($account->isAdmin || $account->owner) {
+            if (!$account->isAdmin ||
+                (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
+                ($account->ownerOrgId && $serviceAccount->isAdmin)
+            ) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        if ($serviceAccount->ownerOrgId) {
+            try {
+                $organizationController->read($serviceAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($serviceAccount->ownerOrgId . " does not exist.");
+            }
+        }
+
         $serviceAccount = \laabs::cast($serviceAccount, 'auth/account');
         $serviceAccount->accountId = \laabs::newId();
 
@@ -146,8 +194,9 @@ class serviceAccount
         try {
             $this->sdoFactory->create($serviceAccount, 'auth/account');
             $this->createServicePrivilege($servicesURI, $serviceAccount->accountId);
-            $organizationController = \laabs::newController("organization/organization");
-            $organizationController->addServicePosition($orgId, $serviceAccount->accountId);
+            if (!$serviceAccount->isAdmin) {
+                $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
+            }
         } catch (\Exception $exception) {
             if ($transactionControl) {
                 $this->sdoFactory->rollback();
@@ -172,8 +221,7 @@ class serviceAccount
     public function edit($serviceAccountId)
     {
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
-        $servicePositionController = \laabs::newController("organization/servicePosition");
-        $servicePosition = $servicePositionController->edit($serviceAccountId);
+        $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 
 
@@ -219,8 +267,25 @@ class serviceAccount
      */
     public function updateServiceInformation($serviceAccount, $orgId = null, $servicesURI = [])
     {
-        $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccount');
+        $organizationController = \laabs::newController("organization/organization");
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
 
+        if (!$account->isAdmin ||
+            (!$account->ownerOrgId && !$serviceAccount->isAdmin) ||
+            ($account->ownerOrgId && $serviceAccount->isAdmin)
+        ) {
+            throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+        }
+
+        $oldServiceAccount = $this->sdoFactory->read('auth/account', $serviceAccount->accountId);
+        if (($oldServiceAccount->ownerOrgId && $oldServiceAccount->ownerOrgId != $serviceAccount->ownerOrgId) 
+            || !$oldServiceAccount->ownerOrgId && $serviceAccount->ownerOrgId
+        ) {
+            throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
+        }
+
+        $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccount');
         if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccount->accountId))) {
             throw \laabs::newException("auth/unknownServiceException");
         }
@@ -232,16 +297,14 @@ class serviceAccount
         }
 
         try {
-            if ($orgId) {
-                $servicePositionController = \laabs::newController("organization/servicePosition");
-                $servicePosition = $servicePositionController->edit($serviceAccount->accountId);
+            if (!$serviceAccount->isAdmin) {
+                if ($orgId) {
+                    $servicePosition = $this->servicePositionController->getPosition($serviceAccount->accountId);
 
-                $organizationController = \laabs::newController("organization/organization");
-                if (isset($servicePosition->organization)) {
-                    $organizationController->deleteServicePosition(
-                        $servicePosition->organization->orgId,
-                        $serviceAccount->accountId
-                    );
+                    if (isset($servicePosition->organization)) {
+                        $this->organizationController->deleteServicePosition($orgId, $serviceAccount->accountId);
+                    }
+                    $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
                 }
                 $organizationController->addServicePosition($orgId, $serviceAccount->accountId);
             }
@@ -275,7 +338,10 @@ class serviceAccount
         // Check userAccount exists
         $currentDate = \laabs::newTimestamp();
 
-        if (!$this->sdoFactory->exists('auth/account', array('accountId' => $serviceAccountId, "accountType" => "service"))) {
+        if (!$this->sdoFactory->exists(
+            'auth/account',
+            array('accountId' => $serviceAccountId, "accountType" => "service")
+        )) {
             \laabs::newController('audit/entry')->add(
                 "auth/serviceTokenGenerationFailure",
                 "auth/account",
@@ -358,7 +424,7 @@ class serviceAccount
     {
         $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $accountId), 'auth/account');
 
-        if(!empty($servicesURI)){
+        if (!empty($servicesURI)) {
             foreach ($servicesURI as $key => $service) {
                 $service = trim($service);
                 if (preg_match('/\s/', $service)) {

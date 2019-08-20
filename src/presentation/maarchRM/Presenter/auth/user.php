@@ -47,9 +47,7 @@ class user
         \dependency\json\JsonObject $json,
         \dependency\localisation\TranslatorInterface $translator,
         \dependency\sdo\Factory $sdoFactory = null
-    )
-    {
-
+    ) {
         $this->view = $view;
 
         $this->json = $json;
@@ -71,6 +69,16 @@ class user
     {
         $view = $this->view;
 
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        $securityLevel = $account->securityLevel;
+
+        $manageUserRights = true;
+        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $manageUserRights = false;
+        }
+
         $view->addContentFile("auth/userAccount/admin/index.html");
         $view->translate();
 
@@ -82,6 +90,7 @@ class user
         $dataTable->setUnsearchableColumns(3, 4, 5);
 
         $view->setSource('users', $users);
+        $view->setSource('manageUserRights', $manageUserRights);
 
         $view->merge();
 
@@ -106,6 +115,19 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
+            $view->setSource('whatAmI', 'adminF');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
+            $view->setSource('whatAmI', 'adminG');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $view->setSource('whatAmI', 'user');
+        } else {
+            $view->setSource('whatAmI', 'oldUser');
+        }
 
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
@@ -169,12 +191,25 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
+            $view->setSource('whatAmI', 'adminF');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
+            $view->setSource('whatAmI', 'adminG');
+        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $view->setSource('whatAmI', 'user');
+        } else {
+            $view->setSource('whatAmI', 'oldUser');
+        }
+        
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
         $view->setSource('user', $user);
         $view->setSource('userPositions', false);
+
 
         $view->merge();
         $view->translate();

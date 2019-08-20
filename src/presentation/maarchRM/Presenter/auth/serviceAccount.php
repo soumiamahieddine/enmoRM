@@ -64,6 +64,18 @@ class serviceAccount
         $this->view->addContentFile("auth/serviceAccount/index.html");
         $this->view->setSource("serviceAccounts", $serviceAccounts);
 
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        $securityLevel = $account->securityLevel;
+
+        $manageUserRights = true;
+        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $manageUserRights = false;
+        }
+
+        $this->view->setSource('manageUserRights', $manageUserRights);
+
         $table = $this->view->getElementById("list-serviceAccount");
         $dataTable = $table->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
@@ -84,49 +96,57 @@ class serviceAccount
      */
     public function edit($serviceAccount)
     {
-
         $tabOrganizations = \laabs::callService('organization/organization/readIndex');
         $ownerOrganizations = [];
         $organizations = [];
 
-
         foreach ($tabOrganizations as $org) {
-            if($org->isOrgUnit){
+            if ($org->isOrgUnit) {
                 $organizations[] = $org;
             } else {
                 $ownerOrganizations []= $org;
             }
         }
 
-
-        if($serviceAccount->servicePrivilege){
+        if ($serviceAccount->servicePrivilege) {
             $noDescription = true;
-            foreach ($serviceAccount->servicePrivilege as $servicePrivilege ) {
+            foreach ($serviceAccount->servicePrivilege as $servicePrivilege) {
                 foreach ($serviceAccount->servicePrivilegeOptions as $option) {
-                    if($servicePrivilege->serviceURI == $option->serviceURI ) {
+                    if ($servicePrivilege->serviceURI == $option->serviceURI) {
                         $servicePrivilege->description = $option->description;
                         $noDescription = false;
                     }
                 }
-                if($noDescription) {
+                if ($noDescription) {
                     $servicePrivilege->description =  $servicePrivilege->serviceURI;
                 }
                 $noDescription = true;
             }
         }
 
-
-        foreach ( $organizations as $org) {
-            if(isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
+        foreach ($organizations as $org) {
+            if (isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
                 $serviceAccount->orgName = $org->displayName;
                 $ownerOrgid = $org->ownerOrgId;
             }
         }
-        foreach ( $ownerOrganizations as $org) {
-            if(isset($ownerOrgid) && $ownerOrgid == $org->orgId) {
+        foreach ($ownerOrganizations as $org) {
+            if (isset($ownerOrgid) && $ownerOrgid == $org->orgId) {
                 $serviceAccount->ownerOrgName = $org->displayName;
-
             }
+        }
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
+            $this->view->setSource('whatAmI', 'adminF');
+        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
+            $this->view->setSource('whatAmI', 'adminG');
+        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $this->view->setSource('whatAmI', 'user');
+        } else {
+            $this->view->setSource('whatAmI', 'oldUser');
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");

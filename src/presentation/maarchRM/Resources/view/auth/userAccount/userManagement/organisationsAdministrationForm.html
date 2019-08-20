@@ -1,6 +1,9 @@
 <div class="form-group">
     <div class="form-group">
-        <div class="input-group">
+        <div id="selectOrgGroup" class="input-group col-md-12">
+            <select id="orgSelect" class="form-control"></select>
+        </div>
+        <div id="typeheadOrgGroup" class="input-group">
             <input type="text" class="form-control" placeholder="Service" id="orgTypeahead"/>
             <span class="input-group-btn">
                 <button class="btn btn-success" type="button" id="addOrg" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
@@ -12,12 +15,12 @@
             <div>
                 <?merge userPositions ?>
                 <div class="input-group">
-                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" readOnly="true">
+                    <input type="text" class="form-control" value="[?merge .ownerOrgName ?] &gt; [?merge .displayName ?]" data-orgid="[?merge .orgId ?]" data-ownerOrgId="[?merge .ownerOrgId ?]" readOnly="true">
                     <span class="input-group-btn">
-                            <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
-                                <i class="fa fa-trash-o fa-fw"></i>&nbsp;
-                            </button>
-                        </span>
+                        <button class="btn btn-danger removeOrg" type="button" data-orgid="[?merge .orgId ?]" title="Remove">
+                            <i class="fa fa-trash-o fa-fw"></i>&nbsp;
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
@@ -33,7 +36,7 @@
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplayorgunit', ttl: '0'},
+        prefetch: {url: '/organizations/todisplay?orgUnit=true&ownerOrg=false', ttl: '0'},
         limit: 100
     });
 
@@ -55,13 +58,11 @@
                 },
                 suggestion: function(organization) {
                     var display;
-                    if(organization.ownerOrgName) {
+                    if(organization.displayName) {
                         display =
                             "<span>"
                             + "<span class='fa fa-user' >&nbsp;</span>"
                             + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + organization.ownerOrgName
-                            + " > "
                             + organization.displayName
                             + "</span></span><br>";
                     }
@@ -87,10 +88,41 @@
         $("#orgTypeahead").prop('org', suggestion);
     });
 
+    $.ajax({
+        type: 'GET',
+        url: '/organizations/todisplay?orgUnit=false&ownerOrg=true',
+        contentType : 'application/json',
+        dataType    : 'json',
+        success: function (response) {
+            $.each(response, function(index, org){
+                addSelectOrgs(org);
+            })
+        }
+    });
+
+    function addSelectOrgs(org){
+        var orgSelect = $('#orgSelect');
+
+        var option = $('<option/>')
+            .val(org.orgId)
+            .text(org.displayName)
+            .appendTo(orgSelect);
+    }
+
+    function selectOrTypeheadOrg(){
+        if ($("#adminUser").prop("checked")) {
+            $("#typeheadOrgGroup").hide();
+            $("#selectOrgGroup").show();
+        } else {
+            $("#typeheadOrgGroup").show();
+            $("#selectOrgGroup").hide();
+        }
+    }
+
     //add Organizations
     $("#addOrg").on('click', function() {
         if(suggestion = $("#orgTypeahead").prop('org')) {
-            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName);
+            addOrg(suggestion.displayName, suggestion.orgId, suggestion.ownerOrgName, suggestion.ownerOrgId);
             $("#orgTypeahead").val('');
         }
     });
@@ -100,13 +132,14 @@
         $(this).closest('.input-group').remove();
     })
 
-    function addOrg(orgName, orgId, ownerOrgName) {
+    function addOrg(orgName, orgId, ownerOrgName, ownerOrgId) {
 
         var userTypeahead = $('#userTypeahead');
 
         var inputGroup = $('<div/>')
             .addClass('input-group')
             .data('orgId', orgId)
+            .data('ownerOrgId', ownerOrgId)
             .appendTo($('#orgs'));
 
         var input = $('<input/>')
@@ -114,8 +147,9 @@
             .attr('type', 'text')
             .attr('readonly', 'true')
             .attr('data-orgid', orgId)
-            .val(ownerOrgName+' > '+orgName)
+            .val(orgName)
             .data('orgId', orgId)
+            .data('ownerOrgId', ownerOrgId)
             .appendTo(inputGroup);
 
         var inputGrpBtn = $('<span/>')
@@ -132,4 +166,12 @@
             .addClass('fa fa-trash-o fa-fw')
             .prependTo(btn);
     }
+
+    selectOrTypeheadOrg();
+
+    $("#adminUser").on('change', function () {
+        selectOrTypeheadOrg();
+    });
+
+
 </script>
