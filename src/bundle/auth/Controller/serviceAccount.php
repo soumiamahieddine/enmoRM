@@ -175,7 +175,7 @@ class serviceAccount
             }
         }
 
-        if (!is_null($orgId)) {
+        if (!$orgId && !empty($orgId)) {
             $organization = $organizationController->read($orgId);
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
