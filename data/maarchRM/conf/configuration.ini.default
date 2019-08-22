@@ -98,10 +98,10 @@ storePath = "<instance>/<originatorOwnerOrgId>/<originatorOrgRegNumber>/<archiva
 logFilePlan = "<type>/<date(Y)>/<date(m)>"
 
 translationLogType = "{
-                         'lifeCycle' : 'Journal du cycle de vie',
-                         'application' : 'Journal de l\'application',
-                         'system' : 'Journal du système'
-                     }"
+    'lifeCycle' : 'Journal du cycle de vie',
+    'application' : 'Journal de l\'application',
+    'system' : 'Journal du système'
+}"
 
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
@@ -132,7 +132,10 @@ chainWithTimestamp = false;
 ; false = Disable
 transaction = false
 
+; Path to the message exchange directory
 messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
+
+; Maximum file size (in bytes) for automatic transfer validation
 autoValidateSize = 2147000
 
 ; Array of task to remove medona message directories
@@ -152,6 +155,7 @@ autoValidateSize = 2147000
 ;    }
 ;}"
 
+; Schema of message exchange
 packageSchemas = "{
     'mades' : {
          'label' : 'Format d\'échange Maarch RM',
@@ -160,6 +164,11 @@ packageSchemas = "{
     }
 }"
 
+; Message exchange menu
+; 'label' is the title of menu
+; 'href'  is the path to the action
+; 'class' is the class of the button
+; 'submenu' is the submenu of the menu. In the case, 'href' must be empty
 menu = "[
    {
        'label' : 'Transferts entrants',
@@ -321,9 +330,12 @@ securityPolicy = "{
  'lockDelay' : 30
 }"
 
+; User story available without privilege
 publicUserStory = "['app/*']"
 
 ; Blacklist of user stories
+; if 'transaction' parameter disable, uncomment the block 'blacklistUserStories' below
+; if 'transaction' parameter enable, comment the block 'blacklistUserStories' below
 blacklistUserStories = "[
    'adminArchive/archivalAgreement',
    'adminArchive/controlAuthority',
@@ -340,19 +352,29 @@ blacklistUserStories = "[
    'adminArchive/adminStorageRule'
 ]"
 
-; TPA
+; Blacklist of user stories
+; if 'transaction' parameter disable, comment the block 'blacklistUserStories' below
+; if 'transaction' parameter enable, uncomment the block 'blacklistUserStories' below
 ;blacklistUserStories = "[
 ;   'adminFunc/contact',
 ;   'adminArchive/adminStorageRule',
 ;   'definitiveTransfer/*'
 ;]"
 
+; CSRF
+; 'csrfWhiteList' URI not protected by the CSRF service
+; 'csrfConfig' Available rules
+;   'cookieName' Name of the cookie whose value is the csrf token
+;   'tokenLenght' Token size
 csrfWhiteList = "['user/login', 'user/password']"
 csrfConfig = '{
              "cookieName" : "CSRF",
              "tokenLength" : 32
              }'
 
+; Available privileges for service account
+; if 'transaction' parameter disable, uncomment the block 'servicePrivilege' below
+; if 'transaction' parameter enable, comment the block 'servicePrivilege' below
 servicePrivileges = "[
     {
         'serviceURI': 'audit/event/createChainjournal',
@@ -400,7 +422,9 @@ servicePrivileges = "[
     }
 ]"
 
-; TPA
+; Available privileges for the services accounts
+; if 'transaction' parameter disable, comment the block 'servicePrivilege' below
+; if 'transaction' parameter enable, uncomment the block 'servicePrivilege' below
 ;servicePrivileges = "[
 ;    {
 ;        'serviceURI': 'audit/event/createChainjournal',
@@ -481,6 +505,9 @@ chainJournalByOrganization = false;
 chainWithTimestamp = false;
 
 [organization]
+; Roles of organization unit
+; if 'transaction' parameter disable, uncomment the block 'orgUnitRoles' below
+; if 'transaction' parameter enable, comment the block 'orgUnitRoles' below
 orgUnitRoles = "{
        'owner' : {
        'code' : 'owner',
@@ -488,7 +515,9 @@ orgUnitRoles = "{
    }
 }"
 
-; TPA
+; Roles of organization unit
+; if 'transaction' parameter disable, comment the block 'orgUnitRoles' below
+; if 'transaction' parameter enable, uncomment the block 'orgUnitRoles' below
 ;orgUnitRoles = "{
 ;       'owner' : {
 ;       'code' : 'owner',
@@ -512,166 +541,11 @@ orgUnitRoles = "{
 ;   }
 ;}"
 
-[dependency.datasource]
-@Adapter                        = Database
-Dsn                             = %dsn%
-Username                        = %username%
-Password                        = %password%
-
-[dependency.fileSystem]
-
-; Path to the UK National Archives DROID signature file for file format detection
-; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
-
-signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
-containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
-
-; Path to libreOffice executable
-;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"
-libreOfficeExecutable = "/usr/bin/libreoffice"
-
-; Conversion paths
-conversionServices = "[
-     {
-         'serviceName'     : 'dependency/fileSystem/plugins/libreOffice',
-         'softwareName'    : 'LibreOffice',
-         'softwareVersion' : '5.4.2.0',
-         'inputFormats'    : ['fmt/412', 'fmt/291', 'fmt/293'],
-         'outputFormats'   : {
-             'fmt/95' : {
-                 'extension' : 'pdf',
-                 'filter' : 'writer_pdf_Export',
-                 'options': 'SelectPdfVersion=1'
-             },
-             'fmt/18' : {
-                 'extension' : 'pdf'
-             }
-         }
-     }
-]"
-
-tikaJarFile = "%laabsDirectory%/dependency/fileSystem/plugins/tika/tika-app-1.16.jar"
-
-;zipExecutable = "C:\Program Files\7-Zip\7z.exe"
-
-[dependency.html]
-headers                         = "['dashboard/head.html']"
-layout                          = "dashboard/layout.html"
-layoutData                      = "presentation/dashboard/layout"
-
-plugins                         = "{
-                                  'dataTable'       : '\dependency\html\plugins\DataTable\DataTable',
-                                  'dataList'        : '\dependency\html\plugins\DataList\DataList',
-                                  'datePicker'      : '\dependency\html\plugins\datePicker\datePicker',
-                                  'dateRangePicker' : '\dependency\html\plugins\dateRangePicker\dateRangePicker'
-}"
-
-layoutReferer = "['/user/prompt', '/user/logout']"
-
-[dependency.json]
-Options                         = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_FORCE_OBJECT
-
-[dependency.localisation]
-@Adapter                        = Gettext
-lang                            = fr
-dateFormat                      = d-m-Y
-dateTimeFormat                  = "Y-m-d H:i:s \(O\)"
-timestampFormat                 = "Y-m-d H:i:s.uO"
-timezone                        = Europe/Paris
-
-[dependency.logger]
-
-loggers = "{
-          'importCustomerRecords' : {
-          'level' : 'INFO',
-          'appenders' : [ 'importCustomerRecordsFile' ],
-          'additivity' : false
-          }
-}"
-
-appenders = "{
-            'default' : {
-            'class' : 'LoggerAppenderFile',
-            'layout' : {
-            'class' : 'LoggerLayoutSimple'
-            },
-            'params' : {
-            'file' : '/var/www/laabs/data/redgreen/log4php.txt',
-            'append' : true
-            }
-            },
-            'importCustomerRecordsFile' : {
-            'class' : 'LoggerAppenderDailyFile',
-            'layout' : {
-            'class' : 'LoggerLayoutPattern',
-            'params' : {
-            'conversionPattern' : '[%date{d/m/Y H:i:s}] %-5p [%t] %message %newline'
-            }
-            },
-            'params' : {
-            'datePattern' : 'Y-m-d',
-            'file' : '/var/www/laabs/data/maarchRM/importMapping-%s.log',
-            'append' : true
-            }
-            }
-}"
-
-[dependency.notification]
-@Adapter = Mailer
-
-mailHost = 'smtp.gmail.com'
-mailUsername = '';
-mailPassword = '';
-mailPort = 587;
-mailSender = "";
-mailAdminReceiver = "";
-mailSMTPAuth = true;
-mailSMTPSecure = "tls";
-
-;Pour laposte
-;mailHost = 'smtp.laposte.com';
-;mailPort = 25;
-;SMTPSecure = "tls";
-;mailSMTPAuth = true;
-
-;Pour gmail
-;mailHost = 'smtp.gmail.com';
-;mailPort = 587;
-;SMTPSecure = "tls";
-;mailSMTPAuth = true;
-
-[dependency.repository]
-@Adapter                        = Repository
-
-[dependency.sdo]
-@Adapter                        = Database
-Dsn                             = %dsn%
-Username                        = %username%
-Password                        = %password%
-
-; Auto generate ids before create operation
-; 0/false/Off                   = never generate ids
-; 1/true/On                     = generates ids when no id is set on object
-generateKey                     = on
-
-; Sets the boolean storage method
-; 0 : as integer 0 | 1
-; 1 : as boolean true |false
-; 2 : as char Y / N
-boolFormat = 1
-
-dateFormat = YYYY-MM-DD
-timeFormat = HH24:MI:SS
-datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
-
-; Log events in Laabs log
-; 0 = no trace
-; 1 = trace only errors
-; 2 = trace queries
-; 3 = dump queries
-trace = 1
 
 [batchProcessing]
+; Available tasks to batch processing
+; if 'transaction' parameter disable, uncomment the block 'tasks' below
+; if 'transaction' parameter enable, comment the block 'tasks' below
 tasks = "[
     {
         'taskId': '01',
@@ -710,7 +584,9 @@ tasks = "[
     }
 ]"
 
-; TPA
+; Available tasks to batch processing
+; if 'transaction' parameter disable, uncomment the block 'tasks' below
+; if 'transaction' parameter enable, comment the block 'tasks' below
 ;tasks = "[
 ;    {
 ;        'taskId': '01',
@@ -778,3 +654,162 @@ tasks = "[
 ;        'description' : 'Extraction plein texte'
 ;    }
 ;]"
+
+
+[dependency.datasource]
+@Adapter                        = Database
+Dsn                             = %dsn%
+Username                        = %username%
+Password                        = %password%
+
+[dependency.fileSystem]
+
+; Path to the UK National Archives DROID signature file for file format detection
+; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
+
+; Path to libreOffice executable
+;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"
+libreOfficeExecutable = "/usr/bin/libreoffice"
+
+; Conversion paths
+conversionServices = "[
+     {
+         'serviceName'     : 'dependency/fileSystem/plugins/libreOffice',
+         'softwareName'    : 'LibreOffice',
+         'softwareVersion' : '5.4.2.0',
+         'inputFormats'    : ['fmt/412', 'fmt/291', 'fmt/293'],
+         'outputFormats'   : {
+             'fmt/95' : {
+                 'extension' : 'pdf',
+                 'filter' : 'writer_pdf_Export',
+                 'options': 'SelectPdfVersion=1'
+             },
+             'fmt/18' : {
+                 'extension' : 'pdf'
+             }
+         }
+     }
+]"
+
+; Path of zip executable (only for Windows)
+;zipExecutable = "C:\Program Files\7-Zip\7z.exe"
+
+[dependency.html]
+headers                         = "['dashboard/head.html']"
+layout                          = "dashboard/layout.html"
+layoutData                      = "presentation/dashboard/layout"
+
+plugins                         = "{
+  'dataTable'       : '\dependency\html\plugins\DataTable\DataTable',
+  'dataList'        : '\dependency\html\plugins\DataList\DataList',
+  'datePicker'      : '\dependency\html\plugins\datePicker\datePicker',
+  'dateRangePicker' : '\dependency\html\plugins\dateRangePicker\dateRangePicker'
+}"
+
+layoutReferer = "['/user/prompt', '/user/logout']"
+
+[dependency.json]
+Options                         = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_FORCE_OBJECT
+
+[dependency.localisation]
+@Adapter                        = Gettext
+lang                            = fr
+dateFormat                      = d-m-Y
+dateTimeFormat                  = "Y-m-d H:i:s \(O\)"
+timestampFormat                 = "Y-m-d H:i:s.uO"
+timezone                        = Europe/Paris
+
+[dependency.logger]
+
+loggers = "{
+  'importCustomerRecords' : {
+      'level' : 'INFO',
+      'appenders' : [ 'importCustomerRecordsFile' ],
+      'additivity' : false
+  }
+}"
+
+appenders = "{
+    'default' : {
+        'class' : 'LoggerAppenderFile',
+        'layout' : {
+            'class' : 'LoggerLayoutSimple'
+        },
+        'params' : {
+            'file' : '/var/www/laabs/data/redgreen/log4php.txt',
+            'append' : true
+        }
+    },
+    'importCustomerRecordsFile' : {
+        'class' : 'LoggerAppenderDailyFile',
+        'layout' : {
+            'class' : 'LoggerLayoutPattern',
+            'params' : {
+                'conversionPattern' : '[%date{d/m/Y H:i:s}] %-5p [%t] %message %newline'
+            }
+        },
+        'params' : {
+            'datePattern' : 'Y-m-d',
+            'file' : '/var/www/laabs/data/maarchRM/importMapping-%s.log',
+            'append' : true
+        }
+    }
+}"
+
+[dependency.notification]
+@Adapter = Mailer
+
+; Configuration of notification service
+mailHost = 'smtp.gmail.com'
+mailUsername = '';
+mailPassword = '';
+mailPort = 587;
+mailSender = "";
+mailAdminReceiver = "";
+mailSMTPAuth = true;
+mailSMTPSecure = "tls";
+
+;Example for laposte
+;mailHost = 'smtp.laposte.com';
+;mailPort = 25;
+;SMTPSecure = "tls";
+;mailSMTPAuth = true;
+
+;Example for gmail
+;mailHost = 'smtp.gmail.com';
+;mailPort = 587;
+;SMTPSecure = "tls";
+;mailSMTPAuth = true;
+
+[dependency.repository]
+@Adapter                        = Repository
+
+[dependency.sdo]
+@Adapter                        = Database
+Dsn                             = %dsn%
+Username                        = %username%
+Password                        = %password%
+
+; Auto generate ids before create operation
+; 0/false/Off                   = never generate ids
+; 1/true/On                     = generates ids when no id is set on object
+generateKey                     = on
+
+; Sets the boolean storage method
+; 0 : as integer 0 | 1
+; 1 : as boolean true |false
+; 2 : as char Y / N
+boolFormat = 1
+
+dateFormat = YYYY-MM-DD
+timeFormat = HH24:MI:SS
+datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
+
+; Log events in Laabs log
+; 0 = no trace
+; 1 = trace only errors
+; 2 = trace queries
+; 3 = dump queries
+trace = 1
