@@ -86,7 +86,7 @@ class digitalSafe
         foreach ($archive->digitalResources as $resource) {
             if ((isset($resource->hash) && !is_null($resource->hash))
                 && (isset($resource->hashAlgorithm)
-                && !is_null($resource->hashAlgorithm))
+                    && !is_null($resource->hashAlgorithm))
             ) {
                 try {
                     $this->checkHash($resource->handler, $resource->hash, $resource->hashAlgorithm);
@@ -129,7 +129,6 @@ class digitalSafe
 
         $replyMessage->digitalResources = [];
         foreach ($resources as $resource) {
-            unset($resource->handler);
             $replyMessage->digitalResources[] = $resource;
         }
 
@@ -223,7 +222,6 @@ class digitalSafe
                 $replyMessage->digitalResources = [];
                 foreach ($resIds as $resId) {
                     $resource = $this->archiveController->consultation($archiveId, $resId);
-                    unset($resource->attachment);
                     $replyMessage->digitalResources[] = $resource;
                 }
             }
