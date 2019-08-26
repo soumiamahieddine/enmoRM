@@ -158,9 +158,9 @@ autoValidateSize = 2147000
 ; Schema of message exchange
 packageSchemas = "{
     'mades' : {
-         'label' : 'Format d\'échange Maarch RM',
-         'phpNamespace' : 'mades',
-         'presenter' : 'mades/message'
+        'label' : 'Format d\'échange Maarch RM',
+        'phpNamespace' : 'mades',
+        'presenter' : 'mades/message'
     }
 }"
 
@@ -175,109 +175,109 @@ menu = "[
        'href'  : '#',
        'class' : 'fa fa-sign-in fa-fw',
        'submenu' : [
-           {
-               'label' : 'Importer un bordereau',
-               'href'  : '/transfer'
-           },
-           {
-               'label' : 'Transferts en attente de traitement',
-               'href'  : '/transfer/sent'
-           },
-           {
-               'label' : 'Transferts à traiter',
-               'href'  : '/transfer/received'
-           },
-           {
-               'label' : 'Historique de transfert',
-               'href'  : '/transfer/history'
-           }
-       ]
-   },
-   {
-       'label' : 'Communication',
-       'href'  : '#',
-       'class' : 'fa fa-share fa-fw',
-       'submenu' : [
-           {
-               'label' : 'Demandes d\'autorisation',
-               'href'  : '/delivery/Authorizationrequest'
-           },
-           {
+            {
+                'label' : 'Importer un bordereau',
+                'href'  : '/transfer'
+            },
+            {
+                'label' : 'Transferts en attente de traitement',
+                'href'  : '/transfer/sent'
+            },
+            {
+                'label' : 'Transferts à traiter',
+                'href'  : '/transfer/received'
+            },
+            {
+                'label' : 'Historique de transfert',
+                'href'  : '/transfer/history'
+            }
+        ]
+    },
+    {
+        'label' : 'Communication',
+        'href'  : '#',
+        'class' : 'fa fa-share fa-fw',
+        'submenu' : [
+            {
+                'label' : 'Demandes d\'autorisation',
+                'href'  : '/delivery/Authorizationrequest'
+            },
+            {
                'label' : 'Communications à valider',
-               'href'  : '/delivery/request'
-           },
-           {
-               'label' : 'Communications à récupérer',
-               'href'  : '/delivery/list'
-           },
-           {
-               'label' : 'Historique de communication',
-               'href'  : '/delivery/history'
-           }
-       ]
-   },
-   {
-       'label' : 'Restitution',
-       'href'  : '#',
-       'class' : 'fa fa-reply fa-fw',
-       'submenu' : [
-           {
-               'label' : 'Demandes à valider',
-               'href'  : '/restitution/Requestvalidation'
-           },
-           {
-               'label' : 'Restitutions à récupérer',
-               'href'  : '/restitution/validation'
-           },
-           {
-               'label' : 'Restitutions à finaliser',
-               'href'  : '/restitution/process'
-           },
-           {
-               'label' : 'Historique de restitution',
-               'href'  : '/restitution/history'
-           }
-       ]
-   },
-   {
-       'label' : 'Élimination',
-       'href'  : '#',
-       'class' : 'fa fa-remove fa-fw',
-       'submenu' : [
-           {
-               'label' : 'Demandes d\'autorisation',
-               'href'  : '/destruction/Authorizationrequests'
-           },
-           {
-               'label' : 'Demandes à valider',
-               'href'  : '/destruction/processlist'
-           },
-           {
-               'label' : 'Historique d\'élimination',
-               'href'  : '/destruction/history'
-           }
-       ]
-   },
-   {
-       'label' : 'Transferts sortants',
-       'href'  : '#',
-       'class' : 'fa fa-sign-out fa-fw',
-       'submenu' : [
-           {
-               'label' : 'Transferts à acquitter',
-               'href'  : '/outgoingTransfer/received'
-           },
-           {
-               'label' : 'Transferts à finaliser',
-               'href'  : '/outgoingTransfer/Process'
-           },
-           {
-               'label' : 'Historique de transfert',
-               'href'  : '/outgoingTransfer/history'
-           }
-       ]
-   },
-   {
+                'href'  : '/delivery/request'
+            },
+            {
+                'label' : 'Communications à récupérer',
+                'href'  : '/delivery/list'
+            },
+            {
+                'label' : 'Historique de communication',
+                'href'  : '/delivery/history'
+            }
+        ]
+    },
+    {
+        'label' : 'Restitution',
+        'href'  : '#',
+        'class' : 'fa fa-reply fa-fw',
+        'submenu' : [
+            {
+                'label' : 'Demandes à valider',
+                'href'  : '/restitution/Requestvalidation'
+            },
+            {
+                'label' : 'Restitutions à récupérer',
+                'href'  : '/restitution/validation'
+            },
+            {
+                'label' : 'Restitutions à finaliser',
+                'href'  : '/restitution/process'
+            },
+            {
+                'label' : 'Historique de restitution',
+                'href'  : '/restitution/history'
+            }
+        ]
+    },
+    {
+        'label' : 'Élimination',
+        'href'  : '#',
+        'class' : 'fa fa-remove fa-fw',
+        'submenu' : [
+            {
+                'label' : 'Demandes d\'autorisation',
+                'href'  : '/destruction/Authorizationrequests'
+            },
+            {
+                'label' : 'Demandes à valider',
+                'href'  : '/destruction/processlist'
+            },
+            {
+                'label' : 'Historique d\'élimination',
+                'href'  : '/destruction/history'
+            }
+        ]
+    },
+    {
+        'label' : 'Transferts sortants',
+        'href'  : '#',
+        'class' : 'fa fa-sign-out fa-fw',
+        'submenu' : [
+            {
+                'label' : 'Transferts à acquitter',
+                'href'  : '/outgoingTransfer/received'
+            },
+            {
+                'label' : 'Transferts à finaliser',
+                'href'  : '/outgoingTransfer/Process'
+            },
+            {
+                'label' : 'Historique de transfert',
+                'href'  : '/outgoingTransfer/history'
+            }
+        ]
+    },
+    {
         'label' : 'Demandes de modification',
         'href'  : '#',
         'class' : 'fa fa-sign-out fa-fw',
@@ -293,9 +293,9 @@ menu = "[
         ]
     },
     {
-       'label' : 'Notifications',
-       'href'  : '/notifications',
-       'class' : 'fa fa-bell-o fa-fw'
+        'label' : 'Notifications',
+        'href'  : '/notifications',
+        'class' : 'fa fa-bell-o fa-fw'
     }
 ]"
 
@@ -319,15 +319,15 @@ allowUserModification = true
 ; Time in second of the session
 ; Lock time in seconds
 securityPolicy = "{
- 'loginAttempts' : 3,
- 'passwordValidity' : 0,
- 'newPasswordValidity' : 1,
- 'passwordMinLength' : 8,
- 'passwordRequiresSpecialChars' : 1,
- 'passwordRequiresDigits' : 1,
- 'passwordRequiresMixedCase' : 1,
- 'sessionTimeout' : 3600,
- 'lockDelay' : 30
+    'loginAttempts' : 3,
+    'passwordValidity' : 0,
+    'newPasswordValidity' : 1,
+    'passwordMinLength' : 8,
+    'passwordRequiresSpecialChars' : 1,
+    'passwordRequiresDigits' : 1,
+    'passwordRequiresMixedCase' : 1,
+    'sessionTimeout' : 3600,
+    'lockDelay' : 30
 }"
 
 ; User story available without privilege
@@ -337,19 +337,19 @@ publicUserStory = "['app/*']"
 ; if 'transaction' parameter disable, uncomment the block 'blacklistUserStories' below
 ; if 'transaction' parameter enable, comment the block 'blacklistUserStories' below
 blacklistUserStories = "[
-   'adminArchive/archivalAgreement',
-   'adminArchive/controlAuthority',
-   'archiveDeposit/processTransfer',
-   'archiveDeposit/transfer*',
-   'definitiveTransfer/*',
-   'delivery/*',
-   'destruction/destructionAuthorizationRequest',
-   'destruction/destructionHistory',
-   'destruction/destructionProcess',
-   'originatorAccess/*',
-   'restitution/*',
-   'adminFunc/contact',
-   'adminArchive/adminStorageRule'
+    'adminArchive/archivalAgreement',
+    'adminArchive/controlAuthority',
+    'archiveDeposit/processTransfer',
+    'archiveDeposit/transfer*',
+    'definitiveTransfer/*',
+    'delivery/*',
+    'destruction/destructionAuthorizationRequest',
+    'destruction/destructionHistory',
+    'destruction/destructionProcess',
+    'originatorAccess/*',
+    'restitution/*',
+    'adminFunc/contact',
+    'adminArchive/adminStorageRule'
 ]"
 
 ; Blacklist of user stories
@@ -368,9 +368,9 @@ blacklistUserStories = "[
 ;   'tokenLenght' Token size
 csrfWhiteList = "['user/login', 'user/password']"
 csrfConfig = '{
-             "cookieName" : "CSRF",
-             "tokenLength" : 32
-             }'
+    "cookieName" : "CSRF",
+    "tokenLength" : 32
+}'
 
 ; Available privileges for service account
 ; if 'transaction' parameter disable, uncomment the block 'servicePrivilege' below
@@ -509,37 +509,37 @@ chainWithTimestamp = false;
 ; if 'transaction' parameter disable, uncomment the block 'orgUnitRoles' below
 ; if 'transaction' parameter enable, comment the block 'orgUnitRoles' below
 orgUnitRoles = "{
-       'owner' : {
-       'code' : 'owner',
-       'description' : 'The system owner'
+    'owner' : {
+        'code' : 'owner',
+        'description' : 'The system owner'
    }
 }"
 
 ; Roles of organization unit
 ; if 'transaction' parameter disable, comment the block 'orgUnitRoles' below
 ; if 'transaction' parameter enable, uncomment the block 'orgUnitRoles' below
-;orgUnitRoles = "{
-;       'owner' : {
-;       'code' : 'owner',
-;       'description' : 'The system owner'
-;   },
-;       'archiver' : {
-;       'code' : 'archiver',
-;       'description' : 'Archival agency'
-;   },
-;       'controlAuthority' : {
-;       'code' : 'controlAuthority',
-;       'description' : 'Archive control authority'
-;   },
-;       'depositor' : {
-;       'code' : 'depositor',
-;       'description' : 'Archive depositor agency'
-;   },
-;       'originator' : {
-;       'code' : 'originator',
-;       'description' : 'Archive originating agency'
-;   }
-;}"
+; orgUnitRoles = "{
+;     'owner' : {
+;         'code' : 'owner',
+;         'description' : 'The system owner'
+;     },
+;     'archiver' : {
+;         'code' : 'archiver',
+;         'description' : 'Archival agency'
+;     },
+;     'controlAuthority' : {
+;         'code' : 'controlAuthority',
+;         'description' : 'Archive control authority'
+;     },
+;     'depositor' : {
+;         'code' : 'depositor',
+;         'description' : 'Archive depositor agency'
+;     },
+;     'originator' : {
+;         'code' : 'originator',
+;         'description' : 'Archive originating agency'
+;     }
+; }"
 
 
 [batchProcessing]
@@ -675,22 +675,22 @@ libreOfficeExecutable = "/usr/bin/libreoffice"
 
 ; Conversion paths
 conversionServices = "[
-     {
-         'serviceName'     : 'dependency/fileSystem/plugins/libreOffice',
-         'softwareName'    : 'LibreOffice',
-         'softwareVersion' : '5.4.2.0',
-         'inputFormats'    : ['fmt/412', 'fmt/291', 'fmt/293'],
-         'outputFormats'   : {
-             'fmt/95' : {
-                 'extension' : 'pdf',
-                 'filter' : 'writer_pdf_Export',
-                 'options': 'SelectPdfVersion=1'
-             },
-             'fmt/18' : {
-                 'extension' : 'pdf'
-             }
-         }
-     }
+    {
+        'serviceName'     : 'dependency/fileSystem/plugins/libreOffice',
+        'softwareName'    : 'LibreOffice',
+        'softwareVersion' : '5.4.2.0',
+        'inputFormats'    : ['fmt/412', 'fmt/291', 'fmt/293'],
+        'outputFormats'   : {
+            'fmt/95' : {
+                'extension' : 'pdf',
+                'filter' : 'writer_pdf_Export',
+                'options': 'SelectPdfVersion=1'
+            },
+            'fmt/18' : {
+                'extension' : 'pdf'
+            }
+        }
+    }
 ]"
 
 ; Path of zip executable (only for Windows)
@@ -702,10 +702,10 @@ layout                          = "dashboard/layout.html"
 layoutData                      = "presentation/dashboard/layout"
 
 plugins                         = "{
-  'dataTable'       : '\dependency\html\plugins\DataTable\DataTable',
-  'dataList'        : '\dependency\html\plugins\DataList\DataList',
-  'datePicker'      : '\dependency\html\plugins\datePicker\datePicker',
-  'dateRangePicker' : '\dependency\html\plugins\dateRangePicker\dateRangePicker'
+    'dataTable'       : '\dependency\html\plugins\DataTable\DataTable',
+    'dataList'        : '\dependency\html\plugins\DataList\DataList',
+    'datePicker'      : '\dependency\html\plugins\datePicker\datePicker',
+    'dateTimePicker'  : '\dependency\html\plugins\dateTimePicker\dateTimePicker'
 }"
 
 layoutReferer = "['/user/prompt', '/user/logout']"
@@ -724,11 +724,11 @@ timezone                        = Europe/Paris
 [dependency.logger]
 
 loggers = "{
-  'importCustomerRecords' : {
-      'level' : 'INFO',
-      'appenders' : [ 'importCustomerRecordsFile' ],
-      'additivity' : false
-  }
+    'importCustomerRecords' : {
+        'level' : 'INFO',
+        'appenders' : [ 'importCustomerRecordsFile' ],
+        'additivity' : false
+    }
 }"
 
 appenders = "{
