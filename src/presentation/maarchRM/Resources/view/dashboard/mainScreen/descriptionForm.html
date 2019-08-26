@@ -371,10 +371,12 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:MM:SS');
+                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:mm:ss');
+
                         return dateObject;
                     } else {
                         var dateObject = this.datepicker('getDate');
+
                         return $.datepicker.formatDate('yy-mm-dd', dateObject);
                     }
                 }
@@ -911,8 +913,8 @@ input:invalid {
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
                     data = data.replace('T', ' ');
+                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
-                    field.data('DateTimePicker').format('YYYY-MM-DD HH:MM:SS');
                 } else {
                     data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                     field.datepicker('setDate', data);
