@@ -912,7 +912,7 @@ input:invalid {
                 if (field.data('format') == 'datetime') {
                     data = data.replace('T', ' ');
                     field.data('DateTimePicker').date(data)
-                    field.data('DateTimePicker').format('YYYY-MM-DDTHH:MM:SS');
+                    field.data('DateTimePicker').format('YYYY-MM-DD HH:MM:SS');
                 } else {
                     data = new Date(data).toLocaleDateString().replace(/\//g, "-");
                     field.datepicker('setDate', data);
