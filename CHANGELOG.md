@@ -24,7 +24,6 @@
 
 - `Added` Dans la section "Journaux" des privilèges de rôle, les producteurs et utilisateurs non techniciens ont désormais le droit de télécharger les attestations de dépôt, de validation d'intégrité et de destruction des archives.
 - `Added` Possibilité d'activer les archives sans profil sur des profils de type dossier sans sous-profil déclaré.
-- `Added` Le producteur d'une archive peut désormais envoyer une demande de modification des métadonnées au service d'archive afin de corriger des erreurs ou d'ajouter des informations complémentaires.
 
 ### Métadonnées
 
@@ -56,7 +55,6 @@
 
 ### Correctifs
 
-- `Fixed` Possibilité de faire de la conversion de ressources lors du traitement d'une archive dont le bordereau est en SEDA 2.
 - `Fixed` Correction et/ou clarification de messages d'erreurs.
 - `Fixed` Gestion de l'utilisateur lors de la suppression de son organisation par défaut.
 - `Fixed` Gestion des accès aux journaux selon les droits fonctionnels de l'utilisateur.
