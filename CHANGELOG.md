@@ -4,61 +4,58 @@
 
 ### Sécurité
 
-- `Added` Ajout de 3 types d'utilisateurs : Administrateur général, administrateur fonctionnel et simple utilisateur.
-- `Added` Ajout d'un contrôle lors de la suppression d'un champ de données descriptives : si le champ est engagé dans un profil d'archive, la suppression sera bloquée.
+- `Added` Trois niveaux d'utilisateurs basés sur les exigences de la NF Z 42-020 : Administrateur Général, Administrateur Fonctionnel et Utilisateur Simple.
+- `Fixed` Attribution d'un "service par défaut à l'affichage" lors de la suppression du service par défaut d'un utilisateur.
 
-### Évènements
+### Journalisation
 
-- `Added` Possibilité de télécharger des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
-- `Fixed` Gestion des événements sur les ressources.
-- `Fixed` Affichage de toutes les métadonnées d'un évènement même lorsque celles-ci sont chaînées dans une journal.
+- `Added` Génération et téléchargement manuel des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
+- `Fixed` Le nombre d'évènements sur l'archive n'est plus multiplié par le nombre de ressources qu'elle contient.
+- `Fixed` L'accès aux évènements d'un journal chaîné est rétabli pour les utilisateurs non producteurs de cette archive de journal.
 
 ### Administration Technique
 
-- `Added` Si la directive "chainWithTimestamp" est passé à 'true' dans le fichier de configuration, un fichier d'horodatage sera généré par défaut lors de la génération du journal de l'application ou du cycle de vie.
-- `Added` Les référents d'archive peuvent désormais manipuler et afficher des champs de métadonnées complexes (tableau, objet) afin de gérer des modèles mixtes au sein du système.
-- `Added` Le nombre de résultats affiché est désormais paramétrable en éditant la valeur du champ 'maxResults'(sa valeur par défaut est de 200).
-- `Changed` Le niveau de service par défaut est désormais utilisé lorsqu'il n'est pas déclaré par l'accord de versement ou par référence directe dans les données de gestion du paquet.
+- `Added` Un fichier d'horodatage peut être généré par défaut lors du chaînage du journal, et associé à l'archive générée.
+- `Added` Le nombre de résultats affichés dans les écrans est désormais paramétrable.
+- `Changed` Si le niveau de service n'est pas déclaré par l'accord de versement ou par référence directe dans les données versées, c'est le niveau de service par défaut qui est désormais appliqué.
 
 ### Administration Fonctionnelle
 
-- `Added` Dans la section "Journaux" des privilèges de rôle, les producteurs et utilisateurs non techniciens ont désormais le droit de télécharger les attestations de dépôt, de validation d'intégrité et de destruction des archives.
-- `Added` Possibilité d'activer les archives sans profil sur des profils de type dossier sans sous-profil déclaré.
+- `Added` Le droit "Télécharger les attestations" est ajouté dans les privilèges de rôle.
+- `Added` L'option "Autoriser les archives sans profil" est activable sur des profils de type dossier sans sous-profil déclaré.
 
 ### Métadonnées
 
-- `Added` Possibilité d'ajout de schémas de description d'archive dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Des schémas de description d'archive peuvent être ajoutés dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Les champs de métadonnées complexes (tableaux, objets) peuvent être ajoutés à un profil, complétés lors d'un versement, modifiés pendant la conservation et consultés via les écrans.
 - `Added` Possibilité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
 - `Added` Possibilité d'intégration de référentiels externes (exemple : CSV, base de données...) pour les données descriptives.
-- `Added` Possibilité d'ajouter un fichier pour surcharger les propriétés d'un modèle de description d'un format d'échange (exemple : format d'échange SEDA 2 avec des champs complémentaires pour la modification).
-- `Added` Possibilité d'ajouter une métadonnée descriptive comprenant date et heure dans le dictionnaire de données (format livré par défaut : JJ-MM-AAAA HH:mm:ss).
-- `Added` Les référents d'archives voient apparaître les libellés des métadonnées descriptives qui sont référencées dans le dictionnaire.
-- `Fixed` Correction des métadonnées visibles sur les événements chainés.
+- `Added` Possibilité d'ajout d'un fichier permettant d'étendre le modèle de description d'un format d'échange (exemple : format d'échange SEDA 2.1 avec des champs complémentaires pour la modification).
+- `Added` La métadonnée descriptive de type date peut comprendre une date complétée d'une heure (format livré par défaut : JJ-MM-AAAA HH:mm:ss).
+- `Added` Les libellés des métadonnées descriptives qui sont référencées dans le dictionnaire sont affichés.
+- `Added` Ajout d'un contrôle lors de la suppression d'un champ de données descriptives : si le champ est engagé dans un profil d'archive, la suppression sera bloquée.
+
+### Gestion de l'archive
+
+- `Added` Une ressource peut être ajoutée ou supprimée au sein d'une archive conservée, et la modification est tracée dans le journal du cycle de vie.
+- `Added` Possibilité de versement par bordereaux XML/Medona.
+- `Added` Les bordereaux entrants comportent le type d'empreinte poussé dans le système.
+- `Changed` L'intégralité des échanges transactionnels MEDONA (extension thirdPartyArchiving) est désormais disponible dans le socle d'archivage. L'extension thirdPartyArchiving est obsolète.
 
 ### IHM
 
-- `Added` Ajout et suppression d'une seule ressource au sein d'une archive désormais possible.
-- `Changed` Ajout d'un message clair lorsqu'une recherche simple ou avancée ne donne aucun résultat.
+- `Changed` Ajout d'un message indiquant qu'une recherche simple ou avancée n'a retourné aucun résultat.
+- `Fixed` Correction et/ou clarification de messages d'erreurs.
+- `Fixed` Tri des résultats de recherche sur les champs date.
 
 ### Stockage / Conservation
 
-- `Added` Le responsable des archives du service a désormais la possibilité de convertir unitairement des documents dans la modale de détail d'une archive.
-- `Added` Possibilité de versement par bordereaux XML/Medona.
-- `Added` Les archivistes ont désormais la possibilité d'ajouter, de modifier ou de supprimer unitairement les ressources au sein d'une archive au statut 'Conservée'.
-- `Added` Les archivistes peuvent désormais visualiser dans les bordereaux entrants le type d'empreinte poussé dans le système.
-- `Added` Les administrateurs techniques peuvent désormais implanter des schémas de description en JSON afin de modifier la présentation des métadonnées déjà existantes du schéma déclaré dans la configuration.
-- `Changed` Modification du nombre de site de stockage minimum, il est desormais possible d'utiliser un unique site.
+- `Added` Possibilité de convertir unitairement des documents dans la modale de détail d'une archive.
+- `Changed` Le nombre de sites de stockage minimum est ramené à 1.
 
 ### Modèle conceptuel
 
-- `Added` Ajout de plusieurs indexs afin d'améliorer les performances de l'application.
-
-### Correctifs
-
-- `Fixed` Correction et/ou clarification de messages d'erreurs.
-- `Fixed` Gestion de l'utilisateur lors de la suppression de son organisation par défaut.
-- `Fixed` Gestion des accès aux journaux selon les droits fonctionnels de l'utilisateur.
-- `Fixed` Tri des résultats de recherche sur des champs date.
+- `Added` Ajout de plusieurs index afin d'améliorer les performances de l'application.
 
 ## Version 2.4.4
 
