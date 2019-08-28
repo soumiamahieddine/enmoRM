@@ -8,7 +8,7 @@ ALTER TABLE "auth"."account" ADD COLUMN "isAdmin" boolean;
 ALTER TABLE "recordsManagement"."descriptionField" ADD COLUMN "facets" jsonb;
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
- ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt d''une ressource dans l''archive %6$s');
+('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt d''une ressource dans l''archive %6$s');
 
 INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
 ('organization/counting', 'orgName ownerOrgId', FALSE, 'Compter le nombre d''objet numérique dans l''activité %6$s');
@@ -110,12 +110,11 @@ CREATE TABLE "medona"."message"
         OIDS=FALSE
     );
 
-
 -- Table: medona."messageComment"
 
 -- DROP TABLE medona."messageComment";
 
-CREATE TABLE medona."messageComment"
+CREATE TABLE "medona"."messageComment"
 (
     "messageId" text,
     "comment" text,
@@ -130,7 +129,7 @@ CREATE TABLE medona."messageComment"
         OIDS=FALSE
     );
 
-CREATE TABLE medona."unitIdentifier"
+CREATE TABLE "medona"."unitIdentifier"
 (
     "messageId" text NOT NULL,
     "objectClass" text NOT NULL,
@@ -141,7 +140,7 @@ CREATE TABLE medona."unitIdentifier"
     UNIQUE ("messageId", "objectClass", "objectId")
 );
 
-CREATE TABLE medona."controlAuthority"
+CREATE TABLE "medona"."controlAuthority"
 (
     "originatorOrgUnitId" text NOT NULL,
     "controlAuthorityOrgUnitId" text NOT NULL,
@@ -155,7 +154,7 @@ CREATE INDEX "audit_event_eventDate_idx" ON "audit"."event" USING btree ("eventD
 
 CREATE INDEX "digitalResource_digitalResource_archiveId_idx" ON "digitalResource"."digitalResource" USING btree ("archiveId");
 
-CREATE INDEX "digitalResource_digitalResource_relatedResId__relationshipType_idx" ON "digitalResource"."digitalResource" USING btree ("relatedResId", "relationshipType");
+CREATE INDEX ON "digitalResource"."digitalResource" USING btree ("relatedResId", "relationshipType");
 
 CREATE INDEX "batchProcessing_logScheduling_schedulingId_idx" ON "batchProcessing"."logScheduling" USING btree ("schedulingId");
 
