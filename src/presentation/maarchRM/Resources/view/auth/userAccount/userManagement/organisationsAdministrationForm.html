@@ -1,7 +1,9 @@
 <div class="form-group">
     <div class="form-group">
         <div id="selectOrgGroup" class="input-group col-md-12">
-            <select id="orgSelect" class="form-control"></select>
+            <select id="orgSelect" class="form-control">
+                <option></option>
+            </select>
         </div>
         <div id="typeheadOrgGroup" class="input-group">
             <input type="text" class="form-control" placeholder="Service" id="orgTypeahead"/>
@@ -26,6 +28,7 @@
         </div>
     </div>
 </div>
+<span class="hide" id="ownerOrgId"><?merge user.ownerOrgId ?></span>
 <span class="hide" id="noServiceFound">No service found</span>
 <span class="hide" id="editMyProfile">true</span>
 
@@ -102,11 +105,16 @@
 
     function addSelectOrgs(org){
         var orgSelect = $('#orgSelect');
+        var ownerOrgId = $('#ownerOrgId').text();
 
         var option = $('<option/>')
             .val(org.orgId)
             .text(org.displayName)
             .appendTo(orgSelect);
+            
+        if (ownerOrgId == org.orgId) {
+            option.prop('selected', true);
+        }
     }
 
     function selectOrTypeheadOrg(){

@@ -46,7 +46,7 @@
                             <input type="checkbox" data-size="small" class="form-control" data-on="Oui" data-off="Non" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="adminRights"">
                         <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
                         <div>
                             <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
@@ -452,6 +452,7 @@
         } else if (whatAmI == "adminF") {
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().addClass('disabled');
+                $("#adminRights").hide();
         } else if (whatAmI == "oldUser") {
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().removeClass('disabled');

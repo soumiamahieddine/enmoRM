@@ -64,9 +64,9 @@
                 <?merge user.accountId.bool()?>
                 <li><a href="#adminTab" data-toggle="tab">Administration</a></li>
                 <?merge whatAmI.ifne('adminG') ?>
-                <li><a href="#orgTab" data-toggle="tab">Organization units<span style="color : red">*</span></a></li>
+                <li id="orgNav"><a href="#orgTab" data-toggle="tab">Organization units<span style="color : red">*</span></a></li>
                 <?merge whatAmI.ifeq('adminG') ?>
-                <li><a href="#orgTab" data-toggle="tab">Organization<span style="color : red">*</span></a></li>
+                <li id="orgNav"><a href="#orgTab" data-toggle="tab">Organization<span style="color : red">*</span></a></li>
             </ul>
             <div class="panel panel-primary" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: none;">
                 <div class="panel-body clearfix">
@@ -101,6 +101,7 @@
                 </div>
             </div>
         </div>
+        <span class="hide" id="securityLevel"><?merge user.securityLevel ?></span>
         <span class="hide" id="whatAmI"><?merge whatAmI ?></span>
         <span class="hide" id="emptyOrganization_text">No organization chosen</span>
         <span class="hide" id="badPasswordVerification_text">Passwords does not match</span>
@@ -124,6 +125,8 @@
         var user = serialize();
         let error = false;
 
+        var securityLevel = $("#securityLevel").text();
+
         if (user.accountName == "" || user.password == "" || user.verification == "" || user.name == "" || user.emailAddress == "" || user.displayName == "") {
             gritter.show($('#empty_text').text(), false);
             return;
@@ -140,6 +143,11 @@
         }
 
         if (user.organizations.length == 0 && user.isAdmin == false) {
+            gritter.show($('#emptyOrganization_text').text(), false);
+            error = true;
+        }
+        
+        if (securityLevel != "gen_admin" && (user.ownerOrgId == "" || user.ownerOrgId == null)) {
             gritter.show($('#emptyOrganization_text').text(), false);
             error = true;
         }
@@ -184,6 +192,8 @@
             modificationRight : $('#editMyProfile').html()
         };
 
+        user_security = $("#securityLevel").text();
+
         if($('#adminUser').prop('checked')) {
             userAccount['isAdmin'] = true;
         } else {
@@ -204,8 +214,11 @@
         })
 
         if (userAccount['isAdmin'] == true) {
-            userAccount.ownerOrgId = $("#orgSelect").val();
             userAccount.organizations = [];
+            userAccount.ownerOrgId = $("#orgSelect").val();
+            if (user_security == "gen_admin") {
+                userAccount.ownerOrgId = null;
+            }
         } else {
             userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerorgid');
         }
@@ -232,16 +245,26 @@
 
     // manage Adminbutton's attributes according to UserType
     function setAdminButton(whatAmI) {
-        if(whatAmI == "adminG") {
+        user_security = ($("#securityLevel").text());
+        if (user_security == "fonc_admin") {
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+        } else if (user_security == "gen_admin"){
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+            $('#orgNav').remove();
+        } else {
+            if(whatAmI == "adminG") {
                 $('#adminUser').bootstrapToggle("on");
                 $('#adminUser').parent().addClass('disabled');
-        } else if (whatAmI == "adminF") {
+            } else if (whatAmI == "adminF") {
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().addClass('disabled');
                 $("#adminRights").hide();
-        } else if (whatAmI == "oldUser") {
+            } else if (whatAmI == "oldUser") {
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().removeClass('disabled');
+            }
         }
     }
 
