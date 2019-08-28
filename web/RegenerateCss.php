@@ -1,25 +1,26 @@
 <?php
 
-if(isset($_POST['regenerate'])) {
+if (isset($_POST['regenerate'])) {
     $fileName = $_POST['file'];
-    require "../dependency/html/plugins/lessphp/lessc.inc.php";
-    $less = new lessc;
-    $css = $less->compileFile("public/less/dashboard/style.less");
-    file_put_contents("public/css/$fileName", $css);
-    
+
+    if (preg_match('/^([A-z0-9]+\.css)$/', $fileName)) {
+        require "../dependency/html/plugins/lessphp/lessc.inc.php";
+        $less = new lessc;
+        $css = $less->compileFile("public/less/dashboard/style.less");
+        file_put_contents("public/css/$fileName", $css);
+    }
     exit;
 }
-
 ?>
 
 <html>
     <body>
-    <div id="filename_form" style="text-align: center; margin-top:15%">
-        <h1>File name</h1>
-        <input id="filename" type="text">
-        <button onclick="generate()">Send</button>
-        <span style="color: red; display: none"> You can't create style.css</span>
-    </div>
+        <div id="filename_form" style="text-align: center; margin-top:15%">
+            <h1>File name</h1>
+            <input id="filename" type="text">
+            <button onclick="generate()">Send</button>
+            <span style="color: red; display: none"> You can't create style.css</span>
+        </div>
         <h1 id="title" style="text-align: center; margin-top:15%;display: none">
             <span>Css regeneration processing...</span>
             <br/>
@@ -36,8 +37,15 @@ if(isset($_POST['regenerate'])) {
         <script>
             function generate() {
 
-                if(document.getElementById("filename").value){
+                if (document.getElementById("filename").value) {
                     var file =  document.getElementById('filename').value;
+                    document.getElementById("description").innerHTML = '';
+
+                    var regex = /^([A-z0-9]+\.css)$/g;
+                    if (!file.match(regex)) {
+                        document.getElementById("description").innerHTML = "The filename must not contain a path and its extension must be 'css'.";
+                        return;
+                    }
 
                     if(file != "style.css") {
 
