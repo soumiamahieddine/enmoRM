@@ -253,6 +253,9 @@
             $('#adminUser').bootstrapToggle("on");
             $('#adminUser').parent().addClass('disabled');
             $('#orgNav').remove();
+        } else if (user_security == "user"){
+            $('#adminUser').bootstrapToggle("off");
+            $('#adminUser').parent().addClass('disabled');
         } else {
             if(whatAmI == "adminG") {
                 $('#adminUser').bootstrapToggle("on");
