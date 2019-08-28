@@ -146,7 +146,7 @@ class logger
                 switch (true) {
                     // Avoid service path variables in input
                     case array_key_exists($name, $this->servicePath->variables):
-                        continue;
+                        continue 2;
 
                     case $name == 'password':
                     case $name == 'oldPassword':
