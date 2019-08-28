@@ -80,7 +80,7 @@ class serviceAccount
 
         switch ($account->getSecurityLevel()) {
             case $account::SECLEVEL_GENADMIN:
-                $queryAssert[] = "((isAdmin='TRUE' AND ownerOrgId!=null) OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
                 break;
 
             case $account::SECLEVEL_FONCADMIN:
@@ -234,7 +234,6 @@ class serviceAccount
         $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 
-
         foreach ($servicePrivilegesTmp as $value) {
             $servicePrivilege = \laabs::newInstance('auth/servicePrivilege');
             $servicePrivilege->serviceURI = $value['serviceURI'];
@@ -250,6 +249,8 @@ class serviceAccount
             'auth/servicePrivilege',
             "accountId='$serviceAccountId'"
         );
+
+        $serviceAccount->securityLevel = $serviceAccount->getSecurityLevel();
 
         return $serviceAccount;
     }

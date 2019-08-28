@@ -31,7 +31,9 @@
                                 </select>
                             </div>
                             <div id="selectOrgGroup" class="input-group col-md-12">
-                                <select id="orgSelect" class="form-control"></select>
+                                <select id="orgSelect" class="form-control">
+                                    <option></option>
+                                </select>
                             </div>
                         </div>
                         <?merge serviceAccount ?>
@@ -157,10 +159,12 @@
     </div>
 </div>
 
-
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <div style="display:none">
-    <span class="hide" id="whatAmI"><?merge whatAmI ?></span>
+    <span id="securityLevel"><?merge serviceAccount.securityLevel ?></span>
+    <span id="isAdmin"><?merge serviceAccount.isAdmin ?></span>
+    <span id="ownerOrgId"><?merge serviceAccount.ownerOrgId ?></span>
+    <span id="whatAmI"><?merge whatAmI ?></span>
     <span id="empty_text">The fields with a star are required.</span>
     <span id="whiteSpace_text">The fields contain white spaces.</span>
     <span id="nullValue_text">The fields is empty.</span>
@@ -425,11 +429,16 @@
 
     function addSelectOrgs(org){
         var orgSelect = $('#orgSelect');
+        var ownerOrgId = $('#ownerOrgId').text();
 
         var option = $('<option/>')
             .val(org.orgId)
             .text(org.displayName)
             .appendTo(orgSelect);
+        
+        if (ownerOrgId == org.orgId) {
+            option.prop('selected', true);
+        }
     }
 
     function selectOrTypeheadOrg(){
@@ -446,16 +455,28 @@
 
     // manage Adminbutton's attributes according to UserType
     function setAdminButton(whatAmI) {
-        if(whatAmI == "adminG") {
-                $('#adminUser').bootstrapToggle('on');
-                $('#adminUser').parent().addClass('disabled');
-        } else if (whatAmI == "adminF") {
-                $('#adminUser').bootstrapToggle("off");
-                $('#adminUser').parent().addClass('disabled');
-                $("#adminRights").hide();
-        } else if (whatAmI == "oldUser") {
-                $('#adminUser').bootstrapToggle("off");
-                $('#adminUser').parent().removeClass('disabled');
+        user_security = ($("#securityLevel").text());
+        if (user_security == "fonc_admin") {
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+        } else if (user_security == "gen_admin"){
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+        } else if (user_security == "user"){
+            $('#adminUser').bootstrapToggle("off");
+            $('#adminUser').parent().addClass('disabled');
+        } else {
+            if(whatAmI == "adminG") {
+                    $('#adminUser').bootstrapToggle('on');
+                    $('#adminUser').parent().addClass('disabled');
+            } else if (whatAmI == "adminF") {
+                    $('#adminUser').bootstrapToggle("off");
+                    $('#adminUser').parent().addClass('disabled');
+                    $("#adminRights").hide();
+            } else if (whatAmI == "oldUser") {
+                    $('#adminUser').bootstrapToggle("off");
+                    $('#adminUser').parent().removeClass('disabled');
+            }
         }
     }
 
