@@ -396,8 +396,22 @@ class userAccount
             }
         }
 
-
         $this->sdoFactory->update($userAccount, "auth/account");
+
+        return $userAccount;
+    }
+
+    /**
+     * Modify userAccount information
+     * @param auth/ownAccountUpdate $userAccount The user object
+     *
+     * @throws \bundle\auth\Exception\unknownUserException
+     *
+     * @return boolean The result of the request
+     */
+    public function updateOwnUserInformation($userAccount)
+    {
+        $this->sdoFactory->update($userAccount, "auth/account", \laabs::getToken('AUTH')->accountId);
 
         return $userAccount;
     }
