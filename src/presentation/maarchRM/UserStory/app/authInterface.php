@@ -44,15 +44,6 @@ interface authInterface
     public function updateMyprofile($userAccount);
 
     /**
-     * Allow to modify user information
-     * @param auth/roleMember[] $roleMembers Array of role member object
-     *
-     * @uses auth/userAccount/update_userAccountId_
-     * @return auth/user/updateUserInformation
-     */
-    public function updateUseraccount_userAccountId_($roleMembers);
-
-    /**
      * Change a user password
      * @param string $newPassword The new password
      * @param string $oldPassword The old password
