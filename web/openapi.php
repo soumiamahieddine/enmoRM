@@ -200,13 +200,16 @@ class Openapi
 
             if (!$method || (isset($_GET['method']) && strtolower($_GET['method']) != $method)) {
                 continue;
-            }           
-
-            if (!isset($this->paths['/'.$reflectionPath->path])) {
-                $this->paths['/'.$reflectionPath->path] = [];
             }
 
-            $this->paths['/'.$reflectionPath->path][$method] = $this->getOperation($reflectionPath);
+            //$pathId = '/'.preg_replace('/\{[A-Za-z]+\}/', '{???}', $reflectionPath->path);
+            $pathId = '/'.$reflectionPath->path;
+            
+            if (!isset($this->paths[$pathId])) {
+                $this->paths[$pathId] = [];
+            }
+
+            $this->paths[$pathId][$method] = $this->getOperation($reflectionPath);
         }
     }
 
@@ -223,11 +226,10 @@ class Openapi
         $operation->operationId = $reflectionPath->domain.'/'.$reflectionPath->interface.'/'.$reflectionPath->name;
         
         $operation->parameters = $this->getOperationParameters($reflectionPath);
-
-        $operation->responses = [];
-        if ($response = $this->getOperationResponse($reflectionPath)) {
-            $operation->responses['200'] = $response;
-        } else {
+       
+        $operation->responses = $this->getOperationResponses($reflectionPath);
+        
+        if (empty($operation->responses)) {
             $operation->responses['default'] = $response = new \StdClass();
             $response->description = "No documentation available";
         }
@@ -321,13 +323,13 @@ class Openapi
     protected function getBodyDefinition($reflectionParameters)
     {
         $parameter = new \StdClass();
-        $parameter->name = 'entity';
+        $parameter->name = 'payload';
         $parameter->in = 'body';
         $parameter->required = true;
 
         $parameter->schema = $schema = new \StdClass();
             
-        $schema->type = 'object';    
+        $schema->type = 'object';
         
         foreach ($reflectionParameters as $reflectionParameter) {
             if (!$reflectionParameter->isOptional() && !$reflectionParameter->isDefaultValueAvailable()) {
@@ -353,8 +355,10 @@ class Openapi
     }
 
 
-    protected function getOperationResponse($reflectionPath)
+    protected function getOperationResponses($reflectionPath)
     {
+        $responses = [];
+
         try {
             if (isset($reflectionPath->action)) {
                 $actionRouter = new \core\Route\ActionRouter($reflectionPath->action);
@@ -366,20 +370,39 @@ class Openapi
 
             if ($returnType = $reflectionAction->getReturnType()) {
                 $response = new \StdClass();
-
-                $response->description = $reflectionAction->description;
+                $this->getDescription($reflectionAction, $response);
                 
                 $response->schema = new \StdClass();
-
                 $this->getDataType($returnType, $response->schema);
 
                 if (count(get_object_vars($response->schema))) {
-                    return $response;
+                    $responses['200'] = $response;
+                }
+            }
+
+            if (!empty($thrownExceptions = $reflectionAction->getThrownExceptions())) {
+                foreach ($thrownExceptions as $thrownException) {
+                    if (strpos($thrownException, LAABS_URI_SEPARATOR) !== false) {
+                        $bundleName = strtok($thrownException, LAABS_URI_SEPARATOR);
+                        $exceptionName = strtok(LAABS_URI_SEPARATOR);
+                        $reflectionException = \laabs::bundle($bundleName)->getException($exceptionName);
+                        if ($code  = $reflectionException->getCode()) {
+                            $response = new \StdClass();
+                            $this->getDescription($reflectionException, $response);
+                            
+                            $response->schema = new \StdClass();
+                            $response->schema->type = 'object';
+                            $responses[$code] = $response;
+                        }
+                    } else {
+
+                    }
                 }
             }
         } catch (\Exception $e) {
-
         }
+
+        return $responses;
     }
 
     protected function getDataType($typename, $schema)
@@ -402,7 +425,7 @@ class Openapi
             }
 
             return;
-        } 
+        }
 
         $this->getSimpleType($typename, $schema);
     }
@@ -457,9 +480,17 @@ class Openapi
                 break;
 
             case 'array':
+                $schema->type = 'array';
+                $schema->items = new \StdClass();
+                $schema->items->type = 'string';
+                break;
+
             case 'string':
+                $schema->type = 'string';
+                break;
+
             case 'object':
-                $schema->type = $typename;
+                $schema->type = 'object';
                 break;
 
             default:
