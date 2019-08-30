@@ -155,6 +155,27 @@ class Openapi
 
         foreach ($this->definitions as $typename => $definition) {
             if (!$definition) {
+                try {
+                    $definition = $this->getDefinition($typename);
+
+                    list ($bundle, $class) = explode('/', $typename);
+
+                    if (!isset($this->definitions[$bundle])) {
+                        $this->definitions[$bundle] = new \StdClass();
+
+                        $this->definitions[$bundle]->type = 'object';
+                        $this->definitions[$bundle]->properties = [];
+                    }
+
+                    $this->definitions[$bundle]->properties[$class] = $definition;
+                } catch (\exception $e) {
+
+                }
+            }
+        }
+
+        foreach ($this->definitions as $typename => $definition) {
+            if (!$definition) {
                 unset($this->definitions[$typename]);
             }
         }
