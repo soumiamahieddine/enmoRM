@@ -132,7 +132,7 @@ interface organizationInterface
      *
      * @action organization/organization/addServicePosition
      */
-    public function createServiceposition_orgId__userAccountId_();
+    public function createServiceposition_orgId__serviceAccountId_();
 
     /**
      * Set default user position for an user
@@ -293,14 +293,6 @@ interface organizationInterface
      * @action organization/organization/getOrgUnitArchivalProfiles
      */
     public function readOrgunitprofiles($orgRegNumber, $originatorAccess=null);
-
-    /**
-     * Get the user postions by accountId
-     *
-     * @return array
-     * @action organization/organization/readUserOrgs
-     */
-    public function readUserpositions_accountId_();
 
     /**
      * List of organizations

@@ -406,11 +406,11 @@ class userAccount
      * get user account information
      * @param id $userAccountId The user account identifier
      *
-     * @return auth/accountInformation $userAccount User account information object
+     * @return auth/userAccount $userAccount User account information object
      */
     public function getUserAccountInformation($userAccountId)
     {
-        $userAccount = $this->sdoFactory->read("auth/accountInformation", $userAccountId);
+        $userAccount = $this->sdoFactory->read("auth/userAccount", $userAccountId);
 
         return $userAccount;
     }

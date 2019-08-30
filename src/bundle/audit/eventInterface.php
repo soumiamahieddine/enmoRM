@@ -27,7 +27,7 @@ interface eventInterface
     /**
      * Create new audit events
      * @param string $path      The path of called service
-     * @param array  $variables The path variables
+     * @param object  $variables The path variables
      * @param mixed  $input     The input data
      * @param mixed  $output    The output data
      * @param bool   $status    The result of action: success or failure (business exception)
@@ -35,7 +35,7 @@ interface eventInterface
      *
      * @action audit/event/add
      */
-    public function create($path, array $variables=null, $input=null, $output=null, $status=false, $info=null);
+    public function create($path, array $variables = null, $input = null, $output = null, $status = false, $info =null);
 
     /**
      * Get search form for entries
@@ -46,11 +46,11 @@ interface eventInterface
      * @param string    $event     Variables
      * @param string    $term      Term to search
      * @param string    $wording   Wording to search
-     * 
+     *
      * @action audit/event/search
      */
     public function readSearch($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null, $wording = null);
-    
+
     /**
      * Get search form for entries
      *

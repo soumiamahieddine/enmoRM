@@ -1142,7 +1142,7 @@ msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur"
 msgid "organization/organization/createUserposition_orgId__userAccountId_"
 msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur et de son identifiant"
 
-msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgid "organization/organization/createServiceposition_orgId__serviceAccountId_"
 msgstr "Création d'une position d'un utilisateur dans une organisation"
 
 msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"

@@ -904,7 +904,7 @@ msgstr "Read organization by user position"
 msgid "organization/organization/createUserposition_orgId__userAccountId_"
 msgstr "Read organization by user position and user id"
 
-msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgid "organization/organization/createServiceposition_orgId__serviceAccountId_"
 msgstr "Create user position in organization"
 
 msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"

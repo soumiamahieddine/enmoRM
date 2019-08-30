@@ -40,7 +40,7 @@ class archivalAgreement
     /**
      * List archival agreements
      *
-     * @return recordManagement/archivalAgreement[] The list of archival agreements
+     * @return medona/archivalAgreement[] The list of archival agreements
      */
     public function index()
     {
@@ -50,7 +50,7 @@ class archivalAgreement
     /**
      * New empty archival agreement with default values
      *
-     * @return medona/archivalAgreementId The archival profile object
+     * @return medona/archivalAgreement The archival profile object
      */
     public function newAgreement()
     {
@@ -61,7 +61,7 @@ class archivalAgreement
      * Edit an archival agreement
      * @param string $archivalAgreementId The archival agreement's identifier
      *
-     * @return medona/archivalAgreementId The profile object
+     * @return medona/archivalAgreement The profile object
      */
     public function edit($archivalAgreementId)
     {
@@ -156,7 +156,7 @@ class archivalAgreement
 
         return $archivalAgreements;
     }
-    
+
     /**
      * Retrieve the agreement object by serviceL level
      * @param string $serviceLevelReference The service level reference
@@ -169,14 +169,14 @@ class archivalAgreement
         if (!$archivalAgreements) {
             return null;
         }
-        
+
         $orgController =  \laabs::newController("organization/organization");
-        
+
         foreach ($archivalAgreements as $archivalAgreement) {
             $archivalAgreement->archiverOrg = $orgController->getOrgByRegNumber($archivalAgreement->archiverOrgRegNumber);
             $archivalAgreement->depositorOrg = $orgController->getOrgByRegNumber($archivalAgreement->depositorOrgRegNumber);
         }
-        
+
         return $archivalAgreements;
     }
 
