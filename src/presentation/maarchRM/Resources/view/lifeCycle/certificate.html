@@ -122,18 +122,22 @@
 						<th><?merge event.orgUnitRegNumber.translatedKey ?></th>
 						<td><?merge event.orgUnitRegNumber.value ?></td>
 					</tr>
+					<?merge event.resId.value.bool() ?>
 					<tr>
 						<th><?merge event.resId.translatedKey ?></th>
 						<td><?merge event.resId.value ?></td>
 					</tr>
+					<?merge event.hashAlgorithm.value.bool() ?>
 					<tr>
 						<th><?merge event.hashAlgorithm.translatedKey ?></th>
 						<td><?merge event.hashAlgorithm.value ?></td>
 					</tr>
+					<?merge event.hash.value.bool() ?>
 					<tr>
 						<th><?merge event.hash.translatedKey ?></th>
 						<td><?merge event.hash.value ?></td>
 					</tr>
+					<?merge event.address.value.bool() ?>
 					<tr>
 						<th><?merge event.address.translatedKey ?></th>
 						<td><?merge event.address.value ?></td>

@@ -260,21 +260,21 @@ class journal
     public function getEventFromJournal($eventId)
     {
         if (is_scalar($eventId) || get_class($eventId) == 'core\Type\Id') {
-            $event = $this->sdoFactory->read('lifeCycle/event', $eventId);
+            $eventFromBase = $this->sdoFactory->read('lifeCycle/event', $eventId);
         } else {
-            $event = $eventId;
+            $eventFromBase = $eventId;
         }
 
         $logController = \laabs::newController('recordsManagement/log');
 
         // Read journal file
-        $journalReference = $logController->getByDate('lifeCycle', $event->timestamp);
+        $journalReference = $logController->getByDate('lifeCycle', $eventFromBase->timestamp);
 
         if ($journalReference) {
             $this->openJournal($journalReference->archiveId);
 
             // Get the eventId position on the journal file
-            $this->currentOffset = strpos($this->currentJournalFile, (string) $event->eventId);
+            $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
 
             // Place cursor to the begin of line
             if ($this->currentOffset) {
@@ -284,13 +284,21 @@ class journal
 
                 // Get the event
                 $event = $this->getEventFromLine($eventLine);
+
+                // Retrieves information that is not in the csv file from database
+                $event->instanceName = $eventFromBase->instanceName;
+                $event->orgRegNumber = $eventFromBase->orgRegNumber;
+                $event->orgUnitRegNumber = $eventFromBase->orgUnitRegNumber;
+
             } else {
+                $event = $eventFromBase;
                 return $event;
 
                 //throw \laabs::newException("lifeCycle/journalException", "Event can't be found.");
             }
         } else {
-             $this->decodeEventFormat($event);
+            $event = $eventFromBase;
+            $this->decodeEventFormat($event);
         }
 
         $this->currentEvent = $event;
