@@ -4,6 +4,8 @@
 
 ### Sécurité
 
+- `Fixed` Correction de la fonction permettant d'intégrer un fichier css personnalisé pour focer à faire référence à fichier CSS et empêcher la remontée de repertoire grâce au chemin de celui-ci.  (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour la communication de l'exploit).
+- `Fixed` Déplacement de la route permettant la modification des utilisateurs pour éviter l'élévation de privilège lorsqu'un utlisateur n'a pas les droits adéquats. (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour la communication de l'exploit).
 - `Added` Trois niveaux d'utilisateurs basés sur les exigences de la NF Z 42-020 : Administrateur Général, Administrateur Fonctionnel et Utilisateur Simple.
 - `Fixed` Attribution d'un "service par défaut à l'affichage" lors de la suppression du service par défaut d'un utilisateur.
 
