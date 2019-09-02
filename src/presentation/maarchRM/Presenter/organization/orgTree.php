@@ -79,6 +79,12 @@ class orgTree
 
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        
+        $manageUserInOrg = true;
+
+        if ($user->getSecurityLevel() == $user::SECLEVEL_USER) {
+            $manageUserInOrg = false;
+        }
 
         if (\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes) {
             $addOrganizationRight = in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes);
@@ -107,6 +113,7 @@ class orgTree
         $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->setSource("serviceLevel", $serviceLevel);
         $this->view->setSource("addOrganizationRight", $addOrganizationRight);
+        $this->view->setSource("manageUserInOrg", $manageUserInOrg);
 
         $profileType = false;
         if (isset(\laabs::configuration('recordsManagement')['archivalProfileType'])) {
