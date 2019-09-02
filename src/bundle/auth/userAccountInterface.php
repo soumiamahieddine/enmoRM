@@ -85,29 +85,40 @@ interface userAccountInterface
     /**
      * Prepare a user Account object for update
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/edit
      *
      */
     public function read_userAccountId_();
-    
+
     /**
      * Prepare a user Account object for update
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/editProfile
      *
      */
     public function readProfile();
-    
+
     /**
      * Update my profile
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/updateUserInformation
      *
      */
     public function updateProfile($userAccount);
+
+    /**
+     * Update my profile
+     *
+     * @param auth/ownAccountUpdate $userAccount The modified user account
+     * @action auth/userAccount/updateOwnUserInformation
+     *
+     * @return auth/userAccount
+     *
+     */
+    public function updateMyProfile($userAccount);
 
     /**
      * Get the user Account personal information
@@ -144,7 +155,7 @@ interface userAccountInterface
 
      /**
      * Get the Security Level
-     * 
+     *
      * @action auth/userAccount/getSecurityLevel
      */
     public function readSecurityLevel();
