@@ -61,7 +61,7 @@ class welcome
         $accountToken = \laabs::getToken('AUTH');
         $userAccountController = \laabs::newController('auth/userAccount');
         $user = $userAccountController->get($accountToken->accountId);
-        
+
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
@@ -103,17 +103,12 @@ class welcome
         }
 
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        $this->view->translate();
+
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-
-
-        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
-            $this->view->translate($dateRangePickerInput);
-        }
 
         $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
         $dateTimePickerPlugin->translate();
@@ -126,7 +121,7 @@ class welcome
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
-
+        $this->view->translate();
         return $this->view->saveHtml();
     }
 
@@ -232,7 +227,7 @@ class welcome
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
             $this->json->message = $this->view->translator->getText($this->json->message);
-            
+
         } else {
             $this->json->message = '%1$s archives were moved.';
             $this->json->message = $this->view->translator->getText($this->json->message);
@@ -291,7 +286,7 @@ class welcome
         }
 
         $orgUnit->archivalProfiles = array_values($orgUnit->archivalProfiles);
-        
+
         // Get scheme for array of objects, limit to one level for scheme recusions
         foreach ($orgUnit->archivalProfiles as $archivalProfile) {
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
