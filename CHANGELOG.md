@@ -59,6 +59,10 @@
 
 - `Added` Ajout de plusieurs index afin d'améliorer les performances de l'application.
 
+### Correctifs
+
+- `Fixed` Correction des erreurs lors de la génération de la documentation openapi
+
 ## Version 2.4.4
 
 ### IHM
