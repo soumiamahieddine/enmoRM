@@ -300,7 +300,7 @@ interface organizationInterface
      * @return array
      * @action organization/organization/readUserOrgs
      */
-    public function readUserpositions_accountId_();
+    public function readAccountpositions_accountId_();
 
     /**
      * List of organizations

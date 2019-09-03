@@ -133,7 +133,7 @@ class user
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
         $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);
-        $userPositions = \laabs::callService("organization/organization/readUserpositions_accountId_", $user->accountId);
+        $userPositions = \laabs::callService("organization/organization/readAccountpositions_accountId_", $user->accountId);
 
         $view->setSource('userPositions', $userPositions);
 
