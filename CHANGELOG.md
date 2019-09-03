@@ -4,14 +4,14 @@
 
 ### Sécurité
 
-- `Fixed` Correction de la fonction permettant d'intégrer un fichier css personnalisé pour focer à faire référence à fichier CSS et empêcher la remontée de repertoire grâce au chemin de celui-ci.  (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour la communication de l'exploit).
-- `Fixed` Déplacement de la route permettant la modification des utilisateurs pour éviter l'élévation de privilège lorsqu'un utlisateur n'a pas les droits adéquats. (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour la communication de l'exploit).
+- `Fixed` Correction de la fonction permettant d'intégrer un fichier css personnalisé pour forcer à faire référence au fichier CSS et empêcher la remontée de répertoire grâce au chemin de celui-ci.  (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour le signalement et l'analyse).
+- `Fixed` Déplacement de la route permettant la modification des utilisateurs pour éviter l'élévation de privilèges lorsqu'un utlisateur n'a pas les droits adéquats. (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT*  pour le signalement et l'analyse).
 - `Added` Trois niveaux d'utilisateurs basés sur les exigences de la NF Z 42-020 : Administrateur Général, Administrateur Fonctionnel et Utilisateur Simple.
 - `Fixed` Attribution d'un "service par défaut à l'affichage" lors de la suppression du service par défaut d'un utilisateur.
 
 ### Open API
 
-- `Added` Adjout d'un sript de génération de documention OpenAPI 2.0 exportable dans Swagger.
+- `Added` Ajout d'un script de génération de documentation OpenAPI 2.0 exportable dans Swagger.
 
 ### Journalisation
 
@@ -46,11 +46,10 @@
 - `Added` Une ressource peut être ajoutée ou supprimée au sein d'une archive conservée, et la modification est tracée dans le journal du cycle de vie.
 - `Added` Possibilité de versement par bordereaux XML/Medona.
 - `Added` Les bordereaux entrants comportent le type d'empreinte poussé dans le système.
-- `Changed` L'intégralité des échanges transactionnels MEDONA (extension thirdPartyArchiving) est désormais disponible dans le socle d'archivage. L'extension thirdPartyArchiving est obsolète.
+- `Changed` L'intégralité des échanges transactionnels MEDONA (extension thirdPartyArchiving) est désormais disponible dans le socle d'archivage. **L'extension thirdPartyArchiving est abandonnée à partir de cette version 2.5**.
 
 ### IHM
 
-- `Changed` Ajout d'un message indiquant qu'une recherche simple ou avancée n'a retourné aucun résultat.
 - `Fixed` Correction et/ou clarification de messages d'erreurs.
 - `Fixed` Tri des résultats de recherche sur les champs date.
 
