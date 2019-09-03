@@ -9,6 +9,10 @@
 - `Added` Trois niveaux d'utilisateurs basés sur les exigences de la NF Z 42-020 : Administrateur Général, Administrateur Fonctionnel et Utilisateur Simple.
 - `Fixed` Attribution d'un "service par défaut à l'affichage" lors de la suppression du service par défaut d'un utilisateur.
 
+### Open API
+
+- `Added` Adjout d'un sript de génération de documention OpenAPI 2.0 exportable dans Swagger.
+
 ### Journalisation
 
 - `Added` Génération et téléchargement manuel des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
@@ -58,10 +62,6 @@
 ### Modèle conceptuel
 
 - `Added` Ajout de plusieurs index afin d'améliorer les performances de l'application.
-
-### Correctifs
-
-- `Fixed` Correction des erreurs lors de la génération de la documentation openapi
 
 ## Version 2.4.4
 
