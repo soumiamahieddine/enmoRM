@@ -295,6 +295,14 @@ interface organizationInterface
     public function readOrgunitprofiles($orgRegNumber, $originatorAccess=null);
 
     /**
+     * Get the user postions by accountId
+     *
+     * @return array
+     * @action organization/organization/readUserOrgs
+     */
+    public function readUserpositions_accountId_();
+
+    /**
      * List of organizations
      *
      * @param bool $ownerOrg
