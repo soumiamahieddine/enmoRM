@@ -29,6 +29,8 @@
 
 - `Added` Le droit "Télécharger les attestations" est ajouté dans les privilèges de rôle.
 - `Added` L'option "Autoriser les archives sans profil" est activable sur des profils de type dossier sans sous-profil déclaré.
+- `Added` Une demande de modification d'une archive peut être envoyée, afin de notifier le service d'archives d'une correction d'erreur nécessaire ou d'un besoin d'ajout d'informations complémentaires.
+
 
 ### Métadonnées
 
