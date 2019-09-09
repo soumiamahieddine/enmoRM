@@ -108,25 +108,45 @@ file that was distributed with this source code.
                             </div>
                         </div>
 
-                        <div class="form-group hide" id="keywordEnumForm" data-translate-catalog="recordsManagement/descriptionField">
-                            <label class="col-md-2 control-label">Enumeration</label>
+                        <div class="form-group hide" id="nameSelectPropertyDefaultValue">
+                            <label class="col-md-2 control-label">Default value</label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="defaultValue">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group hide" id="keywordInputModeForm" data-translate-catalog="recordsManagement/descriptionField">
+                            <label class="col-md-2 control-label">Input mode</label>
                             <div class="col-md-8">
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="keywordChoice" id="keywordDefault" value="keywordDefault" checked>Saisie
+                                        <input type="radio" name="keywordInputMode" id="keywordDefault" value="keywordDefault" checked>Input
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="keywordChoice" id="keywordList" value="keywordList">Liste de choix
+                                        <input type="radio" name="keywordInputMode" id="keywordValueList" value="keywordValueList">Simple list
                                     </label>
                                 </div>
                                 <div class="radio">
                                     <label>
-                                        <input type="radio" name="keywordChoice" id="keywordExternalRef" value="keywordExternalRef">Référentiel externe
+                                        <input type="radio" name="keywordInputMode" id="keywordKeyValueList" value="keywordKeyValueList">List with labels
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="keywordInputMode" id="keywordExternalRef" value="keywordExternalRef">External repository
                                     </label>
                                 </div>
                                 <br>
+                                
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="keywordEnumForm" data-translate-catalog="recordsManagement/descriptionField">
+                            <label class="col-md-2 control-label">Values</label>
+                            <div class="col-md-8">
                                 <div class="input-group" style="border-radius: 4px 0 0 4px;">
                                     <span class="input-group-addon" style="width: 0; padding: 0; border: 0;"></span>
                                     <input type='text' id="inputAddEnumeration" class="form-control col-md-6" name="keywordEnumField" placeholder="Identifier" style="border-radius: 4px 0 0 4px;" />
@@ -137,23 +157,12 @@ file that was distributed with this source code.
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <ul class="col-md-offset-2 col-md-8 hide" id="keywordEnumList"></ul>
+                            <ul class="col-md-offset-2 col-md-8" id="keywordEnumList"></ul>
                         </div>
 
                         <div class="form-group hide" id="keywordRefForm" data-translate-catalog="recordsManagement/descriptionField">
                             <label class="col-md-2 control-label">Reference</label>
                             <?hinclude recordsManagement/descriptionField/fileUpload.html ?>
-                        </div>
-
-                        <div class="form-group hide" id="nameSelectPropertyDefaultValue">
-                            <label class="col-md-2 control-label">Default value</label>
-                            <div class="col-md-8">
-                                <select class="form-control" name="defaultValue">
-                                    <option value=""></option>
-                                </select>
-                            </div>
                         </div>
 
                         <!-- Simple text -->
@@ -359,7 +368,7 @@ file that was distributed with this source code.
         var label = $(this).closest(".list-group-item").find('.keywordEnumeration').text();
 
         $(this).closest(".list-group-item").remove();
-        $('#nameSelectPropertyDefaultValue').find('[value='+label+']').remove();
+        $('#nameSelectPropertyDefaultValue').find('[value="'+label+'"]').remove();
 
         var nbResult = $("#keywordEnumList").find(".list-group-item").length;
         if (nbResult == 0) {
@@ -405,15 +414,13 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordEnumForm, #keywordEnumList, #keywordRefForm, #nameSelectPropertyDefaultValue, #dateWithTimeGroup').addClass('hide');
+        $('#namePropertyDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordInputModeForm, #keywordRefForm, #nameSelectPropertyDefaultValue, #dateWithTimeGroup').addClass('hide');
         $('#keywordEnumList').empty();
         $('#nameSelectPropertyDefaultValue').find("[name='defaultValue'] option:not(:first)").remove();
 
         switch (type) {
             case "name" :
-                $('#keywordEnumForm').removeClass('hide');
-                $('#keywordEnumList').removeClass('hide');
-                $('#keywordEnumForm').removeClass('hide');
+                $('#keywordInputModeForm').removeClass('hide');
                 $('#namePropertyDefaultValue').removeClass('hide');
                 break;
 
@@ -458,9 +465,7 @@ file that was distributed with this source code.
         $('#descriptionField_formSaveBtn').removeClass('hide');
 
         $('#keywordEnumList').empty();
-        $('#keywordEnumForm').addClass('hide');
-        $('#keywordEnumList').addClass('hide');
-
+        $('#keywordInputModeForm').addClass('hide');
     }
 
     function mergeForm(descriptionField) {
@@ -477,38 +482,41 @@ file that was distributed with this source code.
                 break;
 
             case "name" :
-                $("#keywordEnumForm, #keywordEnumList").removeClass("hide");
-                var hasEnumNames = false;
-                if (descriptionField.enumNames !== "" && descriptionField.enumNames !== null && descriptionField.enumNames !== undefined) {
-                    hasEnumNames = true;
+                $("#keywordInputModeForm").removeClass("hide");
+                
+                var hasEnum = false;
+                if (descriptionField.enumeration !== "" && descriptionField.enumeration !== null && descriptionField.enumeration !== undefined) {
+                    hasEnum = true;
                 }
 
-                if (descriptionField.enumeration !== "" && descriptionField.enumeration !== null && descriptionField.enumeration !== undefined) {
+                if (hasEnum) {
+                    var hasEnumNames = false;
+                    $('#keywordValueList').prop('checked', true);
+                    if (descriptionField.enumNames !== "" && descriptionField.enumNames !== null && descriptionField.enumNames !== undefined) {
+                        hasEnumNames = true;
+                        $('#keywordKeyValueList').prop('checked', true);
+                    }
+
                     $.each(descriptionField.enumeration, function (key, value) {
                         if (hasEnumNames === true) {
                             $("#inputAddEnumeration").val(value);
                             $('#inputAddEnumName').val(descriptionField.enumNames[key]);
-                            $('#keywordList').prop('checked', true);
-                            $('#keywordRefForm').hide();
                         } else {
-                            $("#inputAddEnumeration").val(value ).attr('data-Enumeration', value);
-                            $('#keywordDefault').prop('checked', true);
-                            $('#keywordRefForm').hide();
+                            $("#inputAddEnumeration").val(value).attr('data-Enumeration', value);
                         }
                         $("#btnAddEnumField").click();
                     });
                     $("#nameSelectPropertyDefaultValue").find("select").val(descriptionField.default);
-                    $("#keywordEnumList").removeClass("hide");
+                    $("#keywordEnumForm").removeClass("hide");
                 } else if (descriptionField.ref === true) {
-                    $('#keywordEnumForm .input-group').hide();
+                    $('#keywordInputModeForm').hide();
                     $('#inputAddEnumName').hide();
                     $('#keywordExternalRef').prop('checked', true);
-                    $('#keywordRefForm').hide();
                 } else {
                     $('#namePropertyDefaultValue').removeClass('hide');
                     $('#namePropertyDefaultValue').find("input").val(descriptionField.default);
+                    $('#keywordDefault').prop('checked', true);
                 }
-                $("#keywordRefForm").removeClass('hide');
 
                 break;
 
@@ -644,28 +652,42 @@ file that was distributed with this source code.
         }
     });
 
-    $('#keywordEnumForm .radio').on('click', function(e) {
+    $('#keywordInputModeForm .radio').on('click', function(e) {
         var value = $(this).find('input').val();
+        switch (value) {
+            case 'keywordValueList':
+                $(this).siblings('.input-group').show();
+                $('#inputAddEnumName').hide();
+                $('#keywordEnumList').empty();
+                $("#keywordEnumForm").removeClass("hide");
+                $('#namePropertyDefaultValue').addClass('hide');
+                $("#nameSelectPropertyDefaultValue").find("select").empty();
+                break;
 
-        if(value === 'keywordDefault') {
-            $(this).siblings('.input-group').show();
-            $('#inputAddEnumName').hide();
-            $('#keywordEnumList').empty();
-            $("#nameSelectPropertyDefaultValue").find("select").empty();
-        }
+            case 'keywordKeyValueList':
+                $(this).siblings('.input-group').show();
+                $('#inputAddEnumName').show();
+                $("#keywordEnumForm").removeClass("hide");
+                $('#keywordEnumList').empty();
+                $('#namePropertyDefaultValue').addClass('hide');
+                $("#nameSelectPropertyDefaultValue").find("select").empty();
+                break;
 
-        if (value == 'keywordList') {
-            $(this).siblings('.input-group').show();
-            $('#inputAddEnumName').show();
-            $('#keywordEnumList').empty();
-            $("#nameSelectPropertyDefaultValue").find("select").empty();
-        }
+            case 'keywordExternalRef':
+                $(this).siblings('.input-group').hide();
+                $('#inputAddEnumName').hide();
+                $("#keywordEnumForm").addClass('hide');
+                $('#keywordEnumList').empty();
+                $('#namePropertyDefaultValue').removeClass('hide');
+                $('#nameSelectPropertyDefaultValue').addClass('hide');
+                break;
 
-        if (value == 'keywordExternalRef') {
-            $(this).siblings('.input-group').hide();
-            $('#inputAddEnumName').hide();
-            $('#keywordEnumList').empty();
-            $("#nameSelectPropertyDefaultValue").find("select").empty();
+            default:
+                $('#inputAddEnumName').hide();
+                $("#keywordEnumForm").addClass('hide');
+                $('#keywordEnumList').empty();
+                $('#namePropertyDefaultValue').removeClass('hide');
+                $('#nameSelectPropertyDefaultValue').addClass('hide');
         }
 
     });

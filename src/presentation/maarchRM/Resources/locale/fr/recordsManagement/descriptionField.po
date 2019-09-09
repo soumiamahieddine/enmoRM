@@ -44,14 +44,20 @@ msgstr "Donnée(s) descriptive(s)"
 msgid "Default value"
 msgstr "Valeur par défaut"
 
-msgid "Enumeration"
-msgstr "Énumération"
+msgid "Input mode"
+msgstr "Mode de saisie"
+
+msgid "Input"
+msgstr "Saisie libre"
 
 msgid "Simple list"
 msgstr "Liste simple"
 
 msgid "List with labels"
 msgstr "Liste avec libellés"
+
+msgid "Values"
+msgstr "Valeurs"
 
 msgid "External repository"
 msgstr "Référentiel externe"
