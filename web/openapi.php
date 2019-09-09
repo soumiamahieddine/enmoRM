@@ -70,7 +70,7 @@ class Openapi
         $this->paths();
         
         //$this->definitions = [];
-        $this->definitions();
+        //$this->definitions();
 
         //$this->parameters = [];
         
@@ -200,8 +200,8 @@ class Openapi
     protected function externalDocs()
     {
         $this->externalDocs              = new \StdClass();
-        $this->externalDocs->description = 'The Maarch RM documentation Git repository';
-        $this->externalDocs->url         = 'http://labs.maarch.org/maarch/maarchRM.doc/tree/2.1';
+        $this->externalDocs->description = 'Maarch online documentation';
+        $this->externalDocs->url         = 'https://docs.maarch.org/gitbook/html/maarchRM/'.$this->info->version;
     }
 
     /* ************************************************************************
@@ -440,9 +440,17 @@ class Openapi
             list ($bundle, $class) = explode('/', $typename);
             $schema->{'$ref'} = '#/definitions/'.$bundle.'/properties/'.$class;
 
-            // Request complex type documentation
-            if (!isset($this->definitions[$typename])) {
-                $this->definitions[$typename] = false;
+            if (!isset($this->definitions[$bundle])) {
+                $this->definitions[$bundle] = new \StdClass();
+
+                $this->definitions[$bundle]->type = 'object';
+                $this->definitions[$bundle]->properties = [];
+            }
+
+            if (!array_key_exists($class, $this->definitions[$bundle]->properties)) {
+                $this->definitions[$bundle]->properties[$class] = null;
+
+                $this->definitions[$bundle]->properties[$class] = $this->getDefinition($typename);
             }
 
             return;
@@ -571,6 +579,21 @@ class Openapi
 
         if (!empty(trim($description))) {
             $component->description = trim($description);
+        }
+
+        if (isset($reflection->tags['example'])) {
+            if (isset($component->description)) {
+                $component->description .= "\n";
+            }
+            $component->description .= "Examples : ".PHP_EOL;
+            foreach ($reflection->tags['example'] as $exampleTag) {
+                $uri = strtok($exampleTag, ' ');
+                $desc = strtok('');
+                if (empty($desc)) {
+                    $desc = 'Example';
+                }
+                $component->description .= "* [".$desc."](".$_SERVER['REQUEST_SCHEME']."://".$this->host.'/'.$uri.')'.PHP_EOL;
+            }
         }
     }
 }
