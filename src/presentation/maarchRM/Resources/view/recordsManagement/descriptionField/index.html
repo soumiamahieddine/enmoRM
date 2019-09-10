@@ -414,7 +414,7 @@ file that was distributed with this source code.
     // Properties form
     $('input[type=radio][name=type]').on('change', function() {
         var type = $(this).val();
-        $('#keywordDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordInputModeForm, #keywordRefForm, #keywordSelectDefault, #dateWithTimeGroup').addClass('hide');
+        $('#keywordDefaultValue, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #keywordInputModeForm, #keywordRefForm, #keywordSelectDefault, #dateWithTimeGroup, #keywordEnumForm').addClass('hide');
         $('#keywordEnumList').empty();
         $('#keywordSelectDefault').find("[name='defaultValue'] option:not(:first)").remove();
 
@@ -493,6 +493,8 @@ file that was distributed with this source code.
                     var hasEnumNames = false;
                     $('#inputAddEnumName').hide();
                     $("#keywordSelectDefault").find("select").empty();
+                    $("#keywordSelectDefault").find("select").append('<option></option>');
+
                     $('#keywordValueList').prop('checked', true);
                     
                     if (descriptionField.enumNames !== "" && descriptionField.enumNames !== null && descriptionField.enumNames !== undefined) {
@@ -637,7 +639,7 @@ file that was distributed with this source code.
 
             field['enumeration'] = enumeration;
             field.enumNames = enumNames;
-            field['default'] = $('#keywordSelectDefault').find(":selected").text();
+            field['default'] = $('#keywordSelectDefault').find(":selected").val();
         }
 
         return field;
