@@ -90,7 +90,7 @@ class ServiceKernel extends AbstractKernel
 
         } catch (\Exception $exception) {
             $handled = self::$instance->handleException($exception);
-
+            
             if (!$handled) {
 
                 self::$instance->response->setBody((string) $exception);
@@ -316,6 +316,8 @@ class ServiceKernel extends AbstractKernel
 
         if ($this->response->mode == 'http') {
             $this->response->setHeader("X-Laabs-Exception", $exceptionClass . "; " . str_replace("\n", " ", $exception->getMessage()));
+
+            $this->response->setCode($exception->getCode());
         }
         // Try to find serializer output for the raised exception else send exception as string as response content
         if (isset($this->outputRouter)) {
