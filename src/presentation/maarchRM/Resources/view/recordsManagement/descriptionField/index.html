@@ -460,7 +460,7 @@ file that was distributed with this source code.
 
         $('#dateWithTime').bootstrapToggle('off');
 
-        $('#keywordDefaultValue, #keywordSelectDefault, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup').addClass('hide');
+        $('#keywordDefaultValue, #keywordSelectDefault, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup, #keywordEnumForm').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
 
@@ -658,7 +658,7 @@ file that was distributed with this source code.
         }
     });
 
-    $('#keywordInputModeForm .radio').on('click', function(e) {
+    $('#keywordInputModeForm .radio').on('change', function(e) {
         var value = $(this).find('input').val();
         switch (value) {
             case 'keywordValueList':
