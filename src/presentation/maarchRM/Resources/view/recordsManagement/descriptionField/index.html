@@ -422,6 +422,7 @@ file that was distributed with this source code.
             case "name" :
                 $('#keywordInputModeForm').removeClass('hide');
                 $('#keywordDefaultValue').removeClass('hide');
+                $('#keywordDefault').prop('checked', true);
                 break;
 
             case "text" :
@@ -463,6 +464,11 @@ file that was distributed with this source code.
         $('#keywordDefaultValue, #keywordSelectDefault, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup, #keywordEnumForm').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
+        
+        $("#keywordSelectDefault").find("select").empty();
+        $("#keywordSelectDefault").find("select").append('<option></option>');
+
+        $('#keywordDefault').prop('checked', true);
 
         $('#keywordEnumList').empty();
         $('#keywordInputModeForm').addClass('hide');
@@ -492,8 +498,6 @@ file that was distributed with this source code.
                 if (hasEnum) {
                     var hasEnumNames = false;
                     $('#inputAddEnumName').hide();
-                    $("#keywordSelectDefault").find("select").empty();
-                    $("#keywordSelectDefault").find("select").append('<option></option>');
 
                     $('#keywordValueList').prop('checked', true);
                     
@@ -671,6 +675,7 @@ file that was distributed with this source code.
                 $('#keywordDefaultValue').addClass('hide');
                 $("#keywordSelectDefault").removeClass('hide');
                 $("#keywordSelectDefault").find("select").empty();
+                $("#keywordSelectDefault").find("select").append('<option/>');
                 break;
 
             case 'keywordKeyValueList':
@@ -681,6 +686,7 @@ file that was distributed with this source code.
                 $('#keywordDefaultValue').addClass('hide');
                 $("#keywordSelectDefault").removeClass('hide');
                 $("#keywordSelectDefault").find("select").empty();
+                $("#keywordSelectDefault").find("select").append('<option/>');
                 break;
 
             case 'keywordExternalRef':
