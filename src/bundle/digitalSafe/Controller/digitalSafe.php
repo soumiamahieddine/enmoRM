@@ -48,6 +48,10 @@ class digitalSafe
         $this->digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         $accountToken = \laabs::getToken('AUTH');
+        if (!$accountToken) {
+            throw $this->getThrowable("Missing authentication credential", 401);
+        }
+
         $this->account = $this->accountController->get($accountToken->accountId);
     }
 
@@ -474,9 +478,7 @@ class digitalSafe
         try {
             $organization = $this->organizationController->getOrgByRegNumber($originatorOwnerOrgRegNumber);
         } catch (\Exception $exception) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Organization " . $originatorOwnerOrgRegNumber . " doesn't exist";
-            return $replyMessage;
+            throw $this->getThrowable("Organization " . $originatorOwnerOrgRegNumber . " doesn't exist", 404, $replyMessage);
         }
 
         if ($organization->isOrgUnit) {
@@ -680,5 +682,25 @@ class digitalSafe
             $organization,
             true
         );
+    }
+
+    /**
+     * Prepare a throwable
+     * @param string The message
+     * @param int    The code 
+     * @param mixed  The contextual data
+     * 
+     * @return \Exception
+     */
+    protected function getThrowable($message, $code, $context = [])
+    {
+        $exception = \laabs::newException('digitalSafe/Exception', $message, $code);
+
+        foreach ($context as $name => $value) {
+            $exception->{$name} = $value;
+        }
+        $exception->operationResult = false;
+        
+        return $exception;
     }
 }
