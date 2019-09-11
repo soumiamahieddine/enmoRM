@@ -82,9 +82,17 @@ class Openapi
         //$this->info->contact->name   = 'Cyril VAZQUEZ';
         //$this->info->contact->email  = 'cyril.vazquez@maarch.org';
         $this->info->contact->url    = 'http://maarchrm.com';
-        $this->info->license         =   new \StdClass();
+        $this->info->license         = new \StdClass();
         $this->info->license->name   = 'GNU Lesser General Public License V3';
         $this->info->license->url    = 'http://www.gnu.org/licenses/lgpl.txt';
+        $this->info->{'x-logo'}      = new \stdClass();
+        $this->info->{'x-logo'}->url = 'presentation/img/RM.svg';
+        $this->info->{'x-logo'}->altText = 'Maarch RM';
+        $this->info->{'x-logo'}->width = '100%';
+        //$this->info->{'x-logo'}      = 
+        //"url": "https://redocly.github.io/redoc/petstore-logo.png",
+        //"backgroundColor": "#FFFFFF",
+        //"altText": "Petstore logo"
     }
 
     protected function paths()
@@ -229,7 +237,7 @@ class Openapi
         //$operation->tags = [];
         
         $this->getDescription($reflectionPath, $operation);
-        
+
         //$operation->externalDocs = [];
         
         $operation->operationId = $reflectionPath->domain.'/'.$reflectionPath->interface.'/'.$reflectionPath->name;
@@ -569,19 +577,55 @@ class Openapi
             $component->description = trim($description);
         }
 
-        if (isset($reflection->tags['example'])) {
+        $examples = $this->getExamples($reflection);
+        if (!empty($examples)) {
+            /*
             if (isset($component->description)) {
-                $component->description .= "\n";
+                $component->description .= PHP_EOL.PHP_EOL;
             }
-            $component->description .= "Examples : ".PHP_EOL;
-            foreach ($reflection->tags['example'] as $exampleTag) {
-                $uri = strtok($exampleTag, ' ');
-                $desc = strtok('');
-                if (empty($desc)) {
-                    $desc = 'Example';
-                }
-                $component->description .= "* [".$desc."](".$_SERVER['REQUEST_SCHEME']."://".$this->host.'/'.$uri.')'.PHP_EOL;
+            $component->description .= "### Examples".PHP_EOL;
+            */
+            $component->{'x-code-samples'} = [];
+            
+            foreach ($examples as $i => $example) {
+                /*
+                $component->description .= "[".$example->label."](".$_SERVER['REQUEST_SCHEME']."://".$this->host.$example->uri.')'.PHP_EOL; 
+                $component->description .=
+                    "```".$example->lang.PHP_EOL
+                    .$example->source//file_get_contents('../web/'.$example->uri)
+                    ."```".PHP_EOL;
+                */
+
+                $component->{'x-code-samples'}[] = $example;
             }
         }
+
+        $component->{'x-displayName'} = "coucou";
+    }
+
+    protected function getExamples($reflection)
+    {
+        $examples = [];
+
+        if (isset($reflection->tags['example'])) {
+            foreach ($reflection->tags['example'] as $i => $exampleTag) {
+                $example = new \stdClass();
+                $example->uri = strtok($exampleTag, ' ');
+                $example->label = strtok('');
+                if (empty($example->label)) {
+                    $example->label = 'Example '.($i+1);
+                }
+                $example->lang = 'json';
+                if ($example->uri[0] == '/') {
+                    $example->source = file_get_contents('../web'.$example->uri);
+                } else {
+                    $example->source = file_get_contents($example->uri);
+                }
+
+                $examples[] = $example;
+            }
+        }
+
+        return $examples;
     }
 }
