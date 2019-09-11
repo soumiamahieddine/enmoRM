@@ -1,6 +1,6 @@
 ﻿-- AUTH
-INSERT INTO "auth"."account" ("accountType", "accountId", "lastName", "firstName", "title", "displayName", "accountName", "emailAddress", "password","enabled","passwordChangeRequired","passwordLastChange", "locked", "badPasswordCount","lastLogin","lastIp","replacingUserAccountId") VALUES
-('user', 'superadmin', 'Super', 'Admin', 'M.', 'super admin', 'superadmin', 'info@maarch.org', '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae',true,false,null,false,0,null,null,null);
+INSERT INTO "auth"."account" ("accountId", "accountName", "displayName", "accountType", "emailAddress", "enabled", "password", "passwordChangeRequired", "passwordLastChange", "locked", "badPasswordCount", "lastIp", "replacingUserAccountId", "firstName", "lastName", "title", "isAdmin") VALUES
+('superadmin','superadmin', 'Administrateur Général','user','info@maarch.org',true,'186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, null, null, 0, null, null, 'Général', 'Administrateur', 'M.', true);
 
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
@@ -10,42 +10,51 @@ INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
 ('ADMIN', 'superadmin');
 
-
 -- privilege
 INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
-('ADMIN', '*');
-	
--- LIFECYCLE
-INSERT INTO "lifeCycle"."eventFormat" ("type", "format", "notification", "message") VALUES
-('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de communicabilité de l''archive %6$s'),
-('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', FALSE, 'Relation ajoutée avec l''archive %6$s'),
-('recordsManagement/archivalProfileModification', 'archivalProfileReference', FALSE, 'Modification du profil %6$s.'),
-('recordsManagement/consultation', 'resId hash hashAlgorith address size', FALSE, 'Consultation de la ressource %9$s'),
-('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size', FALSE, 'Conversion du document %18$s'),
-('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', FALSE, 'Relation avec l''archive %6$s supprimée'),
-('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size', FALSE, 'Communication de l''archive %6$s'),
-('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', FALSE, 'Dépôt de l''archive %6$s'),
-('recordsManagement/descriptionModification','property', FALSE, 'Modification des métadonnées de l''archive %6$s.'),
-('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Demande de destruction de l''archive %6$s'),
-('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Annulation de la demande de destruction de l''archive %6$s'),
-('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Destruction de l''archive %6$s'),
-('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Élimination de l''archive %6$s'),
-('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Gel de l''archive %6$s'),
-('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info', FALSE, 'Validation d''intégrité'),
-('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification des métadonnées de l''archive %6$s'),
-('recordsManagement/profileCreation', 'archivalProfileReference', FALSE, 'Création du profil %6$s'),
-('recordsManagement/profileDestruction', 'archivalProfileReference', FALSE, 'Destruction du profil %6$s'),
-('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked', FALSE, 'Validation périodique de l''intégrité'),
-('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', FALSE, 'Restitution de l''archive %6$s'),
-('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Modification de la règle de conservation de l''archive %6$s'),
-('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', FALSE, 'Dégel de l''archive %6$s');
+('ADMIN', 'adminTech/*'),
+('ADMIN', 'adminFunc/adminOrganization'),
+('ADMIN', 'adminFunc/adminUseraccount'),
+('ADMIN', 'adminFunc/adminServiceaccount'),
+('ADMIN', 'adminFunc/batchScheduling'),
+('ADMIN', 'adminFunc/adminAuthorization'),
+('ADMIN', 'journal/audit'),
+('ADMIN', 'journal/searchLogArchive');
 
-INSERT INTO "batchProcessing"."scheduling"
-("schedulingId", "name", "executedBy", "taskId", "frequency","parameters","lastExecution","nextExecution","status") VALUES
-('chainJournalAudit', 'Chaînage audit', 'System', '01', '00;00;;;;;;;',null,null,null,'paused'),
-('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', 'System', '02', '00;01;;;;;;;', null,null,null,'paused'),
-('integrity', 'Intégrité', 'System','03', '00;02;;;;;;;',null,null,null,'paused'),
-('deleteArchive', 'Destruction', 'System', '04', '00;03;;;;;;;', null,null,null,'paused'),
-('sendNotification', 'Envoie des notifications', 'System', '05', '00;04;;;;;;;', null,null,null,'paused'),
-('fulltext', 'Extraction plein texte', 'System', '06', '00;05;;;;;;;', null,null,null,'paused'),
-('updateArchiveRetentionRule', 'Mise à jour de la durée d''utilité administrative', 'System', '07', '00;06;;;;;;;', null,null,null,'paused');
+-- LIFECYCLE
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES
+('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber', 'Modification de la règle de communicabilité de l''archive %6$s', false),
+('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', 'Relation ajoutée avec l''archive %6$s', false),
+('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false),
+('recordsManagement/consultation', 'resId hash hashAlgorith address size', 'Consultation de la ressource %9$s', false),
+('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size', 'Conversion du document %18$s', false),
+('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId', 'Relation avec l''archive %6$s supprimée', false),
+('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size', 'Communication de l''archive %6$s', false),
+('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', 'Dépôt de l''archive %6$s', false),
+('recordsManagement/descriptionModification', 'property', 'Modification des métadonnées de l''archive %6$s.', false),
+('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Demande de destruction de l''archive %6$s', false),
+('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Annulation de la demande de destruction de l''archive %6$s', false),
+('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Destruction de l''archive %6$s', false),
+('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Élimination de l''archive %6$s', false),
+('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Gel de l''archive %6$s', false),
+('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info', 'Validation d''intégrité', false),
+('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Modification des métadonnées de l''archive %6$s', false),
+('recordsManagement/profileCreation', 'archivalProfileReference', 'Création du profil %6$s', false),
+('recordsManagement/profileDestruction', 'archivalProfileReference', 'Destruction du profil %6$s', false),
+('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked', 'Validation périodique de l''intégrité', false),
+('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size', 'Restitution de l''archive %6$s', false),
+('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber', 'Modification de la règle de conservation de l''archive %6$s', false),
+('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Dégel de l''archive %6$s', false),
+('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber', 'Destruction de la ressource %9$s', FALSE),
+('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size', 'Dépôt d''une ressource dans l''archive', FALSE),
+('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false),
+('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),
+('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Validation du message %14$s : %16$s (%15$s)', false),
+('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false),
+('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),
+('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false),
+('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s rejeté par %13$s (%12$s)', false),
+('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)', false),
+('organization/counting', 'orgName ownerOrgId', 'Compter le nombre d''objet numérique dans l''activité %6$s', false),
+('organization/listing', 'orgName ownerOrgId', 'Lister les identifiants d''objet numérique de l''activité %6$s', false),
+('organization/journal', 'orgName ownerOrgId', 'Lecture du journal de l''organisation %6$s', false);
