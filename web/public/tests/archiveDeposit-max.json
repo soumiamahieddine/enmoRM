@@ -1,0 +1,35 @@
+{
+  "archive": {
+    "archiveId":"maarchRM_5jymyubx8-0000-idmub9",
+    "profileReference":"DOSIP",
+    "archiveName":"nomDeL'archive",
+    "status":"preserved",
+    "agreementReference":"AccordDeVersement",
+    "finalDisposition":"destruction",
+    "originatorOrgRegNumber":"GIC",
+    "originatorOwnerOrgId":"ACME",
+    "originatorArchiveId":"TODO",
+    "originatingDate":"2018-11-15",
+    "filePlanPosition":"/tests/exemple",
+    "hasParent":"true",
+    "description":"{}",
+    "text":"TODO",
+    "partialRetentionRule":"true",
+    "retentionRuleCode":"BULPAI",
+    "depositStartDate":"2018-11-15",
+    "depositEndDate":"2023-11-15",
+    "originatingStartDate":"2018-11-15",
+    "originatingEndDate":"2023-11-15",
+    "archiverArchiveId":"TODO",
+    "zipContainer" : false,
+    "digitalResources": [
+      {
+        "fileName":"toto",
+        "handler":"~)^gjW7)-m",
+        "size":5,
+        "mimetype":"text/plain",
+        "fileExtension":"txt"
+      }
+    ]
+  }
+}

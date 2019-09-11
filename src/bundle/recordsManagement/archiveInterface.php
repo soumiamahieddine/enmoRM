@@ -36,6 +36,8 @@ interface archiveInterface
      * @param bool                      $zipContainer The archive is a zip container
      *
      * @action recordsManagement/archive/receive
+     * @example /public/tests/archiveDeposit-max.json example-max
+     * @example /public/tests/archiveDeposit-min.json example-min
      */
     public function create($archive, $zipContainer = false);
 

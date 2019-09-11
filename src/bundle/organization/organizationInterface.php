@@ -65,6 +65,8 @@ interface organizationInterface
      * @return string the new organization's Id
      *
      * @action organization/organization/create
+     * @example /public/tests/organizationCreate-max.json example-max
+     * @example /public/tests/organizationCreate-min.json example-min
      */
     public function create($organization);
 

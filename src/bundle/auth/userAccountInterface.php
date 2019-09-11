@@ -71,6 +71,8 @@ interface userAccountInterface
      * @param auth/newUserAccount $userAccount The new user Account information
      *
      * @action auth/userAccount/add
+     * @example /public/tests/userCreate-max.json example-max
+     * @example /public/tests/userCreate-min.json example-min
      */
     public function create($userAccount);
 
