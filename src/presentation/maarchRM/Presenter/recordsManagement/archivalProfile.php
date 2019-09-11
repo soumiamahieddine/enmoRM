@@ -105,7 +105,7 @@ class archivalProfile
             $descriptionClasses = $this->getDescriptionClasses();
 
             // Description by fulltext index fields
-            $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
+            $descriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $archivalProfile->descriptionClass);
             $dateFields = [];
             foreach ($descriptionFields as $descriptionField) {
                 if (strtolower($descriptionField->type) == 'date') {
