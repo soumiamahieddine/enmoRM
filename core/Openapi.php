@@ -17,23 +17,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Laabs.  If not, see <http://www.gnu.org/licenses/>.
  */
-// Require base script
-require_once('../core/laabs.php');
-
-laabs::init();
-
-$openapi = new Openapi();
-
-$body = json_encode($openapi, JSON_PRETTY_PRINT + JSON_UNESCAPED_SLASHES);
-
-header('Content-Type: application/json; charset=utf-8');
-header('Content-Length: '.strlen($body));
-
-echo $body;
+namespace core;
 
 /**
  * API discovery and documentation
- * 
+ *
  * @package Laabs
  * @author  Cyril Vazquez <cyril.vazquez@maarch.org>
  */
@@ -82,7 +70,7 @@ class Openapi
         
         //$this->tags                  = $this->tags();
         
-        $this->externalDocs();       
+        $this->externalDocs();      
     }
 
     protected function info()
@@ -91,8 +79,8 @@ class Openapi
         $this->info->title   = 'Maarch RM';
         $this->info->version = \laabs::getVersion()[0]->number;
         $this->info->contact         = new \StdClass();
-        $this->info->contact->name   = 'Cyril VAZQUEZ';
-        $this->info->contact->email  = 'cyril.vazquez@maarch.org';
+        //$this->info->contact->name   = 'Cyril VAZQUEZ';
+        //$this->info->contact->email  = 'cyril.vazquez@maarch.org';
         $this->info->contact->url    = 'http://maarchrm.com';
         $this->info->license         =   new \StdClass();
         $this->info->license->name   = 'GNU Lesser General Public License V3';
