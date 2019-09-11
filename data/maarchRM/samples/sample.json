@@ -1,0 +1,76 @@
+{
+    "type": "object",
+    "properties": {
+        "professional_adress" : {
+            "title" : "Adresse professionnelle",
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties": {
+                    "streetNumber" : {
+                        "title" : "Numéro de voie",
+                        "type" : "number"
+                    },
+                    "street" : {
+                        "title" : "Rue",
+                        "type" : "string"
+                    },
+                    "city" : {
+                        "title" : "Ville",
+                        "type" : "string"
+                    },
+                    "postCode" : {
+                        "title" : "Code postal",
+                        "type" : "number"
+                    },
+                    "country" : {
+                        "title" : "Pays",
+                        "type" : "string"
+                    }
+                }
+            }
+        },
+        "customer" : {
+            "title" : "Client",
+            "type" : "text"
+        },
+        "documentId" : {
+            "title" : "Identifiant de document",
+            "type" : "string"
+        },
+        "dueDate" : {
+            "title" : "Date d'échéance",
+            "type" : "date"
+        },
+        "empid" : {
+            "title" : "Matricule",
+            "type" : "string"
+        },
+        "fullname" : {
+            "title" : "Nom Complet",
+            "type" : "string"
+        },
+        "netPayable" : {
+            "title" : "Net à payer",
+            "type" : "number"
+        },
+        "orderNumber" : {
+            "title" : "Numéro de commande",
+            "type" : "string"
+        },
+        "org" : {
+            "title" : "Organisation",
+            "type" : "string",
+            "enum" : ["ACME Paris", "ACME Dakar", "ACME Cotonou"]
+        },
+        "salesPerson" : {
+            "title" : "Vendeur",
+            "type" : "text"
+        },
+        "service" : {
+            "title" : "Service concerné",
+            "type" : "string",
+            "enum" : ["MARK", "DSG", "DSI", "DAF"]
+        }
+    }
+}

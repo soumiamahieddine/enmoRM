@@ -6,7 +6,7 @@ cd $SCRIPT_PATH;
 # INIT PATH
 LAABS_PATH="$SCRIPT_PATH/../../../../";
 BUNDLE_PATH="$LAABS_PATH/src/bundle";
-DATA_MAARCHRM_SQL_PATH="$LAABS_PATH/data/maarchRM/sql/";
+DATA_MAARCHRM_SQL_PATH="$LAABS_PATH/data/maarchRM/sql/pgsql/";
 
 # HELP TEXT
 usage="$(basename "$0") [--options ...] -- This program initializes the database with schemas and basic data
@@ -62,6 +62,6 @@ esac
 done
 
 cat \
-$DATA_MAARCHRM_SQL_PATH/pgsql/deleteAllData.sql \
-$DATA_MAARCHRM_SQL_PATH/pgsql/demo.sql \
+$DATA_MAARCHRM_SQL_PATH/deleteAllData.sql \
+$DATA_MAARCHRM_SQL_PATH/demo.sql \
 | psql --host=$input_pgsql_host --port=$input_pgsql_port --username="$input_pgsql_user" --dbname="$input_pgsql_database" -f -
