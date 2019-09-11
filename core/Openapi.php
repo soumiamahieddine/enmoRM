@@ -88,11 +88,6 @@ class Openapi
         $this->info->{'x-logo'}      = new \stdClass();
         $this->info->{'x-logo'}->url = 'presentation/img/RM.svg';
         $this->info->{'x-logo'}->altText = 'Maarch RM';
-        $this->info->{'x-logo'}->width = '100%';
-        //$this->info->{'x-logo'}      = 
-        //"url": "https://redocly.github.io/redoc/petstore-logo.png",
-        //"backgroundColor": "#FFFFFF",
-        //"altText": "Petstore logo"
     }
 
     protected function paths()
