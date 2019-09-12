@@ -401,7 +401,15 @@ trait archiveDestructionTrait
             );
         }
     }
-    
+
+    /**
+     * remove resources from an archive
+     *
+     * @param  string   $archiveId Archive Id
+     * @param  string[] $resIds    An array of resources id
+     *
+     * @return array               Array of resId ordered by success and errors
+     */
     public function deleteResource($archiveId, $resIds)
     {
         $currentService = \laabs::getToken("ORGANIZATION");

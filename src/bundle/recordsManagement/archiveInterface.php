@@ -161,7 +161,7 @@ interface archiveInterface
     public function create_archiveId_Digitalresource($contents, $filename = null);
 
     /**
-     * Remove a resource to the archive
+     * Remove resources from an archive
      * @param array $resIds
      *
      * @action recordsManagement/archive/deleteResource
