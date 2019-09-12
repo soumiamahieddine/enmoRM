@@ -101,7 +101,6 @@ class digitalSafe
                 continue;
             } else {
                 $this->logEvent();
-                $replyMessage->operationResult = false;
                 throw $this->getThrowable("Hash or hash algorithm missing", 401, $replyMessage);
             }
         }
@@ -166,7 +165,7 @@ class digitalSafe
         }
 
         if (count($res['error']) == 1) {
-            throw $this->getThrowable("The Request could not be processed", 409, $replyMessage);
+            throw $this->getThrowable("The request could not be processed", 409, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
@@ -249,7 +248,7 @@ class digitalSafe
         try {
             $archive = $this->archiveController->retrieve($archiveId);
         } catch (\Exception $e) {
-            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
+            throw $this->getThrowable("archive " . $archiveId . " doesn't exist", 404, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
@@ -589,7 +588,7 @@ class digitalSafe
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } catch (\Exception $e) {
             $replyMessage = new \stdClass();
-            throw $this->getThrowable("Archive " . $archiveId . " doesn't exist", 404, $replyMessage);
+            throw $this->getThrowable("archive " . $archiveId . " doesn't exist", 404, $replyMessage);
         }
 
         if ($archive->originatorOwnerOrgRegNumber == $originatorOwnerOrgRegNumber
