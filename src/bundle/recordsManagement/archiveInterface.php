@@ -150,11 +150,13 @@ interface archiveInterface
     public function updateInteractiveconversion_resId_();
 
     /**
-     * Add a resource to the archive
+     * Add a resource to an archive
      * @param string $contents
      * @param string $filename
-     * 
+     *
      * @action recordsManagement/archive/addResource
+     *
+     * @example /public/tests/addResource-standard.json example-standard
      */
     public function create_archiveId_Digitalresource($contents, $filename = null);
 
