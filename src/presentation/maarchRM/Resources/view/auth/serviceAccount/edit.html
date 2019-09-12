@@ -53,7 +53,7 @@
                         <div>
                             <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
                         </div>
-                    </div> 
+                    </div>
                     <div class="clearfix pull-right">
                         <button type="button" class="btn btn-warning" id="cancelServiceAccount" title="Cancel">
                             <span class="fa fa-undo">&nbsp;</span>Cancel
@@ -85,17 +85,13 @@
                                         <div class="form-group">
                                             <label>Token</label><button type="button" class="btn btn-link" id="copy-generatedToken" title="Copy"><span class="fa fa-copy"></span></button>
                                             <div>
-                                                <textarea id="generatedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
-                                                    <?merge serviceAccount.password ?>
-                                                </textarea>
+                                                <textarea id="generatedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled><?merge serviceAccount.password ?></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label>URL encoded token</label><button type="button" class="btn btn-link" id="copy-generatedUrlEncodedToken" title="Copy"><span class="fa fa-copy"></span></button>
                                             <div>
-                                                <textarea id="generatedUrlEncodedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
-                                                    <?merge serviceAccount.password.urlencode() ?>
-                                                </textarea>
+                                                <textarea id="generatedUrlEncodedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled><?merge serviceAccount.password.urlencode() ?></textarea>
                                             </div>
                                         </div>
                                 </div>
@@ -212,7 +208,7 @@
             $(this).hide();
         }
     });
-    
+
     //save
     $("#submitServiceAccount").on("click", function(){
         var url = '/serviceAccount';
@@ -435,7 +431,7 @@
             .val(org.orgId)
             .text(org.displayName)
             .appendTo(orgSelect);
-        
+
         if (ownerOrgId == org.orgId) {
             option.prop('selected', true);
         }
