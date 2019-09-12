@@ -106,6 +106,8 @@ translationLogType = "{
 ;The path of the stopword file for fullTextIndexing
 stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 
+;Additional schemes used to describe complex metadata for archival profiles
+;See documentation about descriptive schemes for a more in-depth explanation
 descriptionSchemes = "{
     'additionalContent' : {
         'label' : 'additionalContent',
