@@ -183,6 +183,7 @@ interface archivesInterface
      * @param array                                  $archiveIds    The archives ids
      *
      * @action recordsManagement/archive/modifyRetentionRule
+     * @example /public/tests/updateArchivesRetentionRule-standard.json example-standard
      *
      */
     public function updateRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null);
@@ -304,7 +305,7 @@ interface archivesInterface
      *
      */
     public function readIntegritycheck($archiveIds);
-    
+
     /*
      *  METADATA
      */
@@ -316,14 +317,14 @@ interface archivesInterface
      * @param string $archiveName
      * @param date   $originatingDate
      * @param mixed  $description
-     * 
+     *
      * @action recordsManagement/archive/modifyMetadata
      */
     public function updateMetadata($archiveId,$originatorArchiveId = null,$archiverArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
 
     /**
      * List an archive resources and children archives
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/listArchiveContents
      */
     public function readArchivecontents_archive_();
@@ -333,7 +334,7 @@ interface archivesInterface
      * Move an archive into a folder
      * @param string $archiveId the archive identifier
      * @param string $folderId  The folder identifier
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
     public function udpateMovearchivetofolder($archiveId, $folderId=null);
@@ -343,13 +344,13 @@ interface archivesInterface
      * @param array  $archiveIds   The archive identifier list
      * @param string $fromFolderId The originating folder identifier
      * @param string $toFolderId   The destination folder identifier
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
     public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 
     /**
-     * Index full text 
+     * Index full text
      * @param int $limit The maximum number of archive to index
      *
      * @action recordsManagement/archive/indexFullText

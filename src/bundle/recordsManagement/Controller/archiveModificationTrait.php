@@ -71,7 +71,7 @@ trait archiveModificationTrait
      * Modify the archive retention rule
      *
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
-     * @param @param mixed                                  $archiveIds    The archives ids
+     * @param mixed                                  $archiveIds    The archives ids
      * @param null $comment
      * @param null $identifier
      * @return array
@@ -155,7 +155,7 @@ trait archiveModificationTrait
                 }
 
                 $retentionRule->retentionRuleStatus = "current";
-                
+
                 $retentionRule->lastModificationDate = \laabs::newTimestamp();
 
                 $this->sdoFactory->update($retentionRule, 'recordsManagement/archive');
@@ -367,7 +367,7 @@ trait archiveModificationTrait
 
         return $res;
     }
-    
+
     /**
      * Update metadata of archive
      * @param string $archiveId
@@ -404,7 +404,7 @@ trait archiveModificationTrait
         if ($archiveName) {
             $archive->archiveName = $archiveName;
         }
-        
+
         $archive->originatorArchiveId = $originatorArchiveId;
 
         if ($archiverArchiveId) {
@@ -458,31 +458,31 @@ trait archiveModificationTrait
                     }
                 }
             }
-            
+
             if (!empty($archive->archivalProfileReference) && is_object($descriptionObject)) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
-                
+
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            
+
             $archive->descriptionObject = $descriptionObject;
 
             $descriptionController->update($archive);
         }
 
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
-        
+
         $operationResult = true;
         $res = true;
-        
+
         $this->logMetadataModification($archive, $operationResult);
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
-            
+
         return $res;
     }
 
@@ -504,7 +504,7 @@ trait archiveModificationTrait
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
             $this->sendModificationNotification([$archive]);
         }
-        
+
         return true;
     }
 
@@ -683,9 +683,9 @@ trait archiveModificationTrait
         if ($checkAccess) {
             $this->checkRights($archive);
         }
-        
+
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
-    
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
@@ -762,7 +762,7 @@ trait archiveModificationTrait
         }
 
         $archiveModificationNotificationController = \laabs::newController("medona/ArchiveModificationNotification");
-        
+
         if (!$identifier) {
             $identifier = "archiveModificationNotification_".date("Y-m-d-H-i-s");
         }
@@ -783,7 +783,7 @@ trait archiveModificationTrait
                 $i++;
                 $unique['reference'] = $reference = $identifier.'_'.$i;
             }
-            
+
             $archiveModificationNotificationController->send(
                 $reference,
                 $archives,
