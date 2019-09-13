@@ -1,10 +1,10 @@
 ﻿-- AUTH
-INSERT INTO "auth"."account" ("accountId", "accountName", "displayName", "accountType", "emailAddress", "enabled", "password", "passwordChangeRequired", "passwordLastChange", "locked", "badPasswordCount", "lastIp", "replacingUserAccountId", "firstName", "lastName", "title", "isAdmin") VALUES
-('superadmin','superadmin', 'Administrateur Général','user','info@maarch.org',true,'186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, null, null, 0, null, null, 'Général', 'Administrateur', 'M.', true);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES 
+('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Admin', 'Super', 'M.', NULL, NULL, NULL, NULL, NULL, true);
 
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
-('ADMIN', 'Administrateur', 'Groupe administrateur', true);
+('ADMIN', 'Administrateur Général', 'Groupe administrateur', true);
 
 -- roleMember
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
