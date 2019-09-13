@@ -213,6 +213,7 @@ class descriptionScheme
     {
         switch (true) {
             case $type == 'string':
+            case $type == 'id':
                 return 'text';
 
             case $type == 'int':
