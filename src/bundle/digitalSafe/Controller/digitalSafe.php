@@ -100,7 +100,6 @@ class digitalSafe
             } elseif (!isset($resource->hash) && !isset($resource->hashAlgorithm)) {
                 continue;
             } else {
-                $this->logEvent();
                 throw $this->getThrowable("Hash or hash algorithm missing", 401, $replyMessage);
             }
         }
@@ -248,7 +247,7 @@ class digitalSafe
         try {
             $archive = $this->archiveController->retrieve($archiveId);
         } catch (\Exception $e) {
-            throw $this->getThrowable("archive " . $archiveId . " doesn't exist", 404, $replyMessage);
+            throw $this->getThrowable($e->getMessage(), 404, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
