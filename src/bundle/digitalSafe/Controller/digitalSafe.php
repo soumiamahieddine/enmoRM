@@ -48,6 +48,10 @@ class digitalSafe
         $this->digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         $accountToken = \laabs::getToken('AUTH');
+        if (!$accountToken) {
+            throw $this->getThrowable("Missing authentication credential", 401);
+        }
+
         $this->account = $this->accountController->get($accountToken->accountId);
     }
 
@@ -91,20 +95,13 @@ class digitalSafe
                 try {
                     $this->checkHash($resource->handler, $resource->hash, $resource->hashAlgorithm);
                 } catch (\Exception $e) {
-                    $replyMessage->operationResult = false;
-                    $replyMessage->operationMessage = $e->getMessage();
-
-                    return $replyMessage;
+                    throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
                 }
             } elseif (!isset($resource->hash) && !isset($resource->hashAlgorithm)) {
                 continue;
             } else {
                 $this->logEvent();
-
-                $replyMessage->operationResult = false;
-                $replyMessage->operationMessage = "Hash or hash algorithm missing";
-
-                return $replyMessage;
+                throw $this->getThrowable("Hash or hash algorithm missing", 401, $replyMessage);
             }
         }
 
@@ -112,10 +109,7 @@ class digitalSafe
             $archiveId = $this->archiveController->receive($archive, false);
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
         }
 
         $replyMessage->archiveId = $archiveId;
@@ -156,10 +150,7 @@ class digitalSafe
         $replyMessage->accountName = $this->account->accountName;
 
         if (!$this->checkRight($originatorOwnerOrgRegNumber, $originatorOrgRegNumber, $archiveId)) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Permission denied";
-
-            return $replyMessage;
+            throw $this->getThrowable("Permission denied", 401, $replyMessage);
         }
 
         try {
@@ -170,16 +161,11 @@ class digitalSafe
                 $res = $this->archiveController->destruct($archiveId);
             }
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
         }
 
         if (count($res['error']) == 1) {
-            $replyMessage->operationResult = false;
-
-            return $replyMessage;
+            throw $this->getThrowable("The request could not be processed", 409, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
@@ -210,10 +196,7 @@ class digitalSafe
         $replyMessage->accountName = $this->account->accountName;
 
         if (!$this->checkRight($originatorOwnerOrgRegNumber, $originatorOrgRegNumber, $archiveId)) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Permission denied";
-
-            return $replyMessage;
+            throw $this->getThrowable("Permission denied", 401, $replyMessage);
         }
 
         try {
@@ -227,10 +210,7 @@ class digitalSafe
             }
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
@@ -262,19 +242,13 @@ class digitalSafe
         $replyMessage->accountName = $this->account->accountName;
 
         if (!$this->checkRight($originatorOwnerOrgRegNumber, $originatorOrgRegNumber, $archiveId)) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Permission denied";
-
-            return $replyMessage;
+            throw $this->getThrowable("Permission denied", 401, $replyMessage);
         }
 
         try {
             $archive = $this->archiveController->retrieve($archiveId);
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable("archive " . $archiveId . " doesn't exist", 404, $replyMessage);
         }
 
         $replyMessage->originatorOwnerOrgRegNumber = $archive->originatorOwnerOrgRegNumber;
@@ -313,20 +287,14 @@ class digitalSafe
         $replyMessage->accountName = $this->account->accountName;
 
         if (!$this->checkRight($originatorOwnerOrgRegNumber, $originatorOrgRegNumber, $archiveId)) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Permission denied";
-
-            return $replyMessage;
+            throw $this->getThrowable("Permission denied", 401, $replyMessage);
         }
 
         try {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $res = $this->archiveController->verifyIntegrity($archiveId);
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
         }
 
         $replyMessage->archiveId = $archive->archiveId;
@@ -338,7 +306,6 @@ class digitalSafe
         if (count($res['error']) > 1) {
             $replyMessage->operationResult = false;
             $replyMessage->operationMessage = "No integrity";
-
             return $replyMessage;
         }
         $replyMessage->operationResult = true;
@@ -421,10 +388,7 @@ class digitalSafe
                 $replyMessage->lifeCycleEvents[] = $event;
             }
         } catch (\Exception $e) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable($e->getMessage(), 400, $replyMessage);
         }
 
         if ($originatorOrgRegNumber) {
@@ -474,15 +438,11 @@ class digitalSafe
         try {
             $organization = $this->organizationController->getOrgByRegNumber($originatorOwnerOrgRegNumber);
         } catch (\Exception $exception) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "Organization " . $originatorOwnerOrgRegNumber . " doesn't exist";
-            return $replyMessage;
+            throw $this->getThrowable("Organization " . $originatorOwnerOrgRegNumber . " doesn't exist", 404, $replyMessage);
         }
 
         if ($organization->isOrgUnit) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "The organization must not be a organization unit";
-            return $replyMessage;
+            throw $this->getThrowable("The organization must not be a organization unit", 403, $replyMessage);
         }
 
         $userPositions = $this->userPositionController->listPositions($this->account->accountId);
@@ -503,9 +463,7 @@ class digitalSafe
         }
 
         if (empty($userOrganisations)) {
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = "The user is not positioned on the organization.";
-            return $replyMessage;
+            throw $this->getThrowable("The user is not positioned on the organization.", 403, $replyMessage);
         }
 
         $queryParts['organization']  = "(";
@@ -523,9 +481,7 @@ class digitalSafe
                 $fromDate = $fromDate ? \laabs::newDatetime($fromDate, "UTC") : false;
                 $toDate = $toDate ? \laabs::newDatetime($toDate, "UTC") : false;
             } catch (\Exception $exception) {
-                $replyMessage->operationResult = false;
-                $replyMessage->operationMessage = "Invalid format date";
-                return $replyMessage;
+                throw $this->getThrowable("Invalid format date", 400, $replyMessage);
             }
 
             if ($fromDate && $toDate) {
@@ -632,10 +588,7 @@ class digitalSafe
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } catch (\Exception $e) {
             $replyMessage = new \stdClass();
-            $replyMessage->operationResult = false;
-            $replyMessage->operationMessage = $e->getMessage();
-
-            return $replyMessage;
+            throw $this->getThrowable("archive " . $archiveId . " doesn't exist", 404, $replyMessage);
         }
 
         if ($archive->originatorOwnerOrgRegNumber == $originatorOwnerOrgRegNumber
@@ -680,5 +633,25 @@ class digitalSafe
             $organization,
             true
         );
+    }
+
+    /**
+     * Prepare a throwable
+     * @param string The message
+     * @param int    The code 
+     * @param mixed  The contextual data
+     * 
+     * @return \Exception
+     */
+    protected function getThrowable($message, $code, $context = [])
+    {
+        $exception = \laabs::newException('digitalSafe/Exception', $message, $code);
+
+        foreach ($context as $name => $value) {
+            $exception->{$name} = $value;
+        }
+        $exception->operationResult = false;
+        
+        return $exception;
     }
 }
