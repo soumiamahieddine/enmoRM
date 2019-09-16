@@ -1,0 +1,53 @@
+{
+    "comment" : [
+        "Test"
+    ],
+    "date" : "2019-06-18",
+    "messageIdentifier" : "01",
+    "archivalAgency" : {
+        "identifier" : "mathusalem"
+    },
+    "transferringAgency" : {
+        "identifier" : "DCIAL"
+    },
+    "dataObjectPackage" : {
+        "binaryDataObjects" : {
+            "bdo1" : {
+                "attachment" : {
+                    "filename" : "17.pdf"
+                },
+                "size" : 26893,
+                "format" : "fmt/18",
+                "messageDigest" : {
+                    "content" : "df5df627fa8ac22fe91e518b382963da8d15636f90b239a8afeb5a63de649214",
+                    "algorithm" : "SHA256"
+                }
+            }
+        },
+        "descriptiveMetadata" : {
+            "au01" : {
+                "identifier" : "F17",
+                "displayName" : "test mathu 1",
+                "profile" : "FACACH",
+                "description" : {
+                    "supplier" : "Maarch SAS - 11 bd du Sud-Est - Nanterre",
+                    "taxIdentifier" : "FR1736448383",
+                    "netPayable" : 1234.56,
+                    "dueDate" : "2019-03-01"
+                },
+                "filing" : {
+                    "activity" : "FOUR"
+                },
+                "management" : {
+                    "appraisalRule" : {
+                        "code" : "COM",
+                        "startDate" : "2019-01-01"
+                    }
+                },
+                "dataObjectReferences" : [
+                    "bdo1"
+                ]
+            }
+        }
+    }
+}
