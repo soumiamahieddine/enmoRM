@@ -57,7 +57,7 @@ refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 archivalProfileType = 2
 
 ; Default Retention Rule if any retention rule is set up ("dispose" or "preserve")
-actionWithoutRetentionRule = "preserve"
+actionWithoutRetentionRule = "dispose"
 
 ; Delete the description of an archive when an archive is deleted
 deleteDescription = false

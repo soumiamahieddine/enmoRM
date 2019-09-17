@@ -1,0 +1,6 @@
+{
+    "require-dev": {
+        "codeception/codeception": "^3.0",
+        "flow/jsonpath" : "^0.4"
+    }
+}

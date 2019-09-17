@@ -15,5 +15,12 @@ data/maarchRM/conf/confvars.ini
 vendor/*
 
 node_modules
-cypress/videos
-cypress/screenshots
+
+
+tests/cypress/videos/*
+!tests/cypress/videos/.gitignore
+
+tests/cypress/screenshots/*
+!tests/cypress/screenshots/.gitignore
+composer.lock
+package-lock.json
