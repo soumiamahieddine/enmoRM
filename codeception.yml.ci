@@ -1,0 +1,31 @@
+# suite config
+suites:
+    api:
+        actor: ApiTester
+        path: .
+        modules:
+            enabled:
+                - REST:
+                    url: http://maarchrm
+                    depends: PhpBrowser
+
+paths:
+    tests: tests/codeception
+    output: tests/codeception/_output
+    data: tests/codeception/_data
+    support: tests/codeception/_support
+
+settings:
+    shuffle: false
+    lint: true
+
+modules:
+    enabled:
+        - Db:
+              dsn: 'pgsql:host=postgres;dbname=maarchRMtest;port=5432'
+              user: 'maarch'
+              password: 'maarch'
+              dump: 'tests/codeception/_data/dump.sql'
+              cleanup: false # run populator before each test
+              populate: true # run populator before all test
+              populator: 'psql -U $user -h $host -d $dbname < $dump'
