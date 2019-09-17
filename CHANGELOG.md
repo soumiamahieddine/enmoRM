@@ -11,7 +11,7 @@
 
 ### Open API
 
-- `Added` Ajout d'un script de génération de documentation OpenAPI 2.0 exportable dans Swagger.
+- `Added` Ajout d'un script de génération de documentation OpenAPI 2.0 exportable dans Swagger ou en documention HTML.
 
 ### Journalisation
 
