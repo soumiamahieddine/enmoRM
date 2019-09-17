@@ -417,7 +417,7 @@ trait archiveDestructionTrait
 
         $userAccountController = \laabs::newController('auth/userAccount');
         if (($currentService->registrationNumber != $archive->archiverOrgRegNumber
-                || !$userAccountController->hasPrivilege("destruction/destructionRequest"))
+                || !$userAccountController->hasPrivilege("archiveManagement/addResource"))
             && !in_array("owner", $currentService->orgRoleCodes)) {
             return false ;
         }
