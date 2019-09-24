@@ -146,10 +146,13 @@ input:invalid {
     }
 
     function checkNumberInput(e){
-        if (e.val() && isNaN(e.val())){
+        // Regexp now accept "," and "." for type number
+        if (e.val() && !RegExp("^[0-9]*[,.]?[0-9]{1,}$").test(e.val())) {
            onError(e);
         }
         else {
+            value = e.val().replace(",", ".");
+            e.val(value);
             e.css({"border-color":""});
         }
     }
@@ -339,7 +342,7 @@ input:invalid {
 
         getNumberInput : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
-            field.attr('placeholder', $('#number_text').text()).attr("pattern", "[0-9]*");
+            field.attr('placeholder', $('#number_text').text()).attr("pattern", "^[0-9]*[,.]?[0-9]{1,}$");
 
             field.getValue = function() {
                 checkNumberInput(field);
