@@ -98,6 +98,7 @@ CREATE TABLE "medona"."message"
 
     "data" text,
     "path" text,
+    "comment" text,
 
     "active" boolean,
     "archived" boolean,
@@ -120,7 +121,7 @@ CREATE TABLE "medona"."messageComment"
     "comment" text,
     "commentId" text NOT NULL,
     PRIMARY KEY ("commentId"),
-    UNIQUE ("messageId", comment),
+    UNIQUE ("messageId", "comment"),
     FOREIGN KEY ("messageId")
         REFERENCES "medona"."message" ("messageId") MATCH SIMPLE
         ON UPDATE NO ACTION ON DELETE NO ACTION
