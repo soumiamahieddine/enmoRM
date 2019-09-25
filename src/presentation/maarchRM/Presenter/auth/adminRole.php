@@ -110,8 +110,13 @@ class adminRole
 
         $this->view->addContentFile("auth/authorization/edit.html");
 
-        if (count($role->roleMembers) > 0) {
-            $role->roleMembers = \laabs::callService('auth/userAccount/readIndex', "accountId=['".implode("', '", $role->roleMembers)."']");
+        if (isset($role->roleMembers) && !is_null($role->roleMembers) && !empty($role->roleMembers)) {
+            if (count($role->roleMembers) > 0) {
+                $role->roleMembers = \laabs::callService(
+                    'auth/userAccount/readIndex',
+                    "accountId=['".implode("', '", $role->roleMembers)."']"
+                );
+            }
         }
 
         $role->superadmin = false;

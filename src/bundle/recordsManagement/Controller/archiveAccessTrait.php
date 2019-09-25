@@ -961,7 +961,7 @@ trait archiveAccessTrait
         $statusList['error'] = array('preserved', 'restituable', 'restituted', 'frozen', 'disposable', 'disposed');
 
         if (!is_array($archiveIds)) {
-            $archiveIds = array($archiveIds);
+            $archiveIds = array((string) $archiveIds);
         }
 
         $res = array('success' => array(), 'error' => array());
