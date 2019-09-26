@@ -189,7 +189,7 @@
         }
     };
     ArchiveFolderList = {
-        rowTemplate    : $('#listTemplate > .archive'),
+        rowTemplate    : $('#listTemplate').children('div').clone(),
         folderContents : $('#folderContentList'),
         folderPanel    : $('#folderPanel'),
         orgRegNumber   : null,
@@ -301,7 +301,6 @@
                     "status"
                 ]
             };
-
             if(options){
                 $.each(options, function( key, value ) {
                     defaultOptions[key] = value;
