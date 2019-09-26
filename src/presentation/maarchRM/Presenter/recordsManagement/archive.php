@@ -279,7 +279,7 @@ class archive
 
         $this->view->translate();
         $this->view->merge();
-           
+
         return $this->view->saveHtml();
     }
 
@@ -332,7 +332,7 @@ class archive
     public function getDescription($archive)
     {
         $this->view->addContentFile("recordsManagement/archive/description.html");
-        
+
         // Digital resources
         $this->setDigitalResources($archive);
 
@@ -354,20 +354,20 @@ class archive
         $currentService = \laabs::getToken("ORGANIZATION");
 
         $canDeleteResource = $canAddResource = false ;
-        
+
         if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || in_array("owner", $currentService->orgRoleCodes))
-            && \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest") 
+            && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/addResource")
             && $archive->status === 'preserved') {
             $canDeleteResource = $canAddResource = true ;
         }
-        
+
         $this->view->setSource("canDeleteResource", $canDeleteResource);
         $this->view->setSource("canAddResource", $canAddResource);
         $this->view->setSource("archive", $archive);
 
         $this->view->translate();
         $this->view->merge();
-       
+
         return $this->view->saveHtml();
     }
 
@@ -786,7 +786,7 @@ class archive
                 $this->json->message = $this->translator->getText($this->json->message);
             }
         }
-        
+
         $this->json->message = sprintf($this->json->message, $success, $echec, $archivesNumber);
 
         return $this->json->save();
@@ -1101,7 +1101,7 @@ class archive
             $descriptionHtml = $presenter->read($archive->descriptionObject, $archivalProfile, $archive->descriptionClass);
 
             $container = $this->view->getElementById("metadata");
-            
+
             $this->view->addContent($descriptionHtml, $container);
         }
     }
@@ -1139,7 +1139,7 @@ class archive
         } else {
             $presenterClass = $descriptionScheme;
         }
- 
+
         try {
             $presentation = \laabs::presentation();
             $presentation->getPresenter($presenterClass);
@@ -1226,7 +1226,7 @@ class archive
 
             // Digital resources
             $this->setDigitalResources($archive->contents[$key]);
-            
+
             // Contents
             $this->setArchiveTree($archive->contents[$key]);
         }
