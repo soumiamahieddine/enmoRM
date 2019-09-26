@@ -21,6 +21,8 @@ Dans la section `[auth]`, la directive `blackListedUserStories` inhibait les dro
 
 Ces directives sont utilisables à la place de la directive existante `publicArchives` pour gérer plus finement les fonctionnalités correspondantes :
 
+Dans la section `[presentation.maarchRM]`, ajout du paramètre maxResults de type nombre (valeur par défaut à 200), qui permet de définir le nombre maximum d'archives retournées lors d'une recherche dans l'application.
+
 Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen. 
 Si activée, chaque utilisateur ne peut avoir qu'un rôle et la gestion des rôles ne permet plus d'ajouter ou retirer des utilisateurs.
 
@@ -55,6 +57,7 @@ descriptionSchemes = "{
   }
 }"
 ```
+
 ## Regroupement Socle + ThirdPartyArchiving
 
 Rapatriement de la configuration de l'extension thirdPartyArchiving dans le socle.
@@ -75,12 +78,14 @@ autoValidateSize = 2147000
 ;    'seda' : {
 ;         'label' : 'Seda 1',
 ;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v1.0',
-;         'phpNamespace' : 'seda'
+;         'phpNamespace' : 'seda',
+;         'presenter' : 'seda/message'
 ;    },
 ;    'seda2' : {
 ;         'label' : 'Seda 2',
 ;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v2.0',
-;         'phpNamespace' : 'seda2'
+;         'phpNamespace' : 'seda2',
+;         'presenter' : 'seda2/message'
 ;    }
 ;}"
 
@@ -234,6 +239,10 @@ refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 Les csv sont considérés comme étant séparés par des virgules et les données présentes entre des guillemets ("").
 Lors de l'ajout d'un mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentiel externe doit correspondre avec le nom du fichier csv à charger dans le dossier renseigné dans la configuration, sans son extension.
 Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxième colonne. Les colonnes surnuméraires sont chargées mais ne servent que d'aide à la recherche lors de la saisie.
+
+## Plugins
+
+Ajout du plugin dateTimePicker, permettant la saisie simultanée d'une date et d'un horaire au sein d'un même champ (au format DD-MM-YYYY HH:mm:ss par défaut) via une interface.
 
 # Migration 2.3 vers 2.4
 
