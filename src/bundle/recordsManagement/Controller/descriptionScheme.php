@@ -279,6 +279,13 @@ class descriptionScheme
             }
         }
 
+        if (isset($property->facets)) {
+            $facets = $property->facets;
+            foreach ($facets as $key => $value) {
+                $descriptionField->$key = $value;
+            }
+        }
+
         if (isset($property->ref)) {
             $descriptionField->ref = $property->ref[0];
         }
