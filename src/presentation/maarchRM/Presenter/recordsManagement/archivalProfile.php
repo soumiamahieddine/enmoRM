@@ -88,7 +88,6 @@ class archivalProfile
 
         $profilesDirectory = \laabs::configuration('recordsManagement')['profilesDirectory'];
         $profileList = \laabs::callService('recordsManagement/archivalProfile/readIndex');
-
         foreach ($profileList as $key => $profile) {
             if ($profile->archivalProfileId == $archivalProfile->archivalProfileId) {
                 unset($profileList[$key]);
@@ -184,7 +183,7 @@ class archivalProfile
             $descriptionClasses[] = $descriptionClass = new \stdClass();
             $descriptionClass->label = $descriptionScheme->label;
             $descriptionClass->name = $name;
-            
+
             $properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $name);
             $dateProperties = [];
             foreach ($properties as $name => $descriptionField) {
@@ -196,6 +195,10 @@ class archivalProfile
                     array_push($dateProperties, $descriptionField);
                 }
             }
+            // sort alphabetically properties of description classes
+            usort($properties, function ($a, $b) {
+                return $a->label > $b->label;
+            });
 
             $descriptionClass->properties = json_encode($properties);
             $descriptionClass->dateProperties = json_encode($dateProperties);
@@ -226,7 +229,7 @@ class archivalProfile
 
             $profileFileForm = $this->view->createDocumentFragment();
             $profileFileForm->appendHtmlFile("recordsManagement/archivalProfile/profileUpload.html");
-            
+
             $this->view->getElementById('archivalProfileNavTabs')->appendChild($profileFileForm);
         }
     }
