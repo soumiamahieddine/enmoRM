@@ -230,6 +230,7 @@ class repository
     {
         try {
             $repositoryService = $repository->getService();
+            $address->path = str_replace('\\', '/', $address->path);
             $contents = $repositoryService->readObject($address->path);
         } catch (\Exception $e) {
             $address->lastIntegrityCheck = \laabs::newTimestamp();

@@ -420,12 +420,12 @@ class journal
         if (is_scalar($journalReference) || get_class($journalReference) == 'core\Type\Id') {
             $journalReference = $logController->read($journalReference);
         }
-        
+
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
             $resources = $archiveController->getDigitalResources($journalReference->archiveId, $checkAccess = false);
             $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
-            
+
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
 
@@ -549,7 +549,8 @@ class journal
         // Open the journal to start with
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
-        if (!isset($journal)) {
+
+        if (!isset($journal) || is_null($journal)) {
             $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", [], ">timestamp");
             foreach ($events as $key => $event) {
                 $events[$key] = $this->decodeEventFormat($event);
@@ -558,9 +559,11 @@ class journal
             return $events;
         }
 
-        $journal = end($journal);
-        $this->openJournal($journal->archiveId);
+        if (is_array($journal)) {
+            $journal = end($journal);
+        }
 
+        $this->openJournal($journal->archiveId);
 
         // Searching for related events not in the journal yet
         $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId' AND timestamp>'$journal->toDate'", [], ">timestamp");

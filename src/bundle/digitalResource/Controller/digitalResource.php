@@ -326,6 +326,10 @@ class digitalResource
     {
         $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
+        foreach ($resources as $key => $resource) {
+            $resources[$key] = $this->info($resource->resId);
+        }
+
         return $resources;
     }
 
