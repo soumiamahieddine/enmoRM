@@ -54,6 +54,14 @@ class welcome
      */
     public function welcomePage()
     {
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->saveParameters());
+
+        $datePickerPlugin = \laabs::newService('dependency/html/plugins/datePicker/datePicker', $this->view->getContainer());
+        $datePickerPlugin->translate();
+        $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
+
         $this->view->addContentFile("dashboard/mainScreen/main.html");
 
         $this->view->translate();
@@ -109,14 +117,6 @@ class welcome
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-
-        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
-        $dateTimePickerPlugin->translate();
-        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->saveParameters());
-
-        $datePickerPlugin = \laabs::newService('dependency/html/plugins/datePicker/datePicker', $this->view->getContainer());
-        $datePickerPlugin->translate();
-        $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
 
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
