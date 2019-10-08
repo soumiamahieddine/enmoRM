@@ -1,0 +1,548 @@
+[
+    {
+        "digitalResources": [
+            {
+                "fileName": "610025.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "610025",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "610025",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "421920.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "421920",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "421920",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "420153.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "420153",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "420153",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "420599.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "420599",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "420599",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "377245.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "377245",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "377245",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "419657.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "419657",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "419657",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "541414.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "541414",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "541414",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "516808.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "516808",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "516808",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "528679.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "528679",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "528679",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "460338.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "460338",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "460338",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "400071.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "400071",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "400071",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "389602.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "389602",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "389602",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "371833.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "371833",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "371833",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "356829.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "356829",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "356829",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "341645.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "341645",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "341645",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "337070.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "337070",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "337070",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "356503.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "356503",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "356503",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "554376.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "554376",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "554376",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "602075.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "602075",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "602075",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "585282.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "585282",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "585282",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "533527.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "533527",
+            "taxIdentifier": "250"
+        },
+        "archiveName": "533527",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "514210.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "514210",
+            "taxIdentifier": "500"
+        },
+        "archiveName": "514210",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "404119.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "404119",
+            "taxIdentifier": "500"
+        },
+        "archiveName": "404119",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "319368.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "319368",
+            "taxIdentifier": "500"
+        },
+        "archiveName": "319368",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "436508.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "436508",
+            "taxIdentifier": "150"
+        },
+        "archiveName": "436508",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "330025.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "330025",
+            "taxIdentifier": "600"
+        },
+        "archiveName": "330025",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "545607.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "545607",
+            "taxIdentifier": "1.25"
+        },
+        "archiveName": "545607",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "477566.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "477566",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "477566",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "407101.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "407101",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "407101",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "414746.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "414746",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "414746",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "528563.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "528563",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "528563",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "495974.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "495974",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "495974",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "375147.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "375147",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "375147",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "316750.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "316750",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "316750",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "363704.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "363704",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "363704",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "622917.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "622917",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "622917",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "569948.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "569948",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "569948",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "621416.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "621416",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "621416",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "536969.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "documentId": "536969",
+            "taxIdentifier": "345"
+        },
+        "archiveName": "536969",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    }
+]
