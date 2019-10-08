@@ -1,8 +1,8 @@
 {
     "type": "object",
     "properties": {
-        "professional_adress" : {
-            "title" : "Adresse professionnelle",
+        "reference_addresses" : {
+            "title" : "Adresses de référence",
             "type" : "array",
             "items" : {
                 "type" : "object",

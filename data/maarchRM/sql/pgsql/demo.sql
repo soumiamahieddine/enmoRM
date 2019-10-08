@@ -482,7 +482,7 @@ INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'dueDate', fa
 INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'orderNumber', false, 5, false, NULL, false);
 INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'fullname', false, 0, false, NULL, NULL);
 INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'empid', true, 1, false, NULL, NULL);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'professional_adress', false, 2, false, NULL, NULL);
+INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'reference_addresses', false, 2, false, NULL, NULL);
 
 INSERT INTO "recordsManagement"."descriptionField" VALUES ('org', 'Organisation', 'name', '', NULL, NULL, NULL, NULL, '["ACME Paris","ACME Dakar","ACME Cotonou"]', NULL, NULL, false);
 INSERT INTO "recordsManagement"."descriptionField" VALUES ('fullname', 'Nom complet', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
