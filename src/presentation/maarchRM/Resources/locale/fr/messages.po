@@ -607,3 +607,6 @@ msgstr "Texte"
 
 msgid "No workflow status"
 msgstr "Pas de statut de traitement"
+
+msgid "Resource has no size"
+msgstr "La taille de la ressource est nulle"
