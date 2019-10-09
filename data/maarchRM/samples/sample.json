@@ -7,6 +7,11 @@
             "items" : {
                 "type" : "object",
                 "properties": {
+                    "address_type" : {
+                        "title" : "Intitulé de l'adresse",
+                        "type" : "string",
+                        "enum" : ["Personelle", "Professionelle" ,"Secondaire"]
+                    },
                     "streetNumber" : {
                         "title" : "Numéro de voie",
                         "type" : "number"
