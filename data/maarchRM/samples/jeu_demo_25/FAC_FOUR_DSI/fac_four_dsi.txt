@@ -2,406 +2,18 @@
     {
         "digitalResources": [
             {
-                "fileName": "23298.pdf"
+                "fileName": "24442.pdf"
             }
         ],
         "descriptionObject": {
-            "documentId": "23298",
-            "taxIdentifier": "49"
+            "taxIdentifier": "FR11223345567",
+            "supplier": "Logo IT Company",
+            "netPayable": 23.94,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5701",
+            "service": "DSI"
         },
-        "archiveName": "23298",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "22272.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "22272",
-            "taxIdentifier": "49"
-        },
-        "archiveName": "22272",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "20057.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "20057",
-            "taxIdentifier": "49"
-        },
-        "archiveName": "20057",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "10764.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "10764",
-            "taxIdentifier": "249"
-        },
-        "archiveName": "10764",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "22449.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "22449",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "22449",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "10753.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "10753",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "10753",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "21584.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "21584",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "21584",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "17978.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "17978",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "17978",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "17120.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "17120",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "17120",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "12395.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "12395",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "12395",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "11750.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "11750",
-            "taxIdentifier": "251"
-        },
-        "archiveName": "11750",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "18228.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "18228",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "18228",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "12436.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "12436",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "12436",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "16479.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "16479",
-            "taxIdentifier": "250"
-        },
-        "archiveName": "16479",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "21001.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "21001",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "21001",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "17414.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "17414",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "17414",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "17048.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "17048",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "17048",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "21199.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "21199",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "21199",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "14709.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "14709",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "14709",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "22707.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "22707",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "22707",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "9852.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "9852",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "9852",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "17604.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "17604",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "17604",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "13402.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "13402",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "13402",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "16416.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "16416",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "16416",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "12206.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "12206",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "12206",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "22391.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "22391",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "22391",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "9528.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "9528",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "9528",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "11111.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "11111",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "11111",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "18847.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "18847",
-            "taxIdentifier": "175"
-        },
-        "archiveName": "18847",
+        "archiveName": "24442",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     },
@@ -412,80 +24,14 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "7504",
-            "taxIdentifier": "19.95"
+            "taxIdentifier": "FR11223345568",
+            "supplier": "Logo IT Company",
+            "netPayable": 23.94,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4057",
+            "service": "DSI"
         },
         "archiveName": "7504",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "24442.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "24442",
-            "taxIdentifier": "19.95"
-        },
-        "archiveName": "24442",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "15304.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "15304",
-            "taxIdentifier": "19.95"
-        },
-        "archiveName": "15304",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "22209.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "22209",
-            "taxIdentifier": "19.95"
-        },
-        "archiveName": "22209",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "16392.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "16392",
-            "taxIdentifier": "49"
-        },
-        "archiveName": "16392",
-        "archivalProfileReference": "FACACH",
-        "originatorOrgRegNumber": "FOUR"
-    },
-    {
-        "digitalResources": [
-            {
-                "fileName": "24493.pdf"
-            }
-        ],
-        "descriptionObject": {
-            "documentId": "24493",
-            "taxIdentifier": "59"
-        },
-        "archiveName": "24493",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     },
@@ -496,8 +42,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "8783",
-            "taxIdentifier": "59"
+            "taxIdentifier": "FR11223345569",
+            "supplier": "Logo IT Company",
+            "netPayable": 354,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5038",
+            "service": "DSI"
         },
         "archiveName": "8783",
         "archivalProfileReference": "FACACH",
@@ -506,42 +56,108 @@
     {
         "digitalResources": [
             {
-                "fileName": "17589.pdf"
+                "fileName": "9528.pdf"
             }
         ],
         "descriptionObject": {
-            "documentId": "17589",
-            "taxIdentifier": "59"
+            "taxIdentifier": "FR11223345570",
+            "supplier": "Logo IT Company",
+            "netPayable": 630,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5593",
+            "service": "DSI"
         },
-        "archiveName": "17589",
+        "archiveName": "9528",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     },
     {
         "digitalResources": [
             {
-                "fileName": "16059.pdf"
+                "fileName": "9852.pdf"
             }
         ],
         "descriptionObject": {
-            "documentId": "16059",
-            "taxIdentifier": "59"
+            "taxIdentifier": "FR11223345571",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3965",
+            "service": "DSI"
         },
-        "archiveName": "16059",
+        "archiveName": "9852",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     },
     {
         "digitalResources": [
             {
-                "fileName": "13855.pdf"
+                "fileName": "10753.pdf"
             }
         ],
         "descriptionObject": {
-            "documentId": "13855",
-            "taxIdentifier": "59"
+            "taxIdentifier": "FR11223345572",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "6048",
+            "service": "DSI"
         },
-        "archiveName": "13855",
+        "archiveName": "10753",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "10764.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345573",
+            "supplier": "Logo IT Company",
+            "netPayable": 0,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5596",
+            "service": "DSI"
+        },
+        "archiveName": "10764",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "11111.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345574",
+            "supplier": "Logo IT Company",
+            "netPayable": 420,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3147",
+            "service": "DSI"
+        },
+        "archiveName": "11111",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "11750.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345575",
+            "supplier": "Logo IT Company",
+            "netPayable": 602.4,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5328",
+            "service": "DSI"
+        },
+        "archiveName": "11750",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     },
@@ -552,10 +168,554 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "12010",
-            "taxIdentifier": "49"
+            "taxIdentifier": "FR11223345576",
+            "supplier": "Logo IT Company",
+            "netPayable": 294,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3567",
+            "service": "DSI"
         },
         "archiveName": "12010",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "12206.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345577",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2139",
+            "service": "DSI"
+        },
+        "archiveName": "12206",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "12395.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345578",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3355",
+            "service": "DSI"
+        },
+        "archiveName": "12395",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "12436.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345579",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4091",
+            "service": "DSI"
+        },
+        "archiveName": "12436",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "13402.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345580",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4621",
+            "service": "DSI"
+        },
+        "archiveName": "13402",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "13855.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345581",
+            "supplier": "Logo IT Company",
+            "netPayable": 70.8,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2893",
+            "service": "DSI"
+        },
+        "archiveName": "13855",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "14709.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345582",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5479",
+            "service": "DSI"
+        },
+        "archiveName": "14709",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "15304.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345583",
+            "supplier": "Logo IT Company",
+            "netPayable": 359.1,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5413",
+            "service": "DSI"
+        },
+        "archiveName": "15304",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "16059.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345584",
+            "supplier": "Logo IT Company",
+            "netPayable": 849.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4768",
+            "service": "DSI"
+        },
+        "archiveName": "16059",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "16392.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345585",
+            "supplier": "Logo IT Company",
+            "netPayable": 117.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3723",
+            "service": "DSI"
+        },
+        "archiveName": "16392",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "16416.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345586",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3195",
+            "service": "DSI"
+        },
+        "archiveName": "16416",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "16479.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345587",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4599",
+            "service": "DSI"
+        },
+        "archiveName": "16479",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17048.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345588",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4949",
+            "service": "DSI"
+        },
+        "archiveName": "17048",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17120.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345589",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4233",
+            "service": "DSI"
+        },
+        "archiveName": "17120",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17414.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345590",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5916",
+            "service": "DSI"
+        },
+        "archiveName": "17414",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17589.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345591",
+            "supplier": "Logo IT Company",
+            "netPayable": 495.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5813",
+            "service": "DSI"
+        },
+        "archiveName": "17589",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17604.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345592",
+            "supplier": "Logo IT Company",
+            "netPayable": 630,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3119",
+            "service": "DSI"
+        },
+        "archiveName": "17604",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "17978.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345593",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4939",
+            "service": "DSI"
+        },
+        "archiveName": "17978",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "18228.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345594",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4884",
+            "service": "DSI"
+        },
+        "archiveName": "18228",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "18847.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345595",
+            "supplier": "Logo IT Company",
+            "netPayable": 840,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4048",
+            "service": "DSI"
+        },
+        "archiveName": "18847",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "20057.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345596",
+            "supplier": "Logo IT Company",
+            "netPayable": 940.8,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4470",
+            "service": "DSI"
+        },
+        "archiveName": "20057",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "21001.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345597",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4519",
+            "service": "DSI"
+        },
+        "archiveName": "21001",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "21199.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345598",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5880",
+            "service": "DSI"
+        },
+        "archiveName": "21199",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "21584.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345599",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2650",
+            "service": "DSI"
+        },
+        "archiveName": "21584",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "22209.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345600",
+            "supplier": "Logo IT Company",
+            "netPayable": 167.58,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2971",
+            "service": "DSI"
+        },
+        "archiveName": "22209",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "22272.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345601",
+            "supplier": "Logo IT Company",
+            "netPayable": 176.4,
+            "dueDate": "2019-09-11",
+            "orderNumber": "6001",
+            "service": "DSI"
+        },
+        "archiveName": "22272",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "22391.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345602",
+            "supplier": "Logo IT Company",
+            "netPayable": 210,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2546",
+            "service": "DSI"
+        },
+        "archiveName": "22391",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "22449.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345603",
+            "supplier": "Logo IT Company",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2646",
+            "service": "DSI"
+        },
+        "archiveName": "22449",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "22707.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345604",
+            "supplier": "Logo IT Company",
+            "netPayable": 1050,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5404",
+            "service": "DSI"
+        },
+        "archiveName": "22707",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "23298.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345605",
+            "supplier": "Logo IT Company",
+            "netPayable": 176.4,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2575",
+            "service": "DSI"
+        },
+        "archiveName": "23298",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "24493.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345606",
+            "supplier": "Logo IT Company",
+            "netPayable": 70.8,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2146",
+            "service": "DSI"
+        },
+        "archiveName": "24493",
         "archivalProfileReference": "FACACH",
         "originatorOrgRegNumber": "FOUR"
     }

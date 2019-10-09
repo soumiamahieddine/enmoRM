@@ -6,8 +6,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201701",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347567",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15829",
+            "service": "DSG"
         },
         "archiveName": "201701",
         "archivalProfileReference": "FACACH",
@@ -20,8 +24,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201702",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347568",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15683",
+            "service": "DSG"
         },
         "archiveName": "201702",
         "archivalProfileReference": "FACACH",
@@ -34,8 +42,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201703",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347569",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15580",
+            "service": "DSG"
         },
         "archiveName": "201703",
         "archivalProfileReference": "FACACH",
@@ -48,8 +60,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201704",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347570",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15312",
+            "service": "DSG"
         },
         "archiveName": "201704",
         "archivalProfileReference": "FACACH",
@@ -62,8 +78,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201705",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347571",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15741",
+            "service": "DSG"
         },
         "archiveName": "201705",
         "archivalProfileReference": "FACACH",
@@ -76,8 +96,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201706",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347572",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15542",
+            "service": "DSG"
         },
         "archiveName": "201706",
         "archivalProfileReference": "FACACH",
@@ -90,8 +114,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201707",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347573",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15355",
+            "service": "DSG"
         },
         "archiveName": "201707",
         "archivalProfileReference": "FACACH",
@@ -104,8 +132,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201708",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347574",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15793",
+            "service": "DSG"
         },
         "archiveName": "201708",
         "archivalProfileReference": "FACACH",
@@ -118,8 +150,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201709",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347575",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15686",
+            "service": "DSG"
         },
         "archiveName": "201709",
         "archivalProfileReference": "FACACH",
@@ -132,8 +168,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201710",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347576",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15584",
+            "service": "DSG"
         },
         "archiveName": "201710",
         "archivalProfileReference": "FACACH",
@@ -146,8 +186,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201711",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347577",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15647",
+            "service": "DSG"
         },
         "archiveName": "201711",
         "archivalProfileReference": "FACACH",
@@ -160,8 +204,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201712",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347578",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15499",
+            "service": "DSG"
         },
         "archiveName": "201712",
         "archivalProfileReference": "FACACH",
@@ -174,8 +222,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201801",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347579",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15885",
+            "service": "DSG"
         },
         "archiveName": "201801",
         "archivalProfileReference": "FACACH",
@@ -188,8 +240,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "201802",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347580",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15723",
+            "service": "DSG"
         },
         "archiveName": "201802",
         "archivalProfileReference": "FACACH",
@@ -202,8 +258,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017011",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347581",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15832",
+            "service": "DSG"
         },
         "archiveName": "2017011",
         "archivalProfileReference": "FACACH",
@@ -216,8 +276,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017012",
-            "taxIdentifier": "250"
+            "taxIdentifier": "FR11223347582",
+            "supplier": "Vecteur Clean",
+            "netPayable": 300,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15511",
+            "service": "DSG"
         },
         "archiveName": "2017012",
         "archivalProfileReference": "FACACH",
@@ -230,8 +294,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017013",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347583",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15344",
+            "service": "DSG"
         },
         "archiveName": "2017013",
         "archivalProfileReference": "FACACH",
@@ -244,8 +312,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017014",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347584",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15536",
+            "service": "DSG"
         },
         "archiveName": "2017014",
         "archivalProfileReference": "FACACH",
@@ -258,8 +330,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017021",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347585",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15879",
+            "service": "DSG"
         },
         "archiveName": "2017021",
         "archivalProfileReference": "FACACH",
@@ -272,8 +348,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017022",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347586",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15913",
+            "service": "DSG"
         },
         "archiveName": "2017022",
         "archivalProfileReference": "FACACH",
@@ -286,8 +366,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017031",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347587",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15200",
+            "service": "DSG"
         },
         "archiveName": "2017031",
         "archivalProfileReference": "FACACH",
@@ -300,8 +384,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017032",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347588",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15560",
+            "service": "DSG"
         },
         "archiveName": "2017032",
         "archivalProfileReference": "FACACH",
@@ -314,8 +402,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017041",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347589",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15601",
+            "service": "DSG"
         },
         "archiveName": "2017041",
         "archivalProfileReference": "FACACH",
@@ -328,8 +420,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017042",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347590",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15855",
+            "service": "DSG"
         },
         "archiveName": "2017042",
         "archivalProfileReference": "FACACH",
@@ -342,8 +438,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017051",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347591",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15207",
+            "service": "DSG"
         },
         "archiveName": "2017051",
         "archivalProfileReference": "FACACH",
@@ -356,8 +456,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017052",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347592",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15356",
+            "service": "DSG"
         },
         "archiveName": "2017052",
         "archivalProfileReference": "FACACH",
@@ -370,8 +474,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017061",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347593",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15583",
+            "service": "DSG"
         },
         "archiveName": "2017061",
         "archivalProfileReference": "FACACH",
@@ -384,8 +492,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017062",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347594",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15285",
+            "service": "DSG"
         },
         "archiveName": "2017062",
         "archivalProfileReference": "FACACH",
@@ -398,8 +510,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017071",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347595",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15923",
+            "service": "DSG"
         },
         "archiveName": "2017071",
         "archivalProfileReference": "FACACH",
@@ -412,8 +528,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017072",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347596",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15341",
+            "service": "DSG"
         },
         "archiveName": "2017072",
         "archivalProfileReference": "FACACH",
@@ -426,8 +546,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017081",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347597",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15716",
+            "service": "DSG"
         },
         "archiveName": "2017081",
         "archivalProfileReference": "FACACH",
@@ -440,8 +564,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017082",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347598",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15241",
+            "service": "DSG"
         },
         "archiveName": "2017082",
         "archivalProfileReference": "FACACH",
@@ -454,8 +582,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017091",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347599",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15460",
+            "service": "DSG"
         },
         "archiveName": "2017091",
         "archivalProfileReference": "FACACH",
@@ -468,8 +600,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017092",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347600",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15923",
+            "service": "DSG"
         },
         "archiveName": "2017092",
         "archivalProfileReference": "FACACH",
@@ -482,8 +618,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017101",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347601",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15560",
+            "service": "DSG"
         },
         "archiveName": "2017101",
         "archivalProfileReference": "FACACH",
@@ -496,8 +636,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017102",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347602",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15570",
+            "service": "DSG"
         },
         "archiveName": "2017102",
         "archivalProfileReference": "FACACH",
@@ -510,8 +654,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017111",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347603",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15483",
+            "service": "DSG"
         },
         "archiveName": "2017111",
         "archivalProfileReference": "FACACH",
@@ -524,8 +672,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017112",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347604",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15537",
+            "service": "DSG"
         },
         "archiveName": "2017112",
         "archivalProfileReference": "FACACH",
@@ -538,8 +690,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017121",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347605",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15296",
+            "service": "DSG"
         },
         "archiveName": "2017121",
         "archivalProfileReference": "FACACH",
@@ -552,8 +708,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2017122",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347606",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15517",
+            "service": "DSG"
         },
         "archiveName": "2017122",
         "archivalProfileReference": "FACACH",
@@ -566,8 +726,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2018011",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347607",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15462",
+            "service": "DSG"
         },
         "archiveName": "2018011",
         "archivalProfileReference": "FACACH",
@@ -580,8 +744,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2018012",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347608",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15469",
+            "service": "DSG"
         },
         "archiveName": "2018012",
         "archivalProfileReference": "FACACH",
@@ -594,8 +762,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2018021",
-            "taxIdentifier": "125"
+            "taxIdentifier": "FR11223347609",
+            "supplier": "Vecteur Clean",
+            "netPayable": 150,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15247",
+            "service": "DSG"
         },
         "archiveName": "2018021",
         "archivalProfileReference": "FACACH",
@@ -608,8 +780,12 @@
             }
         ],
         "descriptionObject": {
-            "documentId": "2018022",
-            "taxIdentifier": "213"
+            "taxIdentifier": "FR11223347610",
+            "supplier": "Vecteur Clean",
+            "netPayable": 255.6,
+            "dueDate": "2019-09-11",
+            "orderNumber": "15238",
+            "service": "DSG"
         },
         "archiveName": "2018022",
         "archivalProfileReference": "FACACH",
