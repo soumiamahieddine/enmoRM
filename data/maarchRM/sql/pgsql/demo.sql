@@ -150,14 +150,10 @@ INSERT INTO "batchProcessing"."logScheduling" VALUES ('maarchRM_5k7cwmpb4-0000-7
 
 INSERT INTO "batchProcessing"."scheduling" VALUES ('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-09-19 09:24:29.658821', '2019-09-20 18:00:00', 'scheduled');
 INSERT INTO "batchProcessing"."scheduling" VALUES ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('deleteArchive', 'Destruction', '04', '00;19;;;;;;;', NULL, 'System', '2019-03-14 17:17:10.155329', '2019-03-15 18:00:00', 'scheduled');
 INSERT INTO "batchProcessing"."scheduling" VALUES ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled');
 INSERT INTO "batchProcessing"."scheduling" VALUES ('processDelivery', 'Traiter les communications', '04', '00;03;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
 INSERT INTO "batchProcessing"."scheduling" VALUES ('processdestruction', 'Traiter les destructions', '05', '00;04;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('processRestitution', 'Traiter les restitutions', '06', '00;05;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('processTransfer', 'Traiter les transferts', '07', '00;06;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('purge', 'Purge', '09', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('validateTransfer', 'Valider les transfert', '08', '00;07;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
+INSERT INTO "batchProcessing"."scheduling" VALUES ('purge', 'Purge', '06', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
 
 INSERT INTO "contact"."communicationMean" VALUES ('AH', 'World Wide Web', false);
 INSERT INTO "contact"."communicationMean" VALUES ('AL', 'Téléphone mobile', true);

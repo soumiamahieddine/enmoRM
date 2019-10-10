@@ -573,24 +573,19 @@ tasks = "[
         'description' : 'Intégrité périodique'
     },
     {
-        'taskId': '10',
-        'route' : 'recordsManagement/archives/updateArchivesretentionrule',
-        'description' : 'Mise à jour de la durée d\'utilité administrative'
+        'taskId': '04',
+        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
+        'description' : 'Traiter les communications'
     },
     {
-        'taskId': '11',
+        'taskId': '05',
         'route' : 'recordsManagement/archives/deleteDisposablearchives',
         'description' : 'Détruire les archives'
     },
     {
-        'taskId': '12',
-        'route' : 'batchProcessing/notification/updateProcess',
-        'description' : 'Envoyer notification'
-    },
-    {
-        'taskId': '13',
-        'route' : 'recordsManagement/archives/updateIndexfulltext',
-        'description' : 'Extraction plein texte'
+        'taskId': '06',
+        'route' : 'medona/message/deleteMessageDirectoryPurge',
+        'description' : 'Purge des bordereaux'
     }
 ]"
 
