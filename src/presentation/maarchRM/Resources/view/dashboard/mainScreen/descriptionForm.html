@@ -685,8 +685,7 @@ input:invalid {
             return div;
         },
 
-        getArrayItem : function(descriptionField)
-        {
+        getArrayItem : function(descriptionField) {
             var item = $('<li class="input-group col-sm-12">');
 
             switch (descriptionField.itemType) {
@@ -977,14 +976,13 @@ input:invalid {
                     array.find("input, select").attr("disabled", true);
                 }
             } else {
-                field = target.find("select, input");
-                field.val(data);
-                if(field.data("readonly")){
-                    field.attr("readonly", true);
+                target.val(data);
+                if(target.data("readonly")){
+                    target.attr("readonly", true);
                 }
             }
         }
-    }
+    };
 
     $('#importPanel').on('click', '#modifyArchive', function(e) {
         ArchiveForm.modify(e, $(this));
