@@ -634,7 +634,7 @@ class organization
                     [$organization->registrationNumber]
                 );
             }
-            
+
             $children = $this->sdoFactory->readChildren("organization/organization", $organization);
             $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
             $services = $this->sdoFactory->readChildren("organization/servicePosition", $organization);
@@ -1351,7 +1351,7 @@ class organization
             $userOrgs[] = $currentService;
         }
 
-        if ($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN") {
+        if ($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN_GENERAL") {
             unset($userOrgs);
             $userOrgs = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE");
         }
