@@ -571,7 +571,7 @@ tasks = "[
         'taskId': '03',
         'route' : 'recordsManagement/archiveCompliance/readPeriodic',
         'description' : 'Intégrité périodique'
-    }
+    },
     {
         'taskId': '04',
         'route' : 'recordsManagement/archives/deleteDisposablearchives',

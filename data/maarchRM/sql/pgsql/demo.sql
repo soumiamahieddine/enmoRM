@@ -42,7 +42,7 @@ INSERT INTO "auth"."account" VALUES ('ttule', 'ttule', 'Thierry TULE', 'user', '
 INSERT INTO "auth"."account" VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
 
 INSERT INTO "auth"."role" VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', true);
-INSERT INTO "auth"."role" VALUES ('SUPERADMIN', 'Administrateur technique', 'Groupe des administrateurs techniques du système', true);
+INSERT INTO "auth"."role" VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', true);
 INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', true);
 INSERT INTO "auth"."role" VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', true);
 INSERT INTO "auth"."role" VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', true);
@@ -55,6 +55,11 @@ INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgU
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminServiceaccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminOrganization');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminServiceaccount');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminUseraccount');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminTech/*');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'journal/audit');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminAccessRule');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminRetentionRule');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/archivalProfile');
@@ -85,13 +90,9 @@ INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagemen
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modify');
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/retrieve');
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest');
-INSERT INTO "auth"."privilege" VALUES ('SUPERADMIN', 'adminFunc/adminOrganization');
-INSERT INTO "auth"."privilege" VALUES ('SUPERADMIN', 'adminFunc/adminServiceaccount');
-INSERT INTO "auth"."privilege" VALUES ('SUPERADMIN', 'adminFunc/adminUseraccount');
-INSERT INTO "auth"."privilege" VALUES ('SUPERADMIN', 'adminTech/*');
-INSERT INTO "auth"."privilege" VALUES ('SUPERADMIN', 'journal/audit');
 
 INSERT INTO "auth"."roleMember" VALUES ('ADMIN_FONCTIONNEL', 'nnataly');
+INSERT INTO "auth"."roleMember" VALUES ('ADMIN_GENERAL', 'superadmin');
 INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'bblier');
 INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'ccharles');
 INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'ddenis');
@@ -127,7 +128,6 @@ INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'ccox');
 INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'eerina');
 INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'nnataly');
 INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'sstone');
-INSERT INTO "auth"."roleMember" VALUES ('SUPERADMIN', 'superadmin');
 INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'bboule');
 INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'cchaplin');
 INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'ccordy');
