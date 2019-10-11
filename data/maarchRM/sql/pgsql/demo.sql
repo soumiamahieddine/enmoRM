@@ -301,7 +301,6 @@ INSERT INTO "organization"."userPosition" VALUES ('jjonasz', 'LITIGES', NULL, tr
 INSERT INTO "organization"."userPosition" VALUES ('kkaar', 'TENDER', NULL, true);
 INSERT INTO "organization"."userPosition" VALUES ('kkrach', 'MARK', NULL, true);
 INSERT INTO "organization"."userPosition" VALUES ('mmanfred', 'DEAL', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('nnataly', 'DSI', NULL, true);
 INSERT INTO "organization"."userPosition" VALUES ('ppacioli', 'NETT', NULL, true);
 INSERT INTO "organization"."userPosition" VALUES ('ppetit', 'CTBLE', NULL, true);
 INSERT INTO "organization"."userPosition" VALUES ('ppreboist', 'DSI', NULL, true);
