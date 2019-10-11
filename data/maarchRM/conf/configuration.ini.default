@@ -571,19 +571,14 @@ tasks = "[
         'taskId': '03',
         'route' : 'recordsManagement/archiveCompliance/readPeriodic',
         'description' : 'Intégrité périodique'
-    },
+    }
     {
         'taskId': '04',
-        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
-        'description' : 'Traiter les communications'
-    },
-    {
-        'taskId': '05',
         'route' : 'recordsManagement/archives/deleteDisposablearchives',
         'description' : 'Détruire les archives'
     },
     {
-        'taskId': '06',
+        'taskId': '05',
         'route' : 'medona/message/deleteMessageDirectoryPurge',
         'description' : 'Purge des bordereaux'
     }
