@@ -140,7 +140,7 @@ class organization
 
         $securityLevel = $user->getSecurityLevel();
 
-        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
+        if ($securityLevel == $user::SECLEVEL_GENADMIN || is_null($securityLevel)) {
             $organizationList = $this->sdoFactory->find(
                 "organization/organization",
                 'isOrgUnit = false',
@@ -1351,7 +1351,7 @@ class organization
             $userOrgs[] = $currentService;
         }
 
-        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
+        if ($securityLevel == $user::SECLEVEL_GENADMIN || is_null($securityLevel)) {
             unset($userOrgs);
             $userOrgs = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE");
         }
