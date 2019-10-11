@@ -262,19 +262,22 @@ trait archiveValidationTrait
 
         if ($nbArchiveObjects) {
             $containedProfiles = [];
-
-            $this->useArchivalProfile($archive->archivalProfileReference);
-            foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
-                $containedProfiles[] = $profile->reference;
+            if (isset($archive->archivalProfileReference)) {
+                $this->useArchivalProfile($archive->archivalProfileReference);
+                foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
+                    $containedProfiles[] = $profile->reference;
+                }
             }
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
-                if (empty($archive->contents[$i]->archivalProfileReference)) {
-                    if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
+                if (isset($archive->archivalProfileReference)) {
+                    if (empty($archive->contents[$i]->archivalProfileReference)) {
+                        if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
+                            throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
+                        }
+                    } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
                         throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                     }
-                } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                 }
 
                 $this->validateManagementMetadata($archive->contents[$i]);
