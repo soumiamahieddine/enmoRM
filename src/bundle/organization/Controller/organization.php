@@ -1351,7 +1351,7 @@ class organization
             $userOrgs[] = $currentService;
         }
 
-        if ($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN_GENERAL") {
+        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
             unset($userOrgs);
             $userOrgs = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE");
         }
