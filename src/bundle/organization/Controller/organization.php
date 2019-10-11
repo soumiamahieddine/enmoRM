@@ -1378,6 +1378,9 @@ class organization
             $originators = $organizationController->index(
                 "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
             );
+            $originators = array_merge($originators, $organizationController->index(
+                "isOrgUnit=true AND ownerOrgId=['" . $user->ownerOrgId . "']"
+            ));
         }
 
         $ownerOriginatorOrgs = [];
