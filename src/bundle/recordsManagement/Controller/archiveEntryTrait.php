@@ -97,7 +97,7 @@ trait archiveEntryTrait
 
         $this->useReferences($archive, 'deposit');
 
-        // Validate metadata
+        // Validate archive metadata and resources
         $this->validateCompliance($archive);
 
         // Check format conversion

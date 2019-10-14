@@ -669,7 +669,6 @@ trait archiveModificationTrait
         }
 
         $digitalResource = $this->digitalResourceController->createFromContents($contents, $filename);
-
         $digitalResource->archiveId = $archiveId;
         $digitalResource->resId = \laabs::newId();
 
@@ -685,6 +684,8 @@ trait archiveModificationTrait
         }
 
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
+
+        $this->validateDigitalResource($digitalResource);
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
