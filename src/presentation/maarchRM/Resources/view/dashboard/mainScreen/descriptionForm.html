@@ -637,7 +637,7 @@ input:invalid {
             var itemList = $('<ul class="arrayDiv">');
             div.append(itemList);
             div.data('itemlist', itemList);
-            div.data('item-description', descriptionField.itemtype);
+            div.data('item-description', descriptionField.itemType);
             div.data('description', descriptionField);
 
             var item = Metadata.getArrayItem(descriptionField);
@@ -976,7 +976,13 @@ input:invalid {
                     array.find("input, select").attr("disabled", true);
                 }
             } else {
-                target.val(data);
+                // if target is within archiveForm div then we attribute data directly otherwise we target first input in div
+                if ($('#archiveForm').find(target).length == 1) {
+                    target.val(data);
+                } else {
+                    target.find("input").first().val(data);
+                }
+
                 if(target.data("readonly")){
                     target.attr("readonly", true);
                 }

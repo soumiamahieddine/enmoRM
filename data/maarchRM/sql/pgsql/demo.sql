@@ -350,7 +350,7 @@ INSERT INTO "recordsManagement"."archivalProfile" VALUES ('23', 'PRVOP', 'Proces
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('24', 'RAPEO', 'Rapport d’Évaluation des Offres', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('26', 'DEMC', 'Demande de Cotation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('27', 'RAPFOR', 'Rapport de Formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('28', 'DOSIP', 'Dossier Individuel du Personnel', NULL, 'additionalContent', 'originatingDate', 'DIP', '', NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" VALUES ('28', 'DOSIP', 'Dossier Individuel du Personnel', NULL, NULL, 'originatingDate', 'DIP', '', NULL, true, true, 'file', NULL);
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('29', 'ETAC', 'Etat Civil', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('30', 'CURV', 'Curriculum Vitae', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
 INSERT INTO "recordsManagement"."archivalProfile" VALUES ('31', 'EXTAN', 'Extrait d''Acte de Naissance', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
