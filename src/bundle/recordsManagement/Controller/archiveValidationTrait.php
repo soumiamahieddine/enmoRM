@@ -385,7 +385,7 @@ trait archiveValidationTrait
     public function validateDigitalResource($digitalResource)
     {
         if ($digitalResource->size === 0) {
-            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource has no size', 400);
+            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
         $contents = base64_decode($digitalResource->getContents());
