@@ -258,6 +258,9 @@ class Droid
             switch ($mimetype) {
                 case 'text/plain':
                     return $this->getFormatByPuid('x-fmt/111');
+
+                case 'application/octet-stream':
+                    return $this->getFormatByPuid('fmt/208');
             }
         }
 
