@@ -60,9 +60,6 @@ unit-tests:php-7.2:
     - composer install
     - sed -i -e 's!pgsql:host=localhost;dbname=maarchRMtest;port=5432!pgsql:host=postgres;dbname=maarchRMtest;port=5432!' /var/www/laabs/codeception.yml
     - vendor/bin/codecept run
-  only:
-    - develop
-    - master
   artifacts:
     paths:
       - tests/codeception/_output/
@@ -81,8 +78,6 @@ functional-test:cypress:
     - $(npm bin)/cypress run
   only:
     - schedules
-    - develop
-    - master
   artifacts:
     expire_in: 1 week
     when: always
