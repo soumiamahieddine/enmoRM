@@ -300,7 +300,7 @@ class descriptionScheme
         }
 
         if (isset($property->ref)) {
-            $descriptionField->ref = $property->ref[0];
+            $descriptionField->ref = $property->ref;
         }
 
         if (isset($property->readonly)) {
