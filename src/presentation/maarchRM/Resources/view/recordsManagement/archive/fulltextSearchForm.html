@@ -54,7 +54,17 @@
                     <?merge .type.ifeq('name') ?>
                     <div>
                         <?merge .enumeration.ifeq('') ?>
+                        <?merge .ref.bool() ?>
                         <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <input type="text" class="advancedSearchField externalRefField form-control input-xs descriptionInput" name="[?merge .name ?]" />
+                            </div>
+                        </div>
+                        <?merge .enumeration.ifeq('') ?>
+                        <?merge .ref.bool().not() ?>
+                        <div class="form-group col-md-6">
+                            <span><?merge . ?></span>
                             <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
                             <div class="col-md-6">
                                 <input type="text" class="advancedSearchField form-control input-xs descriptionInput" name="[?merge .name ?]" />
@@ -196,6 +206,57 @@ FulltextSearchForm = {
 
     },
 
+    getTypeahead : function() {
+        $.each(this.advancedSearchForm.find(".externalRefField"), function() {
+            var field = $(this);
+            var name = field.attr("name");
+
+            setTimeout(function(){
+                var data = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/descriptionRef/'+name+'?query=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+                data.initialize();
+
+                field.typeahead(
+                    {
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'data',
+                        source: data.ttAdapter(),
+                        templates: {
+                            suggestion: function(data) {
+                                delete data._query;
+                                var html = $('<div>');
+                                var keyname = Object.keys(data)[0];
+                                var key = data.keyname;
+                                html.append($('<strong class="badge">').text(key));
+                                delete data[keyname];
+                                var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
+                                html.append(' '+value);
+                                return html;
+                            }
+                        }
+                    }
+                ).on('typeahead:selected', function ($event, suggestion, source) {
+                    var keys = Object.keys(suggestion); //fetched the key at first index
+                    field.val(suggestion[keys[0]]);
+                    field.typeahead('val', suggestion[keys[0]]);
+                });
+            }, 300);
+
+
+            return field;
+        });
+    },
+
     serialize : function() {
         var advancedSearchPanel = $('#advancedSearchPanel');
         var query = {
@@ -327,6 +388,8 @@ FulltextSearchForm = {
         this.advancedSearchForm.find('input[type=text], input[type=number], input[type=date], select').val('');
     }
 }
+
+    FulltextSearchForm.getTypeahead();
 
     $('#app_maarchRM_main').keypress(function (e) {
         if (e.which != 13 || document.getElementById("searchForm_inputSearchBtn").disabled == true) {

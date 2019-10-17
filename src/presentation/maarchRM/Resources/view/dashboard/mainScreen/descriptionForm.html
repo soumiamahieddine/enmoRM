@@ -487,7 +487,7 @@ input:invalid {
 
         getTypeahead : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
-            field.attr('name', 'test');
+            field.attr('name', descriptionField.name);
             setTimeout(function(){
                 var data = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
