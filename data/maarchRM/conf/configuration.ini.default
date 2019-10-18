@@ -109,8 +109,8 @@ stopWordsFilePath = "%laabsDirectory%/data/stopwords/stopwords_fr.txt"
 ;Additional schemes used to describe complex metadata for archival profiles
 ;See documentation about descriptive schemes for a more in-depth explanation
 descriptionSchemes = "{
-    'additionalContent' : {
-        'label' : 'additionalContent',
+    'extension' : {
+        'label' : 'extension',
         'type' : 'json',
         'uri' : '%laabsDirectory%/data/maarchRM/samples/sample.json'
     }
@@ -585,8 +585,8 @@ tasks = "[
 ]"
 
 ; Available tasks to batch processing
-; if 'transaction' parameter disable, uncomment the block 'tasks' below
-; if 'transaction' parameter enable, comment the block 'tasks' below
+; if 'transaction' parameter disable, comment the block 'tasks' below
+; if 'transaction' parameter enable, uncomment the block 'tasks' below
 ;tasks = "[
 ;    {
 ;        'taskId': '01',
