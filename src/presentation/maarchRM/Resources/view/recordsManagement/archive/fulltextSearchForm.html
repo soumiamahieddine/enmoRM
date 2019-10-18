@@ -53,22 +53,6 @@
                 <div>
                     <?merge .type.ifeq('name') ?>
                     <div>
-                        <?merge .enumeration.ifeq('') ?>
-                        <?merge .ref.bool() ?>
-                        <div class="form-group col-md-6">
-                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                            <div class="col-md-6">
-                                <input type="text" class="advancedSearchField externalRefField form-control input-xs descriptionInput" name="[?merge .name ?]" />
-                            </div>
-                        </div>
-                        <?merge .enumeration.ifeq('') ?>
-                        <?merge .ref.bool().not() ?>
-                        <div class="form-group col-md-6">
-                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
-                            <div class="col-md-6">
-                                <input type="text" class="advancedSearchField form-control input-xs descriptionInput" name="[?merge .name ?]" />
-                            </div>
-                        </div>
                         <?merge .enumeration.ifne('') ?>
                         <div class="form-group col-md-6">
                             <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
@@ -78,6 +62,16 @@
                                      <?merge .enumeration ?>
                                     <option value="[?merge . ?]"><?merge . ?></option>
                                 </select>
+                            </div>
+                        </div>
+                        <?merge .enumeration.ifeq('') ?>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-6 control-label text-primary"><small><?merge .label ?></small></label>
+                            <div class="col-md-6">
+                                <?merge .ref.bool() ?>
+                                <input type="text" class="advancedSearchField externalRefField form-control input-xs descriptionInput" name="[?merge .name ?]" />
+                                <?merge .ref.bool().not() ?>
+                                <input type="text" class="advancedSearchField form-control input-xs descriptionInput" name="[?merge .name ?]" />
                             </div>
                         </div>
                     </div>
