@@ -32,7 +32,7 @@ interface messageInterface
      * Set archive delivery messages
      *
      * @return medona/message/index
-     * @requires [archiveDeposit/*, delivery/*, destruction/*, restitution/*, definitiveTransfer/*, originatorAccess/*]
+     * @requires [archiveDeposit/processTransfer, archiveDeposit/transferHistory, archiveDeposit/transferImport, archiveDeposit/transferSend, delivery/*, destruction/*, restitution/*, definitiveTransfer/*, originatorAccess/*]
      */
     public function readMedonaList();
 
