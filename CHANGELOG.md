@@ -49,6 +49,7 @@
 - `Added` Possibilité de versement par bordereaux XML/Medona.
 - `Added` Les bordereaux entrants comportent le type d'empreinte poussé dans le système.
 - `Changed` L'intégralité des échanges transactionnels MEDONA (extension thirdPartyArchiving) est désormais disponible dans le socle d'archivage. **L'extension thirdPartyArchiving est abandonnée à partir de cette version 2.5**.
+- `Fixed` Correction de la fonction permettant de traiter plusieurs bordereaux de transfert par batch pour éviter le versement multiple d'une même archive.
 
 ### IHM
 
