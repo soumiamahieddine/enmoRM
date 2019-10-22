@@ -49,7 +49,13 @@ class descriptionScheme
      */
     public function index()
     {
-        return $this->descriptionSchemes;
+        $schemes = $this->descriptionSchemes;
+
+        if (isset($schemes['extension'])) {
+            unset($schemes['extension']);
+        }
+
+        return $schemes;
     }
 
     /**
@@ -74,37 +80,43 @@ class descriptionScheme
     public function getDescriptionFields($name = false)
     {
         if (empty($name)) {
-            return \laabs::newController('recordsManagement/descriptionField')->index();
-        }
-
-        if (isset($this->descriptionSchemes[$name])) {
-            $descriptionSchemeConfig = $this->descriptionSchemes[$name];
-        } elseif (strpos($name, '/') !== false) {
-            $descriptionSchemeConfig = new \stdClass();
-            $descriptionSchemeConfig->type = 'php';
-            $descriptionSchemeConfig->uri = $name;
-        }
-        switch ($descriptionSchemeConfig->type) {
-            case 'php':
-                $fields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->uri);
-                break;
-
-            case 'json':
-                $fields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeConfig->uri);
-                break;
-
-            default:
-                $fields = [];
-        }
-
-        if (isset($descriptionSchemeConfig->extension)) {
-            switch ($descriptionSchemeConfig->extension->type) {
+            $fields = \laabs::newController('recordsManagement/descriptionField')->index();
+            if (isset($this->descriptionSchemes['extension'])) {
+                $descriptionSchemeExtension = $this->descriptionSchemes['extension'];
+            }
+        } else {
+            if (isset($this->descriptionSchemes[$name])) {
+                $descriptionSchemeConfig = $this->descriptionSchemes[$name];
+                if (isset($descriptionSchemeConfig->extension)) {
+                    $descriptionSchemeExtension = $descriptionSchemeConfig->extension;
+                }
+            } elseif (strpos($name, '/') !== false) {
+                $descriptionSchemeConfig = new \stdClass();
+                $descriptionSchemeConfig->type = 'php';
+                $descriptionSchemeConfig->uri = $name;
+            }
+            switch ($descriptionSchemeConfig->type) {
                 case 'php':
-                    $extendedFields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->extension->uri);
+                    $fields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeConfig->uri);
                     break;
 
                 case 'json':
-                    $extendedFields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeConfig->extension->uri);
+                    $fields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeConfig->uri);
+                    break;
+
+                default:
+                    $fields = [];
+            }
+        }
+
+        if (isset($descriptionSchemeExtension)) {
+            switch ($descriptionSchemeExtension->type) {
+                case 'php':
+                    $extendedFields = $this->getDescriptionFieldsFromPhpClass($descriptionSchemeExtension->uri);
+                    break;
+
+                case 'json':
+                    $extendedFields = $this->getDescriptionFieldsFromJsonSchema($descriptionSchemeExtension->uri);
                     break;
             }
 
@@ -201,6 +213,7 @@ class descriptionScheme
     {
         switch (true) {
             case $type == 'string':
+            case $type == 'id':
                 return 'text';
 
             case $type == 'int':
@@ -279,8 +292,15 @@ class descriptionScheme
             }
         }
 
+        if (isset($property->facets)) {
+            $facets = $property->facets;
+            foreach ($facets as $key => $value) {
+                $descriptionField->$key = $value;
+            }
+        }
+
         if (isset($property->ref)) {
-            $descriptionField->ref = $property->ref[0];
+            $descriptionField->ref = $property->ref;
         }
 
         if (isset($property->readonly)) {

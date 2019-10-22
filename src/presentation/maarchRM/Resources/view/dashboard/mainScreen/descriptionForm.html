@@ -146,10 +146,13 @@ input:invalid {
     }
 
     function checkNumberInput(e){
-        if (e.val() && isNaN(e.val())){
+        // Regexp now accept "," and "." for type number
+        if (e.val() && !RegExp("^[0-9]*[,.]?[0-9]{1,}$").test(e.val())) {
            onError(e);
         }
         else {
+            value = e.val().replace(",", ".");
+            e.val(value);
             e.css({"border-color":""});
         }
     }
@@ -339,7 +342,7 @@ input:invalid {
 
         getNumberInput : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
-            field.attr('placeholder', $('#number_text').text()).attr("pattern", "[0-9]*");
+            field.attr('placeholder', $('#number_text').text()).attr("pattern", "^[0-9]*[,.]?[0-9]{1,}$");
 
             field.getValue = function() {
                 checkNumberInput(field);
@@ -484,7 +487,7 @@ input:invalid {
 
         getTypeahead : function(descriptionField) {
             var field = Metadata.getTextInput(descriptionField);
-            field.attr('name', 'test');
+            field.attr('name', descriptionField.name);
             setTimeout(function(){
                 var data = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
@@ -634,7 +637,7 @@ input:invalid {
             var itemList = $('<ul class="arrayDiv">');
             div.append(itemList);
             div.data('itemlist', itemList);
-            div.data('item-description', descriptionField.itemtype);
+            div.data('item-description', descriptionField.itemType);
             div.data('description', descriptionField);
 
             var item = Metadata.getArrayItem(descriptionField);
@@ -682,8 +685,7 @@ input:invalid {
             return div;
         },
 
-        getArrayItem : function(descriptionField)
-        {
+        getArrayItem : function(descriptionField) {
             var item = $('<li class="input-group col-sm-12">');
 
             switch (descriptionField.itemType) {
@@ -974,14 +976,19 @@ input:invalid {
                     array.find("input, select").attr("disabled", true);
                 }
             } else {
-                field = target.find("select, input");
-                field.val(data);
-                if(field.data("readonly")){
-                    field.attr("readonly", true);
+                // if target is within archiveForm div then we attribute data directly otherwise we target first input in div
+                if ($('#archiveForm').find(target).length == 1) {
+                    target.val(data);
+                } else {
+                    target.find("input").first().val(data);
+                }
+
+                if(target.data("readonly")){
+                    target.attr("readonly", true);
                 }
             }
         }
-    }
+    };
 
     $('#importPanel').on('click', '#modifyArchive', function(e) {
         ArchiveForm.modify(e, $(this));

@@ -63,7 +63,7 @@
                     type    : null
                 }
 
-                fileObject.binary = oFileReader.result.replace(/^data:.*?;base64,/, "");
+                fileObject.binary = oFileReader.result.replace(/(^data:|;base64,)|(^data:.*?;base64,)/, "");
                 fileObject.fileName = file.name;
                 fileObject.size = file.size;
                 fileObject.type = file.type;

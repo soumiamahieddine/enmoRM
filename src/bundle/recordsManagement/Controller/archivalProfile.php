@@ -48,7 +48,7 @@ class archivalProfile
         $this->sdoFactory = $sdoFactory;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
         $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme'); 
-        $this->descriptionFields = \Laabs::newController('recordsManagement/descriptionField')->index();
+        //$this->descriptionFields = \Laabs::newController('recordsManagement/descriptionField')->index();
 
         if (!is_dir($profilesDirectory) && !empty($profilesDirectory)) {
             mkdir($profilesDirectory, 0777, true);
@@ -172,19 +172,13 @@ class archivalProfile
             return $a->position > $b->position;
         });
         
-        if ($archivalProfile->descriptionClass == '') {
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                $archiveDescription->descriptionField = $this->descriptionFields[$archiveDescription->fieldName];
-            }
-        } else {
-            $descriptionFields = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);           
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-                if (isset($descriptionFields[$archiveDescription->fieldName])) {
-                    $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
-                }
+        $descriptionFields = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
+        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            if (isset($descriptionFields[$archiveDescription->fieldName])) {
+                $archiveDescription->descriptionField = $descriptionFields[$archiveDescription->fieldName];
             }
         }
-
+        
         $profileFile = $this->profilesDirectory.DIRECTORY_SEPARATOR.$archivalProfile->reference;
         if (file_exists($profileFile.'.rng') || file_exists($profileFile.'.xsd')) {
             $archivalProfile->profileFile = $profileFile;

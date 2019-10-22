@@ -732,6 +732,8 @@ class ArchiveTransfer extends abstractMessage
         $messages = $this->sdoFactory->find("medona/message", "status='accepted' AND type='ArchiveTransfer' AND active=true");
         foreach ($messages as $message) {
             $this->changeStatus($message->messageId, "processing");
+        }
+        foreach ($messages as $message) {
             $this->loadData($message);
 
             try {

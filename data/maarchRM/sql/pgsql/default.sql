@@ -4,22 +4,27 @@ INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountTyp
 
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
-('ADMIN', 'Administrateur Général', 'Groupe administrateur', true);
+('ADMING', 'Administrateur Général', 'Groupe administrateur général', true),
+('ADMINF', 'Administrateur Fonctionnel', 'Groupe administrateur fonctionnel', true);
 
 -- roleMember
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES
-('ADMIN', 'superadmin');
+('ADMING', 'superadmin');
 
 -- privilege
 INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
-('ADMIN', 'adminTech/*'),
-('ADMIN', 'adminFunc/adminOrganization'),
-('ADMIN', 'adminFunc/adminUseraccount'),
-('ADMIN', 'adminFunc/adminServiceaccount'),
-('ADMIN', 'adminFunc/batchScheduling'),
-('ADMIN', 'adminFunc/adminAuthorization'),
-('ADMIN', 'journal/audit'),
-('ADMIN', 'journal/searchLogArchive');
+('ADMING', 'adminTech/*'),
+('ADMING', 'adminFunc/adminOrganization'),
+('ADMING', 'adminFunc/adminUseraccount'),
+('ADMING', 'adminFunc/adminServiceaccount'),
+('ADMING', 'adminFunc/batchScheduling'),
+('ADMING', 'adminFunc/adminAuthorization'),
+('ADMING', 'journal/audit'),
+('ADMING', 'journal/searchLogArchive'),
+('ADMINF', 'adminFunc/adminOrganization'),
+('ADMINF', 'adminFunc/adminUseraccount'),
+('ADMINF', 'adminFunc/adminServiceaccount'),
+('ADMINF', 'adminFunc/adminOrgUser');
 
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES

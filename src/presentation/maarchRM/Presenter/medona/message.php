@@ -245,6 +245,15 @@ class message
                 }
             }
 
+            if (isset($this->packageSchemas[$baseMessage->schema])) {
+                $schemaConf = $this->packageSchemas[$baseMessage->schema];
+                if (isset($schemaConf['label'])) {
+                    $message->labelSchema = $schemaConf['label'];
+                }
+            } else {
+                $message->labelSchema = $message->schema;
+            }
+
             if ($baseMessage->schema == 'recordsManagement') {
                 if (!isset($descriptionField)) {
                     $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');

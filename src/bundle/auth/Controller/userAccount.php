@@ -80,6 +80,7 @@ class userAccount
      */
     public function userList($query = null)
     {
+        $organizationController = \laabs::newController('organization/organization');
         $accountId = \laabs::getToken("AUTH")->accountId;
 
         $queryAssert = [];
@@ -98,15 +99,23 @@ class userAccount
 
         switch ($account->getSecurityLevel()) {
             case $account::SECLEVEL_GENADMIN:
-                $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
+                $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null)";
                 break;
 
             case $account::SECLEVEL_FONCADMIN:
-                $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                $childrenOrganizations = $this->sdoFactory->readChildren("organization/organization", $organization);
+                $childrenOrgs = [];
+                foreach ($childrenOrganizations as $key => $organization) {
+                    $childrenOrganizationsId[] = (string) $organization->orgId;
+                }
+                $childrenIds = implode("', '", $childrenOrganizationsId);
+
+                $queryAssert[] = "((ownerOrgId= ['" . $childrenIds . "']) OR (isAdmin!=TRUE AND ownerOrgId=null))";
                 break;
 
             case $account::SECLEVEL_USER:
-                $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                $queryAssert[] = "((isAdmin!=TRUE AND ownerOrgId='". $account->ownerOrgId."')";
                 break;
         }
 

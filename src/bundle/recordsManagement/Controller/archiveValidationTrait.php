@@ -84,7 +84,7 @@ trait archiveValidationTrait
         $descriptionSchemeProperties = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
 
         $archivalProfileFields = [];
-        
+
         foreach ($archivalProfile->archiveDescription as $archiveDescription) {
             if (!isset($object->{$archiveDescription->fieldName}) && $archiveDescription->required) {
                 throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
@@ -138,7 +138,7 @@ trait archiveValidationTrait
                 break;
 
             default:
-                if (is_string($descriptionField->itemType) && $descriptionField->type[0] == '#') {
+                if (is_string($descriptionField->type) && $descriptionField->type[0] == '#') {
                     $descriptionField->properties = $this->descriptionSchemeController->getDescriptionFields(substr($descriptionField->type, 1));
                     $this->validateObject($value, $descriptionField);
                 }
@@ -262,19 +262,22 @@ trait archiveValidationTrait
 
         if ($nbArchiveObjects) {
             $containedProfiles = [];
-
-            $this->useArchivalProfile($archive->archivalProfileReference);
-            foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
-                $containedProfiles[] = $profile->reference;
+            if (isset($archive->archivalProfileReference)) {
+                $this->useArchivalProfile($archive->archivalProfileReference);
+                foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
+                    $containedProfiles[] = $profile->reference;
+                }
             }
 
             for ($i = 0; $i < $nbArchiveObjects; $i++) {
-                if (empty($archive->contents[$i]->archivalProfileReference)) {
-                    if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
+                if (isset($archive->archivalProfileReference)) {
+                    if (empty($archive->contents[$i]->archivalProfileReference)) {
+                        if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
+                            throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
+                        }
+                    } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
                         throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                     }
-                } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
                 }
 
                 $this->validateManagementMetadata($archive->contents[$i]);
@@ -344,9 +347,6 @@ trait archiveValidationTrait
     {
         if (!$archive->digitalResources) {
             $archive->digitalResources = [];
-        } else {
-            $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
-            $formatValidation = strrpos($this->currentServiceLevel->control, "formatValidation") === false ? false : true;
         }
 
         foreach ($archive->digitalResources as $digitalResource) {
@@ -358,27 +358,7 @@ trait archiveValidationTrait
                 $digitalResource->resId = \laabs::newId();
             }
 
-            $contents = base64_decode($digitalResource->getContents());
-
-            $digitalResource->setContents($contents);
-
-            $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
-            file_put_contents($filename, $contents);
-
-            if ($formatDetection) {
-                $format = $this->formatController->identifyFormat($filename);
-
-                if ($format) {
-                    $digitalResource->puid = $format->puid;
-                }
-            }
-
-            if ($formatValidation) {
-                $validation = $this->formatController->validateFormat($filename);
-                if (!$validation !== true && is_array($validation)) {
-                    throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
-                }
-            }
+            $this->validateDigitalResource($digitalResource);
 
             if (empty($digitalResource->hash) || empty($digitalResource->hashAlgorithm)) {
                 $this->digitalResourceController->getHash($digitalResource, $this->hashAlgorithm);
@@ -386,7 +366,6 @@ trait archiveValidationTrait
         }
 
         $nbArchiveObjects = 0;
-
         if (!empty($archive->contents)) {
             $nbArchiveObjects = count($archive->contents);
         }
@@ -396,4 +375,39 @@ trait archiveValidationTrait
         }
     }
 
+    /**
+     * Validate resource content
+     *
+     * @param \bundle\digitalResource\digitalResource $digitalResource resource
+     *
+     * @return
+     */
+    public function validateDigitalResource($digitalResource)
+    {
+        if ($digitalResource->size === 0) {
+            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
+        }
+
+        $contents = base64_decode($digitalResource->getContents());
+        $digitalResource->setContents($contents);
+        $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
+        file_put_contents($filename, $contents);
+
+        $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
+        if ($formatDetection) {
+            $format = $this->formatController->identifyFormat($filename);
+
+            if ($format) {
+                $digitalResource->puid = $format->puid;
+            }
+        }
+
+        $formatValidation = strrpos($this->currentServiceLevel->control, "formatValidation") === false ? false : true;
+        if ($formatValidation) {
+            $validation = $this->formatController->validateFormat($filename);
+            if (!$validation !== true && is_array($validation)) {
+                throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
+            }
+        }
+    }
 }

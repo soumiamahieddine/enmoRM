@@ -1,0 +1,704 @@
+[
+    {
+        "digitalResources": [
+            {
+                "fileName": "201706.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344556",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4396",
+            "service": "DAF"
+        },
+        "archiveName": "201706",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201707.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344612",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3994",
+            "service": "DAF"
+        },
+        "archiveName": "201707",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201710.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344668",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3408",
+            "service": "DAF"
+        },
+        "archiveName": "201710",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201722.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344724",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5042",
+            "service": "DAF"
+        },
+        "archiveName": "201722",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201725.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344780",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5081",
+            "service": "DAF"
+        },
+        "archiveName": "201725",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201726.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344836",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4400",
+            "service": "DAF"
+        },
+        "archiveName": "201726",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201728.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344892",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4640",
+            "service": "DAF"
+        },
+        "archiveName": "201728",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201729.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223344948",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2524",
+            "service": "DAF"
+        },
+        "archiveName": "201729",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201734.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345004",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2593",
+            "service": "DAF"
+        },
+        "archiveName": "201734",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201740.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345060",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3743",
+            "service": "DAF"
+        },
+        "archiveName": "201740",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201741.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345116",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3896",
+            "service": "DAF"
+        },
+        "archiveName": "201741",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201742.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345172",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3002",
+            "service": "DAF"
+        },
+        "archiveName": "201742",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201744.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345228",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4224",
+            "service": "DAF"
+        },
+        "archiveName": "201744",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201745.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345284",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5454",
+            "service": "DAF"
+        },
+        "archiveName": "201745",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201749.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345340",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5886",
+            "service": "DAF"
+        },
+        "archiveName": "201749",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201753.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345396",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3535",
+            "service": "DAF"
+        },
+        "archiveName": "201753",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201754.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345452",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4278",
+            "service": "DAF"
+        },
+        "archiveName": "201754",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201755.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345508",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4373",
+            "service": "DAF"
+        },
+        "archiveName": "201755",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201758.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345564",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2611",
+            "service": "DAF"
+        },
+        "archiveName": "201758",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201763.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345620",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4535",
+            "service": "DAF"
+        },
+        "archiveName": "201763",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201765.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345676",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3100",
+            "service": "DAF"
+        },
+        "archiveName": "201765",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201772.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345732",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5557",
+            "service": "DAF"
+        },
+        "archiveName": "201772",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201773.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345788",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5110",
+            "service": "DAF"
+        },
+        "archiveName": "201773",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201775.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345844",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2938",
+            "service": "DAF"
+        },
+        "archiveName": "201775",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201777.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345900",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4803",
+            "service": "DAF"
+        },
+        "archiveName": "201777",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201780.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223345956",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3749",
+            "service": "DAF"
+        },
+        "archiveName": "201780",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201790.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346012",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "6054",
+            "service": "DAF"
+        },
+        "archiveName": "201790",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201793.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346068",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3978",
+            "service": "DAF"
+        },
+        "archiveName": "201793",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201794.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346124",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4907",
+            "service": "DAF"
+        },
+        "archiveName": "201794",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201795.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346180",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3155",
+            "service": "DAF"
+        },
+        "archiveName": "201795",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201796.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346236",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4291",
+            "service": "DAF"
+        },
+        "archiveName": "201796",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201800.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346292",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4112",
+            "service": "DAF"
+        },
+        "archiveName": "201800",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201807.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346348",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "2721",
+            "service": "DAF"
+        },
+        "archiveName": "201807",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201810.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346404",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5875",
+            "service": "DAF"
+        },
+        "archiveName": "201810",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "201812.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346460",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5689",
+            "service": "DAF"
+        },
+        "archiveName": "201812",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "2017261.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346516",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4775",
+            "service": "DAF"
+        },
+        "archiveName": "2017261",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "2017401.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346572",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "5889",
+            "service": "DAF"
+        },
+        "archiveName": "2017401",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "2017451.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346628",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "4222",
+            "service": "DAF"
+        },
+        "archiveName": "2017451",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    },
+    {
+        "digitalResources": [
+            {
+                "fileName": "2017731.pdf"
+            }
+        ],
+        "descriptionObject": {
+            "taxIdentifier": "FR11223346684",
+            "supplier": "Agence Zinc",
+            "netPayable": 5775,
+            "dueDate": "2019-09-11",
+            "orderNumber": "3172",
+            "service": "DAF"
+        },
+        "archiveName": "2017731",
+        "archivalProfileReference": "FACACH",
+        "originatorOrgRegNumber": "FOUR"
+    }
+]

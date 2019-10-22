@@ -180,3 +180,6 @@ msgstr "Nouvelle archive"
 
 msgid "Close search"
 msgstr "Fermer la recherche"
+
+msgid "Your ressource is empty"
+msgstr "La taille de la ressource est nulle"
