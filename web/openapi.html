@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Maarch RM</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="public/js/redoc/redoc.standalone.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <redoc id="openapi" spec-url-='openapi.json'></redoc>
+    <script>
+      Redoc.init(
+        'openapi.json', 
+        { 
+          "pathInMiddlePanel" : true,
+          "onlyRequiredInSamples" : true
+        },
+        document.getElementById('openapi'), 
+        function() {
+          document.getElementsByTagName('img')[0].setAttribute('style', 'padding: 10px; min-width: 100% !important;');
+        });
+    </script>
+  </body>
+</html>

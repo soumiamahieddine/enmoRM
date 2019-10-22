@@ -97,7 +97,7 @@ trait archiveEntryTrait
 
         $this->useReferences($archive, 'deposit');
 
-        // Validate metadata
+        // Validate archive metadata and resources
         $this->validateCompliance($archive);
 
         // Check format conversion
@@ -227,7 +227,7 @@ trait archiveEntryTrait
     {
         $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
 
-        $this->digitalResourceController->getHash($resource, "SHA256");
+        $this->digitalResourceController->getHash($resource, \laabs::configuration('auth')['passwordEncryption']);
 
         return $resource;
     }
@@ -335,7 +335,7 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function manageFileplanPosition($archive)
+    public function manageFileplanPosition($archive)
     {
         // Could classify automatically regarding archival profile rule
         if (empty($archive->filePlanPosition)) {
@@ -350,13 +350,6 @@ trait archiveEntryTrait
 
             return;
         }
-
-        // File plan position is given as a folder id, check it exists, if not move to originator root
-        try {
-            $folder = $this->filePlanController->read($archive->filePlanPosition);
-        } catch (\Exception $notFoundException) {
-            $archive->filePlanPosition = null;
-        }
     }
 
     /**
@@ -364,13 +357,18 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to complete
      */
-    protected function completeManagementMetadata($archive)
+    public function completeManagementMetadata($archive)
     {
         $this->completeArchivalProfileCodes($archive);
         $this->completeRetentionRule($archive);
         $this->completeAccessRule($archive);
         $this->completeServiceLevel($archive);
+        $this->completeOriginator($archive);
+        $this->completeArchiver($archive);
+    }
 
+    public function completeOriginator($archive)
+    {
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
             $currentOrg = \laabs::getToken("ORGANIZATION");
@@ -389,6 +387,16 @@ trait archiveEntryTrait
         $archive->originatorOwnerOrgId = $originator->ownerOrgId;
         $originatorOrg = $this->organizationController->read($originator->ownerOrgId);
         $archive->originatorOwnerOrgRegNumber = $originatorOrg->registrationNumber;
+    }
+
+    protected function completeArchiver($archive)
+    {
+        if (empty($archive->archiverOrgRegNumber)) {
+            $ownerOrgs = $this->organizationController->getOrgsByRole('owner');
+            if (count($ownerOrgs) > 0) {
+                $archive->archiverOrgRegNumber = $ownerOrgs[0]->registrationNumber;
+            }
+        }
     }
 
     /**
@@ -411,7 +419,7 @@ trait archiveEntryTrait
         if (!empty($archivalProfile->accessRuleCode)) {
             $archive->accessRuleCode = $archivalProfile->accessRuleCode;
         }
-        
+
         if (!empty($archivalProfile->retentionStartDate)) {
             $archive->retentionStartDate = $archivalProfile->retentionStartDate;
         }
@@ -436,6 +444,14 @@ trait archiveEntryTrait
         }
 
         if (!empty($archive->accessRuleStartDate) && !empty($archive->accessRuleDuration)) {
+            $dateInter = new \DateInterval($archive->accessRuleDuration);
+            if ($dateInter->y == 9999) {
+                return;
+            }
+
+            if (is_string($archive->accessRuleStartDate)) {
+                $archive->accessRuleStartDate = \laabs::newDate($archive->accessRuleStartDate);
+            }
             $archive->accessRuleComDate = $archive->accessRuleStartDate->shift($archive->accessRuleDuration);
         }
     }
@@ -479,6 +495,9 @@ trait archiveEntryTrait
 
         $archive->disposalDate = null;
         if (!empty($archive->retentionStartDate) && !empty($archive->retentionDuration) && $archive->retentionDuration->y < 9999) {
+            if (is_string($archive->retentionStartDate)) {
+                $archive->retentionStartDate = \laabs::newDate($archive->retentionStartDate);
+            }
             $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
         }
     }
@@ -532,350 +551,6 @@ trait archiveEntryTrait
             if ($processingStatus->default == true) {
                 $archive->processingStatus = $code;
             }
-        }
-    }
-
-    /**
-     * Validate the archive compliance
-     *
-     * @param recordsManagement/archive $archive The archive to validate
-     */
-    public function validateCompliance($archive)
-    {
-        $this->validateFileplan($archive);
-        $this->validateArchiveDescriptionObject($archive);
-        $this->validateManagementMetadata($archive);
-        $this->validateAttachments($archive);
-        $this->validateProcessingStatus($archive);
-    }
-
-    /**
-     * Check and set the processing status
-     *
-     * @param recordsManagement/archive $archive The archive to setting
-     */
-    public function validateProcessingStatus($archive)
-    {
-        if (empty($archive->processingStatus) || !isset($this->currentArchivalProfile)) {
-            return;
-        }
-
-        $processingStatuses = json_decode($this->currentArchivalProfile->processingStatuses);
-
-        if (!isset($processingStatuses->{$archive->processingStatus})) {
-            throw new \core\Exception\BadRequestException("The processing status isn't initial");
-        }
-
-        $archiveProcessingStatus = $processingStatuses->{$archive->processingStatus};
-
-        if ($archiveProcessingStatus->type != 'initial') {
-            throw new \core\Exception\BadRequestException("The processing status isn't initial");
-        }
-    }
-
-    /**
-     * Validate archive description object
-     *
-     * @param recordsManagement/archive $archive The archive object
-     */
-    protected function validateArchiveDescriptionObject($archive)
-    {
-        if (!isset($this->currentArchivalProfile)) {
-            return;
-        }
-
-        if (!empty($this->currentArchivalProfile->descriptionClass)) {
-            $archive->descriptionObject = \laabs::castObject($archive->descriptionObject, $this->currentArchivalProfile->descriptionClass);
-            $this->validateDescriptionClass($archive->descriptionObject, $this->currentArchivalProfile);
-        } else {
-            $this->validateDescriptionModel($archive->descriptionObject, $this->currentArchivalProfile);
-        }
-    }
-
-    /**
-     * Check if an object matches an archival profile definition
-     *
-     * @param mixed                             $object          The metadata object to check
-     * @param recordsManagement/archivalProfile $archivalProfile The reference of the profile
-     *
-     * @return boolean The result of the validation
-     */
-    protected function validateDescriptionClass($object, $archivalProfile)
-    {
-        if (\laabs::getClass($object)->getName() != $archivalProfile->descriptionClass) {
-            throw new \bundle\recordsManagement\Exception\archiveDoesNotMatchProfileException('The description class does not match with the archival profile.');
-        }
-
-        foreach ($archivalProfile->archiveDescription as $description) {
-            $fieldName = explode(LAABS_URI_SEPARATOR, $description->fieldName);
-            $propertiesList = array($object);
-
-            foreach ($fieldName as $name) {
-                $newPropertiesList = array();
-                foreach ($propertiesList as $propertyValue) {
-                    if (isset($propertyValue->{$name})) {
-                        if (is_array($propertyValue->{$name})) {
-                            foreach ($propertyValue->{$name} as $value) {
-                                $newPropertiesList[] = $value;
-                            }
-                        } else {
-                            $newPropertiesList[] = $propertyValue->{$name};
-                        }
-                    } else {
-                        $newPropertiesList[] = null;
-                    }
-                }
-                $propertiesList = $newPropertiesList;
-            }
-
-            foreach ($propertiesList as $propertyValue) {
-                if ($description->required && $propertyValue == null) {
-                    throw new \core\Exception\BadRequestException('The description class does not match with the archival profile.');
-                }
-            }
-        }
-    }
-
-    protected function validateDescriptionModel($object, $archivalProfile)
-    {
-        $names = [];
-
-        foreach ($archivalProfile->archiveDescription as $archiveDescription) {
-            $name = $archiveDescription->fieldName;
-            $names[] = $name;
-            $value = null;
-            if (isset($object->{$name})) {
-                $value = $object->{$name};
-            }
-            $this->validateDescriptionMetadata($value, $archiveDescription);
-        }
-
-        foreach ($object as $name => $value) {
-            if (!in_array($name, $names) && !$archivalProfile->acceptUserIndex) {
-                throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
-            }
-        }
-    }
-
-    protected function validateDescriptionMetadata($value, $archiveDescription)
-    {
-        if (is_null($value)) {
-            if ($archiveDescription->required) {
-                throw new \core\Exception\BadRequestException('Null value not allowed for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-            }
-
-            return;
-        }
-
-        $descriptionField = $archiveDescription->descriptionField;
-
-        $type = $descriptionField->type;
-        switch ($type) {
-            case 'name':
-
-                if (($descriptionField->isArray && !is_array($value)) || (!$descriptionField->isArray && is_array($value))) {
-                    throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                if (empty($descriptionField->enumeration)) {
-                    break;
-                }
-
-                if (!is_array($value)) {
-                    $valueArray = [$value];
-                } else {
-                    $valueArray = $value;
-                }
-
-                foreach ($valueArray as $item) {
-                    if (!in_array($item, $descriptionField->enumeration)  && $archiveDescription->required) {
-                        throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                    }
-                }
-
-                break;
-
-            case 'text':
-                break;
-
-            case 'number':
-                if (!is_int($value) && !is_float($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-
-            case 'boolean':
-                if (!is_bool($value) && !in_array($value, [0, 1])) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-
-            case 'date':
-                if (!is_string($value)) {
-                    throw new \core\Exception\BadRequestException('Invalid value for metadata %1$s', 400, null, [$archiveDescription->fieldName]);
-                }
-                break;
-        }
-    }
-
-    /**
-     * Validate the archive management metadata
-     *
-     * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
-     */
-    protected function validateManagementMetadata($archive)
-    {
-        if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
-            throw new \core\Exception\NotFoundException("The archival profile reference not found");
-        }
-
-        if (isset($archive->retentionRuleCode) && !$this->sdoFactory->exists("recordsManagement/retentionRule", $archive->retentionRuleCode)) {
-            throw new \core\Exception\NotFoundException("The retention rule not found");
-        }
-
-        if (isset($archive->accessRuleCode) && !$this->sdoFactory->exists("recordsManagement/accessRule", $archive->accessRuleCode)) {
-            throw new \core\Exception\NotFoundException("The access rule not found");
-        }
-
-        $nbArchiveObjects = 0;
-
-        if (!empty($archive->contents)) {
-            $nbArchiveObjects = count($archive->contents);
-        }
-
-        if ($nbArchiveObjects) {
-            $containedProfiles = [];
-
-            $this->useArchivalProfile($archive->archivalProfileReference);
-            foreach ($this->currentArchivalProfile->containedProfiles as $profile) {
-                $containedProfiles[] = $profile->reference;
-            }
-
-            for ($i = 0; $i < $nbArchiveObjects; $i++) {
-                if (empty($archive->contents[$i]->archivalProfileReference)) {
-                    if (!$this->currentArchivalProfile->acceptArchiveWithoutProfile) {
-                        throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
-                    }
-                } elseif (!in_array($archive->contents[$i]->archivalProfileReference, $containedProfiles)) {
-                    throw new \core\Exception\BadRequestException("Invalid contained archive profile %s", 400, null, $archive->contents[$i]->archivalProfileReference);
-                }
-
-                $this->validateManagementMetadata($archive->contents[$i]);
-            }
-
-        }
-    }
-
-    /**
-     * Validate archival profile of a child archive
-     *
-     * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
-     */
-    protected function validateFileplan($archive)
-    {
-        // No parent, check orgUnit can deposit with the profile
-        if (empty($archive->parentArchiveId)) {
-            if (!$this->organizationController->checkProfileInOrgAccess($archive->archivalProfileReference, $archive->originatorOrgRegNumber)) {
-                throw new \core\Exception\BadRequestException("Invalid archive profile");
-            }
-
-            return;
-        }
-
-        // Parent : read and check fileplan
-        $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-
-        // Check level in file plan
-        if ($parentArchive->fileplanLevel == 'item') {
-            throw new \core\Exception\BadRequestException("Parent archive is an item and can not contain items.");
-        }
-
-        // No profile on parent, accept any profile
-        if (empty($parentArchive->archivalProfileReference)) {
-            return;
-        }
-
-        // Load parent archive profile
-        if (!isset($this->archivalProfiles[$parentArchive->archivalProfileReference])) {
-            $parentArchivalProfile = $this->archivalProfileController->getByReference($parentArchive->archivalProfileReference);
-            $this->archivalProfiles[$parentArchive->archivalProfileReference] = $parentArchivalProfile;
-        } else {
-            $parentArchivalProfile = $this->archivalProfiles[$parentArchive->archivalProfileReference];
-        }
-
-        // No profile : check parent profile accepts archives without profile
-        if (empty($archive->archivalProfileReference) && $parentArchivalProfile->acceptArchiveWithoutProfile) {
-            return;
-        }
-
-        // Profile on content : check profile is accepted
-        foreach ($parentArchivalProfile->containedProfiles as $containedProfile) {
-            if ($containedProfile->reference == $archive->archivalProfileReference) {
-                return;
-            }
-        }
-
-        throw new \core\Exception\BadRequestException("Invalid archive profile");
-    }
-
-
-    /**
-     * Validate the archive management metadata
-     *
-     * @param \bundle\recordsManagement\Controller\recordsManagement/archive $archive
-     */
-    protected function validateAttachments($archive)
-    {
-        if (!$archive->digitalResources) {
-            $archive->digitalResources = [];
-        } else {
-            $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
-            $formatValidation = strrpos($this->currentServiceLevel->control, "formatValidation") === false ? false : true;
-        }
-
-        foreach ($archive->digitalResources as $digitalResource) {
-            if (empty($digitalResource->archiveId)) {
-                $digitalResource->archiveId = $archive->archiveId;
-            }
-
-            if (empty($digitalResource->resId)) {
-                $digitalResource->resId = \laabs::newId();
-            }
-
-            $contents = base64_decode($digitalResource->getContents());
-
-            $digitalResource->setContents($contents);
-
-            $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
-            file_put_contents($filename, $contents);
-
-            if ($formatDetection) {
-                $format = $this->formatController->identifyFormat($filename);
-
-                if ($format) {
-                    $digitalResource->puid = $format->puid;
-                }
-            }
-
-            if ($formatValidation) {
-                $validation = $this->formatController->validateFormat($filename);
-                if (!$validation !== true && is_array($validation)) {
-                    throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
-                }
-            }
-
-            if (empty($digitalResource->hash) || empty($digitalResource->hashAlgorithm)) {
-                $this->digitalResourceController->getHash($digitalResource, $this->hashAlgorithm);
-            }
-        }
-
-        $nbArchiveObjects = 0;
-
-        if (!empty($archive->contents)) {
-            $nbArchiveObjects = count($archive->contents);
-        }
-
-        for ($i = 0; $i < $nbArchiveObjects; $i++) {
-            $this->validateAttachments($archive->contents[$i]);
         }
     }
 
@@ -945,21 +620,25 @@ trait archiveEntryTrait
      */
     public function deposit($archive, $path = null)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
 
-        if(!empty($archive->contents)) {
+        if (!empty($archive->contents)) {
             $nbArchiveObjects = count($archive->contents);
         } else {
             $nbArchiveObjects = null;
         }
 
-
-
         try {
+            if (!isset($archive->archiveId)) {
+                $archive->archiveId = \laabs::newId();
+            }
             $archive->status = 'preserved';
             $archive->depositDate = \laabs::newTimestamp();
 
@@ -979,9 +658,11 @@ trait archiveEntryTrait
 
                 $this->deposit($archive->contents[$i], $archive->storagePath);
             }
-
         } catch (\Exception $exception) {
-            $nbResources = count($archive->digitalResources);
+            $nbResources = 0;
+            if (!is_null($archive->digitalResources)) {
+                $nbResources = count($archive->digitalResources);
+            }
             for ($i = 0; $i < $nbResources; $i++) {
                 $this->digitalResourceController->rollbackStorage($archive->digitalResources[$i]);
             }
@@ -1084,7 +765,7 @@ trait archiveEntryTrait
     protected function storeDescriptiveMetadata($archive)
     {
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-        
+
         $descriptionController->create($archive);
     }
 
@@ -1104,7 +785,6 @@ trait archiveEntryTrait
 
         $values = is_array($values) ? $values : get_object_vars($values);
 
-        $matches = array();
         if (preg_match_all("/\<[^\>]+\>/", $pattern, $variables)) {
             foreach ($variables[0] as $variable) {
                 $token = substr($variable, 1, -1);
@@ -1115,7 +795,7 @@ trait archiveEntryTrait
 
                     case $token == 'instance':
                         if ($instanceName = \laabs::getInstanceName()) {
-                            $pattern = str_replace($variable, \laabs::getInstanceName(), $pattern);
+                            $pattern = str_replace($variable, $instanceName, $pattern);
                         } else {
                             $pattern = "instance";
                         }

@@ -36,6 +36,8 @@ interface archiveInterface
      * @param bool                      $zipContainer The archive is a zip container
      *
      * @action recordsManagement/archive/receive
+     * @example /public/tests/archiveDeposit-max.json example-max
+     * @example /public/tests/archiveDeposit-min.json example-min
      */
     public function create($archive, $zipContainer = false);
 
@@ -148,16 +150,18 @@ interface archiveInterface
     public function updateInteractiveconversion_resId_();
 
     /**
-     * Add a resource to the archive
+     * Add a resource to an archive
      * @param string $contents
      * @param string $filename
-     * 
+     *
      * @action recordsManagement/archive/addResource
+     *
+     * @example /public/tests/addResource-standard.json example-standard
      */
     public function create_archiveId_Digitalresource($contents, $filename = null);
 
     /**
-     * Remove a resource to the archive
+     * Remove resources from an archive
      * @param array $resIds
      *
      * @action recordsManagement/archive/deleteResource

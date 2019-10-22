@@ -1,0 +1,23 @@
+{
+  "name": "laabs",
+  "version": "1.0.0",
+  "description": "Description ===========",
+  "main": "index.js",
+  "directories": {
+    "test": "tests/cypress"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cypress": "^3.3.1"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/cypress run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "gitlab-maarch@labs.maarch.org:maarch/maarchRM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

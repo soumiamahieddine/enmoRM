@@ -1,0 +1,116 @@
+<div class="row" id="importResourcePanel">
+    <div class="row col-md-6 col-md-offset-3">
+        <div>
+            <?hinclude dashboard/mainScreen/resourceForm.html ?>
+        </div>
+    </div>
+    <div> 
+        <span id="resourceArchiveId" class="hidden"></span>
+        <span id="currentArchiveId" class="hidden"></span>
+        <div class="row col-md-10 col-md-offset-4">
+            <a href="#" class="btn btn-sm btn-success" id="addResource"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
+            <i>&nbsp;</i>
+            <i>&nbsp;</i>
+            <a href="#" class="btn btn-sm btn-danger small" id="cancelResource"><i class="fa fa-times">&nbsp;</i>Cancel</a>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    ResourcePanel = {
+        send : function(type, event, button) {
+            let url = null;
+            let data = null;
+            let archive = null;
+
+            if (type === 'sync') {
+                url = "/archive";
+                archive = this.syncSerialize();
+
+                if (archive < 0) {
+                    return;
+                }
+
+                data = JSON.stringify({archive : archive, zipContainer : ResourceForm.zipContainer});
+            } else {
+                url = "/transfer";
+                data = this.asyncSerialize();
+
+                if (data.message <0) {
+                    return;
+                }
+
+                data = JSON.stringify(data);
+
+            }
+            ajax($(button),
+                {
+                    type        : 'POST',
+                    url         : url,
+                    data        : data,
+                    contentType : 'application/json',
+                    dataType    : 'json',
+                    success     : function (response) {
+                        gritter.show(response.message, response.status, response.errors);
+
+                        if (response.status) {
+                            trigger("archiveImportOver.recordsManagement", [archive.parentArchiveId]);
+                            ImportPanel.cancel();
+                            var folder = archive.originatorOrgRegNumber;
+                            if (archive.filePlanPosition) {
+                                folder = archive.filePlanPosition;
+                            }
+                            trigger('loadFolder.filePlan', [folder]);
+                        }
+                    },
+                    error       : function (response) {
+                        gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                    }
+                }
+            );
+        },
+
+        save: function(e, button) {
+            $('#newResourceModal').modal("hide");
+        },
+
+        cancel: function() {
+            resourceList.clear();
+            $('#newResourceModal').modal("hide");
+        }
+    }
+
+    $("#addResource").on('click', function() {
+        digitalResource = resourceList.serialize();
+        var archiveId = $("#resourceArchiveId").text();
+        var currentArchiveId = $("#currentArchiveId").text();
+
+        var data = {
+            contents : digitalResource[0].handler,
+            filename : digitalResource[0].fileName
+        };
+        $.ajax({
+            url         : '/'+archiveId+'/digitalResource',
+            type        : 'POST',
+            contentType : "application/json",
+            data        : JSON.stringify(data),
+            dataType    :'json',
+            success     : function (response) {
+                ResourcePanel.cancel();
+                archiveInfoModal.reload(currentArchiveId);
+            },
+            error       : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+
+        return;
+    });
+
+    $('#cancelResource').on('click', function(e) {
+        ResourcePanel.cancel();
+        trigger("archiveImportOver.recordsManagement");
+    });
+</script>

@@ -1,0 +1,284 @@
+<!--#
+    This file is part of the organization package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div class="panel panel-primary" id="controlAuthority_Form">
+    <div class="panel-heading">
+        <h4>Associate the control authority to originator</h4>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal col-xs-12">
+            <input name="controlAuthorityId" hidden="hidden">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Control authority <span style="color : red">*</span></label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="controlAuthorityOrgUnitId">
+                        <option value="">Select a control authority</option>
+                        <?merge ownerControlAuthorityOrgs ?>
+                        <optgroup label="[?merge .displayName ?]">
+                            <?merge .depositors ?>
+                            <option value="[?merge .orgId ?]"><?merge .displayName ?></option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Default control authority</label>
+                <div class="col-sm-8">
+                    <input type="checkbox"  id="defaultOriginator" data-toggle="toggle"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4">Service <span style="color : red">*</span></label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control orgHide" placeholder="Originator"  name="orgTypeahead" id="orgTypeahead"/>
+                    <select class="form-control hide" name="originatorOrgUnitId" id="originatorOwnerOrgId">
+                        <option value="">All</option>
+                        <?merge organizationsOriginator ?>
+                        <span>
+                            <?merge .isOrgUnit.bool().not() ?>
+                            <option value="[?merge .orgId ?]"><?merge .displayName ?></option>
+                        </span>
+                    </select>
+                    <select class="form-control hide" name="originatorOrgUnitId" id="originatorOrgUnitId">
+                        <option value="">All</option>
+                        <?merge organizationsOriginator ?>
+                        <span>
+                            <?merge .isOrgUnit.bool() ?>
+                            <option data-ownerOrgName="[?merge .ownerOrgName ?]" value="[?merge .orgId ?]"><?merge .displayName ?></option>
+                        </span>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" name="originatorOrgInfo">
+                <label class="control-label col-sm-4">Organization</label>
+                <div class="col-sm-8">
+                    <span class="align-middle" id="organizationOwnerOrgName"></span>
+                </div>
+            </div>
+            <div class="form-group" name="originatorOrgInfo">
+                <label class="control-label col-sm-4">Service</label>
+                <div class="col-sm-8">
+                    <span class="align-middle" id="originatorOwnerOrgName"></span>
+                </div>
+            </div>
+
+            <br/>
+            <div class="form-group">
+                <button type="button" class="btn btn-warning col-sm-offset-3" id='controlAuthority_cancelForm' title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                <button type="button" class="btn btn-success" id='controlAuthority_save' title="Save"><i class="fa fa-save">&nbsp;</i>Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display:none">
+    <span id="empty_text">The fields with a star are required.</span>
+    <span id="noOriginatorFound">No originator found</span>
+</div>
+<script>
+    $('#controlAuthority_cancelForm').on('click', function() {
+        clearForm();
+    });
+
+    $('#defaultOriginator').change(function() {
+        if($(this).prop('checked')){
+            $("#orgTypeahead").prop('disabled', true);
+        } else {
+            $("#orgTypeahead").prop('disabled', false).val('');
+            $("#originatorOrgUnitId").val('');
+            $("#organizationOwnerOrgName").text('');
+            $("#originatorOwnerOrgName").text('');
+
+        }
+    })
+
+    $('#controlAuthority_save').on('click', function() {
+        var type = "POST";
+        var url = "/controlAuthority";
+        var form = $('#controlAuthority_Form');
+        var parameters;
+
+        var id = form.find('[name="controlAuthorityId"]').text();
+        if (id) {
+            type = "PUT";
+            parameters = {
+                controlAuthority : serializeControlAuthority(),
+                originatorOrgUnitId : id
+            };
+        } else {
+            parameters = {
+                controlAuthority : serializeControlAuthority()
+            };
+        }
+
+        if (parameters.controlAuthority.controlAuthorityOrgUnitId == "" || parameters.controlAuthority.originatorOrgUnitId == "" || parameters.controlAuthority.controlAuthorityOrgUnitId == undefined || parameters.controlAuthority.originatorOrgUnitId == undefined) {
+            gritter.show($("#empty_text").text(), false);
+            return;
+        }
+
+        ajax($(this), {
+            type        : type,
+            url         : url,
+            data        : JSON.stringify(parameters),
+            contentType : 'application/json',
+            dataType    : 'json',
+            success     : function(response) {
+                if (response.status == true) {
+                    gritter.show(response.message, true);
+                    clearForm();
+                    load('/controlAuthority');
+                } else {
+                    gritter.show(response.message, false, response.errors);
+                }
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        });
+    });
+
+    function serializeControlAuthority() {
+        controlAuthority = {
+            //keyword : []
+        };
+
+        $('#controlAuthority_Form').find('select').each(function(){
+            var name = $(this).attr('name');
+            var value = $(this).val();
+            if (name && value != "") {
+                controlAuthority[name] = $(this).val();
+            }
+        });
+
+        if($('#defaultOriginator').is(':checked')){
+            controlAuthority['originatorOrgUnitId'] = '*';
+        }
+
+        return controlAuthority;
+    }
+
+    function newControlAuthorityForm() {
+        $('#controlAuthority_Form').css('display', '');
+        $("#organizationOwnerOrgName").html('');
+        $("#originatorOwnerOrgName").html('');
+        $("#orgTypeahead").val('');
+        $('#defaultOriginator').bootstrapToggle('off');
+    }
+
+    function loadControlAuthorityForm(controlAuthority, originator) {
+        var form = $('#controlAuthority_Form');
+
+        $('#organizationOwnerOrgName').text('');
+        if(originator=='*'){
+            $('#defaultOriginator').bootstrapToggle('on');
+        } else {
+            $('#defaultOriginator').bootstrapToggle('off');
+        }
+        form.find('[name="controlAuthorityId"]').html(originator);
+
+        form.find('select[name="controlAuthorityOrgUnitId"]').val(controlAuthority);
+        form.find('select[name="originatorOrgUnitId"]').val(originator);
+
+        var orgName = $("#originatorOwnerOrgId option:selected").text();
+        var originatorName = $("#originatorOrgUnitId option:selected").text();
+
+        if(!orgName) {
+            orgName = $("#originatorOrgUnitId option:selected").attr('data-ownerorgName');
+        }
+        $("#organizationOwnerOrgName").html(orgName);
+        $("#originatorOwnerOrgName").html(originatorName);
+
+        $('#controlAuthority_Form').css('display', '');
+    }
+
+    function clearForm() {
+        var form =  $('#controlAuthority_Form');
+        form.find('[name="controlAuthorityId"]').val('');
+        form.find('[name="controlAuthorityOrgUnitId"]').val('');
+        form.find('[name="originatorOrgUnitId"]').val('');
+        
+        $('#controlAuthority_Form').css('display', 'none');
+        enableIndex();
+    }
+
+    var organizations = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
+        limit: 100
+    });
+
+
+    window.localStorage.clear();
+    organizations.initialize();
+
+    $('#orgTypeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 2
+        },
+        {
+            name: 'organizations',
+            displayKey: 'displayName',
+            templates: {
+                empty: function() {
+                    return "<span class='well well-sm'>"+$('#noOriginatorFound').text()+"</span>";
+                },
+                suggestion: function(organization) {
+                    var display =
+                        "<span>"
+                        + "<span style='font-family:Helvetica, sans-serif;'>";
+
+                    if(organization.ownerOrgName) {
+                        display += organization.ownerOrgName
+                            + " > ";
+                    }
+
+                    display += organization.displayName
+                        + "</span></span><br>";
+
+                    return display;
+                }
+            },
+            source: function(query, cb) {
+                organizations.search(query, function(suggestions) {
+                    var i = suggestions.length
+                    while (i--) {
+                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                            suggestions.splice(i, 1);
+                    }
+                    cb(suggestions);
+                });
+            },
+            skipCache: true
+        }
+    ).on('typeahead:selected', function($event, suggestion, source) {
+
+        if(suggestion.ownerOrgId) {
+            $("#originatorOrgUnitId").val(suggestion.orgId);
+            $("#organizationOwnerOrgName").html(suggestion.ownerOrgName);
+            $("#originatorOwnerOrgName").html(suggestion.displayName);
+            $("#originatorOwnerOrgId").val('');
+        } else {
+            $("#originatorOwnerOrgId").val(suggestion.orgId);
+            $("#organizationOwnerOrgName").html(suggestion.ownerOrgName);
+            $("#originatorOwnerOrgName").html('');
+            $("#originatorOrgUnitId").val('');
+        }
+
+    });
+
+    $('#orgTypeahead').keyup(function () {
+
+        if(!$(this).val()) {
+            $('[name="originatorOrgInfo]"').each(function(){
+                $(this).hide();
+            });
+        }
+    });
+</script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>

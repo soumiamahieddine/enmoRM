@@ -68,11 +68,11 @@
                     $('#document_XMLDropZone').addClass('hide');
                     $('#documentForm').find("[name=zipContainer]").prop('checked', true).parent().removeClass('hide');
                     DocumentForm.zipContainer = true;
-                
+
                 } else if (DocumentForm.zipContainer) {
                     DocumentForm.disabledZipContainter();
                 }
-                
+
 
                 DocumentList.addDocument(fileObject);
             };
@@ -94,7 +94,7 @@
             if ($('#documentList').find('td:contains("'+fileObject.fileName+'")').length) {
                 return;
             }
-            
+
             var tr = $('<tr/>').attr('data-binary', fileObject.binary).appendTo(this.list);
 
             $('<td class="small">').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
@@ -120,7 +120,7 @@
 
         removeDocument: function(button) {
             button.closest('tr').remove();
-            
+
             this.card = this.card-1;
             if (this.list.find("tr").length == 0) {
                 this.table.hide();
@@ -150,10 +150,14 @@
                 digitalResource.handler = $(this).attr('data-binary');
                 digitalResource.fileName = $(this).find("[name=fileName]").text();
                 digitalResource.size = $(this).find("[name=size]").text();
+                if (digitalResource.size == 0) {
+                    gritter.show($('#emptyResource_error').text(), false);
+                    return -1;
+                }
                 digitalResource.mimetype = $(this).find("[name=type]").text();
-                
+
                 digitalResources.push(digitalResource);
-                
+
             });
 
             if (digitalResources.length == 0) {

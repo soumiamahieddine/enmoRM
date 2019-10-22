@@ -136,4 +136,20 @@ class userAccount
      */
     public $title;
 
+    /**
+     * @var string
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
+
+    /**
+     * The security Level (constants in userAccount model)
+     *
+     * @var string 
+     */
+    public $securityLevel;
 }

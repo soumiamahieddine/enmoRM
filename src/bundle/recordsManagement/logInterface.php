@@ -36,7 +36,16 @@ interface logInterface
 
      * @action recordsManagement/log/find
      */
-    public function find($archiveId = null, $type = null, $fromDate = null, $toDate = null, $processName = null, $processId = null, $sortBy = ">fromDate", $numberOfResult = 300);
+    public function find(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null,
+        $sortBy = ">fromDate",
+        $numberOfResult = null
+    );
     
     /**
      * Deposit a log file
@@ -49,7 +58,14 @@ interface logInterface
      *
      * @action recordsManagement/log/depositJournal
      */
-    public function createDepositjournal($journalFileName, $fromDate, $toDate, $type, $processName = null, $timestampFileName = null);
+    public function createDepositjournal(
+        $journalFileName,
+        $fromDate,
+        $toDate,
+        $type,
+        $processName = null,
+        $timestampFileName = null
+    );
 
     /**
      * @param string $archiveId     Archiver identifier

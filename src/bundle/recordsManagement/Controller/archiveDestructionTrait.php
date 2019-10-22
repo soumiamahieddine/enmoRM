@@ -28,37 +28,123 @@ trait archiveDestructionTrait
 {
     /**
      * Flag for disposal
-     * @param array $archiveIds The archives ids
      *
-     * @return bool The result of the operation
+     * @param array $archiveIds The archives ids
+     * @param string $identifier
+     * @param string $comment
+     * @return mixed
+     * @throws \bundle\recordsManagement\Exception\notDisposableArchiveException
      */
-    public function dispose($archiveIds)
+    public function dispose($archiveIds, $identifier = null, $comment = null)
     {
         $archives = [];
 
         $archiveChildrenIds = [];
         foreach ($archiveIds as $archiveId) {
-            $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
+            $archiveChildrenIds[$archiveId] = $this->listChildrenArchiveId($archiveId);
         }
 
-        foreach ($archiveChildrenIds as $archiveChildrenId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
+        $res = [];
+        $res['success'] = [];
+        $res['error'] = [];
 
-            $this->checkRights($archive);
+        foreach ($archiveChildrenIds as $archiveParentId => $childrenArchiveIds) {
+            foreach ($childrenArchiveIds as $childrenArchiveId) {
+                $archive = $this->sdoFactory->read('recordsManagement/archive', $childrenArchiveId);
+                foreach ($archives as $a) {
+                    if ($a->archiveId == $archive->archiveId) {
+                        continue 2;
+                    }
+                }
 
-            $this->checkDisposalRights($archive) ;
+                $this->checkRights($archive);
+                if ($this->checkDisposalRights($archive)) {
+                    $res['error'][] = $archiveParentId;
+                    continue 2;
+                } else {
+                    $res['success'][] = $archiveParentId;
+                }
 
-            $this->listChildrenArchive($archive, true);
-
-            $archives[] = $archive;
+                $this->listChildrenArchive($archive, true);
+                $archives[] = $archive;
+            }
         }
 
-        $archiveList = $this->setStatus($archiveIds, 'disposable');
+        $archiveList = $this->setStatus($res['success'], 'disposable');
+
         foreach ($archives as $archive) {
             $this->logDestructionRequest($archive);
         }
 
-        return $archiveList;
+        if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
+            $this->sendDestructionRequest($archives, $identifier, $comment);
+        }
+
+        return $res;
+    }
+
+    /**
+     *
+     * Send destruction request
+     *
+     * @param $archives
+     * @param null $identifier
+     * @param null $comment
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function sendDestructionRequest($archives, $identifier = null, $comment = null)
+    {
+        $archiveDestructionRequestController = \laabs::newController("medona/ArchiveDestructionRequest");
+
+        $archivesByOriginator = array();
+        foreach ($archives as $archive) {
+            if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
+                $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
+            }
+
+            $archivesByOriginator[$archive->originatorOrgRegNumber][] = $archive;
+        }
+        $requesterOrg = null;
+        if (!$requesterOrg) {
+            $requesterOrg = \laabs::getToken('ORGANIZATION');
+            if (!$requesterOrg) {
+                throw \laabs::newException('medona/invalidMessageException', "No current organization choosen");
+            }
+        }
+        $requesterOrgRegNumber = $requesterOrg->registrationNumber;
+
+        if (!$identifier) {
+            $identifier = "archiveDestructionRequest_".date("Y-m-d-H-i-s");
+        }
+
+        $reference = $identifier;
+        foreach ($archivesByOriginator as $originatorOrgRegNumber => $archives) {
+            $i = 1;
+            $recipientOrgRegNumber = $archives[0]->archiverOrgRegNumber;
+
+            $unique = array(
+                'type' => 'ArchiveDestructionRequest',
+                'senderOrgRegNumber' => $requesterOrgRegNumber,
+                'reference' => $reference,
+            );
+
+            while ($this->sdoFactory->exists("medona/message", $unique)) {
+                $i++;
+                $unique['reference'] = $reference = $identifier.'_'.$i;
+            }
+
+            $archiveDestructionRequestController->send(
+                $reference,
+                $archives,
+                $comment,
+                $requesterOrgRegNumber,
+                $recipientOrgRegNumber,
+                $originatorOrgRegNumber
+            );
+        }
+
+        return $archives;
     }
 
     /**
@@ -73,11 +159,6 @@ trait archiveDestructionTrait
 
         $result = $this->setStatus($archiveId, 'disposed');
 
-        $eventItems = array(
-            'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
-        );
-
         $this->logElimination($archive);
 
         return $result;
@@ -91,7 +172,12 @@ trait archiveDestructionTrait
      */
     public function cancelDestruction($archiveIds)
     {
+        $archiveIdsWithChildren = $archiveIds;
         foreach ($archiveIds as $archiveId) {
+            $archiveIdsWithChildren = array_merge($archiveIdsWithChildren, $this->getChildrenArchives($archiveId));
+        }
+
+        foreach ($archiveIdsWithChildren as $archiveId) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
             $this->logDestructionRequestCancel($archive);
         }
@@ -139,7 +225,6 @@ trait archiveDestructionTrait
         }
 
         $archives = $this->verifyIntegrity($archiveIds);
-        
         $destructArchives = [];
         $destructArchives['error'] = $archives['error'];
         $destructArchives['success'] = [];
@@ -147,7 +232,10 @@ trait archiveDestructionTrait
         foreach ($archives['success'] as $archiveId) {
             $archive = $this->retrieve((string)$archiveId);
 
-            if ($archive->status != 'disposed' && $archive->status != 'restituted' && $archive->status != 'transfered') {
+            if ($archive->status != 'disposed'
+                && $archive->status != 'restituted'
+                && $archive->status != 'transfered'
+            ) {
                 $destructArchives['error'][] = $archive;
                 continue;
             }
@@ -253,9 +341,15 @@ trait archiveDestructionTrait
         return $archiveIds;
     }
 
+    /**
+     * @param $archive
+     * @param bool $isChild
+     * @return array
+     * @throws \bundle\recordsManagement\Exception\notDisposableArchiveException
+     */
     public function checkDisposalRights($archive, $isChild = false)
     {
-        $archiveIds = [];
+        $error = "";
 
         $this->checkRights($archive);
         $currentDate = \laabs::newTimestamp();
@@ -269,24 +363,61 @@ trait archiveDestructionTrait
         }
 
         if (isset($archive->finalDisposition) && $archive->finalDisposition != "destruction") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Archive not set for destruction.");
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Archive not set for destruction."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Archive not set for destruction."
+            );
         }
         if (isset($archive->disposalDate) && $archive->disposalDate > $currentDate) {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."Disposal date not reached.");
-        }
-        if ((!isset($archive->finalDisposition) || empty($archive->finalDisposition) || empty($archive->disposalDate)) && $actionWithoutRetentionRule == "preserve") {
-            throw new \bundle\recordsManagement\Exception\notDisposableArchiveException($beforeError."There is a missing management information (date or retention rule).");
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Disposal date not reached."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Disposal date not reached."
+            );
         }
 
-        return $archiveIds ;
+        if ($archive->status === "frozen") {
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."Archive not set for destruction."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."Archive not set for destruction."
+            );
+        }
+
+        if ((!isset($archive->finalDisposition)
+                || empty($archive->finalDisposition)
+                || empty($archive->disposalDate)
+            )
+            && $actionWithoutRetentionRule == "preserve") {
+            // throw new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+            //     $beforeError."There is a missing management information (date or retention rule)."
+            // );
+            return new \bundle\recordsManagement\Exception\notDisposableArchiveException(
+                $beforeError."There is a missing management information (date or retention rule)."
+            );
+        }
     }
-    
+
+    /**
+     * remove resources from an archive
+     *
+     * @param  string   $archiveId Archive Id
+     * @param  string[] $resIds    An array of resources id
+     *
+     * @return array               Array of resId ordered by success and errors
+     */
     public function deleteResource($archiveId, $resIds)
     {
         $currentService = \laabs::getToken("ORGANIZATION");
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
-        
-        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber || !\laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest"))
+
+        $userAccountController = \laabs::newController('auth/userAccount');
+        if (($currentService->registrationNumber != $archive->archiverOrgRegNumber
+                || !$userAccountController->hasPrivilege("archiveManagement/addResource"))
             && !in_array("owner", $currentService->orgRoleCodes)) {
             return false ;
         }
@@ -295,8 +426,8 @@ trait archiveDestructionTrait
         $destructResources['success'] = [];
 
         foreach ($resIds as $resId) {
+            $digitalResource = $this->digitalResourceController->info($resId);
             try {
-                $digitalResource = $this->digitalResourceController->info($resId);
                 $this->digitalResourceController->delete($resId);
                 $destructResources['success'][] = $resId;
                 $this->logDestructionResource($archive, $digitalResource);
@@ -305,6 +436,12 @@ trait archiveDestructionTrait
                 $this->logDestructionResource($archive, $digitalResource, false);
             }
         }
+
+        if (isset(\laabs::configuration("medona")['transaction'])
+            && \laabs::configuration("medona")['transaction']) {
+            $this->sendModificationNotification([$archive]);
+        }
+
         return $destructResources;
     }
 }

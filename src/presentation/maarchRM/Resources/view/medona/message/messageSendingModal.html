@@ -1,0 +1,140 @@
+<div class="modal fade bs-example-modal-lg" id="messageSendingModal" tabindex="-1" role="dialog" aria-labelledby="messages" aria-hidden="true">
+    <div class="modal-dialog modal-lg" data-translate-catalog="medona/messages">
+        <div class="modal-content">
+            <div lang="en">
+                <div class="container-fluid">
+                    <div class="page-header">
+                        <h3 id="messageSendingTitle"></h3>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="panel-body">
+                        <form class="form-horizontal" id="messageSendingForm">
+                            <div class="col-md-12">
+                                <?merge userOrg.bool() ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Sender organization</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="senderOrgRegNumber">
+                                            <?merge currentOrg.bool() ?>
+                                            <option value="[?merge currentOrg.registrationNumber?]" selected><?merge currentOrg.displayName ?></option>
+                                            <?merge userOrg ?>
+                                            <option value="[?merge .registrationNumber?]"><?merge .displayName ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <?merge organizations.bool() ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Recipient organization</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" name="senderOrgRegNumber">
+                                            <?merge organizations ?>
+                                            <option value="[?merge .registrationNumber?]"><?merge .displayName ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <?merge reference.bool() ?>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Reference</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="reference" name="reference" placeholder="Message identifier"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Comment</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control" id="comment" name="comment" placeholder="Comment" style="resize: none; resize: vertical"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="sendMessage" class="btn btn-success" data-action="" data-action-type="" data-params="" data-dismiss="modal" title="Send">Send</button>
+                    <button type="button" id="closeMessageSendingModal" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="hide">
+            <span id="validate_Title">Validate</span>
+            <span id="rejet_Title">Reject</span>
+            <span id="requestCommunication_Title">Request communication</span>
+            <span id="requestRestitution_Title">Request restitutiton</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#sendMessage').on('click', function () {
+        messageSendingModal.send($(this));
+    })
+
+    // Reset modal on closing
+    $("#messageSendingModal").on('hidden.bs.modal', function () {
+        messageSendingModal.clear();
+    })
+
+    var messageSendingModal = {
+        load : function(messageType, action, actionType, params) {
+            $('#messageSendingTitle').html($('#' + messageType + "_Title"));
+            $('#sendMessage').data('action', action).data('action-type', actionType);
+            $('#sendMessage').data('params', params);
+
+            $('#messageSendingModal').modal();
+        },
+
+        send : function(button) {
+            var message = this.serialize();
+
+            $.ajax({
+                url         : button.data('action'),
+                data        : JSON.stringify(message),
+                type        : button.data('action-type'),
+                contentType : "application/json",
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors)
+                },
+                error    : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
+        serialize : function() {
+            var form = $('#messageSendingForm');
+            var object = $('#sendMessage').data('params');
+            var senderOrgRegNumber = form.find("[name='senderOrgRegNumber']");
+        
+            if (senderOrgRegNumber.length) {
+                object.senderOrg = {
+                    registrationNumber  : senderOrgRegNumber.val(),
+                    orgName             : senderOrgRegNumber.text()
+                }
+            }
+
+            recipientOrgRegNumber = form.find("[name='recipientOrgRegNumber']");
+
+            if (recipientOrgRegNumber.length) {
+                object.recipientOrgRegNumber = recipientOrgRegNumber.val();
+            }
+
+            object.reference = form.find("[name='reference']").val();
+            object.comment = form.find("[name='comment']").val();
+
+            return object;
+        },
+
+        clear : function() {
+            modal = $('#messageSendingModal');
+
+            senderOrgRegNumber = modal.find("[name='senderOrgRegNumber']");
+            senderOrgRegNumber.val(senderOrgRegNumber.find('option:first').val());
+
+            modal.find("[name='reference']").val('');
+            modal.find("[name='comment']").val('');
+        }
+    }
+
+</script>

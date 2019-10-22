@@ -82,6 +82,9 @@ trait archiveAccessTrait
         $processingStatus = null,
         $checkAccess = true
     ) {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $archives = [];
 
         $archiveArgs = [
@@ -115,10 +118,12 @@ trait archiveAccessTrait
         if (!$profileReference) {
             $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
 
-            $descriptionClassController = \laabs::newController('recordsManagement/descriptionClass');
+            $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
-            foreach ($descriptionClassController->index() as $descriptionClass) {
-                $searchClasses[$descriptionClass->name] = $this->useDescriptionController($descriptionClass->name);
+            foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
+                if (isset($descriptionScheme->search)) {
+                    $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
+                }
             }
         } else {
             $archivalProfile = $this->archivalProfileController->getByReference($profileReference);
@@ -184,6 +189,9 @@ trait archiveAccessTrait
         $originatingStartDate = null,
         $originatingEndDate = null
     ) {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $queryParts = array();
         $queryParams = array();
 
@@ -282,7 +290,15 @@ trait archiveAccessTrait
         }
 
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
@@ -339,7 +355,15 @@ trait archiveAccessTrait
         }
         
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $archives = $this->sdoFactory->find('recordsManagement/archive', $queryString, $queryParams, false, false, 300);
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
 
         foreach ($archives as $archive) {
             if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
@@ -492,6 +516,9 @@ trait archiveAccessTrait
      */
     public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
 
         if ($checkAccess) {
@@ -556,6 +583,9 @@ trait archiveAccessTrait
      */
     public function retrieve($archiveId, $withBinary = false, $checkAccess = true, $isCommunication = false)
     {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
         if (is_scalar($archiveId)) {
             $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
         } else {
@@ -594,9 +624,7 @@ trait archiveAccessTrait
             $archive->communicability = $this->accessVerification($archive);
         }
 
-        if (\laabs::hasBundle('medona')) {
-            $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
-        }
+        $archive->messages = $this->getMessageByArchiveid($archive->archiveId);
 
         return $archive;
     }
@@ -624,12 +652,12 @@ trait archiveAccessTrait
         $res['childrenRelationships'] = $this->archiveRelationshipController->getByArchiveId($archiveId);
         foreach ($res['childrenRelationships'] as $childRelationship) {
             $relatedArchiveInfo = $this->read($childRelationship->relatedArchiveId);
-            $childRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+            $childRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName;
         }
         $res['parentRelationships'] = $this->archiveRelationshipController->getByRelatedArchiveId($archiveId);
         foreach ($res['parentRelationships'] as $parentRelationship) {
             $relatedArchiveInfo = $this->read($parentRelationship->archiveId);
-            $parentRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName; 
+            $parentRelationship->relatedArchiveName = $relatedArchiveInfo->archiveName;
         }
 
         return $res;
@@ -866,7 +894,6 @@ trait archiveAccessTrait
             $this->userPositionController->readDescandantService((string) $currentService->orgId)
         );
 
-        $owner = false;
         foreach ($userServiceOrgRegNumbers as $userServiceOrgRegNumber) {
             $userService = $this->organizationController->getOrgByRegNumber($userServiceOrgRegNumber);
             if (isset($userService->orgRoleCodes) && $userService->orgRoleCodes->contains('owner')) {
@@ -904,22 +931,37 @@ trait archiveAccessTrait
      * Change the status of an archive
      * @param mixed  $archiveIds Identifiers of the archives to update
      * @param string $status     New status to set
+     * @param bool   $isUnFreeze
+     * @param bool   $withChildren
+     * @param bool   $withParents
      *
-     * @return array Archives ids separate by successfully updated archives ['success']
-     * and not updated archives ['error']
+     * @return array Archives ids separate by successfully updated archives ['success'] and not updated archives ['error']
      */
-    public function setStatus($archiveIds, $status)
-    {
+    public function setStatus(
+        $archiveIds,
+        $status,
+        $isUnFreeze = false,
+        $withChildren = true,
+        $withParents = false
+    ) {
         $statusList = [];
-        $statusList['preserved'] = array('frozen', 'disposable', 'error');
-        $statusList['frozen'] = array('preserved', 'disposable');
-        $statusList['disposable'] = array('preserved');
-        $statusList['disposed'] = array('disposable');
+
+        if ($isUnFreeze) {
+            $statusList['preserved'] = array('frozen', 'disposable', 'error', 'restituable', 'transferable');
+        } else {
+            $statusList['preserved'] = array('disposable', 'error', 'restituable', 'transferable');
+        }
+        $statusList['restituable'] = array('preserved');
         $statusList['restituted'] = array('restituable');
-        $statusList['error'] = array('preserved', 'frozen', 'disposable', 'disposed');
+        $statusList['transfered'] = array('transferable');
+        $statusList['frozen'] = array('preserved', 'restituable', 'disposable', 'transferable');
+        $statusList['disposable'] = array('preserved');
+        $statusList['transferable'] = array('preserved');
+        $statusList['disposed'] = array('disposable', 'restituted');
+        $statusList['error'] = array('preserved', 'restituable', 'restituted', 'frozen', 'disposable', 'disposed');
 
         if (!is_array($archiveIds)) {
-            $archiveIds = array($archiveIds);
+            $archiveIds = array((string) $archiveIds);
         }
 
         $res = array('success' => array(), 'error' => array());
@@ -929,18 +971,45 @@ trait archiveAccessTrait
 
             return $res;
         }
-        foreach ($archiveIds as $archiveId) {
+
+        if ($withChildren || $withParents) {
+            $archiveIdsWithChildren = $archiveIdsWithParents = [];
+
+            $archiveIds = array_flip($archiveIds);
+            foreach ($archiveIds as $archiveId => $key) {
+                if ($withChildren) {
+                    $archiveIdsWithChildren = array_merge(
+                        $archiveIdsWithChildren,
+                        $this->getChildrenArchives($archiveId)
+                    );
+                }
+
+                if ($withParents) {
+                    $archiveIdsWithParents = array_merge(
+                        $archiveIdsWithParents,
+                        $this->getParentsArchives($archiveId)
+                    );
+
+                }
+            }
+
+            $archiveIds = array_merge($archiveIds, $archiveIdsWithChildren);
+            $archiveIds = array_merge($archiveIds, $archiveIdsWithParents);
+        }
+
+        foreach ($archiveIds as $archiveId => $value) {
             $archiveStatus = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
+
+            if ($archiveStatus->status === $status) {
+                continue;
+            }
 
             if (!in_array($archiveStatus->status, $statusList[$status])) {
                 array_push($res['error'], $archiveId);
             } else {
                 $archiveStatus->status = $status;
-                $archiveStatus->lastModificationDate = \laabs::newTimestamp();
-                
-                $childrenArchives = $this->sdoFactory->index('recordsManagement/archive', "archiveId", "parentArchiveId = '$archiveId'");
-                $this->setStatus($childrenArchives, $status);
 
+                $archiveStatus->lastModificationDate = \laabs::newTimestamp();
                 $this->sdoFactory->update($archiveStatus);
                 array_push($res['success'], $archiveId);
             }
@@ -948,6 +1017,37 @@ trait archiveAccessTrait
 
         return $res;
     }
+
+    public function getChildrenArchives($archiveId)
+    {
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            "archiveId",
+            "parentArchiveId = '$archiveId'"
+        );
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveIds = array_merge($archiveIds, $this->getChildrenArchives($archiveId));
+        }
+
+        return $archiveIds;
+    }
+
+    public function getParentsArchives($archiveId)
+    {
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            "parentArchiveId",
+            "archiveId = '$archiveId'"
+        );
+
+        foreach ($archiveIds as $archiveId) {
+            $archiveIds = array_merge($archiveIds, $this->getParentsArchives($archiveId));
+        }
+
+        return $archiveIds;
+    }
+
 
     /**
      * Change the processing status of an archive
@@ -967,8 +1067,6 @@ trait archiveAccessTrait
 
         foreach ($archiveIds as $archiveId) {
             $archiveProcessingStatus = $this->sdoFactory->read('recordsManagement/archiveProcessingStatus', $archiveId);
-            $currentStatus = $archiveProcessingStatus->processingStatus;
-
             $archiveProcessingStatus->processingStatus = $targetStatus;
             $this->sdoFactory->update($archiveProcessingStatus);
             array_push($res['success'], $archiveId);
@@ -1058,7 +1156,6 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        $accessRules = array();
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {

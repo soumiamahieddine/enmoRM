@@ -97,10 +97,6 @@ class logger
             $event->orgUnitRegNumber = $currentOrganization->registrationNumber;
         }
         $event->instanceName = \laabs::getInstanceName();
-        
-        $auditLine = array($entry->entryDate, $entry->entryType, $entry->objectClass, $entry->objectId, $entry->message);
-
-        //fputcsv($this->currentAuditFile, $auditLine, "\t");
 
         return $entry;
     }
@@ -135,8 +131,6 @@ class logger
             return;
         }
 
-
-        $fullpath = $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->path;
         foreach ($this->ignorePaths as $ignorePath) {
             if (fnmatch($ignorePath, $servicePath->domain . LAABS_URI_SEPARATOR . $servicePath->interface . LAABS_URI_SEPARATOR . $servicePath->name)) {
                 return;
@@ -152,7 +146,7 @@ class logger
                 switch (true) {
                     // Avoid service path variables in input
                     case array_key_exists($name, $this->servicePath->variables):
-                        continue;
+                        continue 2;
 
                     case $name == 'password':
                     case $name == 'oldPassword':
@@ -194,8 +188,13 @@ class logger
             $this->output = json_encode($this->output);
         }
 
-        \laabs::callService(
-            'audit/event/create', $this->servicePath->getName(), $this->servicePath->variables, $this->input, $this->output, true
+        $eventController = \laabs::newController('audit/event');
+        $eventController->add(
+            $this->servicePath->getName(),
+            $this->servicePath->variables,
+            $this->input,
+            $this->output,
+            true
         );
 
         $this->servicePath = null;
@@ -220,9 +219,14 @@ class logger
 
         // Output with failure
         $output = utf8_encode($businessException->getMessage());
-        
-        \laabs::callService(
-            'audit/event/create', $this->servicePath->getName(), $this->servicePath->variables, $this->input, $output, false
+
+        $eventController = \laabs::newController('audit/event');
+        $eventController->add(
+            $this->servicePath->getName(),
+            $this->servicePath->variables,
+            $this->input,
+            $output,
+            false
         );
     }
 

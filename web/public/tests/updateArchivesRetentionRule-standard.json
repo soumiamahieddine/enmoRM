@@ -1,0 +1,12 @@
+{
+  "retentionRule":{
+    "retentionStartDate":"11-01-2018",
+    "retentionRuleCode":"BULPAI",
+    "retentionDuration":"P5Y",
+    "finalDisposition":"preservation"
+  },
+  "archiveIds":[
+    "maarchRM_5k4l4w1i1-0000-yz252b",
+    "maarchRM_k0ffwvk0-0000-fgw4aw"
+  ]
+}

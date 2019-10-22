@@ -22,22 +22,35 @@ namespace dependency\timestamp\plugins;
  * Timestamp service
  */
 class Timestamp implements \dependency\timestamp\TimestampInterface
-{          
+{
+
+    protected $timestamp;
     /**
      * Constructor
      */
-    public function __construct() 
+    public function __construct()
     {
-        
+
     }
 
     /**
      * Get a timestamp file for a journal
      * @param string $journalFile The journal file name
      *
-     * @return string the timestamp file name
+     * @return string the timestamp file path
      */
-    public function getTimestamp($journalFile) {
-        return NULL;
+    public function getTimestamp($journalFile)
+    {
+        $this->timestamp = new \DateTime();
+
+        $tmpDir = pathinfo($journalFile)["dirname"];
+        $timestampPath = $tmpDir."/timestamp.txt" ;
+        $timestampFile = fopen($timestampPath, "w");
+
+        fwrite($timestampFile, $this->timestamp->format('Y-m-d H:i:s'));
+
+        fclose($timestampFile);
+        
+        return $timestampPath;
     }
 }

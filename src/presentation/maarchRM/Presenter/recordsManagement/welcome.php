@@ -54,17 +54,22 @@ class welcome
      */
     public function welcomePage()
     {
-        //$this->view->addHeaders();
-        //$this->view->useLayout();
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->saveParameters());
+
+        $datePickerPlugin = \laabs::newService('dependency/html/plugins/datePicker/datePicker', $this->view->getContainer());
+        $datePickerPlugin->translate();
+        $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
+
         $this->view->addContentFile("dashboard/mainScreen/main.html");
 
         $this->view->translate();
 
-        $currentOrganization = \laabs::getToken("ORGANIZATION");
         $accountToken = \laabs::getToken('AUTH');
         $userAccountController = \laabs::newController('auth/userAccount');
         $user = $userAccountController->get($accountToken->accountId);
-        
+
         // File plan tree
         $filePlanPrivileges = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/filePlan");
 
@@ -82,7 +87,6 @@ class welcome
             $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
             $this->view->translate();
-
         }
 
         // Retention
@@ -93,12 +97,6 @@ class welcome
 
         // archival profiles for search form
         foreach ($this->userArchivalProfiles as $archivalProfile) {
-            /*if ($archivalProfile == "*") {
-                $currentOrganization->acceptArchiveWithoutProfile = true;
-            }
-
-            $archivalProfileController->readDetail($archivalProfile);*/
-
             $archivalProfile->searchFields = [];
             foreach ($archivalProfile->archiveDescription as $archiveDescription) {
                 switch ($archiveDescription->descriptionField->type) {
@@ -111,25 +109,19 @@ class welcome
                 }
             }
         }
-        
+
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
-        $this->view->translate();
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
-        
-
-        foreach ($this->view->getElementsByClass('dateRangePicker') as $dateRangePickerInput) {
-            $this->view->translate($dateRangePickerInput);
-        }
 
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
         $this->view->merge();
-
+        $this->view->translate();
         return $this->view->saveHtml();
     }
 
@@ -213,7 +205,7 @@ class welcome
 
         foreach ($archives as $archive) {
             $archive->originatorOrgName = $orgsName[$archive->originatorOrgRegNumber];
-            if (!empty($archive->archivalProfileReference)) {
+            if (!empty($archive->archivalProfileReference) && isset($profilesName[$archive->archivalProfileReference])) {
                 $archive->archivalProfileName = $profilesName[$archive->archivalProfileReference];
             }
         }
@@ -235,7 +227,7 @@ class welcome
         if ($result == 1) {
             $this->json->message = "The archive was moved.";
             $this->json->message = $this->view->translator->getText($this->json->message);
-            
+
         } else {
             $this->json->message = '%1$s archives were moved.';
             $this->json->message = $this->view->translator->getText($this->json->message);
@@ -295,9 +287,40 @@ class welcome
 
         $orgUnit->archivalProfiles = array_values($orgUnit->archivalProfiles);
 
+        // Get scheme for array of objects, limit to one level for scheme recusions
+        foreach ($orgUnit->archivalProfiles as $archivalProfile) {
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                if (isset($archiveDescription->descriptionField)) {
+                    $archiveDescription->descriptionField->required = $archiveDescription->required;
+                    $archiveDescription->descriptionField->readonly = $archiveDescription->isImmutable;
+                    $this->loadScheme($archiveDescription->descriptionField);
+                }
+            }
+        }
         if (!empty($orgUnit->organization)) {
             foreach ($orgUnit->organization as $subOrgUnit) {
                 $this->getOrgUnitArchivalProfiles($subOrgUnit);
+            }
+        }
+    }
+
+    protected function loadScheme($descriptionField)
+    {
+        if ($descriptionField->type == 'array' && isset($descriptionField->itemType) && is_string($descriptionField->itemType) && $descriptionField->itemType[0] == '#') {
+            $objectType = new \StdClass();
+            $objectType->type = 'object';
+
+            $className = substr($descriptionField->itemType, 1);
+            $objectType->properties = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields', $className);
+
+            $descriptionField->itemType = $objectType;
+
+            $this->loadScheme($objectType);
+        }
+
+        if ($descriptionField->type == 'object' && isset($descriptionField->properties)) {
+            foreach ($descriptionField->properties as $property) {
+                $this->loadScheme($property);
             }
         }
     }

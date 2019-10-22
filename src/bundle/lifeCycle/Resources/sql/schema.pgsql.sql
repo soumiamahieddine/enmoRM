@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "lifeCycle" CASCADE;
 
-CREATE SCHEMA "lifeCycle"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "lifeCycle";
 
 
 -- Table: "lifeCycle"."event"
@@ -55,3 +54,11 @@ CREATE INDEX
 CREATE INDEX
   ON "lifeCycle"."event"
   ("timestamp");
+
+CREATE INDEX "lifeCycle_event_objectClass_idx" ON "lifeCycle"."event" USING btree ("objectClass");
+
+CREATE INDEX "lifeCycle_event_instanceName_idx" ON "lifeCycle"."event" USING btree ("instanceName");
+
+CREATE INDEX "lifeCycle_event_eventType_idx" ON "lifeCycle"."event" USING btree ("eventType");
+
+CREATE INDEX "lifeCycle_event_objectClass_objectId_idx" ON "lifeCycle"."event" USING btree ("objectClass", "objectId");

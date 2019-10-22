@@ -396,6 +396,7 @@
         FilePlan.mouseleave($(this));
     })
     $('#filePlanTree').on('click', '.folderNode, .orgNode', function() {
+        $("#cancel").click();
         FilePlan.load($(this).closest('li'));
     })
 

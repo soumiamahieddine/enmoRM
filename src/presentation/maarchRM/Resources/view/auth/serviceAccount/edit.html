@@ -30,18 +30,28 @@
                                     <option value="[?merge .orgId ?]" name="orgId"><?merge .displayName ?></option>
                                 </select>
                             </div>
+                            <div id="selectOrgGroup" class="input-group col-md-12">
+                                <select id="orgSelect" class="form-control">
+                                    <option></option>
+                                </select>
+                            </div>
                         </div>
                         <?merge serviceAccount ?>
-                        <div id="orgGroup" class="form-group hide">
+                        <div id="orgGroup" class="form-group">
                             <label class="control-label" for="serviceOrgId">Organization<span> : </span></label>
-                            <input name="ownerOrgName" id="originatorOwnerOrgName" disabled class="form-control">
-                            <!--<span name="ownerOrgName" id="originatorOwnerOrgName"></span>-->
+                            <input name="ownerOrgName" data-ownerorgid="[?merge serviceAccount.ownerOrgId ?]" id="originatorOwnerOrgName" disabled class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="serviceEnabled">Enabled</label>
+                        <label class="col-md-3 control-label" for="serviceEnabled">Enabled</label>
                         <div>
-                            <input type="checkbox" class="form-control" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
+                            <input type="checkbox" data-size="small" class="form-control" data-on="Oui" data-off="Non" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
+                        </div>
+                    </div>
+                    <div class="form-group" id="adminRights"">
+                        <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
+                        <div>
+                            <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
                         </div>
                     </div>
                     <div class="clearfix pull-right">
@@ -75,17 +85,13 @@
                                         <div class="form-group">
                                             <label>Token</label><button type="button" class="btn btn-link" id="copy-generatedToken" title="Copy"><span class="fa fa-copy"></span></button>
                                             <div>
-                                                <textarea id="generatedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
-                                                    <?merge serviceAccount.password ?>
-                                                </textarea>
+                                                <textarea id="generatedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled><?merge serviceAccount.password ?></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label>URL encoded token</label><button type="button" class="btn btn-link" id="copy-generatedUrlEncodedToken" title="Copy"><span class="fa fa-copy"></span></button>
                                             <div>
-                                                <textarea id="generatedUrlEncodedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled>
-                                                    <?merge serviceAccount.password.urlencode() ?>
-                                                </textarea>
+                                                <textarea id="generatedUrlEncodedToken" class="form-control col-xs-12" rows="3" style="resize: none; resize: vertical" disabled><?merge serviceAccount.password.urlencode() ?></textarea>
                                             </div>
                                         </div>
                                 </div>
@@ -149,9 +155,12 @@
     </div>
 </div>
 
-
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <div style="display:none">
+    <span id="securityLevel"><?merge serviceAccount.securityLevel ?></span>
+    <span id="isAdmin"><?merge serviceAccount.isAdmin ?></span>
+    <span id="ownerOrgId"><?merge serviceAccount.ownerOrgId ?></span>
+    <span id="whatAmI"><?merge whatAmI ?></span>
     <span id="empty_text">The fields with a star are required.</span>
     <span id="whiteSpace_text">The fields contain white spaces.</span>
     <span id="nullValue_text">The fields is empty.</span>
@@ -159,6 +168,11 @@
 </div>
 
 <script type="application/javascript">
+
+    $("#adminUser").on('change', function () {
+        selectOrTypeheadOrg();
+    });
+
     $('#tokenRegenerateRequest').on('click', function() {
         if (!$("#generatedToken").text()) {
             $("#tokenRegenerateValidation").click();
@@ -194,7 +208,7 @@
             $(this).hide();
         }
     });
-    
+
     //save
     $("#submitServiceAccount").on("click", function(){
         var url = '/serviceAccount';
@@ -207,20 +221,34 @@
         var param = new Object();
         var serviceAccount = new Object();
 
+        if($('#adminUser').prop('checked')) {
+            serviceAccount['isAdmin'] = true;
+        } else {
+            serviceAccount['isAdmin'] = false;
+        }
+
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
+        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").prop("data-ownerorgid");
         serviceAccount.emailAddress = '';
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
 
-        var servicesURI = new Array();
-        $("#listPrivilege").find("[name=privilegeURI]").each(function(){
+        if (serviceAccount['isAdmin'] == true) {
+            serviceAccount.ownerOrgId = $("#orgSelect").val();
+            orgId = "";
+        } else {
+            serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerorgid");
+        }
 
+        var servicesURI = new Array();
+
+        $("#listPrivilege").find("[name=privilegeURI]").each(function(){
             servicesURI.push($(this).find("input").data('serviceuri'));
         });
 
-        if(serviceAccount.displayName == "" || orgId == "") {
+        if(serviceAccount.displayName == "" || (orgId == "" && serviceAccount['isAdmin'] == false)) {
             gritter.show($('#empty_text').text(),false);
             return false;
         }
@@ -275,7 +303,6 @@
 
     });
 
-
     $("#selectPrivilegeURI").on("change", function(){
         $("#btnAddPrivilege").attr('disabled',false);
 
@@ -315,12 +342,11 @@
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
         limit: 100
     });
     window.localStorage.clear();
     organizations.initialize();
-
 
     // initialize typeahead
     $('#orgTypeahead').typeahead(
@@ -368,8 +394,9 @@
         }
     ).on('typeahead:selected', function($event, suggestion, source) {
         $("#orgTypeahead").prop('org', suggestion);
-        $("#serviceOrgId").val(suggestion.orgId)
-        $("#originatorOwnerOrgName").val(suggestion.ownerOrgName)
+        $("#serviceOrgId").val(suggestion.orgId);
+        $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
+        $("#originatorOwnerOrgName").prop("data-ownerorgid", suggestion.ownerOrgId);
     });
 
     $('#orgTypeahead').keyup(function () {
@@ -383,5 +410,72 @@
             $("#orgGroup").removeClass('hide');
         }
     });
+
+    $.ajax({
+        type: 'GET',
+        url: '/organizations/todisplay?orgUnit=false&ownerOrg=true',
+        contentType : 'application/json',
+        dataType    : 'json',
+        success: function (response) {
+            $.each(response, function(index, org){
+                addSelectOrgs(org);
+            })
+        }
+    });
+
+    function addSelectOrgs(org){
+        var orgSelect = $('#orgSelect');
+        var ownerOrgId = $('#ownerOrgId').text();
+
+        var option = $('<option/>')
+            .val(org.orgId)
+            .text(org.displayName)
+            .appendTo(orgSelect);
+
+        if (ownerOrgId == org.orgId) {
+            option.prop('selected', true);
+        }
+    }
+
+    function selectOrTypeheadOrg(){
+        if ($("#adminUser").prop("checked")) {
+            $("#orgTypeahead").hide();
+            $("#orgGroup").hide();
+            $("#selectOrgGroup").show();
+        } else {
+            $("#orgTypeahead").show();
+            $("#selectOrgGroup").hide();
+            $("#orgGroup").show();
+        }
+    }
+
+    // manage Adminbutton's attributes according to UserType
+    function setAdminButton(whatAmI) {
+        user_security = ($("#securityLevel").text());
+        if (user_security == "fonc_admin") {
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+        } else if (user_security == "gen_admin"){
+            $('#adminUser').bootstrapToggle("on");
+            $('#adminUser').parent().addClass('disabled');
+        } else if (user_security == "user"){
+            $('#adminUser').bootstrapToggle("off");
+            $('#adminUser').parent().addClass('disabled');
+        } else {
+            if(whatAmI == "adminG") {
+                    $('#adminUser').bootstrapToggle('on');
+                    $('#adminUser').parent().addClass('disabled');
+            } else if (whatAmI == "adminF") {
+                    $('#adminUser').bootstrapToggle("off");
+                    $('#adminUser').parent().addClass('disabled');
+                    $("#adminRights").hide();
+            } else if (whatAmI == "oldUser") {
+                    $('#adminUser').bootstrapToggle("off");
+                    $('#adminUser').parent().removeClass('disabled');
+            }
+        }
+    }
+
+    setAdminButton($('#whatAmI').text());
 
 </script>

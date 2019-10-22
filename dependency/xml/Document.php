@@ -126,8 +126,6 @@ class Document
      */
     public function export($classname)
     {
-        $this->XPath = new XPath($this);
-
         return $this->exportElement($this->documentElement, $classname);
     }
 

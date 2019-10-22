@@ -33,6 +33,7 @@
             <div class="form-group">
                 <label>Registration number <span style="color: red">*</span></label>
                 <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
+                <small class="help-block">You must use only letters and the special character '_'</small>
             </div>
             <div id="organization_orgUnitInfo">
                 <div class="form-group">
@@ -238,6 +239,12 @@
 
             var organization = OrganizationForm.serialize();
 
+            var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+
+            if(!pattern.test(organization.registrationNumber)) {
+                return;
+            }
+
             if(organization.orgId != null) {
                 var action = "/organization/" + organization.orgId;
                 var method = "PUT";
@@ -355,4 +362,18 @@
         }
     }
 
+    $("#organization_organizationForm").on("keyup","[name='registrationNumber']", function(){
+        var input = $(this);
+        var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+        var formGroup = input.closest('.form-group');
+
+        if(!input.val()) {
+            formGroup.removeClass('has-error');
+            formGroup.removeClass('has-success');
+        } else if (pattern.test(input.val())) {
+            formGroup.removeClass('has-error').addClass('has-success');
+        } else {
+            formGroup.removeClass('has-success').addClass('has-error');
+        }
+    });
 </script>

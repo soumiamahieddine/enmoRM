@@ -1,4 +1,330 @@
-# Migration 2.1 => 2.2
+# Migration 2.4 vers 2.5 
+
+## Présentation et fonctionnalités orientées "archives publiques"
+
+### Situation dans les versions antérieures
+
+Dans la section `[presentation.maarchRM]`, la directive `publicArchives` définissait les comportements suivants :
+  * dans la gestion des utilisateurs, un seul rôle autorisé par utilisateur
+  * dans la gestion des rôles, pas de gestion des utilisateurs rattachés
+  * dans l'organigramme fonctionnel, pas de gestion des accès aux profils d'archive (géré par accords de versement uniquement)
+  * dans la gestion des règles de communicabilité, pas de suppression ni de modification (règles issues du référentiel contrôlé par les Archives de France)
+  * dans la gestion des règles de conservation, pas de gestion du sort final
+
+La directive `menu` n'intégrait pas le point de menu vers la gestion du dictionnaire de données (champs de description);
+
+Dans la section `[auth]`, la directive `blackListedUserStories` inhibait les droits sur les fonctions suivantes :
+  * versement direct dans l'Archive 
+  * gestion du dictionnaire de données 
+
+### Nouvelles configurations 
+
+Ces directives sont utilisables à la place de la directive existante `publicArchives` pour gérer plus finement les fonctionnalités correspondantes :
+
+Dans la section `[presentation.maarchRM]`, ajout du paramètre maxResults de type nombre (valeur par défaut à 200), qui permet de définir le nombre maximum d'archives retournées lors d'une recherche dans l'application.
+
+Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen. 
+Si activée, chaque utilisateur ne peut avoir qu'un rôle et la gestion des rôles ne permet plus d'ajouter ou retirer des utilisateurs.
+
+Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileType` définit désormais le comportement suivant :
+  * `1` indique des profils de versement de type MEDONA et inhibe la gestion des accès aux profils dans l'organigramme
+  * `2` indique des profils d'archive avec description des métadonnées et règles de gestion, puis active la gestion des accès aux profils dans l'organigramme
+  * `3` indique des profils mixtes (MEDONA et description interne) et active la gestion des accès aux profils dans l'organigramme
+
+## Branchement des schémas de description
+
+Dans la section `[recordsManagement]`, la directive `descriptionSchemes` permet de définir
+les schémas de description en lieu et place des entrées de la table `recordsManagement.descriptionClass` 
+qui doit être supprimée.
+
+A chaque identifiant de schéma de description (éventuellement précédemment inscrit dans la table) correspond un élément 
+de configuration qui fournit :
+
+  * le libellé affiché
+  * le format de description : classe php, schema json, schéma XML
+  * le nom du schéma
+  * les URIs des différents services utilisés par l'application pour la gestion des données, 
+    la recherche, la transformation, la présentation, etc.
+
+```
+descriptionSchemes = "{
+  'seda2' : {
+    'name' : 'SEDA 2',
+    'type' : 'php',
+    'uri' : 'seda2/Content',
+    'controller' : '',
+    'presenter' : ''
+  }
+}"
+```
+
+## Regroupement Socle + ThirdPartyArchiving
+
+Rapatriement de la configuration de l'extension thirdPartyArchiving dans le socle.
+
+Création d'une nouvelle section `[medona]`
+
+```
+[medona]
+; Enable or disable the transaction mode
+; true = Enable
+; false = Disable
+transaction = false
+
+messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
+autoValidateSize = 2147000
+
+;packageSchemas = "{
+;    'seda' : {
+;         'label' : 'Seda 1',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v1.0',
+;         'phpNamespace' : 'seda',
+;         'presenter' : 'seda/message'
+;    },
+;    'seda2' : {
+;         'label' : 'Seda 2',
+;         'xmlNamespace' : 'fr:gouv:culture:archivesdefrance:seda:v2.0',
+;         'phpNamespace' : 'seda2',
+;         'presenter' : 'seda2/message'
+;    }
+;}"
+
+; Array of task to remove medona message directories
+; 'type' is an array of medona message type
+; 'status' is an array of medona message status
+; 'delay' is the difference with the current date
+;removeMessageTask = "{
+;    'task1' : {
+;        'type' : ['ArchiveTransfer', 'ArchiveTransferReply'],
+;        'status' : ['processed'],
+;        'delay' : '-P1Y'
+;    },
+;    'task2' : {
+;        'type' : ['ArchiveModificationNotification'],
+;        'status' : ['sent'],
+;        'delay' : '-P6M'
+;    }
+;}"
+
+menu = "[
+   {
+       'label' : 'Transferts entrants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-in fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Importer un bordereau',
+               'href'  : '/transfer'
+           },
+           {
+               'label' : 'Transferts en attente de traitement',
+               'href'  : '/transfer/sent'
+           },
+           {
+               'label' : 'Transferts à traiter',
+               'href'  : '/transfer/received'
+           },
+           {
+               'label' : 'Historique de transfert',
+               'href'  : '/transfer/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Communication',
+       'href'  : '#',
+       'class' : 'fa fa-share fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes d\'autorisation',
+               'href'  : '/delivery/Authorizationrequest'
+           },
+           {
+               'label' : 'Communications à valider',
+               'href'  : '/delivery/request'
+           },
+           {
+               'label' : 'Communications à récupérer',
+               'href'  : '/delivery/list'
+           },
+           {
+               'label' : 'Historique de communication',
+               'href'  : '/delivery/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Restitution',
+       'href'  : '#',
+       'class' : 'fa fa-reply fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes à valider',
+               'href'  : '/restitution/Requestvalidation'
+           },
+           {
+               'label' : 'Restitutions à récupérer',
+               'href'  : '/restitution/validation'
+           },
+           {
+               'label' : 'Restitutions à finaliser',
+               'href'  : '/restitution/process'
+           },
+           {
+               'label' : 'Historique de restitution',
+               'href'  : '/restitution/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Élimination',
+       'href'  : '#',
+       'class' : 'fa fa-remove fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Demandes d\'autorisation',
+               'href'  : '/destruction/Authorizationrequests'
+           },
+           {
+               'label' : 'Demandes à valider',
+               'href'  : '/destruction/processlist'
+           },
+           {
+               'label' : 'Historique d\'élimination',
+               'href'  : '/destruction/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Transferts sortants',
+       'href'  : '#',
+       'class' : 'fa fa-sign-out fa-fw',
+       'submenu' : [
+           {
+               'label' : 'Transferts à acquitter',
+               'href'  : '/outgoingTransfer/received'
+           },
+           {
+               'label' : 'Transferts à finaliser',
+               'href'  : '/outgoingTransfer/Process'
+           },
+           {
+               'label' : 'Historique de transfert',
+               'href'  : '/outgoingTransfer/history'
+           }
+       ]
+   },
+   {
+       'label' : 'Notifications',
+       'href'  : '/notifications',
+       'class' : 'fa fa-bell-o fa-fw'
+   }
+]"
+```
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.4_V2.5.sql
+
+## Branchement de listes externes
+
+Une nouvelle fonctionnalité permet de brancher des référentiels externes afin d'utiliser des valeurs ou des paires de clé et valeur dans les métadonnées descriptives des archives.
+
+Pour le moment, uniquement les csv sur deux colonnes sont gérés. Il est nécessaire de créer un dossier avec l'ensemble des référentiels externes à l'intérieur. Le chemin vers ce fichier est à renseigner dans la valeur de configuration [recordsManagement] refDirectoy, par exemple :
+
+[recordsManagement]
+refDirectory = "%laabsDirectory%/data/maarchRM/ref"
+
+Les csv sont considérés comme étant séparés par des virgules et les données présentes entre des guillemets ("").
+Lors de l'ajout d'un mot clé, il est désormais donné la possibilité de choisir un référentiel externe. Le nom du reférentiel externe doit correspondre avec le nom du fichier csv à charger dans le dossier renseigné dans la configuration, sans son extension.
+Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la saisie. Il est à noter que la première colonne du csv sert d'identification dans la base de données; Les données affichéees à l'écran sont celles de la deuxième colonne. Les colonnes surnuméraires sont chargées mais ne servent que d'aide à la recherche lors de la saisie.
+
+## Plugins
+
+Ajout du plugin dateTimePicker, permettant la saisie simultanée d'une date et d'un horaire au sein d'un même champ (au format DD-MM-YYYY HH:mm:ss par défaut) via une interface.
+
+# Migration 2.3 vers 2.4
+
+## Evenement
+
+Ajout de l'évènement recordsManagement/resourceDestruction dans la table "lifeCycle.eventFormat" qui permet la suppression d'une ressource détenue dans une archive.
+
+Ajout de l'évènement recordsManagement/updateRelationship dans la table "lifeCycle.eventFormat" qui permet de mettre à jour les relations d'archives.
+
+Ajout de l'évènement recordsManagement/restitutionRequest dans la table "lifeCycle.eventFormat" qui permet de faire une demande de restitution de l'archive.
+
+Ajout de l'évènement recordsManagement/restitutionRequestCanceling dans la table "lifeCycle.eventFormat" qui permet d'annuler une demande de restitution de l'archive.
+
+## Configuration
+
+Rajout des options dateTimeFormat, timestampFormat, timezone dans les paramètres dependency.localisation
+
+```
+[dependency.localisation]
+@Adapter                        = Gettext
+lang                            = fr
+dateFormat                      = d-m-Y
+dateTimeFormat                  = "Y-m-d H:i:s \(P\)"
+timestampFormat                 = "Y-m-d H:i:s \(P\)"
+timezone                        = Europe/Paris
+```
+
+Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. 
+Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date et heure en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
+Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
+Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
+Si ces paramètres sont ignorés, les valeurs par défaut sont chargées par le logiciel, correspondant à un format respectant le standard ISO8601.
+
+Ajout d'un paramètre "actionWithoutRetentionRule" pour permettre ou non l'élimination d'une archive n'ayant pas de règle de conservation.
+Ce paramètre peut prendre deux valeurs : "preserve" ou "dispose" (valeur "preserve" par défaut).
+La valeur preserve bloque la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
+La valeur dispose permet la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
+
+## SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
+
+# Migration 2.2 vers 2.3 
+
+## Configuration
+
+### Ecran de connexion
+
+Un style peut être appliqué à l'écran de connexion utilisateur, via la directive 
+"loginBackground" de la section "presentation.maarchRM":
+
+```
+loginBackground = ".modal-backdrop {
+    background-image: url('presentation/img/19093d7d-21f4-491b-bca1-5f57704c29d9.jpg');
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-color: #fff;
+    background-size: cover;
+    opacity: 1 !important;
+}"
+```
+
+De même, le logo utilisé dans la mire de connexion peut être modifié séparément 
+de celui affiché dans la barre de navigation:
+
+```
+altLogo = "/presentation/img/RM.svg"
+
+```
+
+### CSRF
+
+Modification de la configuration : 
+
+    csrfWhiteList = "['user/login', 'user/password']"
+    csrfConfig = '{
+        "cookieName" : "CSRF",
+        "tokenLength" : 32
+    }'
+    # Migration 2.1 => 2.2
 
 Pour toutes les modifications ci-dessous, merci de vous référer à la documentation **AVANT tout changement** pour plus de détails'.
 
@@ -166,84 +492,3 @@ et toutes les tâches :
             ]"
             
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/scheduling.md)
-
-# Migration 2.2 vers 2.3 
-
-## Configuration
-
-### Ecran de connexion
-
-Un style peut être appliqué à l'écran de connexion utilisateur, via la directive 
-"loginBackground" de la section "presentation.maarchRM":
-
-```
-loginBackground = ".modal-backdrop {
-    background-image: url('presentation/img/19093d7d-21f4-491b-bca1-5f57704c29d9.jpg');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-color: #fff;
-    background-size: cover;
-    opacity: 1 !important;
-}"
-```
-
-De même, le logo utilisé dans la mire de connexion peut être modifié séparément 
-de celui affiché dans la barre de navigation:
-
-```
-altLogo = "/presentation/img/RM.svg"
-
-```
-
-### CSRF
-
-Modification de la configuration : 
-
-    csrfWhiteList = "['user/login', 'user/password']"
-    csrfConfig = '{
-        "cookieName" : "CSRF",
-        "tokenLength" : 32
-    }'
-
-# Migration 2.3 vers 2.4
-
-## Evenement
-
-Ajout de l'évènement recordsManagement/resourceDestruction dans la table "lifeCycle.eventFormat" qui permet la suppression d'une ressource détenue dans une archive.
-
-Ajout de l'évènement recordsManagement/updateRelationship dans la table "lifeCycle.eventFormat" qui permet de mettre à jour les relations d'archives.
-
-Ajout de l'évènement recordsManagement/restitutionRequest dans la table "lifeCycle.eventFormat" qui permet de faire une demande de restitution de l'archive.
-
-Ajout de l'évènement recordsManagement/restitutionRequestCanceling dans la table "lifeCycle.eventFormat" qui permet d'annuler une demande de restitution de l'archive.
-
-## Configuration
-
-Rajout des options dateTimeFormat, timestampFormat, timezone dans les paramètres dependency.localisation
-
-```
-[dependency.localisation]
-@Adapter                        = Gettext
-lang                            = fr
-dateFormat                      = d-m-Y
-dateTimeFormat                  = "Y-m-d H:i:s \(P\)"
-timestampFormat                 = "Y-m-d H:i:s \(P\)"
-timezone                        = Europe/Paris
-```
-
-Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. 
-Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date et heure en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
-Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
-Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
-Si ces paramètres sont ignorés, les valeurs par défaut sont chargées par le logiciel, correspondant à un format respectant le standard ISO8601.
-
-Ajout d'un paramètre "actionWithoutRetentionRule" pour permettre ou non l'élimination d'une archive n'ayant pas de règle de conservation.
-Ce paramètre peut prendre deux valeurs : "preserve" ou "dispose" (valeur "preserve" par défaut).
-La valeur preserve bloque la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
-La valeur dispose permet la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
-
-## SQL
-
-Voir le fichier spécifique
-
-    laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql

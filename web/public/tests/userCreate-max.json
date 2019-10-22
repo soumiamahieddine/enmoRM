@@ -1,0 +1,30 @@
+{
+  "userAccount": 
+  {
+    "accountName": "exemple",
+    "accountType": "user",
+    "adminUser": "on",
+    "displayName": "coco",
+    "emailAddress": "coco@test.fr",
+    "firstName": "Coco",
+    "lastName": "Chanel",
+    "passwordChangeRequired":true,
+    "password": "coco",
+    "title": "Mme.",
+    "ownerOrgId": "ACME",
+    "isAdmin": false,
+    "modificationRight": true,
+    "roles": 
+    [
+      {
+        "roleId": "UTILISATEUR"
+      }
+    ],
+    "organization": 
+    [
+      {
+        "orgId": "GIC"
+      }
+    ]
+  }
+}

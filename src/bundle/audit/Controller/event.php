@@ -106,7 +106,12 @@ class event
         if (!empty($this->notifications) && isset($this->notifications[$path])) {
             $rule = $this->notifications[$path];
             if (($rule["onResult"]) == $status) {
-                \laabs::callService("batchProcessing/notification/create", $rule["title"], $rule["message"], $rule["receivers"]);
+                $notificationController = \laabs::newController('batchProcessing/notification');
+                $notificationController->create(
+                    $rule["title"],
+                    $rule["message"],
+                    $rule["receivers"]
+                );
             }
         }
         
@@ -227,9 +232,6 @@ class event
         if ($event) {
             $queryParams['path'] = $event;
             $queryParts['path'] = "path=:path";
-
-            $pathRouter = new \core\Route\PathRouter($event);
-            $reflectionPath = $pathRouter->path;
         }
         if ($accountId) {
             $queryParams['accountId'] = $accountId;
@@ -270,13 +272,15 @@ class event
         $length = 400;
         $events = $this->sdoFactory->find("audit/event", $queryString, $queryParams, ">eventDate", 0, $length);
 
-        $users = \laabs::callService('auth/userAccount/readIndex');
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $users = $userAccountController->index();
         foreach ($users as $i => $user) {
             $users[(string) $user->accountId] = $user;
             unset($users[$i]);
         }
 
-        $services = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $services = $serviceAccountController->index();
         foreach ($services as $i => $service) {
             $services[(string) $service->accountId] = $service;
             unset($services[$i]);

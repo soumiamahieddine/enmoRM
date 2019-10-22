@@ -1,0 +1,240 @@
+<?xml version="1.0" ?>
+<xsd:schema 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://www.w3.org/1999/xlink"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <xsd:annotation>
+        <xsd:documentation>
+            <![CDATA[This schema document provides attribute declarations and
+attribute group, complex type and simple type definitions which can be used in
+the construction of user schemas to define the structure of particular linking
+constructs, e.g.
+
+            <xsd:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xl="http://www.w3.org/1999/xlink">
+
+                <xsd:import namespace="http://www.w3.org/1999/xlink"
+            location="http://www.w3.org/1999/xlink.xsd">
+
+                    <xsd:element name="mySimple">
+                        <xsd:complexType>
+   ...
+                            <xsd:attributeGroup ref="xl:simpleAttrs"/>
+   ...
+                        </xsd:complexType>
+                    </xsd:element>
+ ...
+                </xsd:schema>
+            ]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    <xsd:attribute name="type" type="xlink:typeType"/>
+    <xsd:simpleType name="typeType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="simple"/>
+            <xsd:enumeration value="extended"/>
+            <xsd:enumeration value="title"/>
+            <xsd:enumeration value="resource"/>
+            <xsd:enumeration value="locator"/>
+            <xsd:enumeration value="arc"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attribute name="href" type="xlink:hrefType"/>
+    <xsd:simpleType name="hrefType">
+        <xsd:restriction base="xsd:anyURI"/>
+    </xsd:simpleType>
+    <xsd:attribute name="role" type="xlink:roleType"/>
+    <xsd:simpleType name="roleType">
+        <xsd:restriction base="xsd:anyURI">
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attribute name="arcrole" type="xlink:arcroleType"/>
+    <xsd:simpleType name="arcroleType">
+        <xsd:restriction base="xsd:anyURI">
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attribute name="title" type="xlink:titleAttrType"/>
+    <xsd:simpleType name="titleAttrType">
+        <xsd:restriction base="xsd:string"/>
+    </xsd:simpleType>
+    <xsd:attribute name="show" type="xlink:showType"/>
+    <xsd:simpleType name="showType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="new"/>
+            <xsd:enumeration value="replace"/>
+            <xsd:enumeration value="embed"/>
+            <xsd:enumeration value="other"/>
+            <xsd:enumeration value="none"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attribute name="actuate" type="xlink:actuateType"/>
+    <xsd:simpleType name="actuateType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="onLoad"/>
+            <xsd:enumeration value="onRequest"/>
+            <xsd:enumeration value="other"/>
+            <xsd:enumeration value="none"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:attribute name="label" type="xlink:labelType"/>
+    <xsd:simpleType name="labelType">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+    <xsd:attribute name="from" type="xlink:fromType"/>
+    <xsd:simpleType name="fromType">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+    <xsd:attribute name="to" type="xlink:toType"/>
+    <xsd:simpleType name="toType">
+        <xsd:restriction base="xsd:NCName"/>
+    </xsd:simpleType>
+    <xsd:attributeGroup name="simpleAttrs">
+        <xsd:attribute ref="xlink:type" fixed="simple"/>
+        <xsd:attribute ref="xlink:href"/>
+        <xsd:attribute ref="xlink:role"/>
+        <xsd:attribute ref="xlink:arcrole"/>
+        <xsd:attribute ref="xlink:title"/>
+        <xsd:attribute ref="xlink:show"/>
+        <xsd:attribute ref="xlink:actuate"/>
+    </xsd:attributeGroup>
+    <xsd:group name="simpleModel">
+        <xsd:sequence>
+            <xsd:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType mixed="true" name="simple">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[
+    Intended for use as the type of user-declared elements to make them
+    simple links.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:group ref="xlink:simpleModel"/>
+        <xsd:attributeGroup ref="xlink:simpleAttrs"/>
+    </xsd:complexType>
+    <xsd:attributeGroup name="extendedAttrs">
+        <xsd:attribute ref="xlink:type" fixed="extended" use="required"/>
+        <xsd:attribute ref="xlink:role"/>
+        <xsd:attribute ref="xlink:title"/>
+    </xsd:attributeGroup>
+    <xsd:group name="extendedModel">
+        <xsd:choice>
+            <xsd:element ref="xlink:title"/>
+            <xsd:element ref="xlink:resource"/>
+            <xsd:element ref="xlink:locator"/>
+            <xsd:element ref="xlink:arc"/>
+        </xsd:choice>
+    </xsd:group>
+    <xsd:complexType name="extended">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[
+    Intended for use as the type of user-declared elements to make them
+    extended links.
+    Note that the elements referenced in the content model are all abstract.
+    The intention is that by simply declaring elements with these as their
+    substitutionGroup, all the right things will happen.
+                ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:group ref="xlink:extendedModel" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:attributeGroup ref="xlink:extendedAttrs"/>
+    </xsd:complexType>
+    <xsd:element name="title" type="xlink:titleEltType" abstract="true"/>
+    <xsd:attributeGroup name="titleAttrs">
+        <xsd:attribute ref="xlink:type" fixed="title" use="required"/>
+        <xsd:attribute ref="xml:lang">
+            <xsd:annotation>
+                <xsd:documentation>
+                    <![CDATA[
+     xml:lang is not required, but provides much of the
+     motivation for title elements in addition to attributes, and so
+     is provided here for convenience.
+                    ]]>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+    <xsd:group name="titleModel">
+        <xsd:sequence>
+            <xsd:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType mixed="true" name="titleEltType">
+        <xsd:group ref="xlink:titleModel"/>
+        <xsd:attributeGroup ref="xlink:titleAttrs"/>
+    </xsd:complexType>
+    <xsd:element name="resource" type="xlink:resourceType" abstract="true"/>
+    <xsd:attributeGroup name="resourceAttrs">
+        <xsd:attribute ref="xlink:type" fixed="resource" use="required"/>
+        <xsd:attribute ref="xlink:role"/>
+        <xsd:attribute ref="xlink:title"/>
+        <xsd:attribute ref="xlink:label"/>
+    </xsd:attributeGroup>
+    <xsd:group name="resourceModel">
+        <xsd:sequence>
+            <xsd:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType mixed="true" name="resourceType">
+        <xsd:group ref="xlink:resourceModel"/>
+        <xsd:attributeGroup ref="xlink:resourceAttrs"/>
+    </xsd:complexType>
+    <xsd:element name="locator" type="xlink:locatorType" abstract="true"/>
+    <xsd:attributeGroup name="locatorAttrs">
+        <xsd:attribute ref="xlink:type" fixed="locator" use="required"/>
+        <xsd:attribute ref="xlink:href" use="required"/>
+        <xsd:attribute ref="xlink:role"/>
+        <xsd:attribute ref="xlink:title"/>
+        <xsd:attribute ref="xlink:label">
+            <xsd:annotation>
+                <xsd:documentation>
+                    <![CDATA[
+     label is not required, but locators have no particular
+     XLink function if they are not labeled.
+                    ]]>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+    <xsd:group name="locatorModel">
+        <xsd:sequence>
+            <xsd:element ref="xlink:title" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType name="locatorType">
+        <xsd:group ref="xlink:locatorModel"/>
+        <xsd:attributeGroup ref="xlink:locatorAttrs"/>
+    </xsd:complexType>
+    <xsd:element name="arc" type="xlink:arcType" abstract="true"/>
+    <xsd:attributeGroup name="arcAttrs">
+        <xsd:attribute ref="xlink:type" fixed="arc" use="required"/>
+        <xsd:attribute ref="xlink:arcrole"/>
+        <xsd:attribute ref="xlink:title"/>
+        <xsd:attribute ref="xlink:show"/>
+        <xsd:attribute ref="xlink:actuate"/>
+        <xsd:attribute ref="xlink:from"/>
+        <xsd:attribute ref="xlink:to">
+            <xsd:annotation>
+                <xsd:documentation>
+                    <![CDATA[
+     from and to have default behavior when values are missing
+                    ]]>
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+    <xsd:group name="arcModel">
+        <xsd:sequence>
+            <xsd:element ref="xlink:title" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+    <xsd:complexType name="arcType">
+        <xsd:group ref="xlink:arcModel"/>
+        <xsd:attributeGroup ref="xlink:arcAttrs"/>
+    </xsd:complexType>
+</xsd:schema>

@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "organization" CASCADE;
 
-CREATE SCHEMA "organization"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "organization";
 
 -- Table: "organization"."orgType"
 

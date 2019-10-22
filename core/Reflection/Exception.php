@@ -26,4 +26,16 @@ class Exception
         parent::__construct($uri, $classname, $bundle);
     }
 
+    /**
+     * Get the exceptions code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        $docComment = $this->getDocComment();
+        if (preg_match("#@code (?<code>[^\s]+)#", $docComment, $matches)) {
+            return $matches['code'];
+        }
+    }
 }

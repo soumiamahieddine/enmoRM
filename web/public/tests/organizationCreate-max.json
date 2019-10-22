@@ -1,0 +1,32 @@
+{
+    "organization": {
+      "orgId": "ASSU",
+      "orgName": "Assurances Groupe",
+      "otherOrgName": "TODO",
+      "displayName": "Assurances du Groupe",
+      "legalClassification": "TODO",
+      "businessType": "TODO",
+      "description": "TODO",
+      "orgTypeCode": "TODO",
+      "orgRoleCodes": "owner",
+      "registrationNumber": "ASSU",
+      "taxIdentifier": "TODO",
+      "beginDate": "2019-09-10",
+      "endDate": "2019-09-10",
+      "parentOrgId": "SJ",
+      "ownerOrgId": "ACME",
+      "isOrgUnit": true,
+      "users": [
+        "cchaplin"
+      ],
+      "services": [
+        "string"
+      ],
+      "contacts": [
+        "string"
+      ],
+      "archivalProfileAccess": [
+        "string"
+      ]
+    }
+  }

@@ -369,6 +369,9 @@ msgstr "Demander le transfert"
 msgid "Verify integrity"
 msgstr "Vérifier l'intégrité"
 
+msgid "Request a modification"
+msgstr "Demander une modification"
+
 msgid "Edit access rule"
 msgstr "Modifier la règle de communicabilité"
 
@@ -646,7 +649,7 @@ msgid "bits"
 msgstr "octets"
 
 msgid "Identifier"
-msgstr "Cote"
+msgstr "Identifiant"
 
 msgid "Document type"
 msgstr "Type de document"
@@ -695,8 +698,17 @@ msgctxt "validationModal"
 msgid "%1$s archive(s) flagged for restitution."
 msgstr "%1$s archive(s) marquée(s) pour restitution."
 
-msgid "%1$s / %2$s archive(s) flagged for destruction."
+msgid "%1$s / %3$s archive(s) flagged for destruction."
 msgstr "%1$s archive(s) marquée(s) pour destruction."
+
+msgid "%2$s / %3$s archive(s) not eliminable."
+msgstr "%2$s archive(s) non éliminable(s)."
+
+msgid "The archive is flagged for destruction."
+msgstr "L'archive est marquée pour la destruction."
+
+msgid "The archive cannot be eliminated."
+msgstr "L'archive n'est pas éliminable."
 
 msgid "%1$s archive(s) flagged for conversion."
 msgstr "%1$s archive(s) marquée(s) pour conversion."
@@ -743,10 +755,10 @@ msgstr "%1$s archive(s) ne sont pas dégelée(s)."
 msgid "%1$s restitution(s) can not be validate(s)."
 msgstr "%1$s restitution(s) ne sont pas validée(s)."
 
-msgid "%1$s restitution(s) can not be canceled.'"
+msgid "%1$s restitution(s) can not be canceled."
 msgstr "%1$s restitution(s) ne sont pas annulée(s)."
 
-msgid "%1$s destruction(s) can not be canceled.'"
+msgid "%1$s destruction(s) can not be canceled."
 msgstr "%1$s destruction(s) ne sont pas annulée(s)."
 
 msgid "%1$s resource(s) can\'t be deleted."
@@ -986,6 +998,9 @@ msgstr "Demande de restitution"
 msgid "ArchiveDestructionRequest"
 msgstr "Demande d'élimination"
 
+msgid "ArchiveModificationRequest"
+msgstr "Demande de modification"
+
 msgid "Rule name"
 msgstr "Nom de la règle"
 
@@ -1010,6 +1025,9 @@ msgstr "Demander le transfert sortant"
 
 msgid "Invalid object"
 msgstr "Objet invalide"
+
+msgid "Attempt to modify readonly field(s)"
+msgstr "Tentative de modification d'une donnée en lecture seule."
 
 msgid "Do not update the final disposition"
 msgstr "Ne pas mettre à jour le sort final"
@@ -1052,3 +1070,33 @@ msgstr "Statut initial du flux de travail"
 
 msgid "Last modification date"
 msgstr "Date de mise à jour"
+
+msgid "Add a resource"
+msgstr "Ajouter une ressource"
+
+msgid "Delete the resource"
+msgstr "Supprimer la ressource"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Import a resource"
+msgstr "Ajout d'une ressource"
+
+msgid "Do you really want to delete this resource ?"
+msgstr "Voulez-vous vraiment supprimer cette ressource ?"
+
+msgid "This action will be irreversible."
+msgstr "Cette action sera irréversible."
+
+msgid "Modification request sent"
+msgstr "Demande de modification envoyée"
+
+msgid "Click to add '%1$s'"
+msgstr "Cliquer pour ajouter '%1$s'"
+
+msgid "Click to modify '%1$s'"
+msgstr "Cliquer pour modifier '%1$s'"
+
+msgid "* At least one field must be filled in."
+msgstr "* Au moins un champ doit être renseigné."

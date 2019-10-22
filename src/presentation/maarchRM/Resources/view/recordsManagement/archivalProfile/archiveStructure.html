@@ -84,13 +84,11 @@
 		removeProfile: function(li) {
 			var profileId = li.data('profileid');
 
-			// if profileList is empty we disable toggle button & set value to 'ON'
+			// if profileList is empty we set value to 'ON'
 			if ($(li).siblings().length === 0) {
 				if($('#acceptArchiveWithoutProfile').prop("checked") === false) {
 					$('#acceptArchiveWithoutProfile').bootstrapToggle('on');
 				}
-				$('.disableToggle').prop('disabled', true);
-				$('#toggleText').css({'color':'grey'});
 			}
 			li.remove();
 
@@ -145,13 +143,11 @@
 	 		ArchiveStructure.addProfile(profile);
 	 	});
 
-		// if profileList is empty we disable toggle button & set value to 'ON'
+		// if profileList is empty we set value to 'ON'
 		if (select.data('contained-profiles').length === 0) {
 			if ($('#acceptArchiveWithoutProfile').hasClass("on")) {
 				$('#acceptArchiveWithoutProfile').bootstrapToggle("on");
 			}
-			$('#toggleText').css({'color':'grey'});
-			$('.disableToggle').prop('disabled', true);
 		}
 	 	select.removeAttr('data-contained-profiles').removeAttr('data-profile-list');
 

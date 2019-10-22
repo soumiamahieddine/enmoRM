@@ -17,7 +17,7 @@
 
     <div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/messages">
         <?merge emptyRole ?>
-        <h3><i class="fa fa-times"></i> You don't avec any role that enables you tu use search.</h3>
+        <h3><i class="fa fa-times"></i> You have to choose a working organization unit to proceed this action.</h3>
         <?merge emptyRole.not() ?>        
         <div class="panel-group" id="accordionSearch">
             <div class="panel panel-default">
@@ -249,7 +249,9 @@
                 $('#archive_searchResult').empty().html(response);
                 $('#archive_search').prop('disabled', false);
             },
-            error    : function(e) {
+            error    : function(response) {
+                responseJSON = JSON.parse(response.responseText);
+                gritter.show(responseJSON.message);
                 $('#archive_search').prop('disabled', false);
             }
         });
@@ -303,7 +305,7 @@
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay', ttl: '0'},
+        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
         limit: 100
     });
 

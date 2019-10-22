@@ -164,9 +164,16 @@ class serviceLevel
             return false;
         }
 
+        $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+
+        $archivalAgreement = $archivalAgreementController->getByServiceLevelReference($serviceLevel->reference);
+
+        if ($archivalAgreement) {
+            return false;
+        }
+
         try {
             $result = $this->sdoFactory->delete($serviceLevel, "recordsManagement/serviceLevel");
-
         } catch (\Exception $e) {
             throw new \bundle\recordsManagement\Exception\serviceLevelException("Service level not deleted.");
         }

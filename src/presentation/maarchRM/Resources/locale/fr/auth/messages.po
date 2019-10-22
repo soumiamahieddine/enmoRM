@@ -117,6 +117,19 @@ msgid "archivalRelationships"
 msgstr "Ajouter une relation à l'archive"
 msgctxt "userStory"
 
+msgid "addResource"
+msgstr "Ajouter et supprimer une ressource"
+msgctxt "userStory"
+
+msgid "modificationRequestSend"
+msgstr "Envoyer des demandes de modification"
+msgctxt "userStory"
+
+msgid "modificationRequestProcess"
+msgstr "Traiter les demandes de modification"
+msgctxt "userStory"
+
+
 # ---------------------------------------------------------
 # Journal
 # ---------------------------------------------------------
@@ -134,7 +147,7 @@ msgstr "Consulter le journal de l'application"
 msgctxt "userStory"
 
 msgid "logBatchScheduling"
-msgstr "Historique de planification"
+msgstr "Historique des tâches planifiées"
 msgctxt "userStory"
 
 msgid "searchLogArchive"
@@ -159,6 +172,10 @@ msgctxt "userStory"
 
 msgid "checkIntegrity"
 msgstr "Contrôler l'intégrité des archives"
+msgctxt "userStory"
+
+msgid "certificate"
+msgstr "Télécharger les attestations"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
@@ -203,6 +220,10 @@ msgctxt "userStory"
 
 msgid "destructionRequest"
 msgstr "Demander l'élimination"
+msgctxt "userStory"
+
+msgid "destructionCancel"
+msgstr "Annuler les demandes l'élimination"
 msgctxt "userStory"
 
 msgid "destructionAuthorizationRequest"
@@ -786,3 +807,6 @@ msgstr "Attention, vous êtes sur le point de générer un nouveau jeton. Cela a
 
 msgid "No organization chosen"
 msgstr "Aucune organisation choisie"
+
+msgid "Admin Rights"
+msgstr "Droits Administrateur"

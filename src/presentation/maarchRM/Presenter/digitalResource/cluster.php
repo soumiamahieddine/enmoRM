@@ -69,8 +69,6 @@ class cluster
 
             // Maximum cluster size in Gb
             $maxSize = 0;
-            $unitConversionPower = 0;
-
             foreach ($cluster->clusterRepository as $clusterRepository) {
                 $repository = \laabs::callService('digitalResource/repository/read_repositoryId_', $clusterRepository->repositoryId);
                 if ($repository->maxSize && ($maxSize == 0 || $repository->maxSize < $maxSize)) {

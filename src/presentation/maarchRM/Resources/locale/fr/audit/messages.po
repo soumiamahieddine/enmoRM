@@ -351,10 +351,10 @@ msgid "recordsManagement/archiveRelationship/newRelationship"
 msgstr "Préparation à la création d'une nouvelle relation"
 
 msgid "recordsManagement/archive/create_archiveId_Digitalresource"
-msgstr "Création d'un document au sein d'une archive"
+msgstr "Dépôt d'une ressource au sein d'une archive"
 
 msgid "recordsManagement/archive/delete_archiveId_Digitalresource"
-msgstr "Suppression d'un document au sein d'une archive"
+msgstr "Destruction d'une ressource au sein d'une archive"
 
 msgid "recordsManagement/archiveRelationship/createRelationship"
 msgstr "Création d'une relation entre deux archives"
@@ -399,7 +399,7 @@ msgid "recordsManagement/archives/updateSetforrestitution"
 msgstr "Paramétrer une archive pour la restitution"
 
 msgid "recordsManagement/archives/updateDisposearchives"
-msgstr "Modification d'un dépôt d'archive"
+msgstr "Demande de destruction"
 
 msgid "recordsManagement/archives/cancelDestruction"
 msgstr "Annuler une destruction"
@@ -446,7 +446,7 @@ msgstr "Déplacement de plusieurs archives dans un dossier"
 msgid "recordsManagement/archives/deleteDisposearchives"
 msgstr "Suppression des archives marquées pour destruction"
 
-msgid "recordsManagement/descriptionClass/readIndex"
+msgid "recordsManagement/descriptionScheme/readIndex"
 msgstr "Liste des modèles de description"
 
 msgid "recordsManagement/log/find"
@@ -1142,7 +1142,7 @@ msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur"
 msgid "organization/organization/createUserposition_orgId__userAccountId_"
 msgstr "Lecture d'une organisation en fonction d'une position d'un utilisateur et de son identifiant"
 
-msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgid "organization/organization/createServiceposition_orgId__serviceAccountId_"
 msgstr "Création d'une position d'un utilisateur dans une organisation"
 
 msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"
@@ -1779,13 +1779,89 @@ msgid "recordsManagement/archives/readRegistry"
 msgstr "Recherche du registre"
 
 msgid "organization/organization/createArchivalprofileaccess"
-msgstr "New profile access to services association created"
+msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
 
 msgid "organization/organization/updateArchivalprofileaccess"
-msgstr "Relationships between a service and an archival profile updated"
+msgstr "Mise à jour d'une association d'un profil d'archive à un service"
 
 msgid "organization/orgTree/deleteArchivalProfileAccess"
-msgstr "Relationships between a service and an archival profile deleted"
+msgstr "Suppression d'une association d'un profil d'archive à un service"
 
 msgid "organization/orgTree/readList"
 msgstr "Charge la liste des types d'organisation"
+
+msgid "medona/archiveModificationRequest/read"
+msgstr "Lecture des demandes de modification d'archive"
+
+msgid "medona/archiveModificationRequest/create"
+msgstr "Ajout d'une modification d'archive"
+
+msgid "medona/archiveModificationRequest/update_messageId_Reject"
+msgstr "Rejet de la demande de modification d'archive"
+
+msgid "medona/archiveModificationRequest/update_messageId_Accept"
+msgstr "Acceptation de la demande de modification d'archive"
+
+msgid "medona/archiveModificationRequest/readHistory"
+msgstr "Historique des modifications d'archive"
+
+msgid "medona/archiveModificationRequest/readReference"
+msgstr "Liste des références des modifications d'archive"
+
+msgid "medona/archiveModificationRequest/read_messageId_"
+msgstr "Lecture d'une modification d'archive"
+
+msgid "medona/archiveModificationRequest/read_messageId_Export"
+msgstr "Lecture des exports de modification d'archive"
+
+msgid "medona/archiveModificationRequest/read_messageId_Retry"
+msgstr "Lecture des relances d'exports de modification d'archive"
+
+msgid "medona/archiveModificationRequest/read_messageId_Attachment_attachmentId_"
+msgstr "Lecture des pièces jointes aux demandes de modification d'archives"
+
+msgid "medona/archiveModificationRequest/updateEndtransaction_messageId_"
+msgstr "Mise à jour de la fin de transaction de la demande de modification d'une archive"
+
+msgid "medona/archiveModificationRequest/readCount"
+msgstr "Somme du nombre de demande de modification d'archives"
+
+msgid "medona/archiveModificationRequest/readSearch"
+msgstr "Liste de recherches aux requêtes de modifications d'archive"
+
+msgid "medona/archiveModificationRequest/updateArchive"
+msgstr "Mise à jour des demandes de modification d'archives"
+
+msgid "medona/archiveModificationRequest/update_messageId_Archive"
+msgstr "Mise à jour du message de la demande de modification de l'archive"
+
+msgid "medona/archiveModificationRequest/deleteMessagedirectorypurge"
+msgstr "Suppression du dossier temporaire des demandes de modification d'archive"
+
+# CCFN
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber_events"
+msgstr "Coffre fort numérique : Lecture des événements"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_"
+msgstr "Coffre fort numérique : Lister les identifiants d'objet numérique"
+
+msgid "digitalSafe/digitalSafe/delete_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_"
+msgstr "Coffre fort numérique : Suppression d'une archive"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Metadata"
+msgstr "Coffre fort numérique : Lecture des métadonnées d'un objet numérique"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_"
+msgstr "Coffre fort numérique : Lecture d'un objet numérique"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_Count"
+msgstr "Coffre fort numérique : Somme du nombre d'objet numérique"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_List"
+msgstr "Coffre fort numérique : Lister les identifiants des objets numériques"
+
+msgid "digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_Integritycheck"
+msgstr "Coffre fort numérique : Valider l'intégrité d'un objet numérique"
+
+msgid "digitalSafe/digitalSafe/create_originatorOwnerOrgRegNumber__originatorOrgRegNumber_"
+msgstr "Coffre fort numérique : Création d'un objet numérique"

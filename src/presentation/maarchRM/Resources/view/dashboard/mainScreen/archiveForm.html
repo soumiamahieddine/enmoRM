@@ -7,25 +7,26 @@
 #-->
 <form class="form-horizontal" id="archiveForm">
     <div class="form-group">
-        <label class="col-sm-3 control-label small">Name</label>
+        <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="archiveName" placeholder="Archive name"/>
         </div>
     </div>
     <div class="form-group" data-translate-catalog="recordsManagement/archive">
-        <label class="col-sm-3 control-label small">Identifier</label>
+        <label class="col-sm-3 control-label">Identifier</label>
         <div class="col-sm-9">
             <input type="text" class="input-sm form-control archiveInput" name="originatorArchiveId" placeholder="Identifier"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 control-label small">Originating date</label>
-        <div class="col-md-6">
+        <label class="col-sm-3 control-label">Originating date</label>
+        <div class="input-group col-sm-9" style="padding-left: 15px; padding-right: 15px;">
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
+
     <div class="form-group" id="fileplanLevelDiv">
-        <label class="col-md-3 control-label small">Fileplan level</label>
+        <label class="col-md-3 control-label">Fileplan level</label>
         <div class="col-md-9">
             <input type="checkbox" data-width="100" class="input-sm" id="fileplanLevelToggle">
         </div>
@@ -40,6 +41,7 @@
 
 <?hinclude dashboard/mainScreen/descriptionForm.html ?>
 
+<div id="managementMetadataDiv">
 <div class="panel-heading" role="tab">
     <strong>
         <a data-toggle="collapse" href="#management">Management metadata</a>
@@ -48,7 +50,7 @@
 <div id="management" class="panel-collapse collapse in">
     <form id="managementMetadataForm" class="form-horizontal">
         <div class="form-group">
-            <label class="col-md-3 control-label small">Retention rule</label>
+            <label class="col-md-3 control-label">Retention rule</label>
             <div class="col-md-6">
                 <select class="input-sm form-control archiveInput" name="retentionRuleCode" id="retentionRule">
                     <option value=""></option>
@@ -61,12 +63,13 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3 control-label small">Retention start date</label>
+            <label class="col-md-3 control-label">Retention start date</label>
             <div class="col-md-6">
                 <input class="input-sm form-control datePicker archiveInput" name="retentionStartDate" placeholder="Retention start date"/>
             </div>
         </div>
     </form>
+</div>
 </div>
 
 <div class="hide">
@@ -76,6 +79,7 @@
 </div>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+
 <script type="text/javascript">
 
 
@@ -117,6 +121,13 @@
 
     $('#app_maarchRM_main').ready(function () {
         $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
+    });
+
+    $("#archiveForm").keypress(function(e) {
+    //To disable Enter keypress in this form
+        if (e.which == 13) {
+            return false;
+        }
     });
 
     // ARCHIVE
@@ -173,6 +184,8 @@
                                 folder = archive.filePlanPosition;
                             }
                             trigger('loadFolder.filePlan', [folder]);
+
+                            $("#documentForm").show();
                         }
                     },
                     error       : function (response) {
@@ -181,6 +194,56 @@
                 }
             );
         },
+
+        modify : function(event, button) {
+            let url = null;
+            let data = null;
+            let archive = null;
+            let archiveId = null;
+
+            archiveId = $(button).data("archive-id");
+            archive = this.syncSerialize("modify");
+
+            if (archive < 0) {
+                return;
+            }
+
+            var parameters = {
+                archiveId           : archiveId,
+                originatorArchiveId : archive.originatorArchiveId,
+                archiveName         : archive.archiveName,
+                originatingDate     : archive.originatingDate,
+                description         : archive.descriptionObject
+            };
+
+            $.ajax({
+                type        : 'PUT',
+                url         : "/recordsmanagement/archive/metadata",
+                data        : JSON.stringify(parameters),
+                contentType : 'application/json',
+                dataType    : 'json',
+                success     : function (response) {
+                    gritter.show(response.message, response.status, response.errors);
+
+                    if (response.status) {
+                        ImportPanel.cancel();
+                        $('#archivalProfileFields').empty();
+                        Archive.getInfo(ArchiveInformation.archiveId);
+                        $("#searchForm_inputSearchBtn").click();
+                        trigger("archiveImportOver.recordsManagement");
+                        $("#modifyArchive").addClass("hide");
+                        $("#syncImport").removeClass("hide");
+                        $("#asyncImport").removeClass("hide");
+                        $("#managementMetadataDiv").removeClass("hide");
+                        $("#documentForm").show();
+                    }
+                },
+                error       : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+
         loadProfile : function() {
             var value = $('#archivalProfile').val();
             var dataJson = $('#archivalProfile').data('json');
@@ -189,12 +252,6 @@
             if (dataJson !== undefined && dataJson !== null && dataJson !== "") {
                 selectedProfile = dataJson;
             }
-
-            /*if (value == '' || value == null) {
-                $('#requireArchiveName').removeClass("hide");
-            } else {
-                $('#requireArchiveName').addClass("hide");
-            }*/
 
             if (value == '' || selectedProfile.retentionRuleCode == null || selectedProfile.retentionRuleCode == '' || selectedProfile.retentionRuleCode == undefined) {
                 $('#retentionRule').val('').removeAttr("disabled").change();
@@ -206,7 +263,7 @@
                 || selectedProfile.retentionStartDate == ''
                 || selectedProfile.retentionStartDate == null) {
                 var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]");
-                retentionStartDate.data("datepicker").setDate(new Date())
+                retentionStartDate.data("datepicker").setDate(new Date());
                 retentionStartDate.closest(".form-group").removeClass("hide");
 
             } else {
@@ -280,7 +337,7 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function() {
+        syncSerialize : function(action = "add") {
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
@@ -292,7 +349,7 @@
                 var value = $(this).val();
                 if (value) {
                     if ($(this).hasClass('datePicker')) {
-                        value = $(this).data('datepicker').getFormattedDate('yyyy-mm-dd');
+                        value = new Date($(this).data('datepicker').getFormattedDate('yyyy-mm-dd'));
                     }
                     archive[$(this).attr('name')] = value;
                 }
@@ -308,18 +365,18 @@
             }
 
             archive.descriptionObject = Metadata.serialize($('#allFields'));
-            if (archive.descriptionObject === true) {
+
+            if (archive.descriptionObject === -1) {
                 return -1;
             }
 
-            /*if (archive.archiveName == null || archive.archiveName == "") {
-                gritter.show($('#fieldLabel_error').text(), false);
-                return -2;
-            }*/
-
             archive.digitalResources = DocumentList.serialize();
 
-            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "") {
+            if (archive.descriptionObject === undefined) {
+                return -1;
+            }
+
+            if (selectedProfile !== undefined && selectedProfile !== null && selectedProfile !== "" && action !== "modify") {
                 if (selectedProfile.fileplanLevel == 'item' && archive.digitalResources==null) {
                     gritter.show($('#documentMissing_error').text(), false);
                     return -2;

@@ -1,0 +1,37 @@
+<!-- Data objects -->
+<div class="col-xs-6" >
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong><?merge $rolename ?></strong>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>Identifier</dt>
+                <dd translate="no">
+                    <?merge $organization.orgId ?>
+                </dd>
+                <dt>Nom de l'organisation</dt>
+                <dd translate="no">
+                    <?merge $organization.orgName ?>
+                </dd>
+            </dl>           
+            <?merge $organization.address.bool() ?>
+            <div>
+                <?merge $organization.address ?>
+                <?hinclude recordsManagement/message/address.html ?>
+                <br/>
+            </div>
+            <?merge $organization.communication.bool() ?>
+            <div>
+                <?merge $organization.communication $communication ?>
+                <?hinclude recordsManagement/message/communication.html ?>
+                <br/>
+            </div>
+            <?merge $organization.contacts.bool() ?>
+            <div>
+                <?merge $organization.contacts ?>
+                <?hinclude recordsManagement/message/contact.html ?>
+            </div>
+        </div>
+    </div>
+</div>

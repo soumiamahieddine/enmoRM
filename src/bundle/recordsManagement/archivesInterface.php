@@ -149,24 +149,24 @@ interface archivesInterface
     */
     /**
      * Suspend archives
-     * @param array  $archiveIds  Array of archive identifier
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param array  $archiveIds Array of archive identifier
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @action recordsManagement/archive/freeze
      *
      */
-    public function updateFreeze($archiveIds, $comment = null, $identifiant = null);
+    public function updateFreeze($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Change the status of an archive
-     * @param mixed  $archiveIds  Array of archive identifier
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param mixed  $archiveIds Array of archive identifier
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @action recordsManagement/archive/unfreeze
      */
-    public function updateUnfreeze($archiveIds, $comment = null, $identifiant = null);
+    public function updateUnfreeze($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Read the retention rule of multiple archives
@@ -183,9 +183,10 @@ interface archivesInterface
      * @param array                                  $archiveIds    The archives ids
      *
      * @action recordsManagement/archive/modifyRetentionRule
+     * @example /public/tests/updateArchivesRetentionRule-standard.json example-standard
      *
      */
-    public function updateRetentionrule($retentionRule, $archiveIds);
+    public function updateRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null);
 
     /**
      * Find archives
@@ -197,7 +198,7 @@ interface archivesInterface
      * @action recordsManagement/archive/find
      *
      */
-    public function readFind($description='', $text='', $profile = '', $limit = null);
+    public function readFind($description = '', $text = '', $profile = '', $limit = null);
 
     /**
      * Read the access rule of multiple archives
@@ -210,38 +211,38 @@ interface archivesInterface
 
     /**
      * Update a access rule
-     * @param recordsManagement/archiveAccessRule $accessRule  The access rule object
-     * @param array                               $archiveIds  The archives ids
-     * @param string                              $comment     The comment of modification
-     * @param string                              $identifiant Message identifiant
+     * @param recordsManagement/archiveAccessRule $accessRule The access rule object
+     * @param array                               $archiveIds The archives ids
+     * @param string                              $comment    The comment of modification
+     * @param string                              $identifier Message identifier
      *
      * @action recordsManagement/archive/modifyAccessRule
      *
      */
-    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifiant = null);
+    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifier = null);
 
     /*
         RESTITUTION
     */
     /**
      * Flag archives for restitution
-     * @param array  $archiveIds  Array of archive identifier
-     * @param string $identifiant The message reference
-     * @param string $comment     A comment
+     * @param array  $archiveIds Array of archive identifier
+     * @param string $identifier The message reference
+     * @param string $comment    A comment
      *
      * @action recordsManagement/archive/setForRestitution
      *
      */
-    public function updateSetforrestitution($archiveIds, $identifiant = null, $comment = null);
+    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null);
 
     /*
         DESTRUCTION
     */
     /**
      * Flag archives for disposal
-     * @param array  $archiveIds  The archives ids
-     * @param string $comment     The comment of modification
-     * @param string $identifiant Message identifiant
+     * @param array  $archiveIds The archives ids
+     * @param string $comment    The comment of modification
+     * @param string $identifier Message identifier
      *
      * @return boolean
      *
@@ -249,7 +250,7 @@ interface archivesInterface
      * @action recordsManagement/archive/dispose
      *
      */
-    public function updateDisposearchives($archiveIds, $comment = null, $identifiant = null);
+    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null);
 
     /**
      * Delete disposable archives
@@ -304,7 +305,7 @@ interface archivesInterface
      *
      */
     public function readIntegritycheck($archiveIds);
-    
+
     /*
      *  METADATA
      */
@@ -316,14 +317,14 @@ interface archivesInterface
      * @param string $archiveName
      * @param date   $originatingDate
      * @param mixed  $description
-     * 
+     *
      * @action recordsManagement/archive/modifyMetadata
      */
     public function updateMetadata($archiveId,$originatorArchiveId = null,$archiverArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
 
     /**
      * List an archive resources and children archives
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/listArchiveContents
      */
     public function readArchivecontents_archive_();
@@ -333,7 +334,7 @@ interface archivesInterface
      * Move an archive into a folder
      * @param string $archiveId the archive identifier
      * @param string $folderId  The folder identifier
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
     public function udpateMovearchivetofolder($archiveId, $folderId=null);
@@ -343,13 +344,13 @@ interface archivesInterface
      * @param array  $archiveIds   The archive identifier list
      * @param string $fromFolderId The originating folder identifier
      * @param string $toFolderId   The destination folder identifier
-     * 
+     *
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
     public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
 
     /**
-     * Index full text 
+     * Index full text
      * @param int $limit The maximum number of archive to index
      *
      * @action recordsManagement/archive/indexFullText

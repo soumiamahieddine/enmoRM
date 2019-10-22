@@ -1,8 +1,7 @@
 
 DROP SCHEMA IF EXISTS "batchProcessing" CASCADE;
 
-CREATE SCHEMA "batchProcessing"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "batchProcessing";
 
 -- Table: "batchProcessing"."scheduling"
 
@@ -60,3 +59,5 @@ CREATE TABLE "batchProcessing".notification
   "sendBy" text,
   PRIMARY KEY ("notificationId")
 );
+
+CREATE INDEX "batchProcessing_logScheduling_schedulingId_idx" ON "batchProcessing"."logScheduling" USING btree ("schedulingId");

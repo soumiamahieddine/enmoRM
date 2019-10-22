@@ -180,7 +180,7 @@ trait archiveComplianceTrait
 
         $archives = $this->sdoFactory->find("recordsManagement/archive", "archiveId=['".implode("', '", $archiveIds)."']");
 
-        foreach ($archives as $key => $archive) {
+        foreach ($archives as $archive) {
             if ($this->checkArchiveIntegrity($archive)) {
                 $res['success'][] = (string) $archive->archiveId;
             } else {
@@ -222,7 +222,7 @@ trait archiveComplianceTrait
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
         }
 
-        $archive->digitalResources = $this->getDigitalResources($archive->archiveId);
+        $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess = false);
 
         $errors = [];
         if (count($archive->digitalResources)) {

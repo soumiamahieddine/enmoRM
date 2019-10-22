@@ -17,23 +17,87 @@
             </table>
             <?hinclude recordsManagement/archive/archiveModificationModal/accessRule.html?>
             <?hinclude recordsManagement/archive/archiveModificationModal/retentionRule.html?>
+            <?hinclude recordsManagement/archive/archiveModificationModal/requestCommunication.html?>
+            <?hinclude recordsManagement/archive/archiveModificationModal/archiveTransfer.html?>
         </div>
     </div>
 </div>
+<?hinclude medona/message/modificationMessageCommentFrom.html ?>
+
+<div class="hide">
+    <span id="mtext_requestCommunication">Request of communication</span>
+    <span id="mtext_flagForRestitution">Flag for restitution</span>
+    <span id="mtext_cancelRestitution">Cancel restitution</span>
+    <span id="mtext_validateRestitution">Validate restitution</span>
+
+    <span id="restituable_text">restituable</span>
+
+</div>
 
 <script>
+
+    $('#archiveList').on('click', 'li', function () {
+        ExtentionSetting.set();
+    });
+
+    var ExtentionSetting = {
+        init: false,
+        set: function () {
+            if (this.init === true)
+                return;
+
+            this.init = true;
+
+            // Add new actions
+            ModificationModal.actionsList.flagForRestitution = '/restitution/request';
+            //ModificationModal.actionsList.cancelRestitution = '/cancelRestitution';
+            ModificationModal.actionsList.validateRestitution = '/validateRestitution';
+            ModificationModal.actionsList.requestCommunication = '/archiveDelivery';
+            ModificationModal.actionsList.flagForTransfer = '/outgoingTransfer/sending';
+
+            // Add new action types
+            ModificationModal.actionsType.requestCommunication = "POST";
+            ModificationModal.actionsType.requestModification = "POST";
+
+            // Add new selection status for multiple selection
+            if (ArchivesAction.actions) {
+                ArchivesAction.actions.freeze.push('restituable');
+                ArchivesAction.actions.flagForDestruction.push('restituable');
+
+                ArchivesAction.actions.flagForRestitution = ['preserved'];
+                //ArchivesAction.actions.cancelRestitution = ['restituable'];
+                ArchivesAction.actions.validateRestitution = ['retituted'];
+                ArchivesAction.actions.requestCommunication = ['frozen', 'preserved', 'restituable', 'disposable'];
+            }
+        }
+    };
+
     var ArchiveModification = {
         modal: $('#modificationModal'),
-        serialize: function(type) {
-            parameter = {};
-            try {
+        serialize: function (type) {
+            var parameter = {};
+            var transaction = false;
+
+            $("#transaction").val() ? transaction = true : transaction = false;
+            if (type === "accessRule" || type === "retentionRule" || type === "requestCommunication") {
                 parameter = eval(type+"_serialize()");
+            } else if (type === "flagForTransfer") {
+                if ($('#archivalAgencySelect').find('option:selected').val()) {
+                    parameter.archiverOrgRegNumber = $('#archivalAgencySelect').find('option:selected').val();
+                }
             }
-            catch(err) {
-                parameter = {};
+
+            if (transaction) {
+                parameter.identifier = this.modal.find('[name="identifier"]').val();
+                parameter.comment = this.modal.find('[name="comment"]').val();
+
+                if (parameter!=-1 && !parameter.comment) {
+                    gritter.show($('#empty_text').html(), false);
+                    return -1;
+                }
             }
 
             return parameter;
         }
-    }
+    };
 </script>

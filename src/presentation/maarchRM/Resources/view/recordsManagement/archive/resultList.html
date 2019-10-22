@@ -1,5 +1,6 @@
 <div class="row" data-translate-catalog="recordsManagement/messages" id="archiveList">
     <div class="panel panel-primary">
+        <input type="hidden" id="transaction" value="[?merge transaction ?]" />
         <div class="panel-heading clearfix">
             <div class="pull-left">
                 <h4><?merge archive.count() ?> result(s)</h4>
@@ -29,7 +30,7 @@
                 </thead>
                 <tbody>
                     <?merge archive ?>
-                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]">
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]" data-iscommunicable="[?merge .isCommunicable ?]">
                         <td>
                             <?merge .hasRights.bool() ?>
                             <input type="checkbox" 
@@ -43,7 +44,7 @@
                         <td><?merge .archiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
                         <td class="profile"><?merge .archivalProfileReference ?></td>
-                        <td><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
+                        <td data-order="[?merge .depositDate.format('Y-m-d') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td>

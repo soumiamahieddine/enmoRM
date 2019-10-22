@@ -93,5 +93,17 @@ abstract class abstractMethod
             return trim($matches['type']);
         }
     }
-    
+
+    /**
+     * Get the exceptions thrown by the method from doc comments
+     *
+     * @return string[] The exceptions
+     */
+    public function getThrownExceptions()
+    {
+        $docComment = $this->getDocComment();
+        if (preg_match_all("#@throws (?<type>[^\s]+)#", $docComment, $matches)) {
+            return $matches['type'];
+        }
+    }  
 }

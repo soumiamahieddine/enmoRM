@@ -152,7 +152,7 @@ class archiveRelationship
 
     public function getUniqueRelationship($archiveId, $relatedArchiveId)
     {
-        return $this->sdoFactory->find("recordsManagement/archiveRelationship", "archiveId='$archiveId' AND relatedArchiveId='$relatedArchiveId'")[0];
+        return $this->sdoFactory->find("recordsManagement/archiveRelationship", "archiveId='$archiveId' AND relatedArchiveId='$relatedArchiveId'");
     }
 
     protected function decodeDescription($relationship)

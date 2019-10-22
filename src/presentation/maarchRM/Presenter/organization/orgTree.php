@@ -34,7 +34,6 @@ class orgTree
     public $view;
     public $json;
     public $sdoFactory;
-    public $publicArchives;
 
     /**
      * __construct
@@ -42,9 +41,8 @@ class orgTree
      * @param \dependency\html\Document   $view           A new ready-to-use empty view
      * @param \dependency\json\JsonObject $jsonObject     The json base object
      * @param \dependency\sdo\Factory     $sdoFactory     The Sdo Factory for data access
-     * @param bool                        $publicArchives
      */
-    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory, $publicArchives = false)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $jsonObject, \dependency\sdo\Factory $sdoFactory)
     {
         $this->view = $view;
 
@@ -55,8 +53,6 @@ class orgTree
 
         $this->translator = $this->view->translator;
         $this->translator->setCatalog('organization/messages');
-
-        $this->publicArchives = $publicArchives;
     }
 
     /**
@@ -75,8 +71,7 @@ class orgTree
         $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
-        $publicArchives = \laabs::configuration("presentation.maarchRM")["publicArchives"];
-
+        
         // Sort archival profile by reference
         usort($archivalProfile, function ($a, $b) {
             return strcmp($a->reference, $b->reference);
@@ -84,6 +79,12 @@ class orgTree
 
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        
+        $manageUserInOrg = true;
+
+        if ($user->getSecurityLevel() == $user::SECLEVEL_USER) {
+            $manageUserInOrg = false;
+        }
 
         if (\laabs::getToken("ORGANIZATION") && \laabs::getToken("ORGANIZATION")->orgRoleCodes) {
             $addOrganizationRight = in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes);
@@ -105,7 +106,6 @@ class orgTree
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("adminUser", $adminUser);
         $this->view->setSource("adminContact", $adminContact);
-        $this->view->setSource("publicArchives", $this->publicArchives);
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
         $this->view->setSource("communicationMeans", $communicationMeans);
@@ -113,7 +113,15 @@ class orgTree
         $this->view->setSource("archivalProfile", $archivalProfile);
         $this->view->setSource("serviceLevel", $serviceLevel);
         $this->view->setSource("addOrganizationRight", $addOrganizationRight);
-        $this->view->setSource("publicArchives", $publicArchives);
+        $this->view->setSource("manageUserInOrg", $manageUserInOrg);
+
+        $profileType = false;
+        if (isset(\laabs::configuration('recordsManagement')['archivalProfileType'])) {
+            $profileType = \laabs::configuration('recordsManagement')['archivalProfileType'];
+        }
+        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        
+        $this->view->setSource("hideAccess", $publicArchives || ($profileType == 1));
         $this->view->merge();
         $this->view->translate();
 

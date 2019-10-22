@@ -21,13 +21,16 @@ msgid "number"
 msgstr "Nombre"
 
 msgid "Boolean"
-msgstr "Booléen"
+msgstr "Indicateur"
 
 msgid "boolean"
-msgstr "Booléen"
+msgstr "Indicateur"
 
 msgid "date"
 msgstr "Date"
+
+msgid "With time"
+msgstr "Avec heure"
 
 msgid "Description field"
 msgstr "Champ de description"
@@ -41,8 +44,23 @@ msgstr "Donnée(s) descriptive(s)"
 msgid "Default value"
 msgstr "Valeur par défaut"
 
-msgid "Enumeration"
-msgstr "Énumération"
+msgid "Input mode"
+msgstr "Mode de saisie"
+
+msgid "Input"
+msgstr "Saisie libre"
+
+msgid "Simple list"
+msgstr "Liste simple"
+
+msgid "List with labels"
+msgstr "Liste avec libellés"
+
+msgid "Values"
+msgstr "Valeurs"
+
+msgid "External repository"
+msgstr "Référentiel externe"
 
 msgid "Multiple value"
 msgstr "Valeur multiple"
@@ -56,6 +74,9 @@ msgstr "Champ de description modifié"
 msgid "Description field deleted"
 msgstr "Champ de description supprimé"
 
+msgid "The description field %s is currently used in an archival profile. It can't be deleted as long as it is used in any archival profile."
+msgstr "Le champ  %s est utilisé dans un profil d'archives. Modifiez ce dernier pour supprimer la donnée descriptive."
+
 msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
 msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
 
@@ -65,3 +86,53 @@ msgstr "Vous devez remplir tous les champs obligatoires."
 msgid "Multiple value"
 msgstr "Valeur multiple"
 
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Label"
+msgstr "Libellé"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Click or drop a file"
+msgstr "Cliquer ou déposer un fichier"
+
+msgid "File name"
+msgstr "Nom du fichier"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Import"
+msgstr "Télécharger"
+
+msgid "Download file"
+msgstr "Télécharger fichier"
+
+msgid "Replace file"
+msgstr "Remplacer fichier"
+
+msgid "Can't upload file. You have to save the profile first."
+msgstr "Import du fichier impossible. Veuillez préalablement sauvegarder le profil"
+
+msgid "The profile file's extension must be csv or txt."
+msgstr "L'extension de fichier du profil doit être en .csv ou en .txt"
+
+msgid "Save field"
+msgstr "Enregistrer le champ"
+
+msgid "Field will be save in order to add the file. Do you wish to proceed ?"
+msgstr "Le champ sera enregistré afin de pouvoir ajouter le fichier. Voulez-vous continuer ?"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"

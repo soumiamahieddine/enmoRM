@@ -1,0 +1,51 @@
+# auth/messages
+# Language: en
+# Content-Type: text/plain; charset=UTF-8
+
+# ---------------------------------------------------------
+# Journal
+# ---------------------------------------------------------
+
+msgid "journal"
+msgstr "Logs"
+msgctxt "userStoryGroup"
+
+msgid "lifeCycleJournal"
+msgstr "Read lifecycle logs"
+msgctxt "userStory"
+
+msgid "audit"
+msgstr "Read application logs"
+msgctxt "userStory"
+
+msgid "logBatchScheduling"
+msgstr "Batch processing logs"
+msgctxt "userStory"
+
+msgid "searchLogArchive"
+msgstr "Search archived events"
+msgctxt "userStory"
+
+msgid "archiveManagement"
+msgstr "Archival management"
+msgctxt "userStoryGroup"
+
+msgid "modify"
+msgstr "Modify archival management rules"
+msgctxt "userStory"
+
+msgid "modifyDescription"
+msgstr "Modify archive descriptions"
+msgctxt "userStory"
+
+msgid "migration"
+msgstr "Convert documents formats"
+msgctxt "userStory"
+
+msgid "checkIntegrity"
+msgstr "Check records integrity"
+msgctxt "userStory"
+
+msgid "certificate"
+msgstr "Download certificate"
+msgctxt "userStory"

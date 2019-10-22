@@ -61,7 +61,7 @@ class scheduling
 
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
-        $serviceAccounts = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccounts = \laabs::callService('auth/serviceAccount/readSearch');
 
         foreach ($serviceAccounts as $key => $serviceAccount) {
             $serviceURI = [];

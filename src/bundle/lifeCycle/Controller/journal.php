@@ -176,8 +176,6 @@ class journal
         $logController = \laabs::newController('recordsManagement/log');
 
         $tmpDir = \laabs::getTmpDir();
-        $journalFile = null;
-
         $journal = $logController->getByDate('lifeCycle', (string) $date);
 
         if (!$journal) {
@@ -188,7 +186,7 @@ class journal
         $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         if (!\laabs\file_exists($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId)) {
-            $resources = $archiveController->getDigitalResources($journal->archiveId);
+            $resources = $archiveController->getDigitalResources($journal->archiveId, $checkAccess = false);
             $journalResource = $resources[0];
 
             $journalContents = $digitalResourceController->contents($journalResource->resId);
@@ -262,21 +260,21 @@ class journal
     public function getEventFromJournal($eventId)
     {
         if (is_scalar($eventId) || get_class($eventId) == 'core\Type\Id') {
-            $event = $this->sdoFactory->read('lifeCycle/event', $eventId);
+            $eventFromBase = $this->sdoFactory->read('lifeCycle/event', $eventId);
         } else {
-            $event = $eventId;
+            $eventFromBase = $eventId;
         }
 
         $logController = \laabs::newController('recordsManagement/log');
 
         // Read journal file
-        $journalReference = $logController->getByDate('lifeCycle', $event->timestamp);
+        $journalReference = $logController->getByDate('lifeCycle', $eventFromBase->timestamp);
 
         if ($journalReference) {
             $this->openJournal($journalReference->archiveId);
 
             // Get the eventId position on the journal file
-            $this->currentOffset = strpos($this->currentJournalFile, (string) $event->eventId);
+            $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
 
             // Place cursor to the begin of line
             if ($this->currentOffset) {
@@ -286,13 +284,21 @@ class journal
 
                 // Get the event
                 $event = $this->getEventFromLine($eventLine);
+
+                // Retrieves information that is not in the csv file from database
+                $event->instanceName = $eventFromBase->instanceName;
+                $event->orgRegNumber = $eventFromBase->orgRegNumber;
+                $event->orgUnitRegNumber = $eventFromBase->orgUnitRegNumber;
+
             } else {
+                $event = $eventFromBase;
                 return $event;
 
                 //throw \laabs::newException("lifeCycle/journalException", "Event can't be found.");
             }
         } else {
-             $this->decodeEventFormat($event);
+            $event = $eventFromBase;
+            $this->decodeEventFormat($event);
         }
 
         $this->currentEvent = $event;
@@ -314,8 +320,15 @@ class journal
      *
      * @return object[] The result of the request
      */
-    public function searchEvent($eventType = null, $objectClass = null, $objectId = null, $minDate = null, $maxDate = null, $sortBy = ">timestamp", $numberOfResult = 300)
-    {
+    public function searchEvent(
+        $eventType = null,
+        $objectClass = null,
+        $objectId = null,
+        $minDate = null,
+        $maxDate = null,
+        $sortBy = ">timestamp",
+        $numberOfResult = null
+    ) {
         $query = array();
         $queryParams = array();
 
@@ -351,15 +364,28 @@ class journal
 
         $queryString = implode(' AND ', $query);
 
-        $events = $this->sdoFactory->find('lifeCycle/event', $queryString, $queryParams, $sortBy, null, $numberOfResult);
+        if (!$numberOfResult) {
+            $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
 
-        $users = \laabs::callService('auth/userAccount/readIndex');
+        $events = $this->sdoFactory->find(
+            'lifeCycle/event',
+            $queryString,
+            $queryParams,
+            $sortBy,
+            null,
+            $numberOfResult
+        );
+
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $users = $userAccountController->index();
         foreach ($users as $i => $user) {
             $users[(string) $user->accountId] = $user;
             unset($users[$i]);
         }
 
-        $services = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $services = $serviceAccountController->index();
         foreach ($services as $i => $service) {
             $services[(string) $service->accountId] = $service;
             unset($services[$i]);
@@ -389,6 +415,7 @@ class journal
     public function openJournal($journalReference)
     {
         $logController = \laabs::newController('recordsManagement/log');
+        $digitalResourceController = \laabs::newController('digitalResource/digitalResource');
 
         if (is_scalar($journalReference) || get_class($journalReference) == 'core\Type\Id') {
             $journalReference = $logController->read($journalReference);
@@ -396,8 +423,8 @@ class journal
 
         if (isset($journalReference->toDate)) {
             $archiveController = \laabs::newController('recordsManagement/archive');
-            $resources = $archiveController->getDigitalResources($journalReference->archiveId);
-            $journalResource = $resources[0];
+            $resources = $archiveController->getDigitalResources($journalReference->archiveId, $checkAccess = false);
+            $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
 
             $journalFile = $journalResource->getContents();
             $this->journalCursor = 0;
@@ -442,7 +469,14 @@ class journal
 
             $queryString['timestamp'] = "timestamp>'$timestamp'";
 
-            $nextEvent = $this->sdoFactory->find("lifeCycle/event", implode(' and ', $queryString), [], "<timestamp", 0, 1);
+            $nextEvent = $this->sdoFactory->find(
+                "lifeCycle/event",
+                implode(' and ', $queryString),
+                [],
+                "<timestamp",
+                0,
+                1
+            );
 
             if (count($nextEvent)) {
                 $nextEvent = $nextEvent[0];
@@ -455,7 +489,6 @@ class journal
                     $this->getNextEvent($eventType, $chain);
 
                 } else {
-
                     $nextEvent = false;
                 }
 
@@ -516,7 +549,8 @@ class journal
         // Open the journal to start with
         $logController = \laabs::newController('recordsManagement/log');
         $journal = $logController->getByDate('lifeCycle', $searchingStartDate);
-        if (!isset($journal)) {
+
+        if (!isset($journal) || is_null($journal)) {
             $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId'", [], ">timestamp");
             foreach ($events as $key => $event) {
                 $events[$key] = $this->decodeEventFormat($event);
@@ -525,9 +559,11 @@ class journal
             return $events;
         }
 
-        $journal = end($journal);
-        $this->openJournal($journal->archiveId);
+        if (is_array($journal)) {
+            $journal = end($journal);
+        }
 
+        $this->openJournal($journal->archiveId);
 
         // Searching for related events not in the journal yet
         $events = $this->sdoFactory->find('lifeCycle/event', "objectClass='recordsManagement/archive' AND  objectId='$archiveId' AND timestamp>'$journal->toDate'", [], ">timestamp");
@@ -718,11 +754,11 @@ class journal
 
             $logController = \laabs::newController('recordsManagement/log');
 
-            $nexJournal = $logController->getNextJournal($this->currentJournalId);
+            $nextJournal = $logController->getNextJournal($this->currentJournalId);
 
             if (isset($nextJournal)) {
-                $this->openJournal($nexJournal->archiveId);
-                $journalId = $nexJournal->archiveId;
+                $this->openJournal($nextJournal->archiveId);
+                $journalId = $nextJournal->archiveId;
             }
         }
 
@@ -739,11 +775,15 @@ class journal
      *
      * @return object[] Array of life cycle event
      */
-    public function readJournal($journalId, $offset = 0, $limit = 300)
+    public function readJournal($journalId, $offset = 0, $limit = null)
     {
         $this->openJournal($journalId);
 
         $events = array();
+
+        if (!$limit) {
+            $limit = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
 
         while ($limit > 0 && $event = $this->getNextEvent(null, false)) {
             $events[] = $event;
@@ -774,12 +814,15 @@ class journal
             $journal = $archiveId;
             $archiveId = (string) $journal->archiveId;
         }
-        $resources = $archiveController->getDigitalResources($journal->archiveId);
+        $resources = $archiveController->getDigitalResources($journal->archiveId, $checkAccess = false);
         $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
-            throw \laabs::newException('recordsManagement/journalException', "Invalid journal: invalid hash integrity.");
+            throw \laabs::newException(
+                'recordsManagement/journalException',
+                "Invalid journal: invalid hash integrity."
+            );
         }
 
         $nextJournal = $logController->getNextJournal($journal);
@@ -792,13 +835,16 @@ class journal
 
             // In the future ????
             if ($diff->invert) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal date: latest date is in the future.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal date: latest date is in the future."
+                );
             }
 
             return true;
         }
 
-        $resources = $archiveController->getDigitalResources($nextJournal->archiveId);
+        $resources = $archiveController->getDigitalResources($nextJournal->archiveId, $checkAccess = false);
         $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
         $nextJournalContents = $nextJournalResource->getContents();
 
@@ -807,12 +853,18 @@ class journal
         // For older version compatibility
         if (count($chainEvent) < 7) {
             if (empty($chainEvent[3]) || empty($chainEvent[4]) || empty($chainEvent[5])) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal chaining event is incomplete.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal chaining event is incomplete."
+                );
             }
 
             $chainedJournalId = $chainEvent[3];
             if ($chainedJournalId != $archiveId) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
+                );
             }
 
             $chainedJournalHashAlgo = $chainEvent[4];
@@ -821,17 +873,26 @@ class journal
             $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Chaining event has a different hash."
+                );
             }
 
         } else {
             if (empty($chainEvent[8]) || empty($chainEvent[9]) || empty($chainEvent[10])) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal chaining event is incomplete.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal chaining event is incomplete."
+                );
             }
 
             $chainedJournalId = $chainEvent[8];
             if ($chainedJournalId != $archiveId) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Next journal is missing or chaining event has an invalid journal identifier."
+                );
             }
 
             $chainedJournalHashAlgo = $chainEvent[9];
@@ -840,7 +901,10 @@ class journal
             $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
 
             if ($calcJournalHash != $chainedJournalHash) {
-                throw \laabs::newException('recordsManagement/journalException', "Invalid journal: Chaining event has a different hash.");
+                throw \laabs::newException(
+                    'recordsManagement/journalException',
+                    "Invalid journal: Chaining event has a different hash."
+                );
             }
         }
 
@@ -1067,7 +1131,7 @@ class journal
                 if (isset($eventArray[$i])) {
                     $event->{$item} = $eventArray[$i];
                 } else {
-                    $event->{$value} = null;
+                    $event->{$item} = null;
                 }
                 $i++;
             }
@@ -1088,6 +1152,7 @@ class journal
         $body .= "The object '$event->objectId' of class '$event->objectClass'. ";
         $body .= "Description : $event->description ";
 
-        \laabs::callService("batchProcessing/notification/create", $subject, $body, array());
+        $notificationController = \laabs::newController('batchProcessing/notification');
+        $notificationController->create($subject, $body, array());
     }
 }

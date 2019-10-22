@@ -50,7 +50,11 @@ class accessRule
      */
     public function index()
     {
-        $accessRules = $this->sdoFactory->find('recordsManagement/accessRule');
+        try {
+            $accessRules = $this->sdoFactory->find('recordsManagement/accessRule');
+        } catch (\Exception $exception) {
+            return null;
+        }
 
         return $accessRules;
     }

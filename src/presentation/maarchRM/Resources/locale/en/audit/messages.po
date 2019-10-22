@@ -208,7 +208,7 @@ msgstr "Move archives into a folder"
 msgid "recordsManagement/archives/deleteDisposearchives"
 msgstr "Delete all archives flagged for destuction"
 
-msgid "recordsManagement/descriptionClass/readIndex"
+msgid "recordsManagement/descriptionScheme/readIndex"
 msgstr "Listing of description models"
 
 msgid "recordsManagement/log/find"
@@ -904,7 +904,7 @@ msgstr "Read organization by user position"
 msgid "organization/organization/createUserposition_orgId__userAccountId_"
 msgstr "Read organization by user position and user id"
 
-msgid "organization/organization/createServiceposition_orgId__userAccountId_"
+msgid "organization/organization/createServiceposition_orgId__serviceAccountId_"
 msgstr "Create user position in organization"
 
 msgid "organization/organization/updateSetdefaultposition_orgId__userAccountId_"
@@ -1548,13 +1548,61 @@ msgid "Username and / or password invalid"
 msgstr "Nom d'utilisateur et / ou mot de passe invalide"
 
 msgid "organization/organization/createArchivalprofileaccess"
-msgstr "Création d'une nouvelle association d'un profil d'archive à un service"
+msgstr "New profile access to services association created"
 
 msgid "organization/organization/updateArchivalprofileaccess"
-msgstr "Mise à jour d'une association d'un profil d'archive à un service"
+msgstr "Relationships between a service and an archival profile updated"
 
 msgid "organization/orgTree/deleteArchivalProfileAccess"
-msgstr "Suppression d'une association d'un profil d'archive à un service"
+msgstr "Relationships between a service and an archival profile deleted"
 
 msgid "organization/orgTree/readList"
 msgstr "Retrieve list of organization's type"
+
+msgid "medona/archiveModificationRequest/read"
+msgstr "Archive modification request list"
+
+msgid "medona/archiveModificationRequest/create"
+msgstr "Create an archive modification request"
+
+msgid "medona/archiveModificationRequest/update_messageId_Reject"
+msgstr "Archive modification request refused"
+
+msgid "medona/archiveModificationRequest/update_messageId_Accept"
+msgstr "Archive modification request accepted"
+
+msgid "medona/archiveModificationRequest/readHistory"
+msgstr "History or archive modification request"
+
+msgid "medona/archiveModificationRequest/readReference"
+msgstr "References of archive modification request"
+
+msgid "medona/archiveModificationRequest/read_messageId_"
+msgstr "Read archive modification request"
+
+msgid "medona/archiveModificationRequest/read_messageId_Export"
+msgstr "Read archive modification request for export"
+
+msgid "medona/archiveModificationRequest/read_messageId_Retry"
+msgstr "Read archive modification retry request for export"
+
+msgid "medona/archiveModificationRequest/read_messageId_Attachment_attachmentId_"
+msgstr "Read archive modification request for attachement"
+
+msgid "medona/archiveModificationRequest/updateEndtransaction_messageId_"
+msgstr "Update end transaction of archive modification request"
+
+msgid "medona/archiveModificationRequest/readCount"
+msgstr "Count of archive modification request"
+
+msgid "medona/archiveModificationRequest/readSearch"
+msgstr "Archive modification request searched"
+
+msgid "medona/archiveModificationRequest/updateArchive"
+msgstr "Update archive modification request"
+
+msgid "medona/archiveModificationRequest/update_messageId_Archive"
+msgstr "Update mmessage with archive modification request"
+
+msgid "medona/archiveModificationRequest/deleteMessagedirectorypurge"
+msgstr "Delete temporary files of archive modification request"

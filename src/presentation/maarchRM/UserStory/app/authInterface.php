@@ -33,24 +33,15 @@ interface authInterface
      * @return auth/user/editProfile
      */
     public function readMyprofile();
-    
+
     /**
      * Prepare a user object for update
      *
-     * @uses auth/userAccount/updateProfile
+     * @uses auth/userAccount/updateMyProfile
      *
      * @return auth/user/updateUserInformation
      */
     public function updateMyprofile($userAccount);
-    
-    /**
-     * Allow to modify user information
-     * @param auth/roleMember[] $roleMembers Array of role member object
-     *
-     * @uses auth/userAccount/update_userAccountId_
-     * @return auth/user/updateUserInformation
-     */
-    public function updateUseraccount_userAccountId_($roleMembers);
 
     /**
      * Change a user password

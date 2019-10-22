@@ -32,7 +32,7 @@ namespace bundle\auth\Model;
 class privilege
 {
     /**
-     * The user strory route
+     * The user story route
      *
      * @var string
      */

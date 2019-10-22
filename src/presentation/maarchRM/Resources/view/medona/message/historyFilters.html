@@ -1,0 +1,159 @@
+<!--#
+    This file is part of the registeredMail package.
+    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+
+
+<div class="col-sm-12" data-translate-catalog="medona/messages">
+	<button id="filters" class="btn btn-info btn" data-toggle="collapse" data-target="#filterPanel">
+		<i class="fa fa-filter">&nbsp;</i>
+		Filters
+		<small><i class="fa fa-caret-down">&nbsp;</i></small>
+	</button>
+	<br/>
+	<br/>
+	<div id="filterPanel" class="panel panel-default collapse">
+		<div class="panel-body">
+			<form class="form-horizontal" id="searchForm">
+	                <div class="form-group">
+	                    <label class="col-sm-3 text-primary control-label">Identifiant</label>
+	                    <div class="col-sm-6">
+	                        <div class="form-group">
+	                            <input type="text" class="form-control input-sm" name="reference" placeholder="Message identifier"/>
+	                        </div>
+	                    </div>
+	                </div>
+	                <hr/>
+	                <div class="col-md-4">
+	                    <div class="form-group">
+	                        <label class="col-sm-4 text-primary control-label">Archival agency</label>
+	                        <div class="col-sm-8">
+	                            <select class="form-control input-sm" name="archiver">
+	                                <option value=""></option>
+	                                <?merge ownerArchiverOrgs ?>
+	                                <optgroup label="[?merge .displayName ?]">
+	                                    <?merge .archivers ?>
+	                                    <option value="[?merge .registrationNumber ?]"><?merge .displayName ?></option>
+	                                </optgroup>
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+	                        <label class="col-sm-4 text-primary control-label">Transferring agency</label>
+	                        <div class="col-sm-8">
+	                            <select class="form-control input-sm" name="depositor">
+	                                <option value=""></option>
+	                                <?merge ownerDepositorOrgs ?>
+	                                <optgroup label="[?merge .displayName ?]">
+	                                    <?merge .depositors ?>
+	                                    <option value="[?merge .registrationNumber ?]"><?merge .displayName ?></option>
+	                                </optgroup>
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <br/>
+	                </div>
+	                <div class="col-md-4">
+	                    <div class="form-group">
+	                        <label class="col-sm-4 text-primary control-label">Archival agreements</label>
+	                        <div class="col-sm-8">
+	                            <select class="form-control input-sm" name="archivalAgreement">
+	                                <option value=""></option>
+	                                <?merge archivalAgreements ?>
+	                                <option value="[?merge .reference ?]"><?merge .reference ?></option>
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+	                        <label class="col-sm-4 text-primary  control-label">Date</label>
+	                        <div class="col-sm-8">
+		                        <div class="input-group input-group-sm input-daterange">
+		                            <input type="text" class="form-control datePicker col-sm-4" name="fromDate" placeholder="From"/>
+		                            <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
+		                            <input type="text" class="form-control datePicker col-sm-4" name="toDate" placeholder="To"/>
+		                        </div>
+	                        </div>
+	                    </div>
+	                </div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label class="col-sm-4 text-primary control-label">Status</label>
+						<div class="col-sm-8">
+							<select class="form-control input-sm" name="status">
+								<option value=""></option>
+								<?merge statuses.array() ?>
+								<option value="[?merge statuses.key() ?]"><?merge . ?></option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+	            <div class="clearfix">
+	            	<div class="col-xs-12">
+	                	<button type="button" class="btn btn-primary pull-right" id="search" title="Search"><i class="fa fa-search">&nbsp;</i> Search</button>
+	            	</div>
+	            </div>
+	        </form>
+		</div>
+	</div>
+</div>
+
+<script>
+
+	$('#search').on('click', function() {
+        messageSearchForm.search();
+    });
+
+    $(document).keypress(function (e) {
+        if (e.which != 13) {
+            return;
+        }
+        // Prevent form submit
+        e.preventDefault();
+        $("#search").click();
+    });
+
+    var messageSearchForm = {
+
+        search: function() {
+            ajax($('#search'), {
+                type 		: 'GET',
+                url 		: $('#messageType').data('url'),
+                data 		: messageSearchForm.serialize(),
+                contentType : 'application/json',
+                dataType 	: 'html',
+                success 	: function (response) {
+                    $('#containList').empty().replaceWith($(response).find('#containList'));
+
+                    $("#containList").on('click','.viewMessage',function() {
+                        $.ajax({
+                            url: "/medona/historyMessage/" + $(this).data('message-id'),
+                            type: "GET",
+                            dataType: "html",
+                            success: function(response) {
+                                $('#message_modalContainer').html(response);
+                                $('#infoModal').modal();
+                            }
+                        });
+                    });
+                }
+            });
+        },
+
+        serialize: function() {
+            var searchForm = $('#searchForm');
+            var reference = searchForm.find('[name="reference"]').val();
+            var serializedObject = {};
+
+            searchForm.find('input, select').each(function(){
+                serializedObject[$(this).attr('name')] = $(this).val();
+            });
+            serializedObject['type'] = $('#messageType').val();
+
+            return serializedObject;
+        }
+    }
+</script>

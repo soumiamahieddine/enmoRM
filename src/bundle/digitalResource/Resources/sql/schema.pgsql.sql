@@ -1,7 +1,6 @@
 DROP SCHEMA IF EXISTS "digitalResource" CASCADE;
 
-CREATE SCHEMA "digitalResource"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "digitalResource";
 
 
 -- Table: "digitalResource"."cluster"
@@ -200,3 +199,7 @@ CREATE TABLE "digitalResource"."conversionRule"
 WITH (
   OIDS=FALSE
 );
+
+CREATE INDEX "digitalResource_digitalResource_archiveId_idx" ON "digitalResource"."digitalResource" USING btree ("archiveId");
+
+CREATE INDEX "digitalResource_digitalResource_relatedResId__relationshipType_idx" ON "digitalResource"."digitalResource" USING btree ("relatedResId", "relationshipType");

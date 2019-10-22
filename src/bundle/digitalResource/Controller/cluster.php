@@ -126,7 +126,13 @@ class cluster
             $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
         } catch (\Exception $e) {
             $this->sdoFactory->rollback();
-            throw \laabs::newException("digitalResource/clusterException", "Cluster %s not created.", 404, null, [$clusterId]);
+            throw \laabs::newException(
+                "digitalResource/clusterException",
+                "Cluster %s not created.",
+                404,
+                null,
+                [$cluster->clusterId]
+            );
         }
         $this->sdoFactory->commit();
 
@@ -241,16 +247,16 @@ class cluster
      * @param object $cluster
      * @param string $path
      * @param mixed  $metadata
-     * 
+     *
      * @return String[] Array of ressource container on the cluster
      */
     public function openContainers($cluster, $path, $metadata=null)
     {
-        if (count($cluster->clusterRepository) < 2) {
+        if (count($cluster->clusterRepository) < 1) {
             throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
         }
 
-        foreach ($cluster->clusterRepository as $index => $clusterRepository) {
+        foreach ($cluster->clusterRepository as $clusterRepository) {
             if ($clusterRepository->repository == null || !is_readable($clusterRepository->repository->repositoryUri)) {
                 throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
             }
@@ -258,7 +264,7 @@ class cluster
             $realPath = $this->repositoryController->openContainer($clusterRepository->repository, $path, $metadata);
 
             if (!$realPath) {
-                throw \laabs::newException("digitalResource/clusterException", "Container %s counld not be opened.", 404, null, [$path]);
+                throw \laabs::newException("digitalResource/clusterException", "Container %s couldn't not be opened.", 404, null, [$path]);
             }
         }
 

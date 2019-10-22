@@ -77,7 +77,13 @@ class retentionRule
      */
     public function read($code)
     {
-        return $this->sdoFactory->read('recordsManagement/retentionRule', $code);
+        try {
+            $retentionRule = $this->sdoFactory->read('recordsManagement/retentionRule', $code);
+        } catch (\Exception $exception) {
+            return null;
+        }
+
+        return $retentionRule;
     }
 
     /**

@@ -47,14 +47,18 @@ class filePlan
     public function getTree()
     {
         // Get user org tree
-        $tree = \laabs::callService("organization/userPosition/readGetcurrentorgtree");
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $tree = $userPositionController->getCurrentOrgTree();
         if (!$tree) {
             return;
         }
 
         $orgRegNumbers = $this->getOrgIdsFromTree($tree);
 
-        $folders = $this->sdoFactory->find('filePlan/folder', "ownerOrgRegNumber=['".\laabs\implode("', '", $orgRegNumbers)."']");
+        $folders = $this->sdoFactory->find(
+            'filePlan/folder',
+            "ownerOrgRegNumber=['".\laabs\implode("', '", $orgRegNumbers)."']"
+        );
 
         $folderTree = \laabs::buildTree($folders, 'filePlan/folder');
         \laabs::C14NPath($folderTree, 'name', 'path');

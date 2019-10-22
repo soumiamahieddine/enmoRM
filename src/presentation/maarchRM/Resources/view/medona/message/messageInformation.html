@@ -1,0 +1,62 @@
+<div id="sidebarModal" class="sidebar-offcanvas col-sm-12">
+    <div class="table-responsive">
+        <br/>
+        
+        <table class="table table-condensed table-striped table-condensed">
+            <tbody>
+                <tr>
+                    <td><strong>Identifier</strong></td>
+                    <td><?merge $message.reference ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td><?merge $message.type ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Status</strong></td>
+                    <td><?merge $message.status ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Schema</strong></td>
+                    <td><?merge $message.labelSchema ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Date</strong></td>
+                    <td><?merge $message.date ?></td>
+                </tr>
+                <?merge $message.archivalAgreementReference.bool() ?>
+                <tr>
+                    <td><strong>Archival agreements</strong></td>
+                    <td><?merge $message.archivalAgreementReference ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Sender</strong></td>
+                    <td><?merge $message.senderOrgName ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Recipient</strong></td>
+                    <td><?merge $message.recipientOrgName ?></td>
+                </tr>
+                <?merge $message.size.bool() ?>
+                <tr>
+                    <td><strong>Size</strong></td>
+                    <td><?merge $message.size ?></td>
+                </tr>
+                <?merge $message.comment.bool() ?>
+                <tr>
+                    <td><strong>Comment(s)</strong></td>
+                    <td>
+                        <ul>
+                            <?merge $message.comment ?>
+                            <li><?merge . ?></li>
+                        </ul>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<span class="hide" id="destruction_text">Destruction</span>
+<span class="hide" id="preservation_text">Preservation</span>

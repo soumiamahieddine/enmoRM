@@ -65,17 +65,10 @@ interface organizationInterface
      * @return string the new organization's Id
      *
      * @action organization/organization/create
+     * @example /public/tests/organizationCreate-max.json example-max
+     * @example /public/tests/organizationCreate-min.json example-min
      */
     public function create($organization);
-
-    /**
-     * Read an organization by his orgId
-     *
-     * @return organization/organization the organization
-     *
-     * @action organization/organization/read
-     */
-    public function read_orgId_();
 
     /**
      * Get an organization by his regitration number
@@ -141,7 +134,7 @@ interface organizationInterface
      *
      * @action organization/organization/addServicePosition
      */
-    public function createServiceposition_orgId__userAccountId_();
+    public function createServiceposition_orgId__serviceAccountId_();
 
     /**
      * Set default user position for an user
@@ -309,25 +302,19 @@ interface organizationInterface
      * @return array
      * @action organization/organization/readUserOrgs
      */
-    public function readUserpositions_accountId_();
+    public function readAccountpositions_accountId_();
 
     /**
      * List of organizations
+     *
+     * @param bool $ownerOrg
+     * @param bool $orgUnit
      *
      * @return array An array of organization and service
      *
      * @action organization/organization/todisplay
      */
-    public function readTodisplay();
-
-    /**
-     * List of organizations
-     *
-     * @return An array of organization and service
-     *
-     * @action organization/organization/todisplayOrgUnit
-     */
-    public function readTodisplayorgunit();
+    public function readTodisplay($ownerOrg = false, $orgUnit = false);
 
     /**
      * Get originator
@@ -335,4 +322,13 @@ interface organizationInterface
      * @action organization/organization/getOriginator
      */
     public function readOriginator();
+
+    /**
+     * Read an organization by his orgId
+     *
+     * @return organization/organization the organization
+     *
+     * @action organization/organization/read
+     */
+    public function read_orgId_();
 }

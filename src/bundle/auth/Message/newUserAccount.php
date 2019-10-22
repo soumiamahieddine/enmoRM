@@ -124,4 +124,14 @@ class newUserAccount
      * @var string
      */
     public $title;
+
+    /**
+     * @var string
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
 }

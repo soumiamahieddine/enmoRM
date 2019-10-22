@@ -86,7 +86,7 @@ class role
     }
 
     /**
-     * Recorde a new role
+     * Record a new role
      * @param auth/role $role The role object to create
      *
      * @return string The new role id
@@ -116,7 +116,8 @@ class role
 
             if (!empty($role->roleMembers)) {
                 foreach ($role->roleMembers as $userAccountId) {
-                    \laabs::callService("auth/roleMember/create", $roleInstance->roleId, $userAccountId);
+                    $roleMemberController = \laabs::newController('auth/roleMember');
+                    $roleMemberController->create($roleInstance->roleId, $userAccountId);
                 }
             }
 
@@ -160,7 +161,8 @@ class role
 
             if (!empty($role->roleMembers)) {
                 foreach ($role->roleMembers as $member) {
-                    \laabs::callService("auth/roleMember/create", $roleId, $member);
+                    $roleMemberController = \laabs::newController('auth/roleMember');
+                    $roleMemberController->create($roleId, $member);
                 }
             }
 

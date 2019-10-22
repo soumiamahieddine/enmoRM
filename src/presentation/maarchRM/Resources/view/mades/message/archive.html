@@ -1,0 +1,243 @@
+<?merge $archiveUnit ?>
+<div class="panel-group" role="tablist" aria-multiselectable="true">
+    <?merge .newId() $archiveCollapsId ?>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" href="#archive[?merge $archiveCollapsId ?]" aria-expanded="true" aria-controls="collapseOne" class="collapsed">
+                    Archive : <?merge .id ?> 
+                </a>
+            </h4>
+        </div>
+        <div id="archive[?merge $archiveCollapsId ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" style="height: 0px;">
+            <div class="panel-body">
+                <div class="panel panel-warning">
+                    <?merge .newId() $managementCollapsId ?>
+                    <div class="panel-heading" role="tab">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" href="#descriptiveMetadata[?merge $managementCollapsId ?]" aria-expanded="true" aria-controls="collapseOne" data-translate-catalog="medona/messages">
+                                Description du contenu <?merge .content.title.bool() ?><span>: <?merge .content.title[0] ?></span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="descriptiveMetadata[?merge $managementCollapsId ?]" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <dl class="dl-horizontal" data-translate-catalog="recordsManagement/messages">
+                                <?merge .content.descriptionLevel.bool() ?>
+                                <span>
+                                    <dt>Niveau de description</dt>
+                                    <dd translate="no">
+                                        <?merge .content.descriptionLevel.ifeq('Class') ?>
+                                        <span>Classe</span>
+                                        <?merge .content.descriptionLevel.ifeq('Collection') ?>
+                                        <span>Collection</span>
+                                        <?merge .content.descriptionLevel.ifeq('File') ?>
+                                        <span>Dossier</span>
+                                        <?merge .content.descriptionLevel.ifeq('Fonds') ?>
+                                        <span>Fonds</span>
+                                        <?merge .content.descriptionLevel.ifeq('Item') ?>
+                                        <span>Pièce</span>
+                                        <?merge .content.descriptionLevel.ifeq('RecordGrp') ?>
+                                        <span>Groupe de documents</span>
+                                        <?merge .content.descriptionLevel.ifeq('Series') ?>
+                                        <span>Série organique</span>
+                                        <?merge .content.descriptionLevel.ifeq('Subfonds') ?>
+                                        <span>Sous-fonds</span>
+                                        <?merge .content.descriptionLevel.ifeq('SubGrp') ?>
+                                        <span>Sous-groupe de documents</span>
+                                        <?merge .content.descriptionLevel.ifeq('Subseries') ?>
+                                        <span>Sous-série organique</span>
+                                    </dd>
+                                </span>
+                                <?merge .content.filePlanPosition.bool() ?>
+                                <span>
+                                    <dt>Position dans le Plan de classement</dt>
+                                    <dd translate="no">
+                                        <?merge .content.filePlanPosition ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.systemId.bool() ?>
+                                <span>
+                                    <dt title="Identifiant système">Identifiant système</dt>
+                                    <dd translate="no">
+                                        <?merge .content.systemId ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.originatingSystemId.bool() ?>
+                                <span>
+                                    <dt title="Identifiant système d'origine">Identifiant système d'origine</dt>
+                                    <dd translate="no">
+                                        <?merge .content.originatingSystemId ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.archivalAgencyArchiveUnitIdentifier.bool() ?>
+                                <span>
+                                    <dt title="Identifiant d'archivage">Identifiant d'archivage</dt>
+                                    <dd translate="no">
+                                        <?merge .content.archivalAgencyArchiveUnitIdentifier ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.originatingAgencyArchiveUnitIdentifier.bool() ?>
+                                <span>
+                                    <dt title="Identifiant métier">Identifiant métier</dt>
+                                    <dd translate="no">
+                                        <?merge .content.originatingAgencyArchiveUnitIdentifier ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.transferringAgencyArchiveUnitIdentifier.bool() ?>
+                                <span>
+                                    <dt title="Identifiant de versement">Identifiant de versement</dt>
+                                    <dd translate="no">
+                                        <?merge .content.transferringAgencyArchiveUnitIdentifier ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.description.bool() ?>
+                                <span>
+                                    <dt>Description</dt>
+                                    <?merge .content.description ?>
+                                    <dd translate="no">
+                                        <?merge . ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.originatingAgency.bool() ?>
+                                <span>
+                                    <dt>Service producteur</dt>
+                                    <dd translate="no">
+                                        <?merge .content.originatingAgency.name ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.submissionAgency.bool() ?>
+                                <span>
+                                    <dt>Service versant</dt>
+                                    <dd><?merge .content.submissionAgency.name ?></dd>
+                                </span>
+                                <?merge .content.type.bool() ?>
+                                <span>
+                                    <dt>Type</dt>
+                                    <?merge .content.type.ifeq('CDO') ?>
+                                    <dd>Content data object</dd>
+                                    <?merge .content.type.ifeq('RI') ?>
+                                    <dd>Representation information</dd>
+                                    <?merge .content.type.ifeq('PDI') ?>
+                                    <dd>Preservation Description Information</dd>
+                                </span>
+                                <?merge .content.documentType.bool() ?>
+                                <span>
+                                    <dt>Type de document</dt>
+                                    <dd translate="no">
+                                        <?merge .content.documentType ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.language.bool() ?>
+                                <span>
+                                    <dt>Langage</dt>
+                                    <dd><?merge .content.language ?></dd>
+                                </span>
+                                <?merge .content.status.bool() ?>
+                                <span>
+                                    <dt>Statut</dt>
+                                    <dd translate="no">
+                                        <?merge .content.status ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.version.bool() ?>
+                                <span>
+                                    <dt>Version</dt>
+                                    <dd translate="no">
+                                        <?merge .content.version ?>
+                                    </dd>
+                                </span>
+                                <?merge .content.source.bool() ?>
+                                <span>
+                                    <dt>Source</dt>
+                                    <dd translate="no">
+                                        <?merge .content.source ?>
+                                    </dd>
+                                </span>
+                                <!-- 
+                                    Dates 
+                                -->
+                                <?merge .content.startDate.bool() ?>
+                                <span>
+                                    <dt>Date de debut</dt>
+                                    <dd><?merge .content.startDate ?></dd>
+                                </span>
+                                <?merge .content.endDate.bool() ?>
+                                <span>
+                                    <dt>Date de fin</dt>
+                                    <dd><?merge .content.endDate ?></dd>
+                                </span>
+                                <?merge .content.createdDate.bool() ?>
+                                <span>
+                                    <dt>Date de création</dt>
+                                    <dd><?merge .content.createdDate ?></dd>
+                                </span>
+                                <?merge .content.transactedDate.bool() ?>
+                                <span>
+                                    <dt>Date de transaction</dt>
+                                    <dd><?merge .content.transactedDate ?></dd>
+                                </span>
+                                <?merge .content.acquiredDate.bool() ?>
+                                <span>
+                                    <dt>Date d'acquisition</dt>
+                                    <dd><?merge .content.acquiredDate ?></dd>
+                                </span>
+                                <?merge .content.sentDate.bool() ?>
+                                <span>
+                                    <dt>Date d'envoi</dt>
+                                    <dd><?merge .content.sentDate ?></dd>
+                                </span>
+                                <?merge .content.receivedDate.bool() ?>
+                                <span>
+                                    <dt>Date de reception</dt>
+                                    <dd><?merge .content.receivedDate ?></dd>
+                                </span>
+                                <?merge .content.registeredDate.bool() ?>
+                                <span>
+                                    <dt>Date d'enregistrement</dt>
+                                    <dd><?merge .content.registeredDate ?></dd>
+                                </span>
+                                <!-- 
+                                    Mot-clés et tags 
+                                -->
+                                <?merge .content.keyword.bool() ?>
+                                <span>
+                                    <dt>Index / Mot cl&eacute; </dt>
+                                    <?merge .content.keyword ?>
+                                    <dd translate="no">
+                                        <?merge .keywordType ?> / <?merge .keywordContent ?> 
+                                    </dd>
+                                </span>
+                                <?merge .content.tags.bool() ?>
+                                <span>
+                                    <dt>Tags </dt>
+                                    <?merge .content.tag ?>
+                                    <dd translate="no">
+                                        <?merge . ?> 
+                                    </dd>
+                                </span>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <?merge .archiveUnit /mades/message/archive.html ?>
+            </div><!-- end panel body -->
+        </div> <!-- end collapse -->
+    </div> <!-- end panel -->
+</div> <!-- end panel group -->
+
+<style>
+    .dl-horizontal dt {
+        float: left;
+        width: 35%;
+        clear: left;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .dl-horizontal dd {
+        margin-left: 40%;
+    }
+</style>

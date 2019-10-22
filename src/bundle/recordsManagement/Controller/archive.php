@@ -28,6 +28,7 @@ class archive
 {
 
     use archiveEntryTrait,
+        archiveValidationTrait,
         archiveAccessTrait,
         archiveModificationTrait,
         archiveRestitutionTrait,
@@ -72,6 +73,12 @@ class archive
      * @var recordsManagement/Controller/archivalProfile
      */
     protected $archivalProfileController;
+
+    /**
+     * Controller for description schemes
+     * @var recordsManagement/Controller/descriptionScheme
+     */
+    protected $descriptionSchemeController;
 
     /**
      * Controller for service levels
@@ -201,6 +208,8 @@ class archive
 
         $this->archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
+        $this->descriptionSchemeController = \laabs::newController("recordsManagement/descriptionScheme");
+
         $this->serviceLevelController = \laabs::newController("recordsManagement/serviceLevel");
 
         $this->lifeCycleJournalController = \laabs::newController("lifeCycle/journal");
@@ -321,34 +330,47 @@ class archive
 
     /**
      * Select a description controller
-     * @param string $descriptionClass
+     * @param string $descriptionScheme
      *
      * @return object descriptionClass controller
      */
-    public function useDescriptionController($descriptionClass)
+    public function useDescriptionController($descriptionScheme)
     {
-        // Default description class
-        if (empty($descriptionClass)) {
-            $descriptionClass = 'recordsManagement/description';
-        } else {
-            // Try to find a bundle controller, else fallback to default
-            try {
-                $bundle = \laabs::bundle(strtok($descriptionClass, LAABS_URI_SEPARATOR));
-                $controller = $bundle->getController(strtok(''));
-            } catch (\exception $exception) {
-                $descriptionClass = 'recordsManagement/description';
-            }
-        }
+        $controllerClass = $this->getDescriptionControllerClass($descriptionScheme);
 
-        if (!isset($this->descriptionControllers[$descriptionClass])) {
-            $this->currentDescriptionController = \laabs::newController($descriptionClass);
+        if (!isset($this->descriptionControllers[$descriptionScheme])) {
+            $this->currentDescriptionController = \laabs::newController($controllerClass);
 
-            $this->descriptionControllers[$descriptionClass] = $this->currentDescriptionController;
+            $this->descriptionControllers[$descriptionScheme] = $this->currentDescriptionController;
         } else {
-            $this->currentDescriptionController = $this->descriptionControllers[$descriptionClass];
+            $this->currentDescriptionController = $this->descriptionControllers[$descriptionScheme];
         }
 
         return $this->currentDescriptionController;
+    }
+
+    protected function getDescriptionControllerClass($descriptionScheme)
+    {
+        // Default description class
+        if (empty($descriptionScheme)) {
+            return 'recordsManagement/description';
+        } 
+
+        $descriptionSchemeConfig = $this->descriptionSchemeController->read($descriptionScheme);
+        if (!empty($descriptionSchemeConfig) && isset($descriptionSchemeConfig->controller)) {
+            $controllerClass = $descriptionSchemeConfig->controller;
+        } else {
+            $controllerClass = $descriptionScheme;
+        }
+
+        try {
+            $bundle = \laabs::bundle(strtok($controllerClass, LAABS_URI_SEPARATOR));
+            $controller = $bundle->getController(strtok(''));
+        } catch (\exception $exception) {
+            return 'recordsManagement/description';
+        }
+        
+        return $controllerClass;
     }
 
     /**
@@ -360,5 +382,29 @@ class archive
     public function read($archiveId)
     {
         return $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+    }
+
+    /**
+     * Check if the new status of an archive is possible depending on current status
+     * @param string $archiveId  Identifier of the archives to check
+     * @param string $status     New status to check
+     *
+     * @return boolean           if the new status is possible on this archive (depends on the current status of the archive)
+     */
+    public function checkStatus($archiveId, $status)
+    {
+        $statusList = [];
+        $statusList['restituable'] = array('preserved', 'restituted', 'disposed');
+        
+        if (!isset($statusList[$status])) {
+            return false;
+        }
+        $archive = $this->sdoFactory->read('recordsManagement/archiveStatus', $archiveId);
+
+        if (!in_array($archive->status, $statusList[$status])) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,0 +1,119 @@
+<div id="contain" class="row" data-translate-catalog="medona/messages">
+    <div class="panel panel-primary">
+        <div class="panel-body" style="padding: 0;">
+            <table class="table dataTable table-hover">
+                <thead>
+                    <tr>
+                        <th class="hidden-md" data-translate-catalog="recordsManagement/messages">Archive identifier</th>
+                        <th style="opacity:0;cursor:initial"/>
+                    </tr>
+                </thead>
+                <tbody id="objectList_tabl">
+                    <?merge $unitIdentifier ?>
+                    <div>
+                        <tr id="[?merge .value ?]">
+                            <td class="hidden-md" ><?merge . ?></td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <span>
+                                        <button type="button" class="btn btn-success viewArchive" title="Info" data-archive-id="[?merge . ?]">
+                                            <span class="fa fa-info-circle">&nbsp;</span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="descriptionObjectModal hide">
+    <div id="messageModal">
+    <div class="container-fluid">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4>Description</h4>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive" data-translate-catalog="businessRecords/messages">
+                <table class="table table-condensed table-striped table-condensed">
+                    <tbody class="descriptionBody">
+                        <!--Description information-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-default" data-dismiss="modal" title="Close">Close</button>
+        </div>
+    </div>
+</div>
+    <div class="hide" data-translate-catalog="businessRecords/messages">
+    </div>
+</div>
+
+
+<script>
+   $("#objectList_tabl").on('click', ".viewDocument", function() {
+       var objectClass = $(this).attr('data-class');
+        if (objectClass == "ArchivalAgencyArchiveIdentifier" || objectClass == "recordsManagement/archive") {
+            archiveDocumentViewer.load($(this).attr('data-id'));
+        } else if (objectClass == "ArchivalAgencyDocumentIdentifier" || objectClass == "archivesPubliques/document") {
+            archiveDocumentViewer.loadDoc($(this).attr('data-id'));
+        }
+    }); 
+    
+   // view the archive description
+    $('#objectList_tabl').on('click', '.viewRelatedArchive', function () {
+        archiveInfoModal.load($(this).data('objectid'));
+    })
+    
+    $("#archiveList_tabl").on('click',".info", function() {
+
+        description = $.parseJSON($(this).attr('data-json'));
+        var table = $(".descriptionBody");
+        
+        table.empty();
+        
+        $.each(description, function(index, value) {
+            if (value) {
+                var tr = $('<tr/>');
+                var td = $('<td/>').appendTo(tr);
+                var strong = $('<strong/>').text($("#"+index+"_text").html()).appendTo(td);
+                var tdValue = $('<td/>').text(value).appendTo(tr);
+                
+                tr.appendTo(table);
+            }
+        });
+        
+        $('#modalContainerInfo').html($(".descriptionObjectModal").html());
+        $('#viewModalInfo').modal();
+    });
+    archiveDocumentViewer = {
+        load: function(archiveId, action) {
+                    
+            var url = "/recordsManagement/contents/" + archiveId;
+            if (action) {
+                url = action + archiveId;
+            }
+            
+            window.open(url, 'document');
+        },
+        
+        loadDoc: function(docId, action) {
+            var url = "/recordsManagement/document/" + docId;
+            if (action) {
+                url = action + docId;
+            }
+            window.open(url, 'document');
+        },
+        
+        loadResource: function(archiveId, resId) {
+            var url = "/recordsManagement/"+archiveId+"/digitalResource/" + resId;
+            window.open(url, 'document');
+        }
+    }
+</script>

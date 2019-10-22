@@ -18,6 +18,7 @@
  * along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\recordsManagement\Model;
+
 /**
  * Class model that represents a description field of the data dictionnary
  *
@@ -36,54 +37,54 @@ class descriptionField
     public $name;
 
     /**
-    * @var string The label for users
-    * @notempty
-    */
+     * @var string The label for users
+     * @notempty
+     */
     public $label;
 
     /**
-    * @var string The type of data : name, string, integer, float, boolean, number, date, timestamp, datetime 
-    * @notempty
-    */
+     * @var string The type of data : name, string, integer, float, boolean, number, date, timestamp, datetime
+     * @notempty
+     */
     public $type;
 
     /**
-    * @var string The default value
-    */
+     * @var string The default value
+     */
     public $default;
 
     /**
-    * @var integer
-    */
+     * @var integer
+     */
     public $minLength;
 
     /**
-    * @var integer
-    */
+     * @var integer
+     */
     public $maxLength;
 
     /**
-    * @var float
-    */
+     * @var float
+     */
     public $minValue;
 
     /**
-    * @var float
-    */
+     * @var float
+     */
     public $maxValue;
 
     /**
-    * @var string
-    */
+     * @var string
+     */
     public $enumeration;
 
     /**
-    * @var string
-    */
-    public $pattern;
+     * @var json
+     */
+    public $facets;
 
     /**
-     * @var boolean
+     * @var string
      */
-    public $isArray;
+    public $pattern;
 }

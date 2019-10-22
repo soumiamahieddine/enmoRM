@@ -1,6 +1,70 @@
 # CHANGELOG
 
-## Version 2.4.4 
+## Version 2.5
+
+### Sécurité
+
+- `Fixed` Correction de la fonction permettant d'intégrer un fichier css personnalisé pour forcer à faire référence au fichier CSS et empêcher la remontée de répertoire grâce au chemin de celui-ci.  (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT* pour le signalement et l'analyse).
+- `Fixed` Déplacement de la route permettant la modification des utilisateurs pour éviter l'élévation de privilèges lorsqu'un utlisateur n'a pas les droits adéquats. (Merci à *Vladimir TOUTAIN* et *Sammy FORGIT*  pour le signalement et l'analyse).
+- `Added` Trois niveaux d'utilisateurs basés sur les exigences de la NF Z 42-020 : Administrateur Général, Administrateur Fonctionnel et Utilisateur Simple.
+- `Fixed` Attribution d'un "service par défaut à l'affichage" lors de la suppression du service par défaut d'un utilisateur.
+
+### Open API
+
+- `Added` Ajout d'un script de génération de documentation OpenAPI 2.0 exportable dans Swagger ou en documention HTML.
+
+### Journalisation
+
+- `Added` Génération et téléchargement manuel des attestations de dépôt, de validation d'intégrité et de destruction des archives à partir du journal de cycle de vie.
+- `Fixed` Le nombre d'évènements sur l'archive n'est plus multiplié par le nombre de ressources qu'elle contient.
+- `Fixed` L'accès aux évènements d'un journal chaîné est rétabli pour les utilisateurs non producteurs de cette archive de journal.
+
+### Administration Technique
+
+- `Added` Un fichier d'horodatage peut être généré par défaut lors du chaînage du journal, et associé à l'archive générée.
+- `Added` Le nombre de résultats affichés dans les écrans est désormais paramétrable.
+- `Changed` Si le niveau de service n'est pas déclaré par l'accord de versement ou par référence directe dans les données versées, c'est le niveau de service par défaut qui est désormais appliqué.
+
+### Administration Fonctionnelle
+
+- `Added` Le droit "Télécharger les attestations" est ajouté dans les privilèges de rôle.
+- `Added` L'option "Autoriser les archives sans profil" est activable sur des profils de type dossier sans sous-profil déclaré.
+- `Added` Une demande de modification d'une archive peut être envoyée, afin de notifier le service d'archives d'une correction d'erreur nécessaire ou d'un besoin d'ajout d'informations complémentaires.
+
+
+### Métadonnées
+
+- `Added` Des schémas de description d'archive peuvent être ajoutés dans l'application avec des métadonnées de type tableau ou objet.
+- `Added` Les champs de métadonnées complexes (tableaux, objets) peuvent être ajoutés à un profil, complétés lors d'un versement, modifiés pendant la conservation et consultés via les écrans.
+- `Added` Possibilité d'ajout de champ de description "clé valeur" de type énumération dans les données descriptives.
+- `Added` Possibilité d'intégration de référentiels externes (exemple : CSV, base de données...) pour les données descriptives.
+- `Added` Possibilité d'ajout d'un fichier permettant d'étendre le modèle de description d'un format d'échange (exemple : format d'échange SEDA 2.1 avec des champs complémentaires pour la modification).
+- `Added` La métadonnée descriptive de type date peut comprendre une date complétée d'une heure (format livré par défaut : JJ-MM-AAAA HH:mm:ss).
+- `Added` Les libellés des métadonnées descriptives qui sont référencées dans le dictionnaire sont affichés.
+- `Added` Ajout d'un contrôle lors de la suppression d'un champ de données descriptives : si le champ est engagé dans un profil d'archive, la suppression sera bloquée.
+
+### Gestion de l'archive
+
+- `Added` Une ressource peut être ajoutée ou supprimée au sein d'une archive conservée, et la modification est tracée dans le journal du cycle de vie.
+- `Added` Possibilité de versement par bordereaux XML/Medona.
+- `Added` Les bordereaux entrants comportent le type d'empreinte poussé dans le système.
+- `Changed` L'intégralité des échanges transactionnels MEDONA (extension thirdPartyArchiving) est désormais disponible dans le socle d'archivage. **L'extension thirdPartyArchiving est abandonnée à partir de cette version 2.5**.
+
+### IHM
+
+- `Fixed` Correction et/ou clarification de messages d'erreurs.
+- `Fixed` Tri des résultats de recherche sur les champs date.
+
+### Stockage / Conservation
+
+- `Added` Possibilité de convertir unitairement des documents dans la modale de détail d'une archive.
+- `Changed` Le nombre de sites de stockage minimum est ramené à 1.
+
+### Modèle conceptuel
+
+- `Added` Ajout de plusieurs index afin d'améliorer les performances de l'application.
+
+## Version 2.4.4
 
 ### IHM
 
@@ -12,31 +76,30 @@
 - `Fixed` Rétablissement de l'affichage des fichiers convertis et des relations dans la modale de détails de l'archive
 - `Changed` Différenciation entre le fichier d'origine et ses conversions dans l'arborescence du plan de classement
 
-### Sécurité 
+### Sécurité
 
 - `Changed` Ajout du paramètre `lifetime` pour le jeton CSRF qui définit la durée de validité des jetons en secondes. Si omis, durée de 1 heure par défaut.
-- `Fixed` Jeton CRSF consommé lorsqu'utilisé. 
+- `Fixed` Jeton CRSF consommé lorsqu'utilisé.
 
-
-## Version 2.4.3 
+## Version 2.4.3
 
 ### Métadonnées
 
-- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation 
+- `Changed` Le format interne _Name_ utilisé pour les codes de règles de conservation
 et de communicabilité accepte désormais les caractères numériques en première position, ainsi que les tirets
-- `Changed` Les appels au service de modification de la règle de conservation des archives 
+- `Changed` Les appels au service de modification de la règle de conservation des archives
 peuvent désormais n'envoyer que le code de la règle, le système utilisant le référentiel pour récupérer les durées et le sort final. Idem pour la règle de communicabilité et la durée qui y est associée.
 
-### Exploitation 
+### Exploitation
 
-- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS 
+- `Changed` Nouveau paramètre pour les notifications, `mailSMTPAutoTLS` pour activer/désactiver le mode TLS
 automatique, notamment pour les connexions sans authentification
 
-## Version 2.4.2
+## Version 2.4.2
 
 ### Script d'import
 
-- `Fixed` Correction d'un bug lors de l'utilisation de cli 
+- `Fixed` Correction d'un bug lors de l'utilisation de cli
 
 ## Version 2.4.1
 
@@ -53,9 +116,8 @@ automatique, notamment pour les connexions sans authentification
 
 ### IHM
 
-- `Added` Ajout et suppression d'une seule pièce au sein d'une archive désormais possible
 - `Changed` Nouveau design de la modale de détails des informations de l'archive
-- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2) 
+- `Changed` Modification du moteur de recherche : à présent insensible aux caractères spéciaux, ajout du symbole * qui permet de rechercher une archive débutant / finissant / contenant un terme spécifique (exemple* cherchera une archive débutant par le terme exemple, *exemple2* cherchera une archive contenant le terme exemple2)
 - `Fixed` Blocage des imports multiples lors de clics répétés sur le bouton Importer
 - `Fixed` Le bouton Annuler est également non cliquable durant l'execution d'un versement
 - `Fixed` Le choix "sans profil" au versement d'une archive ne doit apparaître que si le dossier qui la receptionne l'autorise

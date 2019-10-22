@@ -62,6 +62,12 @@ msgstr "Un Opérateur d'Archivage est déjà défini."
 msgid "Profile %s not found"
 msgstr "Le profil %s n'a pas été trouvé"
 
+msgid "The retention rule %s not found"
+msgstr "La règle de conservation %s n'existe pas"
+
+msgid "The access rule %s not found"
+msgstr "La règle de communication %s n'existe pas"
+
 msgid "Role not created"
 msgstr "Rôle non créé"
 
@@ -191,6 +197,9 @@ msgstr "Le dossier n'existe pas."
 msgid "Journal hash is incorrect."
 msgstr "L'empreinte numérique du journal est incorrecte."
 
+msgid "The journal file can't be opened."
+msgstr "Le fichier de journal ne peut pas être ouvert."
+
 msgid "Invalid journal: invalid hash integrity."
 msgstr "Journal invalide : empreinte numérique non valide."
 
@@ -250,6 +259,9 @@ msgstr "Vous devez vous positionner dans un service pour vérifier l'intégité 
 
 msgid "A frozen archive can't be modified."
 msgstr "Une archive gelée ne peut pas être modifiée."
+
+msgid "An archive that does not have the status 'preserved' can't be modified."
+msgstr "Une archive n'ayant pas le statut 'Conservée' ne peut pas être modifiée"
 
 msgid "An action is already in progress on this archive."
 msgstr "Une action est déjà en cours sur cette archive."
@@ -386,7 +398,7 @@ msgstr "La grappe de stockage %s n'a pas été mise à jour."
 msgid "No repository for %s mode"
 msgstr "Aucun espace de stockage pour le mode %1s"
 
-msgid "Container %s counld not be opened."
+msgid "Container %s couldn't not be opened."
 msgstr "Le conteneur %s ne peut pas être ouvert."
 
 msgid "%s not found"
@@ -460,3 +472,6 @@ msgstr "Le journal ne peut pas être écrit"
 
 msgid "You're not allowed to create an organization"
 msgstr "Vous n'êtes pas autorisé à créer une organisation"
+
+msgid "You are not allowed to do this action"
+msgstr "Vous n'êtes pas autorisé à effectuer cette action"

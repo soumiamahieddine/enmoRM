@@ -1,54 +1,68 @@
 -- Audit
-DELETE FROM "audit"."event";
+TRUNCATE TABLE "audit"."event" CASCADE;
 
 -- Auth
-DELETE FROM "auth"."roleMember";
-DELETE FROM "auth"."privilege";
-DELETE FROM "auth"."servicePrivilege";
-DELETE FROM "auth"."role";
-DELETE FROM "auth"."account";
+TRUNCATE TABLE "auth"."roleMember" CASCADE;
+TRUNCATE TABLE "auth"."privilege" CASCADE;
+TRUNCATE TABLE "auth"."servicePrivilege" CASCADE;
+TRUNCATE TABLE "auth"."role" CASCADE;
+TRUNCATE TABLE "auth"."account" CASCADE;
 
  -- BatchProcessing
-DELETE FROM "batchProcessing"."scheduling";
-DELETE FROM "batchProcessing"."task";
+TRUNCATE TABLE "batchProcessing"."scheduling" CASCADE;
+TRUNCATE TABLE "batchProcessing"."logScheduling" CASCADE;
+TRUNCATE TABLE "batchProcessing"."notification" CASCADE;
 
  -- Contact
-DELETE FROM "contact"."communication";
-DELETE FROM "contact"."address";
-DELETE FROM "contact"."contact";
-DELETE FROM "contact"."communicationMean";
+TRUNCATE TABLE "contact"."communication" CASCADE;
+TRUNCATE TABLE "contact"."address" CASCADE;
+TRUNCATE TABLE "contact"."contact" CASCADE;
+TRUNCATE TABLE "contact"."communicationMean" CASCADE;
 
  -- DigitalResource
-TRUNCATE "digitalResource"."digitalResource" CASCADE;
-TRUNCATE "digitalResource"."address" CASCADE;
-TRUNCATE "digitalResource"."clusterRepository" CASCADE;
-TRUNCATE "digitalResource"."cluster" CASCADE;
-TRUNCATE "digitalResource"."repository" CASCADE;
-TRUNCATE "digitalResource"."conversionRule" CASCADE;
+TRUNCATE TABLE "digitalResource"."digitalResource" CASCADE;
+TRUNCATE TABLE "digitalResource"."address" CASCADE;
+TRUNCATE TABLE "digitalResource"."clusterRepository" CASCADE;
+TRUNCATE TABLE "digitalResource"."cluster" CASCADE;
+TRUNCATE TABLE "digitalResource"."repository" CASCADE;
+TRUNCATE TABLE "digitalResource"."conversionRule" CASCADE;
+TRUNCATE TABLE "digitalResource"."contentType" CASCADE;
+TRUNCATE TABLE "digitalResource"."package" CASCADE;
+TRUNCATE TABLE "digitalResource"."packedResource" CASCADE;
 
  -- FilePlan
-DELETE FROM "filePlan"."folder";
-DELETE FROM "filePlan"."position";
+TRUNCATE TABLE "filePlan"."folder" CASCADE;
+TRUNCATE TABLE "filePlan"."position" CASCADE;
 
  -- LifeCycle
 TRUNCATE TABLE "lifeCycle"."eventFormat" CASCADE;
+TRUNCATE TABLE "lifeCycle"."event" CASCADE;
 
  -- Organization
-DELETE FROM "organization"."archivalProfileAccess";
-DELETE FROM "organization"."userPosition";
-DELETE FROM "organization"."servicePosition";
-DELETE FROM "organization"."orgContact";
-DELETE FROM "organization"."organization";
-DELETE FROM "organization"."orgType";
+TRUNCATE TABLE "organization"."archivalProfileAccess" CASCADE;
+TRUNCATE TABLE "organization"."userPosition" CASCADE;
+TRUNCATE TABLE "organization"."servicePosition" CASCADE;
+TRUNCATE TABLE "organization"."orgContact" CASCADE;
+TRUNCATE TABLE "organization"."organization" CASCADE;
+TRUNCATE TABLE "organization"."orgType" CASCADE;
 
  -- RecordsManagement
 TRUNCATE TABLE "recordsManagement"."archiveRelationship" CASCADE;
 TRUNCATE TABLE "recordsManagement"."archive" CASCADE;
-
 TRUNCATE TABLE "recordsManagement"."archivalProfile" CASCADE;
 TRUNCATE TABLE "recordsManagement"."serviceLevel" CASCADE;
-
 TRUNCATE TABLE "recordsManagement"."accessRule" CASCADE;
 TRUNCATE TABLE "recordsManagement"."retentionRule" CASCADE;
-
 TRUNCATE TABLE "recordsManagement"."descriptionField" CASCADE;
+TRUNCATE TABLE "recordsManagement"."archivalProfileContents" CASCADE;
+TRUNCATE TABLE "recordsManagement"."archiveDescription" CASCADE;
+TRUNCATE TABLE "recordsManagement"."descriptionClass" CASCADE;
+TRUNCATE TABLE "recordsManagement"."log" CASCADE;
+TRUNCATE TABLE "recordsManagement"."storageRule" CASCADE;
+
+-- Medona
+TRUNCATE TABLE "medona"."archivalAgreement" CASCADE;
+TRUNCATE TABLE "medona"."message" CASCADE;
+TRUNCATE TABLE "medona"."controlAuthority" CASCADE;
+TRUNCATE TABLE "medona"."messageComment" CASCADE;
+TRUNCATE TABLE "medona"."unitIdentifier" CASCADE;

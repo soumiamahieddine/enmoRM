@@ -80,6 +80,7 @@ class userAccount
      */
     public function userList($query = null)
     {
+        $organizationController = \laabs::newController('organization/organization');
         $accountId = \laabs::getToken("AUTH")->accountId;
 
         $queryAssert = [];
@@ -90,9 +91,32 @@ class userAccount
         }
 
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+        $queryAssert[] = "accountId!=['".$accountId."']";
 
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
+        }
+
+        switch ($account->getSecurityLevel()) {
+            case $account::SECLEVEL_GENADMIN:
+                $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null)";
+                break;
+
+            case $account::SECLEVEL_FONCADMIN:
+                $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                $childrenOrganizations = $this->sdoFactory->readChildren("organization/organization", $organization);
+                $childrenOrgs = [];
+                foreach ($childrenOrganizations as $key => $organization) {
+                    $childrenOrganizationsId[] = (string) $organization->orgId;
+                }
+                $childrenIds = implode("', '", $childrenOrganizationsId);
+
+                $queryAssert[] = "((ownerOrgId= ['" . $childrenIds . "']) OR (isAdmin!=TRUE AND ownerOrgId=null))";
+                break;
+
+            case $account::SECLEVEL_USER:
+                $queryAssert[] = "((isAdmin!=TRUE AND ownerOrgId='". $account->ownerOrgId."')";
+                break;
         }
 
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
@@ -141,7 +165,8 @@ class userAccount
 
         if (is_array($userAccount->roles) && !empty($userAccount->roles[0])) {
             foreach ($userAccount->roles as $roleId) {
-                \laabs::callService("auth/roleMember/create", $roleId, $userAccountId);
+                $roleMemberController = \laabs::newController('auth/roleMember');
+                $roleMemberController->create($roleId, $userAccountId);
             }
         }
 
@@ -159,17 +184,43 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
+        $this->isAuthorized(['gen_admin', 'fonc_admin']);
+
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
 
-        if(!$organizations) {
-            throw \laabs::newException('auth/noOrganizationException', "No organization chosen");
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        $organizationController = \laabs::newController('organization/organization');
+        if (!is_null($organizations)) {
+            $organization = $organizationController->read($organizations[0]);
+            $userAccount->ownerOrgId = $organization->ownerOrgId;
+        }
+
+        if ($userAccount->ownerOrgId) {
+            try {
+                $organizationController->read($userAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
+            }
         }
 
         if ($this->sdoFactory->exists('auth/account', array('accountName' => $userAccount->accountName))) {
-            throw \laabs::newException("auth/userAlreadyExistException","User already exist");
+            throw \laabs::newException("auth/userAlreadyExistException", "User already exist");
         }
 
         if (!\laabs::validate($userAccount, 'auth/account')) {
@@ -191,10 +242,11 @@ class userAccount
         $userAccount->lastIp = null;
 
         $this->sdoFactory->create($userAccount, 'auth/account');
-        $organizationController = \laabs::newController("organization/organization");
 
-        foreach ($organizations as $orgId){
-            $organizationController->addUserPosition($userAccount->accountId ,$orgId);
+        if (!$userAccount->isAdmin) {
+            foreach ($organizations as $orgId) {
+                $organizationController->addUserPosition($userAccount->accountId, $orgId);
+            }
         }
 
         return $userAccount->accountId;
@@ -219,16 +271,19 @@ class userAccount
      */
     public function edit($userAccountId)
     {
-        $userAccount = $this->sdoFactory->read('auth/account', $userAccountId);
+        $userAccountModel = $this->sdoFactory->read('auth/account', $userAccountId);
         $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccountId'");
-        $userAccount = \laabs::castMessage($userAccount, 'auth/userAccount');
+        $userAccount = \laabs::castMessage($userAccountModel, 'auth/userAccount');
+
+        $userAccount->securityLevel = $userAccountModel->getSecurityLevel();
 
         if (empty($roleMembers)) {
             return $userAccount;
         }
 
         foreach ($roleMembers as $roleMember) {
-            $role = \laabs::callService('auth/role/read_roleId_', $roleMember->roleId);
+            $roleController = \laabs::newController('auth/role');
+            $role = $roleController->edit($roleMember->roleId);
             $userRole = \laabs::newMessage('auth/userRole');
             $userRole->roleId = $role->roleId;
             $userRole->roleName = $role->roleName;
@@ -258,7 +313,44 @@ class userAccount
      */
     public function update($userAccountId, $userAccount)
     {
+        $this->isAuthorized(['gen_admin', 'fonc_admin']);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        $organizationController = \laabs::newController('organization/organization');
+        if (!is_null($userAccount->organizations)) {
+            $organization = $organizationController->read($userAccount->organizations[0]);
+            $userAccount->ownerOrgId = $organization->ownerOrgId;
+        }
+
+        if ($userAccount->ownerOrgId) {
+            try {
+                $organizationController->read($userAccount->ownerOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\UnauthorizedException($userAccount->ownerOrgId . " does not exist.");
+            }
+        }
+
         $userAccount = $this->updateUserInformation($userAccount);
+
+        $oldUserAccount = $this->sdoFactory->read('auth/account', $userAccount->accountId);
+        if ($oldUserAccount->ownerOrgId && $oldUserAccount->ownerOrgId != $userAccount->ownerOrgId ||
+            !$oldUserAccount->ownerOrgId && $userAccount->ownerOrgId
+        ) {
+            throw new \core\Exception\UnauthorizedException("The owner org id cannot be modified");
+        }
 
         $this->sdoFactory->deleteChildren("auth/roleMember", $userAccount, "auth/account");
 
@@ -268,7 +360,8 @@ class userAccount
                     continue;
                 }
 
-                \laabs::callService("auth/roleMember/create", $roleId, $userAccount->accountId);
+                $roleMemberController = \laabs::newController('auth/roleMember');
+                $roleMemberController->create($roleId, $userAccount->accountId);
             }
         }
     }
@@ -301,17 +394,33 @@ class userAccount
             $userAccount->emailAddress = $user->emailAddress;
         }
 
-        if(isset($userAccount->modificationRight)) {
-            if($userAccount->organizations == null) {
-                throw new \core\Exception\BadRequestException('No service chosen', 400);
-            }
+        if (!$userAccount->isAdmin) {
+            if (isset($userAccount->modificationRight)) {
+                if ($userAccount->organizations == null) {
+                    throw new \core\Exception\BadRequestException('No service chosen', 400);
+                }
 
-            $organizationController = \laabs::newController("organization/organization");
-            $organizationController->updateUserPosition($userAccount->accountId,$userAccount->organizations );
+                $organizationController = \laabs::newController("organization/organization");
+                $organizationController->updateUserPosition($userAccount->accountId, $userAccount->organizations);
+            }
         }
 
-
         $this->sdoFactory->update($userAccount, "auth/account");
+
+        return $userAccount;
+    }
+
+    /**
+     * Modify userAccount information
+     * @param auth/ownAccountUpdate $userAccount The user object
+     *
+     * @throws \bundle\auth\Exception\unknownUserException
+     *
+     * @return boolean The result of the request
+     */
+    public function updateOwnUserInformation($userAccount)
+    {
+        $this->sdoFactory->update($userAccount, "auth/account", \laabs::getToken('AUTH')->accountId);
 
         return $userAccount;
     }
@@ -320,11 +429,11 @@ class userAccount
      * get user account information
      * @param id $userAccountId The user account identifier
      *
-     * @return auth/accountInformation $userAccount User account information object
+     * @return auth/userAccount $userAccount User account information object
      */
     public function getUserAccountInformation($userAccountId)
     {
-        $userAccount = $this->sdoFactory->read("auth/accountInformation", $userAccountId);
+        $userAccount = $this->sdoFactory->read("auth/userAccount", $userAccountId);
 
         return $userAccount;
     }
@@ -342,7 +451,7 @@ class userAccount
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
         $oldPasswordHash = hash($this->passwordEncryption, $oldPassword);
 
-        if($userAccount->password != $oldPasswordHash) {
+        if ($userAccount->password != $oldPasswordHash) {
             throw new \core\Exception\UnauthorizedException("User password error.");
         }
 
@@ -459,7 +568,6 @@ class userAccount
     {
         $userAccountId = (string) $userAccountId;
         if (!isset($this->accountPrivileges[$userAccountId])) {
-
             $roleMemberController = \laabs::newController("auth/roleMember");
             $roles = $roleMemberController->readByUseraccount($userAccountId);
 
@@ -557,5 +665,41 @@ class userAccount
         $userAccounts = $this->sdoFactory->find('auth/account', $userAccountQueryString);
 
         return $userAccounts;
+    }
+
+    public function isAuthorized($securitiesLevel)
+    {
+        if (!is_array($securitiesLevel)) {
+            $securitiesLevel = [$securitiesLevel];
+        }
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        if (!$account->isAdmin && !$account->ownerOrgId) {
+            return true;
+        }
+
+        foreach ($securitiesLevel as $securityLevel) {
+            switch ($securityLevel) {
+                case 'gen_admin':
+                    if ($account->isAdmin && !$account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'fonc_admin':
+                    if ($account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+                case 'user':
+                    if (!$account->isAdmin && $account->ownerOrgId) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
     }
 }

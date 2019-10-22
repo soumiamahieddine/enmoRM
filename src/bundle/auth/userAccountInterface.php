@@ -71,6 +71,8 @@ interface userAccountInterface
      * @param auth/newUserAccount $userAccount The new user Account information
      *
      * @action auth/userAccount/add
+     * @example /public/tests/userCreate-max.json example-max
+     * @example /public/tests/userCreate-min.json example-min
      */
     public function create($userAccount);
 
@@ -85,29 +87,40 @@ interface userAccountInterface
     /**
      * Prepare a user Account object for update
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/edit
      *
      */
     public function read_userAccountId_();
-    
+
     /**
      * Prepare a user Account object for update
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/editProfile
      *
      */
     public function readProfile();
-    
+
     /**
      * Update my profile
      * @return auth/userAccount
-     * 
+     *
      * @action auth/userAccount/updateUserInformation
      *
      */
     public function updateProfile($userAccount);
+
+    /**
+     * Update my profile
+     *
+     * @param auth/ownAccountUpdate $userAccount The modified user account
+     * @action auth/userAccount/updateOwnUserInformation
+     *
+     * @return auth/userAccount
+     *
+     */
+    public function updateMyProfile($userAccount);
 
     /**
      * Get the user Account personal information
@@ -141,6 +154,13 @@ interface userAccountInterface
      * @action auth/userAccount/hasPrivilege
      */
     public function readHasprivilege($userStory);
+
+     /**
+     * Get the Security Level
+     *
+     * @action auth/userAccount/getSecurityLevel
+     */
+    public function readSecurityLevel();
 
     /**
      * Get list of user access rules of current user

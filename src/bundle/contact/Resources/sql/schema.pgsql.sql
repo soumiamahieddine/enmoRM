@@ -2,8 +2,7 @@
 
 DROP SCHEMA IF EXISTS "contact" CASCADE;
 
-CREATE SCHEMA "contact"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "contact";
 
 -- Table: "contact"."contact"
 

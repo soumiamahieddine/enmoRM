@@ -1,0 +1,72 @@
+<div class="panel panel-default" id="message" data-translate-catalog="medona/messages">
+    <div class="panel-body">
+        <h4>Message</h4>
+        <div class="table-responsive">
+            <div id="modification">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr id="derogationTr" style="display: none;">
+                            <td class="col-md-6">
+                                <strong>Send to third party</strong><br>
+                                <p class="help-block">If you deactivate this option, you agree not to communicate these archives outside the originator service.</p>
+                            </td>
+                            <td class="col-md-6">
+                                <input type="checkbox"  name="sendDerogation" data-toggle="toggle" checked/>&nbsp;
+                            </td>
+                        </tr>
+                        <tr id="derogationInputTr" style="display: none;">
+                            <td class="col-md-6"><strong>Requestor <span style="color:red">*</span></strong></td>
+                            <td class="col-md-6"><input type="text" class="form-control" placeholder="Service or organization"  id="derogationInput"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Message identifier</strong></td>
+                            <td><input class="form-control" name="identifier" id="identifier" placeholder="Identifier"></td> 
+                        <tr>
+                        <tr>
+                            <td><strong>Comment <span style="color:red">*</span></strong></td>
+                            <td><div>
+                                    <textarea id="comment" class="form-control" name="comment" placeholder="Comment" style="resize: none; resize: vertical"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="addComment" style="display: none;">
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><strong>Comment</strong></td>
+                            <td><div>
+                                    <textarea class="form-control" name="comment" placeholder="Comment" style="resize: none; resize: vertical"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="hide">
+        <span id="mtext_derogration">Sent a derogation for</span>
+        <span id="mtext_reject">Reject the request</span>
+        <span id="mtext_accept">Accept the request</span>
+    </div>
+</div>
+<script>
+
+    $("#derogationTr [name='sendDerogation']").change(function() {
+        if($(this).is(':checked')) {
+            $('#derogationInputTr').show();
+        } else {
+            $('#derogationInputTr').hide();
+        }
+    });
+
+    $('#derogationInputTr').change(function() {
+        if ($('#derogationInput').val().length > 0) {
+            $("#modification [name='comment']").val($('#mtext_derogration').text() + ' ' + $('#derogationInput').val());
+        }
+    });
+</script>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>

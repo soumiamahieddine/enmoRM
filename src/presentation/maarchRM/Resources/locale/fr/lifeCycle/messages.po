@@ -72,6 +72,9 @@ msgstr "Adresse :"
 msgid "Archive identifier :"
 msgstr "Identifiant de l'archive :"
 
+msgid "Archive identifier"
+msgstr "Identifiant de l'archive"
+
 msgid "Archiver name :"
 msgstr "Nom du Service d'Archives :"
 
@@ -105,6 +108,9 @@ msgstr "Attestation"
 msgid "Show the certificate"
 msgstr "Voir l'attestation"
 
+msgid "Download certificate"
+msgstr "Télécharger l'attestation"
+
 msgid "Deposit"
 msgstr "Dépôt"
 
@@ -121,7 +127,7 @@ msgid "Profile deleted"
 msgstr "Suppression de profil"
 
 msgid "eventId"
-msgstr "identifiant d'évènement"
+msgstr "Identifiant d'évènement"
 
 msgid "eventType"
 msgstr "Type d'événement"
@@ -161,6 +167,12 @@ msgstr "Identifiant utilisateur"
 
 msgid "User name"
 msgstr "Utilisateur"
+
+msgid "certificationDateTime"
+msgstr "Attestation générée le "
+
+msgid "bytes"
+msgstr "octet(s)"
 
 # ---------------------------------------------------------
 # Event info detail
@@ -401,6 +413,15 @@ msgctxt "eventInfo"
 msgid "serviceDestinataire"
 msgstr "Service du destinataire"
 msgctxt "eventInfo"
+
+msgid "orgName"
+msgstr "Nom de l'activité"
+msgctxt "eventInfo"
+
+msgid "ownerOrgId"
+msgstr "Identifiant de l'organisation"
+msgctxt "eventInfo"
+
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------
@@ -451,7 +472,7 @@ msgid "recordsManagement/integrity"
 msgstr "Test de conformité"
 
 msgid "recordsManagement/depositNewResource"
-msgstr "Dépôt d'un nouveau document"
+msgstr "Dépôt d'une ressource"
 
 msgid "recordsManagement/delivery"
 msgstr "Communication"
@@ -513,6 +534,15 @@ msgstr "Modification de la description d'archive"
 msgid "recordsManagement/outgoingTransfer"
 msgstr "Transfert sortant"
 
+msgid "recordsManagement/depositOfLinkedResource"
+msgstr "Dépôt d'une ressource liée"
+
+msgid "recordsManagement/destructionRequestCancel"
+msgstr "Annuler la demande de d'élimination de l'archive"
+
+msgid "recordsManagement/resourceDestruction"
+msgstr "Destruction d'une ressource"
+
 msgid "medona/sending"
 msgstr "Envoi d'un bordereau"
 
@@ -545,6 +575,15 @@ msgstr "Demande d'autorisation d'un bordereau"
 
 msgid "medona/message"
 msgstr "Identifiant bordereau"
+
+msgid "organization/counting"
+msgstr "Compter le nombre d'identifiant"
+
+msgid "organization/listing"
+msgstr "Lister le nombre d'identifiant"
+
+msgid "organization/journal"
+msgstr "Lecture journal"
 
 msgid "Result"
 msgstr "Résultat"
@@ -672,15 +711,6 @@ msgstr "Le format est vide."
 msgid "Archival profile"
 msgstr "Profil d'archive"
 
-msgid "recordsManagement/depositOfLinkedResource"
-msgstr "Dépôt d'une ressource liée"
-
-msgid "recordsManagement/destructionRequestCancel"
-msgstr "Annuler la demande de d'élimination de l'archive"
-
-msgid "recordsManagement/resourceDestruction"
-msgstr "Destruction d'un document"
-
 msgid "Account name"
 msgstr "Nom du compte"
 
@@ -692,3 +722,23 @@ msgstr "Données d'Archive"
 
 msgid "Service level"
 msgstr "Niveau de service"
+
+# ---------------------------------------------------------
+# deposit certificate
+# ---------------------------------------------------------
+
+msgid "certificateName"
+msgstr "Attestation de dépot"
+msgctxt "recordsManagement/deposit"
+
+msgid "certificateName"
+msgstr "Attestation de conformité"
+msgctxt "recordsManagement/integrityCheck"
+
+msgid "certificateName"
+msgstr "Attestation de destruction"
+msgctxt "recordsManagement/destruction"
+
+
+msgid "Organization"
+msgstr "Organisation"

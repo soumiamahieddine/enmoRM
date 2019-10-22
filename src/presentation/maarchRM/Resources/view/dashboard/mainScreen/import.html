@@ -13,21 +13,29 @@
             <?hinclude dashboard/mainScreen/archiveForm.html ?>
         </div>
         <div class="col-lg-4 col-md-12">
-            <?hinclude dashboard/mainScreen/documentForm.html ?>    
+            <?hinclude dashboard/mainScreen/documentForm.html ?>
         </div>
     </div>
         <div class="pull-right">
+            <a href="#" class="btn btn-sm btn-success hide" id="modifyArchive"><i class="fa fa-paper-plane-o">&nbsp;</i>Modify</a>
+            <i>&nbsp;</i>
             <?merge syncImportPrivilege.bool() ?>
             <a href="#" class="btn btn-sm btn-success" id="syncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import</a>
             <i>&nbsp;</i>
-            <?merge asyncImportPrivilege.bool() ?>
-            <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>
-
-            <i>&nbsp;</i>
+<!--            <?merge asyncImportPrivilege.bool() ?>-->
+<!--            <a href="#" class="btn btn-sm btn-warning" id="asyncImport"><i class="fa fa-paper-plane-o">&nbsp;</i>Import with validation</a>-->
+<!--            <i>&nbsp;</i>-->
             <a href="#" class="btn btn-sm btn-danger small" id="cancel"><i class="fa fa-times">&nbsp;</i>Cancel</a>
         </div>
     </div>
 </div>
+<div class="hide">
+    <!-- ERROR MESSAGE -->
+    <div data-translate-catalog="recordsManagement/message">
+        <span id="emptyResource_error">Your ressource is empty</span>
+    </div>
+</div>
+
 
 <script type="text/javascript">
 
@@ -63,6 +71,7 @@
 
         save: function(e, button) {
             ArchiveForm.send(e, button);
+            $("#documentForm").show();
         },
         cancel: function() {
             ArchiveForm.clear();
@@ -93,6 +102,11 @@
 
     $('#cancel').on('click', function(e) {
         ImportPanel.cancel();
+        $("#modifyArchive").addClass("hide");
+        $("#syncImport").removeClass("hide");
+        $("#asyncImport").removeClass("hide");
+        $("#managementMetadataDiv").removeClass("hide");
         trigger("archiveImportOver.recordsManagement");
+        $("#documentForm").show();
     });
 </script>

@@ -58,4 +58,14 @@ class serviceAccount
      * @var boolean
      */
     public $enabled;
+
+    /**
+     * @var string
+     */
+    public $ownerOrgId;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
 }

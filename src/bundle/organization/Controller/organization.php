@@ -30,6 +30,7 @@ use core\Exception;
 class organization
 {
     protected $sdoFactory;
+    protected $accountController;
 
     /**
      * Constructor
@@ -40,6 +41,7 @@ class organization
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->accountController = \laabs::newController('auth/userAccount');
     }
 
     /**
@@ -56,11 +58,18 @@ class organization
     /**
      * List of organizations
      *
+     * @param bool $ownerOrg
+     * @param bool $orgUnit
+     *
      * @return organization/organization[] An array of organization whith service
      */
-    public function todisplay()
+    public function todisplay($ownerOrg, $orgUnit)
     {
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
         $currentOrg = \laabs::getToken("ORGANIZATION");
+        $orgList = [];
 
         if (!$currentOrg || (!empty($currentOrg->orgRoleCodes) && in_array('owner', $currentOrg->orgRoleCodes))) {
             $orgUnitList = $this->getOwnerOriginatorsOrgs();
@@ -73,20 +82,19 @@ class organization
             $organization->displayName = $org->displayName;
             $organization->orgId = $org->orgId;
             $organization->parentOrgId = $org->parentOrgId;
-            $orgList[] = $organization;
 
-            foreach ($org->originators as $orgUnit) {
-                if ($org->orgId == $orgUnit->ownerOrgId) {
-                    $orgUnit->ownerOrgName = $org->displayName;
-                    $orgList[] = $orgUnit;
+            if ($ownerOrg) {
+                $orgList[] = $organization;
+            }
+
+            if ($orgUnit) {
+                foreach ($org->originators as $orgUnit) {
+                    if ($org->orgId == $orgUnit->ownerOrgId) {
+                        $orgUnit->ownerOrgName = $org->displayName;
+                        $orgList[] = $orgUnit;
+                    }
                 }
             }
-        }
-
-        if (isset($owner)) {
-            $organizations = $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "parentOrgId", "ownerOrgId"), 'isOrgUnit = false');
-
-            $orgList = array_merge($orgList, $organizations);
         }
 
         if (isset($orgList)) {
@@ -99,38 +107,7 @@ class organization
                     }
                 }
             }
-
-            return $orgList;
         }
-    }
-
-    /**
-     * List of orgUnit
-     *
-     * @return object[] An array of orgUnit
-     */
-    public function todisplayOrgUnit()
-    {
-        $currentOrg = \laabs::getToken("ORGANIZATION");
-        $orgList = [];
-
-        if (isset($currentOrg)) {
-            $organizations = $this->getOwnerOriginatorsOrgs($currentOrg);
-        } else {
-            $owner = $this->getOrgsByRole('owner')[0];
-            $organizations = $this->getOwnerOriginatorsOrgs($owner);
-        }
-
-        foreach ($organizations as $org) {
-
-            foreach ($org->originators as $orgUnit) {
-                if ($org->orgId == $orgUnit->ownerOrgId) {
-                    $orgUnit->ownerOrgName = $org->displayName;
-                    $orgList[] = $orgUnit;
-                }
-            }
-        }
-
         return $orgList;
     }
 
@@ -143,18 +120,37 @@ class organization
     {
         $tree = array();
 
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $owner = true;
 
         if (isset($currentOrg)) {
             if (!$currentOrg->orgRoleCodes) {
                 $owner = false;
-            } else if (is_array($currentOrg->orgRoleCodes) && !in_array('owner', $currentOrg->orgRoleCodes)) {
+            } elseif (is_array($currentOrg->orgRoleCodes) && !in_array('owner', $currentOrg->orgRoleCodes)) {
                 $owner = false;
             }
         }
 
-        $organizationList = $this->sdoFactory->find("organization/organization", null, [], 'orgName');
+        $securityLevel = $user->getSecurityLevel();
+
+        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
+            $organizationList = $this->sdoFactory->find(
+                "organization/organization",
+                'isOrgUnit = false',
+                [],
+                'orgName'
+            );
+        } else {
+            $organizationList = $this->sdoFactory->find(
+                "organization/organization",
+                null,
+                [],
+                'orgName'
+            );
+        }
         $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationTree");
 
         // sort organization by parentOrgId
@@ -162,6 +158,11 @@ class organization
         foreach ($organizationList as $organization) {
             $parentOrgId = (string)$organization->parentOrgId;
 
+            if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
+                if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
+                    continue;
+                }
+            }
 
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
@@ -218,7 +219,6 @@ class organization
         $variables = array();
         $query = null;
 
-
         if ($name) {
             $variables['name'] = "*$name*";
             $queryParts[] = "(orgName~:name OR otherOrgName~:name OR displayName~:name)";
@@ -263,9 +263,13 @@ class organization
      */
     public function create($organization)
     {
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+        } else {
+            $this->accountController->isAuthorized('gen_admin');
+        }
 
-        $authController = \laabs::newController("auth/userAccount");
-        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
 
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {
@@ -410,6 +414,7 @@ class organization
                     foreach ($organizations as $orgName) {
                         if ($org->ownerOrgId == $orgName->orgId) {
                             $user->ownerOrgName = $orgName->displayName;
+                            $user->ownerOrgId = $orgName->orgId;
                         }
                     }
                 }
@@ -459,6 +464,12 @@ class organization
      */
     public function update($orgId, $organization)
     {
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+        } else {
+            $this->accountController->isAuthorized('gen_admin');
+        }
+
         $organization->orgId = $orgId;
 
         if ($organization->beginDate > $organization->endDate) {
@@ -507,19 +518,31 @@ class organization
         }
 
         if ($newParentOrgId) {
+            $oldParentOrgs = $this->readParentOrg($orgId);
+            $newParentOrgs = $this->readParentOrg($newParentOrgId);
 
-            $oldParentOrg = $this->readParentOrg($orgId);
-            $newParentOrg = $this->readParentOrg($newParentOrgId);
-
-            if (is_array($oldParentOrg)) {
-                $oldParentOrg = end($oldParentOrg);
+            $newParentOrg = $this->sdoFactory->read("organization/organization", $newParentOrgId);
+            if ($newParentOrg->isOrgUnit) {
+                for ($i = 0; $i < count($newParentOrgs); $i++) {
+                    if (!$newParentOrgs[$i]->isOrgUnit) {
+                        $newParentOrg = $newParentOrgs[$i];
+                        break;
+                    }
+                }
             }
 
-            if (is_array($newParentOrg)) {
-                $newParentOrg = end($newParentOrg);
+            for ($i = 0; $i < count($oldParentOrgs); $i++) {
+                if (!$oldParentOrgs[$i]->isOrgUnit) {
+                    $oldParentOrg = $oldParentOrgs[$i];
+                    break;
+                }
             }
 
-            if ($oldParentOrg->orgId === null || ($oldParentOrg->orgId !== null && $oldParentOrg->orgId != $newParentOrg->orgId && $oldParentOrg->orgId != $newParentOrgId)) {
+            if ($oldParentOrg->orgId === null
+                || ($oldParentOrg->orgId !== null
+                    && $oldParentOrg->orgId != $newParentOrg->orgId
+                )
+            ) {
                 throw new \core\Exception("Organization can''t be moved to an other organization");
             }
         }
@@ -573,6 +596,11 @@ class organization
     public function delete($orgId)
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
+        if ($organization->isOrgUnit) {
+            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+        } else {
+            $this->accountController->isAuthorized('gen_admin');
+        }
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -582,16 +610,26 @@ class organization
 
         try {
             if ($this->isUsed($organization->registrationNumber)) {
-                throw new \core\Exception\ForbiddenException("The organization %s is used in archives.", 403, null, [$organization->registrationNumber]);
+                throw new \core\Exception\ForbiddenException(
+                    "The organization %s is used in archives.",
+                    403,
+                    null,
+                    [$organization->registrationNumber]
+                );
             }
 
-            if (\laabs::hasBundle('medona')) {
-                $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'");
-                if (count($controlAuthorities) > 0) {
-                    throw new \core\Exception\ForbiddenException("The organization %s is used in control authority.", 403, null, [$organization->registrationNumber]);
-                }
+            $controlAuthorities = $this->sdoFactory->find(
+                'medona/controlAuthority',
+                "originatorOrgUnitId = '$orgId' OR controlAuthorityOrgUnitId = '$orgId'"
+            );
+            if (count($controlAuthorities) > 0) {
+                throw new \core\Exception\ForbiddenException(
+                    "The organization %s is used in control authority.",
+                    403,
+                    null,
+                    [$organization->registrationNumber]
+                );
             }
-
 
             $children = $this->sdoFactory->readChildren("organization/organization", $organization);
             $users = $this->sdoFactory->readChildren("organization/userPosition", $organization);
@@ -604,11 +642,16 @@ class organization
             }
 
             foreach ($children as $child) {
-                if (\laabs::hasBundle('medona')) {
-                    $controlAuthorities = $this->sdoFactory->find('medona/controlAuthority', "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'");
-                    if (count($controlAuthorities) > 0) {
-                        throw new \core\Exception\ForbiddenException("The child organization is used in control authority.", 403, null);
-                    }
+                $controlAuthorities = $this->sdoFactory->find(
+                    'medona/controlAuthority',
+                    "originatorOrgUnitId = '$child->orgId' OR controlAuthorityOrgUnitId = '$child->orgId'"
+                );
+                if (count($controlAuthorities) > 0) {
+                    throw new \core\Exception\ForbiddenException(
+                        "The child organization is used in control authority.",
+                        403,
+                        null
+                    );
                 }
                 $this->delete($child->orgId);
             }
@@ -648,12 +691,17 @@ class organization
      */
     public function addUserPosition($userAccountId, $orgId, $function = null)
     {
+        $this->accountController->isAuthorized('fonc_admin');
+
         $userPosition = \laabs::newInstance('organization/userPosition');
         $userPosition->userAccountId = $userAccountId;
         $userPosition->orgId = $orgId;
         $userPosition->function = $function;
         $userPosition->default = false;
-        $userDefaultPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId = '$userAccountId' AND default = true");
+        $userDefaultPosition = $this->sdoFactory->find(
+            'organization/userPosition',
+            "userAccountId = '$userAccountId' AND default = true"
+        );
 
         if (empty($userDefaultPosition)) {
             $userPosition->default = true;
@@ -671,6 +719,8 @@ class organization
      */
     public function updateUserPosition($userAccountId, $orgId = null)
     {
+        $this->accountController->isAuthorized('fonc_admin');
+
         $userPositions = $this->sdoFactory->find("organization/userPosition", "userAccountId='$userAccountId'");
         $default = null;
 
@@ -681,7 +731,6 @@ class organization
         }
 
         try {
-
             if ($userPositions) {
                 $this->sdoFactory->deleteCollection($userPositions, "organization/userPosition");
             }
@@ -734,7 +783,8 @@ class organization
      */
     public function setDefaultUserPosition($orgId, $userAccountId)
     {
-        $previousDefaultUserPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId='$userAccountId' AND default=true");
+        $previousDefaultUserPosition = $this->sdoFactory->find(
+            'organization/userPosition', "userAccountId='$userAccountId' AND default=true");
 
         if (!empty($previousDefaultUserPosition)) {
             $previousDefaultUserPosition = $previousDefaultUserPosition[0];
@@ -742,7 +792,10 @@ class organization
             $this->sdoFactory->update($previousDefaultUserPosition, 'organization/userPosition');
         }
 
-        $userPosition = $this->sdoFactory->read("organization/userPosition", array("userAccountId" => $userAccountId, "orgId" => $orgId));
+        $userPosition = $this->sdoFactory->read(
+            "organization/userPosition",
+            array("userAccountId" => $userAccountId, "orgId" => $orgId)
+        );
         $userPosition->default = true;
 
         return $this->sdoFactory->update($userPosition, 'organization/userPosition');
@@ -757,10 +810,18 @@ class organization
      */
     public function deleteUserPosition($userAccountId, $orgId)
     {
-        $userPosition = $this->sdoFactory->read("organization/userPosition", array("userAccountId" => $userAccountId, "orgId" => $orgId));
+        $this->accountController->isAuthorized('fonc_admin');
+
+        $userPosition = $this->sdoFactory->read(
+            "organization/userPosition",
+            array("userAccountId" => $userAccountId, "orgId" => $orgId)
+        );
 
         if ($userPosition->default) {
-            $newDefaultUserPosition = $this->sdoFactory->find('organization/userPosition', "userAccountId='$userAccountId'");
+            $newDefaultUserPosition = $this->sdoFactory->find(
+                'organization/userPosition',
+                "userAccountId='$userAccountId'"
+            );
 
             if (!empty($newDefaultUserPosition)) {
                 $newDefaultUserPosition = $newDefaultUserPosition[0];
@@ -782,7 +843,10 @@ class organization
      */
     public function deleteContactPosition($contactId, $orgId)
     {
-        $contactPosition = $this->sdoFactory->read("organization/orgContact", array("contactId" => $contactId, "orgId" => $orgId));
+        $contactPosition = $this->sdoFactory->read(
+            "organization/orgContact",
+            array("contactId" => $contactId, "orgId" => $orgId)
+        );
 
         $contactController = \laabs::newController('contact/contact');
         $this->sdoFactory->delete($contactPosition);
@@ -799,7 +863,10 @@ class organization
      */
     public function deleteServicePosition($orgId, $serviceAccountId)
     {
-        $servicePosition = $this->sdoFactory->read("organization/servicePosition", array("serviceAccountId" => $serviceAccountId, "orgId" => $orgId));
+        $servicePosition = $this->sdoFactory->read(
+            "organization/servicePosition",
+            array("serviceAccountId" => $serviceAccountId, "orgId" => $orgId)
+        );
 
         return $this->sdoFactory->delete($servicePosition);
     }
@@ -817,7 +884,8 @@ class organization
         $contacts = array();
         foreach ($orgContacts as $orgContact) {
             try {
-                $contact = \laabs::callService('contact/contact/read_contactId_', $orgContact->contactId);
+                $contactController = \laabs::newController('contact/contact');
+                $contact = $contactController->get($orgContact->contactId);
                 $contacts[] = (object)array_merge((array)$contact, (array)$orgContact);
             } catch (\Exception $e) {
 
@@ -885,9 +953,9 @@ class organization
         $address = null;
 
         try {
-            $contact = \laabs::callService('contact/contact/read_contactId_', $orgContacts[0]->contactId);
+            $contactController = \laabs::newController('contact/contact');
+            $contact = $contactController->get($orgContacts[0]->contactId);
             $address = $contact->address;
-
         } catch (\Exception $e) {
             throw $e;
         }
@@ -908,7 +976,8 @@ class organization
             return array();
         }
 
-        $contact = \laabs::callService('contact/contact/read_contactId_', (string)$orgContacts[0]->contactId);
+        $contactController = \laabs::newController('contact/contact');
+        $contact = $contactController->get((string)$orgContacts[0]->contactId);
 
         return $contact->communication;
     }
@@ -954,7 +1023,10 @@ class organization
 
         while ($hasDescendants) {
             $idsString = \laabs\implode("','", $ids);
-            $descendants = $this->sdoFactory->find('organization/organization', "parentOrgId=['$idsString'] AND isOrgUnit=false");
+            $descendants = $this->sdoFactory->find(
+                'organization/organization',
+                "parentOrgId=['$idsString'] AND isOrgUnit=false"
+            );
 
             if (empty($descendants)) {
                 $hasDescendants = false;
@@ -980,10 +1052,22 @@ class organization
      */
     public function readDescendantServices($parentId)
     {
-        $childrenServices = $this->sdoFactory->find('organization/organization', "parentOrgId = '$parentId' AND isOrgUnit = true");
+        $childrenServices = $this->sdoFactory->find(
+            'organization/organization',
+            "parentOrgId = '$parentId' AND isOrgUnit = true"
+        );
 
         foreach ($childrenServices as $childService) {
             $childrenServices = array_merge($this->readDescendantServices($childService->orgId), $childrenServices);
+        }
+
+        $childrenOrgs = $this->sdoFactory->find(
+            'organization/organization',
+            "parentOrgId = '$parentId' AND isOrgUnit = false"
+        );
+
+        foreach ($childrenOrgs as $childOrg) {
+            $childrenServices = array_merge($this->readDescendantServices($childOrg->orgId), $childrenServices);
         }
 
         return $childrenServices;
@@ -998,7 +1082,10 @@ class organization
      */
     public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        if (null ==! $this->getArchivalProfileAccess($archivalProfileAccess->orgId, $archivalProfileAccess->archivalProfileReference)) {
+        if (null ==! $this->getArchivalProfileAccess(
+            $archivalProfileAccess->orgId,
+            $archivalProfileAccess->archivalProfileReference
+        )) {
             throw new \core\Exception("Organization Archival Profile Access already exists.");
         }
         $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
@@ -1012,15 +1099,24 @@ class organization
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
-            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access");
+            throw new \core\Exception(
+                "Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access"
+            );
         }
 
-        if ($archivalProfileAccess->archivalProfileReference !== '*' && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)) {
-            throw new \core\Exception("Organization Archival Profile Access cannot be created, archival profile does not exists");
+        if ($archivalProfileAccess->archivalProfileReference !== '*'
+            && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)
+        ) {
+            throw new \core\Exception(
+                "Organization Archival Profile Access cannot be created, archival profile does not exists"
+            );
         }
 
         try {
-            $archivalProfileAccess = $this->sdoFactory->create($archivalProfileAccess, 'organization/archivalProfileAccess');
+            $archivalProfileAccess = $this->sdoFactory->create(
+                $archivalProfileAccess,
+                'organization/archivalProfileAccess'
+            );
         } catch (Exception $e) {
             throw $e;
         }
@@ -1048,7 +1144,9 @@ class organization
 
         if ($archivalProfileAccess->archivalProfileReference === '*') {
             if (!$archivalProfileAccess->originatorAccess) {
-                throw new \core\Exception("User cannot be associated with archival profile when archival without profiles is selected");
+                throw new \core\Exception(
+                    "User cannot be associated with archival profile when archival without profiles is selected"
+                );
             }
         }
 
@@ -1121,12 +1219,21 @@ class organization
     {
         $orgUnitArchivalProfiles = [];
 
-        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $orgRegNumber));
+        $organization = $this->sdoFactory->read(
+            "organization/organization",
+            array('registrationNumber' => $orgRegNumber)
+        );
 
         if ($originatorAccess) {
-            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'");
+            $archivalProfileAccesses = $this->sdoFactory->find(
+                'organization/archivalProfileAccess',
+                "orgId='" . $organization->orgId . "' AND originatorAccess='" . $originatorAccess . "'"
+            );
         } else {
-            $archivalProfileAccesses = $this->sdoFactory->find('organization/archivalProfileAccess', "orgId='" . $organization->orgId . "'");
+            $archivalProfileAccesses = $this->sdoFactory->find(
+                'organization/archivalProfileAccess',
+                "orgId='" . $organization->orgId . "'"
+            );
         }
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
@@ -1135,7 +1242,10 @@ class organization
                 $orgUnitArchivalProfiles[] = '*';
                 continue;
             }
-            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference, $withRelatedProfile = true);
+            $orgUnitArchivalProfiles[] = $archivalProfileController->getByReference(
+                $archivalProfileAccess->archivalProfileReference,
+                true
+            );
         }
 
         return $orgUnitArchivalProfiles;
@@ -1155,7 +1265,11 @@ class organization
         $queryParam["orgId"] = $orgId;
         $queryParam["archivalProfileReference"] = $archivalProfileReference;
 
-        $archivalProfileAccess = $this->sdoFactory->find('organization/archivalProfileAccess', $queryString, $queryParam);
+        $archivalProfileAccess = $this->sdoFactory->find(
+            'organization/archivalProfileAccess',
+            $queryString,
+            $queryParam
+        );
 
         if (empty($archivalProfileAccess)) {
             return null;
@@ -1173,14 +1287,20 @@ class organization
      */
     public function checkProfileInOrgAccess($archivalProfileReference, $registrationNumber)
     {
-        $organization = $this->sdoFactory->read("organization/organization", array('registrationNumber' => $registrationNumber));
+        $organization = $this->sdoFactory->read(
+            "organization/organization",
+            array('registrationNumber' => $registrationNumber)
+        );
 
         if (!$archivalProfileReference) {
             $archivalProfileReference = "*";
         }
 
         try {
-            $this->sdoFactory->read("organization/archivalProfileAccess", array('orgId' => $organization->orgId, 'archivalProfileReference' => $archivalProfileReference));
+            $this->sdoFactory->read(
+                "organization/archivalProfileAccess",
+                array('orgId' => $organization->orgId, 'archivalProfileReference' => $archivalProfileReference)
+            );
         } catch (\Exception $e) {
             return false;
         }
@@ -1199,20 +1319,36 @@ class organization
         $archiveController = \laabs::newController("recordsManagement/archive");
         $count = $archiveController->countByOrg($registrationNumber);
 
+        if ($count > 0) {
+            return true;
+        }
+
+        $messageController = \laabs::newController("medona/message");
+        $count = $messageController->countByOrg($registrationNumber);
+
+        if ($count > 0) {
+            return true;
+        }
+
+        $archivalAgreementController = \laabs::newController("medona/archivalAgreement");
+        $count = $archivalAgreementController->countByOrg($registrationNumber);
+
         return $count > 0 ? true : false;
     }
 
     protected function getOwnerOriginatorsOrgs($currentService = null)
     {
         $userPositionController = \laabs::newController('organization/userPosition');
-
         $owner = false;
         $userOrgs = [];
         $userOwnerOrgs = [];
 
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        $securityLevel = $user->getSecurityLevel();
+
         if (!$currentService) {
             $userPositions = $userPositionController->getMyPositions();
-
             foreach ($userPositions as $userPosition) {
                 $userOrgs[] = $userPosition->organization;
             }
@@ -1220,46 +1356,58 @@ class organization
             $userOrgs[] = $currentService;
         }
 
-        if ($this->sdoFactory->find('auth/roleMember', "userAccountId = '" . \laabs::getToken('AUTH')->accountId . "'")[0]->roleId == "ADMIN") {
-            unset($userOrgs);
-            $userOrgs = $this->sdoFactory->find('organization/organization', "isOrgUnit = TRUE");
-        }
-
-        foreach ($userOrgs as $userPosition) {
-            if (!in_array($userPosition->ownerOrgId, $userOwnerOrgs)) {
-                $userOwnerOrgs[] = $userPosition->ownerOrgId;
-            }
-
-            if (is_string($userPosition->orgRoleCodes)) {
-                $userPosition->orgRoleCodes = \laabs::newTokenList($userPosition->orgRoleCodes);
-            }
-
-            if (in_array('owner', (array) $userPosition->orgRoleCodes) !== false) {
-                $owner = true;
-                break;
-            }
-        }
-
-        if ($owner) {
-            $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+        $organizationController = \laabs::newController('organization/organization');
+        if ($securityLevel == $user::SECLEVEL_GENADMIN || is_null($securityLevel)) {
+            $originators = $organizationController->index();
         } else {
-            $originators = \laabs::callService('organization/organization/readIndex', "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']");
+            foreach ($userOrgs as $userPosition) {
+                if (!in_array($userPosition->ownerOrgId, $userOwnerOrgs)) {
+                    $userOwnerOrgs[] = $userPosition->ownerOrgId;
+                }
+
+                if (is_string($userPosition->orgRoleCodes)) {
+                    $userPosition->orgRoleCodes = \laabs::newTokenList($userPosition->orgRoleCodes);
+                }
+
+                if (in_array('owner', (array) $userPosition->orgRoleCodes) !== false) {
+                    $owner = true;
+                    break;
+                }
+            }
+
+            if ($owner) {
+                $originators = $organizationController->index();
+            } else {
+                $originators = $organizationController->index(
+                    "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
+                );
+                $originators = array_merge($originators, $this->readDescendantServices($user->ownerOrgId));
+            }
         }
 
         $ownerOriginatorOrgs = [];
-
         foreach ($originators as $orgUnit) {
-            if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
-                $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
-                $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
-                $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+            if (isset($orgUnit->ownerOrgId)) {
+                if (!isset($ownerOriginatorOrgs[(string)$orgUnit->ownerOrgId])) {
+                    $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+                }
+                $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
+            } else {
+                if (!isset($ownerOriginatorOrgs[(string)$orgUnit->orgId])) {
+                    $orgObject = $organizationController->read((string)$orgUnit->orgId);
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId] = new \stdClass();
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->orgId = $orgObject->orgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->parentOrgId = $orgObject->parentOrgId;
+                    $ownerOriginatorOrgs[(string)$orgObject->orgId]->originators = [];
+                }
             }
-            $ownerOriginatorOrgs[$orgUnit->ownerOrgId]->originators[] = $orgUnit;
         }
-
         return $ownerOriginatorOrgs;
     }
 
@@ -1297,7 +1445,8 @@ class organization
      */
     protected function getOwnerOrgsByRole($currentService, $role)
     {
-        $orgUnits = \laabs::callService('organization/organization/readByrole_role_', $role);
+        $organizationController = \laabs::newController('organization/organization');
+        $orgUnits = $organizationController->getOrgsByRole($role);
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
@@ -1325,8 +1474,7 @@ class organization
 
         foreach ($userOrgUnits as $userOrgUnit) {
             foreach ($orgUnits as $orgUnit) {
-                if (
-                // Owner = all originators
+                if (// Owner = all originators
                 $owner
                     // Archiver = all originators fo the same org
                 || ($archiver && $orgUnit->ownerOrgId == $userOrgUnit->ownerOrgId)
@@ -1335,7 +1483,7 @@ class organization
                     // Depositor = all
                 || $role == 'depositor') {
                     if (!isset($userOrgs[(string)$orgUnit->ownerOrgId])) {
-                        $orgObject = \laabs::callService('organization/organization/read_orgId_', (string)$orgUnit->ownerOrgId);
+                        $orgObject = $organizationController->read((string)$orgUnit->ownerOrgId);
 
                         $userOrgs[(string)$orgObject->orgId] = new \stdClass();
                         $userOrgs[(string)$orgObject->orgId]->displayName = $orgObject->displayName;

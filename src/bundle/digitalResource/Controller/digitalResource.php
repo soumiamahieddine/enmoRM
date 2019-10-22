@@ -95,7 +95,7 @@ class digitalResource
         if (!preg_match('//u', $filename)) {
             $UTF8filename = utf8_encode($filename);
         }
-            
+
         // Basic path information
         $pathinfo = pathinfo($UTF8filename);
 
@@ -211,7 +211,7 @@ class digitalResource
      * @param string $clusterId
      * @param string $path
      * @param mixed  $metadata
-     * 
+     *
      * @return string Ressource container on the cluster
      */
     public function openContainers($clusterId, $path, $metadata=null)
@@ -326,6 +326,10 @@ class digitalResource
     {
         $resources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
+        foreach ($resources as $key => $resource) {
+            $resources[$key] = $this->info($resource->resId);
+        }
+
         return $resources;
     }
 
@@ -382,10 +386,7 @@ class digitalResource
                         $package->resource = $this->retrieve($packedResource->packageId);
                         $contents = $packageController->getPackedContents($package, $packedResource->name);
                         // Check hash
-                        $hash = strtolower(hash($resource->hashAlgorithm, $contents));
-                        if ($hash !== strtolower($resource->hash)) {
-                            throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash.");
-                        }
+                        $this->checkHash($contents, $resource->hash, $resource->hashAlgorithm);
 
                         $resource->setContents($contents);
                     } catch (\Exception $exception) {
@@ -405,6 +406,15 @@ class digitalResource
         }
 
         return $resource;
+    }
+
+    public function checkHash($contents, $hash, $hashAlgorithm)
+    {
+        $hash_calculated = strtolower(hash($hashAlgorithm, $contents));
+
+        if ($hash_calculated !== strtolower($hash)) {
+            throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash.");
+        }
     }
 
     /**
@@ -432,11 +442,8 @@ class digitalResource
                 if (!$contents) {
                     try {
                         $contents = $repositoryService->readObject($address->path);
-                        // Check hash
-                        $hash = hash($resource->hashAlgorithm, $contents);
-                        if ($hash !== $resource->hash) {
-                            throw \laabs::newException("digitalResource/clusterException", "Resource unavailable");
-                        }
+
+                        $this->checkHash($contents, $resource->hash, $resource->hashAlgorithm);
                     } catch (\Exception $e) {
                         // TODO : throw exception if resource not available on repo, based on options ?
                     }
@@ -619,7 +626,7 @@ class digitalResource
     {
         $convert = $this->isConvertible($digitalResource);
 
-        if($convert == false) {
+        if ($convert == false) {
             return false;
         }
 
@@ -684,7 +691,8 @@ class digitalResource
      *
      * @return mixed The convertion rule or false if it's no possible
      */
-    public function isConvertible($digitalResource) {
+    public function isConvertible($digitalResource)
+    {
         if (!$this->sdoFactory->exists("digitalResource/conversionRule", array('puid' => $digitalResource->puid))) {
             return false;
         }
@@ -748,7 +756,7 @@ class digitalResource
             foreach ($digitalResources as $digitalResource) {
                 $contents = $this->contents($digitalResource->resId);
                 $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
-                
+
                 $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
 
                 file_put_contents($srcfile, $contents);

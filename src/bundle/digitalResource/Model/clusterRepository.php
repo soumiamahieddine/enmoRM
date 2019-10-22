@@ -18,16 +18,17 @@
  * along with bundle digitalResource.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace bundle\digitalResource\Model;
+
 /**
  * Class model that represents a digital resource cluster repository
  *
  * @package Digitalresource
  * @author  Prosper DE LAURE (Maarch) <prosper.delaure@maarch.org>
- * 
+ *
  * @pkey [clusterId, repositoryId]
  * @fkey [clusterId] digitalResource/cluster [clusterId]
  * @fkey [repositoryId] digitalResource/repository [repositoryId]
- * 
+ *
  */
 class clusterRepository
 {
@@ -65,5 +66,4 @@ class clusterRepository
      * @var integer
      */
     public $deletePriority;
-
-} // END class format 
+}

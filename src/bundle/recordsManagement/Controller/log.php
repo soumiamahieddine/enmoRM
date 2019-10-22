@@ -64,8 +64,16 @@ class log implements archiveDescriptionInterface
      *
      * @return array Array of logs
      */
-    public function find($archiveId = null, $type = null, $fromDate = null, $toDate = null, $processName = null, $processId = null, $sortBy = ">fromDate", $numberOfResult = 300)
-    {
+    public function find(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null,
+        $sortBy = ">fromDate",
+        $numberOfResult = null
+    ) {
         $queryParts = array();
         $queryParams = array();
 
@@ -106,7 +114,18 @@ class log implements archiveDescriptionInterface
 
         $queryString = implode(' AND ', $queryParts);
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, $queryParams, $sortBy, 0, $numberOfResult);
+        if (!$numberOfResult) {
+            $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
+        $logs = $this->sdoFactory->find(
+            "recordsManagement/log",
+            $queryString,
+            $queryParams,
+            $sortBy,
+            0,
+            $numberOfResult
+        );
 
         return $logs;
     }
@@ -125,7 +144,7 @@ class log implements archiveDescriptionInterface
         $archives = [];
 
         $sortBy = ">fromDate";
-        $numberOfResult = 300;
+        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
 
         $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
         foreach ($logs as $log) {
@@ -149,7 +168,14 @@ class log implements archiveDescriptionInterface
      */
     public function getByDate($type, $date)
     {
-        $journal = $this->sdoFactory->find('recordsManagement/log', "type='$type' AND fromDate <= '$date' AND toDate >= '$date'", [], ">fromDate", 0, 1);
+        $journal = $this->sdoFactory->find(
+            'recordsManagement/log',
+            "type='$type' AND fromDate <= '$date' AND toDate >= '$date'",
+            [],
+            ">fromDate",
+            0,
+            1
+        );
 
         if (!count($journal)) {
             return null;
@@ -238,7 +264,15 @@ class log implements archiveDescriptionInterface
             $journal = $this->sdoFactory->read('recordsManagement/log', $journal);
         }
 
-        $nextJournal =  $this->sdoFactory->find('recordsManagement/log', "type = '$journal->type' and fromDate >= '$journal->toDate'", [], '<fromDate', 0, 1);
+        $nextJournal =  $this->sdoFactory->find(
+            'recordsManagement/log',
+            "type = '$journal->type' and fromDate >= '$journal->toDate'",
+            [],
+            '<fromDate',
+            0,
+            1
+        );
+
         if (!count($nextJournal)) {
             return null;
         }
@@ -257,7 +291,6 @@ class log implements archiveDescriptionInterface
     {
         if ($ownerOrgRegNumber) {
             $query = "type='$type' AND ownerOrgRegNumber = '$ownerOrgRegNumber'";
-        
         } else {
             $query = "type='$type' AND ownerOrgRegNumber = null";
         }
@@ -284,8 +317,14 @@ class log implements archiveDescriptionInterface
      *
      * @return string The archive id of the journal archive
      */
-    public function depositJournal($journalFileName, $fromDate, $toDate, $type, $processName = null, $timestampFileName = null)
-    {
+    public function depositJournal(
+        $journalFileName,
+        $fromDate,
+        $toDate,
+        $type,
+        $processName = null,
+        $timestampFileName = null
+    ) {
         $newJournal = \laabs::newInstance('recordsManagement/log');
         $newJournal->archiveId = \laabs::newId();
         $newJournal->toDate = $toDate;
@@ -313,7 +352,10 @@ class log implements archiveDescriptionInterface
         $currentOrganization = \laabs::getToken("ORGANIZATION");
 
         if (!($currentOrganization->orgRoleCodes && in_array("owner", (array) $currentOrganization->orgRoleCodes))) {
-            throw \laabs::newException("recordsManagement/logException", "The journal must be archived by an owner organization.");
+            throw \laabs::newException(
+                "recordsManagement/logException",
+                "The journal must be archived by an owner organization."
+            );
         }
 
         $archiveController = \laabs::newController('recordsManagement/archive');
@@ -327,11 +369,21 @@ class log implements archiveDescriptionInterface
         $archive->retentionDuration = 'P0D';
         $archive->finalDisposition = 'preservation';
         $archive->fileplanLevel = 'item';
-        $archive->archiveName = 'journal/'.$log->type.' '.date_format($log->fromDate, 'Y/m/d').' - '.date_format($log->toDate, 'Y/m/d');
+        $archive->archiveName =
+            'journal/'.
+            $log->type.
+            ' '.
+            date_format($log->fromDate, 'Y/m/d').
+            ' - '.
+            date_format($log->toDate, 'Y/m/d');
 
         if (!empty($this->logFilePlan)) {
             $path = $this->resolveLogFilePlan($this->logFilePlan, ["type" => $log->type]);
-            $position = $this->filePlanController->createFromPath($path, $currentOrganization->registrationNumber, true);
+            $position = $this->filePlanController->createFromPath(
+                $path,
+                $currentOrganization->registrationNumber,
+                true
+            );
             $archive->filePlanPosition = $position;
         }
 
@@ -341,6 +393,8 @@ class log implements archiveDescriptionInterface
         $journalResource->mimetype = "text/csv";
         $journalResource->archiveId = $archive->archiveId;
         $digitalResourceController->getHash($journalResource, "SHA256");
+
+        $archive->digitalResources[] = $journalResource;
 
         if ($timestampFileName) {
             // Create timestamp resource
@@ -357,12 +411,13 @@ class log implements archiveDescriptionInterface
             $archive->digitalResources[] = $timestampResource;
         }
 
-        $archive->digitalResources[] = $journalResource;
-
         $archive->descriptionObject = $log;
         $archive->descriptionClass = 'recordsManagement/log';
 
-        $archive->originatorOrgRegNumber = $archive->archiverOrgRegNumber = $archive->depositorOrgRegNumber = (string) $currentOrganization->registrationNumber;
+        $archive->originatorOrgRegNumber =
+        $archive->archiverOrgRegNumber =
+        $archive->depositorOrgRegNumber =
+            (string) $currentOrganization->registrationNumber;
         $archive->originatorOwnerOrgId = (string) $currentOrganization->orgId;
 
         $archive->serviceLevelReference = $archiveController->useServiceLevel("deposit")->reference;
@@ -389,10 +444,6 @@ class log implements archiveDescriptionInterface
 
     private function resolveLogFilePlan($path, $values)
     {
-        if (!$path) {
-            $pattern = $this->storePath;
-        }
-
         $values = is_array($values) ? $values : get_object_vars($values);
 
         if (preg_match_all("/\<[^\>]+\>/", $path, $variables)) {

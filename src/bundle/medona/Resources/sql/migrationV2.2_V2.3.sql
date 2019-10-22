@@ -1,0 +1,1 @@
+ALTER TABLE "medona"."message" ADD COLUMN "path" text;

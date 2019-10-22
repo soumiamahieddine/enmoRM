@@ -241,7 +241,7 @@ class Document extends \dependency\xml\Document
 
         // add css
         $this->addStyle("/public/css/bootstrap-toggle/bootstrap-toggle.css");
-        //$this->addStyle("/public/css/bootstrap-daterangepicker/daterangepicker.css");
+        $this->addStyle("/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css");
 
         // Add js scripts
         $this->addScript("/public/js/jQuery_1.11.0/jQuery.js");
@@ -285,14 +285,15 @@ class Document extends \dependency\xml\Document
         //typeahead
         $this->addScript("/public/js/typeahead_0.11.1/typeahead.js");
 
-        //$this->addScript("/public/js/bootstrap-daterangepicker/moment.min.js");
-        //$this->addScript("/public/js/bootstrap-daterangepicker/daterangepicker.js");
-
         $this->addScript("/public/js/konami-code/jquery.raptorize.1.0.js");
 
         $this->addScript("/public/js/bootstrap-tree/bootstrap-tree.js");
         $this->addScript("/public/js/dataList_0.0.1/dataList.js");
         $this->addScript("/public/js/datePicker/bootstrap-datepicker.js");
+
+
+        $this->addScript("/public/js/moment_2.14.1/moment.js");
+        $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
 
         $this->addScript("/public/js/csrf/csrfprotector.js");
 
