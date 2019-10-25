@@ -1,4 +1,4 @@
-# Migration 2.4 vers 2.5 
+# Migration 2.4 vers 2.5
 
 ## Présentation et fonctionnalités orientées "archives publiques"
 
@@ -14,16 +14,16 @@ Dans la section `[presentation.maarchRM]`, la directive `publicArchives` défini
 La directive `menu` n'intégrait pas le point de menu vers la gestion du dictionnaire de données (champs de description);
 
 Dans la section `[auth]`, la directive `blackListedUserStories` inhibait les droits sur les fonctions suivantes :
-  * versement direct dans l'Archive 
-  * gestion du dictionnaire de données 
+  * versement direct dans l'Archive
+  * gestion du dictionnaire de données
 
-### Nouvelles configurations 
+### Nouvelles configurations
 
 Ces directives sont utilisables à la place de la directive existante `publicArchives` pour gérer plus finement les fonctionnalités correspondantes :
 
 Dans la section `[presentation.maarchRM]`, ajout du paramètre maxResults de type nombre (valeur par défaut à 200), qui permet de définir le nombre maximum d'archives retournées lors d'une recherche dans l'application.
 
-Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen. 
+Dans la section `[auth]`, ajout de la directive `restrictUserRoles`, de type booléen.
 Si activée, chaque utilisateur ne peut avoir qu'un rôle et la gestion des rôles ne permet plus d'ajouter ou retirer des utilisateurs.
 
 Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileType` définit désormais le comportement suivant :
@@ -34,16 +34,16 @@ Dans la section `[recordsManagement]`, la valeur de directive `archivalProfileTy
 ## Branchement des schémas de description
 
 Dans la section `[recordsManagement]`, la directive `descriptionSchemes` permet de définir
-les schémas de description en lieu et place des entrées de la table `recordsManagement.descriptionClass` 
+les schémas de description en lieu et place des entrées de la table `recordsManagement.descriptionClass`
 qui doit être supprimée.
 
-A chaque identifiant de schéma de description (éventuellement précédemment inscrit dans la table) correspond un élément 
+A chaque identifiant de schéma de description (éventuellement précédemment inscrit dans la table) correspond un élément
 de configuration qui fournit :
 
   * le libellé affiché
   * le format de description : classe php, schema json, schéma XML
   * le nom du schéma
-  * les URIs des différents services utilisés par l'application pour la gestion des données, 
+  * les URIs des différents services utilisés par l'application pour la gestion des données,
     la recherche, la transformation, la présentation, etc.
 
 ```
@@ -270,7 +270,7 @@ timestampFormat                 = "Y-m-d H:i:s \(P\)"
 timezone                        = Europe/Paris
 ```
 
-Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran. 
+Ces paramètres permettent de modifier le fuseau horaire et l'affichage des dates à l'écran.
 Le paramètre `dateTimeFormat` définit le format d'affichage des valeurs date et heure en suivant le formalisme d'affichage php (se référer à http://php.net/manual/fr/function.date.php )
 Le paramètre `timestampFormat` définit le format d'affichage des temps en suivant le formalisme d'affichage php.
 Le paramètre `timeZone` définit le fuseau horaire utilisé pour l'affichage en heure locale.
@@ -281,19 +281,25 @@ Ce paramètre peut prendre deux valeurs : "preserve" ou "dispose" (valeur "prese
 La valeur preserve bloque la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
 La valeur dispose permet la suppression d'une archive si aucune règle de conservation ne lui a été attribuée.
 
+Mise à jour des fichiers signature et container permettant la détection du format des fichiers
+```
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
+```
+
 ## SQL
 
 Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
 
-# Migration 2.2 vers 2.3 
+# Migration 2.2 vers 2.3
 
 ## Configuration
 
 ### Ecran de connexion
 
-Un style peut être appliqué à l'écran de connexion utilisateur, via la directive 
+Un style peut être appliqué à l'écran de connexion utilisateur, via la directive
 "loginBackground" de la section "presentation.maarchRM":
 
 ```
@@ -307,7 +313,7 @@ loginBackground = ".modal-backdrop {
 }"
 ```
 
-De même, le logo utilisé dans la mire de connexion peut être modifié séparément 
+De même, le logo utilisé dans la mire de connexion peut être modifié séparément
 de celui affiché dans la barre de navigation:
 
 ```
@@ -317,7 +323,7 @@ altLogo = "/presentation/img/RM.svg"
 
 ### CSRF
 
-Modification de la configuration : 
+Modification de la configuration :
 
     csrfWhiteList = "['user/login', 'user/password']"
     csrfConfig = '{
@@ -348,19 +354,19 @@ Les modifications de configuration font référence au fichier **configuration.i
 
 ### CSRF
 
-Ajout de la configuration suivante : 
+Ajout de la configuration suivante :
 
     csrfWhiteList = "['user/login']"
     csrfConfig = '{
         "cookieName" : "CSRF",
         "tokenLength" : 32
     }'
-        
-[Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/csrf.md) 
+
+[Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/csrf.md)
 
 ### Customisation CSS
 
-L'ajout de la customisation CSS permet d'utiliser une feuille de style personnalisable. 
+L'ajout de la customisation CSS permet d'utiliser une feuille de style personnalisable.
 
     css = "/presentation/css/style.css"
 
@@ -377,19 +383,19 @@ Les répertoires des logs sont personnalisables depuis la 2.2.
     ;   - m for the numeric representation of a month, with leading zeros
     ;   - d for day of the month, 2 digits with leading zeros
     logFilePlan = "<type>/<date(Y)>/<date(m)>"
-    
+
     translationLogType = "
     {
          'lifeCycle' : 'Journal du cycle de vie',
          'application' : 'Journal de l\'application',
          'system' : 'Journal du système'
-     }" 
+     }"
 
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/log_filePlan_path.md)
 
 ### Rôle d'organisation
 
-Les rôles d'organisation ont été déplacés de la base de données vers la configuration. 
+Les rôles d'organisation ont été déplacés de la base de données vers la configuration.
 
     orgUnitRoles = "
     {
@@ -449,7 +455,7 @@ De ce fait, il faut ajouter le privilège :
             'description' : 'Tous les droits'
         }
     ]"
-    
+
 et toutes les tâches :
 
     [batchProcessing]
@@ -490,5 +496,5 @@ et toutes les tâches :
                     'description' : 'Mise à jour de la durée d\'utilité administrative'
                 }
             ]"
-            
+
 [Documentation](https://labs.maarch.org/maarch/maarchRM.doc/blob/b5ff8d2a3c3ad5669eeb01b0ec56f33184ee474e/conf/scheduling.md)
