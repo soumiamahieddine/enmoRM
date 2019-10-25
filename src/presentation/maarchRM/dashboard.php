@@ -90,6 +90,12 @@ class dashboard
                 }
                 try {
                     $command = \laabs::command('READ', substr($parser['path'], 1));
+
+                     // remove menu display for medona list if transaction mode is not activated
+                    if (!\laabs::configuration('medona')['transaction'] && $command->name == 'readMedonaList') {
+                        unset($menu[$i]);
+                    }
+
                     if (!$this->hasUserPrivilege($command)) {
                         unset($menu[$i]);
                     }
@@ -117,7 +123,7 @@ class dashboard
         }
     }
 
-    protected function checkRequirements($command) 
+    protected function checkRequirements($command)
     {
         // All requirements must be fulfilled
         foreach ($command->tags['requires'] as $requirement) {
@@ -130,7 +136,7 @@ class dashboard
         return true;
     }
 
-    protected function checkRequirement($requirement) 
+    protected function checkRequirement($requirement)
     {
         // At least one requirement must be fulfilled
         foreach ($requirement as $requirementItem) {
