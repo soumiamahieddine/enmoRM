@@ -91,11 +91,6 @@ class dashboard
                 try {
                     $command = \laabs::command('READ', substr($parser['path'], 1));
 
-                     // remove menu display for medona list if transaction mode is not activated
-                    if (!\laabs::configuration('medona')['transaction'] && $command->name == 'readMedonaList') {
-                        unset($menu[$i]);
-                    }
-
                     if (!$this->hasUserPrivilege($command)) {
                         unset($menu[$i]);
                     }
