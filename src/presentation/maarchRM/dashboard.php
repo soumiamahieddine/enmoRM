@@ -90,7 +90,6 @@ class dashboard
                 }
                 try {
                     $command = \laabs::command('READ', substr($parser['path'], 1));
-
                     if (!$this->hasUserPrivilege($command)) {
                         unset($menu[$i]);
                     }
