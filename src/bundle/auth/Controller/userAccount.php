@@ -104,21 +104,23 @@ class userAccount
 
             case $account::SECLEVEL_FONCADMIN:
                 $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
-                $childrenOrganizations = $this->sdoFactory->readChildren("organization/organization", $organization);
-                $childrenOrgs = [];
-                foreach ($childrenOrganizations as $key => $organization) {
-                    $childrenOrganizationsId[] = (string) $organization->orgId;
+                $organizations = $organizationController->readDescendantOrg($organization->orgId);
+                $organizations[] = $organization;
+                $organizationsIds = [];
+                foreach ($organizations as $key => $organization) {
+                    $organizationsIds[] = (string) $organization->orgId;
                 }
-                $childrenIds = implode("', '", $childrenOrganizationsId);
 
-                $queryAssert[] = "((ownerOrgId= ['" . $childrenIds . "']) OR (isAdmin!=TRUE AND ownerOrgId=null))";
+                $queryAssert[] = "((ownerOrgId= ['" .
+                    implode("', '", $organizationsIds) .
+                    "']) OR (isAdmin!=TRUE AND ownerOrgId=null))
+                    ";
                 break;
 
             case $account::SECLEVEL_USER:
                 $queryAssert[] = "((isAdmin!=TRUE AND ownerOrgId='". $account->ownerOrgId."')";
                 break;
         }
-
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $userAccounts;

@@ -81,6 +81,13 @@ trait archiveEntryTrait
         if (!isset($archive->archiveId)) {
             $archive->archiveId = \laabs::newId();
         }
+
+        // Get originatorOrgRegNumber of parent if parentId exists
+        if (isset($archive->parentArchiveId)) {
+            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+            $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
+        }
+
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
