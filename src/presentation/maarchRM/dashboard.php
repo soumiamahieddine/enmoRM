@@ -117,7 +117,7 @@ class dashboard
         }
     }
 
-    protected function checkRequirements($command) 
+    protected function checkRequirements($command)
     {
         // All requirements must be fulfilled
         foreach ($command->tags['requires'] as $requirement) {
@@ -130,7 +130,7 @@ class dashboard
         return true;
     }
 
-    protected function checkRequirement($requirement) 
+    protected function checkRequirement($requirement)
     {
         // At least one requirement must be fulfilled
         foreach ($requirement as $requirementItem) {
